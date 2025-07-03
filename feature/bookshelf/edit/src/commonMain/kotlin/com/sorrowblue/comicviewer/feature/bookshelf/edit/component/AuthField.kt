@@ -14,36 +14,35 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_lab
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_username_password
 import org.jetbrains.compose.resources.stringResource
 import soil.form.FieldName
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 
 @Composable
-internal fun FormScope<SmbEditScreenForm>.AuthField(
-    enabled: Boolean,
+internal fun AuthField(
+    form: Form<SmbEditScreenForm>,
     modifier: Modifier = Modifier,
-    control: FieldControl<SmbEditScreenForm.Auth> = rememberAuthFieldControl(),
+    field: FormField<SmbEditScreenForm.Auth> = form.rememberAuthField(),
 ) {
-    Controller(control) { field ->
-        val list = remember { SmbEditScreenForm.Auth.entries }
-        SingleChoiceSegmentedButtonRow(modifier = modifier) {
-            list.forEachIndexed { index, auth ->
-                SegmentedButton(
-                    selected = auth == field.value,
-                    onClick = { field.onChange(auth) },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = list.size),
-                    enabled = enabled && field.isEnabled,
-                    colors = SegmentedButtonDefaults.fixedColors()
-                ) {
-                    Text(
-                        text = stringResource(
-                            when (auth) {
-                                SmbEditScreenForm.Auth.Guest -> Res.string.bookshelf_edit_label_guest
-                                SmbEditScreenForm.Auth.UserPass -> Res.string.bookshelf_edit_label_username_password
-                            }
-                        ),
-                    )
-                }
+    val list = remember { SmbEditScreenForm.Auth.entries }
+    SingleChoiceSegmentedButtonRow(modifier = modifier) {
+        list.forEachIndexed { index, auth ->
+            SegmentedButton(
+                selected = auth == field.value,
+                onClick = { field.onValueChange(auth) },
+                shape = SegmentedButtonDefaults.itemShape(index = index, count = list.size),
+                enabled = field.isEnabled,
+                colors = SegmentedButtonDefaults.fixedColors()
+            ) {
+                Text(
+                    text = stringResource(
+                        when (auth) {
+                            SmbEditScreenForm.Auth.Guest -> Res.string.bookshelf_edit_label_guest
+                            SmbEditScreenForm.Auth.UserPass -> Res.string.bookshelf_edit_label_username_password
+                        }
+                    ),
+                )
             }
         }
     }
@@ -52,10 +51,11 @@ internal fun FormScope<SmbEditScreenForm>.AuthField(
 internal const val AuthField: FieldName = "Auth"
 
 @Composable
-private fun FormScope<SmbEditScreenForm>.rememberAuthFieldControl(): FieldControl<SmbEditScreenForm.Auth> {
-    return rememberFieldControl(
+private fun Form<SmbEditScreenForm>.rememberAuthField(): FormField<SmbEditScreenForm.Auth> {
+    return rememberField(
         name = AuthField,
-        select = { auth },
-        update = { copy(auth = it) }
+        selector = { it.auth },
+        updater = { copy(auth = it) },
+        enabled = watch { !value.isRunning }
     )
 }

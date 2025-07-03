@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.feature.collection.editor.component.OutlinedTextField
+import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.CollectionEditorFormData
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
@@ -19,12 +19,7 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import soil.form.FormPolicy
-import soil.form.compose.FieldControl
-import soil.form.compose.Form
-import soil.form.compose.FormScope
-import soil.form.compose.rememberFieldRuleControl
-import soil.form.rule.notBlank
+import soil.form.compose.rememberForm
 
 @Serializable
 internal data class BasicCollectionCreate(
@@ -60,45 +55,38 @@ internal data class BasicCollectionsCreateScreenUiState(
 @Serializable
 internal data class BasicCollectionEditorFormData(
     override val name: String = "",
-) : CollectionEditorFormData
+) : CollectionEditorFormData {
+
+    override fun <T : CollectionEditorFormData> update(name: String): T {
+        @Suppress("UNCHECKED_CAST")
+        return copy(name = name) as T
+    }
+}
 
 @Composable
 private fun FavoriteCreateScreen(
     uiState: BasicCollectionsCreateScreenUiState,
     onCancel: () -> Unit,
-    onSubmit: suspend (BasicCollectionEditorFormData) -> Unit,
+    onSubmit: (BasicCollectionEditorFormData) -> Unit,
 ) {
-    Form(
-        onSubmit = onSubmit,
-        saver = kSerializableSaver<BasicCollectionEditorFormData>(),
+    val form = rememberForm(
         initialValue = uiState.formData,
-        policy = FormPolicy.Default
-    ) {
-        AlertDialog(
-            title = { Text(text = stringResource(Res.string.collection_editor_title_basic_create)) },
-            text = {
-                OutlinedTextField(control = rememberCollectionNameControl())
-            },
-            onDismissRequest = onCancel,
-            confirmButton = {
-                CreateButton()
-            },
-            dismissButton = {
-                TextButton(onClick = onCancel) {
-                    Text(text = stringResource(Res.string.collection_editor_label_cancel))
-                }
+        saver = kSerializableSaver<BasicCollectionEditorFormData>(),
+        onSubmit = onSubmit
+    )
+    AlertDialog(
+        title = { Text(text = stringResource(Res.string.collection_editor_title_basic_create)) },
+        text = {
+            CollectionNameTextField(form = form)
+        },
+        onDismissRequest = onCancel,
+        confirmButton = {
+            CreateButton(form = form)
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel) {
+                Text(text = stringResource(Res.string.collection_editor_label_cancel))
             }
-        )
-    }
-}
-
-@Composable
-private fun FormScope<BasicCollectionEditorFormData>.rememberCollectionNameControl(): FieldControl<String> {
-    return rememberFieldRuleControl(
-        name = "Collection name",
-        select = { this.name },
-        update = { copy(name = it) },
-    ) {
-        notBlank { "must not be blank" }
-    }
+        }
+    )
 }

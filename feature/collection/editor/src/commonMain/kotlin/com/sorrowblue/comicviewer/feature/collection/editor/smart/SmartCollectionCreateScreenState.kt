@@ -20,6 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
@@ -41,8 +42,8 @@ internal fun rememberSmartCollectionCreateScreenState(
 
 private class SmartCollectionCreateScreenStateImpl(
     route: SmartCollectionCreate,
-    scope: CoroutineScope,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
+    private val scope: CoroutineScope,
     private val createCollectionUseCase: CreateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
 
@@ -63,17 +64,19 @@ private class SmartCollectionCreateScreenStateImpl(
             }.launchIn(scope)
     }
 
-    override suspend fun onSubmit(formData: SmartCollectionEditorFormData) {
-        delay(1000)
-        createCollectionUseCase(
-            CreateCollectionUseCase.Request(
-                SmartCollection(
-                    formData.name,
-                    formData.bookshelfId,
-                    formData.searchCondition
+    override fun onSubmit(formData: SmartCollectionEditorFormData) {
+        scope.launch {
+            delay(1000)
+            createCollectionUseCase(
+                CreateCollectionUseCase.Request(
+                    SmartCollection(
+                        formData.name,
+                        formData.bookshelfId,
+                        formData.searchCondition
+                    )
                 )
             )
-        )
-        event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+            event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+        }
     }
 }

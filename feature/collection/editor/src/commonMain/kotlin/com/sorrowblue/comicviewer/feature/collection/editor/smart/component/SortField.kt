@@ -15,16 +15,18 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_sort_size_desc
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.rememberField
 
 @Composable
-internal fun FormScope<SmartCollectionEditorFormData>.SortTypeField(
+internal fun SortTypeField(
+    form: Form<SmartCollectionEditorFormData>,
     modifier: Modifier = Modifier,
-    control: FieldControl<SortType> = rememberSortTypeControl(),
+    field: FormField<SortType> = form.rememberSortTypeField(),
 ) {
     DropdownMenuField(
-        control = control,
+        field = field,
         value = { stringResource(displayText) },
         menus = remember { SortType.entries },
         modifier = modifier
@@ -32,11 +34,11 @@ internal fun FormScope<SmartCollectionEditorFormData>.SortTypeField(
 }
 
 @Composable
-private fun FormScope<SmartCollectionEditorFormData>.rememberSortTypeControl(): FieldControl<SortType> {
-    return rememberFieldControl(
+private fun Form<SmartCollectionEditorFormData>.rememberSortTypeField(): FormField<SortType> {
+    return rememberField(
         name = stringResource(Res.string.collection_editor_label_sort),
-        select = { searchCondition.sortType },
-        update = { copy(searchCondition = searchCondition.copy(sortType = it)) },
+        selector = { it.searchCondition.sortType },
+        updater = { copy(searchCondition = searchCondition.copy(sortType = it)) },
     )
 }
 

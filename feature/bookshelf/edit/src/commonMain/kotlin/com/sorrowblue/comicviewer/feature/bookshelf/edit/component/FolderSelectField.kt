@@ -24,10 +24,12 @@ import io.github.vinceglb.filekit.core.PlatformDirectory
 import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
-import soil.form.compose.rememberFieldRuleControl
+import soil.form.FieldValidator
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 import soil.form.rule.notNull
 
 expect fun localUriToDisplayPath(path: String): String
@@ -36,86 +38,84 @@ expect val PlatformDirectory.pathString: String
 @Composable
 internal fun FolderSelectField(
     state: FolderSelectFieldState,
-    enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Controller(state.control) { field ->
-        val focusManager = LocalFocusManager.current
-        OutlinedTextField(
-            value = field.value?.let { localUriToDisplayPath(it) }.orEmpty(),
-            onValueChange = {},
-            modifier = modifier
-                .testTag("FolderSelect")
-                .onFocusChanged {
-                    if (it.isFocused) {
-                        state.pickerResultLauncher.launch()
-                        focusManager.clearFocus()
-                    }
-                },
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            enabled = enabled && field.isEnabled,
-            supportingText = {
-                field.errors.firstOrNull()?.let { Text(text = it) }
-            },
-            trailingIcon = {
-                IconButton(onClick = { state.pickerResultLauncher.launch() }) {
-                    Icon(
-                        imageVector = ComicIcons.Folder,
-                        contentDescription = stringResource(Res.string.bookshelf_edit_label_select_folder)
-                    )
+    val focusManager = LocalFocusManager.current
+    OutlinedTextField(
+        value = state.formField.value?.let { localUriToDisplayPath(it) }.orEmpty(),
+        onValueChange = {},
+        label = { Text(text = state.formField.name) },
+        isError = state.formField.hasError,
+        enabled = state.formField.isEnabled,
+        supportingText = state.formField.supportingText(),
+        trailingIcon = {
+            IconButton(onClick = { state.pickerResultLauncher.launch() }) {
+                Icon(
+                    imageVector = ComicIcons.Folder,
+                    contentDescription = stringResource(Res.string.bookshelf_edit_label_select_folder)
+                )
+            }
+        },
+        readOnly = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        modifier = modifier
+            .testTag("FolderSelect")
+            .onFocusChanged {
+                if (it.isFocused) {
+                    state.pickerResultLauncher.launch()
+                    focusManager.clearFocus()
                 }
             },
-            readOnly = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            singleLine = true,
-        )
-    }
+    )
 }
 
 internal interface FolderSelectFieldState {
-    val control: FieldControl<String?>
+    val formField: FormField<String?>
     val pickerResultLauncher: PickerResultLauncher
 }
 
 @Composable
-internal fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldState(
+internal fun rememberFolderSelectFieldState(
+    form: Form<InternalStorageEditScreenForm>,
     onOpenDocumentTreeCancel: () -> Unit,
-    control: FieldControl<String?> = rememberFolderSelectFieldControl(),
+    formField: FormField<String?> = form.rememberFolderSelectField(),
     takePersistableUriPermission: TakePersistableUriPermission = koinInject(),
     pickerResultLauncher: PickerResultLauncher = rememberDirectoryPickerLauncher { platformDirectory ->
-        logcat { "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.pathString}" }
+        logcat(
+            "FolderSelectFieldState"
+        ) { "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.pathString}" }
         platformDirectory?.let {
             takePersistableUriPermission(it)
-            control.setValue(it.pathString)
+            formField.onValueChange(it.pathString)
         } ?: run {
             onOpenDocumentTreeCancel()
         }
     },
 ): FolderSelectFieldState {
     return remember {
-        FolderSelectFieldStateImpl(control, pickerResultLauncher)
+        FolderSelectFieldStateImpl(formField, pickerResultLauncher)
     }
 }
 
 private class FolderSelectFieldStateImpl(
-    override val control: FieldControl<String?>,
+    override val formField: FormField<String?>,
     override val pickerResultLauncher: PickerResultLauncher,
 ) : FolderSelectFieldState
 
 @Composable
-private fun FormScope<InternalStorageEditScreenForm>.rememberFolderSelectFieldControl(): FieldControl<String?> {
-    val message = stringResource(Res.string.bookshelf_edit_error_select_folder)
-    return rememberFieldRuleControl(
+private fun Form<InternalStorageEditScreenForm>.rememberFolderSelectField(): FormField<String?> {
+    val errorMessage = stringResource(Res.string.bookshelf_edit_error_select_folder)
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_label_select_folder),
-        select = { path },
-        update = { copy(path = it) }
-    ) {
-        notNull { message }
-    }
+        selector = { it.path },
+        updater = { this.copy(path = it) },
+        validator = FieldValidator { notNull { errorMessage } },
+        enabled = watch { !value.isRunning }
+    )
 }
 
 internal expect class TakePersistableUriPermission {

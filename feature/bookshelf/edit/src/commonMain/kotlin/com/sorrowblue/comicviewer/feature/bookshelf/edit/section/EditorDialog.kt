@@ -16,18 +16,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenUiState
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_save
 import comicviewer.feature.bookshelf.edit.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
-import soil.form.Submission
+import soil.form.compose.Form
 
 @Composable
 internal fun EditorDialog(
+    form: Form<out BookshelfEditForm>,
     uiState: BookshelfEditScreenUiState,
     onDismissRequest: () -> Unit,
-    submission: Submission,
     scrollState: ScrollState,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -35,11 +36,11 @@ internal fun EditorDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(
-                onClick = submission.onSubmit,
-                enabled = !submission.isSubmitting
+                onClick = form::handleSubmit,
+                enabled = form.meta.canSubmit
             ) {
                 AnimatedContent(
-                    targetState = !submission.isSubmitting,
+                    targetState = form.meta.canSubmit,
                     label = "progress"
                 ) {
                     if (it) {
@@ -54,7 +55,7 @@ internal fun EditorDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest, enabled = !submission.isSubmitting) {
+            TextButton(onClick = onDismissRequest, enabled = form.meta.canSubmit) {
                 Text(text = stringResource(Res.string.cancel))
             }
         },
@@ -74,10 +75,10 @@ internal fun EditorDialog(
                 }
             }
         },
-        properties = if (submission.isSubmitting) {
-            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-        } else {
+        properties = if (form.meta.canSubmit) {
             DialogProperties()
+        } else {
+            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         }
     )
 }

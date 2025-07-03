@@ -13,12 +13,15 @@ import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
-import kotlinx.datetime.Instant
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.format.char
+import kotlinx.datetime.parse
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalTime::class)
 @Entity(
     tableName = "collection",
     foreignKeys = [
@@ -107,7 +110,7 @@ internal data class CollectionEntity(
             char('-')
             monthNumber()
             char('-')
-            dayOfMonth()
+            day()
             char(' ')
             hour()
             char(':')

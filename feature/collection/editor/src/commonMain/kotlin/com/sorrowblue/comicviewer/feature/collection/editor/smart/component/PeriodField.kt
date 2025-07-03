@@ -13,16 +13,18 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_period_week1
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.rememberField
 
 @Composable
-internal fun FormScope<SmartCollectionEditorFormData>.PeriodField(
+internal fun PeriodField(
+    form: Form<SmartCollectionEditorFormData>,
     modifier: Modifier = Modifier,
-    control: FieldControl<SearchCondition.Period> = rememberPeriodControl(),
+    field: FormField<SearchCondition.Period> = form.rememberPeriodField(),
 ) {
     DropdownMenuField(
-        control = control,
+        field = field,
         value = { stringResource(displayText) },
         menus = remember { SearchCondition.Period.entries },
         modifier = modifier
@@ -30,11 +32,11 @@ internal fun FormScope<SmartCollectionEditorFormData>.PeriodField(
 }
 
 @Composable
-private fun FormScope<SmartCollectionEditorFormData>.rememberPeriodControl(): FieldControl<SearchCondition.Period> {
-    return rememberFieldControl(
+private fun Form<SmartCollectionEditorFormData>.rememberPeriodField(): FormField<SearchCondition.Period> {
+    return rememberField(
         name = stringResource(Res.string.collection_editor_label_period),
-        select = { searchCondition.period },
-        update = { copy(searchCondition = searchCondition.copy(period = it)) },
+        selector = { it.searchCondition.period },
+        updater = { copy(searchCondition = searchCondition.copy(period = it)) },
     )
 }
 

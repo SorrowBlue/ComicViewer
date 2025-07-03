@@ -13,45 +13,47 @@ import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_error_host
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_label_host
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
-import soil.form.compose.rememberFieldRuleControl
+import soil.form.FieldValidator
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 import soil.form.rule.notBlank
 
 @Composable
-internal fun FormScope<SmbEditScreenForm>.HostField(
-    enabled: Boolean,
+internal fun HostField(
+    form: Form<SmbEditScreenForm>,
     modifier: Modifier = Modifier,
-    control: FieldControl<String> = rememberHostFieldControl(),
+    field: FormField<String> = form.rememberHostField(),
 ) {
-    Controller(control) { field ->
-        OutlinedTextField(
-            value = field.value,
-            onValueChange = field.onChange,
-            modifier = modifier.testTag("Host"),
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            enabled = enabled && field.isEnabled,
-            supportingText = field.errorContent { Text(text = it.first()) },
-            keyboardOptions = KeyboardOptions(
-                showKeyboardOnFocus = false,
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-            singleLine = true,
-        )
-    }
+    OutlinedTextField(
+        value = field.value,
+        onValueChange = field::onValueChange,
+        label = { Text(text = field.name) },
+        isError = field.hasError,
+        enabled = field.isEnabled,
+        supportingText = field.supportingText(),
+        keyboardOptions = KeyboardOptions(
+            showKeyboardOnFocus = false,
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        modifier = modifier.testTag("Host"),
+    )
 }
 
 @Composable
-private fun FormScope<SmbEditScreenForm>.rememberHostFieldControl(): FieldControl<String> {
+private fun Form<SmbEditScreenForm>.rememberHostField(): FormField<String> {
     val notBlankMessage = stringResource(Res.string.bookshelf_edit_smb_input_error_host)
-    return rememberFieldRuleControl(
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_smb_input_label_host),
-        select = { host },
-        update = { copy(host = it) }
-    ) {
-        notBlank { notBlankMessage }
-    }
+        selector = { it.host },
+        updater = { this.copy(host = it) },
+        validator = FieldValidator {
+            notBlank { notBlankMessage }
+        },
+        enabled = watch { !value.isRunning }
+    )
 }

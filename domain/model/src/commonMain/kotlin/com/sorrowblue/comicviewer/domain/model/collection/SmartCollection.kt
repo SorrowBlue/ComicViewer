@@ -3,11 +3,13 @@ package com.sorrowblue.comicviewer.domain.model.collection
 import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalTime::class)
 data class SmartCollection(
     override val id: CollectionId,
     override val name: String,

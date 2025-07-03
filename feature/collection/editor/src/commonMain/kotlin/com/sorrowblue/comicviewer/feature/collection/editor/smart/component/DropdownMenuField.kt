@@ -13,12 +13,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
+import soil.form.compose.FormField
 
 @Composable
 internal fun <T> DropdownMenuField(
-    control: FieldControl<T>,
+    field: FormField<T>,
     value: @Composable T.() -> String,
     menus: List<T>,
     modifier: Modifier = Modifier,
@@ -26,43 +25,41 @@ internal fun <T> DropdownMenuField(
     text: @Composable (T) -> Unit = { Text(text = value(it)) },
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Controller(control) { field ->
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-            modifier = modifier,
-        ) {
-            OutlinedTextField(
-                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).then(
-                    if (fillMaxWidth) {
-                        Modifier.fillMaxWidth()
-                    } else {
-                        Modifier
-                    }
-                ),
-                value = value(field.value),
-                enabled = field.isEnabled,
-                readOnly = true,
-                onValueChange = {},
-                singleLine = true,
-                label = { Text(text = field.name) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                menus.forEach { option ->
-                    DropdownMenuItem(
-                        text = { text(option) },
-                        onClick = {
-                            field.onChange(option)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier,
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).then(
+                if (fillMaxWidth) {
+                    Modifier.fillMaxWidth()
+                } else {
+                    Modifier
                 }
+            ),
+            value = value(field.value),
+            enabled = field.isEnabled,
+            readOnly = true,
+            onValueChange = {},
+            singleLine = true,
+            label = { Text(text = field.name) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+        ) {
+            menus.forEach { option ->
+                DropdownMenuItem(
+                    text = { text(option) },
+                    onClick = {
+                        field.onValueChange(option)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
             }
         }
     }

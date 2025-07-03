@@ -26,19 +26,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenUiState
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_save
 import org.jetbrains.compose.resources.stringResource
-import soil.form.Submission
+import soil.form.compose.Form
+import soil.form.compose.watch
 
 @Composable
 internal fun EditScreen(
+    form: Form<out BookshelfEditForm>,
     uiState: BookshelfEditScreenUiState,
     onBackClick: () -> Unit,
-    submission: Submission,
     scrollState: ScrollState,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
@@ -54,11 +56,11 @@ internal fun EditScreen(
                 },
                 actions = {
                     TextButton(
-                        onClick = submission.onSubmit,
-                        enabled = !submission.isSubmitting
+                        onClick = form::handleSubmit,
+                        enabled = form.watch { !value.isRunning }
                     ) {
                         AnimatedContent(
-                            targetState = !submission.isSubmitting,
+                            targetState = form.watch { !value.isRunning },
                             label = "progress"
                         ) {
                             if (it) {

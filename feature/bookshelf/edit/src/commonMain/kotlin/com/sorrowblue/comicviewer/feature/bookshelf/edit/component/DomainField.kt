@@ -12,41 +12,42 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenForm
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_hint_domain
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Controller
-import soil.form.compose.FieldControl
-import soil.form.compose.FormScope
+import soil.form.compose.Form
+import soil.form.compose.FormField
+import soil.form.compose.hasError
+import soil.form.compose.rememberField
+import soil.form.compose.watch
 
 @Composable
-internal fun FormScope<SmbEditScreenForm>.DomainField(
-    enabled: Boolean,
+internal fun DomainField(
+    form: Form<SmbEditScreenForm>,
     modifier: Modifier = Modifier,
-    control: FieldControl<String> = rememberDomainFieldControl(),
+    field: FormField<String> = form.rememberDomainField(),
 ) {
-    Controller(control) { field ->
-        OutlinedTextField(
-            value = field.value,
-            onValueChange = field.onChange,
-            modifier = modifier.testTag("Domain"),
-            label = { Text(text = field.name) },
-            isError = field.hasError,
-            enabled = enabled && field.isEnabled,
-            supportingText = field.errorContent { Text(text = it.first()) },
-            keyboardOptions = KeyboardOptions(
-                showKeyboardOnFocus = false,
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-            singleLine = true,
-        )
-    }
+    OutlinedTextField(
+        value = field.value,
+        onValueChange = field::onValueChange,
+        label = { Text(text = field.name) },
+        isError = field.hasError,
+        enabled = field.isEnabled,
+        supportingText = field.supportingText(),
+        keyboardOptions = KeyboardOptions(
+            showKeyboardOnFocus = false,
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        ),
+        singleLine = true,
+        modifier = modifier.testTag("Domain"),
+    )
 }
 
 @Composable
-private fun FormScope<SmbEditScreenForm>.rememberDomainFieldControl(): FieldControl<String> {
-    return rememberFieldControl(
+private fun Form<SmbEditScreenForm>.rememberDomainField(): FormField<String> {
+    return rememberField(
         name = stringResource(Res.string.bookshelf_edit_hint_domain),
-        select = { domain },
-        update = { copy(domain = it) },
-        dependsOn = setOf(AuthField)
+        selector = { it.domain },
+        updater = { copy(domain = it) },
+        dependsOn = setOf(AuthField),
+        enabled = watch { !value.isRunning }
     )
 }
