@@ -4,7 +4,7 @@ import com.sorrowblue.comicviewer.pdf.aidl.IOutputStream;
 
 interface FileReader {
     int pageCount();
-    void copyTo(int pageIndex, IOutputStream stream);
+    String loadPage(int pageIndex);
     long fileSize(int pageIndex);
 
     void close();

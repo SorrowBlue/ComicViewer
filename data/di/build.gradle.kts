@@ -14,7 +14,6 @@ kotlin {
                     projects.data,
                     projects.data.di,
                     projects.data.reader,
-                    projects.data.reader.document,
                     projects.data.storage,
                     projects.domain,
                     projects.feature,
@@ -26,12 +25,6 @@ kotlin {
                         implementation(project)
                     }
                 }
-            }
-        }
-
-        desktopMain {
-            dependencies {
-                implementation(projects.data.reader.document)
             }
         }
     }

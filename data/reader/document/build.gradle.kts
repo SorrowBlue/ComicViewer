@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.dynamicfeature)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
 }
 
@@ -12,18 +12,14 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation(projects.composeApp)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.mupdf)
+                implementation(libs.androidx.core.ktx)
             }
         }
         desktopMain {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.pdfbox)
-                implementation(fileTree("libs") {
-                    include("*.jar")
-                })
             }
         }
     }
@@ -31,15 +27,7 @@ kotlin {
 
 android {
     namespace = "com.sorrowblue.comicviewer.data.reader.document"
-    packaging {
-        jniLibs.useLegacyPackaging = false
-    }
-
     buildFeatures {
         aidl = true
     }
-}
-
-dependencies {
-    add("kspAndroid", libs.autoservice.ksp)
 }

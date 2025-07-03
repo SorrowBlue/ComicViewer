@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.storage.smb.impl
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import jcifs.SmbConstants
 import jcifs.smb.SmbFile
-import logcat.logcat
 
 internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) :
     SeekableInputStream {
@@ -32,10 +31,7 @@ internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) :
     }
 
     override fun read(buf: ByteArray): Int {
-        logcat { "read($buf)" }
-        return file.read(buf).also {
-            logcat { "read($buf) = $it" }
-        }
+        return file.read(buf)
     }
 
     override fun close() {

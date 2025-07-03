@@ -1,9 +1,10 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
+import androidx.core.net.toUri
 import io.github.vinceglb.filekit.core.PlatformDirectory
 
 actual fun localUriToDisplayPath(path: String): String {
-    return android.net.Uri.parse(path).pathSegments?.lastOrNull()?.split(":")?.lastOrNull()
+    return path.toUri().pathSegments?.lastOrNull()?.split(":")?.lastOrNull()
         .orEmpty()
 }
 

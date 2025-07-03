@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 internal fun Project.configureKotlinMultiplatform() {
     kotlin<KotlinMultiplatformExtension> {
         androidTarget {
-            publishAllLibraryVariants()
         }
 
         jvm("desktop")
