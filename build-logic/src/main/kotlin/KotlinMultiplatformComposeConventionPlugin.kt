@@ -28,19 +28,11 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
-                    implementation(compose.material3AdaptiveNavigationSuite) {
-                        exclude(group = "org.jetbrains.androidx.window")
-                    }
-                    implementation(libs.compose.multiplatform.material3.adaptive) {
-                        exclude(group = "org.jetbrains.androidx.window")
-                    }
-                    implementation(libs.compose.multiplatform.material3.adaptiveLayout) {
-                        exclude(group = "org.jetbrains.androidx.window")
-                    }
-                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
-                        exclude(group = "org.jetbrains.androidx.window")
-                    }
-                    implementation("androidx.window:window-core:1.4.0")
+                    implementation(libs.compose.multiplatform.material3)
+                    implementation(libs.compose.multiplatform.material3AdaptiveNavigationSuite)
+                    implementation(libs.compose.multiplatform.material3.adaptive)
+                    implementation(libs.compose.multiplatform.material3.adaptiveLayout)
+                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
                     // Navigation
                     implementation(libs.cmpdestinations)
                     implementation(libs.compose.multiplatform.lifecycleCompose)

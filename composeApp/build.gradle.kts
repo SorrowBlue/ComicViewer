@@ -76,19 +76,12 @@ kotlin {
 
         androidUnitTest {
             dependencies {
-                implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
-                    exclude(group = "org.jetbrains.androidx.window")
-                }
                 implementation(projects.data.storage.client)
             }
         }
 
         desktopTest {
             dependencies {
-                implementation(libs.compose.multiplatform.material3.adaptiveNavigation) {
-                    exclude(group = "org.jetbrains.androidx.window")
-                }
-                implementation(libs.androidx.windowCoreJvm)
                 implementation(projects.data.storage.client)
             }
         }

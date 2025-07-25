@@ -97,7 +97,7 @@ fun NavigationSuiteScaffold2State<*>.AnimatedNavigationSuiteScaffold(
             }
         }
     }
-    // TODO(ShortNavigationBar has an animation bug in SharedElementTransition)
+    // TODO(ShortNavigationBar has an animation bug in SharedElementTransition. Remove it when bug is fixed)
     val movableNavigationBarContent = remember(navigationSuiteItems) {
         movableContentWithReceiverOf<RowScope> {
             suiteItemProvider.itemList.forEach {
@@ -135,11 +135,12 @@ fun NavigationSuiteScaffold2State<*>.AnimatedNavigationSuiteScaffold(
                     )
             ) {
                 if (it) {
-                    // TODO(ShortNavigationBar has an animation bug in SharedElementTransition)
+                    // TODO(ShortNavigationBar has an animation bug in SharedElementTransition. If the bug is fixed, replace it with ShortNavigationBar.)
                     NavigationBar(
                         containerColor = colors.shortNavigationBarContainerColor,
                         contentColor = colors.shortNavigationBarContentColor
                     ) {
+                        // TODO(If the bug is fixed, replace it with movableContent.)
                         movableNavigationBarContent()
                     }
                 } else {
@@ -218,11 +219,19 @@ fun NavigationSuiteScaffold2State<*>.AnimatedNavigationSuiteScaffold(
     }
 }
 
+/**
+ * @see
+ *    androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemProvider
+ */
 private interface NavigationSuiteItemProvider {
     val itemsCount: Int
     val itemList: MutableVector<NavigationSuiteItem>
 }
 
+/**
+ * @see
+ *    androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
+ */
 private class NavigationSuiteItem(
     val selected: Boolean,
     val onClick: () -> Unit,
@@ -252,6 +261,10 @@ sealed interface NavigationSuiteScope {
     )
 }
 
+/**
+ * @see
+ *    androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScopeImpl
+ */
 private class NavigationSuiteScopeImpl : NavigationSuiteScope, NavigationSuiteItemProvider {
 
     override fun item(
@@ -282,8 +295,7 @@ private class NavigationSuiteScopeImpl : NavigationSuiteScope, NavigationSuiteIt
         )
     }
 
-    override val itemList: MutableVector<NavigationSuiteItem> =
-        mutableVectorOf()
+    override val itemList: MutableVector<NavigationSuiteItem> = mutableVectorOf()
 
     override val itemsCount: Int
         get() = itemList.size
@@ -302,11 +314,10 @@ private fun NavigationItemIcon(
     icon: @Composable () -> Unit,
     badge: (@Composable () -> Unit)? = null,
 ) {
-    val currentIcon = remember(icon) { movableContentOf(icon) }
     if (badge != null) {
-        BadgedBox(badge = { badge.invoke() }) { currentIcon() }
+        BadgedBox(badge = { badge.invoke() }) { icon() }
     } else {
-        currentIcon()
+        icon()
     }
 }
 

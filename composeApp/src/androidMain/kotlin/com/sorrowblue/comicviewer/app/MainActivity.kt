@@ -10,12 +10,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.MainScreen
 import logcat.logcat
 
 /** Main activity */
@@ -23,6 +25,7 @@ internal class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         logcat { "onCreate" }
         installSplashScreen().apply {
@@ -37,11 +40,15 @@ internal class MainActivity : AppCompatActivity() {
         @OptIn(ExperimentalComposeUiApi::class)
         ComposeUiFlags.isSemanticAutofillEnabled = true
         setContent {
-            ComicTheme {
-                RootScreenWrapper(finishApp = ::finish) {
-                    ComicViewerApp()
-                }
+            LaunchedEffect(Unit) {
+                viewModel.shouldKeepSplash.value = false
             }
+            MainScreen()
+//            ComicTheme {
+//                RootScreenWrapper(finishApp = ::finish) {
+//                    ComicViewerApp()
+//                }
+//            }
         }
     }
 }
