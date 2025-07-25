@@ -61,6 +61,7 @@ internal fun Project.configureKotlinMultiplatform() {
 
         compilerOptions {
             freeCompilerArgs.add("-Xexpect-actual-classes")
+            freeCompilerArgs.add("-Xcontext-parameters")
         }
     }
 }

@@ -34,7 +34,8 @@ internal fun BookshelfSheet(
             EmptyContent(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(contentPadding),
+                    .padding(contentPadding)
+                ,
                 imageVector = ComicIcons.UndrawBookshelves,
                 text = stringResource(Res.string.bookshelf_label_no_bookshelf)
             )
