@@ -16,7 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
@@ -38,7 +37,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SearchPageScreen(onClickItem: () -> Unit) {
-    val scaffoldState = LocalScaffoldState.current
+    val scaffoldState = rememberScaffoldState(true)
     val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
     val textFieldState = rememberTextFieldState()
     val searchBarState = rememberSearchBarState()

@@ -22,20 +22,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -44,19 +41,50 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableExtr
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.LocalScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.layout.ScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.layout.animatePaddingValues
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.layout.union
+import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 import kotlinx.coroutines.launch
 
 @Composable
+fun rememberScaffoldState(
+    initNavigation: Boolean = true,
+): ScaffoldState {
+    val state = LocalScaffoldState.current
+    LaunchedEffect(Unit) {
+        if (initNavigation) {
+            state.navigationSuiteScaffoldState.show()
+        } else {
+            state.navigationSuiteScaffoldState.hide()
+        }
+    }
+    return state
+}
+
+@Composable
+fun calculateContentPadding(
+    contentPadding: PaddingValues,
+    navigator: ThreePaneScaffoldNavigator<*>,
+    scaffoldState: ScaffoldState = LocalScaffoldState.current,
+): PaddingValues {
+    return if (scaffoldState.navigationSuiteType.isNavigationRail) {
+        contentPadding + PaddingValues(
+            start = if (scaffoldState.navigationSuiteScaffoldState.currentValue == NavigationSuiteScaffoldValue.Hidden) 16.dp else 0.dp,
+            end = if (navigator.scaffoldState.currentState.tertiary == PaneAdaptedValue.Expanded) 0.dp else 16.dp,
+            bottom = 16.dp
+        )
+    } else {
+        contentPadding
+    }
+}
+
+@Composable
 fun DetailPageScreen() {
-    val scaffoldState = LocalScaffoldState.current
+    val scaffoldState = rememberScaffoldState(false)
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
-        scaffoldState.navigationSuiteScaffoldState.hide()
-    }
     val navigator = rememberSupportingPaneScaffoldNavigator<String>()
     NavigableExtraPaneScaffold(
         navigator = navigator,
@@ -81,13 +109,18 @@ fun DetailPageScreen() {
                         }
                     },
                     containerColor = ComicTheme.colorScheme.surface,
-                    contentWindowInsets = WindowInsets(),
+                    contentWindowInsets = if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
+                        WindowInsets.safeDrawing
+                    } else {
+                        WindowInsets()
+                    },
                     modifier = Modifier
                         .windowInsetsPadding(
                             WindowInsets.safeDrawing.union(
                                 WindowInsets(0.dp, 16.dp, 16.dp, 16.dp)
                             )
                         )
+                        .scratch(Color.Red)
                         .clip(
                             if (scaffoldState.navigationSuiteType.isNavigationBar) RoundedCornerShape(
                                 0
@@ -145,26 +178,10 @@ fun DetailPageScreen() {
             contentWindowInsets = WindowInsets.safeDrawing,
             modifier = Modifier
                 .fillMaxSize()
+                .scratch(Color.Blue)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { contentPadding ->
-            val layoutDirection = LocalLayoutDirection.current
-            var extPaddings by remember(scaffoldState.navigationSuiteType.isNavigationRail, scaffoldState.navigationSuiteScaffoldState.targetValue, navigator.scaffoldState.targetState.tertiary) {
-                mutableStateOf(
-                    if (scaffoldState.navigationSuiteType.isNavigationRail) {
-                        contentPadding.plus(
-                            PaddingValues(
-                                start = if (scaffoldState.navigationSuiteScaffoldState.targetValue == NavigationSuiteScaffoldValue.Hidden) 16.dp else 0.dp,
-                                end = if (navigator.scaffoldState.targetState.tertiary == PaneAdaptedValue.Expanded) 0.dp else 16.dp,
-                                bottom = 16.dp
-                            ), layoutDirection
-                        )
-                    } else {
-                        contentPadding
-                    }
-                )
-            }
-
-            val pad by animatePaddingValues(extPaddings)
+            val pad by animatePaddingValues(calculateContentPadding(contentPadding, navigator))
             LazyColumn(
                 contentPadding = pad,
                 verticalArrangement = Arrangement.spacedBy(
