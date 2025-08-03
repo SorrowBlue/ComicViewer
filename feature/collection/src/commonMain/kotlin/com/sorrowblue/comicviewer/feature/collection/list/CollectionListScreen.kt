@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionListConte
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
-import com.sorrowblue.comicviewer.framework.ui.PrimaryActionContentMode
 import com.sorrowblue.comicviewer.framework.ui.canonical.PrimaryActionButtonMenu
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
@@ -112,7 +111,6 @@ internal fun CollectionListScreen(
                 )
             }
         },
-        primaryActionContentMode = PrimaryActionContentMode.NavigationBarOnly
     ) { contentPadding ->
         CollectionListContents(
             lazyPagingItems = lazyPagingItems,
