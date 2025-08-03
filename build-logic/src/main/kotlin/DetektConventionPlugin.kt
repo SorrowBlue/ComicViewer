@@ -42,6 +42,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 }
                 finalizedBy(reportMerge)
                 exclude {
+                    logger.lifecycle("it.file.path = ${it.file.path}")
                     it.file.path.run { contains("generated") || contains("buildkonfig") }
                 }
             }
