@@ -6,17 +6,20 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.WideNavigationRailDefaults
 import androidx.compose.material3.WideNavigationRailState
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
@@ -37,11 +40,9 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.AnimatedNavigationSuite
 import com.sorrowblue.comicviewer.framework.ui.canonical.AppBarState
 import com.sorrowblue.comicviewer.framework.ui.canonical.DefaultAppBarScope
 import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
-import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationSuiteScope
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberAppBarState
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
-import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -123,20 +124,14 @@ class NavigationSuiteScaffold2StateImpl<T : Any>(
     override val snackbarHostState: SnackbarHostState get() = appState.snackbarHostState
 }
 
-enum class PrimaryActionContentMode {
-    Auto,
-    NavigationBarOnly,
-}
-
 @Composable
 fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
     modifier: Modifier = Modifier,
     topBar: @Composable NavigationSuiteScaffold2State<T>.() -> Unit = {},
     primaryActionContent: @Composable NavigationSuiteScaffold2State<T>.() -> Unit = {},
-    primaryActionContentMode: PrimaryActionContentMode = PrimaryActionContentMode.Auto,
-    navigationSuiteItems: NavigationSuiteScope.() -> Unit = {
+    navigationItems: @Composable () -> Unit = {
         navItems.forEach { navItem ->
-            item(
+            NavigationSuiteItem(
                 selected = navItem == currentNavItem,
                 label = { Text(navItem.title) },
                 icon = { Icon(navItem.icon, null) },
@@ -160,37 +155,36 @@ fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
             }
         },
     ) {
-        Surface(color = containerColor) {
-            AnimatedNavigationSuiteScaffold(
-                state = this,
-                navigationRailState = navigationRailState,
-                layoutType = navigationSuiteType,
-                navigationSuiteItems = navigationSuiteItems,
-                primaryActionContent = { primaryActionContent() },
-                primaryActionContentMode = primaryActionContentMode,
-                colors = NavigationSuiteDefaults.colors(
-                    shortNavigationBarContainerColor = ComicTheme.colorScheme.surfaceContainer,
-                    wideNavigationRailColors = WideNavigationRailDefaults.colors(
-                        containerColor = containerColor
-                    ),
-                )
-            ) {
-                Scaffold(
-                    topBar = {
-                        DefaultAppBarScope {
-                            topBar()
-                        }
-                    },
-                    containerColor = containerColor,
-                    contentWindowInsets = it.asWindowInsets(),
-                    modifier = appBarState.scrollBehavior?.nestedScrollConnection?.let(Modifier::nestedScroll)
-                        ?: Modifier
-                ) { contentPadding ->
-                    CompositionLocalProvider(
-                        LocalContainerColor provides ComicTheme.colorScheme.surface
-                    ) {
-                        content(contentPadding)
+        AnimatedNavigationSuiteScaffold(
+            navigationItems = navigationItems,
+            navigationSuiteType = navigationSuiteType,
+            navigationSuiteColors = NavigationSuiteDefaults.colors(
+                shortNavigationBarContainerColor = ComicTheme.colorScheme.surfaceContainer,
+                wideNavigationRailColors = WideNavigationRailDefaults.colors(
+                    containerColor = containerColor
+                ),
+            ),
+            containerColor = containerColor,
+            contentColor = ComicTheme.colorScheme.onSurface,
+            state = suiteScaffoldState,
+            navigationItemVerticalArrangement = Arrangement.Center,
+            primaryActionContent = { primaryActionContent() },
+        ) {
+            Scaffold(
+                topBar = {
+                    DefaultAppBarScope {
+                        topBar()
                     }
+                },
+                containerColor = containerColor,
+                contentWindowInsets = WindowInsets.safeDrawing,
+                modifier = appBarState.scrollBehavior?.nestedScrollConnection?.let(Modifier::nestedScroll)
+                    ?: Modifier
+            ) { contentPadding ->
+                CompositionLocalProvider(
+                    LocalContainerColor provides ComicTheme.colorScheme.surface
+                ) {
+                    content(contentPadding)
                 }
             }
         }

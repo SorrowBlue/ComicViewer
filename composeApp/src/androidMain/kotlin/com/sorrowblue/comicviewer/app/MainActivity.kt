@@ -11,13 +11,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import com.sorrowblue.comicviewer.framework.ui.MainScreen
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import logcat.logcat
 
 /** Main activity */
@@ -40,15 +39,11 @@ internal class MainActivity : AppCompatActivity() {
         @OptIn(ExperimentalComposeUiApi::class)
         ComposeUiFlags.isSemanticAutofillEnabled = true
         setContent {
-            LaunchedEffect(Unit) {
-                viewModel.shouldKeepSplash.value = false
+            ComicTheme {
+                RootScreenWrapper(finishApp = ::finish) {
+                    ComicViewerApp()
+                }
             }
-            MainScreen()
-//            ComicTheme {
-//                RootScreenWrapper(finishApp = ::finish) {
-//                    ComicViewerApp()
-//                }
-//            }
         }
     }
 }
