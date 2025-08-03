@@ -33,8 +33,9 @@ import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-context(scope: AnimatedVisibilityScope, scope2: SharedTransitionScope)
 fun AnimatedNavigationSuiteScaffold(
+    visibilityScope: AnimatedVisibilityScope,
+    transitionScope: SharedTransitionScope,
     navigationItems: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     navigationSuiteType: NavigationSuiteType =
@@ -59,7 +60,11 @@ fun AnimatedNavigationSuiteScaffold(
                     primaryActionContent = primaryActionContent,
                     verticalArrangement = navigationItemVerticalArrangement,
                     content = navigationItems,
-                    modifier = Modifier.navigationSuiteScaffoldSharedElement(navigationSuiteType)
+                    modifier = Modifier.navigationSuiteScaffoldSharedElement(
+                        navigationSuiteType,
+                        visibilityScope,
+                        transitionScope
+                    )
                 )
             },
             navigationSuiteType = navigationSuiteType,
@@ -79,10 +84,13 @@ fun AnimatedNavigationSuiteScaffold(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
-context(scope: AnimatedVisibilityScope, scope2: SharedTransitionScope)
-private fun Modifier.navigationSuiteScaffoldSharedElement(navigationSuiteType: NavigationSuiteType): Modifier =
-    with(scope) {
-        with(scope2) {
+private fun Modifier.navigationSuiteScaffoldSharedElement(
+    navigationSuiteType: NavigationSuiteType,
+    visibilityScope: AnimatedVisibilityScope,
+    transitionScope: SharedTransitionScope,
+): Modifier =
+    with(visibilityScope) {
+        with(transitionScope) {
             if (navigationSuiteType.isNavigationBar) {
                 Modifier
                     .animateEnterExit(
@@ -90,7 +98,7 @@ private fun Modifier.navigationSuiteScaffoldSharedElement(navigationSuiteType: N
                         exit = NavigationBarTransitionExit
                     )
                     .sharedElement(
-                        animatedVisibilityScope = scope,
+                        animatedVisibilityScope = visibilityScope,
                         sharedContentState = rememberSharedContentState(
                             NavigationBarSharedElementKey
                         )
@@ -102,7 +110,7 @@ private fun Modifier.navigationSuiteScaffoldSharedElement(navigationSuiteType: N
                         exit = NavigationRailTransitionExit
                     )
                     .sharedElement(
-                        animatedVisibilityScope = scope,
+                        animatedVisibilityScope = visibilityScope,
                         sharedContentState = rememberSharedContentState(
                             NavigationRailSharedElementKey
                         )

@@ -98,23 +98,23 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButtonMenu(
         button = {
             ToggleFloatingActionButton(
                 modifier =
-                    Modifier.semantics {
-                        traversalIndex = -1f
-                        stateDescription = if (fabMenuExpanded) "Expanded" else "Collapsed"
-                        contentDescription = "Toggle menu"
-                    }
-                        .animateFloatingActionButton(
-                            visible = visible && floatingActionButtonState.targetValue.isVisible || fabMenuExpanded,
-                            alignment = Alignment.BottomEnd
-                        )
-                        .animateEnterExit(
-                            enter = FloatingActionButtonTransitionEnter,
-                            exit = FloatingActionButtonTransitionExit
-                        )
-                        .sharedElement(
-                            sharedContentState = rememberSharedContentState("fab"),
-                            animatedVisibilityScope = this
-                        ),
+                Modifier.semantics {
+                    traversalIndex = -1f
+                    stateDescription = if (fabMenuExpanded) "Expanded" else "Collapsed"
+                    contentDescription = "Toggle menu"
+                }
+                    .animateFloatingActionButton(
+                        visible = visible && floatingActionButtonState.targetValue.isVisible || fabMenuExpanded,
+                        alignment = Alignment.BottomEnd
+                    )
+                    .animateEnterExit(
+                        enter = FloatingActionButtonTransitionEnter,
+                        exit = FloatingActionButtonTransitionExit
+                    )
+                    .sharedElement(
+                        sharedContentState = rememberSharedContentState("fab"),
+                        animatedVisibilityScope = this
+                    ),
                 checked = fabMenuExpanded,
                 onCheckedChange = { fabMenuExpanded = !fabMenuExpanded }
             ) {

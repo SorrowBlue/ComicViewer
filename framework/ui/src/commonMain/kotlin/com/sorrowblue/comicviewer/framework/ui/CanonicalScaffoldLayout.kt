@@ -156,6 +156,8 @@ fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
         },
     ) {
         AnimatedNavigationSuiteScaffold(
+            visibilityScope = this,
+            transitionScope = this,
             navigationItems = navigationItems,
             navigationSuiteType = navigationSuiteType,
             navigationSuiteColors = NavigationSuiteDefaults.colors(
