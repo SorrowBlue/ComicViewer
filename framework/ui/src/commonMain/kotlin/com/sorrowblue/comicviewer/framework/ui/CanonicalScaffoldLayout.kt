@@ -124,6 +124,7 @@ class NavigationSuiteScaffold2StateImpl<T : Any>(
     override val snackbarHostState: SnackbarHostState get() = appState.snackbarHostState
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
     modifier: Modifier = Modifier,
