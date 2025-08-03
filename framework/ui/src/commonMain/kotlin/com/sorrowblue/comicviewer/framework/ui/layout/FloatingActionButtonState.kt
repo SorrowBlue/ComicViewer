@@ -35,7 +35,7 @@ interface FloatingActionButtonState {
 fun rememberFloatingActionButtonState(
     initialValue: FloatingActionButtonValue = FloatingActionButtonValue.Visible,
 ): FloatingActionButtonState {
-    return rememberSaveable(saver = FloatingActionButtonStateImpl.Saver()) {
+    return rememberSaveable(saver = FloatingActionButtonStateImpl.saver()) {
         FloatingActionButtonStateImpl(initialValue = initialValue)
     }
 }
@@ -90,7 +90,7 @@ private class FloatingActionButtonStateImpl(var initialValue: FloatingActionButt
         private const val Hidden = 0f
         private const val Visible = 1f
 
-        fun Saver() =
+        fun saver() =
             androidx.compose.runtime.saveable.Saver<FloatingActionButtonState, FloatingActionButtonValue>(
                 save = { it.targetValue },
                 restore = { FloatingActionButtonStateImpl(it) },
