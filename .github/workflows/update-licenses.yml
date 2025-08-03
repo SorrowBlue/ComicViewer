@@ -15,7 +15,7 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🤖 ExportLibraryDefinitions android
-        run: ./gradlew :data:reader:document:exportLibraryDefinitions -PaboutLibraries.exportPath=../../../composeApp/src/androidMain/composeResources/files -PaboutLibraries.exportVariant=androidRelease
+        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/androidMain/composeResources/files -PaboutLibraries.exportVariant=androidRelease
       - name: 🖥️ ExportLibraryDefinitions desktop
         run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/desktopMain/composeResources/files -PaboutLibraries.exportVariant=desktop
       - name: 🍎 ExportLibraryDefinitions ios
