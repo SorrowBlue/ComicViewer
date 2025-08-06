@@ -19,7 +19,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
@@ -80,7 +80,7 @@ internal data class SmartCollectionScreenUiState(
 
 @Composable
 internal fun CollectionScreen(
-    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
+    scaffoldState: CanonicalScaffoldState<File.Key>,
     lazyPagingItems: LazyPagingItems<File>,
     uiState: SmartCollectionScreenUiState,
     lazyGridState: LazyGridState,

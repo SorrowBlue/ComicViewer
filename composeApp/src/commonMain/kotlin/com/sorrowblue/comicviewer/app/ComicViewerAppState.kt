@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
@@ -31,21 +30,12 @@ import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
-import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavGraph
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraph
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraph
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.AppState
-import com.sorrowblue.comicviewer.framework.ui.NavItem
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavItem
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
 import com.sorrowblue.comicviewer.framework.ui.sharedKoinViewModel
-import comicviewer.composeapp.generated.resources.Res
-import comicviewer.composeapp.generated.resources.app_label_bookshelf
-import comicviewer.composeapp.generated.resources.app_label_collection
-import comicviewer.composeapp.generated.resources.app_label_history
-import comicviewer.composeapp.generated.resources.app_label_read_later
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -56,7 +46,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.component.KoinComponent
@@ -107,43 +96,11 @@ internal interface ComicViewerAppState : AppState {
     fun onNavigationHistoryRestore()
 }
 
-sealed class NavItemImpl(
-    val navGraph: Any,
-    override val icon: ImageVector,
-) : NavItem {
-    data object Bookshelf : NavItemImpl(
-        BookshelfNavGraph,
-        ComicIcons.Book
-    ) {
-        override val title: String
-            @Composable
-            get() = stringResource(Res.string.app_label_bookshelf)
-    }
-
-    data object Collection : NavItemImpl(CollectionNavGraph, ComicIcons.CollectionsBookmark) {
-        override val title: String
-            @Composable
-            get() = stringResource(Res.string.app_label_collection)
-    }
-
-    data object Readlater : NavItemImpl(ReadLaterNavGraph, ComicIcons.WatchLater) {
-        override val title: String
-            @Composable
-            get() = stringResource(Res.string.app_label_read_later)
-    }
-
-    data object History : NavItemImpl(HistoryNavGraph, ComicIcons.History) {
-        override val title: String
-            @Composable
-            get() = stringResource(Res.string.app_label_history)
-    }
-}
-
 @OptIn(ExperimentalSharedTransitionApi::class)
 private class ComicViewerAppStateImpl(
     lifecycle: Lifecycle,
     navigationSuiteType: NavigationSuiteType,
-    override val sharedTransitionScope: SharedTransitionScope,
+    sharedTransitionScope: SharedTransitionScope,
     override var snackbarHostState: SnackbarHostState,
     private val scope: CoroutineScope,
     private val navTabHandler: NavTabHandler,
@@ -153,18 +110,14 @@ private class ComicViewerAppStateImpl(
     override val navController: NavHostController,
 ) : ComicViewerAppState, KoinComponent, SharedTransitionScope by sharedTransitionScope {
 
-    override val navItems = mutableStateListOf<NavItemImpl>(
-        NavItemImpl.Bookshelf,
-        NavItemImpl.Collection,
-        NavItemImpl.Readlater,
-        NavItemImpl.History
-    )
+    override val navItems = mutableStateListOf(*AppNavItem.entries.toTypedArray())
+
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)
 
-    override var currentNavItem by mutableStateOf<NavItemImpl?>(null)
+    override var currentNavItem by mutableStateOf<AppNavItem?>(null)
 
     override fun onNavItemClick(navItem: NavItem) {
-        navItem as NavItemImpl
+        require(navItem is AppNavItem)
         val navGraph = navItem.navGraph
         logcat { "Selected navGraph = $navGraph" }
         if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(navGraph::class) } == true) {

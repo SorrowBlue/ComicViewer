@@ -8,15 +8,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 internal interface CollectionListScreenState {
-    val scaffoldState: NavigationSuiteScaffold2State<Unit>
+    val scaffoldState: CanonicalScaffoldState<Unit>
     val pagingDataFlow: Flow<PagingData<Collection>>
     val lazyListState: LazyListState
     fun onNavClick()
@@ -24,7 +24,7 @@ internal interface CollectionListScreenState {
 
 @Composable
 internal fun rememberCollectionListScreenState(
-    scaffoldState: NavigationSuiteScaffold2State<Unit> = rememberCanonicalScaffoldLayoutState(),
+    scaffoldState: CanonicalScaffoldState<Unit> = rememberCanonicalScaffoldState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyListState: LazyListState = rememberLazyListState(),
     viewModel: CollectionListViewModel = koinViewModel(),
@@ -39,7 +39,7 @@ internal fun rememberCollectionListScreenState(
 
 @Stable
 private class CollectionListScreenStateImpl(
-    override val scaffoldState: NavigationSuiteScaffold2State<Unit>,
+    override val scaffoldState: CanonicalScaffoldState<Unit>,
     override val lazyListState: LazyListState,
     override val pagingDataFlow: Flow<PagingData<Collection>>,
     private val scope: CoroutineScope,

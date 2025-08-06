@@ -31,11 +31,11 @@ import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NavigationSuiteScaffold2State<*>.PrimaryActionButton(
+fun CanonicalScaffoldState<*>.PrimaryActionButton(
     onClick: () -> Unit,
     text: @Composable () -> Unit,
     icon: @Composable () -> Unit,
@@ -87,7 +87,7 @@ fun NavigationSuiteScaffold2State<*>.PrimaryActionButton(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NavigationSuiteScaffold2State<*>.PrimaryActionButtonMenu(
+fun CanonicalScaffoldState<*>.PrimaryActionButtonMenu(
     modifier: Modifier = Modifier,
     visible: Boolean = true,
     content: @Composable FloatingActionButtonMenuScope.() -> Unit,

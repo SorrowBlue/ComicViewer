@@ -13,10 +13,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 
 @Composable
-fun NavigationSuiteScaffold2State<*>.CanonicalAppBar(
+fun CanonicalScaffoldState<*>.CanonicalAppBar(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: @Composable () -> Unit = {},

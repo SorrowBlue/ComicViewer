@@ -9,10 +9,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -20,7 +20,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 internal interface BookshelfScreenState {
     val pagingItems: LazyPagingItems<BookshelfFolder>
-    val scaffoldState: NavigationSuiteScaffold2State<BookshelfId>
+    val scaffoldState: CanonicalScaffoldState<BookshelfId>
     val lazyGridState: LazyGridState
     fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder)
     fun onNavItemReSelected()
@@ -45,7 +45,7 @@ internal fun rememberBookshelfScreenState(
         )
     }
     stateImpl.scaffoldState =
-        rememberCanonicalScaffoldLayoutState(onReSelect = stateImpl::onNavItemReSelected)
+        rememberCanonicalScaffoldState(onReSelect = stateImpl::onNavItemReSelected)
     return stateImpl
 }
 
@@ -55,7 +55,7 @@ private class BookshelfScreenStateImpl(
     private val scope: CoroutineScope,
 ) : BookshelfScreenState {
 
-    override lateinit var scaffoldState: NavigationSuiteScaffold2State<BookshelfId>
+    override lateinit var scaffoldState: CanonicalScaffoldState<BookshelfId>
 
     override fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder) {
         scope.launch {

@@ -5,7 +5,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.CanonicalAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
@@ -20,7 +20,7 @@ internal sealed interface HistoryTopAppBarAction {
 }
 
 @Composable
-internal fun NavigationSuiteScaffold2State<*>.HistoryTopAppBar(
+internal fun CanonicalScaffoldState<*>.HistoryTopAppBar(
     onAction: (HistoryTopAppBarAction) -> Unit,
 ) {
     CanonicalAppBar(

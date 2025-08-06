@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowEmptyData
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowLoadingData
 import com.sorrowblue.comicviewer.framework.ui.rememberAppState
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
@@ -37,7 +37,7 @@ private fun CollectionListScreenPreview(
                     if (it) {
                         val lazyPagingItems = config.collectAsLazyPagingItems()
                         val scaffoldState =
-                            rememberCanonicalScaffoldLayoutState<Unit>(animatedContentScope = this)
+                            rememberCanonicalScaffoldState<Unit>(animatedContentScope = this)
                         CollectionListScreen(
                             scaffoldState = scaffoldState,
                             lazyPagingItems = lazyPagingItems,

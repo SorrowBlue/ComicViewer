@@ -13,8 +13,8 @@ import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUse
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ internal interface ReadLaterScreenState {
     val lazyGridState: LazyGridState
     val events: EventFlow<ReadLaterScreenEvent>
 
-    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
+    val scaffoldState: CanonicalScaffoldState<File.Key>
 
     fun onNavClick()
     fun onTopAppBarAction(action: ReadLaterTopAppBarAction)
@@ -48,7 +48,7 @@ internal interface ReadLaterScreenState {
 
 @Composable
 internal fun rememberReadLaterScreenState(
-    scaffoldState: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState(),
+    scaffoldState: CanonicalScaffoldState<File.Key> = rememberCanonicalScaffoldState(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: ReadLaterViewModel = koinViewModel(),
@@ -64,7 +64,7 @@ internal fun rememberReadLaterScreenState(
 
 private class ReadLaterScreenStateImpl(
     viewModel: ReadLaterViewModel,
-    override val scaffoldState: NavigationSuiteScaffold2State<File.Key>,
+    override val scaffoldState: CanonicalScaffoldState<File.Key>,
     override val lazyGridState: LazyGridState,
     private val scope: CoroutineScope,
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,

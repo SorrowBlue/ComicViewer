@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.file.component.fileListDisplayItem
 import com.sorrowblue.comicviewer.file.component.gridSizeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.CanonicalAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.settingsItem
@@ -35,7 +35,7 @@ internal sealed interface CollectionAppBarAction {
 }
 
 @Composable
-internal fun NavigationSuiteScaffold2State<*>.CollectionAppBar(
+internal fun CanonicalScaffoldState<*>.CollectionAppBar(
     uiState: CollectionAppBarUiState,
     onAction: (CollectionAppBarAction) -> Unit,
 ) {

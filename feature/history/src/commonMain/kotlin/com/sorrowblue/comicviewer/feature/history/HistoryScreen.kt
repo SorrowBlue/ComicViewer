@@ -19,7 +19,7 @@ import com.sorrowblue.comicviewer.file.FileInfoSheet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.serialization.Serializable
@@ -75,7 +75,7 @@ internal fun HistoryScreen(
 @Composable
 internal fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
-    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
+    scaffoldState: CanonicalScaffoldState<File.Key>,
     onHistoryTopAppBarAction: (HistoryTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,
     onHistoryContentsAction: (HistoryContentsAction) -> Unit,

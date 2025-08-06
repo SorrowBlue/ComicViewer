@@ -77,21 +77,6 @@ operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
 }
 
 /**
- * Add the other [PaddingValues] to this [PaddingValues].
- *
- * @param other
- * @return
- */
-fun PaddingValues.plus(other: PaddingValues, layoutDirection: LayoutDirection): PaddingValues {
-    return PaddingValues(
-        start = calculateStartPadding(layoutDirection) + other.calculateStartPadding(layoutDirection),
-        top = calculateTopPadding() + other.calculateTopPadding(),
-        end = calculateEndPadding(layoutDirection) + other.calculateEndPadding(layoutDirection),
-        bottom = calculateBottomPadding() + other.calculateBottomPadding(),
-    )
-}
-
-/**
  * [PaddingValues] を [WindowInsets] に変換します。
  *
  * @param layoutDirection LayoutDirection

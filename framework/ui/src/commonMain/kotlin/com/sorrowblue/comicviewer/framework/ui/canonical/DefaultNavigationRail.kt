@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-val NavigationSuiteScaffold2State<*>.DefaultNavigationRail: @Composable (Boolean, @Composable () -> Unit) -> Unit
+val CanonicalScaffoldState<*>.DefaultNavigationRail: @Composable (Boolean, @Composable () -> Unit) -> Unit
     get() = { visible, content ->
         AnimatedContent(
             targetState = visible,

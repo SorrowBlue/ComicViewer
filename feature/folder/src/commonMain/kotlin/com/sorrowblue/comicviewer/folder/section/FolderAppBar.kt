@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.file.component.fileListDisplayItem
 import com.sorrowblue.comicviewer.file.component.gridSizeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.CanonicalAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import comicviewer.feature.folder.generated.resources.Res
@@ -38,7 +38,7 @@ internal sealed interface FolderTopAppBarAction {
 }
 
 @Composable
-internal fun NavigationSuiteScaffold2State<*>.FolderAppBar(
+internal fun CanonicalScaffoldState<*>.FolderAppBar(
     uiState: FolderAppBarUiState,
     onAction: (FolderTopAppBarAction) -> Unit,
     modifier: Modifier = Modifier,
