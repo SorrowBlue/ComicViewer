@@ -17,11 +17,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NavigationSuiteScaffold2State<*>.DefaultAppBarScope(
+fun CanonicalScaffoldState<*>.DefaultAppBarScope(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {

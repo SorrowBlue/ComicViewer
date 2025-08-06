@@ -29,7 +29,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.CanonicalAppBar
 import com.sorrowblue.comicviewer.framework.ui.canonical.PrimaryActionButton
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
@@ -83,7 +83,7 @@ internal fun BookshelfScreen(
 
 @Composable
 internal fun BookshelfScreen(
-    scaffoldState: NavigationSuiteScaffold2State<BookshelfId>,
+    scaffoldState: CanonicalScaffoldState<BookshelfId>,
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     onFabClick: () -> Unit,
     onSettingsClick: () -> Unit,

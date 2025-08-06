@@ -23,8 +23,8 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarAct
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContentsAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
@@ -48,7 +48,7 @@ internal sealed interface CollectionScreenEvent {
 }
 
 internal interface CollectionScreenState {
-    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
+    val scaffoldState: CanonicalScaffoldState<File.Key>
     val uiState: SmartCollectionScreenUiState
     val events: EventFlow<CollectionScreenEvent>
     val pagingDataFlow: Flow<PagingData<File>>
@@ -62,7 +62,7 @@ internal interface CollectionScreenState {
 @Composable
 internal fun rememberCollectionScreenState(
     route: Collection,
-    scaffoldState: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState(),
+    scaffoldState: CanonicalScaffoldState<File.Key> = rememberCanonicalScaffoldState(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     getCollectionUseCase: GetCollectionUseCase = koinInject(),
@@ -86,7 +86,7 @@ internal fun rememberCollectionScreenState(
 
 private class CollectionScreenStateImpl(
     getCollectionUseCase: GetCollectionUseCase,
-    override val scaffoldState: NavigationSuiteScaffold2State<File.Key>,
+    override val scaffoldState: CanonicalScaffoldState<File.Key>,
     override val pagingDataFlow: Flow<PagingData<File>>,
     override val lazyGridState: LazyGridState,
     private val route: Collection,

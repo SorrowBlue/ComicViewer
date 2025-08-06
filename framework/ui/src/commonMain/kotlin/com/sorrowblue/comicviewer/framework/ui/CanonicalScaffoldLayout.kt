@@ -43,12 +43,13 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonSta
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberAppBarState
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-interface NavigationSuiteScaffold2State<T : Any> : AnimatedVisibilityScope, SharedTransitionScope {
+interface CanonicalScaffoldState<T : Any> : AnimatedVisibilityScope, SharedTransitionScope {
     val suiteScaffoldState: NavigationSuiteScaffoldState
     val navigationRailState: WideNavigationRailState
     fun toggleNavigationRail()
@@ -64,7 +65,7 @@ interface NavigationSuiteScaffold2State<T : Any> : AnimatedVisibilityScope, Shar
 }
 
 @Composable
-inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldLayoutState(
+inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldState(
     navigator: ThreePaneScaffoldNavigator<T> = rememberCanonicalScaffoldNavigator(),
     animatedContentScope: AnimatedContentScope = LocalAnimatedContentScope.current,
     suiteScaffoldState: NavigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState(),
@@ -74,9 +75,9 @@ inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldLayoutState(
     appState: AppState = LocalAppState.current,
     scope: CoroutineScope = rememberCoroutineScope(),
     noinline onReSelect: () -> Unit = {},
-): NavigationSuiteScaffold2State<T> {
+): CanonicalScaffoldState<T> {
     return remember {
-        NavigationSuiteScaffold2StateImpl(
+        CanonicalScaffoldStateImpl(
             animatedVisibilityScope = animatedContentScope,
             suiteScaffoldState = suiteScaffoldState,
             navigationRailState = navigationRailState,
@@ -91,7 +92,7 @@ inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldLayoutState(
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-class NavigationSuiteScaffold2StateImpl<T : Any>(
+class CanonicalScaffoldStateImpl<T : Any>(
     animatedVisibilityScope: AnimatedVisibilityScope,
     override val suiteScaffoldState: NavigationSuiteScaffoldState,
     override val navigationRailState: WideNavigationRailState,
@@ -101,9 +102,9 @@ class NavigationSuiteScaffold2StateImpl<T : Any>(
     private val appState: AppState,
     private val scope: CoroutineScope,
     private val onReSelected: () -> Unit,
-) : NavigationSuiteScaffold2State<T>,
+) : CanonicalScaffoldState<T>,
     AnimatedVisibilityScope by animatedVisibilityScope,
-    SharedTransitionScope by appState.sharedTransitionScope {
+    SharedTransitionScope by appState {
 
     override fun toggleNavigationRail() {
         scope.launch {
@@ -126,10 +127,10 @@ class NavigationSuiteScaffold2StateImpl<T : Any>(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
+fun <T : Any> CanonicalScaffoldState<T>.CanonicalScaffoldLayout(
     modifier: Modifier = Modifier,
-    topBar: @Composable NavigationSuiteScaffold2State<T>.() -> Unit = {},
-    primaryActionContent: @Composable NavigationSuiteScaffold2State<T>.() -> Unit = {},
+    topBar: @Composable CanonicalScaffoldState<T>.() -> Unit = {},
+    primaryActionContent: @Composable CanonicalScaffoldState<T>.() -> Unit = {},
     navigationItems: @Composable () -> Unit = {
         navItems.forEach { navItem ->
             NavigationSuiteItem(
@@ -170,7 +171,7 @@ fun <T : Any> NavigationSuiteScaffold2State<T>.CanonicalScaffoldLayout(
             containerColor = containerColor,
             contentColor = ComicTheme.colorScheme.onSurface,
             state = suiteScaffoldState,
-            navigationItemVerticalArrangement = Arrangement.Center,
+            navigationItemVerticalArrangement = Arrangement.Top,
             primaryActionContent = { primaryActionContent() },
         ) {
             Scaffold(

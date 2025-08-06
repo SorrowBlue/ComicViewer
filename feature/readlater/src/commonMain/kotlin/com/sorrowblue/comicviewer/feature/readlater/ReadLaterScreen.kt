@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveB
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
@@ -78,7 +78,7 @@ internal fun ReadLaterScreen(
 @Composable
 private fun ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
-    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
+    scaffoldState: CanonicalScaffoldState<File.Key>,
     lazyGridState: LazyGridState,
     onTopAppBarAction: (ReadLaterTopAppBarAction) -> Unit,
     onFileInfoSheetAction: (FileInfoSheetNavigator) -> Unit,

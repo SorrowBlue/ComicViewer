@@ -13,18 +13,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavItem
 import comicviewer.framework.ui.generated.resources.Res
 import comicviewer.framework.ui.generated.resources.label_settings
 import org.jetbrains.compose.resources.stringResource
-
-interface NavItem {
-    val title: String
-        @Composable
-        get
-    val icon: ImageVector
-}
 
 val LocalAppState = staticCompositionLocalOf<AppState> {
     error("No AppState provided")
@@ -55,8 +48,6 @@ interface AppState : SharedTransitionScope {
 
     val currentNavItem: NavItem?
 
-    val sharedTransitionScope: SharedTransitionScope
-
     var navigationSuiteType: NavigationSuiteType
     val snackbarHostState: SnackbarHostState
 }
@@ -64,7 +55,7 @@ interface AppState : SharedTransitionScope {
 @OptIn(ExperimentalSharedTransitionApi::class)
 private class AppStateImpl(
     navigationSuiteType: NavigationSuiteType,
-    override val sharedTransitionScope: SharedTransitionScope,
+    sharedTransitionScope: SharedTransitionScope,
     override var snackbarHostState: SnackbarHostState,
 ) : AppState,
     SharedTransitionScope by sharedTransitionScope {

@@ -14,9 +14,9 @@ import com.sorrowblue.comicviewer.feature.history.section.HistoryContentsAction
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +39,7 @@ internal interface HistoryScreenState :
     SaveableScreenState {
     val pagingDataFlow: Flow<PagingData<Book>>
     val events: EventFlow<HistoryScreenEvent>
-    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
+    val scaffoldState: CanonicalScaffoldState<File.Key>
     fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onHistoryContentsAction(action: HistoryContentsAction)
@@ -48,7 +48,7 @@ internal interface HistoryScreenState :
 
 @Composable
 internal fun rememberHistoryScreenState(
-    scaffoldState: NavigationSuiteScaffold2State<File.Key> = rememberCanonicalScaffoldLayoutState(),
+    scaffoldState: CanonicalScaffoldState<File.Key> = rememberCanonicalScaffoldState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: HistoryViewModel = koinViewModel(),
     clearAllHistoryUseCase: ClearAllHistoryUseCase = koinInject(),
@@ -68,7 +68,7 @@ private class HistoryScreenStateImpl(
     override val savedStateHandle: SavedStateHandle,
     private val scope: CoroutineScope,
     override val pagingDataFlow: Flow<PagingData<Book>>,
-    override val scaffoldState: NavigationSuiteScaffold2State<File.Key>,
+    override val scaffoldState: CanonicalScaffoldState<File.Key>,
     private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
 ) : HistoryScreenState {
 

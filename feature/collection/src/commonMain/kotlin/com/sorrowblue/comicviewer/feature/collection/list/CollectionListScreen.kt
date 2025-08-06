@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionListConte
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionListContentsAction
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.PrimaryActionButtonMenu
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
@@ -63,7 +63,7 @@ internal fun CollectionListScreen(navigator: CollectionListScreenNavigator = koi
 
 @Composable
 internal fun CollectionListScreen(
-    scaffoldState: NavigationSuiteScaffold2State<Unit>,
+    scaffoldState: CanonicalScaffoldState<Unit>,
     lazyPagingItems: LazyPagingItems<Collection>,
     lazyListState: LazyListState,
     onContentsAction: (CollectionListContentsAction) -> Unit,

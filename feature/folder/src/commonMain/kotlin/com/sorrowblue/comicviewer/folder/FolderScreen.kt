@@ -40,7 +40,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
@@ -120,7 +120,7 @@ fun FolderScreen(
 
 @Composable
 internal fun FolderScreen(
-    scaffoldState: NavigationSuiteScaffold2State<File.Key>,
+    scaffoldState: CanonicalScaffoldState<File.Key>,
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onFolderTopAppBarAction: (FolderTopAppBarAction) -> Unit,

@@ -29,12 +29,12 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.NavigationSuiteScaffold2State
+import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldLayoutState
+import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,7 +66,7 @@ internal sealed interface FolderScreenEvent {
 @Stable
 internal interface FolderScreenState {
 
-    val scaffoldState: NavigationSuiteScaffold2State<File.Key>
+    val scaffoldState: CanonicalScaffoldState<File.Key>
     val events: EventFlow<FolderScreenEvent>
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
@@ -122,7 +122,7 @@ internal fun rememberFolderScreenState(
             getFileUseCase = getFileUseCase
         )
     }
-    state.scaffoldState = rememberCanonicalScaffoldLayoutState<File.Key>(
+    state.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
         onReSelect = state::onReSelected
     )
     return state
@@ -138,7 +138,7 @@ private class FolderScreenStateImpl(
     getFileUseCase: GetFileUseCase,
 ) : FolderScreenState {
 
-    override lateinit var scaffoldState: NavigationSuiteScaffold2State<File.Key>
+    override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
 
     var isRestored by mutableStateOf(false)
 

@@ -43,10 +43,6 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(libs.androidx.compose.ui.toolingPreview)
                 }
 
-                sourceSets.desktopMain.dependencies {
-                    implementation(libs.androidx.windowCoreJvm)
-                }
-
                 compilerOptions {
                     freeCompilerArgs.addAll(
                         "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
