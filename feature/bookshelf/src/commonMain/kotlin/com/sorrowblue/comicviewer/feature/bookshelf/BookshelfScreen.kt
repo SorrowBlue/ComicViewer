@@ -93,7 +93,7 @@ internal fun BookshelfScreen(
     lazyGridState: LazyGridState = rememberLazyGridState(),
     extraPane: @Composable (BookshelfId) -> Unit,
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val expanded by rememberLastScrolledForward(lazyGridState)
     scaffoldState.appBarState.scrollBehavior = scrollBehavior
     scaffoldState.CanonicalScaffoldLayout(
