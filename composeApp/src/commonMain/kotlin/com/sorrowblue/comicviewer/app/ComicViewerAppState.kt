@@ -23,6 +23,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.sorrowblue.comicviewer.app.AppNavItem.Bookshelf
+import com.sorrowblue.comicviewer.app.AppNavItem.History
+import com.sorrowblue.comicviewer.app.AppNavItem.Readlater
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraph
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.fold
@@ -110,7 +113,7 @@ private class ComicViewerAppStateImpl(
     override val navController: NavHostController,
 ) : ComicViewerAppState, KoinComponent, SharedTransitionScope by sharedTransitionScope {
 
-    override val navItems = mutableStateListOf(*AppNavItem.entries.toTypedArray())
+    override val navItems = mutableStateListOf(Bookshelf, AppNavItem.Collection, Readlater, History)
 
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)
 
