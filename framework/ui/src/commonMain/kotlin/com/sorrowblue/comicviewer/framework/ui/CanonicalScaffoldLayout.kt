@@ -147,32 +147,32 @@ fun <T : Any> CanonicalScaffoldState<T>.CanonicalScaffoldLayout(
     val containerColor by animateColorAsState(
         if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
     )
-    NavigableExtraPaneScaffold(
-        navigator = navigator,
-        modifier = modifier.background(containerColor),
-        extraPane = {
-            val destination = navigator.currentDestination
-            if (destination?.pane == SupportingPaneScaffoldRole.Extra && destination.contentKey != null) {
-                extraPane(destination.contentKey!!)
-            }
-        },
-    ) {
-        AnimatedNavigationSuiteScaffold(
-            visibilityScope = this,
-            transitionScope = this,
-            navigationItems = navigationItems,
-            navigationSuiteType = navigationSuiteType,
-            navigationSuiteColors = NavigationSuiteDefaults.colors(
-                shortNavigationBarContainerColor = ComicTheme.colorScheme.surfaceContainer,
-                wideNavigationRailColors = WideNavigationRailDefaults.colors(
-                    containerColor = containerColor
-                ),
+    AnimatedNavigationSuiteScaffold(
+        visibilityScope = this,
+        transitionScope = this,
+        navigationItems = navigationItems,
+        navigationSuiteType = navigationSuiteType,
+        navigationSuiteColors = NavigationSuiteDefaults.colors(
+            shortNavigationBarContainerColor = ComicTheme.colorScheme.surfaceContainer,
+            wideNavigationRailColors = WideNavigationRailDefaults.colors(
+                containerColor = containerColor
             ),
-            containerColor = containerColor,
-            contentColor = ComicTheme.colorScheme.onSurface,
-            state = suiteScaffoldState,
-            navigationItemVerticalArrangement = Arrangement.Top,
-            primaryActionContent = { primaryActionContent() },
+        ),
+        containerColor = containerColor,
+        contentColor = ComicTheme.colorScheme.onSurface,
+        state = suiteScaffoldState,
+        navigationItemVerticalArrangement = Arrangement.Top,
+        primaryActionContent = { primaryActionContent() },
+    ) {
+        NavigableExtraPaneScaffold(
+            navigator = navigator,
+            modifier = modifier.background(containerColor),
+            extraPane = {
+                val destination = navigator.currentDestination
+                if (destination?.pane == SupportingPaneScaffoldRole.Extra && destination.contentKey != null) {
+                    extraPane(destination.contentKey!!)
+                }
+            },
         ) {
             Scaffold(
                 topBar = {

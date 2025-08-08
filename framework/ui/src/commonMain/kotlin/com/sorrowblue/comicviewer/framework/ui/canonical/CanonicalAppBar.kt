@@ -22,7 +22,7 @@ fun CanonicalScaffoldState<*>.CanonicalAppBar(
     subtitle: @Composable () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    titleHorizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    titleHorizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
 ) {
     val containerColor by animateColorAsState(
         if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
