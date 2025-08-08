@@ -45,8 +45,4 @@ internal sealed class AppNavItem(
             @Composable
             get() = stringResource(Res.string.app_label_history)
     }
-
-    companion object {
-        val entries = listOf(Bookshelf, Collection, Readlater, History)
-    }
 }

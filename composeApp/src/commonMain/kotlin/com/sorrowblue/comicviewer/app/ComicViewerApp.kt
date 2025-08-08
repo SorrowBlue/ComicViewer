@@ -16,6 +16,9 @@ import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module
 
+/**
+ * ComicViewerApp
+ */
 @OptIn(KoinExperimentalAPI::class, ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun ComicViewerApp() {
