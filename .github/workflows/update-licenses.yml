@@ -15,11 +15,11 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🤖 ExportLibraryDefinitions android
-        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/androidMain/composeResources/files -PaboutLibraries.exportVariant=androidRelease
+        run: ./gradlew :composeApp:exportLibraryDefinitions -P"aboutLibraries.exportVariant=android"
       - name: 🖥️ ExportLibraryDefinitions desktop
-        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/desktopMain/composeResources/files -PaboutLibraries.exportVariant=desktop
+        run: ./gradlew :composeApp:exportLibraryDefinitions -P"aboutLibraries.exportVariant=desktop"
       - name: 🍎 ExportLibraryDefinitions ios
-        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/iosMain/composeResources/files -PaboutLibraries.exportVariant=metadataIosMain
+        run: ./gradlew :composeApp:exportLibraryDefinitions -P"aboutLibraries.exportVariant=ios"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
