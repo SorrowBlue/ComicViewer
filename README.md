@@ -1,7 +1,6 @@
 # ComicViewer
 
-[![Qodana](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml/badge.svg?branch=main)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml)
-[![Detekt & Lint & Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml)
+[![Lint, Test, and Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml/badge.svg?event=push)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml)
 [![Deploy Dokka and static content to Pages](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml)
 
 ## Coding rules
