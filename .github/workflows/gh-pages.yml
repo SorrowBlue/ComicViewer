@@ -27,7 +27,7 @@ jobs:
       - name: Setup Java
         uses: ./.github/actions/setup-java-gradle
       - name: Generage Dokka
-        run: ./gradlew dokkaGenerateModuleHtml --no-configuration-cache
+        run: ./gradlew dokkaGenerate
       - uses: actions/upload-artifact@v4
         id: artifact-upload-step
         with:
