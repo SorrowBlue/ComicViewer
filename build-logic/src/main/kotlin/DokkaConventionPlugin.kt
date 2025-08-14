@@ -17,13 +17,17 @@ internal class DokkaConventionPlugin : Plugin<Project> {
 
             extensions.configure<DokkaExtension> {
                 dokkaSourceSets.configureEach {
-                    suppressedFiles.setFrom(layout.buildDirectory.dir("generated"))
+                    suppressedFiles.setFrom(layout.buildDirectory.dir("generated/ksp"))
                     documentedVisibilities(
                         VisibilityModifier.Public,
                         VisibilityModifier.Internal,
                     )
                 }
-                dokkaGeneratorIsolation.set(ClassLoaderIsolation())
+                dokkaGeneratorIsolation.set(
+                    ProcessIsolation {
+                        maxHeapSize.set("6g")
+                    }
+                )
             }
         }
     }
