@@ -52,13 +52,11 @@ internal class RegisterBookshelfInteractor(
                             fileLocalDataSource.deleteAll2(request.bookshelf.id)
                         }
                         val bookshelf = bookshelfLocalDataSource.updateOrCreate(request.bookshelf)!!
+                        val file = remoteDataSourceFactory.create(bookshelf).file(request.path) as IFolder
                         val folderModel = when (file) {
-                            is BookFolder -> file.copy(
-                                bookshelfId = bookshelf.id,
-                                parent = ""
-                            )
+                            is BookFolder -> file.copy(parent = "")
 
-                            is Folder -> file.copy(bookshelfId = bookshelf.id, parent = "")
+                            is Folder -> file.copy(parent = "")
                         }
                         fileLocalDataSource.addUpdate(folderModel)
                         Resource.Success(bookshelf)

@@ -19,6 +19,8 @@ internal abstract class TestMan : KoinTest {
 
     protected val db: ComicViewerDatabase by inject()
 
+    protected val factory: EntityFactory = EntityFactory()
+
     @BeforeTest
     fun setupDatabase() {
         startKoin {

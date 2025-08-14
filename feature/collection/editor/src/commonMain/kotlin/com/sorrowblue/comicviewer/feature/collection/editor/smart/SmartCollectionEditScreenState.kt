@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.EmptyRequest
+import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -95,11 +96,13 @@ private class SmartCollectionEditScreenImpl(
         }
     }
 
+    @OptIn(InternalDataApi::class)
     private suspend fun allBookshelf(): Bookshelf {
         return InternalStorage(
             BookshelfId(),
             getString(Res.string.collection_editor_label_all_bookshelf),
-            0
+            0,
+            false
         )
     }
 }

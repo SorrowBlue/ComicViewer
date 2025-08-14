@@ -3,21 +3,23 @@ package com.sorrowblue.comicviewer.domain.model.settings.folder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.serialization.Serializable
 
-@Serializable
-data class FolderScopeOnly(
-    val bookshelfId: BookshelfId,
-    val path: String,
-    val sortType: SortType,
-)
-
 /**
- * フォルダ表示設定
+ * Represents the display settings for folders.
  *
- * @property fileListDisplay ファイル/フォルダの表示方式。
- * @property isSavedThumbnail サムネイルを表示するか
- * @property gridColumnSize グリッド表示時のカラムサイズ
- * @property sortType ソート順所
- * @property showHiddenFiles 隠しファイルを表示するか
+ * @property fileListDisplay The display type for files and folders.
+ * @property isSavedThumbnail Whether to save thumbnails.
+ * @property gridColumnSize The column size for grid display.
+ * @property sortType The default sort type.
+ * @property showHiddenFiles Whether to show hidden files.
+ * @property showFilesExtension Whether to show file extensions.
+ * @property showThumbnails Whether to show thumbnails.
+ * @property fontSize The font size for display.
+ * @property thumbnailQuality The quality of thumbnails.
+ * @property imageFormat The image format for thumbnails.
+ * @property imageScale The scale type for images.
+ * @property imageFilterQuality The filter quality for images.
+ * @property folderThumbnailOrder The order for folder thumbnails.
+ * @property folderScopeOnlyList List of folder-specific settings.
  */
 @Serializable
 data class FolderDisplaySettings(
@@ -37,49 +39,73 @@ data class FolderDisplaySettings(
     val folderThumbnailOrder: FolderThumbnailOrder = FolderDisplaySettingsDefaults.folderThumbnailOrder,
 ) {
 
+    /**
+     * Returns the current sort type for the specified bookshelf and path.
+     *
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @return The sort type for the folder, or the default sort type if not
+     *    set.
+     */
     fun currentSortType(bookshelfId: BookshelfId, path: String): SortType {
         return folderScopeOnlyList.find { it.bookshelfId == bookshelfId && it.path == path }?.sortType
             ?: sortType
     }
 }
 
+/** Default values for [FolderDisplaySettings]. */
 object FolderDisplaySettingsDefaults {
 
-    /** ソートタイプ */
+    /** Default sort type. */
     val sortType = SortType.Name(true)
 
-    /** ファイル一覧の表示方法 */
+    /** Default file list display type. */
     val fileListDisplay = FileListDisplay.Grid
 
-    /** グリッドリストのカラムサイズ */
+    /** Default grid column size. */
     val gridColumnSize = GridColumnSize.Medium
 
+    /** Default font size. */
     const val fontSize = 16
 
-    /** 拡張子を表示するか */
+    /** Whether to display file extensions by default. */
     const val isDisplayFileExtension = true
 
-    /** 隠しファイルを表示するか */
+    /** Whether to display hidden files by default. */
     const val isDisplayHiddenFile = false
 
-    /** サムネイルを表示するか */
+    /** Whether to display thumbnails by default. */
     const val isDisplayThumbnail = true
 
-    /** サムネイルを保存するか */
+    /** Whether to save thumbnails by default. */
     const val isSavedThumbnail = true
 
-    /** 画像フォーマット */
+    /** Default image format. */
     val imageFormat = ImageFormat.WEBP
 
-    /** サムネイル品質 */
+    /** Default thumbnail quality. */
     const val thumbnailQuality = 75
 
-    /** サムネイルの拡大縮小 */
+    /** Default image scale type. */
     val imageScale = ImageScale.Fit
 
-    /** サムネイルフィルターの品質 */
+    /** Default image filter quality. */
     val imageFilterQuality = ImageFilterQuality.Medium
 
-    /** フォルダーサムネイルの順序 */
+    /** Default folder thumbnail order. */
     val folderThumbnailOrder = FolderThumbnailOrder.NAME
 }
+
+/**
+ * Represents folder-specific display settings.
+ *
+ * @property bookshelfId The ID of the bookshelf.
+ * @property path The folder path.
+ * @property sortType The sort type for the folder.
+ */
+@Serializable
+data class FolderScopeOnly(
+    val bookshelfId: BookshelfId,
+    val path: String,
+    val sortType: SortType,
+)

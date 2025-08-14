@@ -31,6 +31,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.LoadingContents
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
@@ -158,13 +159,7 @@ private fun BookshelfInfoSheetPreview() {
                         uiState.bookshelfFolder.folder
                     ),
                     lazyPagingItems = PagingData.flowData(10) {
-                        BookThumbnail(
-                            BookshelfId(),
-                            "$it",
-                            0,
-                            0,
-                            0
-                        )
+                        BookThumbnail.from(fakeBookFile())
                     }.collectAsLazyPagingItems(),
                     onScanFileClick = {},
                     onScanThumbnailClick = {},

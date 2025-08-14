@@ -134,6 +134,16 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC")
     fun pagingSourceHistory(): PagingSource<Int, FileEntity>
 
+    /**
+     * Get all files (excluding folders) for a specific bookshelf as a
+     * PagingSource.
+     *
+     * @param bookshelfId The ID of the bookshelf.
+     * @return PagingSource for FileEntity.
+     */
+    @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND file_type != 'FOLDER'")
+    fun pagingSourceFileOnBookshelf(bookshelfId: Int): PagingSource<Int, FileEntity>
+
     @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC LIMIT 1")
     fun lastHistory(): Flow<FileEntity?>
 

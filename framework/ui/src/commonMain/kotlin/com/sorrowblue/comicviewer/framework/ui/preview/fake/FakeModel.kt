@@ -1,59 +1,53 @@
 package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
-import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
+import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.favorite.Favorite
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import kotlin.random.Random
 
-@OptIn(ExperimentalIdValue::class)
+@OptIn(InternalDataApi::class)
 fun fakeInternalStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
-    InternalStorage(BookshelfId(bookshelfId), name, 999)
-
-@OptIn(ExperimentalIdValue::class)
-fun fakeSmbServer(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
-    SmbServer(
-        BookshelfId(bookshelfId),
-        name,
-        "198.51.100.254",
-        455,
-        SmbServer.Auth.UsernamePassword("example.com", nextLoremIpsum(), nextLoremIpsum())
+    InternalStorage(
+        id = BookshelfId(bookshelfId),
+        displayName = name,
+        fileCount = 999,
+        isDeleted = false
     )
 
-@OptIn(ExperimentalIdValue::class)
+@OptIn(InternalDataApi::class)
+fun fakeSmbServer(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
+    SmbServer(
+        id = BookshelfId(bookshelfId),
+        displayName = name,
+        host = "198.51.100.254",
+        port = 455,
+        auth = SmbServer.Auth.UsernamePassword("example.com", nextLoremIpsum(), nextLoremIpsum())
+    )
+
+@OptIn(InternalDataApi::class)
 fun fakeBookFile(bookshelfId: Int = 0, name: String = nextLoremIpsum()) =
     BookFile(
-        BookshelfId(bookshelfId),
-        "$name.zip",
-        "parent",
-        "path$bookshelfId",
-        10240000,
-        100,
-        false,
+        bookshelfId = BookshelfId(bookshelfId),
+        name = "$name.zip",
+        parent = "parent",
+        path = "path$bookshelfId",
+        size = 10240000,
+        lastModifier = 100,
+        isHidden = false,
         totalPageCount = 100,
         lastPageRead = 50
     )
 
-fun fakeFolder(bookshelfId: BookshelfId = BookshelfId()) =
+@OptIn(InternalDataApi::class)
+fun fakeFolder(bookshelfId: Int = 0) =
     Folder(
-        bookshelfId,
-        nextLoremIpsum(),
-        "name",
-        "name",
-        0L,
-        0,
-        false,
-    )
-
-fun fakeFavorite(favoriteId: Int = 0, exist: Boolean = Random(1).nextBoolean()) =
-    Favorite(
-        @OptIn(ExperimentalIdValue::class) (FavoriteId(favoriteId)),
-        nextLoremIpsum(),
-        Random(1).nextInt(5, 999),
-        exist,
-        Random(1).nextLong()
+        bookshelfId = BookshelfId(bookshelfId),
+        name = nextLoremIpsum(),
+        parent = "name",
+        path = "name",
+        size = 0L,
+        lastModifier = 0,
+        isHidden = false,
     )

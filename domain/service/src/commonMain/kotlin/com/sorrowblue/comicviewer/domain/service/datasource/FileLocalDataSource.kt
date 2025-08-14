@@ -89,6 +89,11 @@ interface FileLocalDataSource {
      */
     suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean
 
+    fun pagingSource(
+        bookshelfId: BookshelfId,
+        pagingConfig: PagingConfig,
+    ): Flow<PagingData<BookThumbnail>>
+
     fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,

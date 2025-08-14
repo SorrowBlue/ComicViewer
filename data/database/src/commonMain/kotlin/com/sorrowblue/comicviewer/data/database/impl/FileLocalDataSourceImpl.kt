@@ -135,6 +135,15 @@ internal class FileLocalDataSourceImpl(
         }
     }
 
+    override fun pagingSource(
+        bookshelfId: BookshelfId,
+        pagingConfig: PagingConfig,
+    ): Flow<PagingData<BookThumbnail>> {
+        return Pager(pagingConfig) { dao.pagingSourceFileOnBookshelf(bookshelfId.value) }.flow.map { pagingData ->
+            pagingData.map { BookThumbnail.from(it.toModel() as Book) }
+        }
+    }
+
     @OptIn(ExperimentalPagingApi::class)
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,

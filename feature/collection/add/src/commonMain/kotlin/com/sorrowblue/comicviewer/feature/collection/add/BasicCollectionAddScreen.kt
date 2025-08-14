@@ -34,7 +34,6 @@ import androidx.navigation.NavController
 import androidx.paging.PagingData
 import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
@@ -151,7 +150,6 @@ private fun BasicCollectionAddScreen(
 
 private val FabSpacing = 16.dp
 
-@OptIn(ExperimentalIdValue::class)
 @Preview
 @Composable
 private fun BasicCollectionAddScreenPreview() {

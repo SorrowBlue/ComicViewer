@@ -7,7 +7,9 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.PluginManager
 import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.testing.AbstractTestTask
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.withType
 import org.gradle.plugin.use.PluginDependency
 
 internal class AndroidLintConventionPlugin : Plugin<Project> {
@@ -35,6 +37,9 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
                         configure(target)
                     }
                 }
+            }
+            tasks.withType<AbstractTestTask>().configureEach {
+                failOnNoDiscoveredTests.set(false)
             }
         }
     }
