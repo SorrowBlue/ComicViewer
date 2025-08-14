@@ -8,14 +8,12 @@ import com.sorrowblue.cmpdestinations.annotation.DeepLink
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.book.BookScreen
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
-import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraph
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data object ReceiveBook
 
 @Destination<ReceiveBook>(
-    graph = BookNavGraph::class,
     deeplinks = [
         DeepLink(action = Intent.ACTION_VIEW, mimeType = "application/pdf"),
         DeepLink(action = Intent.ACTION_VIEW, mimeType = "application/zip")

@@ -14,8 +14,7 @@ import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.pageDiskCache
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
@@ -53,7 +52,7 @@ internal class BookPageImageFetcher(
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
         val dataSource = bookshelfLocalDataSource.flow(data.book.bookshelfId).first()
             ?.let(remoteDataSourceFactory::create)
-            ?: remoteDataSourceFactory.create(InternalStorage(BookshelfId(), "intent"))
+            ?: remoteDataSourceFactory.create(ShareContents)
         if (!dataSource.exists(data.book.path)) {
             throw CoilRuntimeException("ファイルがない(${data.book.path})")
         }

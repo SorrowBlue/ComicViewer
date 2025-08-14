@@ -11,31 +11,71 @@ import androidx.room.RoomRawQuery
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfIdCacheKey
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.model.favorite.FavoriteId
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Data Access Object for the collection_file table. Provides methods for
+ * inserting, deleting, and querying collection files and related file
+ * entities.
+ */
 @Dao
 internal interface CollectionFileDao {
 
+    /**
+     * Inserts a CollectionFileEntity into the database. If the entity already
+     * exists, the operation is ignored.
+     *
+     * @param entity The CollectionFileEntity to insert.
+     * @return The row ID of the inserted entity, or -1 if ignored.
+     */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(entity: CollectionFileEntity): Long
 
+    /**
+     * Deletes a CollectionFileEntity from the database.
+     *
+     * @param entity The CollectionFileEntity to delete.
+     * @return The number of rows deleted.
+     */
     @Delete
     suspend fun delete(entity: CollectionFileEntity): Int
 
+    /**
+     * Returns a PagingSource for FileEntity based on a raw SQL query.
+     *
+     * @param query The RoomRawQuery containing the SQL statement.
+     * @return PagingSource for FileEntity.
+     */
     @RawQuery(observedEntities = [CollectionFileEntity::class, FileEntity::class])
     fun pagingSource(query: RoomRawQuery): PagingSource<Int, FileEntity>
 
+    /**
+     * Returns a Flow of a list of FileEntity for previous, current, and next
+     * files based on a raw SQL query.
+     *
+     * @param query The RoomRawQuery containing the SQL statement.
+     * @return Flow emitting a list of FileEntity.
+     */
     @RawQuery(observedEntities = [FileEntity::class])
     fun flowPrevNext(query: RoomRawQuery): Flow<List<FileEntity>>
 
+    /**
+     * Finds cache keys for basic collection files that are not folders and
+     * have a non-empty cache key.
+     *
+     * @param id The CollectionId to query.
+     * @param limit The maximum number of results to return.
+     * @return List of BookshelfIdCacheKey.
+     */
     @Query(
         "SELECT file.bookshelf_id, file.cache_key FROM collection_file INNER JOIN file ON collection_file.collection_id = :id AND collection_file.bookshelf_id == file.bookshelf_id AND collection_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit"
     )
-    suspend fun findBasicCollectionFileCacheKey(id: CollectionId, limit: Int): List<BookshelfIdCacheKey>
+    suspend fun findBasicCollectionFileCacheKey(
+        id: CollectionId,
+        limit: Int,
+    ): List<BookshelfIdCacheKey>
 }
 
 internal fun CollectionFileDao.pagingSource(
@@ -65,50 +105,6 @@ internal fun CollectionFileDao.pagingSource(
             """.trimIndent()
         ) {
             it.bindLong(1, collectionId.toLong())
-        }
-    )
-}
-
-internal fun CollectionFileDao.flowPrevNext(
-    favoriteId: FavoriteId,
-    bookshelfId: BookshelfId,
-    path: String,
-    isNext: Boolean,
-    sortType: SortType,
-): Flow<List<FileEntity>> {
-    val column = when (sortType) {
-        is SortType.Name -> "sort_index"
-        is SortType.Date -> "last_modified"
-        is SortType.Size -> "size"
-    }
-    val comparison = if (isNext && sortType.isAsc) ">=" else "<="
-    val order = if (isNext && sortType.isAsc) "ASC" else "DESC"
-    return flowPrevNext(
-        RoomRawQuery(
-            """
-                WITH
-                  tmp as (
-                    SELECT file.*
-                    FROM collection_file
-                    INNER JOIN file ON
-                      collection_file.favorite_id = :favoriteId
-                      AND collection_file.bookshelf_id = file.bookshelf_id
-                      AND collection_file.file_path = file.path
-                  )
-                  SELECT *
-                  FROM tmp, (
-                    SELECT path c_path, $column c_$column
-                    FROM tmp
-                    WHERE bookshelf_id = :bookshelfId AND path = :path
-                  )
-                  WHERE file_type != 'FOLDER' AND path != c_path AND $column $comparison c_$column
-                  ORDER BY $column $order
-                  LIMIT 1
-            """.trimIndent()
-        ) {
-            it.bindLong(1, favoriteId.value.toLong())
-            it.bindLong(2, bookshelfId.value.toLong())
-            it.bindText(3, path)
         }
     )
 }

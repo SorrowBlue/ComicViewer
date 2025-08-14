@@ -30,6 +30,11 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
             configureAndroid<LibraryExtension>()
 
             configure<KotlinMultiplatformExtension> {
+                compilerOptions {
+                    if (project.path.startsWith(":data")) {
+                        freeCompilerArgs.add("-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi")
+                    }
+                }
                 sourceSets.commonMain.dependencies {
                     if (project.name != "common" || project.parent?.name != "framework") {
                         implementation(project(":framework:common"))

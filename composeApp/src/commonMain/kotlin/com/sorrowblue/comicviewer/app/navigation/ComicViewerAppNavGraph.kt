@@ -6,6 +6,7 @@ import com.sorrowblue.cmpdestinations.GraphNavigation
 import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraph
+import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavGraph
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraph
@@ -17,6 +18,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlinx.serialization.Serializable
 
+@Suppress("KotlinNoActualForExpect")
 @NavGraph(
     startDestination = BookshelfNavGraph::class,
     destinations = [SortTypeSelect::class],
@@ -28,6 +30,7 @@ import kotlinx.serialization.Serializable
         SettingsNavGraph::class,
         HistoryNavGraph::class,
         BookNavGraph::class,
+        ReceiveBookNavGraph::class,
     ]
 )
 @Serializable

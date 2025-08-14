@@ -11,10 +11,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
 @Composable
 @Preview(showBackground = true)
@@ -24,7 +24,7 @@ private fun FileThumbnailAsyncImagePreview(
     val content = remember {
         movableContentOf {
             FileThumbnailAsyncImage(
-                fileThumbnail = BookThumbnail(BookshelfId(), "", 0, 0, 0),
+                fileThumbnail = BookThumbnail.from(fakeBookFile()),
                 loading = if (state == FileThumbnailAsyncImageProvider.State.Success) null else FileThumbnailAsyncImageDefault.loading,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

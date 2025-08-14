@@ -2,6 +2,12 @@ package com.sorrowblue.comicviewer.domain.model.settings.folder
 
 import kotlinx.serialization.Serializable
 
-/** サムネイルの拡大縮小 */
+/** Represents the scale type for image thumbnails. */
 @Serializable
-enum class ImageScale { Crop, Fit }
+enum class ImageScale {
+    /** Crop the thumbnail image. */
+    Crop,
+
+    /** Fit the thumbnail image to the container. */
+    Fit,
+}

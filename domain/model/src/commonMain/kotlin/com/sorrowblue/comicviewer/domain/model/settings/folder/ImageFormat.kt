@@ -2,6 +2,15 @@ package com.sorrowblue.comicviewer.domain.model.settings.folder
 
 import kotlinx.serialization.Serializable
 
-/** Image format */
+/** Represents the image format for thumbnails. */
 @Serializable
-enum class ImageFormat { WEBP, JPEG, PNG }
+enum class ImageFormat {
+    /** WEBP image format. */
+    WEBP,
+
+    /** JPEG image format. */
+    JPEG,
+
+    /** PNG image format. */
+    PNG,
+}

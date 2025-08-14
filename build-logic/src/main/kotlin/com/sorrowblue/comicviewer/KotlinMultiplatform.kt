@@ -62,6 +62,7 @@ internal fun Project.configureKotlinMultiplatform() {
         compilerOptions {
             freeCompilerArgs.add("-Xexpect-actual-classes")
             freeCompilerArgs.add("-Xcontext-parameters")
+            freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
         }
     }
 }

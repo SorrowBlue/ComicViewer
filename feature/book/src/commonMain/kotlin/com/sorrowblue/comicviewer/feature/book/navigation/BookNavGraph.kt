@@ -12,3 +12,5 @@ import kotlinx.serialization.Serializable
 )
 @Serializable
 data object BookNavGraph
+
+expect object ReceiveBookNavGraph

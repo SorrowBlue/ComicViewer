@@ -1,13 +1,13 @@
 package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
-import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
+import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import kotlinx.datetime.LocalDateTime
 
-@OptIn(ExperimentalIdValue::class)
+@OptIn(InternalDataApi::class)
 fun fakeSmartCollection(collectionId: Int = 0, name: String = nextLoremIpsum()) = SmartCollection(
     id = CollectionId(collectionId),
     name = name,
@@ -18,7 +18,7 @@ fun fakeSmartCollection(collectionId: Int = 0, name: String = nextLoremIpsum()) 
     searchCondition = SearchCondition(),
 )
 
-@OptIn(ExperimentalIdValue::class)
+@OptIn(InternalDataApi::class)
 fun fakeBasicCollection(collectionId: Int = 0, name: String = nextLoremIpsum()) =
     BasicCollection(
         id = CollectionId(collectionId),

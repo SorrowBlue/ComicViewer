@@ -18,7 +18,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.ExperimentalIdValue
+import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
@@ -51,7 +51,7 @@ internal class ScanFileWorker(
     }
 
     override suspend fun doWork(): Result {
-        @OptIn(ExperimentalIdValue::class)
+        @OptIn(InternalDataApi::class)
         val bookshelfId = BookshelfId(inputData.getInt(BOOKSHELF_ID, 0))
         val bookshelfInfo =
             getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
@@ -86,7 +86,7 @@ internal class ScanFileWorker(
                 setProgress(
                     workDataOf(
                         "path" to file.path,
-                        FileScanRequest.ID to file.bookshelfId.value
+                        "id" to file.bookshelfId.value
                     )
                 )
                 setForeground(createForegroundInfo(bookshelf.displayName, file.path))

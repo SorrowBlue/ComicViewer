@@ -16,16 +16,14 @@ import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module
 
-/**
- * ComicViewerApp
- */
+/** ComicViewerApp */
 @OptIn(KoinExperimentalAPI::class, ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun ComicViewerApp() {
     DestinationTransitions.slideDistance = rememberSlideDistance()
     SharedTransitionLayout {
         val state = rememberComicViewerAppState(this)
-        rememberKoinModules(unloadModules = true) {
+        rememberKoinModules {
             listOf(
                 module {
                     single<ComicViewerAppNavigatorImpl> {

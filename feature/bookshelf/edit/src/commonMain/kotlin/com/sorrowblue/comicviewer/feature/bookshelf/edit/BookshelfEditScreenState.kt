@@ -7,12 +7,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
@@ -146,68 +148,71 @@ private class BookshelfEditScreenStateImpl(
         }
     }
 
+    @OptIn(InternalDataApi::class)
     override fun onSubmit(form: BookshelfEditForm) {
-        logcat { "onSubmit(form: $form)" }
-        uiState = when (val currentUiState = uiState) {
-            is BookshelfEditScreenUiState.Loading -> currentUiState
-            is InternalStorageEditScreenUiState ->
-                currentUiState.copy(form = currentUiState.form.copy(isRunning = true))
+        scope.launch {
+            logcat { "onSubmit(form: $form)" }
+            uiState = when (val currentUiState = uiState) {
+                is BookshelfEditScreenUiState.Loading -> currentUiState
+                is InternalStorageEditScreenUiState ->
+                    currentUiState.copy(form = currentUiState.form.copy(isRunning = true))
 
-            is SmbEditScreenUiState -> currentUiState.copy(form = currentUiState.form.copy(isRunning = true))
-        }
-        val bookshelf: Bookshelf
-        val path: String
-        when (form) {
-            is InternalStorageEditScreenForm -> when (editMode) {
-                is BookshelfEditMode.Edit -> {
-                    bookshelf = InternalStorage(
-                        editMode.bookshelfId,
-                        form.displayName
+                is SmbEditScreenUiState -> currentUiState.copy(
+                    form = currentUiState.form.copy(
+                        isRunning = true
                     )
-                    path = form.path!!
-                }
-
-                is BookshelfEditMode.Register -> {
-                    bookshelf = InternalStorage(form.displayName)
-                    path = form.path!!
-                }
+                )
             }
-
-            is SmbEditScreenForm -> {
-                val paths = "/${form.path}/".replace("(/+)".toRegex(), "/")
-                val auth = when (form.auth) {
-                    SmbEditScreenForm.Auth.Guest -> SmbServer.Auth.Guest
-                    SmbEditScreenForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
-                        domain = form.domain,
-                        username = form.username,
-                        password = form.password
-                    )
-                }
-                when (editMode) {
+            val bookshelf: Bookshelf
+            val path: String
+            when (form) {
+                is InternalStorageEditScreenForm -> when (editMode) {
                     is BookshelfEditMode.Edit -> {
-                        bookshelf = SmbServer(
-                            editMode.bookshelfId,
-                            displayName = form.displayName,
-                            host = form.host,
-                            port = form.port,
-                            auth = auth,
-                        )
-                        path = paths
+                        bookshelf = (getBookshelf(editMode.bookshelfId) as InternalStorage)
+                            .copy(displayName = form.displayName)
+                        path = form.path!!
                     }
 
                     is BookshelfEditMode.Register -> {
-                        bookshelf = SmbServer(
-                            displayName = form.displayName,
-                            host = form.host,
-                            port = form.port,
-                            auth = auth,
+                        bookshelf = InternalStorage(form.displayName)
+                        path = form.path!!
+                    }
+                }
+
+                is SmbEditScreenForm -> {
+                    val paths = "/${form.path}/".replace("(/+)".toRegex(), "/")
+                    val auth = when (form.auth) {
+                        SmbEditScreenForm.Auth.Guest -> SmbServer.Auth.Guest
+                        SmbEditScreenForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
+                            domain = form.domain,
+                            username = form.username,
+                            password = form.password
                         )
-                        path = paths
+                    }
+                    when (editMode) {
+                        is BookshelfEditMode.Edit -> {
+                            bookshelf = (getBookshelf(editMode.bookshelfId) as SmbServer)
+                                .copy(
+                                    displayName = form.displayName,
+                                    host = form.host,
+                                    port = form.port,
+                                    auth = auth,
+                                )
+                            path = paths
+                        }
+
+                        is BookshelfEditMode.Register -> {
+                            bookshelf = SmbServer(
+                                displayName = form.displayName,
+                                host = form.host,
+                                port = form.port,
+                                auth = auth,
+                            )
+                            path = paths
+                        }
                     }
                 }
             }
-        }
-        scope.launch {
             delay(300)
             registerBookshelfUseCase(RegisterBookshelfUseCase.Request(bookshelf, path)).fold(
                 onSuccess = {
@@ -235,5 +240,10 @@ private class BookshelfEditScreenStateImpl(
                 }
             )
         }
+    }
+
+    suspend fun getBookshelf(id: BookshelfId): Bookshelf {
+        return getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(id)).first()
+            .dataOrNull()!!.bookshelf
     }
 }
