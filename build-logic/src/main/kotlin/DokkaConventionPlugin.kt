@@ -16,21 +16,14 @@ internal class DokkaConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<DokkaExtension> {
-                dokkaPublications.named("html") {
-                    outputDirectory.set(project.rootDir.resolve("docs/dokka"))
-                }
                 dokkaSourceSets.configureEach {
-                    suppressedFiles.setFrom(layout.buildDirectory.dir("generated/ksp"))
+                    suppressedFiles.setFrom(layout.buildDirectory.dir("generated"))
                     documentedVisibilities(
                         VisibilityModifier.Public,
                         VisibilityModifier.Internal,
                     )
                 }
-                dokkaGeneratorIsolation.set(
-                    ProcessIsolation {
-                        maxHeapSize.set("6g")
-                    }
-                )
+                dokkaGeneratorIsolation.set(ClassLoaderIsolation())
             }
         }
     }

@@ -2,10 +2,13 @@ package com.sorrowblue.comicviewer
 
 import desktopMain
 import desktopTest
+import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.getValue
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 /**
  * Configure base Kotlin multiplatform options
@@ -64,5 +67,14 @@ internal fun Project.configureKotlinMultiplatform() {
             freeCompilerArgs.add("-Xcontext-parameters")
             freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
         }
+        abiValidation {
+            @OptIn(ExperimentalAbiValidation::class)
+            klib {
+                keepUnsupportedTargets.set(false)
+            }
+        }
     }
 }
+
+private fun KotlinMultiplatformExtension.abiValidation(configure: Action<AbiValidationMultiplatformExtension>): Unit =
+    (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("abiValidation", configure)

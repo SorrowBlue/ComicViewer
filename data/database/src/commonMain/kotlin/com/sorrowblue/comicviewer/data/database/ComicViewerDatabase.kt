@@ -104,7 +104,7 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
     }
 }
 
-@Suppress("NO_ACTUAL_FOR_EXPECT", "KotlinNoActualForExpect")
+@Suppress("KotlinNoActualForExpect")
 internal expect object ComicViewerDatabaseConstructor :
     RoomDatabaseConstructor<ComicViewerDatabase> {
     override fun initialize(): ComicViewerDatabase

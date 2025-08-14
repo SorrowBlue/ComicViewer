@@ -33,7 +33,9 @@ jobs:
         with:
           name: kdoc-html
           include-hidden-files: true
-          path: docs/
+          path: |
+            build/dokka/html/
+            docs/
           retention-days: 1
 
   jekyll-build:
@@ -44,6 +46,13 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: kdoc-html
+      - name: Move dokka html to root dokka/
+        run: |
+          mkdir -p dokka
+          cp -r build/dokka/html/* dokka/
+      - name: Move docs to root
+        run: |
+          cp -r docs/* ./
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
