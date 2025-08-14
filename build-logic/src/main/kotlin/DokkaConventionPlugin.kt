@@ -16,6 +16,9 @@ internal class DokkaConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<DokkaExtension> {
+                dokkaPublications.named("html") {
+                    outputDirectory.set(project.rootDir.resolve("docs/dokka"))
+                }
                 dokkaSourceSets.configureEach {
                     suppressedFiles.setFrom(layout.buildDirectory.dir("generated/ksp"))
                     documentedVisibilities(
