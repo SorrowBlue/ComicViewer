@@ -4,8 +4,6 @@ import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.getByType
-import org.jetbrains.compose.ComposePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
@@ -23,9 +21,6 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                     implementation(project(":framework:ui"))
                     implementation(project(":domain:usecase"))
 
-                    // Material3
-                    val compose = extensions.getByType<ComposePlugin.Dependencies>()
-                    implementation(compose.material3)
                     // Image
                     implementation(libs.coil3.compose)
                     // Paging

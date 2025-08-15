@@ -11,8 +11,6 @@ kotlin {
                 implementation(projects.framework.designsystem)
                 implementation(projects.domain.model)
 
-                // Material3
-                implementation(compose.material3)
                 // Navigation + Serialization
                 implementation(libs.kotlinx.serialization.cbor)
                 // Image
