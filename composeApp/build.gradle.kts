@@ -41,8 +41,6 @@ kotlin {
             implementation(projects.feature.settings.info)
             implementation(projects.feature.history)
 
-            // Material3
-            implementation(compose.material3)
             // Di
             implementation(libs.koin.composeViewModel)
 
