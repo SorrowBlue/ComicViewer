@@ -7,8 +7,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.tutorial.component.TutorialBottomBar
@@ -16,7 +14,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.section.ArchiveSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheet
-import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
 import com.sorrowblue.comicviewer.framework.ui.BackHandler
 import kotlinx.serialization.Serializable
@@ -50,9 +47,6 @@ internal fun TutorialScreen(
     )
 
     BackHandler(state.enabledBack, state::onBack)
-
-    LifecycleEventEffect(event = Lifecycle.Event.ON_START, onEvent = state::onStart)
-    LifecycleEventEffect(event = Lifecycle.Event.ON_STOP, onEvent = state::onStop)
 }
 
 internal enum class TutorialSheet {
@@ -64,7 +58,6 @@ internal enum class TutorialSheet {
 
 internal data class TutorialScreenUiState(
     val list: List<TutorialSheet> = TutorialSheet.entries,
-    val documentSheetUiState: DocumentSheetUiState = DocumentSheetUiState.NONE,
     val directionSheetUiState: DirectionSheetUiState = DirectionSheetUiState(),
 )
 
@@ -85,7 +78,6 @@ internal fun TutorialScreen(
                 TutorialSheet.WELCOME -> WelcomeSheet(contentPadding = contentPadding)
                 TutorialSheet.ARCHIVE -> ArchiveSheet(contentPadding = contentPadding)
                 TutorialSheet.DOCUMENT -> DocumentSheet(
-                    uiState = uiState.documentSheetUiState,
                     onDownloadClick = onDocumentDownloadClick,
                     contentPadding = contentPadding
                 )

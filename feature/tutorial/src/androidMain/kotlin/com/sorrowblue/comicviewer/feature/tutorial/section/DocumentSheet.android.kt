@@ -12,7 +12,6 @@ private fun DocumentSheetPreview() {
     PreviewTheme {
         Surface {
             DocumentSheet(
-                uiState = DocumentSheetUiState.INSTALLED,
                 onDownloadClick = {},
                 contentPadding = PaddingValues()
             )
