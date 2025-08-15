@@ -27,6 +27,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
+                    implementation(libs.androidx.window.core)
                     implementation(libs.compose.multiplatform.material3)
                     implementation(libs.compose.multiplatform.material3AdaptiveNavigationSuite)
                     implementation(libs.compose.multiplatform.material3.adaptive)
