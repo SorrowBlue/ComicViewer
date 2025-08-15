@@ -33,33 +33,6 @@
       ]
     },
     {
-      "groupName": "dropbox",
-      "groupSlug": "dropbox",
-      "matchPackageNames": [
-        "com.dropbox.core:dropbox-android-sdk{/,}**",
-        "com.fasterxml.jackson.core:jackson-core{/,}**"
-      ]
-    },
-    {
-      "groupName": "Microsoft Sdk",
-      "groupSlug": "microsoft_sdk",
-      "matchPackageNames": [
-        "com.microsoft.graph:microsoft-graph{/,}**",
-        "com.microsoft.identity.client{/,}**",
-        "io.opentelemetry:opentelemetry-api{/,}**",
-        "com.fasterxml.jackson.core:jackson-core{/,}**"
-      ]
-    },
-    {
-      "groupName": "Google api",
-      "groupSlug": "google_api",
-      "matchPackageNames": [
-        "com.google.api-client:google-api-client-android{/,}**",
-        "com.google.apis:google-api-services-drive{/,}**",
-        "com.google.guava:guava{/,}**"
-      ]
-    },
-    {
       "groupName": "Coil",
       "groupSlug": "coil",
       "matchPackageNames": [
@@ -78,7 +51,8 @@
       "groupName": "androidx.compose",
       "groupSlug": "androidx_compose",
       "matchPackageNames": [
-        "androidx.compose{/,}**"
+        "androidx.compose{/,}**",
+        "org.jetbrains.compose{/,}**"
       ]
     },
     {
