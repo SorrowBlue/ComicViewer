@@ -22,7 +22,7 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Decode android keystore file
@@ -52,7 +52,7 @@ jobs:
     environment: android
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run packageDistributionForCurrentOS

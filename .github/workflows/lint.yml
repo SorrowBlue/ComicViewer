@@ -11,7 +11,7 @@ jobs:
         task: [ detektAndroidAll, detektDesktopAll, detektIosAll, detektMetadataAll, ':build-logic:detektAll' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run detekt
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run check VersionCatalog
@@ -46,7 +46,7 @@ jobs:
         variant: [ Debug, Internal, Prerelease, Release ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🚨Run lint
