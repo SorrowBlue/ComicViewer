@@ -131,7 +131,7 @@ private class DefaultCanonicalScaffoldNavigator<T>(
         }
         val targetSize = previousDestinationIndex + 1
         while (destinationHistory.size > targetSize) {
-            destinationHistory.removeLast()
+            destinationHistory.removeAt(destinationHistory.lastIndex)
         }
         animateStateToCurrentScaffoldValue()
         return true
