@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_label_bookshelf">Bookshelf</string>
-    <string name="app_label_collection">Collection</string>
-    <string name="app_label_read_later">Read Later</string>
-    <string name="app_label_history">History</string>
-    <string name="app_label_exit">Exit</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_label_bookshelf" tools:ignore="UnusedResources">Bookshelf</string>
+    <string name="app_label_collection" tools:ignore="UnusedResources">Collection</string>
+    <string name="app_label_read_later" tools:ignore="UnusedResources">Read Later</string>
+    <string name="app_label_history" tools:ignore="UnusedResources">History</string>
+    <string name="app_label_exit" tools:ignore="UnusedResources">Exit</string>
 </resources>

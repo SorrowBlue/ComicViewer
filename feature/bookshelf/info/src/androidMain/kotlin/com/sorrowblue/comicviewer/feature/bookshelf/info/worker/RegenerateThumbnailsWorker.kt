@@ -120,7 +120,7 @@ internal class RegenerateThumbnailsWorker(
                 setSubText(bookshelfName)
                 setContentText("$progress/$max")
                 setProgress(max.toInt(), progress.toInt(), init)
-                setSmallIcon(R.drawable.ic_sync_book_24dp)
+                setSmallIcon(R.drawable.ic_sync_image_24dp)
                 addAction(
                     R.drawable.ic_sync_cancel_24dp,
                     applicationContext.getString(android.R.string.cancel),
