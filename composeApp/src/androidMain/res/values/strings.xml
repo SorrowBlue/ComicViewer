@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="document_title" translatable="false">Document for ComicViewer</string>
-
-    <string name="yubikit_otp_activity_title" translatable="false" tools:ignore="ResourceName,UnusedResources" />
-    <string name="yubikit_prompt_activity_title" translatable="false" tools:ignore="ResourceName,UnusedResources" />
-</resources>
