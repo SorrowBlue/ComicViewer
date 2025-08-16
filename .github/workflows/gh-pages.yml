@@ -49,10 +49,12 @@ jobs:
       - name: Move dokka html to root dokka/
         run: |
           mkdir -p dokka
-          cp -r build/dokka/html/* dokka/
+          cp -a build/dokka/html/. dokka/
+          rm -rf build
       - name: Move docs to root
         run: |
-          cp -r docs/* ./
+          cp -a docs/. ./
+          rm -rf docs
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
