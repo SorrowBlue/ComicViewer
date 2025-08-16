@@ -19,7 +19,7 @@
       "namespace": "android_app",
       "package_name": "com.sorrowblue.comicviewer",
       "sha256_cert_fingerprints": [
-        "D6:C1:EA:7C:E1:B8:C5:1F:11:A4:25:30:4E:C4:77:4B:D8:6F:9D:CA:0C:A9:7F:5C:31:62:4D:2C:B2:28:F4:61"
+        "82:7D:61:A4:9F:AF:21:FD:10:97:9E:10:F4:E9:08:B9:28:E8:D2:00:45:A6:54:7E:83:7B:8C:33:69:EF:27:8D"
       ]
     }
   },
@@ -29,9 +29,9 @@
     ],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.sorrowblue.comicviewer",
+      "package_name": "com.sorrowblue.comicviewer.prerelease",
       "sha256_cert_fingerprints": [
-        "82:7D:61:A4:9F:AF:21:FD:10:97:9E:10:F4:E9:08:B9:28:E8:D2:00:45:A6:54:7E:83:7B:8C:33:69:EF:27:8D"
+        "D6:C1:EA:7C:E1:B8:C5:1F:11:A4:25:30:4E:C4:77:4B:D8:6F:9D:CA:0C:A9:7F:5C:31:62:4D:2C:B2:28:F4:61"
       ]
     }
   },
