@@ -14,6 +14,11 @@ on:
         required: false
         default: ':rocket: bump versionCode'
         type: string
+  push:
+    branches:
+      - 'copilot/**'
+    paths:
+      - '.github/workflows/version-bump-release.yml'
 
 permissions:
   contents: write
@@ -32,6 +37,16 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+
+      - name: Set dry run mode for push events
+        id: set_dry_run
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "dry_run=true" >> $GITHUB_OUTPUT
+            echo "Running in dry run mode (triggered by push event)"
+          else
+            echo "dry_run=${{ inputs.dry_run }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Read current versionCode
         id: current_version
@@ -82,9 +97,9 @@ jobs:
           rm gradle/libs.versions.toml.bak
 
       - name: Commit versionCode increment
-        if: ${{ !inputs.dry_run }}
+        if: ${{ steps.set_dry_run.outputs.dry_run != 'true' }}
         run: |
-          COMMIT_MESSAGE="${{ inputs.custom_commit_message }}"
+          COMMIT_MESSAGE="${{ inputs.custom_commit_message || ':rocket: bump versionCode' }}"
           git add gradle/libs.versions.toml
           git commit -m "$COMMIT_MESSAGE"
           git push origin main
@@ -140,7 +155,7 @@ jobs:
           echo "2. Run this workflow again to publish it"
 
       - name: Publish draft release
-        if: steps.draft_release.outputs.found == 'true' && !inputs.dry_run
+        if: steps.draft_release.outputs.found == 'true' && steps.set_dry_run.outputs.dry_run != 'true'
         run: |
           TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
           RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
@@ -163,10 +178,14 @@ jobs:
           echo "- **Previous versionCode**: ${{ steps.current_version.outputs.current }}" >> $GITHUB_STEP_SUMMARY
           echo "- **New versionCode**: ${{ steps.new_version.outputs.new }}" >> $GITHUB_STEP_SUMMARY
           
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
+          DRY_RUN="${{ steps.set_dry_run.outputs.dry_run }}"
+          if [ "$DRY_RUN" = "true" ]; then
             echo "- **Mode**: Dry run (no changes committed)" >> $GITHUB_STEP_SUMMARY
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "- **Trigger**: Push event (auto dry-run)" >> $GITHUB_STEP_SUMMARY
+            fi
           else
-            echo "- **Commit**: ${{ inputs.custom_commit_message }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Commit**: ${{ inputs.custom_commit_message || ':rocket: bump versionCode' }}" >> $GITHUB_STEP_SUMMARY
           fi
           
           if [ "${{ steps.draft_release.outputs.found }}" = "true" ]; then
@@ -174,7 +193,7 @@ jobs:
             echo "- **Tag**: ${{ steps.draft_release.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
             echo "- **Release Type**: ${{ steps.release_type.outputs.type }}" >> $GITHUB_STEP_SUMMARY
             
-            if [ "${{ inputs.dry_run }}" != "true" ]; then
+            if [ "$DRY_RUN" != "true" ]; then
               echo "- **Status**: Published" >> $GITHUB_STEP_SUMMARY
             else
               echo "- **Status**: Would be published (dry run)" >> $GITHUB_STEP_SUMMARY
