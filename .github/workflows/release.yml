@@ -1,36 +1,146 @@
+---
 name: Release
 
 on:
   workflow_dispatch:
   release:
-    types: [ published ]
+    types: [published]
 
 permissions:
-  contents: read
-  # required for all workflows
+  contents: write
+  id-token: write
   security-events: write
 
 jobs:
-  status-check:
+  # Step 1: Run quality checks (Android Lint, Detekt, Test, versioncatalog)
+  lint:
+    uses: ./.github/workflows/lint.yml
+
+  static-code-analysis:
+    uses: ./.github/workflows/static-code-analysis.yml
+
+  test:
+    uses: ./.github/workflows/test.yml
+
+  # Step 2: Build release artifacts after checks pass
+  build-android-release:
     runs-on: ubuntu-latest
+    needs: [lint, static-code-analysis, test]
+    environment: android
+    outputs:
+      upload-url: ${{ steps.upload.outputs.internalSharingDownloadUrl }}
     steps:
-      - name: Check last workflow run status on main
-        uses: actions/github-script@v7
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Decode android keystore file
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.2.4
         with:
-          script: |
-            const workflow_id = 'lint-test-build.yml';
-            const runs = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: workflow_id,
-              branch: 'main',
-              per_page: 1,
-              enable_debug_logging: true
-            });
-            const latest = runs.data.workflow_runs[0];
-            core.info(runs.data.total_count)
-            core.info(latest.html_url)
-            core.info(latest.conclusion)
-            if (!latest || latest.conclusion !== 'success') {
-              core.setFailed('Latest workflow run on main is not successful.');
-            }
+          fileName: 'android_keystore.jks'
+          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
+      - name: Build Release Bundle
+        run: ./gradlew bundleRelease assembleRelease
+        env:
+          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: >-
+            ${{ steps.android_keystore.outputs.filePath }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: >-
+            ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: >-
+            ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: >-
+            ${{ secrets.ANDROID_KEY_PASSWORD }}
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: >-
+            ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+      - name: Upload AAB to Play Console
+        id: upload
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
+          packageName: com.sorrowblue.comicviewer
+          releaseFiles: >-
+            composeApp/build/outputs/bundle/release/composeApp-release.aab
+          track: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
+          status: draft
+          mappingFile: composeApp/build/outputs/mapping/release/mapping.txt
+          debugSymbols: >-
+            composeApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+
+  # Step 3: Build desktop releases for all platforms
+  build-desktop-release:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    needs: [lint, static-code-analysis, test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Build Desktop Release
+        run: ./gradlew packageDistributionForCurrentOS
+      - name: Upload Desktop artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-release-${{ runner.os }}
+          path: composeApp/build/compose/binaries/main/
+
+  # Step 4: Upload artifacts to GitHub Release and notify Discord
+  upload-release-assets:
+    runs-on: ubuntu-latest
+    needs: [build-android-release, build-desktop-release]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      - name: Display structure of downloaded files
+        run: ls -la ./artifacts/**
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'release'
+        with:
+          files: |
+            ./artifacts/desktop-release-Linux/**/*
+            ./artifacts/desktop-release-Windows/**/*
+            ./artifacts/desktop-release-macOS/**/*
+      - name: Notify Discord - Release Success
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: ":rocket: Release ${{ github.ref_name }} published!"
+          description: |
+            :white_check_mark: All quality checks passed
+            :package: Release artifacts uploaded to GitHub
+            :iphone: Android AAB uploaded to Play Console
+            :desktop: Desktop apps built for Windows, macOS, Linux
+
+            **Play Console URL**:
+              [Download here](${{
+                needs.build-android-release.outputs.upload-url }})
+            **GitHub Release**:
+              [View release](${{ github.event.release.html_url }})
+          color: 0x00ff00
+      - name: Notify Discord - Failure
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: ":x: Release ${{ github.ref_name }} failed"
+          description: |
+            The release process encountered an error. Please check the
+            workflow logs.
+
+            **Workflow**:
+              [View logs](${{ github.server_url }}/${{
+                github.repository }}/actions/runs/${{ github.run_id }})
+          color: 0xff0000
