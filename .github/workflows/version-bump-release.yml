@@ -109,7 +109,7 @@ jobs:
         id: draft_release
         run: |
           # Get the latest draft release
-          DRAFT_RELEASE=$(gh release list --limit 1 --json isDraft,tagName,id,name | jq -r '.[] | select(.isDraft == true) | @base64')
+          DRAFT_RELEASE=$(gh release list --limit 1 --json isDraft,tagName,name | jq -r '.[] | select(.isDraft == true) | @base64')
           
           if [ -z "$DRAFT_RELEASE" ]; then
             echo "No draft release found"
@@ -120,14 +120,12 @@ jobs:
             # Decode the release data
             RELEASE_DATA=$(echo "$DRAFT_RELEASE" | base64 --decode)
             TAG_NAME=$(echo "$RELEASE_DATA" | jq -r '.tagName')
-            RELEASE_ID=$(echo "$RELEASE_DATA" | jq -r '.id')
             RELEASE_NAME=$(echo "$RELEASE_DATA" | jq -r '.name')
             
             echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
-            echo "release_id=$RELEASE_ID" >> $GITHUB_OUTPUT
             echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
             
-            echo "Found draft release: $RELEASE_NAME (Tag: $TAG_NAME, ID: $RELEASE_ID)"
+            echo "Found draft release: $RELEASE_NAME (Tag: $TAG_NAME)"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
