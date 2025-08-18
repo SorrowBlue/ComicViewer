@@ -16,13 +16,16 @@ jobs:
   lint:
     uses: ./.github/workflows/lint.yml
 
+  static-code-analysis:
+    uses: ./.github/workflows/static-code-analysis.yml
+
   test:
     uses: ./.github/workflows/test.yml
 
   # Step 2: Build release artifacts after checks pass
   build-android-release:
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [lint, static-code-analysis, test]
     environment: android
     outputs:
       upload-url: ${{ steps.upload.outputs.internalSharingDownloadUrl }}
@@ -81,7 +84,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
-    needs: [lint, test]
+    needs: [lint, static-code-analysis, test]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
