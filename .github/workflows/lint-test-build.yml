@@ -1,8 +1,12 @@
+---
 name: Lint, Test, and Build
 
 on:
   workflow_dispatch:
   pull_request:
+    branches:
+      - 'main'
+  push:
     branches:
       - 'main'
 
@@ -17,17 +21,42 @@ permissions:
 
 jobs:
 
+  # Check if this is a PR commit to main and skip if so
+  check-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+    steps:
+      - name: Check if should run
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && \
+             [ "${{ github.event.head_commit.committer.name }}" = "GitHub" ]; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "Skipping workflow for PR commit to main"
+          else
+            echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "Running workflow"
+          fi
+
   lint:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/lint.yml
 
   static-code-analysis:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/static-code-analysis.yml
 
   test:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/test.yml
 
   build:
-    needs: [ lint, static-code-analysis, test ]
+    needs: [check-commit, lint, static-code-analysis, test]
+    if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
     with:
       environment: android
