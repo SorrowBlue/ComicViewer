@@ -1,0 +1,145 @@
+---
+name: Version Bump and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry run mode (no commits or releases)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  version-bump-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Read current versionCode
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(grep 'versionCode = ' gradle/libs.versions.toml | sed 's/.*"\([0-9]*\)".*/\1/')
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Current versionCode: $CURRENT_VERSION"
+
+      - name: Increment versionCode
+        id: new_version
+        run: |
+          CURRENT_VERSION=${{ steps.current_version.outputs.current }}
+          NEW_VERSION=$((CURRENT_VERSION + 1))
+          echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New versionCode: $NEW_VERSION"
+
+      - name: Update versionCode in libs.versions.toml
+        run: |
+          NEW_VERSION=${{ steps.new_version.outputs.new }}
+          sed -i "s/versionCode = \"[0-9]*\"/versionCode = \"$NEW_VERSION\"/" gradle/libs.versions.toml
+          echo "Updated versionCode to $NEW_VERSION"
+          
+          # Verify the change
+          grep 'versionCode = ' gradle/libs.versions.toml
+
+      - name: Commit versionCode increment
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git add gradle/libs.versions.toml
+          git commit -m ":rocket: bump versionCode"
+          git push origin main
+
+      - name: Get latest draft release
+        id: draft_release
+        run: |
+          # Get the latest draft release
+          DRAFT_RELEASE=$(gh release list --limit 1 --json isDraft,tagName,id,name | jq -r '.[] | select(.isDraft == true) | @base64')
+          
+          if [ -z "$DRAFT_RELEASE" ]; then
+            echo "No draft release found"
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "found=true" >> $GITHUB_OUTPUT
+            
+            # Decode the release data
+            RELEASE_DATA=$(echo "$DRAFT_RELEASE" | base64 --decode)
+            TAG_NAME=$(echo "$RELEASE_DATA" | jq -r '.tagName')
+            RELEASE_ID=$(echo "$RELEASE_DATA" | jq -r '.id')
+            RELEASE_NAME=$(echo "$RELEASE_DATA" | jq -r '.name')
+            
+            echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+            echo "release_id=$RELEASE_ID" >> $GITHUB_OUTPUT
+            echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
+            
+            echo "Found draft release: $RELEASE_NAME (Tag: $TAG_NAME, ID: $RELEASE_ID)"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine release type
+        id: release_type
+        if: steps.draft_release.outputs.found == 'true'
+        run: |
+          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
+          
+          if [[ "$TAG_NAME" == *"beta"* ]]; then
+            echo "type=prerelease" >> $GITHUB_OUTPUT
+            echo "Release type: PreRelease (beta tag detected)"
+          else
+            echo "type=release" >> $GITHUB_OUTPUT
+            echo "Release type: Release (no beta tag)"
+          fi
+
+      - name: Publish draft release
+        if: steps.draft_release.outputs.found == 'true' && !inputs.dry_run
+        run: |
+          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
+          RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
+          
+          if [ "$RELEASE_TYPE" = "prerelease" ]; then
+            echo "Publishing as PreRelease..."
+            gh release edit "$TAG_NAME" --draft=false --prerelease
+          else
+            echo "Publishing as Release..."
+            gh release edit "$TAG_NAME" --draft=false --latest
+          fi
+          
+          echo "Successfully published release: $TAG_NAME as $RELEASE_TYPE"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## Version Bump and Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Previous versionCode**: ${{ steps.current_version.outputs.current }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **New versionCode**: ${{ steps.new_version.outputs.new }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "- **Mode**: Dry run (no changes committed)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Commit**: :rocket: bump versionCode" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ steps.draft_release.outputs.found }}" = "true" ]; then
+            echo "- **Draft Release Found**: ${{ steps.draft_release.outputs.release_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Tag**: ${{ steps.draft_release.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Release Type**: ${{ steps.release_type.outputs.type }}" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "${{ inputs.dry_run }}" != "true" ]; then
+              echo "- **Status**: Published" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- **Status**: Would be published (dry run)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "- **Draft Release**: None found" >> $GITHUB_STEP_SUMMARY
+          fi
