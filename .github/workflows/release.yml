@@ -66,7 +66,8 @@ jobs:
           packageName: com.sorrowblue.comicviewer
           releaseFiles: >-
             composeApp/build/outputs/bundle/release/composeApp-release.aab
-          track: internalsharing
+          track: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
+          status: draft
           mappingFile: composeApp/build/outputs/mapping/release/mapping.txt
           debugSymbols: >-
             composeApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
@@ -114,7 +115,6 @@ jobs:
         if: github.event_name == 'release'
         with:
           files: |
-            ./artifacts/android-release/**/*
             ./artifacts/desktop-release-Linux/**/*
             ./artifacts/desktop-release-Windows/**/*
             ./artifacts/desktop-release-macOS/**/*
