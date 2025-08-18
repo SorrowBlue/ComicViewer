@@ -9,6 +9,11 @@ on:
         required: false
         default: false
         type: boolean
+      custom_commit_message:
+        description: 'Custom commit message (default: ":rocket: bump versionCode")'
+        required: false
+        default: ':rocket: bump versionCode'
+        type: string
 
 permissions:
   contents: write
@@ -31,7 +36,18 @@ jobs:
       - name: Read current versionCode
         id: current_version
         run: |
+          if ! grep -q 'versionCode = ' gradle/libs.versions.toml; then
+            echo "Error: versionCode not found in gradle/libs.versions.toml"
+            exit 1
+          fi
+          
           CURRENT_VERSION=$(grep 'versionCode = ' gradle/libs.versions.toml | sed 's/.*"\([0-9]*\)".*/\1/')
+          
+          if ! [[ "$CURRENT_VERSION" =~ ^[0-9]+$ ]]; then
+            echo "Error: Invalid versionCode format: $CURRENT_VERSION"
+            exit 1
+          fi
+          
           echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           echo "Current versionCode: $CURRENT_VERSION"
 
@@ -46,18 +62,33 @@ jobs:
       - name: Update versionCode in libs.versions.toml
         run: |
           NEW_VERSION=${{ steps.new_version.outputs.new }}
-          sed -i "s/versionCode = \"[0-9]*\"/versionCode = \"$NEW_VERSION\"/" gradle/libs.versions.toml
-          echo "Updated versionCode to $NEW_VERSION"
           
-          # Verify the change
-          grep 'versionCode = ' gradle/libs.versions.toml
+          # Create backup
+          cp gradle/libs.versions.toml gradle/libs.versions.toml.bak
+          
+          # Update version
+          sed -i "s/versionCode = \"[0-9]*\"/versionCode = \"$NEW_VERSION\"/" gradle/libs.versions.toml
+          
+          # Verify the change was successful
+          if ! grep -q "versionCode = \"$NEW_VERSION\"" gradle/libs.versions.toml; then
+            echo "Error: Failed to update versionCode"
+            mv gradle/libs.versions.toml.bak gradle/libs.versions.toml
+            exit 1
+          fi
+          
+          echo "Updated versionCode to $NEW_VERSION"
+          echo "Changes made:"
+          diff gradle/libs.versions.toml.bak gradle/libs.versions.toml || true
+          rm gradle/libs.versions.toml.bak
 
       - name: Commit versionCode increment
         if: ${{ !inputs.dry_run }}
         run: |
+          COMMIT_MESSAGE="${{ inputs.custom_commit_message }}"
           git add gradle/libs.versions.toml
-          git commit -m ":rocket: bump versionCode"
+          git commit -m "$COMMIT_MESSAGE"
           git push origin main
+          echo "Committed with message: $COMMIT_MESSAGE"
 
       - name: Get latest draft release
         id: draft_release
@@ -100,6 +131,14 @@ jobs:
             echo "Release type: Release (no beta tag)"
           fi
 
+      - name: Handle no draft release case
+        if: steps.draft_release.outputs.found == 'false'
+        run: |
+          echo "::warning::No draft release found. Version code has been incremented but no release will be published."
+          echo "To complete the release process:"
+          echo "1. Create a new draft release manually"
+          echo "2. Run this workflow again to publish it"
+
       - name: Publish draft release
         if: steps.draft_release.outputs.found == 'true' && !inputs.dry_run
         run: |
@@ -127,7 +166,7 @@ jobs:
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             echo "- **Mode**: Dry run (no changes committed)" >> $GITHUB_STEP_SUMMARY
           else
-            echo "- **Commit**: :rocket: bump versionCode" >> $GITHUB_STEP_SUMMARY
+            echo "- **Commit**: ${{ inputs.custom_commit_message }}" >> $GITHUB_STEP_SUMMARY
           fi
           
           if [ "${{ steps.draft_release.outputs.found }}" = "true" ]; then
