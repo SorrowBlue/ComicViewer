@@ -4,33 +4,48 @@
 
 ## 概要
 
-リリース自動化ワークフロー（`/.github/workflows/release.yml`）は、ComicViewerのAndroidおよびDesktopバージョンの両方をリリースするためのエンドツーエンドの自動化を提供します。
+リリース自動化は以下の2つのワークフローによって実現されています：
+- **Release Drafter**: Pull Requestから自動的にドラフトリリースを作成
+- **Release**: リリースが公開されたときにAndroidおよびDesktopバージョンをビルド・配布
+
+バージョン管理は完全に自動化されており、`versionCode`は`versionName`（Gitタグ）から自動計算されます。
 
 ## ワークフロー
 
+### Release Drafterワークフロー
+Release Drafterワークフロー（`/.github/workflows/release-drafter.yml`）は、以下のタイミングで実行されます：
+
+1. **自動**: mainブランチへのPush時
+2. **自動**: Pull Requestの作成・更新時
+3. **機能**:
+   - マージされたPull Requestから自動的にリリースノートを生成
+   - ドラフトリリースを作成・更新
+   - Pull Requestに適切なラベルを自動付与
+
 ### リリースワークフロー
-メインのリリースワークフロー（`/.github/workflows/release.yml`）は、以下の2つのシナリオで実行されます：
+メインのリリースワークフロー（`/.github/workflows/release.yml`）は、以下のシナリオで実行されます：
 
 1. **自動**: GitHubでリリースが公開されたとき
 2. **手動**: GitHub Actionsタブの「Run workflow」ボタンを使用
 
-### バージョンバンプワークフロー
-バージョンバンプワークフロー（`/.github/workflows/version-bump-release.yml`）は、バージョンインクリメントプロセスを自動化します：
+## バージョン管理
 
-1. **手動**: GitHub Actionsタブの「Run workflow」ボタンを使用
-2. **機能**:
-   - `gradle/libs.versions.toml`内の`versionCode`を自動的にインクリメント
-   - フィーチャーブランチを作成し、`:rocket: bump versionCode`メッセージでコミット
-   - バージョンバンプのためのmainブランチへのPull Requestを作成
+### 自動バージョン計算
+バージョン管理は完全に自動化されています：
 
-### ドラフトリリース公開ワークフロー
-ドラフトリリース公開ワークフロー（`/.github/workflows/publish-draft-release.yml`）は、ドラフトリリースを自動的に公開します：
+- **versionName**: Gitタグから取得（例：`v0.1.0-beta.1`、`v0.1.0`）
+- **versionCode**: versionNameから自動計算される整数値
 
-1. **自動**: バージョンバンプ変更がmainブランチにマージされたときにトリガー
-2. **機能**:
-   - バージョンバンプPRがマージされたことを検出
-   - 最新のドラフトリリースを見つけて適切に公開
-   - "beta"タグ検出に基づいてリリースタイプ（PreRelease vs Release）を決定
+### versionCodeの計算式
+- **正式リリース**: `(major × 10000 + minor × 100 + patch) × 100 + 99`
+- **Beta リリース**: `(major × 10000 + minor × 100 + patch) × 100 + beta番号`
+
+#### 例
+- `v0.1.0-beta.1` → versionCode: `10001`
+- `v0.1.0-beta.2` → versionCode: `10002`
+- `v0.1.0` → versionCode: `10099`
+
+これにより、betaバージョンは番号順に増加し、正式リリースは常に対応するbetaバージョンより高い値になります。
 
 ## プロセスフロー
 
@@ -82,50 +97,30 @@ Androidリリースと並行して：
 - 上記に記載された必要なシークレット
 - 必要に応じて適切な保護ルール
 
-## 手動リリースプロセス
+## リリースプロセス
 
-### オプション1: 従来のリリースプロセス
+### 現在のリリースフロー
 
-1. GitHubで新しいリリースを作成：
-   - リポジトリの「Releases」に移動
-   - 「Create a new release」をクリック
-   - タグを選択または作成（例：`v1.0.0`）
-   - リリースノートを追加
-   - 「Publish release」をクリック
+1. **開発とPull Request**:
+   - 機能開発やバグ修正のPull Requestを作成
+   - Release Drafterが自動的にドラフトリリースを更新
 
-2. ワークフローが自動的に開始され：
-   - すべての品質チェックを実行
-   - リリース成果物をビルド
-   - Play Consoleにアップロード
-   - GitHub Releaseに成果物をアップロード
-   - Discord通知を送信
+2. **リリース準備**:
+   - 適切なGitタグを作成（例：`v0.1.0-beta.1`、`v0.1.0`）
+   - Release Drafterが作成したドラフトリリースを確認・編集
 
-### オプション2: 自動バージョンバンプとリリース
+3. **リリース公開**:
+   - GitHubでドラフトリリースを「Publish」
+   - リリースワークフローが自動的に開始される
 
-1. 「Version Bump」ワークフローを使用：
-   - リポジトリの「Actions」タブに移動
-   - 「Version Bump」ワークフローを選択
-   - 「Run workflow」をクリック
-   - テスト用に「dry run」モードを有効にすることも可能
+4. **自動ビルドと配布**:
+   - 品質チェック（lint、test、static code analysis）の実行
+   - AndroidリリースとDesktopリリースの並行ビルド
+   - 成果物のGitHub Releaseへのアップロード
+   - Discord通知の送信
 
-2. ワークフローが自動的に：
-   - `gradle/libs.versions.toml`内の`versionCode`をインクリメント
-   - フィーチャーブランチを作成し、`:rocket: bump versionCode`でコミット
-   - バージョンバンプのためのmainブランチへのPull Requestを作成
-
-3. バージョンバンプPRをレビューしてマージ：
-   - バージョン変更のために生成されたPull Requestをレビュー
-   - PRを承認してmainブランチにマージ
-
-4. 自動ドラフトリリース公開：
-   - バージョンバンプPRがマージされると、「Publish Draft Release」ワークフローが自動的にトリガー
-   - バージョン変更を検出し、最新のドラフトリリースを見つける
-   - PreRelease（「beta」を含む）かReleaseかを決定
-   - ドラフトリリースを適切に公開
-
-**注意**: プロセスはより良い制御のために2段階に分割されています：
-1. **Version Bump**: 手動でレビューとマージが必要なバージョン変更のPRを作成
-2. **Release Publishing**: バージョン変更がmainにマージされたときに自動的にドラフトリリースを公開
+### 手動リリーストリガー
+必要に応じて、GitHub Actionsタブから「Release」ワークフローを手動実行することも可能です。
 
 ## 監視
 
