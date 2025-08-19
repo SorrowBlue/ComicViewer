@@ -294,6 +294,7 @@ Always run complete validation scenarios before committing changes, and ensure a
 - **PR titles**: Write in English
 - **PR descriptions/comments**: Write in Japanese
 - **Conversations/Communication**: Conduct in Japanese
+- **PR closing**: Include `Fixed #issue_number` at the end of PR descriptions to automatically close related issues
 
 ### Label Management
 - Choose appropriate labels from `.github/labels.yml` for Issues
