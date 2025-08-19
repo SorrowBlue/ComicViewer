@@ -61,7 +61,6 @@ soil = "1.0.0-alpha12"
 squareup-okio = "3.16.0"
 targetSdk = "36"
 versionCatalogLinter = "1.1.0"
-versionCode = "18"
 versions = "0.52.0"
 
 [libraries]

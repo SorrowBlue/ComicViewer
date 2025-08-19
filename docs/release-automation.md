@@ -1,123 +1,138 @@
-# Release Automation
+# リリース自動化
 
-This document describes the automated release process for ComicViewer using GitHub Actions.
+このドキュメントでは、GitHub Actionsを使用したComicViewerの自動リリースプロセスについて説明します。
 
-## Overview
+## 概要
 
-The release automation workflow (`/.github/workflows/release.yml`) provides end-to-end automation for releasing both Android and Desktop versions of ComicViewer.
+リリース自動化は以下の2つのワークフローによって実現されています：
+- **Release Drafter**: Pull Requestから自動的にドラフトリリースを作成
+- **Release**: リリースが公開されたときにAndroidおよびDesktopバージョンをビルド・配布
 
-## Workflows
+バージョン管理は完全に自動化されており、`versionCode`は`versionName`（Gitタグ）から自動計算されます。
 
-### Release Workflow
-The main release workflow (`/.github/workflows/release.yml`) runs in two scenarios:
+## ワークフロー
 
-1. **Automatic**: When a release is published on GitHub
-2. **Manual**: Using the "Run workflow" button in the GitHub Actions tab
+### Release Drafterワークフロー
+Release Drafterワークフロー（`/.github/workflows/release-drafter.yml`）は、以下のタイミングで実行されます：
 
-### Version Bump and Release Workflow
-The version bump workflow (`/.github/workflows/version-bump-release.yml`) automates the complete release process:
+1. **自動**: mainブランチへのPush時
+2. **自動**: Pull Requestの作成・更新時
+3. **機能**:
+   - マージされたPull Requestから自動的にリリースノートを生成
+   - ドラフトリリースを作成・更新
+   - Pull Requestに適切なラベルを自動付与
 
-1. **Manual**: Using the "Run workflow" button in the GitHub Actions tab
-2. **Features**:
-   - Automatically increments `versionCode` in `gradle/libs.versions.toml`
-   - Commits changes directly to main branch with `:rocket: bump versionCode` message
-   - Finds latest draft release and publishes it appropriately
-   - Determines release type (PreRelease vs Release) based on "beta" tag detection
+### リリースワークフロー
+メインのリリースワークフロー（`/.github/workflows/release.yml`）は、以下のシナリオで実行されます：
 
-## Process Flow
+1. **自動**: GitHubでリリースが公開されたとき
+2. **手動**: GitHub Actionsタブの「Run workflow」ボタンを使用
 
-### 1. Quality Checks
-Before any release artifacts are built, the following quality checks must pass:
-- **Detekt**: Static code analysis for Kotlin code
-- **Android Lint**: Android-specific code quality checks  
-- **Version Catalog**: Validation of dependency versions
-- **Unit Tests**: All project unit tests
+## バージョン管理
 
-### 2. Android Release
-If quality checks pass:
-- Builds release AAB (Android App Bundle) with proper code signing
-- Uploads AAB to Google Play Console (Internal App Sharing)
-- Stores AAB and APK artifacts for GitHub Release
+### 自動バージョン計算
+バージョン管理は完全に自動化されています：
 
-### 3. Desktop Release
-Parallel to Android release:
-- Builds native distributions for Windows, macOS, and Linux
-- Creates platform-specific packages using Compose Multiplatform
-- Stores distribution artifacts for GitHub Release
+- **versionName**: Gitタグから取得（例：`v0.1.0-beta.1`、`v0.1.0`）
+- **versionCode**: versionNameから自動計算される整数値
 
-### 4. Asset Upload & Notifications
-After successful builds:
-- Uploads all artifacts to the GitHub Release page
-- Sends success notification to Discord with download links
-- On failure, sends error notification to Discord
+### versionCodeの計算式
+- **正式リリース**: `(major × 10000 + minor × 100 + patch) × 100 + 99`
+- **Beta リリース**: `(major × 10000 + minor × 100 + patch) × 100 + beta番号`
 
-## Required Secrets
+#### 例
+- `v0.1.0-beta.1` → versionCode: `10001`
+- `v0.1.0-beta.2` → versionCode: `10002`
+- `v0.1.0` → versionCode: `10099`
 
-The following secrets must be configured in GitHub repository settings:
+これにより、betaバージョンは番号順に増加し、正式リリースは常に対応するbetaバージョンより高い値になります。
 
-### Android Signing
-- `ANDROID_STORE_FILE_BASE64`: Base64-encoded Android keystore file
-- `ANDROID_STORE_PASSWORD`: Password for the keystore file
-- `ANDROID_KEY_ALIAS`: Key alias within the keystore
-- `ANDROID_KEY_PASSWORD`: Password for the signing key
+## プロセスフロー
+
+### 1. 品質チェック
+リリース成果物がビルドされる前に、以下の品質チェックが通過する必要があります：
+- **Detekt**: Kotlinコードの静的コード解析
+- **Android Lint**: Android固有のコード品質チェック
+- **Version Catalog**: 依存関係バージョンの検証
+- **Unit Tests**: すべてのプロジェクトユニットテスト
+
+### 2. Androidリリース
+品質チェックが通過した場合：
+- 適切なコード署名でリリースAAB（Android App Bundle）をビルド
+- Google Play Console（Internal App Sharing）にAABをアップロード
+- GitHub ReleaseのためにAABとAPK成果物を保存
+
+### 3. Desktopリリース
+Androidリリースと並行して：
+- Windows、macOS、Linuxのネイティブディストリビューションをビルド
+- Compose Multiplatformを使用してプラットフォーム固有のパッケージを作成
+- GitHub Releaseのためにディストリビューション成果物を保存
+
+### 4. アセットアップロードと通知
+ビルドが成功した後：
+- すべての成果物をGitHub Releaseページにアップロード
+- ダウンロードリンク付きの成功通知をDiscordに送信
+- 失敗時は、エラー通知をDiscordに送信
+
+## 必要なシークレット
+
+以下のシークレットがGitHubリポジトリ設定で構成されている必要があります：
+
+### Android署名
+- `ANDROID_STORE_FILE_BASE64`: Base64エンコードされたAndroidキーストアファイル
+- `ANDROID_STORE_PASSWORD`: キーストアファイルのパスワード
+- `ANDROID_KEY_ALIAS`: キーストア内のキーエイリアス
+- `ANDROID_KEY_PASSWORD`: 署名キーのパスワード
 
 ### Google Play Console
-- `GOOGLE_WORKLOAD_IDENTITY_PROVIDER`: Google Cloud workload identity provider
-- `GOOGLE_SERVICE_ACCOUNT`: Google service account for Play Console access
+- `GOOGLE_WORKLOAD_IDENTITY_PROVIDER`: Google Cloudワークロードアイデンティティプロバイダー
+- `GOOGLE_SERVICE_ACCOUNT`: Play Consoleアクセス用のGoogleサービスアカウント
 
-### Discord Notifications
-- `DISCORD_WEBHOOK`: Discord webhook URL for notifications
+### Discord通知
+- `DISCORD_WEBHOOK`: 通知用のDiscord webhook URL
 
-## Environment Requirements
+## 環境要件
 
-The workflow uses the `android` environment, which should be configured with:
-- Required secrets listed above
-- Appropriate protection rules if desired
+ワークフローは`android`環境を使用し、以下で構成される必要があります：
+- 上記に記載された必要なシークレット
+- 必要に応じて適切な保護ルール
 
-## Manual Release Process
+## リリースプロセス
 
-### Option 1: Traditional Release Process
+### 現在のリリースフロー
 
-1. Create a new release on GitHub:
-   - Go to "Releases" in the repository
-   - Click "Create a new release"
-   - Choose or create a tag (e.g., `v1.0.0`)
-   - Add release notes
-   - Click "Publish release"
+1. **開発とPull Request**:
+   - 機能開発やバグ修正のPull Requestを作成
+   - Release Drafterが自動的にドラフトリリースを更新
 
-2. The workflow will automatically start and:
-   - Run all quality checks
-   - Build release artifacts
-   - Upload to Play Console
-   - Upload artifacts to GitHub Release
-   - Send Discord notifications
+2. **リリース準備**:
+   - 適切なGitタグを作成（例：`v0.1.0-beta.1`、`v0.1.0`）
+   - Release Drafterが作成したドラフトリリースを確認・編集
 
-### Option 2: Automated Version Bump and Release
+3. **リリース公開**:
+   - GitHubでドラフトリリースを「Publish」
+   - リリースワークフローが自動的に開始される
 
-1. Use the "Version Bump and Release" workflow:
-   - Go to "Actions" tab in the repository
-   - Select "Version Bump and Release" workflow
-   - Click "Run workflow"
-   - Optionally enable "dry run" mode for testing
+4. **自動ビルドと配布**:
+   - 品質チェック（lint、test、static code analysis）の実行
+   - AndroidリリースとDesktopリリースの並行ビルド
+   - 成果物のGitHub Releaseへのアップロード
+   - Discord通知の送信
 
-2. The workflow will automatically:
-   - Increment `versionCode` in `gradle/libs.versions.toml`
-   - Commit changes to main branch with `:rocket: bump versionCode`
-   - Find the latest draft release
-   - Determine if it should be PreRelease (contains "beta") or Release
-   - Publish the draft release appropriately
+### 手動リリーストリガー
+必要に応じて、GitHub Actionsタブから「Release」ワークフローを手動実行することも可能です。
 
-## Monitoring
+## 監視
 
-- Check the Actions tab for workflow progress
-- Discord will receive notifications for success/failure
-- Release artifacts will appear on the GitHub Release page
-- Play Console upload URL will be provided in Discord notification
+- ワークフローの進行状況についてはActionsタブを確認
+- Discordが成功/失敗の通知を受信
+- リリース成果物がGitHub Releaseページに表示
+- Play ConsoleアップロードURLがDiscord通知で提供
 
-## Troubleshooting
+## トラブルシューティング
 
-If the workflow fails:
-1. Check the workflow logs in the Actions tab
-2. Verify all required secrets are configured
-3. Ensure the `android` environment exists and has access to secrets
-4. Check Discord for error notifications with direct links to logs
+ワークフローが失敗した場合：
+1. Actionsタブでワークフローログを確認
+2. 必要なシークレットがすべて構成されていることを確認
+3. `android`環境が存在し、シークレットにアクセスできることを確認
+4. ログへの直接リンク付きのエラー通知についてDiscordを確認
