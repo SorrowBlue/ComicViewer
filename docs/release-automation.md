@@ -6,12 +6,23 @@ This document describes the automated release process for ComicViewer using GitH
 
 The release automation workflow (`/.github/workflows/release.yml`) provides end-to-end automation for releasing both Android and Desktop versions of ComicViewer.
 
-## Triggers
+## Workflows
 
-The workflow runs in two scenarios:
+### Release Workflow
+The main release workflow (`/.github/workflows/release.yml`) runs in two scenarios:
 
 1. **Automatic**: When a release is published on GitHub
 2. **Manual**: Using the "Run workflow" button in the GitHub Actions tab
+
+### Version Bump and Release Workflow
+The version bump workflow (`/.github/workflows/version-bump-release.yml`) automates the complete release process:
+
+1. **Manual**: Using the "Run workflow" button in the GitHub Actions tab
+2. **Features**:
+   - Automatically increments `versionCode` in `gradle/libs.versions.toml`
+   - Commits changes directly to main branch with `:rocket: bump versionCode` message
+   - Finds latest draft release and publishes it appropriately
+   - Determines release type (PreRelease vs Release) based on "beta" tag detection
 
 ## Process Flow
 
@@ -65,6 +76,8 @@ The workflow uses the `android` environment, which should be configured with:
 
 ## Manual Release Process
 
+### Option 1: Traditional Release Process
+
 1. Create a new release on GitHub:
    - Go to "Releases" in the repository
    - Click "Create a new release"
@@ -78,6 +91,21 @@ The workflow uses the `android` environment, which should be configured with:
    - Upload to Play Console
    - Upload artifacts to GitHub Release
    - Send Discord notifications
+
+### Option 2: Automated Version Bump and Release
+
+1. Use the "Version Bump and Release" workflow:
+   - Go to "Actions" tab in the repository
+   - Select "Version Bump and Release" workflow
+   - Click "Run workflow"
+   - Optionally enable "dry run" mode for testing
+
+2. The workflow will automatically:
+   - Increment `versionCode` in `gradle/libs.versions.toml`
+   - Commit changes to main branch with `:rocket: bump versionCode`
+   - Find the latest draft release
+   - Determine if it should be PreRelease (contains "beta") or Release
+   - Publish the draft release appropriately
 
 ## Monitoring
 

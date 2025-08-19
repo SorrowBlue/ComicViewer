@@ -1,0 +1,201 @@
+---
+name: Version Bump and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry run mode (no commits or releases)'
+        required: false
+        default: false
+        type: boolean
+      custom_commit_message:
+        description: 'Custom commit message (default: ":rocket: bump versionCode")'
+        required: false
+        default: ':rocket: bump versionCode'
+        type: string
+  push:
+    branches:
+      - 'copilot/**'
+    paths:
+      - '.github/workflows/version-bump-release.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  version-bump-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Set dry run mode for push events
+        id: set_dry_run
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "dry_run=true" >> $GITHUB_OUTPUT
+            echo "Running in dry run mode (triggered by push event)"
+          else
+            echo "dry_run=${{ inputs.dry_run }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Read current versionCode
+        id: current_version
+        run: |
+          if ! grep -q 'versionCode = ' gradle/libs.versions.toml; then
+            echo "Error: versionCode not found in gradle/libs.versions.toml"
+            exit 1
+          fi
+          
+          CURRENT_VERSION=$(grep 'versionCode = ' gradle/libs.versions.toml | sed 's/.*"\([0-9]*\)".*/\1/')
+          
+          if ! [[ "$CURRENT_VERSION" =~ ^[0-9]+$ ]]; then
+            echo "Error: Invalid versionCode format: $CURRENT_VERSION"
+            exit 1
+          fi
+          
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Current versionCode: $CURRENT_VERSION"
+
+      - name: Increment versionCode
+        id: new_version
+        run: |
+          CURRENT_VERSION=${{ steps.current_version.outputs.current }}
+          NEW_VERSION=$((CURRENT_VERSION + 1))
+          echo "new=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New versionCode: $NEW_VERSION"
+
+      - name: Update versionCode in libs.versions.toml
+        run: |
+          NEW_VERSION=${{ steps.new_version.outputs.new }}
+          
+          # Create backup
+          cp gradle/libs.versions.toml gradle/libs.versions.toml.bak
+          
+          # Update version
+          sed -i "s/versionCode = \"[0-9]*\"/versionCode = \"$NEW_VERSION\"/" gradle/libs.versions.toml
+          
+          # Verify the change was successful
+          if ! grep -q "versionCode = \"$NEW_VERSION\"" gradle/libs.versions.toml; then
+            echo "Error: Failed to update versionCode"
+            mv gradle/libs.versions.toml.bak gradle/libs.versions.toml
+            exit 1
+          fi
+          
+          echo "Updated versionCode to $NEW_VERSION"
+          echo "Changes made:"
+          diff gradle/libs.versions.toml.bak gradle/libs.versions.toml || true
+          rm gradle/libs.versions.toml.bak
+
+      - name: Commit versionCode increment
+        if: ${{ steps.set_dry_run.outputs.dry_run != 'true' }}
+        run: |
+          COMMIT_MESSAGE="${{ inputs.custom_commit_message || ':rocket: bump versionCode' }}"
+          git add gradle/libs.versions.toml
+          git commit -m "$COMMIT_MESSAGE"
+          git push origin main
+          echo "Committed with message: $COMMIT_MESSAGE"
+
+      - name: Get latest draft release
+        id: draft_release
+        run: |
+          # Get the latest draft release
+          DRAFT_RELEASE=$(gh release list --limit 1 --json isDraft,tagName,name | jq -r '.[] | select(.isDraft == true) | @base64')
+          
+          if [ -z "$DRAFT_RELEASE" ]; then
+            echo "No draft release found"
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "found=true" >> $GITHUB_OUTPUT
+            
+            # Decode the release data
+            RELEASE_DATA=$(echo "$DRAFT_RELEASE" | base64 --decode)
+            TAG_NAME=$(echo "$RELEASE_DATA" | jq -r '.tagName')
+            RELEASE_NAME=$(echo "$RELEASE_DATA" | jq -r '.name')
+            
+            echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+            echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
+            
+            echo "Found draft release: $RELEASE_NAME (Tag: $TAG_NAME)"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine release type
+        id: release_type
+        if: steps.draft_release.outputs.found == 'true'
+        run: |
+          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
+          
+          if [[ "$TAG_NAME" == *"beta"* ]]; then
+            echo "type=prerelease" >> $GITHUB_OUTPUT
+            echo "Release type: PreRelease (beta tag detected)"
+          else
+            echo "type=release" >> $GITHUB_OUTPUT
+            echo "Release type: Release (no beta tag)"
+          fi
+
+      - name: Handle no draft release case
+        if: steps.draft_release.outputs.found == 'false'
+        run: |
+          echo "::warning::No draft release found. Version code has been incremented but no release will be published."
+          echo "To complete the release process:"
+          echo "1. Create a new draft release manually"
+          echo "2. Run this workflow again to publish it"
+
+      - name: Publish draft release
+        if: steps.draft_release.outputs.found == 'true' && steps.set_dry_run.outputs.dry_run != 'true'
+        run: |
+          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
+          RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
+          
+          if [ "$RELEASE_TYPE" = "prerelease" ]; then
+            echo "Publishing as PreRelease..."
+            gh release edit "$TAG_NAME" --draft=false --prerelease
+          else
+            echo "Publishing as Release..."
+            gh release edit "$TAG_NAME" --draft=false --latest
+          fi
+          
+          echo "Successfully published release: $TAG_NAME as $RELEASE_TYPE"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## Version Bump and Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Previous versionCode**: ${{ steps.current_version.outputs.current }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **New versionCode**: ${{ steps.new_version.outputs.new }}" >> $GITHUB_STEP_SUMMARY
+          
+          DRY_RUN="${{ steps.set_dry_run.outputs.dry_run }}"
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "- **Mode**: Dry run (no changes committed)" >> $GITHUB_STEP_SUMMARY
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "- **Trigger**: Push event (auto dry-run)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "- **Commit**: ${{ inputs.custom_commit_message || ':rocket: bump versionCode' }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ steps.draft_release.outputs.found }}" = "true" ]; then
+            echo "- **Draft Release Found**: ${{ steps.draft_release.outputs.release_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Tag**: ${{ steps.draft_release.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Release Type**: ${{ steps.release_type.outputs.type }}" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "$DRY_RUN" != "true" ]; then
+              echo "- **Status**: Published" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- **Status**: Would be published (dry run)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "- **Draft Release**: None found" >> $GITHUB_STEP_SUMMARY
+          fi
