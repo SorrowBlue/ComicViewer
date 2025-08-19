@@ -20,7 +20,8 @@ The version bump workflow (`/.github/workflows/version-bump-release.yml`) automa
 1. **Manual**: Using the "Run workflow" button in the GitHub Actions tab
 2. **Features**:
    - Automatically increments `versionCode` in `gradle/libs.versions.toml`
-   - Commits changes directly to main branch with `:rocket: bump versionCode` message
+   - Creates a feature branch and commits changes with `:rocket: bump versionCode` message
+   - Creates a Pull Request to main branch for the version bump
    - Finds latest draft release and publishes it appropriately
    - Determines release type (PreRelease vs Release) based on "beta" tag detection
 
@@ -102,10 +103,13 @@ The workflow uses the `android` environment, which should be configured with:
 
 2. The workflow will automatically:
    - Increment `versionCode` in `gradle/libs.versions.toml`
-   - Commit changes to main branch with `:rocket: bump versionCode`
+   - Create a feature branch and commit changes with `:rocket: bump versionCode`
+   - Create a Pull Request to main branch for the version bump
    - Find the latest draft release
    - Determine if it should be PreRelease (contains "beta") or Release
    - Publish the draft release appropriately
+
+**Note**: The workflow follows proper Git flow by creating a feature branch and Pull Request instead of directly pushing to main. You'll need to review and merge the generated PR to complete the version bump process.
 
 ## Monitoring
 
