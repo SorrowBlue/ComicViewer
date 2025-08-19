@@ -4,6 +4,15 @@ ComicViewer is a Kotlin Multiplatform comic viewer application targeting Android
 
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
+## Technology Stack
+
+- **Kotlin Multiplatform**: Primary programming language
+- **Jetpack Compose**: UI framework for Android, Desktop, and iOS
+- **Modular Architecture**: feature/domain/data layer structure
+- **Koin**: Dependency injection framework
+- **Room**: Database (Android)
+- **Ktor**: Network communication
+
 ## Working Effectively
 
 ### Prerequisites and Setup
@@ -82,6 +91,8 @@ After making changes, ALWAYS validate with these complete scenarios:
 - Prefer Material3 components over custom implementations
 - Use `@Preview` annotations for UI component previews
 - Follow Compose naming conventions: `ScreenContent`, `ScreenState`, etc.
+- Use Material3 Adaptive components for Android
+- Minimize recomposition with proper state management
 
 ### Documentation Requirements
 - **Public APIs**: Add KDoc comments to all public functions and classes
@@ -95,6 +106,14 @@ After making changes, ALWAYS validate with these complete scenarios:
 - Test files follow same package structure as source files
 - Mock external dependencies using test doubles
 - Test multiplatform code on all target platforms
+
+### Quality Assurance Requirements
+- **Input validation**: Always implement input validation
+- **Null safety**: Consider null safety in all code
+- **External libraries**: Use latest stable versions
+- **API communication**: Include proper error handling
+- **Lifecycle awareness**: Implement proper lifecycle management for Android
+- **Memory management**: Avoid memory leaks with proper lifecycle management
 
 ## Navigation and Architecture
 
@@ -129,6 +148,13 @@ After making changes, ALWAYS validate with these complete scenarios:
     └── ui/              # Common UI components
 ```
 
+### Dependency Rules
+- Upper layers can depend on lower layers
+- Minimize dependencies between same-level layers
+- Avoid direct dependencies between feature modules
+- Use Compose Navigation for screen transitions
+- Leverage Destinations library for navigation implementation
+
 ### Common Development Tasks
 
 #### Adding New Features
@@ -149,6 +175,31 @@ After making changes, ALWAYS validate with these complete scenarios:
 2. Always create migration scripts for schema changes
 3. Test migrations with: `./gradlew :data:database:test`
 4. Update version in database configuration
+
+## Platform-Specific Considerations
+
+### Android
+- Consider Android Lifecycle in all implementations
+- Use Material3 Adaptive components
+- Follow Android resource naming conventions with appropriate qualifiers
+- Ensure proper Activity and Fragment lifecycle management
+
+### iOS
+- Use expect/actual patterns for platform-specific implementations
+- Consider iOS Human Interface Guidelines
+- Verify all expect declarations have corresponding actual implementations
+
+### Desktop
+- Consider desktop-specific UI patterns (menu bars, keyboard shortcuts)
+- Implement proper window management features
+- Test desktop-specific features like file system access
+
+## Localization
+
+- Implement string resources with multi-language support in mind
+- Japanese as default language, with English support
+- Use `Res.string.*` pattern for string resources
+- Extract all hardcoded strings to resources
 
 ## Build Environment Issues
 
@@ -211,6 +262,50 @@ When network access is limited:
 
 Always run complete validation scenarios before committing changes, and ensure adequate timeout values for all build and test operations.
 
+## Reference Resources
+
+- [Android Developers](https://developer.android.com/) - Official Android development guidelines
+- [Jetpack Compose](https://developer.android.com/jetpack/compose) - Compose development guide
+- [Kotlin Multiplatform](https://kotlinlang.org/lp/multiplatform/) - Official KMP documentation
+- [Material Design 3](https://m3.material.io/) - Material3 design system
+- Project-specific details: See `docs/` folder
+
+## Git and CI/CD Guidelines
+
+### Commit Message Standards
+- Write commit messages in English
+- Follow Conventional Commits format
+- Use types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+### Branch Naming Convention
+- Format: `[type]/[issue-number]-[simplified-issue-title]`
+- Types:
+  - `feature/`: New feature proposals and implementations
+  - `enhancement/`: Improvements to existing functions
+  - `refactor/`: Internal code improvements (no feature changes)
+  - `fix/`: Bug fixes and unexpected behavior corrections
+  - `doc/`: Documentation creation, editing, additions
+  - `dependencies/`: Dependency updates
+  - `chore/`: Build, CI/CD, dependency updates, etc.
+
+### Issue and PR Language Guidelines
+- **Issue titles**: Write in English
+- **Issue descriptions/comments**: Write in Japanese
+- **PR titles**: Write in English
+- **PR descriptions/comments**: Write in Japanese
+- **Conversations/Communication**: Conduct in Japanese
+
+### Label Management
+- Choose appropriate labels from `.github/labels.yml` for Issues
+- PR labels are automatically assigned by ReleaseDrafter
+- Do not manually assign PR labels
+
+### Quality Gates
+- Run detekt static analysis before commits: `./gradlew detektAll`
+- Run Android Lint checks: `./gradlew composeApp:lintDebug`
+- Automatic tests execute on pull request creation
+- All PRs must pass lint, detekt, and test phases
+
 ## Troubleshooting Common Development Scenarios
 
 ### Detekt Failures
@@ -242,3 +337,6 @@ Always run complete validation scenarios before committing changes, and ensure a
 - **Memory errors**: Increase heap size in gradle.properties if builds fail with OOM
 - **Cache issues**: Clear build cache with `./gradlew clean` when experiencing odd behaviors
 - **Network timeouts**: Check corporate proxy settings for repository access
+- **Compose recomposition**: Write code to minimize Compose recomposition
+- **Large datasets**: Use LazyColumn/LazyRow for handling large amounts of data
+- **Image loading**: Use Coil library for efficient image loading
