@@ -162,10 +162,9 @@ androidComponents {
     onVariants(selector().all()) { variant ->
         variant.outputs.forEach { output: VariantOutput ->
             val vn = gitTagProvider.orElse("0.0.0").get()
-            output.versionName.set(vn)
-            
-            // Calculate versionCode from versionName
             val versionCode = calculateVersionCode(vn)
+            
+            output.versionName.set(vn)
             output.versionCode.set(versionCode)
             
             logger.lifecycle("${variant.name} versionName=$vn, versionCode=$versionCode")
