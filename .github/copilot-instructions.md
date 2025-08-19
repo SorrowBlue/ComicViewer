@@ -31,10 +31,21 @@ Always reference these instructions first and fallback to search or bash command
 - **Desktop**: `./gradlew composeApp:packageDistributionForCurrentOS` -- takes 20-30 minutes. NEVER CANCEL.
 
 ### Quality Assurance (MANDATORY before commits)
-- **Detekt analysis**: `./gradlew detektAll` -- takes 10-15 minutes. NEVER CANCEL.
-- **Android Lint**: `./gradlew lintDebug` -- takes 10-15 minutes. NEVER CANCEL.
+- **All Detekt checks**: `./gradlew detektAndroidAll detektDesktopAll detektIosAll detektMetadataAll` -- takes 15-20 minutes total. NEVER CANCEL.
+- **Build-logic Detekt**: `./gradlew :build-logic:detektAll` -- takes 3-5 minutes. NEVER CANCEL.
+- **Android Lint (all variants)**: 
+  - Debug: `./gradlew composeApp:lintDebug` -- takes 8-12 minutes. NEVER CANCEL.
+  - Internal: `./gradlew composeApp:lintInternal` -- takes 8-12 minutes. NEVER CANCEL.
+  - Prerelease: `./gradlew composeApp:lintPrerelease` -- takes 8-12 minutes. NEVER CANCEL.
+  - Release: `./gradlew composeApp:lintRelease` -- takes 10-15 minutes. NEVER CANCEL.
 - **Version catalog check**: `./gradlew versionCatalogLint` -- takes 2-3 minutes.
-- **Format code**: `./gradlew detektFormat` -- formats code to match style guide.
+- **Format code**: `./gradlew detektFormat` -- formats code to match Kotlin style guide.
+
+### Build Verification Commands
+These commands verify the project builds correctly across all targets:
+- **Full clean build**: `./gradlew clean build` -- takes 45-60 minutes. NEVER CANCEL.
+- **Compose app only**: `./gradlew composeApp:build` -- takes 30-40 minutes. NEVER CANCEL.
+- **All modules check**: `./gradlew check` -- runs tests and validation, takes 25-35 minutes. NEVER CANCEL.
 
 ## Validation Scenarios
 
@@ -54,6 +65,36 @@ After making changes, ALWAYS validate with these complete scenarios:
 1. Run all detekt checks: `./gradlew detektAndroidAll detektDesktopAll detektIosAll`
 2. Test shared domain/data modules: `./gradlew :domain:model:test :data:database:test`
 3. Verify expect/actual implementations work correctly
+
+## Coding Standards and Guidelines
+
+### Kotlin Style Requirements
+- **MANDATORY**: Follow Android's [Kotlin style guide](https://developer.android.com/kotlin/style-guide)
+- **MANDATORY**: Use trailing commas in all collections, function parameters, and class declarations
+- **MANDATORY**: Use camelCase for function names, PascalCase for class names
+- Package structure: Always use `com.sorrowblue.comicviewer.*` prefix
+- File endings: Include newline at end of files
+- Import organization: Group `*` imports, then `^` imports (detekt enforced)
+
+### Compose-Specific Rules  
+- Use `@Composable` functions with named parameters
+- Leverage default arguments with trailing lambda syntax
+- Prefer Material3 components over custom implementations
+- Use `@Preview` annotations for UI component previews
+- Follow Compose naming conventions: `ScreenContent`, `ScreenState`, etc.
+
+### Documentation Requirements
+- **Public APIs**: Add KDoc comments to all public functions and classes
+- **Complex logic**: Add Japanese comments for business logic explanations
+- **TODOs**: Include assignee information in TODO comments
+- **Architecture decisions**: Document expect/actual implementations for multiplatform code
+
+### Testing Standards
+- New features MUST include unit tests
+- UI tests use Compose testing framework
+- Test files follow same package structure as source files
+- Mock external dependencies using test doubles
+- Test multiplatform code on all target platforms
 
 ## Navigation and Architecture
 
@@ -113,20 +154,37 @@ After making changes, ALWAYS validate with these complete scenarios:
 
 ### Network Requirements
 - **CRITICAL**: Requires access to Google Maven repository (dl.google.com)
-- If builds fail with "Plugin not found" errors, check network connectivity to Google's repositories
+- **CRITICAL**: Cannot access Google repositories in restricted environments - builds will fail with "Plugin not found" errors
+- If working in restricted environments, request network access to:
+  - `dl.google.com` (Google Maven repository)
+  - `repo1.maven.org` (Maven Central)
+  - `plugins.gradle.org` (Gradle Plugin Portal)
 - Proxy configurations may be needed in corporate environments
 
+### Alternative Validation in Restricted Environments
+When network access is limited:
+- Review code changes manually against existing patterns in the codebase
+- Use static analysis tools locally (if available without network deps)
+- Focus on consistent code style matching existing files
+- Test logic changes in isolation where possible
+- Validate against module dependency rules shown in README.md
+
 ### Common Build Failures
+- **Network connectivity**: Most common issue - check access to Google/Maven repositories
 - **Java version mismatch**: Ensure Java 21 is active, not Java 17 or other versions
 - **Android SDK missing**: Install Android SDK with API 36 and build tools
 - **Memory issues**: Build requires significant memory (4GB+ recommended in gradle.properties)
-- **Network timeouts**: Increase network timeout in gradle-wrapper.properties if needed
+- **Gradle cache corruption**: Clear with `./gradlew clean` if builds behave unexpectedly
 
 ### CI/CD Integration
-- GitHub Actions workflows are in `.github/workflows/`
-- Main workflow: `lint-test-build.yml` runs full validation
-- Release automation documented in `docs/release-automation.md`
-- Always ensure local builds pass before pushing to avoid CI failures
+- **Main workflow**: `.github/workflows/lint-test-build.yml` runs complete validation pipeline
+- **Quality gates**: All PRs must pass lint, detekt, and test phases
+- **Build matrix**: Tests Debug, Internal, Prerelease, and Release variants
+- **Static analysis**: Separate jobs for Android, Desktop, iOS, and Metadata detekt checks
+- **Artifacts**: GitHub Actions generate SARIF reports for security scanning
+- **Release automation**: Documented in `docs/release-automation.md` with automated Android/Desktop builds
+- **Branch protection**: Main branch requires passing CI checks
+- **Local validation**: ALWAYS run `./gradlew detektAll lintDebug test` before pushing to avoid CI failures
 
 ## Important Files and Locations
 
@@ -152,3 +210,35 @@ After making changes, ALWAYS validate with these complete scenarios:
 - `config/detekt/` - Detekt rule configuration (if present)
 
 Always run complete validation scenarios before committing changes, and ensure adequate timeout values for all build and test operations.
+
+## Troubleshooting Common Development Scenarios
+
+### Detekt Failures
+- **Format issues**: Run `./gradlew detektFormat` to auto-fix style violations
+- **Trailing comma missing**: Add commas after last parameter/element in collections and functions
+- **Import organization**: Rearrange imports with IDE tools or detekt auto-fix
+- **Complex function**: Break down functions exceeding complexity thresholds
+
+### Android Lint Failures  
+- **API level issues**: Check minimum SDK (30) and target SDK (36) compatibility
+- **Resource naming**: Follow Android naming conventions for drawables, strings, layouts
+- **Hardcoded strings**: Extract strings to resources in appropriate values folders
+- **Lifecycle issues**: Ensure proper lifecycle management in Activities and Fragments
+
+### Multiplatform Issues
+- **Expect/Actual mismatch**: Verify all expect declarations have corresponding actual implementations
+- **Platform-specific APIs**: Use appropriate expect/actual patterns for platform differences
+- **Dependency conflicts**: Check version catalog for compatible multiplatform library versions
+- **Build variant issues**: Test changes on both Android and Desktop targets
+
+### Module Dependency Issues
+- **Circular dependencies**: Refer to README.md module dependency diagram
+- **API changes**: Update all dependent modules when changing public APIs
+- **Version conflicts**: Use version catalog to maintain consistent dependency versions
+- **Missing dependencies**: Add required dependencies to all affected platform source sets
+
+### Performance Issues
+- **Build time**: Use Gradle daemon, configuration cache, and parallel builds (enabled by default)
+- **Memory errors**: Increase heap size in gradle.properties if builds fail with OOM
+- **Cache issues**: Clear build cache with `./gradlew clean` when experiencing odd behaviors
+- **Network timeouts**: Check corporate proxy settings for repository access
