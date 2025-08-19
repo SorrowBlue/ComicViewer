@@ -174,16 +174,28 @@ androidComponents {
 
 /**
  * Calculate versionCode from versionName.
- * Converts semantic version (e.g., "1.2.3") to integer.
- * Format: major * 10000 + minor * 100 + patch
+ * Converts semantic version (e.g., "v1.2.3" or "v1.2.3-beta.1") to integer.
+ * Format: 
+ * - Final releases: (major * 10000 + minor * 100 + patch) * 100 + 99
+ * - Beta releases: (major * 10000 + minor * 100 + patch) * 100 + beta_number
  * Falls back to 1 for invalid versions.
  */
 fun calculateVersionCode(versionName: String): Int {
     return try {
-        // Remove any non-numeric suffixes (e.g., "-beta1", "-SNAPSHOT")
-        val cleanVersion = versionName.split("-")[0]
-        val parts = cleanVersion.split(".")
+        // Remove 'v' prefix if present
+        val withoutPrefix = if (versionName.startsWith("v")) {
+            versionName.substring(1)
+        } else {
+            versionName
+        }
         
+        // Split version and suffix (e.g., "1.2.3-beta.1" -> ["1.2.3", "beta.1"])
+        val versionParts = withoutPrefix.split("-", limit = 2)
+        val baseVersion = versionParts[0]
+        val suffix = if (versionParts.size > 1) versionParts[1] else null
+        
+        // Parse semantic version parts
+        val parts = baseVersion.split(".")
         if (parts.size >= 3) {
             val major = parts[0].toIntOrNull() ?: 0
             val minor = parts[1].toIntOrNull() ?: 0
@@ -194,7 +206,17 @@ fun calculateVersionCode(versionName: String): Int {
             val boundedMinor = minor.coerceIn(0, 99)
             val boundedPatch = patch.coerceIn(0, 99)
             
-            boundedMajor * 10000 + boundedMinor * 100 + boundedPatch
+            val baseVersionCode = boundedMajor * 10000 + boundedMinor * 100 + boundedPatch
+            
+            // Handle beta versions (e.g., "beta.1", "beta.2")
+            if (suffix != null && suffix.startsWith("beta.")) {
+                val betaNumber = suffix.substring(5).toIntOrNull() ?: 1
+                val boundedBeta = betaNumber.coerceIn(1, 98)
+                baseVersionCode * 100 + boundedBeta
+            } else {
+                // Final release - use 99 as suffix to ensure it's higher than any beta
+                baseVersionCode * 100 + 99
+            }
         } else {
             logger.warn("Invalid version format: $versionName, using versionCode 1")
             1
