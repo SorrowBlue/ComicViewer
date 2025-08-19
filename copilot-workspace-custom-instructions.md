@@ -104,6 +104,21 @@ ComicViewerは、Android、iOS、Desktopをサポートするマルチプラッ�
 - Conventional Commits 形式を推奨します
 - タイプ: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
+### ブランチ命名規則
+- 命名規則: `[type]/[issue-number]-[Issueタイトルを簡略化した内容]`
+- typeは以下の種別で運用してください:
+  - `feature/`: 「新しい機能の提案や実装」[Proposals and implementation of new features]
+  - `enhancement/`: 「既存機能の改善」[Improvements to existing functions]
+  - `refactor/`: 「コードの内部的な改善（機能変更なし）」[Internal improvements to the code (no feature changes)]
+  - `fix/`: 「バグ、予期しない動作」[Bugs, unexpected behavior]
+  - `doc/`: 「ドキュメントの作成、修正、追加」[Create, edit, add documents]
+  - `dependencies/`: 「依存関係更新」[Dependency Updates]
+  - `chore/`: 「ビルド、CI/CD、依存関係更新など」[Build, CI/CD, dependency updates, etc.]
+
+### ラベル管理
+- Issueにつけるラベルは `.github/labels.yml` に定義されているものから適切なものを選択してください
+- PRのラベルはReleaseDrafterによって自動的に付与されるため、Copilotは手動でつける必要はありません
+
 ### 品質チェック
 - コミット前に detekt による静的解析を実行してください
 - Android Lint チェックも必須です
