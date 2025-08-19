@@ -183,7 +183,7 @@ fun extractPackageVersion(versionName: String): String {
         // Parse semantic version parts and validate format
         val parts = baseVersion.split(".")
         if (parts.size >= 3) {
-            val major = parts[0].toIntOrNull() ?: 0
+            val major = parts[0].toIntOrNull()?.coerceAtLeast(1) ?: 1
             val minor = parts[1].toIntOrNull() ?: 0
             val build = parts[2].toIntOrNull() ?: 0
             "$major.$minor.$build"
