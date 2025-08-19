@@ -91,7 +91,7 @@ android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = libs.versions.versionCode.get().toInt()
+        // versionCode calculated from versionName in androidComponents block
     }
     androidResources {
         @Suppress("UnstableApiUsage")
@@ -163,7 +163,45 @@ androidComponents {
         variant.outputs.forEach { output: VariantOutput ->
             val vn = gitTagProvider.orElse("0.0.0").get()
             output.versionName.set(vn)
-            logger.lifecycle("${variant.name} versionName=$vn")
+            
+            // Calculate versionCode from versionName
+            val versionCode = calculateVersionCode(vn)
+            output.versionCode.set(versionCode)
+            
+            logger.lifecycle("${variant.name} versionName=$vn, versionCode=$versionCode")
         }
+    }
+}
+
+/**
+ * Calculate versionCode from versionName.
+ * Converts semantic version (e.g., "1.2.3") to integer.
+ * Format: major * 10000 + minor * 100 + patch
+ * Falls back to 1 for invalid versions.
+ */
+fun calculateVersionCode(versionName: String): Int {
+    return try {
+        // Remove any non-numeric suffixes (e.g., "-beta1", "-SNAPSHOT")
+        val cleanVersion = versionName.split("-")[0]
+        val parts = cleanVersion.split(".")
+        
+        if (parts.size >= 3) {
+            val major = parts[0].toIntOrNull() ?: 0
+            val minor = parts[1].toIntOrNull() ?: 0
+            val patch = parts[2].toIntOrNull() ?: 0
+            
+            // Ensure values are within reasonable bounds
+            val boundedMajor = major.coerceIn(0, 99)
+            val boundedMinor = minor.coerceIn(0, 99)
+            val boundedPatch = patch.coerceIn(0, 99)
+            
+            boundedMajor * 10000 + boundedMinor * 100 + boundedPatch
+        } else {
+            logger.warn("Invalid version format: $versionName, using versionCode 1")
+            1
+        }
+    } catch (e: Exception) {
+        logger.warn("Error parsing version $versionName: ${e.message}, using versionCode 1")
+        1
     }
 }
