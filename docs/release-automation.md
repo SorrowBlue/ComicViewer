@@ -14,14 +14,21 @@ The main release workflow (`/.github/workflows/release.yml`) runs in two scenari
 1. **Automatic**: When a release is published on GitHub
 2. **Manual**: Using the "Run workflow" button in the GitHub Actions tab
 
-### Version Bump and Release Workflow
-The version bump workflow (`/.github/workflows/version-bump-release.yml`) automates the complete release process:
+### Version Bump Workflow
+The version bump workflow (`/.github/workflows/version-bump-release.yml`) automates the version increment process:
 
 1. **Manual**: Using the "Run workflow" button in the GitHub Actions tab
 2. **Features**:
    - Automatically increments `versionCode` in `gradle/libs.versions.toml`
    - Creates a feature branch and commits changes with `:rocket: bump versionCode` message
    - Creates a Pull Request to main branch for the version bump
+
+### Draft Release Publishing Workflow
+The draft release publishing workflow (`/.github/workflows/publish-draft-release.yml`) automatically publishes draft releases:
+
+1. **Automatic**: Triggered when version bump changes are merged to main branch
+2. **Features**:
+   - Detects when a version bump PR has been merged
    - Finds latest draft release and publishes it appropriately
    - Determines release type (PreRelease vs Release) based on "beta" tag detection
 
@@ -95,9 +102,9 @@ The workflow uses the `android` environment, which should be configured with:
 
 ### Option 2: Automated Version Bump and Release
 
-1. Use the "Version Bump and Release" workflow:
+1. Use the "Version Bump" workflow:
    - Go to "Actions" tab in the repository
-   - Select "Version Bump and Release" workflow
+   - Select "Version Bump" workflow
    - Click "Run workflow"
    - Optionally enable "dry run" mode for testing
 
@@ -105,11 +112,20 @@ The workflow uses the `android` environment, which should be configured with:
    - Increment `versionCode` in `gradle/libs.versions.toml`
    - Create a feature branch and commit changes with `:rocket: bump versionCode`
    - Create a Pull Request to main branch for the version bump
-   - Find the latest draft release
-   - Determine if it should be PreRelease (contains "beta") or Release
-   - Publish the draft release appropriately
 
-**Note**: The workflow follows proper Git flow by creating a feature branch and Pull Request instead of directly pushing to main. You'll need to review and merge the generated PR to complete the version bump process.
+3. Review and merge the version bump PR:
+   - Review the generated Pull Request for the version change
+   - Approve and merge the PR to main branch
+
+4. Automatic draft release publishing:
+   - When the version bump PR is merged, the "Publish Draft Release" workflow triggers automatically
+   - It detects the version change and finds the latest draft release
+   - Determines if it should be PreRelease (contains "beta") or Release
+   - Publishes the draft release appropriately
+
+**Note**: The process is now split into two stages for better control:
+1. **Version Bump**: Creates a PR for version changes that requires manual review and merge
+2. **Release Publishing**: Automatically publishes draft releases when version changes are merged to main
 
 ## Monitoring
 

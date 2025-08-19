@@ -1,11 +1,11 @@
 ---
-name: Version Bump and Release
+name: Version Bump
 
 on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Run in dry run mode (no commits or releases)'
+        description: 'Run in dry run mode (no commits or PR creation)'
         required: false
         default: false
         type: boolean
@@ -25,7 +25,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  version-bump-and-release:
+  version-bump:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -144,74 +144,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get latest draft release
-        id: draft_release
-        run: |
-          # Get the latest draft release
-          DRAFT_RELEASE=$(gh release list --limit 1 --json isDraft,tagName,name | jq -r '.[] | select(.isDraft == true) | @base64')
-          
-          if [ -z "$DRAFT_RELEASE" ]; then
-            echo "No draft release found"
-            echo "found=false" >> $GITHUB_OUTPUT
-          else
-            echo "found=true" >> $GITHUB_OUTPUT
-            
-            # Decode the release data
-            RELEASE_DATA=$(echo "$DRAFT_RELEASE" | base64 --decode)
-            TAG_NAME=$(echo "$RELEASE_DATA" | jq -r '.tagName')
-            RELEASE_NAME=$(echo "$RELEASE_DATA" | jq -r '.name')
-            
-            echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
-            echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
-            
-            echo "Found draft release: $RELEASE_NAME (Tag: $TAG_NAME)"
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Determine release type
-        id: release_type
-        if: steps.draft_release.outputs.found == 'true'
-        run: |
-          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
-          
-          if [[ "$TAG_NAME" == *"beta"* ]]; then
-            echo "type=prerelease" >> $GITHUB_OUTPUT
-            echo "Release type: PreRelease (beta tag detected)"
-          else
-            echo "type=release" >> $GITHUB_OUTPUT
-            echo "Release type: Release (no beta tag)"
-          fi
-
-      - name: Handle no draft release case
-        if: steps.draft_release.outputs.found == 'false'
-        run: |
-          echo "::warning::No draft release found. Version code has been incremented but no release will be published."
-          echo "To complete the release process:"
-          echo "1. Create a new draft release manually"
-          echo "2. Run this workflow again to publish it"
-
-      - name: Publish draft release
-        if: steps.draft_release.outputs.found == 'true' && steps.set_dry_run.outputs.dry_run != 'true'
-        run: |
-          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
-          RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
-          
-          if [ "$RELEASE_TYPE" = "prerelease" ]; then
-            echo "Publishing as PreRelease..."
-            gh release edit "$TAG_NAME" --draft=false --prerelease
-          else
-            echo "Publishing as Release..."
-            gh release edit "$TAG_NAME" --draft=false --latest
-          fi
-          
-          echo "Successfully published release: $TAG_NAME as $RELEASE_TYPE"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Summary
         run: |
-          echo "## Version Bump and Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Version Bump Summary" >> $GITHUB_STEP_SUMMARY
           echo "- **Previous versionCode**: ${{ steps.current_version.outputs.current }}" >> $GITHUB_STEP_SUMMARY
           echo "- **New versionCode**: ${{ steps.new_version.outputs.new }}" >> $GITHUB_STEP_SUMMARY
           
@@ -225,18 +160,6 @@ jobs:
             echo "- **Branch Created**: ${{ env.branch_name }}" >> $GITHUB_STEP_SUMMARY
             echo "- **Pull Request**: Created for version bump" >> $GITHUB_STEP_SUMMARY
             echo "- **Commit**: ${{ inputs.custom_commit_message || ':rocket: bump versionCode' }}" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-          if [ "${{ steps.draft_release.outputs.found }}" = "true" ]; then
-            echo "- **Draft Release Found**: ${{ steps.draft_release.outputs.release_name }}" >> $GITHUB_STEP_SUMMARY
-            echo "- **Tag**: ${{ steps.draft_release.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
-            echo "- **Release Type**: ${{ steps.release_type.outputs.type }}" >> $GITHUB_STEP_SUMMARY
-            
-            if [ "$DRY_RUN" != "true" ]; then
-              echo "- **Status**: Published" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "- **Status**: Would be published (dry run)" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "- **Draft Release**: None found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Next Steps:** Review and merge the created PR to complete the version bump process." >> $GITHUB_STEP_SUMMARY
           fi

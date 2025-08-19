@@ -1,0 +1,139 @@
+---
+name: Publish Draft Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'gradle/libs.versions.toml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish-draft-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 2
+
+      - name: Check if version was bumped
+        id: version_check
+        run: |
+          # Check if the last commit was a version bump
+          LAST_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+          
+          if [[ "$LAST_COMMIT_MESSAGE" == *"bump versionCode"* ]]; then
+            echo "Version bump detected in commit: $LAST_COMMIT_MESSAGE"
+            echo "is_version_bump=true" >> $GITHUB_OUTPUT
+            
+            # Get the version change details
+            if git diff HEAD~1 HEAD -- gradle/libs.versions.toml | grep -q "versionCode"; then
+              OLD_VERSION=$(git show HEAD~1:gradle/libs.versions.toml | grep 'versionCode = ' | sed 's/.*"\([0-9]*\)".*/\1/')
+              NEW_VERSION=$(git show HEAD:gradle/libs.versions.toml | grep 'versionCode = ' | sed 's/.*"\([0-9]*\)".*/\1/')
+              
+              echo "old_version=$OLD_VERSION" >> $GITHUB_OUTPUT
+              echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+              echo "Version changed from $OLD_VERSION to $NEW_VERSION"
+            else
+              echo "::warning::Version bump commit detected but no version change found in gradle/libs.versions.toml"
+              echo "is_version_bump=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No version bump detected. Last commit: $LAST_COMMIT_MESSAGE"
+            echo "is_version_bump=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get latest draft release
+        id: draft_release
+        if: steps.version_check.outputs.is_version_bump == 'true'
+        run: |
+          # Get the latest draft release
+          DRAFT_RELEASE=$(gh release list --limit 1 --json isDraft,tagName,name | jq -r '.[] | select(.isDraft == true) | @base64')
+          
+          if [ -z "$DRAFT_RELEASE" ]; then
+            echo "No draft release found"
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "found=true" >> $GITHUB_OUTPUT
+            
+            # Decode the release data
+            RELEASE_DATA=$(echo "$DRAFT_RELEASE" | base64 --decode)
+            TAG_NAME=$(echo "$RELEASE_DATA" | jq -r '.tagName')
+            RELEASE_NAME=$(echo "$RELEASE_DATA" | jq -r '.name')
+            
+            echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+            echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
+            
+            echo "Found draft release: $RELEASE_NAME (Tag: $TAG_NAME)"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine release type
+        id: release_type
+        if: steps.draft_release.outputs.found == 'true'
+        run: |
+          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
+          
+          if [[ "$TAG_NAME" == *"beta"* ]]; then
+            echo "type=prerelease" >> $GITHUB_OUTPUT
+            echo "Release type: PreRelease (beta tag detected)"
+          else
+            echo "type=release" >> $GITHUB_OUTPUT
+            echo "Release type: Release (no beta tag)"
+          fi
+
+      - name: Handle no draft release case
+        if: steps.version_check.outputs.is_version_bump == 'true' && steps.draft_release.outputs.found == 'false'
+        run: |
+          echo "::warning::Version bump was merged but no draft release found."
+          echo "To complete the release process:"
+          echo "1. Create a new draft release manually"
+          echo "2. This workflow will automatically publish it on the next version bump"
+
+      - name: Publish draft release
+        if: steps.draft_release.outputs.found == 'true'
+        run: |
+          TAG_NAME="${{ steps.draft_release.outputs.tag_name }}"
+          RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
+          
+          if [ "$RELEASE_TYPE" = "prerelease" ]; then
+            echo "Publishing as PreRelease..."
+            gh release edit "$TAG_NAME" --draft=false --prerelease
+          else
+            echo "Publishing as Release..."
+            gh release edit "$TAG_NAME" --draft=false --latest
+          fi
+          
+          echo "Successfully published release: $TAG_NAME as $RELEASE_TYPE"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        if: steps.version_check.outputs.is_version_bump == 'true'
+        run: |
+          echo "## Draft Release Publication Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version Bump**: ${{ steps.version_check.outputs.old_version }} → ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: Version bump merged to main" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.draft_release.outputs.found }}" = "true" ]; then
+            echo "- **Draft Release Found**: ${{ steps.draft_release.outputs.release_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Tag**: ${{ steps.draft_release.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Release Type**: ${{ steps.release_type.outputs.type }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Status**: Published ✅" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Draft Release**: None found ⚠️" >> $GITHUB_STEP_SUMMARY
+            echo "- **Action Required**: Create a draft release manually" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Skip summary
+        if: steps.version_check.outputs.is_version_bump != 'true'
+        run: |
+          echo "## Draft Release Publication Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: Skipped (no version bump detected)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Last Commit**: $(git log -1 --pretty=format:'%s')" >> $GITHUB_STEP_SUMMARY
