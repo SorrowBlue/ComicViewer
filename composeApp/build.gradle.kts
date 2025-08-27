@@ -1,5 +1,6 @@
 import com.android.build.api.variant.VariantOutput
 import com.sorrowblue.comicviewer.ComicBuildType
+import kotlin.math.max
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {

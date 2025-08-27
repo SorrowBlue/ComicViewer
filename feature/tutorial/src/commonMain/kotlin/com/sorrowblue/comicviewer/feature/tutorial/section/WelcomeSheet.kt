@@ -37,7 +37,7 @@ internal fun WelcomeSheet(contentPadding: PaddingValues) {
             Image(
                 imageVector = ComicIcons.Launcher,
                 contentDescription = null,
-                modifier = Modifier.size(108.dp),
+                modifier = Modifier.size(160.dp)
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
             Text(

@@ -6,6 +6,7 @@ import coil3.SingletonImageLoader
 import coil3.fetch.Fetcher
 import coil3.request.crossfade
 import coil3.size.Precision
+import coil3.util.DebugLogger
 import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailKeyer
 import com.sorrowblue.comicviewer.data.coil.collection.CollectionKeyer
 import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailKeyer
@@ -56,7 +57,7 @@ internal abstract class BaseCoilInitializer : KoinComponent, SingletonImageLoade
             }
             .crossfade(true)
             .precision(Precision.INEXACT)
-//            .logger(DebugLogger())
+            .logger(DebugLogger())
             .apply { setup() }
             .build()
     }

@@ -66,7 +66,7 @@ internal class FileModelRemoteMediator(
         kotlin.runCatching {
             withContext(dispatcher) {
                 val settings = folderSettings.first()
-                val supportExtensions = (settings.supportExtension + listOf(SupportExtension.Document.PDF)).map(
+                val supportExtensions = settings.supportExtension.map(
                     SupportExtension::extension
                 )
                 val files = SortUtil.sortedIndex(

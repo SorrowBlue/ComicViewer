@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.Collection
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
 import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
+import com.sorrowblue.comicviewer.data.datastore.qualifier.PdfPlugin
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Settings
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
@@ -15,6 +16,7 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.CollectionSettingsSe
 import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderDisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerializer
+import com.sorrowblue.comicviewer.data.datastore.serializer.PdfPluginSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
@@ -65,3 +67,8 @@ internal fun viewerSettingsDataStore(dataStoreMaker: DataStoreMaker) =
 @Collection
 internal fun collectionSettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(CollectionSettingsSerializer)
+
+@Singleton
+@PdfPlugin
+internal fun pdfPluginSettingsDataStore(dataStoreMaker: DataStoreMaker) =
+    dataStoreMaker.createDataStore(PdfPluginSettingsSerializer)

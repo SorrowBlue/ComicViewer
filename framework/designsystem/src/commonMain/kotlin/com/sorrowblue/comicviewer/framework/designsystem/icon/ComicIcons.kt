@@ -49,6 +49,7 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.OpenInBrowser
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.RocketLaunch
 import androidx.compose.material.icons.rounded.Save
@@ -125,6 +126,7 @@ object ComicIcons {
     val CollectionsBookmark = Icons.Rounded.CollectionsBookmark
     val Menu = Icons.Rounded.Menu
     val MenuOpen = Icons.AutoMirrored.Rounded.MenuOpen
+    val OpenInBrowser = Icons.Rounded.OpenInBrowser
     val FirstPage = Icons.Rounded.FirstPage
     val LastPage = Icons.AutoMirrored.Rounded.LastPage
 }

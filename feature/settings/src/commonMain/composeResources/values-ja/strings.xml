@@ -9,6 +9,7 @@
     <string name="settings_label_viewer">ビューワー</string>
     <string name="settings_label_donation">寄付</string>
     <string name="settings_label_image_cache">画像キャッシュ</string>
+    <string name="settings_label_plugin">プラグイン</string>
     <string name="settings_language_label_all_languages">すべての言語</string>
     <string name="settings_language_label_japanese">日本語</string>
     <string name="settings_language_label_system_default">システムのデフォルト</string>

@@ -8,13 +8,10 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 @PreviewMultiScreen
 @Composable
-private fun DocumentSheetPreview() {
+private fun DirectionSheetPreview() {
     PreviewTheme {
         Surface {
-            DocumentSheet(
-                onDownloadClick = {},
-                contentPadding = PaddingValues()
-            )
+            DocumentSheet(contentPadding = PaddingValues())
         }
     }
 }

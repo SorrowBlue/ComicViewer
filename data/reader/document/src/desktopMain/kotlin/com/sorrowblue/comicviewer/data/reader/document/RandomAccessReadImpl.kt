@@ -1,12 +1,24 @@
 package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.plugin.pdf.ISeekableInputStream
 import org.apache.pdfbox.io.RandomAccessRead
 import org.apache.pdfbox.io.RandomAccessReadView
 
 internal class RandomAccessReadImpl(
     private val seekableInputStream: SeekableInputStream,
-) : RandomAccessRead {
+) : RandomAccessRead, ISeekableInputStream {
+    override fun read(buf: ByteArray): Int {
+        return seekableInputStream.read(buf)
+    }
+
+    override fun seek(offset: Long, whence: Int): Long {
+        return seekableInputStream.seek(offset, whence)
+    }
+
+    override fun position(): Long {
+        return seekableInputStream.position()
+    }
 
     override fun close() {
         seekableInputStream.close()

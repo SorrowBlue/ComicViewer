@@ -6,7 +6,7 @@
     <string name="tutorial_text_archive_description">アーカイブおよび圧縮ファイルの表示をサポートします。対応拡張子はzip、rar、7zなどで、パスワード付きファイルにも対応しています。</string>
     <string name="tutorial_text_direction">読む方向</string>
     <string name="tutorial_text_document">ドキュメントサポート</string>
-    <string name="tutorial_text_document_description">プラグインアプリをインストールすると、ドキュメント (.pdf、.epub、.xps、.oxps) を読むことができます。</string>
+    <string name="tutorial_text_document_description">PDFプラグインをインストールすると、「.pdf」「.epub」「.xps」「.oxps」などを読み込むことができます。</string>
     <string name="tutorial_text_document_btn_download">ダウンロード</string>
     <string name="tutorial_title_welcome">ようこそ、親愛なるユーザー！</string>
     <string name="tutorial_message_welcome">このアプリで何ができるかをご覧ください。</string>
