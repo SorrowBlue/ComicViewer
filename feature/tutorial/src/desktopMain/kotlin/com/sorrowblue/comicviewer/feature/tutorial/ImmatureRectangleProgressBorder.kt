@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 private const val ROTATION_ANIMATION_DURATION = 4000
 private const val SWEEP_ANIMATION_DURATION = 4000
 
+@Suppress("ModifierComposed")
 internal fun Modifier.immatureRectangleProgressBorder(
     strokeWidth: Dp = 5.dp,
     cornerRadius: Dp = 12.dp,
@@ -72,16 +73,6 @@ internal fun Modifier.immatureRectangleProgressBorder(
             repeatMode = RepeatMode.Reverse
         ),
         label = "sweep_length"
-    )
-
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = -2.5f,
-        targetValue = 2.5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(300, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "rotation"
     )
 
     // --- 描画のための準備 ---

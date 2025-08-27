@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.tutorial.section
 
-import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -16,10 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.platform.testTag
@@ -52,57 +50,54 @@ data class DocumentSheetUiState(
 )
 
 @Composable
-internal actual fun DocumentSheetOption() {
-    val state = rememberDocumentSheetState()
-    val uiState = state.uiState
-    TextButton(onClick = state::onDocumentDownloadClick) {
-        Row {
-            Icon(ComicIcons.InstallMobile, contentDescription = null)
-            Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(Res.string.tutorial_text_document_btn_download))
+internal actual fun DocumentSheetOption(modifier: Modifier) {
+    Box(modifier) {
+        val state = rememberDocumentSheetState()
+        val uiState = state.uiState
+        TextButton(onClick = state::onDocumentDownloadClick) {
+            Row {
+                Icon(ComicIcons.InstallMobile, contentDescription = null)
+                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text = stringResource(Res.string.tutorial_text_document_btn_download))
+            }
         }
-    }
-
-    remember { Path() }
-
-    remember { Animatable(0f) }
-    rememberCoroutineScope()
-    OutlinedTextField(
-        label = {
-            Text("インストールフォルダを選択")
-        },
-        value = uiState.folderPath,
-        onValueChange = {},
-        readOnly = true,
-        enabled = !uiState.checking,
-        supportingText = {
-            if (uiState.error.isNotEmpty()) {
-                Text(uiState.error, color = ComicTheme.colorScheme.error)
-            } else if (uiState.info.isNotEmpty()) {
-                Text(uiState.info)
-            }
-        },
-        trailingIcon = {
-            if (uiState.checking) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                )
-            } else {
-                IconButton(
-                    onClick = state::onSettingsClick,
-                ) {
-                    Icon(ComicIcons.FolderOpen, contentDescription = null)
+        OutlinedTextField(
+            label = {
+                Text("インストールフォルダを選択")
+            },
+            value = uiState.folderPath,
+            onValueChange = {},
+            readOnly = true,
+            enabled = !uiState.checking,
+            supportingText = {
+                if (uiState.error.isNotEmpty()) {
+                    Text(uiState.error, color = ComicTheme.colorScheme.error)
+                } else if (uiState.info.isNotEmpty()) {
+                    Text(uiState.info)
                 }
-            }
-        },
+            },
+            trailingIcon = {
+                if (uiState.checking) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                    )
+                } else {
+                    IconButton(
+                        onClick = state::onSettingsClick,
+                    ) {
+                        Icon(ComicIcons.FolderOpen, contentDescription = null)
+                    }
+                }
+            },
 
-        modifier = Modifier
-            .testTag("FolderSelect")
-            .immatureRectangleProgressBorder(
-                color = ComicTheme.colorScheme.secondary,
-                enable = uiState.checking
-            )
-    )
+            modifier = Modifier
+                .testTag("FolderSelect")
+                .immatureRectangleProgressBorder(
+                    color = ComicTheme.colorScheme.secondary,
+                    enable = uiState.checking
+                )
+        )
+    }
 }
 
 @Composable
