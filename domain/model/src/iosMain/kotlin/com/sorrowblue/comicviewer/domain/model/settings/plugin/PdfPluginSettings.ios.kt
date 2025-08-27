@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 actual data class PdfPluginSettings(
-    actual val isEnabled: Boolean,
-    actual val isInstallationChecked: Boolean,
+    actual val isEnabled: Boolean = false,
+    actual val isInstallationChecked: Boolean = false,
 )
