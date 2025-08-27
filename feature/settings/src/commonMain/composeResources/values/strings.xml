@@ -8,6 +8,7 @@
     <string name="settings_label_tutorial">Start Tutorial</string>
     <string name="settings_label_donation">Donation</string>
     <string name="settings_label_image_cache">Image cache</string>
+    <string name="settings_label_plugin">Plugin</string>
     <string name="settings_label_viewer">Viewer</string>
     <string name="settings_language_label_all_languages">all languages</string>
     <string name="settings_language_label_japanese">Japanese</string>

@@ -24,10 +24,12 @@ import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSetti
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraph
+import com.sorrowblue.comicviewer.feature.settings.plugin.PluginRoute
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Plugin
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableListDetailPaneScaffold
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_app
@@ -35,6 +37,7 @@ import comicviewer.feature.settings.generated.resources.settings_label_display
 import comicviewer.feature.settings.generated.resources.settings_label_folder
 import comicviewer.feature.settings.generated.resources.settings_label_image_cache
 import comicviewer.feature.settings.generated.resources.settings_label_language
+import comicviewer.feature.settings.generated.resources.settings_label_plugin
 import comicviewer.feature.settings.generated.resources.settings_label_security
 import comicviewer.feature.settings.generated.resources.settings_label_tutorial
 import comicviewer.feature.settings.generated.resources.settings_label_viewer
@@ -161,5 +164,6 @@ enum class SettingsItem(
     TUTORIAL(Res.string.settings_label_tutorial, ComicIcons.Start),
 
     Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage, ImageCache::class),
+    Plugin(Res.string.settings_label_plugin, ComicIcons.Plugin, PluginRoute::class),
     LANGUAGE(Res.string.settings_label_language, ComicIcons.Language, InAppLanguagePicker::class),
 }

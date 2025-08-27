@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySet
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavGraph
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
+import com.sorrowblue.comicviewer.feature.settings.plugin.PluginRoute
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
@@ -31,6 +32,7 @@ import org.koin.core.annotation.Scoped
     startDestination = DisplaySettingsNavGraph::class,
     destinations = [
         ImageCache::class,
+        PluginRoute::class,
         SecuritySettings::class,
         ViewerSettings::class,
         InAppLanguagePicker::class,

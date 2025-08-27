@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_msg_found_pdf_plugin">PDF plugin found</string>
+    <string name="tutorial_msg_not_found_pdf_plugin">No PDF plugin found. Please specify the PDF plugin installation directory.</string>
+</resources>

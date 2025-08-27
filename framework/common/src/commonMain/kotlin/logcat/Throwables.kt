@@ -10,5 +10,5 @@ package logcat
  * - The buffer size is 256 bytes instead of the default 16 bytes.
  */
 fun Throwable.asLog(): String {
-    return stackTraceToString().substring(0, 128)
+    return stackTraceToString()
 }

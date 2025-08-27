@@ -9,6 +9,12 @@ kotlin {
                 implementation(libs.google.android.play.feature.delivery.ktx)
             }
         }
+
+        desktopMain {
+            dependencies {
+                implementation(libs.filekit.compose)
+            }
+        }
     }
 }
 

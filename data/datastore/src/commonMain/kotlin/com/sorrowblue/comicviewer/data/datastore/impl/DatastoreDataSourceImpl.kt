@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.Collection
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
 import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
+import com.sorrowblue.comicviewer.data.datastore.qualifier.PdfPlugin
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
 import com.sorrowblue.comicviewer.data.datastore.qualifier.ViewerOperation
@@ -18,6 +19,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Qualifier
@@ -35,6 +37,7 @@ internal class DatastoreDataSourceImpl(
     @Qualifier(ViewerOperation::class) private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
     @Qualifier(Collection::class) private val collectionSettingsDataStore: DataStore<CollectionSettings>,
     @Qualifier(Security::class) private val securitySettingsDataStore: DataStore<SecuritySettings>,
+    @Qualifier(PdfPlugin::class) private val pdfPluginSettingsDataStore: DataStore<PdfPluginSettings>,
 ) : DatastoreDataSource {
 
     override val settings = settingsDataStore.data
@@ -76,4 +79,8 @@ internal class DatastoreDataSourceImpl(
     override val collectionSettings: Flow<CollectionSettings> = collectionSettingsDataStore.data
     override suspend fun updateCollectionSettings(transform: suspend (CollectionSettings) -> CollectionSettings) =
         collectionSettingsDataStore.updateData(transform)
+
+    override val pdfPluginSettings = pdfPluginSettingsDataStore.data
+    override suspend fun updatePdfPluginSettings(transform: suspend (PdfPluginSettings) -> PdfPluginSettings) =
+        pdfPluginSettingsDataStore.updateData(transform)
 }

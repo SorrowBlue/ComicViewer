@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.pdf.aidl.ISeekableInputStream
+import com.sorrowblue.comicviewer.plugin.aidl.ISeekableInputStream
 
 internal class SeekableInputStreamImpl(private val seekableInputStream: SeekableInputStream) :
     ISeekableInputStream.Stub() {

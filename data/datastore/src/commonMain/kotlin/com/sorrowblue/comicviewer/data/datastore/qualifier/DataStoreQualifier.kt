@@ -28,3 +28,6 @@ annotation class ViewerOperation
 
 @Qualifier
 annotation class Viewer
+
+@Qualifier
+annotation class PdfPlugin
