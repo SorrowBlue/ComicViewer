@@ -3,9 +3,7 @@ package com.sorrowblue.comicviewer.data.reader.document
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.DocumentFileReader
 import com.sorrowblue.comicviewer.domain.service.FileReader
-import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -14,8 +12,6 @@ import logcat.logcat
 import okio.BufferedSink
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
-import org.koin.core.annotation.Qualifier
-
 
 @DocumentFileReader
 @Factory
@@ -23,7 +19,6 @@ internal actual class DocumentFileReader(
     @InjectedParam mimeType: String,
     @InjectedParam private val seekableInputStream: SeekableInputStream,
     private val dataSource: DatastoreDataSource,
-    @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
 
     init {

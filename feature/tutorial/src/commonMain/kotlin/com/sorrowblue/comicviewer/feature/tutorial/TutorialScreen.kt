@@ -42,7 +42,6 @@ internal fun TutorialScreen(
         uiState = uiState,
         pageState = state.pageState,
         onNextClick = { state.onNextClick(navigator::onCompleteTutorial) },
-        onDocumentDownloadClick = state::onDocumentDownloadClick,
         onBindingDirectionChange = state::updateReadingDirection
     )
 
@@ -66,7 +65,6 @@ internal fun TutorialScreen(
     uiState: TutorialScreenUiState,
     pageState: PagerState,
     onNextClick: () -> Unit,
-    onDocumentDownloadClick: () -> Unit,
     onBindingDirectionChange: (BindingDirection) -> Unit,
 ) {
     Scaffold(

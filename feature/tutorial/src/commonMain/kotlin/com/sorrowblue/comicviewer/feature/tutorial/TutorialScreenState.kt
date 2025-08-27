@@ -9,8 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +25,6 @@ internal interface TutorialScreenState {
     fun onNextClick(onComplete: () -> Unit)
     fun updateReadingDirection(bindingDirection: BindingDirection)
     fun onBack()
-    fun onDocumentDownloadClick()
 }
 
 @Composable
@@ -35,13 +32,11 @@ internal fun rememberTutorialScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase = koinInject(),
     pageState: PagerState = rememberPagerState { TutorialSheet.entries.size },
-    uriHandler: UriHandler = LocalUriHandler.current,
 ): TutorialScreenState {
     return remember {
         TutorialScreenStateImpl(
             scope = scope,
             manageViewerOperationSettingsUseCase = manageViewerOperationSettingsUseCase,
-            uriHandler = uriHandler,
             pageState = pageState
         )
     }
@@ -51,7 +46,6 @@ internal fun rememberTutorialScreenState(
 private class TutorialScreenStateImpl(
     private val scope: CoroutineScope,
     private val manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase,
-    private val uriHandler: UriHandler,
     override val pageState: PagerState,
 ) : TutorialScreenState {
 
@@ -66,10 +60,6 @@ private class TutorialScreenStateImpl(
                 )
             )
         }.launchIn(scope)
-    }
-
-    override fun onDocumentDownloadClick() {
-        uriHandler.openUri(APP_DOWNLOAD_LINK)
     }
 
     override fun updateReadingDirection(bindingDirection: BindingDirection) {

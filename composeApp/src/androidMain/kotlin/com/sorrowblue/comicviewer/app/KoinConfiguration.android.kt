@@ -19,7 +19,10 @@ internal actual fun koinConfiguration() = KoinConfiguration {
 
 internal actual fun allModules() =
     listOf(
-        DiModule().module, SettingsModule().module, AppModule().module,
+        DiModule().module,
+        SettingsModule().module,
+        AppModule().module,
         module {
             single { PluginManager() }
-        })
+        }
+    )

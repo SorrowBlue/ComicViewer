@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.tutorial.section
 
 import android.content.Context
 import android.content.pm.PackageManager.NameNotFoundException
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
@@ -23,53 +24,55 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import logcat.LogPriority
 import logcat.logcat
 
-private const val pkg = "com.sorrowblue.comicviewer.plugin.pdf"
-private const val supportMajorVersion = 0
+private const val Pkg = "com.sorrowblue.comicviewer.plugin.pdf"
+private const val SupportMajorVersion = 0
 
 private const val TAG = "DocumentSheetOption"
 
 @Composable
-internal actual fun DocumentSheetOption() {
-    val state = rememberDocumentSheetOptionState()
-    when (state.uiState.pluginState) {
-        PdfPluginState.Enable -> {
-            OutlinedButton(
-                onClick = state::onOpenLinkClick,
-                enabled = false,
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-            ) {
-                Icon(ComicIcons.OpenInBrowser, null)
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("PlayStoreを開く")
+internal actual fun DocumentSheetOption(modifier: Modifier) {
+    Box(modifier) {
+        val state = rememberDocumentSheetOptionState()
+        when (state.uiState.pluginState) {
+            PdfPluginState.Enable -> {
+                OutlinedButton(
+                    onClick = state::onOpenLinkClick,
+                    enabled = false,
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                ) {
+                    Icon(ComicIcons.OpenInBrowser, null)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("PlayStoreを開く")
+                }
+                Spacer(Modifier.size(8.dp))
+                Text("インストール済み")
             }
-            Spacer(Modifier.size(8.dp))
-            Text("インストール済み")
-        }
 
-        PdfPluginState.OldVersion -> {
-            OutlinedButton(
-                onClick = state::onOpenLinkClick,
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-            ) {
-                Icon(ComicIcons.OpenInBrowser, null)
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("PlayStoreを開く")
+            PdfPluginState.OldVersion -> {
+                OutlinedButton(
+                    onClick = state::onOpenLinkClick,
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                ) {
+                    Icon(ComicIcons.OpenInBrowser, null)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("PlayStoreを開く")
+                }
+                Spacer(Modifier.size(8.dp))
+                Text("インストールされているPDFプラグインのバージョンが古いです\n最新Verにアップデートしてください")
             }
-            Spacer(Modifier.size(8.dp))
-            Text("インストールされているPDFプラグインのバージョンが古いです\n最新Verにアップデートしてください")
-        }
 
-        PdfPluginState.NotInstalled -> {
-            OutlinedButton(
-                onClick = state::onOpenLinkClick,
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-            ) {
-                Icon(ComicIcons.OpenInBrowser, null)
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("PlayStoreを開く")
+            PdfPluginState.NotInstalled -> {
+                OutlinedButton(
+                    onClick = state::onOpenLinkClick,
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                ) {
+                    Icon(ComicIcons.OpenInBrowser, null)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("PlayStoreを開く")
+                }
+                Spacer(Modifier.size(8.dp))
+                Text("プラグインがインストールされていません")
             }
-            Spacer(Modifier.size(8.dp))
-            Text("プラグインがインストールされていません")
         }
     }
 }
@@ -81,7 +84,7 @@ private data class DocumentSheetOptionUiState(
 private enum class PdfPluginState {
     Enable,
     OldVersion,
-    NotInstalled
+    NotInstalled,
 }
 
 @Composable
@@ -117,15 +120,15 @@ private class DocumentSheetOptionStateImpl(
 
     private fun extracted() {
         val versionName = try {
-            context.packageManager.getPackageInfo(pkg, 0)?.versionName
+            context.packageManager.getPackageInfo(Pkg, 0)?.versionName
         } catch (_: NameNotFoundException) {
-            logcat(TAG, LogPriority.INFO) { "Plugin '$pkg' is not installed" }
+            logcat(TAG, LogPriority.INFO) { "Plugin '$Pkg' is not installed" }
             uiState = uiState.copy(pluginState = PdfPluginState.NotInstalled)
             null
         }
         versionName?.let {
             val majorVersion = versionName.split(".")[0].toInt()
-            uiState = if (supportMajorVersion <= majorVersion) {
+            uiState = if (SupportMajorVersion <= majorVersion) {
                 uiState.copy(pluginState = PdfPluginState.Enable)
             } else {
                 uiState.copy(pluginState = PdfPluginState.OldVersion)
@@ -134,7 +137,7 @@ private class DocumentSheetOptionStateImpl(
     }
 
     override fun onOpenLinkClick() {
-        uriHandler.openUri("https://play.google.com/store/apps/details?id=$pkg")
+        uriHandler.openUri("https://play.google.com/store/apps/details?id=$Pkg")
     }
 
     fun onResume() {

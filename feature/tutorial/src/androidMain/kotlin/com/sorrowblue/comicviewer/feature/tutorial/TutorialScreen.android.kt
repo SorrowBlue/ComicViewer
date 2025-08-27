@@ -13,7 +13,6 @@ private fun TutorialScreenPreview() {
             uiState = TutorialScreenUiState(),
             pageState = rememberPagerState { 3 },
             onNextClick = {},
-            onDocumentDownloadClick = {},
             onBindingDirectionChange = {}
         )
     }

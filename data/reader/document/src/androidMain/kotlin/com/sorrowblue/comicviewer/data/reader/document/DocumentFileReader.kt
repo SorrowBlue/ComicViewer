@@ -121,7 +121,6 @@ internal actual class DocumentFileReader(
         pdfService = null
     }
 
-
     private fun PluginFileReader.loadPage(pageIndex: Int, bufferedSink: BufferedSink) {
         loadPage(pageIndex).toUri().let(context.contentResolver::openInputStream)
             ?.use { inputStream ->
