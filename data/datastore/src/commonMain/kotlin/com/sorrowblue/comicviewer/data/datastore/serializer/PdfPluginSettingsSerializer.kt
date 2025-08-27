@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.data.datastore.serializer
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 
 internal object PdfPluginSettingsSerializer :
-    OkioKSerializer<PdfPluginSettings>(PdfPluginSettings.serializer()) {
+    OkioKSerializer<PdfPluginSettings>(PdfPluginSettings.kSerializer()) {
     override val fileName = "pdfPluginSettings.pb"
-    override val defaultValue = PdfPluginSettings()
+    override val defaultValue = PdfPluginSettings.default()
 }
