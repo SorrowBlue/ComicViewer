@@ -69,7 +69,9 @@ jobs:
           tar \
             --dereference --hard-dereference \
             --directory "_site" \
-            -czf "$RUNNER_TEMP/artifact.tar" \
+            -cvf "$RUNNER_TEMP/artifact.tar" \
+            --exclude=.git \
+            --exclude=.github \
             .
           echo "::endgroup::"
       - name: Upload artifact
@@ -91,5 +93,3 @@ jobs:
     steps:
       - uses: actions/deploy-pages@v4
         id: deployment
-        with:
-          artifact-name: github-pages
