@@ -1,6 +1,9 @@
 package com.sorrowblue.comicviewer.domain.model.settings.plugin
 
-expect class PdfPluginSettings {
+import kotlinx.serialization.Serializable
+
+@Serializable
+expect class PdfPluginSettings() {
     val isEnabled: Boolean
     val isInstallationChecked: Boolean
 }
