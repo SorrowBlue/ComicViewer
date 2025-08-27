@@ -69,14 +69,14 @@ jobs:
           tar \
             --dereference --hard-dereference \
             --directory "_site" \
-            -czf "$RUNNER_TEMP/github-pages.tar.gz" \
+            -czf "$RUNNER_TEMP/artifact.tar" \
             .
           echo "::endgroup::"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: ${{ runner.temp }}/github-pages.tar.gz
+          path: ${{ runner.temp }}/artifact.tar
           retention-days: 1
           if-no-files-found: error
   deploy:
