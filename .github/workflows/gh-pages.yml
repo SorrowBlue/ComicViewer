@@ -62,10 +62,23 @@ jobs:
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
+      - name: Archive artifact
+        shell: sh
+        run: |
+          echo "::group::Archive artifact"
+          tar \
+            --dereference --hard-dereference \
+            --directory "_site" \
+            -czf "$RUNNER_TEMP/github-pages.tar.gz" \
+            .
+          echo "::endgroup::"
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          path: _site
+          name: github-pages
+          path: ${{ runner.temp }}/github-pages.tar.gz
+          retention-days: 1
+          if-no-files-found: error
   deploy:
     needs: jekyll-build
     permissions:
@@ -78,3 +91,5 @@ jobs:
     steps:
       - uses: actions/deploy-pages@v4
         id: deployment
+        with:
+          artifact-name: github-pages
