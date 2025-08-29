@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_REFERENCE")
+
 package com.sorrowblue.comicviewer.feature.book
 
 import androidx.compose.foundation.basicMarquee
@@ -17,11 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.material3.tokens.ElevationTokens
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.material3.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 
 @Composable
