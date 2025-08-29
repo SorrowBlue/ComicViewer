@@ -8,7 +8,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -79,7 +78,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
             trailingIcon = {
                 if (uiState.checking) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
                     )
                 } else {
                     IconButton(

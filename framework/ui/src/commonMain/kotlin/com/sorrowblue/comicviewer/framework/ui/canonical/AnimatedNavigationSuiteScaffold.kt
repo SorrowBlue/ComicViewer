@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
 import androidx.compose.material3.DrawerDefaults
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.ShortNavigationBarDefaults
@@ -82,7 +81,7 @@ fun AnimatedNavigationSuiteScaffold(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun Modifier.navigationSuiteScaffoldSharedElement(
     navigationSuiteType: NavigationSuiteType,
@@ -121,7 +120,6 @@ private fun Modifier.navigationSuiteScaffoldSharedElement(
         }
     }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Modifier.navigationSuiteScaffoldConsumeWindowInsets(
     navigationSuiteType: NavigationSuiteType,

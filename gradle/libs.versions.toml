@@ -46,9 +46,9 @@ kotlinx-kover = "0.9.1"
 kotlinx-serialization = "1.9.0"
 licensee = "1.13.0"
 modulegraph = "0.12.1"
-multiplatform-compose = "1.9.0-beta01"
-multiplatform-compose-material3 = "1.9.0-alpha04"
-multiplatform-compose-material3Adaptive = "1.2.0-alpha04"
+multiplatform-compose = "1.9.0-rc01"
+multiplatform-compose-material3 = "1.9.0-beta03"
+multiplatform-compose-material3Adaptive = "1.2.0-alpha05"
 multiplatform-core = "1.1.0-alpha03"
 multiplatform-lifecycleCompose = "2.9.2"
 multiplatform-navigationCompose = "2.9.0-beta05"
@@ -107,7 +107,7 @@ compose-multiplatform-material3 = { group = "org.jetbrains.compose.material3", n
 compose-multiplatform-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version.ref = "multiplatform-compose-material3Adaptive" }
 compose-multiplatform-material3-adaptiveLayout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version.ref = "multiplatform-compose-material3Adaptive" }
 compose-multiplatform-material3-adaptiveNavigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "multiplatform-compose-material3Adaptive" }
-compose-multiplatform-material3AdaptiveNavigationSuite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "multiplatform-compose" }
+compose-multiplatform-material3AdaptiveNavigationSuite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version = "1.9.0-beta04" }
 compose-multiplatform-navigationCompose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "multiplatform-navigationCompose" }
 credential-secure-storage = { group = "com.microsoft", name = "credential-secure-storage", version.ref = "credentialSecureStorage" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }

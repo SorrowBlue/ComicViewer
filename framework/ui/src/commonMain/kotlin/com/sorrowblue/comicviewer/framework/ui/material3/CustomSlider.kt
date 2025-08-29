@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_REFERENCE")
+
 package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.foundation.background
@@ -13,13 +15,17 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
+import androidx.compose.material3.fromToken
 import androidx.compose.material3.ripple
+import androidx.compose.material3.tokens.ColorSchemeKeyTokens
+import androidx.compose.material3.tokens.ElevationTokens
+import androidx.compose.material3.tokens.ShapeKeyTokens
+import androidx.compose.material3.tokens.TypographyKeyTokens
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -239,79 +245,6 @@ private fun Indicator(
     }
 }
 
-internal enum class ColorSchemeKeyTokens {
-    Background,
-    Error,
-    ErrorContainer,
-    InverseOnSurface,
-    InversePrimary,
-    InverseSurface,
-    OnBackground,
-    OnError,
-    OnErrorContainer,
-    OnPrimary,
-    OnPrimaryContainer,
-    OnSecondary,
-    OnSecondaryContainer,
-    OnSurface,
-    OnSurfaceVariant,
-    OnTertiary,
-    OnTertiaryContainer,
-    Outline,
-    OutlineVariant,
-    Primary,
-    PrimaryContainer,
-    Scrim,
-    Secondary,
-    SecondaryContainer,
-    Surface,
-    SurfaceTint,
-    SurfaceVariant,
-    Tertiary,
-    TertiaryContainer,
-}
-
-internal enum class ShapeKeyTokens {
-    CornerExtraLarge,
-    CornerExtraLargeTop,
-    CornerExtraSmall,
-    CornerExtraSmallTop,
-    CornerFull,
-    CornerLarge,
-    CornerLargeEnd,
-    CornerLargeTop,
-    CornerMedium,
-    CornerNone,
-    CornerSmall,
-}
-
-object ElevationTokens {
-    val Level0 = 0.0.dp
-    val Level1 = 1.0.dp
-    val Level2 = 3.0.dp
-    val Level3 = 6.0.dp
-    val Level4 = 8.0.dp
-    val Level5 = 12.0.dp
-}
-
-internal enum class TypographyKeyTokens {
-    BodyLarge,
-    BodyMedium,
-    BodySmall,
-    DisplayLarge,
-    DisplayMedium,
-    DisplaySmall,
-    HeadlineLarge,
-    HeadlineMedium,
-    HeadlineSmall,
-    LabelLarge,
-    LabelMedium,
-    LabelSmall,
-    TitleLarge,
-    TitleMedium,
-    TitleSmall,
-}
-
 internal object SliderTokens {
     val ActiveTrackColor = ColorSchemeKeyTokens.Primary
     val ActiveTrackHeight = 4.0.dp
@@ -357,40 +290,6 @@ internal object SliderTokens {
 @Composable
 internal fun ColorSchemeKeyTokens.toColor(): Color {
     return MaterialTheme.colorScheme.fromToken(this)
-}
-
-internal fun ColorScheme.fromToken(value: ColorSchemeKeyTokens): Color {
-    return when (value) {
-        ColorSchemeKeyTokens.Background -> background
-        ColorSchemeKeyTokens.Error -> error
-        ColorSchemeKeyTokens.ErrorContainer -> errorContainer
-        ColorSchemeKeyTokens.InverseOnSurface -> inverseOnSurface
-        ColorSchemeKeyTokens.InversePrimary -> inversePrimary
-        ColorSchemeKeyTokens.InverseSurface -> inverseSurface
-        ColorSchemeKeyTokens.OnBackground -> onBackground
-        ColorSchemeKeyTokens.OnError -> onError
-        ColorSchemeKeyTokens.OnErrorContainer -> onErrorContainer
-        ColorSchemeKeyTokens.OnPrimary -> onPrimary
-        ColorSchemeKeyTokens.OnPrimaryContainer -> onPrimaryContainer
-        ColorSchemeKeyTokens.OnSecondary -> onSecondary
-        ColorSchemeKeyTokens.OnSecondaryContainer -> onSecondaryContainer
-        ColorSchemeKeyTokens.OnSurface -> onSurface
-        ColorSchemeKeyTokens.OnSurfaceVariant -> onSurfaceVariant
-        ColorSchemeKeyTokens.SurfaceTint -> surfaceTint
-        ColorSchemeKeyTokens.OnTertiary -> onTertiary
-        ColorSchemeKeyTokens.OnTertiaryContainer -> onTertiaryContainer
-        ColorSchemeKeyTokens.Outline -> outline
-        ColorSchemeKeyTokens.OutlineVariant -> outlineVariant
-        ColorSchemeKeyTokens.Primary -> primary
-        ColorSchemeKeyTokens.PrimaryContainer -> primaryContainer
-        ColorSchemeKeyTokens.Scrim -> scrim
-        ColorSchemeKeyTokens.Secondary -> secondary
-        ColorSchemeKeyTokens.SecondaryContainer -> secondaryContainer
-        ColorSchemeKeyTokens.Surface -> surface
-        ColorSchemeKeyTokens.SurfaceVariant -> surfaceVariant
-        ColorSchemeKeyTokens.Tertiary -> tertiary
-        ColorSchemeKeyTokens.TertiaryContainer -> tertiaryContainer
-    }
 }
 
 object CustomSliderDefaults {

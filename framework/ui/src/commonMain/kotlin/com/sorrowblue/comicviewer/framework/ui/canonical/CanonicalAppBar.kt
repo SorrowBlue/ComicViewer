@@ -27,6 +27,8 @@ fun CanonicalScaffoldState<*>.CanonicalAppBar(
     val containerColor by animateColorAsState(
         if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
     )
+
+    @Suppress("INVISIBLE_REFERENCE")
     TopAppBar(
         title = title,
         subtitle = subtitle,

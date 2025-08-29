@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.framework.designsystem.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.SegmentedButtonColors
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
@@ -32,11 +31,6 @@ object ComicTheme {
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.shapes
-
-    val motionScheme: MotionScheme
-        @Composable
-        @ReadOnlyComposable
-        get() = MaterialTheme.motionScheme
 
     var fixedSegmentedButtonColorsCached: SegmentedButtonColors? = null
 }
