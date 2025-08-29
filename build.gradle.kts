@@ -1,10 +1,8 @@
 import dev.iurysouza.modulegraph.ModuleType.Custom
 import dev.iurysouza.modulegraph.Theme
-import java.util.Locale
 
 plugins {
     alias(libs.plugins.detekt)
-    alias(libs.plugins.versions)
     alias(libs.plugins.licensee) apply false
     alias(libs.plugins.dokka)
     alias(libs.plugins.modulegraph)
@@ -58,23 +56,6 @@ dependencies {
     dokka(projects.framework.designsystem)
     dokka(projects.framework.notification)
     dokka(projects.framework.ui)
-}
-
-fun isNonStable(version: String): Boolean {
-    val stableKeyword =
-        listOf("RELEASE", "FINAL", "GA").any { version.uppercase(Locale.getDefault()).contains(it) }
-    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
-    val isStable = stableKeyword || regex.matches(version)
-    return isStable.not()
-}
-
-tasks.named(
-    "dependencyUpdates",
-    com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask::class.java
-).configure {
-    rejectVersionIf {
-        isNonStable(candidate.version) && !isNonStable(currentVersion)
-    }
 }
 
 tasks.register("reportMerge", io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
