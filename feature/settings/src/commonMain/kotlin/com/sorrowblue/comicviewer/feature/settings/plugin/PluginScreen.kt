@@ -12,10 +12,12 @@ import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_plugin
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
 data object PluginRoute
@@ -48,9 +50,17 @@ internal fun PluginScreen(
                 IconButton(onClick = {
                     // onClick
                 }) {
-                    Icon(imageVector = ComicIcons.Delete, contentDescription = null)
+                    Icon(imageVector = ComicIcons.Settings, contentDescription = null)
                 }
             }
         )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewPluginScreen() {
+    PreviewTheme {
+        PluginScreen()
     }
 }
