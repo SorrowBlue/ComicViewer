@@ -61,7 +61,6 @@ soil = "1.0.0-alpha12"
 squareup-okio = "3.16.0"
 targetSdk = "36"
 versionCatalogLinter = "1.1.0"
-versions = "0.52.0"
 
 [libraries]
 aboutlibraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "aboutlibraries" }
@@ -180,4 +179,3 @@ kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kov
 licensee = { id = "app.cash.licensee", version.ref = "licensee" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }
-versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
