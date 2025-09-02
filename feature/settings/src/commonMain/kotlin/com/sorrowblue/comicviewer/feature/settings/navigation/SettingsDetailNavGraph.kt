@@ -7,6 +7,9 @@ import com.sorrowblue.cmpdestinations.Destination
 import com.sorrowblue.cmpdestinations.GraphNavigation
 import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
+import com.sorrowblue.comicviewer.feature.authentication.Authentication
+import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
+import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.settings.InAppLanguagePicker
 import com.sorrowblue.comicviewer.feature.settings.SettingsItem
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
@@ -36,6 +39,7 @@ import org.koin.core.annotation.Scoped
         SecuritySettings::class,
         ViewerSettings::class,
         InAppLanguagePicker::class,
+        Authentication::class,
     ],
     nestedGraphs = [
         AppInfoSettingsNavGraph::class,
@@ -53,20 +57,24 @@ expect object SettingsDetailNavGraph : GraphNavigation {
 }
 
 @Scope(SettingsScope::class)
-@Scoped(binds = [SecuritySettingsScreenNavigator::class, SettingsDetailNavigator::class, SettingsExtraNavigator::class])
+@Scoped(binds = [SecuritySettingsScreenNavigator::class, SettingsDetailNavigator::class, SettingsExtraNavigator::class, AuthenticationScreenNavigator::class])
 internal class SettingsDetailNavGraphNavigator(
     private val scope: CoroutineScope,
     private val navController: NavController,
     private val navigator: ThreePaneScaffoldNavigator<SettingsItem>,
     private val settingsScreenNavigator: SettingsScreenNavigator,
-) : SecuritySettingsScreenNavigator, SettingsDetailNavigator, SettingsExtraNavigator {
+) : SecuritySettingsScreenNavigator, SettingsDetailNavigator, SettingsExtraNavigator, AuthenticationScreenNavigator {
 
     override fun navigateToChangeAuth(enabled: Boolean) {
-        settingsScreenNavigator.navigateToChangeAuth(enabled)
+        if (enabled) {
+            navController.navigate(Authentication(ScreenType.Register))
+        } else {
+            navController.navigate(Authentication(ScreenType.Erase))
+        }
     }
 
     override fun navigateToPasswordChange() {
-        settingsScreenNavigator.onPasswordChange()
+        navController.navigate(Authentication(ScreenType.Change))
     }
 
     override fun navigateBack() {
@@ -77,5 +85,9 @@ internal class SettingsDetailNavGraphNavigator(
 
     override fun navigateUp() {
         navController.navigateUp()
+    }
+
+    override fun onCompleted() {
+        navController.popBackStack()
     }
 }
