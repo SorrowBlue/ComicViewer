@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNav
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.settings.InAppLanguagePicker
 import com.sorrowblue.comicviewer.feature.settings.SettingsItem
-import com.sorrowblue.comicviewer.feature.settings.SettingsScreenNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsExtraNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
@@ -62,7 +61,6 @@ internal class SettingsDetailNavGraphNavigator(
     private val scope: CoroutineScope,
     private val navController: NavController,
     private val navigator: ThreePaneScaffoldNavigator<SettingsItem>,
-    private val settingsScreenNavigator: SettingsScreenNavigator,
 ) : SecuritySettingsScreenNavigator, SettingsDetailNavigator, SettingsExtraNavigator, AuthenticationScreenNavigator {
 
     override fun navigateToChangeAuth(enabled: Boolean) {
