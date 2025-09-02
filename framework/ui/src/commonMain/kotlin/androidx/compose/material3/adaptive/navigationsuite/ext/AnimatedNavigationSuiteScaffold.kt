@@ -1,10 +1,11 @@
-package com.sorrowblue.comicviewer.framework.ui.canonical
+package androidx.compose.material3.adaptive.navigationsuite.ext
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -16,7 +17,6 @@ import androidx.compose.material3.ShortNavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.WideNavigationRailDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuite
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
@@ -29,13 +29,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationBarSharedElementKey
+import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationBarTransitionEnter
+import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationBarTransitionExit
+import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailSharedElementKey
+import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailTransitionEnter
+import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailTransitionExit
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AnimatedNavigationSuiteScaffold(
     visibilityScope: AnimatedVisibilityScope,
     transitionScope: SharedTransitionScope,
-    navigationItems: @Composable () -> Unit,
+    navigationItems: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
     navigationSuiteType: NavigationSuiteType =
         NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo()),
@@ -53,6 +61,7 @@ fun AnimatedNavigationSuiteScaffold(
     Surface(modifier = modifier, color = containerColor, contentColor = contentColor) {
         NavigationSuiteScaffoldLayout(
             navigationSuite = {
+                // TODO ShortNavigationBarがSharedTransitionAnimationに対応したら[androidx.compose.material3.adaptive.navigationsuite.NavigationSuite]に置き換える
                 NavigationSuite(
                     navigationSuiteType = navigationSuiteType,
                     colors = navigationSuiteColors,
