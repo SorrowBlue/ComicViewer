@@ -56,7 +56,9 @@ expect object SettingsDetailNavGraph : GraphNavigation {
 }
 
 @Scope(SettingsScope::class)
-@Scoped(binds = [SecuritySettingsScreenNavigator::class, SettingsDetailNavigator::class, SettingsExtraNavigator::class, AuthenticationScreenNavigator::class])
+@Scoped(
+    binds = [SecuritySettingsScreenNavigator::class, SettingsDetailNavigator::class, SettingsExtraNavigator::class, AuthenticationScreenNavigator::class]
+)
 internal class SettingsDetailNavGraphNavigator(
     private val scope: CoroutineScope,
     private val navController: NavController,
