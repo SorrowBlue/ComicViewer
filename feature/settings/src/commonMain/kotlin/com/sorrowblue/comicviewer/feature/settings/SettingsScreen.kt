@@ -54,8 +54,6 @@ import org.koin.dsl.module
 internal interface SettingsScreenNavigator {
     fun navigateUp()
     fun onStartTutorialClick()
-    fun navigateToChangeAuth(enabled: Boolean)
-    fun onPasswordChange()
 }
 
 @Serializable

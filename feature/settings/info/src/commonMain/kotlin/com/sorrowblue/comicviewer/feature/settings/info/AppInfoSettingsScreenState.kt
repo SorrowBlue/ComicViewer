@@ -51,6 +51,6 @@ private class AppInfoSettingsScreenStateImpl(
     )
 
     override fun launchReview() {
-        urlHandler.openUri("http://play.google.com/store/apps/details?id=comicviewr")
+        urlHandler.openUri("http://play.google.com/store/apps/details?id=com.sorrowblue.comicviewer")
     }
 }
