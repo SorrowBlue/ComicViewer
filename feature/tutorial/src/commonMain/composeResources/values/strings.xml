@@ -6,7 +6,7 @@
     <string name="tutorial_text_archive_description">Supports viewing of archived and compressed files. Supported extensions are zip, rar, 7z, etc. Files with passwords are also supported.</string>
     <string name="tutorial_text_direction">Reading direction</string>
     <string name="tutorial_text_document">Document Support</string>
-    <string name="tutorial_text_document_description">You have installed the plugin app, you can read the documentation (.pdf, .epub, .xps, .oxps).</string>
+    <string name="tutorial_text_document_description">You can read document files by installing the plugin app. Supported document formats include PDF, EPUB, XPS, and more.</string>
     <string name="tutorial_text_document_btn_download">Download</string>
     <string name="tutorial_title_welcome">Welcome, dear user!</string>
     <string name="tutorial_message_welcome">See what you can do with this app.</string>

@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.tutorial.section
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -50,7 +50,7 @@ data class DocumentSheetUiState(
 
 @Composable
 internal actual fun DocumentSheetOption(modifier: Modifier) {
-    Box(modifier) {
+    Column(modifier) {
         val state = rememberDocumentSheetState()
         val uiState = state.uiState
         TextButton(onClick = state::onDocumentDownloadClick) {
