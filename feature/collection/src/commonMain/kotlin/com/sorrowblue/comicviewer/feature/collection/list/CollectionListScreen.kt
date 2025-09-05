@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.feature.collection.list
 
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.ext.FloatingActionButtonMenuItem
 import androidx.compose.runtime.Composable
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.collection.Collection

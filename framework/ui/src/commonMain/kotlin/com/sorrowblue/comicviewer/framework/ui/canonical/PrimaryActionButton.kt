@@ -8,14 +8,13 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.FloatingActionButtonMenuScope
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SmallExtendedFloatingActionButton
+import androidx.compose.material3.ToggleFloatingActionButton
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.WideNavigationRailValue
-import androidx.compose.material3.ext.FloatingActionButtonMenu
-import androidx.compose.material3.ext.FloatingActionButtonMenuScope
-import androidx.compose.material3.ext.SmallExtendedFloatingActionButton
-import androidx.compose.material3.ext.ToggleFloatingActionButton
-import androidx.compose.material3.ext.ToggleFloatingActionButtonDefaults.animateIcon
-import androidx.compose.material3.ext.animateFloatingActionButton
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -93,28 +92,28 @@ fun CanonicalScaffoldState<*>.PrimaryActionButtonMenu(
     content: @Composable FloatingActionButtonMenuScope.() -> Unit,
 ) {
     var fabMenuExpanded by remember { mutableStateOf(false) }
-    FloatingActionButtonMenu(
+    androidx.compose.material3.FloatingActionButtonMenu(
         expanded = fabMenuExpanded,
         button = {
             ToggleFloatingActionButton(
                 modifier =
-                Modifier.semantics {
-                    traversalIndex = -1f
-                    stateDescription = if (fabMenuExpanded) "Expanded" else "Collapsed"
-                    contentDescription = "Toggle menu"
-                }
-                    .animateFloatingActionButton(
-                        visible = visible && floatingActionButtonState.targetValue.isVisible || fabMenuExpanded,
-                        alignment = Alignment.BottomEnd
-                    )
-                    .animateEnterExit(
-                        enter = FloatingActionButtonTransitionEnter,
-                        exit = FloatingActionButtonTransitionExit
-                    )
-                    .sharedElement(
-                        sharedContentState = rememberSharedContentState("fab"),
-                        animatedVisibilityScope = this
-                    ),
+                    Modifier.semantics {
+                        traversalIndex = -1f
+                        stateDescription = if (fabMenuExpanded) "Expanded" else "Collapsed"
+                        contentDescription = "Toggle menu"
+                    }
+                        .animateFloatingActionButton(
+                            visible = visible && floatingActionButtonState.targetValue.isVisible || fabMenuExpanded,
+                            alignment = Alignment.BottomEnd
+                        )
+                        .animateEnterExit(
+                            enter = FloatingActionButtonTransitionEnter,
+                            exit = FloatingActionButtonTransitionExit
+                        )
+                        .sharedElement(
+                            sharedContentState = rememberSharedContentState("fab"),
+                            animatedVisibilityScope = this
+                        ),
                 checked = fabMenuExpanded,
                 onCheckedChange = { fabMenuExpanded = !fabMenuExpanded }
             ) {
