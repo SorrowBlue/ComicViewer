@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.feature.tutorial.section
 
 import android.content.Context
 import android.content.pm.PackageManager.NameNotFoundException
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -31,7 +32,7 @@ private const val TAG = "DocumentSheetOption"
 
 @Composable
 internal actual fun DocumentSheetOption(modifier: Modifier) {
-    Box(modifier) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         val state = rememberDocumentSheetOptionState()
         when (state.uiState.pluginState) {
             PdfPluginState.Enable -> {
