@@ -54,7 +54,9 @@ internal fun DocumentSheet(contentPadding: PaddingValues) {
                 }
             }
             Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
-            DocumentSheetOption()
+            DocumentSheetOption(
+                modifier = Modifier.widthIn(max = 420.dp)
+            )
         },
         contentPadding = contentPadding
     )
