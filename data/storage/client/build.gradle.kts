@@ -14,7 +14,6 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.androidx.startup.runtime)
-                implementation(libs.google.android.play.feature.delivery.ktx)
                 implementation(libs.koin.androidxStartup)
             }
         }

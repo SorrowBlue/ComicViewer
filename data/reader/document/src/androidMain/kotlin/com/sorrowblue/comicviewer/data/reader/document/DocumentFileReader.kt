@@ -30,6 +30,9 @@ import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Qualifier
 import com.sorrowblue.comicviewer.plugin.aidl.FileReader as PluginFileReader
 
+internal const val PDF_PLUGIN_PACKAGE = "com.sorrowblue.comicviewer.plugin.pdf"
+internal const val PDF_PLUGIN_SERVICE = "com.sorrowblue.comicviewer.plugin.pdf.PdfService"
+
 @DocumentFileReader
 @Factory
 internal actual class DocumentFileReader(
@@ -48,10 +51,7 @@ internal actual class DocumentFileReader(
     init {
         job.launch { mutex.lock() }
         val intent = Intent().apply {
-            component = ComponentName(
-                "com.sorrowblue.comicviewer.plugin.pdf",
-                "com.sorrowblue.comicviewer.plugin.pdf.PdfService"
-            )
+            component = ComponentName(PDF_PLUGIN_PACKAGE, PDF_PLUGIN_SERVICE)
         }
         context.bindService(intent, this@DocumentFileReader, Context.BIND_AUTO_CREATE)
     }

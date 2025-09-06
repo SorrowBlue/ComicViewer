@@ -26,7 +26,7 @@ internal object OutsideDocumentFileReader {
             instance = singletonClass.getField("INSTANCE").get(null)
             val methodWithoutArgs = singletonClass.getMethod("init")
             methodWithoutArgs.invoke(instance)
-            classLoader.loadClass("com.sorrowblue.comicviewer.plugin.pdf.PdfPlugin").apply {
+            singletonClass.apply {
                 getReader = singletonClass.getMethod(
                     "getReader",
                     ISeekableInputStream::class.java,
