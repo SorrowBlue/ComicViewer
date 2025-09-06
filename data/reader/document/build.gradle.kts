@@ -14,6 +14,8 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.androidx.core.ktx)
+                implementation(libs.androidx.startup.runtime)
+                implementation(libs.koin.androidxStartup)
             }
         }
         desktopMain {
