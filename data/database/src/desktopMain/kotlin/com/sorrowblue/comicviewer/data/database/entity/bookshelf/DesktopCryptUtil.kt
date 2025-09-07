@@ -15,13 +15,13 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 import org.koin.mp.KoinPlatform
 
 private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
 
-@Singleton
+@Single
 internal class DesktopCryptUtil : CryptUtil {
 
     @OptIn(ExperimentalEncodingApi::class)

@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.database.dao
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
-import com.sorrowblue.comicviewer.data.database.EntityFactory
-import com.sorrowblue.comicviewer.data.database.TestMan
+import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
+import com.sorrowblue.comicviewer.data.database.DatabaseTest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.test.MultiplatformAndroidJUnit4
 import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
@@ -13,7 +13,7 @@ import kotlin.test.assertContentEquals
 import kotlinx.coroutines.test.runTest
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
-internal class FileDaoTest : TestMan() {
+internal class FileDaoTest : DatabaseTest() {
 
     private val dao: BookshelfDao get() = db.bookshelfDao()
 

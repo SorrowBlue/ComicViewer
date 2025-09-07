@@ -22,9 +22,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
+@Single
 internal class CollectionLocalDataSourceImpl(
     private val dao: CollectionDao,
     @param:IoDispatcher private val dispatcher: CoroutineDispatcher,

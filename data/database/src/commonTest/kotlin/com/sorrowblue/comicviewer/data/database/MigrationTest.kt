@@ -24,7 +24,7 @@ internal expect val AutoMigration_6_7_Impl: Migration
 internal expect fun getMigrationTestHelper(): MigrationTestHelper
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
-internal class MigrationTest : TestMan() {
+internal class MigrationTest : DatabaseTest() {
 
     @Test
     fun testMigration_2_3() = runTest {

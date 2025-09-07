@@ -41,22 +41,25 @@ import okio.source
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
+@SmbFileClient
+@Factory
+internal actual fun providesSmbFileClient(@InjectedParam bookshelf: SmbServer): FileClient<SmbServer> {
+    return SmbFileClient(bookshelf = bookshelf)
+}
+
 private var rootSmbFile: SmbFile? = null
+
 private val mutex = Mutex()
 
-@Factory
-@SmbFileClient
-internal actual class SmbFileClient(
-    @InjectedParam actual override val bookshelf: SmbServer,
-) : FileClient<SmbServer> {
+private class SmbFileClient(override val bookshelf: SmbServer) : FileClient<SmbServer> {
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         return runCommand {
             smbFile(file.path).openInputStream().source().buffer()
         }
     }
 
-    actual override suspend fun connect(path: String) {
+    override suspend fun connect(path: String) {
         kotlin.runCatching {
             smbFile(path).use {
                 it.connect()
@@ -98,19 +101,19 @@ internal actual class SmbFileClient(
         }
     }
 
-    actual override suspend fun exists(path: String): Boolean {
+    override suspend fun exists(path: String): Boolean {
         return runCommand {
             smbFile(path).exists()
         }
     }
 
-    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return runCommand {
             smbFile(path).toFileModel(resolveImageFolder)
         }
     }
 
-    actual override suspend fun attribute(path: String): FileAttribute {
+    override suspend fun attribute(path: String): FileAttribute {
         return runCommand {
             smbFile(path).run {
                 FileAttribute(
@@ -133,7 +136,7 @@ internal actual class SmbFileClient(
         return attributes and attribute == attribute
     }
 
-    actual override suspend fun listFiles(
+    override suspend fun listFiles(
         file: File,
         resolveImageFolder: Boolean,
     ): List<File> {
@@ -143,7 +146,7 @@ internal actual class SmbFileClient(
         }
     }
 
-    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return runCommand {
             SmbSeekableInputStream(smbFile(file.path), false)
         }
@@ -286,7 +289,6 @@ internal actual class SmbFileClient(
     }
 
     private fun URI.decode() = URLDecoder.decode(toString().replace("+", "%2B"), "UTF-8")
-
     private fun cifsContext(): CIFSContext {
         val prop = Properties().apply {
             setProperty("jcifs.smb.client.minVersion", DialectVersion.SMB202.name)

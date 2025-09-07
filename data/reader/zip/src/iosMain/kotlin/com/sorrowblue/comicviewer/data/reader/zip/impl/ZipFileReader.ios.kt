@@ -1,8 +1,11 @@
 package com.sorrowblue.comicviewer.data.reader.zip.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
 import com.sorrowblue.comicviewer.domain.service.FileReader
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import logcat.asLog
 import logcat.logcat
 import okio.BufferedSink
@@ -13,12 +16,15 @@ import okio.openZip
 import okio.use
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Qualifier
 import platform.Foundation.NSURL
 
 @ZipFileReader
 @Factory
-internal actual class ZipFileReader(
-    @InjectedParam actual val seekableInputStream: SeekableInputStream,
+internal actual class ZipFileReader actual constructor(
+    @InjectedParam seekableInputStream: SeekableInputStream,
+    @Qualifier(value = ImageExtension::class) supportedException: Set<String>,
+    @Qualifier(value = IoDispatcher::class) dispatcher: CoroutineDispatcher,
 ) : FileReader {
 
     val zipFileSystem = FileSystem.SYSTEM.openZip(

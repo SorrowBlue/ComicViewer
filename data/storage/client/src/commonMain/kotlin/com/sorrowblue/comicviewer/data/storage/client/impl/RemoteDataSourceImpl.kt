@@ -33,7 +33,7 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.qualifier
 
-@Factory(binds = [RemoteDataSource::class])
+@Factory
 internal class RemoteDataSourceImpl(
     @InjectedParam private val bookshelf: Bookshelf,
     @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,

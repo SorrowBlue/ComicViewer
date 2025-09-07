@@ -1,6 +1,4 @@
-package com.sorrowblue.comicviewer.data.database
-
-import com.sorrowblue.comicviewer.data.database.entity.bookshelf.CryptUtil
+package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 internal class FakeCryptUtil : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String? {

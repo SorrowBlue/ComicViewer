@@ -22,9 +22,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Qualifier
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
+@Single
 internal class BookshelfLocalDataSourceImpl(
     private val dao: BookshelfDao,
     @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,

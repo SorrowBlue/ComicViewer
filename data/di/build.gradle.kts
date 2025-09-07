@@ -16,6 +16,7 @@ kotlin {
                     projects.data.reader,
                     projects.data.storage,
                     projects.domain,
+                    projects.diVerifier,
                     projects.feature,
                     projects.framework,
                     projects.framework.notification,

@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.framework.ui
 
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
+@Single
 actual class NotificationManager {
     actual fun toast(text: String, length: Int) {
         // TODO

@@ -32,7 +32,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.ImageFormatSettings as
 data object FolderSettingsNavGraph
 
 @Scope(SettingsScope::class)
-@Scoped(binds = [FolderSettingsScreenNavigator::class])
+@Scoped
 internal class FolderSettingsNavGraphNavigator(
     private val navController: NavController,
     private val navigator: SettingsDetailNavigator,
