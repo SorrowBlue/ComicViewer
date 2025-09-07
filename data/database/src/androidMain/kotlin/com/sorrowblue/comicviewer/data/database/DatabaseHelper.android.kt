@@ -1,14 +1,13 @@
 package com.sorrowblue.comicviewer.data.database
 
-import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.koin.core.annotation.Singleton
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import org.koin.core.annotation.Single
 
-@Singleton
-internal actual class DatabaseHelper(
-    private val context: Context,
-) {
+@Single
+internal actual class DatabaseHelper actual constructor(private val context: PlatformContext) {
+
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {
         val appContext = context.applicationContext
         val dbFile = appContext.getDatabasePath(DATABASE_NAME)

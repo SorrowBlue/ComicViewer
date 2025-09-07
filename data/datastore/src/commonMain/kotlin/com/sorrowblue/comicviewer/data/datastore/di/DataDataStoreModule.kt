@@ -21,54 +21,54 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSeri
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerializer
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
+@Single
 @Book
 internal fun bookSettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(BookSettingsSerializer)
 
-@Singleton
+@Single
 @Display
 internal fun displaySettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(DisplaySettingsSerializer)
 
-@Singleton
+@Single
 @FolderDisplay
 internal fun folderDisplaySettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(FolderDisplaySettingsSerializer)
 
-@Singleton
+@Single
 @Folder
 internal fun folderSettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(FolderSettingsSerializer)
 
-@Singleton
+@Single
 @Security
 internal fun securitySettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(SecuritySettingsSerializer)
 
-@Singleton
+@Single
 @Settings
 internal fun settingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(SettingsSerializer)
 
-@Singleton
+@Single
 @ViewerOperation
 internal fun viewerOperationSettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(ViewerOperationSettingsSerializer)
 
-@Singleton
+@Single
 @Viewer
 internal fun viewerSettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(ViewerSettingsSerializer)
 
-@Singleton
+@Single
 @Collection
 internal fun collectionSettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(CollectionSettingsSerializer)
 
-@Singleton
+@Single
 @PdfPlugin
 internal fun pdfPluginSettingsDataStore(dataStoreMaker: DataStoreMaker) =
     dataStoreMaker.createDataStore(PdfPluginSettingsSerializer)

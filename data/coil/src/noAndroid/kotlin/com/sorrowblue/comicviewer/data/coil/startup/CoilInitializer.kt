@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.framework.common.Initializer
 import com.sorrowblue.comicviewer.framework.common.starup.LogcatInitializer
 import kotlin.reflect.KClass
 import org.koin.core.annotation.Factory
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
 @Factory
 internal class CoilInitializer : BaseCoilInitializer(), Initializer<Unit> {
@@ -19,5 +19,5 @@ internal class CoilInitializer : BaseCoilInitializer(), Initializer<Unit> {
     }
 }
 
-@Singleton
+@Single
 fun providePlatformContext() = PlatformContext.INSTANCE

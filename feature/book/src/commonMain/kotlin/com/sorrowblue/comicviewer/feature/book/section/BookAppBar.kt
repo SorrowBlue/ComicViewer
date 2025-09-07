@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_REFERENCE")
+
 package com.sorrowblue.comicviewer.feature.book.section
 
 import androidx.compose.foundation.basicMarquee

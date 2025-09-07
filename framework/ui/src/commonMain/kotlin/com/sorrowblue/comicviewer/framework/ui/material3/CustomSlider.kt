@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_REFERENCE")
+
 package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.foundation.background

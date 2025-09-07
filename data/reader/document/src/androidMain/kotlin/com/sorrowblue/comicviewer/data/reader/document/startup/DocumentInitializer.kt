@@ -20,7 +20,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-private const val supportMajor = 1
+private const val SUPPORT_MAJOR = 1
 
 internal class DocumentInitializer : Initializer<Unit>, KoinComponent {
 
@@ -32,9 +32,9 @@ internal class DocumentInitializer : Initializer<Unit>, KoinComponent {
                 if (checkPdfService(context)) {
                     val versionName =
                         context.packageManager.getPackageInfo(PDF_PLUGIN_PACKAGE, 0).versionName
-                    logcat(LogPriority.INFO) { "PdfPlugin versionName=$versionName, supportMajor=$supportMajor" }
+                    logcat(LogPriority.INFO) { "PdfPlugin versionName=$versionName, supportMajor=$SUPPORT_MAJOR" }
                     val targetMajor = versionName!!.split(".")[0].toInt()
-                    if (supportMajor <= targetMajor) {
+                    if (SUPPORT_MAJOR <= targetMajor) {
                         // Supported
                         datastoreDataSource.updateFolderSettings { settings ->
                             settings.copy(
@@ -47,19 +47,25 @@ internal class DocumentInitializer : Initializer<Unit>, KoinComponent {
                         // Not supported
                         logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
                         datastoreDataSource.updateFolderSettings { settings ->
-                            settings.copy(supportExtension = settings.supportExtension.filterNot { it in SupportExtension.Document.entries })
+                            settings.copy(
+                                supportExtension = settings.supportExtension.filterNot { it in SupportExtension.Document.entries }
+                            )
                         }
                     }
                 } else {
                     logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
                     datastoreDataSource.updateFolderSettings { settings ->
-                        settings.copy(supportExtension = settings.supportExtension.filterNot { it in SupportExtension.Document.entries })
+                        settings.copy(
+                            supportExtension = settings.supportExtension.filterNot { it in SupportExtension.Document.entries }
+                        )
                     }
                 }
             }.onFailure {
                 logcat(LogPriority.WARN) { "$PDF_PLUGIN_PACKAGE: ${it.asLog()}" }
             }
-            logcat(LogPriority.INFO) { "Initialized document. ${datastoreDataSource.folderSettings.first().supportExtension}" }
+            logcat(
+                LogPriority.INFO
+            ) { "Initialized document. ${datastoreDataSource.folderSettings.first().supportExtension}" }
         }
     }
 

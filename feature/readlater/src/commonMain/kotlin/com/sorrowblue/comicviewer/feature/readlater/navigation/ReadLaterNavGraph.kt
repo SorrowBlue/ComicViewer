@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.feature.readlater.ReadLaterFolder
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import kotlin.reflect.KClass
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
 @NavGraph(
     startDestination = ReadLater::class,
@@ -16,7 +16,7 @@ import org.koin.core.annotation.Singleton
 @Serializable
 data object ReadLaterNavGraph
 
-@Singleton
+@Single
 internal class ReadLaterNavGraphTabDisplayRoute : TabDisplayRoute {
     override val routes: List<KClass<*>> =
         listOf(ReadLater::class, ReadLaterFolder::class)

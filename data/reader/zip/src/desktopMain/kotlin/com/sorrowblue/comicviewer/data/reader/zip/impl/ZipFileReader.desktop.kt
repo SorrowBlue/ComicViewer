@@ -40,10 +40,10 @@ internal class SevenZipInitializer : Initializer<Unit> {
 
 @ZipFileReader
 @Factory
-internal actual class ZipFileReader(
-    @InjectedParam actual val seekableInputStream: SeekableInputStream,
-    @Qualifier(ImageExtension::class) supportedException: Set<String>,
-    @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
+internal actual class ZipFileReader actual constructor(
+    @InjectedParam private val seekableInputStream: SeekableInputStream,
+    @Qualifier(value = ImageExtension::class) supportedException: Set<String>,
+    @Qualifier(value = IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
 
     private val zipFile = SevenZip.openInArchive(null, IInStreamImpl(seekableInputStream))

@@ -22,9 +22,13 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
                     implementation(libs.koin.core)
                     implementation(libs.koin.annotations)
                 }
+                sourceSets.androidUnitTest.dependencies {
+                    implementation(libs.koin.androidxCompose)
+                }
             }
 
             dependencies {
+                add("kspCommonMainMetadata", libs.koin.kspCompiler)
                 add("kspAndroid", libs.koin.kspCompiler)
                 add("kspAndroidTest", libs.koin.kspCompiler)
                 add("kspIosX64", libs.koin.kspCompiler)
@@ -35,12 +39,6 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
                 add("kspIosSimulatorArm64Test", libs.koin.kspCompiler)
                 add("kspDesktop", libs.koin.kspCompiler)
                 add("kspDesktopTest", libs.koin.kspCompiler)
-            }
-
-            ksp {
-                arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
-                arg("KOIN_DEFAULT_MODULE", "false")
-                arg("KOIN_CONFIG_CHECK", "false")
             }
         }
     }

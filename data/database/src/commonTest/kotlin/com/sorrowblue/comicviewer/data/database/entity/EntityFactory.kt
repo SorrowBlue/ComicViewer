@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.database
+package com.sorrowblue.comicviewer.data.database.entity
 
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPassword
@@ -33,7 +33,7 @@ internal class EntityFactory {
         parent: String = "parent$index",
         lastReadTime: Long = Clock.System.now().toEpochMilliseconds(),
     ): FileEntity {
-        return BookFile(
+        return BookFile.Companion(
             bookshelfId = bookshelfId,
             name = "name$index",
             parent = parent,
