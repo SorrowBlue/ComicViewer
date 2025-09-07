@@ -1,6 +1,5 @@
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.kotlin
-import com.sorrowblue.comicviewer.ksp
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
