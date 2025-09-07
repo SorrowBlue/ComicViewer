@@ -3,9 +3,9 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 import android.content.Context
 import android.content.Intent
 import io.github.vinceglb.filekit.core.PlatformDirectory
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
+@Single
 internal actual class TakePersistableUriPermission(private val context: Context) {
 
     actual operator fun invoke(platformDirectory: PlatformDirectory) {

@@ -12,9 +12,10 @@ internal class CryptUtilsTest {
     fun testEncryptDecrypt() {
         val alias = "password"
         val text = "text"
-        val encryptedText = CryptUtils.encrypt(alias, text)
+        val cryptUtil = AndroidCryptUtil()
+        val encryptedText = cryptUtil.encrypt(alias, text)
         Assert.assertNotEquals(encryptedText, text)
 
-        Assert.assertEquals(CryptUtils.decrypt(alias, encryptedText), text)
+        Assert.assertEquals(cryptUtil.decrypt(alias, encryptedText), text)
     }
 }

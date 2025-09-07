@@ -6,14 +6,14 @@ import android.util.Base64
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import javax.crypto.Cipher
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
 private const val PROVIDER = "AndroidKeyStore"
 
 private const val CIPHER_TRANSFORMATION =
     "${KeyProperties.KEY_ALGORITHM_RSA}/${KeyProperties.BLOCK_MODE_ECB}/${KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1}"
 
-@Singleton
+@Single
 internal class AndroidCryptUtil : CryptUtil {
 
     override fun decrypt(alias: String, encryptedText: String): String? {

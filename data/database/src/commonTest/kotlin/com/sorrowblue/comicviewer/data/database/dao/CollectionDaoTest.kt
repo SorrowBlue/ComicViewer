@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.database.dao
 
-import com.sorrowblue.comicviewer.data.database.TestMan
+import com.sorrowblue.comicviewer.data.database.DatabaseTest
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntity
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -14,7 +14,7 @@ import kotlinx.coroutines.test.runTest
 import org.koin.test.inject
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
-internal class CollectionDaoTest : TestMan() {
+internal class CollectionDaoTest : DatabaseTest() {
 
     private val collectionDao: CollectionDao by inject()
 

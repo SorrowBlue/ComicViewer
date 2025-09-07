@@ -2,11 +2,14 @@ package com.sorrowblue.comicviewer.data.coil
 
 import coil3.disk.DiskCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import kotlin.concurrent.atomics.AtomicReference
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import okio.Path
+import org.koin.core.annotation.Single
 
-expect class CoilDiskCache {
+@Single
+expect class CoilDiskCache(context: PlatformContext) {
     fun resolve(folder: String): Path
 }
 

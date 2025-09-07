@@ -4,12 +4,13 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 import org.koin.mp.KoinPlatform
 
-interface DesktopContext {
-    val filesDir: Path
-    val cacheDir: Path
+@Suppress("UnnecessaryAbstractClass")
+abstract class DesktopContext {
+    abstract val filesDir: Path
+    abstract val cacheDir: Path
 
     companion object {
 
@@ -17,8 +18,8 @@ interface DesktopContext {
     }
 }
 
-@Singleton
-internal class DesktopContextImpl : DesktopContext {
+@Single
+internal class DesktopContextImpl : DesktopContext() {
 
     private val os by lazy { System.getProperty("os.name").lowercase() }
 

@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
 import io.github.vinceglb.filekit.core.PlatformDirectory
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
+@Single
 internal actual class TakePersistableUriPermission {
     actual operator fun invoke(platformDirectory: PlatformDirectory) {
         // TODO

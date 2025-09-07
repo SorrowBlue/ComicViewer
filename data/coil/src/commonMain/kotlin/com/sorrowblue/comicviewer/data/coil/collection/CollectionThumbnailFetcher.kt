@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import logcat.LogPriority
 import logcat.logcat
 import okio.BufferedSource
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
 internal class CollectionThumbnailFetcher(
     options: Options,
@@ -74,7 +74,7 @@ internal class CollectionThumbnailFetcher(
     }
 }
 
-@Singleton
+@Single
 @CollectionFetcher
 internal class CollectionThumbnailFetcherFactory(
     private val diskCache: Lazy<DiskCache>,

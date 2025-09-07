@@ -4,9 +4,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import org.koin.core.annotation.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton(binds = [RemoteDataSource.Factory::class])
+@Single
 internal class RemoteDataSourceFactory : RemoteDataSource.Factory {
     override fun create(bookshelf: Bookshelf): RemoteDataSource {
         return RemoteDataSourceImpl(bookshelf, Dispatchers.IO)

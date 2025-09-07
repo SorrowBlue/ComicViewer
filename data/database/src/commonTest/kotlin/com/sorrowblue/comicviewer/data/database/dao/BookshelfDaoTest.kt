@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.database.dao
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
-import com.sorrowblue.comicviewer.data.database.EntityFactory
-import com.sorrowblue.comicviewer.data.database.TestMan
+import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
+import com.sorrowblue.comicviewer.data.database.DatabaseTest
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPassword
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.EmbeddedBookshelfFileCountEntity
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
-internal class BookshelfDaoTest : TestMan() {
+internal class BookshelfDaoTest : DatabaseTest() {
     private val dao: BookshelfDao get() = db.bookshelfDao()
 
     @Test
