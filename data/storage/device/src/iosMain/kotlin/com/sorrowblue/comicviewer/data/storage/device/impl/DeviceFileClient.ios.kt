@@ -29,11 +29,11 @@ import platform.Foundation.NSURL
 
 @Factory
 @DeviceFileClient
-internal actual class DeviceFileClient(
-    @InjectedParam actual override val bookshelf: InternalStorage,
+internal class DeviceFileClient(
+    @InjectedParam override val bookshelf: InternalStorage,
 ) : FileClient<InternalStorage> {
     @OptIn(ExperimentalForeignApi::class)
-    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
+    override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         val url = NSURL.URLWithString(URLString = file.path)!!
         return NSFileManager.defaultManager.contentsOfDirectoryAtURL(
             url = url,
@@ -46,27 +46,27 @@ internal actual class DeviceFileClient(
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    actual override suspend fun exists(path: String): Boolean {
+    override suspend fun exists(path: String): Boolean {
         logcat { "exists(path=$path)" }
         val url = NSURL.URLWithString(URLString = path) ?: return false
         return url.checkResourceIsReachableAndReturnError(null)
     }
 
-    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         val url = NSURL.URLWithString(URLString = path)!!
         return url.toFileModel(resolveImageFolder)
     }
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         val file = FileUtils.fromString(input = file.path, !NSURL(fileURLWithPath = file.path).fileURL) ?: throw FileClientException.InvalidPath()
         return file.openInputStream()!!.toOkioSource().buffer()
     }
 
-    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return LocalFileSeekableInputStream(file.path)
     }
 
-    actual override suspend fun connect(path: String) {
+    override suspend fun connect(path: String) {
         logcat { "connect(path=$path)" }
         kotlin.runCatching {
             exists(path)
@@ -83,7 +83,7 @@ internal actual class DeviceFileClient(
         }
     }
 
-    actual override suspend fun attribute(path: String): FileAttribute {
+    override suspend fun attribute(path: String): FileAttribute {
         TODO("Not yet implemented")
     }
 

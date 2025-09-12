@@ -2,9 +2,6 @@ package com.sorrowblue.comicviewer.framework.ui.animation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -20,7 +17,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
-import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
 
 fun materialContainerTransformIn(): EnterTransition {
     return materialFadeThroughIn()
@@ -30,10 +26,10 @@ fun materialContainerTransformOut(): ExitTransition {
     return materialFadeThroughOut()
 }
 
-fun materialFadeThroughIn(): EnterTransition {
+fun materialFadeThroughIn(initialAlpha: Float = 0.0f): EnterTransition {
     return fadeIn(
         animationSpec = ExpressiveMotion.Spatial.slow(),
-        initialAlpha = 0.0f,
+        initialAlpha = initialAlpha,
     ) + scaleIn(
         animationSpec = ExpressiveMotion.Spatial.slow(),
         initialScale = 0.92f,
@@ -41,13 +37,13 @@ fun materialFadeThroughIn(): EnterTransition {
     )
 }
 
-fun materialFadeThroughOut(): ExitTransition {
+fun materialFadeThroughOut(targetAlpha: Float = 0.0f): ExitTransition {
     return fadeOut(
         animationSpec = ExpressiveMotion.Spatial.slow(),
-        targetAlpha = 0.0f,
+        targetAlpha = targetAlpha,
     ) + scaleOut(
         animationSpec = ExpressiveMotion.Spatial.slow(),
-        targetScale = 0.0f,
+        targetScale = 1.1f,
         transformOrigin = TransformOrigin.Center,
     )
 }
@@ -56,77 +52,45 @@ fun materialSharedAxisXIn(
     forward: Boolean,
     slideDistance: Int,
 ): EnterTransition = slideInHorizontally(
-    animationSpec = tween(
-        durationMillis = 400,
-        easing = MotionTokens.EasingEmphasizedDecelerate,
-    ),
+    animationSpec = ExpressiveMotion.Spatial.slow(),
     initialOffsetX = {
         if (forward) slideDistance else -slideDistance
     },
-) + fadeIn(
-    animationSpec = tween(
-        durationMillis = 195,
-        delayMillis = 105,
-        easing = LinearOutSlowInEasing,
-    ),
 )
+// + materialFadeThroughIn()
 
 fun materialSharedAxisXOut(
     forward: Boolean,
     slideDistance: Int,
 ): ExitTransition = slideOutHorizontally(
-    animationSpec = tween(
-        durationMillis = 200,
-        easing = MotionTokens.EasingEmphasizedAccelerate,
-    ),
+    animationSpec = ExpressiveMotion.Spatial.slow(),
     targetOffsetX = {
         if (forward) -slideDistance else slideDistance
     },
-) + fadeOut(
-    animationSpec = tween(
-        durationMillis = 105,
-        delayMillis = 0,
-        easing = FastOutLinearInEasing,
-    ),
 )
+// + materialFadeThroughOut()
 
 fun materialSharedAxisYIn(
     slideUp: Boolean,
     slideDistance: Int,
 ): EnterTransition = slideInVertically(
-    animationSpec = tween(
-        durationMillis = 400,
-        easing = MotionTokens.EasingEmphasizedDecelerate,
-    ),
+    animationSpec = ExpressiveMotion.Spatial.slow(),
     initialOffsetY = {
         if (slideUp) slideDistance else -slideDistance
     },
-) + fadeIn(
-    animationSpec = tween(
-        durationMillis = 195,
-        delayMillis = 105,
-        easing = LinearOutSlowInEasing,
-    ),
 )
+// + materialFadeThroughIn()
 
 fun materialSharedAxisYOut(
     slideDown: Boolean,
     slideDistance: Int,
 ): ExitTransition = slideOutVertically(
-    animationSpec = tween(
-        durationMillis = 200,
-        easing = MotionTokens.EasingEmphasizedAccelerate,
-    ),
+    animationSpec = ExpressiveMotion.Spatial.slow(),
     targetOffsetY = {
         if (slideDown) slideDistance else -slideDistance
     },
-) + fadeOut(
-    animationSpec = tween(
-        durationMillis = 105,
-        delayMillis = 0,
-        easing = FastOutLinearInEasing,
-    ),
 )
+// + materialFadeThroughOut()
 
 @Composable
 fun rememberSlideDistance(): Int {

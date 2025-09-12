@@ -4,11 +4,9 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Icon
@@ -20,15 +18,14 @@ import androidx.compose.material3.WideNavigationRailState
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.ext.AnimatedNavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
-import androidx.compose.material3.ext.NavigationSuiteItem
 import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -41,7 +38,6 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.rememberCanon
 import com.sorrowblue.comicviewer.framework.ui.canonical.AppBarState
 import com.sorrowblue.comicviewer.framework.ui.canonical.DefaultAppBarScope
 import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberAppBarState
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavItem
@@ -132,7 +128,8 @@ fun <T : Any> CanonicalScaffoldState<T>.CanonicalScaffoldLayout(
     modifier: Modifier = Modifier,
     topBar: @Composable CanonicalScaffoldState<T>.() -> Unit = {},
     primaryActionContent: @Composable CanonicalScaffoldState<T>.() -> Unit = {},
-    navigationItems: @Composable RowScope.() -> Unit = {
+    forcePrimaryActionPosition: Boolean = false,
+    navigationItems: @Composable () -> Unit = {
         navItems.forEach { navItem ->
             NavigationSuiteItem(
                 selected = navItem == currentNavItem,
@@ -145,9 +142,7 @@ fun <T : Any> CanonicalScaffoldState<T>.CanonicalScaffoldLayout(
     extraPane: @Composable (T) -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val containerColor by animateColorAsState(
-        if (navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
-    )
+    val currentPrimaryActionContent = remember { movableContentOf { primaryActionContent() } }
     AnimatedNavigationSuiteScaffold(
         visibilityScope = this,
         transitionScope = this,
@@ -156,18 +151,22 @@ fun <T : Any> CanonicalScaffoldState<T>.CanonicalScaffoldLayout(
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             shortNavigationBarContainerColor = ComicTheme.colorScheme.surfaceContainer,
             wideNavigationRailColors = WideNavigationRailDefaults.colors(
-                containerColor = containerColor
+                containerColor = LocalContainerColor.current
             ),
         ),
-        containerColor = containerColor,
+        containerColor = LocalContainerColor.current,
         contentColor = ComicTheme.colorScheme.onSurface,
         state = suiteScaffoldState,
         navigationItemVerticalArrangement = Arrangement.Top,
-        primaryActionContent = { primaryActionContent() },
+        primaryActionContent = {
+            if (!forcePrimaryActionPosition) {
+                currentPrimaryActionContent()
+            }
+        },
     ) {
         NavigableExtraPaneScaffold(
             navigator = navigator,
-            modifier = modifier.background(containerColor),
+            modifier = modifier.background(LocalContainerColor.current),
             extraPane = {
                 val destination = navigator.currentDestination
                 if (destination?.pane == SupportingPaneScaffoldRole.Extra && destination.contentKey != null) {
@@ -181,16 +180,17 @@ fun <T : Any> CanonicalScaffoldState<T>.CanonicalScaffoldLayout(
                         topBar()
                     }
                 },
-                containerColor = containerColor,
+                floatingActionButton = {
+                    if (forcePrimaryActionPosition) {
+                        currentPrimaryActionContent()
+                    }
+                },
+                containerColor = LocalContainerColor.current,
                 contentWindowInsets = WindowInsets.safeDrawing,
                 modifier = appBarState.scrollBehavior?.nestedScrollConnection?.let(Modifier::nestedScroll)
                     ?: Modifier
             ) { contentPadding ->
-                CompositionLocalProvider(
-                    LocalContainerColor provides ComicTheme.colorScheme.surface
-                ) {
-                    content(contentPadding)
-                }
+                content(contentPadding)
             }
         }
     }

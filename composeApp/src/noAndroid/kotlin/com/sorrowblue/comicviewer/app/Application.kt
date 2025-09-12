@@ -14,11 +14,14 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.TypeQualifier
 import org.koin.core.scope.Scope
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
+
+internal expect fun mainApplication(): KoinAppDeclaration
 
 @Composable
 fun Application(finishApp: () -> Unit) {
-    KoinApplication(application = koinConfiguration().invoke()) {
+    KoinApplication(application = mainApplication()) {
         val coroutineScope = rememberCoroutineScope()
         @OptIn(KoinExperimentalAPI::class)
         rememberKoinModules {

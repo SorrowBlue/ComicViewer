@@ -24,14 +24,14 @@ import org.koin.core.annotation.InjectedParam
 
 @Factory
 @DeviceFileClient
-internal actual class DeviceFileClient(
-    @InjectedParam actual override val bookshelf: InternalStorage,
+internal class DeviceFileClient(
+    @InjectedParam override val bookshelf: InternalStorage,
     private val context: Context,
 ) : FileClient<InternalStorage> {
 
     private val contentResolver = context.contentResolver
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource {
+    override suspend fun bufferedSource(file: File): BufferedSource {
         return kotlin.runCatching {
             ParcelFileDescriptor.AutoCloseInputStream(
                 contentResolver.openFileDescriptor(file.uri, "r")
@@ -46,11 +46,11 @@ internal actual class DeviceFileClient(
         }
     }
 
-    actual override suspend fun attribute(path: String): FileAttribute {
+    override suspend fun attribute(path: String): FileAttribute {
         return FileAttribute()
     }
 
-    actual override suspend fun connect(path: String) {
+    override suspend fun connect(path: String) {
         kotlin.runCatching {
             documentFile(path).exists()
         }.fold({
@@ -67,7 +67,7 @@ internal actual class DeviceFileClient(
         }
     }
 
-    actual override suspend fun exists(path: String): Boolean {
+    override suspend fun exists(path: String): Boolean {
         return kotlin.runCatching {
             documentFile(path).exists()
         }.getOrElse {
@@ -80,7 +80,7 @@ internal actual class DeviceFileClient(
         }
     }
 
-    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return kotlin.runCatching {
             documentFile(path).toFileModel(resolveImageFolder)
         }.getOrElse {
@@ -93,7 +93,7 @@ internal actual class DeviceFileClient(
         }
     }
 
-    actual override suspend fun listFiles(
+    override suspend fun listFiles(
         file: File,
         resolveImageFolder: Boolean,
     ): List<File> {
@@ -109,7 +109,7 @@ internal actual class DeviceFileClient(
         }
     }
 
-    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return kotlin.runCatching {
             DeviceSeekableInputStream(context, file.uri)
         }.getOrElse {
