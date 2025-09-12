@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.InternalStorageEditScreenForm
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_select_folder
@@ -24,6 +25,7 @@ import io.github.vinceglb.filekit.core.PlatformDirectory
 import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import org.koin.core.annotation.Single
 import soil.form.FieldValidator
 import soil.form.compose.Form
 import soil.form.compose.FormField
@@ -118,7 +120,8 @@ private fun Form<InternalStorageEditScreenForm>.rememberFolderSelectField(): For
     )
 }
 
-internal expect class TakePersistableUriPermission {
+@Single
+internal expect class TakePersistableUriPermission(context: PlatformContext) {
 
     operator fun invoke(platformDirectory: PlatformDirectory)
 }

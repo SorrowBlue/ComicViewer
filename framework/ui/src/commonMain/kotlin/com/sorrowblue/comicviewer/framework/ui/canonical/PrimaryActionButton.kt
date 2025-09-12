@@ -5,13 +5,16 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuScope
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButton
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.animateFloatingActionButton
@@ -57,10 +60,6 @@ fun CanonicalScaffoldState<*>.PrimaryActionButton(
                     enter = FloatingActionButtonTransitionEnter,
                     exit = FloatingActionButtonTransitionExit
                 )
-                .sharedElement(
-                    sharedContentState = rememberSharedContentState("fab"),
-                    animatedVisibilityScope = this
-                )
         )
     } else {
         FloatingActionButton(
@@ -73,10 +72,6 @@ fun CanonicalScaffoldState<*>.PrimaryActionButton(
                 .animateEnterExit(
                     enter = FloatingActionButtonTransitionEnter,
                     exit = FloatingActionButtonTransitionExit
-                )
-                .sharedElement(
-                    sharedContentState = rememberSharedContentState("fab"),
-                    animatedVisibilityScope = this
                 )
         ) {
             Icon(imageVector = ComicIcons.Add, contentDescription = null)
@@ -92,7 +87,7 @@ fun CanonicalScaffoldState<*>.PrimaryActionButtonMenu(
     content: @Composable FloatingActionButtonMenuScope.() -> Unit,
 ) {
     var fabMenuExpanded by remember { mutableStateOf(false) }
-    androidx.compose.material3.FloatingActionButtonMenu(
+    FloatingActionButtonMenu(
         expanded = fabMenuExpanded,
         button = {
             ToggleFloatingActionButton(
@@ -109,12 +104,9 @@ fun CanonicalScaffoldState<*>.PrimaryActionButtonMenu(
                     .animateEnterExit(
                         enter = FloatingActionButtonTransitionEnter,
                         exit = FloatingActionButtonTransitionExit
-                    )
-                    .sharedElement(
-                        sharedContentState = rememberSharedContentState("fab"),
-                        animatedVisibilityScope = this
                     ),
                 checked = fabMenuExpanded,
+                containerSize = if (navigationSuiteType.isNavigationRail) ToggleFloatingActionButtonDefaults.containerSizeMedium() else ToggleFloatingActionButtonDefaults.containerSize(),
                 onCheckedChange = { fabMenuExpanded = !fabMenuExpanded }
             ) {
                 val imageVector by remember(checkedProgress) {
@@ -125,12 +117,16 @@ fun CanonicalScaffoldState<*>.PrimaryActionButtonMenu(
                 Icon(
                     imageVector,
                     contentDescription = null,
-                    modifier = Modifier.animateIcon({ checkedProgress })
+                    modifier = Modifier.animateIcon(
+                        checkedProgress = { checkedProgress },
+                        size = if (navigationSuiteType.isNavigationRail) ToggleFloatingActionButtonDefaults.iconSizeMedium() else ToggleFloatingActionButtonDefaults.iconSize()
+                    )
                 )
             }
         },
         content = content,
-        modifier = modifier
+        // TODO FloatingActionButtonMenuの余分なPadding対策
+        modifier = modifier.offset(16.dp, 16.dp)
     )
 }
 
