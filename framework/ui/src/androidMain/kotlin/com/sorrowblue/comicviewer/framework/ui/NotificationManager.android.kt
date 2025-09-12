@@ -1,11 +1,11 @@
 package com.sorrowblue.comicviewer.framework.ui
 
-import android.content.Context
 import android.widget.Toast
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import org.koin.core.annotation.Single
 
 @Single
-actual class NotificationManager(private val context: Context) {
+actual class NotificationManager actual constructor(private val context: PlatformContext) {
     actual fun toast(text: String, length: Int) {
         Toast.makeText(context, text, length).show()
     }

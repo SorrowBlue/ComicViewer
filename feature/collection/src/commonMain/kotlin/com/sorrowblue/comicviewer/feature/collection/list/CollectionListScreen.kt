@@ -79,6 +79,7 @@ internal fun CollectionListScreen(
                 onSettingsClick = onSettingsClick,
             )
         },
+        forcePrimaryActionPosition = true,
         primaryActionContent = {
             PrimaryActionButtonMenu {
                 FloatingActionButtonMenuItem(

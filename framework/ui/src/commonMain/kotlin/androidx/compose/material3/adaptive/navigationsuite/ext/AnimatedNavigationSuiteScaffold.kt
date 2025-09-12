@@ -5,18 +5,20 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
 import androidx.compose.material3.DrawerDefaults
+import androidx.compose.material3.ExperimentalMaterial3ComponentOverrideApi
+import androidx.compose.material3.LocalShortNavigationBarOverride
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.ShortNavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.WideNavigationRailDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuite
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
@@ -25,7 +27,9 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
+import androidx.compose.material3.ext.FixedDefaultShortNavigationBarOverride
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,12 +42,15 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailTransitio
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+/**
+ * @see androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+ */
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ComponentOverrideApi::class)
 @Composable
 fun AnimatedNavigationSuiteScaffold(
     visibilityScope: AnimatedVisibilityScope,
     transitionScope: SharedTransitionScope,
-    navigationItems: @Composable RowScope.() -> Unit,
+    navigationItems: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     navigationSuiteType: NavigationSuiteType =
         NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo()),
@@ -61,19 +68,22 @@ fun AnimatedNavigationSuiteScaffold(
     Surface(modifier = modifier, color = containerColor, contentColor = contentColor) {
         NavigationSuiteScaffoldLayout(
             navigationSuite = {
-                // TODO ShortNavigationBarがSharedTransitionAnimationに対応したら[androidx.compose.material3.adaptive.navigationsuite.NavigationSuite]に置き換える
-                NavigationSuite(
-                    navigationSuiteType = navigationSuiteType,
-                    colors = navigationSuiteColors,
-                    primaryActionContent = primaryActionContent,
-                    verticalArrangement = navigationItemVerticalArrangement,
-                    content = navigationItems,
-                    modifier = Modifier.navigationSuiteScaffoldSharedElement(
-                        navigationSuiteType,
-                        visibilityScope,
-                        transitionScope
+                CompositionLocalProvider(
+                    LocalShortNavigationBarOverride provides FixedDefaultShortNavigationBarOverride
+                ) {
+                    NavigationSuite(
+                        navigationSuiteType = navigationSuiteType,
+                        colors = navigationSuiteColors,
+                        primaryActionContent = primaryActionContent,
+                        verticalArrangement = navigationItemVerticalArrangement,
+                        content = navigationItems,
+                        modifier = Modifier.navigationSuiteScaffoldSharedElement(
+                            navigationSuiteType,
+                            visibilityScope,
+                            transitionScope
+                        )
                     )
-                )
+                }
             },
             navigationSuiteType = navigationSuiteType,
             state = state,

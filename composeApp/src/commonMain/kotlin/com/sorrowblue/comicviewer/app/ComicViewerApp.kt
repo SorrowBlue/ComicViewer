@@ -2,14 +2,22 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.sorrowblue.cmpdestinations.NavGraphNavHost
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraph
 import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigatorImpl
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import org.koin.compose.module.rememberKoinModules
@@ -35,11 +43,15 @@ internal fun ComicViewerApp() {
                 }
             )
         }
-        CompositionLocalProvider(LocalAppState provides state) {
+        val containerColor by animateColorAsState(
+            if (state.navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
+        )
+        CompositionLocalProvider(LocalAppState provides state, LocalContainerColor provides containerColor) {
             NavGraphNavHost(
                 graphNavigation = ComicViewerAppNavGraph,
                 isCompact = isCompactWindowClass(),
-                navController = state.navController
+                navController = state.navController,
+                modifier = Modifier.fillMaxSize().background(LocalContainerColor.current)
             )
         }
     }
