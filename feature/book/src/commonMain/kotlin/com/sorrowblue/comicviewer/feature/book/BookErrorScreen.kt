@@ -1,5 +1,3 @@
-@file:Suppress("INVISIBLE_REFERENCE")
-
 package com.sorrowblue.comicviewer.feature.book
 
 import androidx.compose.foundation.Image
@@ -24,13 +22,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
-import androidx.compose.material3.tokens.ElevationTokens
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
+import com.sorrowblue.comicviewer.framework.designsystem.tokens.ElevationTokens
 import comicviewer.feature.book.generated.resources.Res
 import comicviewer.feature.book.generated.resources.book_text_could_not_open
 import comicviewer.feature.book.generated.resources.book_text_could_not_open_name

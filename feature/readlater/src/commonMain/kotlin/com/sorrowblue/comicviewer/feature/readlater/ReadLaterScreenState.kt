@@ -6,7 +6,6 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUseCase
@@ -14,9 +13,10 @@ import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAc
 import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
+import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -34,7 +34,7 @@ internal sealed interface ReadLaterScreenEvent {
 }
 
 internal interface ReadLaterScreenState {
-    val pagingDataFlow: Flow<PagingData<File>>
+    val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     val events: EventFlow<ReadLaterScreenEvent>
 
@@ -55,11 +55,11 @@ internal fun rememberReadLaterScreenState(
         ReadLaterScreenStateImpl(
             lazyGridState = lazyGridState,
             scope = scope,
-            viewModel = viewModel,
             deleteAllReadLaterUseCase = viewModel.deleteAllReadLaterUseCase,
         )
     }
 
+    state.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     state.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
         onReSelect = state::onReSelected
     )
@@ -67,7 +67,6 @@ internal fun rememberReadLaterScreenState(
 }
 
 private class ReadLaterScreenStateImpl(
-    viewModel: ReadLaterViewModel,
     override val lazyGridState: LazyGridState,
     private val scope: CoroutineScope,
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
@@ -75,7 +74,8 @@ private class ReadLaterScreenStateImpl(
 
     override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
     override val events = EventFlow<ReadLaterScreenEvent>()
-    override val pagingDataFlow = viewModel.pagingDataFlow
+
+    override lateinit var lazyPagingItems: LazyPagingItems<File>
 
     override fun onTopAppBarAction(action: ReadLaterTopAppBarAction) {
         when (action) {
@@ -114,7 +114,6 @@ private class ReadLaterScreenStateImpl(
             }
         }
     }
-
 
     fun onReSelected() {
         if (lazyGridState.canScrollBackward) {

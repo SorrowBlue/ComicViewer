@@ -26,7 +26,6 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_label_nothing_to_read_later
@@ -50,9 +49,8 @@ internal fun ReadLaterScreen(
     navigator: ReadLaterScreenNavigator = koinInject(),
     state: ReadLaterScreenState = rememberReadLaterScreenState(),
 ) {
-    val lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems()
     ReadLaterScreen(
-        lazyPagingItems = lazyPagingItems,
+        lazyPagingItems = state.lazyPagingItems,
         scaffoldState = state.scaffoldState,
         lazyGridState = state.lazyGridState,
         onTopAppBarAction = state::onTopAppBarAction,
