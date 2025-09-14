@@ -40,7 +40,6 @@ internal interface ReadLaterScreenState {
 
     val scaffoldState: CanonicalScaffoldState<File.Key>
 
-    fun onNavClick()
     fun onTopAppBarAction(action: ReadLaterTopAppBarAction)
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onContentsAction(action: ReadLaterContentsAction)
@@ -48,28 +47,33 @@ internal interface ReadLaterScreenState {
 
 @Composable
 internal fun rememberReadLaterScreenState(
-    scaffoldState: CanonicalScaffoldState<File.Key> = rememberCanonicalScaffoldState(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     viewModel: ReadLaterViewModel = koinViewModel(),
-): ReadLaterScreenState = remember {
-    ReadLaterScreenStateImpl(
-        scaffoldState = scaffoldState,
-        lazyGridState = lazyGridState,
-        scope = scope,
-        viewModel = viewModel,
-        deleteAllReadLaterUseCase = viewModel.deleteAllReadLaterUseCase,
+): ReadLaterScreenState {
+    val state = remember {
+        ReadLaterScreenStateImpl(
+            lazyGridState = lazyGridState,
+            scope = scope,
+            viewModel = viewModel,
+            deleteAllReadLaterUseCase = viewModel.deleteAllReadLaterUseCase,
+        )
+    }
+
+    state.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
+        onReSelect = state::onReSelected
     )
+    return state
 }
 
 private class ReadLaterScreenStateImpl(
     viewModel: ReadLaterViewModel,
-    override val scaffoldState: CanonicalScaffoldState<File.Key>,
     override val lazyGridState: LazyGridState,
     private val scope: CoroutineScope,
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
 ) : ReadLaterScreenState {
 
+    override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
     override val events = EventFlow<ReadLaterScreenEvent>()
     override val pagingDataFlow = viewModel.pagingDataFlow
 
@@ -111,10 +115,11 @@ private class ReadLaterScreenStateImpl(
         }
     }
 
-    override fun onNavClick() {
+
+    fun onReSelected() {
         if (lazyGridState.canScrollBackward) {
             scope.launch {
-                lazyGridState.scrollToItem(0)
+                lazyGridState.animateScrollToItem(0)
             }
         }
     }

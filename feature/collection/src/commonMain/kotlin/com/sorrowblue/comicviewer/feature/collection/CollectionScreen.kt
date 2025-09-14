@@ -20,7 +20,6 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.serialization.Serializable
@@ -70,7 +69,6 @@ internal fun CollectionScreen(
             is CollectionScreenEvent.EditClick -> currentNavigator.onCollectionEditClick(it.collection)
         }
     }
-    NavTabHandler(onClick = state::onNavClick)
 }
 
 internal data class SmartCollectionScreenUiState(

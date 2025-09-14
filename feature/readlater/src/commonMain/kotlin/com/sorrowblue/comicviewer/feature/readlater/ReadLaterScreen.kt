@@ -25,7 +25,6 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldLayout
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
@@ -72,7 +71,6 @@ internal fun ReadLaterScreen(
             ReadLaterScreenEvent.Settings -> currentNavigator.onSettingsClick()
         }
     }
-    NavTabHandler(onClick = state::onNavClick)
 }
 
 @Composable

@@ -56,8 +56,7 @@ fun materialSharedAxisXIn(
     initialOffsetX = {
         if (forward) slideDistance else -slideDistance
     },
-)
-// + materialFadeThroughIn()
+) + materialFadeThroughIn()
 
 fun materialSharedAxisXOut(
     forward: Boolean,
@@ -67,8 +66,7 @@ fun materialSharedAxisXOut(
     targetOffsetX = {
         if (forward) -slideDistance else slideDistance
     },
-)
-// + materialFadeThroughOut()
+) + materialFadeThroughOut()
 
 fun materialSharedAxisYIn(
     slideUp: Boolean,
@@ -78,8 +76,7 @@ fun materialSharedAxisYIn(
     initialOffsetY = {
         if (slideUp) slideDistance else -slideDistance
     },
-)
-// + materialFadeThroughIn()
+) + materialFadeThroughIn()
 
 fun materialSharedAxisYOut(
     slideDown: Boolean,
@@ -89,8 +86,7 @@ fun materialSharedAxisYOut(
     targetOffsetY = {
         if (slideDown) slideDistance else -slideDistance
     },
-)
-// + materialFadeThroughOut()
+) + materialFadeThroughOut()
 
 @Composable
 fun rememberSlideDistance(): Int {

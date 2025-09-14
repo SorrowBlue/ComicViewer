@@ -35,7 +35,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavItem
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavTabHandler
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
 import com.sorrowblue.comicviewer.framework.ui.sharedKoinViewModel
@@ -60,7 +59,6 @@ internal fun rememberComicViewerAppState(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     scope: CoroutineScope = rememberCoroutineScope(),
-    navTabHandler: NavTabHandler = sharedKoinViewModel(),
     manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase = koinInject(),
     getNavigationHistoryUseCase: GetNavigationHistoryUseCase = koinInject(),
     mainViewModel: MainViewModel = koinViewModel(),
@@ -79,7 +77,6 @@ internal fun rememberComicViewerAppState(
             sharedTransitionScope = sharedTransitionScope,
             snackbarHostState = snackbarHostState,
             scope = scope,
-            navTabHandler = navTabHandler,
             manageDisplaySettingsUseCase = manageDisplaySettingsUseCase,
             getNavigationHistoryUseCase = getNavigationHistoryUseCase,
             completeInit = {
@@ -106,7 +103,6 @@ private class ComicViewerAppStateImpl(
     sharedTransitionScope: SharedTransitionScope,
     override var snackbarHostState: SnackbarHostState,
     private val scope: CoroutineScope,
-    private val navTabHandler: NavTabHandler,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val completeInit: () -> Unit,
@@ -122,10 +118,8 @@ private class ComicViewerAppStateImpl(
     override fun onNavItemClick(navItem: NavItem) {
         require(navItem is AppNavItem)
         val navGraph = navItem.navGraph
-        logcat { "Selected navGraph = $navGraph" }
-        if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(navGraph::class) } == true) {
-            navTabHandler.click.tryEmit(Unit)
-        } else {
+        logcat { "Clicked navItem.navGraph = $navGraph" }
+        if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(navGraph::class) } != true) {
             navController.navigate(
                 navGraph,
                 navOptions {
