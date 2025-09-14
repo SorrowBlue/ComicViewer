@@ -62,7 +62,6 @@ internal interface CollectionScreenState {
 @Composable
 internal fun rememberCollectionScreenState(
     route: Collection,
-    scaffoldState: CanonicalScaffoldState<File.Key> = rememberCanonicalScaffoldState(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
     scope: CoroutineScope = rememberCoroutineScope(),
     getCollectionUseCase: GetCollectionUseCase = koinInject(),
@@ -70,10 +69,9 @@ internal fun rememberCollectionScreenState(
     deleteCollectionUseCase: DeleteCollectionUseCase = koinInject(),
     viewModel: CollectionViewModel = koinViewModel { parametersOf(route) },
 ): CollectionScreenState {
-    return remember {
+    val state = remember {
         CollectionScreenStateImpl(
             getCollectionUseCase = getCollectionUseCase,
-            scaffoldState = scaffoldState,
             pagingDataFlow = viewModel.pagingDataFlow,
             lazyGridState = lazyGridState,
             route = route,
@@ -82,11 +80,14 @@ internal fun rememberCollectionScreenState(
             deleteCollectionUseCase = deleteCollectionUseCase
         )
     }
+    state.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
+        onReSelect = state::onReSelected
+    )
+    return state
 }
 
 private class CollectionScreenStateImpl(
     getCollectionUseCase: GetCollectionUseCase,
-    override val scaffoldState: CanonicalScaffoldState<File.Key>,
     override val pagingDataFlow: Flow<PagingData<File>>,
     override val lazyGridState: LazyGridState,
     private val route: Collection,
@@ -95,6 +96,7 @@ private class CollectionScreenStateImpl(
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : CollectionScreenState {
 
+    override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
     override val events = EventFlow<CollectionScreenEvent>()
 
     override var uiState by mutableStateOf(SmartCollectionScreenUiState())
@@ -182,6 +184,14 @@ private class CollectionScreenStateImpl(
         scope.launch {
             deleteCollectionUseCase(DeleteCollectionUseCase.Request(route.id))
             events.emit(CollectionScreenEvent.Back)
+        }
+    }
+
+    fun onReSelected() {
+        if (lazyGridState.canScrollBackward) {
+            scope.launch {
+                lazyGridState.animateScrollToItem(0)
+            }
         }
     }
 }

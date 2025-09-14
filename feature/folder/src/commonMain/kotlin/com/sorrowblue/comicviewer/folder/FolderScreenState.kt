@@ -72,7 +72,6 @@ internal interface FolderScreenState {
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     val pullRefreshState: PullToRefreshState
-    fun onReSelected()
     fun onNavResult(navResult: NavResult<SortTypeSelect>)
     fun onFolderTopAppBarAction(action: FolderTopAppBarAction)
 
@@ -363,7 +362,7 @@ private class FolderScreenStateImpl(
         }
     }
 
-    override fun onReSelected() {
+    fun onReSelected() {
         if (lazyGridState.canScrollBackward) {
             scope.launch {
                 lazyGridState.animateScrollToItem(0)
