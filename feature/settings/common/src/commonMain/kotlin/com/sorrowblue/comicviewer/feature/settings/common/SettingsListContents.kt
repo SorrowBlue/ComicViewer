@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.settings.common
 import androidx.annotation.IntRange
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -10,20 +11,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Label
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.material3.CustomSlider
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -224,21 +234,44 @@ fun SliderSetting(
     value: Float,
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
+    colors: SliderColors = SliderDefaults.colors(),
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     @IntRange(from = 0) steps: Int = 0,
     widget: @Composable (() -> Unit)? = null,
     icon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     Setting(
         title = title,
         summary = {
-            CustomSlider(
+            Slider(
                 value = value,
-                onValueChange = onValueChange,
+                onValueChange = { onValueChange(it) },
                 valueRange = valueRange,
                 steps = steps,
-                thumbLabel = { it.toString() },
+                colors = colors,
+                thumb = {
+                    Label(
+                        label = {
+                            PlainTooltip(
+                                shape = CircleShape
+                            ) {
+                                Text(
+                                    value.toString(),
+                                    modifier = Modifier.widthIn(min = 40.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        },
+                        interactionSource = interactionSource,
+                    ) {
+                        SliderDefaults.Thumb(
+                            interactionSource = interactionSource,
+                        )
+                    }
+                },
+                interactionSource = interactionSource,
                 enabled = enabled,
             )
         },
@@ -256,21 +289,44 @@ fun SliderSetting(
     value: Int,
     onValueChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    colors: SliderColors = SliderDefaults.colors(),
     valueRange: kotlin.ranges.IntRange = 0..100,
     @IntRange(from = 0) steps: Int = 0,
     widget: @Composable (() -> Unit)? = null,
     icon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     Setting(
         title = title,
         summary = {
-            CustomSlider(
+            Slider(
                 value = value.toFloat(),
                 onValueChange = { onValueChange(it.toInt()) },
                 valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
                 steps = steps,
-                thumbLabel = { it.toInt().toString() },
+                colors = colors,
+                thumb = {
+                    Label(
+                        label = {
+                            PlainTooltip(
+                                shape = CircleShape
+                            ) {
+                                Text(
+                                    value.toString(),
+                                    modifier = Modifier.widthIn(min = 40.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        },
+                        interactionSource = interactionSource,
+                    ) {
+                        SliderDefaults.Thumb(
+                            interactionSource = interactionSource,
+                        )
+                    }
+                },
+                interactionSource = interactionSource,
                 enabled = enabled,
             )
         },

@@ -37,7 +37,6 @@ import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavItem
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
-import com.sorrowblue.comicviewer.framework.ui.sharedKoinViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
