@@ -5,6 +5,7 @@ import com.sorrowblue.cmpdestinations.Destination
 import com.sorrowblue.cmpdestinations.GraphNavigation
 import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
+import com.sorrowblue.comicviewer.aggregation.navigation.AggregationNavTransitions
 import com.sorrowblue.comicviewer.feature.book.navigation.BookNavGraph
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
@@ -31,7 +32,8 @@ import kotlinx.serialization.Serializable
         HistoryNavGraph::class,
         BookNavGraph::class,
         ReceiveBookNavGraph::class,
-    ]
+    ],
+    transitions = AggregationNavTransitions::class
 )
 @Serializable
 internal expect object ComicViewerAppNavGraph : GraphNavigation {

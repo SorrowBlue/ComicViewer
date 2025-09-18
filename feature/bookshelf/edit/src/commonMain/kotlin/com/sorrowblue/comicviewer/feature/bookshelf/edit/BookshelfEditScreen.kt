@@ -6,7 +6,6 @@ import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.framework.ui.BackHandler
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import kotlinx.serialization.Serializable
@@ -37,9 +36,6 @@ internal fun BookshelfEditScreen(
     state: BookshelfEditScreenState = rememberBookshelfEditScreenState(route.editMode),
     isCompact: Boolean = isCompactWindowClass(),
 ) {
-    BackHandler {
-        navigator.onBack(state.uiState.editMode)
-    }
     val autofillManager = LocalAutofillManager.current
     DisposableEffect(Unit) {
         onDispose {

@@ -15,11 +15,12 @@ kotlin {
                         logger.lifecycle("Skipping empty or non-source module: ${it.name}")
                     }
                 }
+                implementation(libs.cmpdestinations)
             }
         }
     }
 }
 
 android {
-    namespace = "com.sorrowblue.comicviewer.data.di"
+    namespace = "com.sorrowblue.comicviewer.aggregation"
 }

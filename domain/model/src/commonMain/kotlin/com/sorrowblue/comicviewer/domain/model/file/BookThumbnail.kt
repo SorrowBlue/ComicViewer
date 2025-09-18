@@ -12,6 +12,9 @@ data class BookThumbnail private constructor(
 
     companion object {
 
+        fun temporary(bookshelfId: BookshelfId, path: String) =
+            BookThumbnail(bookshelfId, path, 0, 0, 0)
+
         fun from(book: Book) = when (book) {
             is BookFile -> BookThumbnail(
                 bookshelfId = book.bookshelfId,

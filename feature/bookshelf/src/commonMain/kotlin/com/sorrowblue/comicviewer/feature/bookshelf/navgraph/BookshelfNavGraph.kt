@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.navgraph
 
+import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
@@ -14,14 +15,14 @@ import org.koin.core.annotation.Single
 @Serializable
 @NavGraph(
     startDestination = Bookshelf::class,
-    transitions = BookshelfNavGraphTransitions::class,
     destinations = [
         Bookshelf::class,
         BookshelfDelete::class,
         BookshelfFolder::class,
         BookshelfSelection::class,
     ],
-    nestedGraphs = [BookshelfEditNavGraph::class]
+    nestedGraphs = [BookshelfEditNavGraph::class],
+    transitions = NavTransitions.ApplyParent::class
 )
 data object BookshelfNavGraph
 

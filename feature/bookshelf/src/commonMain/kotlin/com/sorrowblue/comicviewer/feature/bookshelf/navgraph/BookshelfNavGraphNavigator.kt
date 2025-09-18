@@ -87,7 +87,6 @@ internal class BookshelfNavGraphNavigatorImpl(
 
     override fun onSourceClick(bookshelfType: BookshelfType) {
         navController.navigate(BookshelfEditNavGraph(BookshelfEditMode.Register(bookshelfType))) {
-            popUpTo(route = Bookshelf)
         }
     }
 
@@ -105,7 +104,7 @@ internal class BookshelfNavGraphNavigatorImpl(
     }
 
     override fun onComplete() {
-        if (!navController.popBackStack(BookshelfSelection, true)) {
+        if (!navController.popBackStack(Bookshelf, false)) {
             navController.popBackStack()
         }
     }

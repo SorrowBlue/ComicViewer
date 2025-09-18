@@ -2,23 +2,25 @@ package com.sorrowblue.comicviewer.feature.search.navigation
 
 import com.sorrowblue.comicviewer.feature.search.Search
 import com.sorrowblue.comicviewer.feature.search.SearchFolder
+import com.sorrowblue.comicviewer.framework.ui.navigation.BetweenScreen
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
+import com.sorrowblue.comicviewer.framework.ui.navigation.GraphFrom
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
 
 internal object SearchNavGraphTransitions : DestinationTransitions() {
 
     override val transitions = listOf(
-        TransitionsConfigure(
-            SearchNavGraph::class,
+        GraphFrom(
             null,
+            SearchNavGraph::class,
             TransitionsConfigure.Type.ContainerTransform
         ),
-        TransitionsConfigure(
+        BetweenScreen(
             Search::class,
             SearchFolder::class,
             TransitionsConfigure.Type.SharedAxisX
         ),
-        TransitionsConfigure(
+        BetweenScreen(
             SearchFolder::class,
             SearchFolder::class,
             TransitionsConfigure.Type.SharedAxisX
