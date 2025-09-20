@@ -25,7 +25,7 @@ dependencies {
     dokka(projects.data.coil)
     dokka(projects.data.database)
     dokka(projects.data.datastore)
-    dokka(projects.data.di)
+    dokka(projects.aggregation)
     dokka(projects.data.reader.document)
     dokka(projects.data.reader.zip)
     dokka(projects.data.storage.client)

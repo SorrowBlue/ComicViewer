@@ -2,25 +2,27 @@ package com.sorrowblue.comicviewer.feature.readlater.navigation
 
 import com.sorrowblue.comicviewer.feature.readlater.ReadLater
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterFolder
+import com.sorrowblue.comicviewer.framework.ui.navigation.BetweenScreen
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
+import com.sorrowblue.comicviewer.framework.ui.navigation.GraphFrom
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
 
-internal object ReadLaterNavGraphTransitions : DestinationTransitions() {
+object ReadLaterNavGraphTransitions : DestinationTransitions() {
     override val transitions = listOf(
-        TransitionsConfigure(
-            ReadLaterNavGraph::class,
-            null,
-            TransitionsConfigure.Type.ContainerTransform
-        ),
-        TransitionsConfigure(
+        BetweenScreen(
             ReadLater::class,
             ReadLaterFolder::class,
             TransitionsConfigure.Type.SharedAxisX
         ),
-        TransitionsConfigure(
+        BetweenScreen(
             ReadLaterFolder::class,
             ReadLaterFolder::class,
             TransitionsConfigure.Type.SharedAxisX
-        )
+        ),
+        GraphFrom(
+            null,
+            ReadLaterNavGraph::class,
+            TransitionsConfigure.Type.ContainerTransform
+        ),
     )
 }

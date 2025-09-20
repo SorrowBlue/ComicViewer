@@ -42,6 +42,7 @@ kover {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        mavenLocal()
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -70,6 +71,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "comicviewer"
 
+include(":aggregation")
+
 include(":composeApp")
 
 include(":framework:common")
@@ -91,7 +94,6 @@ include(":data:storage:client")
 include(":data:storage:smb")
 include(":data:storage:")
 include(":data:storage:device")
-include(":data:di")
 
 include(":feature:authentication")
 include(":feature:book")

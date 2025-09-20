@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.navigation
 
 import androidx.navigation.NavController
+import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -13,7 +14,8 @@ import kotlinx.serialization.Serializable
 
 @NavGraph(
     startDestination = BasicCollectionCreate::class,
-    destinations = [BasicCollectionCreate::class, BasicCollectionEdit::class, SmartCollectionCreate::class, SmartCollectionEdit::class]
+    destinations = [BasicCollectionCreate::class, BasicCollectionEdit::class, SmartCollectionCreate::class, SmartCollectionEdit::class],
+    transitions = NavTransitions.ApplyParent::class
 )
 @Serializable
 data object CollectionEditorNavGraph

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.readlater.navigation
 
+import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.readlater.ReadLater
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterFolder
@@ -10,8 +11,8 @@ import org.koin.core.annotation.Single
 
 @NavGraph(
     startDestination = ReadLater::class,
-    transitions = ReadLaterNavGraphTransitions::class,
-    destinations = [ReadLater::class, ReadLaterFolder::class]
+    destinations = [ReadLater::class, ReadLaterFolder::class],
+    transitions = NavTransitions.ApplyParent::class
 )
 @Serializable
 data object ReadLaterNavGraph

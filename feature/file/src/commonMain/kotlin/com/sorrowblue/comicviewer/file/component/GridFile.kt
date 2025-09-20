@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.file.component
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,11 +30,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
+import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
+import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
@@ -46,6 +53,7 @@ import org.jetbrains.compose.resources.stringResource
  * @param showThumbnail サムネイル表示を有効にするか
  * @param modifier Modifier
  */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun GridFile(
     file: File,
@@ -60,19 +68,40 @@ fun GridFile(
 ) {
     Card(onClick = onClick, colors = colors, modifier = modifier) {
         Box {
-            if (showThumbnail) {
-                FileThumbnailAsyncImage(
-                    fileThumbnail = FileThumbnail.from(file),
-                    alignment = Alignment.TopCenter,
-                    contentScale = contentScale,
-                    filterQuality = filterQuality,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clip(CardDefaults.shape)
-                )
-            } else {
-                GridFileIcon(file = file)
+            with(LocalAppState.current) {
+                if (showThumbnail) {
+                    FileThumbnailAsyncImage(
+                        fileThumbnail = FileThumbnail.from(file),
+                        alignment = Alignment.TopCenter,
+                        contentScale = contentScale,
+                        filterQuality = filterQuality,
+                        modifier = Modifier
+                            .sharedBounds(
+                                rememberSharedContentState("${file.bookshelfId}:${file.path}"),
+                                LocalAnimatedContentScope.current,
+                                enter = materialFadeThroughIn(),
+                                exit = materialFadeThroughOut(),
+                                boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                resizeMode = scaleToBounds(contentScale, Alignment.Center),
+                            )
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .clip(CardDefaults.shape)
+                    )
+                } else {
+                    GridFileIcon(
+                        file = file,
+                        modifier = Modifier
+                            .sharedBounds(
+                                rememberSharedContentState("${file.bookshelfId}:${file.path}"),
+                                LocalAnimatedContentScope.current,
+                                enter = materialFadeThroughIn(),
+                                exit = materialFadeThroughOut(),
+                                boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                resizeMode = scaleToBounds(contentScale, Alignment.Center),
+                            )
+                    )
+                }
             }
             IconButton(
                 onClick = onInfoClick,
@@ -130,10 +159,10 @@ fun GridFile(
 }
 
 @Composable
-private fun GridFileIcon(file: File) {
+private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .aspectRatio(1f)
             .clip(CardDefaults.shape)

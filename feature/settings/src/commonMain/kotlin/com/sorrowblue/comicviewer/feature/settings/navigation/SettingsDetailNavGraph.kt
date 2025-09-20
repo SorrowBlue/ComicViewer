@@ -44,7 +44,8 @@ import org.koin.core.annotation.Scoped
         AppInfoSettingsNavGraph::class,
         DisplaySettingsNavGraph::class,
         FolderSettingsNavGraph::class,
-    ]
+    ],
+    transitions = SettingsNavGraphTransitions::class
 )
 expect object SettingsDetailNavGraph : GraphNavigation {
     override val destinations: Array<Destination>
