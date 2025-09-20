@@ -46,7 +46,6 @@ data class GraphFrom(
     }
 }
 
-
 data class BetweenScreen(
     val from: KClass<*>,
     val to: KClass<*>,

@@ -7,14 +7,9 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.GraphFrom
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
 
-internal object SearchNavGraphTransitions : DestinationTransitions() {
+object SearchNavGraphTransitions : DestinationTransitions() {
 
     override val transitions = listOf(
-        GraphFrom(
-            null,
-            SearchNavGraph::class,
-            TransitionsConfigure.Type.ContainerTransform
-        ),
         BetweenScreen(
             Search::class,
             SearchFolder::class,
@@ -24,6 +19,11 @@ internal object SearchNavGraphTransitions : DestinationTransitions() {
             SearchFolder::class,
             SearchFolder::class,
             TransitionsConfigure.Type.SharedAxisX
-        )
+        ),
+        GraphFrom(
+            null,
+            SearchNavGraph::class,
+            TransitionsConfigure.Type.SharedAxisZ
+        ),
     )
 }

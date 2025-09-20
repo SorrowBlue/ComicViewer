@@ -5,6 +5,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraphTr
 import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavGraphTransitions
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavGraphTransitions
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavGraphTransitions
+import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavGraphTransitions
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsNavGraphTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
@@ -13,6 +14,7 @@ object AggregationNavTransitions : DestinationTransitions() {
     override val transitions: List<TransitionsConfigure> = buildList {
         addAll(SettingsNavGraphTransitions.transitions)
         addAll(BookNavGraphTransitions.transitions)
+        addAll(SearchNavGraphTransitions.transitions)
         addAll(BookshelfNavGraphTransitions.transitions)
         addAll(CollectionNavGraphTransitions.transitions)
         addAll(ReadLaterNavGraphTransitions.transitions)

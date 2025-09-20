@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.file.component
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,16 +33,22 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
+import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
+import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ListFile(
     file: File,
@@ -51,74 +60,92 @@ fun ListFile(
     modifier: Modifier = Modifier,
     colors: ListItemColors = ListItemDefaults.colors(),
 ) {
-    ListItem(
-        leadingContent = {
-            if (showThumbnail) {
-                Box {
-                    var isError by remember { mutableStateOf(false) }
-                    FileThumbnailAsyncImage(
-                        fileThumbnail = FileThumbnail.from(file),
-                        contentScale = contentScale,
-                        filterQuality = filterQuality,
-                        onError = { isError = true },
-                        onSuccess = { isError = false },
+    with(LocalAppState.current) {
+        ListItem(
+            leadingContent = {
+                if (showThumbnail) {
+                    Box {
+                        var isError by remember { mutableStateOf(false) }
+                        FileThumbnailAsyncImage(
+                            fileThumbnail = FileThumbnail.from(file),
+                            contentScale = contentScale,
+                            filterQuality = filterQuality,
+                            onError = { isError = true },
+                            onSuccess = { isError = false },
+                            modifier = Modifier
+                                .sharedBounds(
+                                    rememberSharedContentState("${file.bookshelfId}:${file.path}"),
+                                    LocalAnimatedContentScope.current,
+                                    enter = materialFadeThroughIn(),
+                                    exit = materialFadeThroughOut(),
+                                    boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                    resizeMode = scaleToBounds(contentScale, Center),
+                                )
+                                .size(80.dp)
+                                .clip(CardDefaults.shape)
+                                .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
+                        )
+                    }
+                } else {
+                    Box(
                         modifier = Modifier
+                            .sharedBounds(
+                                rememberSharedContentState("${file.bookshelfId}:${file.path}"),
+                                LocalAnimatedContentScope.current,
+                                enter = materialFadeThroughIn(),
+                                exit = materialFadeThroughOut(),
+                                boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                resizeMode = scaleToBounds(contentScale, Center),
+                            )
                             .size(80.dp)
                             .clip(CardDefaults.shape)
-                            .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
-                    )
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CardDefaults.shape)
-                        .background(ComicTheme.colorScheme.surfaceContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (file is Book) {
-                        Icon(imageVector = ComicIcons.Book, contentDescription = null)
-                    } else {
-                        Icon(imageVector = ComicIcons.Folder, contentDescription = null)
+                            .background(ComicTheme.colorScheme.surfaceContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (file is Book) {
+                            Icon(imageVector = ComicIcons.Book, contentDescription = null)
+                        } else {
+                            Icon(imageVector = ComicIcons.Folder, contentDescription = null)
+                        }
                     }
                 }
-            }
-        },
-        headlineContent = {
-            Text(text = file.name, fontSize = fontSize.sp)
-        },
-        supportingContent = {
-            Column {
-                if (file is Book && 0 < file.lastPageRead) {
-                    val color = ProgressIndicatorDefaults.linearColor
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        progress = { file.lastPageRead.toFloat() / file.totalPageCount },
-                        strokeCap = StrokeCap.Butt,
-                        gapSize = 0.dp,
-                        drawStopIndicator = {
-                            drawStopIndicator(
-                                drawScope = this,
-                                stopSize = 0.dp,
-                                color = color,
-                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
-                            )
-                        }
+            },
+            headlineContent = {
+                Text(text = file.name, fontSize = fontSize.sp)
+            },
+            supportingContent = {
+                Column {
+                    if (file is Book && 0 < file.lastPageRead) {
+                        val color = ProgressIndicatorDefaults.linearColor
+                        LinearProgressIndicator(
+                            modifier = Modifier.fillMaxWidth(),
+                            progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                            strokeCap = StrokeCap.Butt,
+                            gapSize = 0.dp,
+                            drawStopIndicator = {
+                                drawStopIndicator(
+                                    drawScope = this,
+                                    stopSize = 0.dp,
+                                    color = color,
+                                    strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                                )
+                            }
+                        )
+                    }
+                }
+            },
+            trailingContent = {
+                IconButton(onClick = onLongClick) {
+                    Icon(
+                        imageVector = ComicIcons.MoreVert,
+                        contentDescription = stringResource(Res.string.file_desc_open_file_info)
                     )
                 }
-            }
-        },
-        trailingContent = {
-            IconButton(onClick = onLongClick) {
-                Icon(
-                    imageVector = ComicIcons.MoreVert,
-                    contentDescription = stringResource(Res.string.file_desc_open_file_info)
-                )
-            }
-        },
-        colors = colors,
-        modifier = modifier
-    )
+            },
+            colors = colors,
+            modifier = modifier
+        )
+    }
 }
 
 /**

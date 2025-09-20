@@ -28,7 +28,6 @@ object Transitions {
             with(density) { slideDistanceDp.roundToPx() }
         }
     }
-
 }
 
 fun materialContainerTransformIn(): EnterTransition {

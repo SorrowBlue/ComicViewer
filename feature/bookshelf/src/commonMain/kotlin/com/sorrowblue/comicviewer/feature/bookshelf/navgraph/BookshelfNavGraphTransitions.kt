@@ -4,8 +4,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
-import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.BetweenScreen
+import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.GraphFrom
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
 

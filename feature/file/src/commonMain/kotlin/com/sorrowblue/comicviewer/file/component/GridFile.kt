@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,7 +29,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
@@ -94,10 +92,15 @@ fun GridFile(
                 } else {
                     GridFileIcon(
                         file = file,
-                        modifier = Modifier.sharedBounds(
-                            rememberSharedContentState("${file.bookshelfId}:${file.path}"),
-                            LocalAnimatedContentScope.current
-                        )
+                        modifier = Modifier
+                            .sharedBounds(
+                                rememberSharedContentState("${file.bookshelfId}:${file.path}"),
+                                LocalAnimatedContentScope.current,
+                                enter = materialFadeThroughIn(),
+                                exit = materialFadeThroughOut(),
+                                boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                resizeMode = scaleToBounds(contentScale, Center),
+                            )
                     )
                 }
             }
