@@ -21,7 +21,6 @@ import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.FilterQuality
@@ -83,7 +82,7 @@ fun GridFile(
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
                                 boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
-                                resizeMode = scaleToBounds(contentScale, Center),
+                                resizeMode = scaleToBounds(contentScale, Alignment.Center),
                             )
                             .fillMaxWidth()
                             .aspectRatio(1f)
@@ -99,7 +98,7 @@ fun GridFile(
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
                                 boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
-                                resizeMode = scaleToBounds(contentScale, Center),
+                                resizeMode = scaleToBounds(contentScale, Alignment.Center),
                             )
                     )
                 }

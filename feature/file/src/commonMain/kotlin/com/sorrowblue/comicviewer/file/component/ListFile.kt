@@ -19,12 +19,7 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -65,13 +60,10 @@ fun ListFile(
             leadingContent = {
                 if (showThumbnail) {
                     Box {
-                        var isError by remember { mutableStateOf(false) }
                         FileThumbnailAsyncImage(
                             fileThumbnail = FileThumbnail.from(file),
                             contentScale = contentScale,
                             filterQuality = filterQuality,
-                            onError = { isError = true },
-                            onSuccess = { isError = false },
                             modifier = Modifier
                                 .sharedBounds(
                                     rememberSharedContentState("${file.bookshelfId}:${file.path}"),
@@ -79,7 +71,7 @@ fun ListFile(
                                     enter = materialFadeThroughIn(),
                                     exit = materialFadeThroughOut(),
                                     boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
-                                    resizeMode = scaleToBounds(contentScale, Center),
+                                    resizeMode = scaleToBounds(contentScale, Alignment.Center),
                                 )
                                 .size(80.dp)
                                 .clip(CardDefaults.shape)
@@ -95,7 +87,7 @@ fun ListFile(
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
                                 boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
-                                resizeMode = scaleToBounds(contentScale, Center),
+                                resizeMode = scaleToBounds(contentScale, Alignment.Center),
                             )
                             .size(80.dp)
                             .clip(CardDefaults.shape)
