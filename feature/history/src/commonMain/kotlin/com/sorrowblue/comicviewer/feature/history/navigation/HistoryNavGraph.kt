@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.history.navigation
 
+import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.history.ClearAllHistory
 import com.sorrowblue.comicviewer.feature.history.History
@@ -12,12 +13,12 @@ import org.koin.core.annotation.Single
 @Serializable
 @NavGraph(
     startDestination = History::class,
-    transitions = HistoryNavGraphTransitions::class,
     destinations = [
         History::class,
         HistoryFolder::class,
         ClearAllHistory::class,
-    ]
+    ],
+    transitions = NavTransitions.ApplyParent::class
 )
 data object HistoryNavGraph
 

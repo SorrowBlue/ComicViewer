@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.collection.navigation
 
+import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.CollectionFolder
@@ -14,7 +15,6 @@ import org.koin.core.annotation.Single
 
 @NavGraph(
     startDestination = CollectionList::class,
-    transitions = CollectionNavGraphTransitions::class,
     destinations = [
         Collection::class,
         CollectionList::class,
@@ -25,6 +25,7 @@ import org.koin.core.annotation.Single
         BasicCollectionAddNavGraph::class,
         CollectionEditorNavGraph::class,
     ],
+    transitions = NavTransitions.ApplyParent::class
 )
 @Serializable
 data object CollectionNavGraph

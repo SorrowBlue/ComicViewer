@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
-import com.sorrowblue.comicviewer.data.di.DiModule
+import com.sorrowblue.comicviewer.aggregation.di.AggregationModule
 import logcat.LogPriority
 import logcat.logcat
 import org.koin.android.ext.koin.androidLogger
@@ -16,6 +16,6 @@ internal actual fun koinConfiguration() = KoinConfiguration {
 
 internal actual fun allModules() =
     listOf(
-        DiModule().module,
+        AggregationModule().module,
         AppModule().module,
     )

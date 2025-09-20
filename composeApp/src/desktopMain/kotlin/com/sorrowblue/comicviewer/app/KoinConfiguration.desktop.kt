@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
-import com.sorrowblue.comicviewer.data.di.DiModule
+import com.sorrowblue.comicviewer.aggregation.di.AggregationModule
 import logcat.LogPriority
 import logcat.logcat
 import org.koin.core.logger.Level
@@ -15,7 +15,7 @@ internal actual fun koinConfiguration() = KoinConfiguration {
 }
 
 internal actual fun allModules() =
-    listOf(DiModule().module, AppModule().module)
+    listOf(AggregationModule().module, AppModule().module)
 
 private object JvmLogger : Logger() {
     override fun display(level: Level, msg: MESSAGE) {

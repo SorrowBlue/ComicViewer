@@ -2,41 +2,43 @@ package com.sorrowblue.comicviewer.feature.bookshelf.navgraph
 
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditNavGraph
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
+import com.sorrowblue.comicviewer.framework.ui.navigation.BetweenScreen
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
+import com.sorrowblue.comicviewer.framework.ui.navigation.GraphFrom
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure
 
-internal object BookshelfNavGraphTransitions : DestinationTransitions() {
-    override val transitions: List<TransitionsConfigure> = listOf(
-        TransitionsConfigure(
+object BookshelfNavGraphTransitions : DestinationTransitions() {
+    override val transitions = listOf(
+        BetweenScreen(
             Bookshelf::class,
             BookshelfFolder::class,
             TransitionsConfigure.Type.SharedAxisX
         ),
-        TransitionsConfigure(
+        BetweenScreen(
             BookshelfFolder::class,
             BookshelfFolder::class,
             TransitionsConfigure.Type.SharedAxisX
         ),
-        TransitionsConfigure(
+        BetweenScreen(
             Bookshelf::class,
             BookshelfSelection::class,
-            TransitionsConfigure.Type.SharedAxisY
+            TransitionsConfigure.Type.SharedAxisZ
         ),
-        TransitionsConfigure(
+        GraphFrom(
             Bookshelf::class,
-            BookshelfEditNavGraph::class,
-            TransitionsConfigure.Type.SharedAxisY
+            BookshelfEdit::class,
+            TransitionsConfigure.Type.SharedAxisZ
         ),
-        TransitionsConfigure(
+        GraphFrom(
             BookshelfSelection::class,
-            BookshelfEditNavGraph::class,
+            BookshelfEdit::class,
             TransitionsConfigure.Type.SharedAxisX
         ),
-        TransitionsConfigure(
-            BookshelfNavGraph::class,
+        GraphFrom(
             null,
+            BookshelfNavGraph::class,
             TransitionsConfigure.Type.ContainerTransform
         )
     )

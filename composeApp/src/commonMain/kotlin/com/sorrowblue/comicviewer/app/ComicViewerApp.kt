@@ -16,10 +16,9 @@ import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavigatorImpl
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
-import com.sorrowblue.comicviewer.framework.ui.animation.rememberSlideDistance
+import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import org.koin.compose.module.rememberKoinModules
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module
@@ -28,7 +27,7 @@ import org.koin.dsl.module
 @OptIn(KoinExperimentalAPI::class, ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun ComicViewerApp() {
-    DestinationTransitions.slideDistance = rememberSlideDistance()
+    Transitions.InitSlideDistance()
     SharedTransitionLayout {
         val state = rememberComicViewerAppState(this)
         rememberKoinModules {
@@ -46,7 +45,10 @@ internal fun ComicViewerApp() {
         val containerColor by animateColorAsState(
             if (state.navigationSuiteType.isNavigationRail) ComicTheme.colorScheme.surfaceContainer else ComicTheme.colorScheme.surface
         )
-        CompositionLocalProvider(LocalAppState provides state, LocalContainerColor provides containerColor) {
+        CompositionLocalProvider(
+            LocalAppState provides state,
+            LocalContainerColor provides containerColor
+        ) {
             NavGraphNavHost(
                 graphNavigation = ComicViewerAppNavGraph,
                 isCompact = isCompactWindowClass(),

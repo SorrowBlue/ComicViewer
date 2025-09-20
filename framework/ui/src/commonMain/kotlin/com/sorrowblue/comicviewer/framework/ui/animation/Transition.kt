@@ -14,9 +14,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
+
+object Transitions {
+    var slideDistance = -1
+
+    @Composable
+    fun InitSlideDistance() {
+        val slideDistanceDp = 30.dp
+        val density = LocalDensity.current
+        slideDistance = remember(density, slideDistanceDp) {
+            with(density) { slideDistanceDp.roundToPx() }
+        }
+    }
+}
 
 fun materialContainerTransformIn(): EnterTransition {
     return materialFadeThroughIn()
@@ -48,51 +60,38 @@ fun materialFadeThroughOut(targetAlpha: Float = 0.0f): ExitTransition {
     )
 }
 
-fun materialSharedAxisXIn(
-    forward: Boolean,
-    slideDistance: Int,
-): EnterTransition = slideInHorizontally(
+fun materialSharedAxisXIn(): EnterTransition =
+    slideInHorizontally(
+        animationSpec = ExpressiveMotion.Spatial.slow(),
+        initialOffsetX = { Transitions.slideDistance },
+    ) + materialFadeThroughIn()
+
+fun materialSharedAxisXOut(): ExitTransition =
+    slideOutHorizontally(
+        animationSpec = ExpressiveMotion.Spatial.slow(),
+        targetOffsetX = { -Transitions.slideDistance },
+    ) + materialFadeThroughOut()
+
+fun materialSharedAxisYIn(): EnterTransition =
+    slideInVertically(
+        animationSpec = ExpressiveMotion.Spatial.slow(),
+        initialOffsetY = { Transitions.slideDistance },
+    ) + materialFadeThroughIn()
+
+fun materialSharedAxisYOut(): ExitTransition =
+    slideOutVertically(
+        animationSpec = ExpressiveMotion.Spatial.slow(),
+        targetOffsetY = { Transitions.slideDistance },
+    ) + materialFadeThroughOut()
+
+fun materialSharedAxisZIn(): EnterTransition = scaleIn(
     animationSpec = ExpressiveMotion.Spatial.slow(),
-    initialOffsetX = {
-        if (forward) slideDistance else -slideDistance
-    },
+    initialScale = 0.8f,
+    transformOrigin = TransformOrigin.Center,
 ) + materialFadeThroughIn()
 
-fun materialSharedAxisXOut(
-    forward: Boolean,
-    slideDistance: Int,
-): ExitTransition = slideOutHorizontally(
+fun materialSharedAxisZOut(): ExitTransition = scaleOut(
     animationSpec = ExpressiveMotion.Spatial.slow(),
-    targetOffsetX = {
-        if (forward) -slideDistance else slideDistance
-    },
+    targetScale = 1.1f,
+    transformOrigin = TransformOrigin.Center,
 ) + materialFadeThroughOut()
-
-fun materialSharedAxisYIn(
-    slideUp: Boolean,
-    slideDistance: Int,
-): EnterTransition = slideInVertically(
-    animationSpec = ExpressiveMotion.Spatial.slow(),
-    initialOffsetY = {
-        if (slideUp) slideDistance else -slideDistance
-    },
-) + materialFadeThroughIn()
-
-fun materialSharedAxisYOut(
-    slideDown: Boolean,
-    slideDistance: Int,
-): ExitTransition = slideOutVertically(
-    animationSpec = ExpressiveMotion.Spatial.slow(),
-    targetOffsetY = {
-        if (slideDown) slideDistance else -slideDistance
-    },
-) + materialFadeThroughOut()
-
-@Composable
-fun rememberSlideDistance(): Int {
-    val slideDistance: Dp = 30.dp
-    val density = LocalDensity.current
-    return remember(density, slideDistance) {
-        with(density) { slideDistance.roundToPx() }
-    }
-}

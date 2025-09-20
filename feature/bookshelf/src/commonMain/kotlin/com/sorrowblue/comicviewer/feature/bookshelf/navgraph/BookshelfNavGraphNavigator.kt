@@ -10,9 +10,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolderScreenNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenNavigator
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditMode
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenNavigator
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditNavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
@@ -70,7 +70,7 @@ internal class BookshelfNavGraphNavigatorImpl(
     }
 
     override fun onEditClick(id: BookshelfId) {
-        navController.navigate(BookshelfEditNavGraph(BookshelfEditMode.Edit(id)))
+        navController.navigate(BookshelfEdit(BookshelfEditMode.Edit(id)))
     }
 
     override fun onRemoveClick(bookshelfId: BookshelfId) {
@@ -86,8 +86,7 @@ internal class BookshelfNavGraphNavigatorImpl(
     }
 
     override fun onSourceClick(bookshelfType: BookshelfType) {
-        navController.navigate(BookshelfEditNavGraph(BookshelfEditMode.Register(bookshelfType))) {
-            popUpTo(route = Bookshelf)
+        navController.navigate(BookshelfEdit(BookshelfEditMode.Register(bookshelfType))) {
         }
     }
 
@@ -105,7 +104,7 @@ internal class BookshelfNavGraphNavigatorImpl(
     }
 
     override fun onComplete() {
-        if (!navController.popBackStack(BookshelfSelection, true)) {
+        if (!navController.popBackStack(Bookshelf, false)) {
             navController.popBackStack()
         }
     }
