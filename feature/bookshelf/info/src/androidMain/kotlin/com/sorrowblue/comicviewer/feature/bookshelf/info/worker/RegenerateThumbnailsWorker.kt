@@ -63,8 +63,8 @@ internal class RegenerateThumbnailsWorker(
             logcat { "catch: ${e.asLog()}" }
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("サムネイルのスキャン")
-                    .setContentText("サムネイルのスキャンはキャンセルされました。")
+                    .setContentTitle(getString(Res.string.bookshelf_info_notification_thumbnail_scan_title))
+                    .setContentText(getString(Res.string.bookshelf_info_notification_thumbnail_scan_cancelled))
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(R.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)

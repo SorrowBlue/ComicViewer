@@ -63,8 +63,8 @@ internal class ScanFileWorker(
             logcat { "catch: ${e.asLog()}" }
             val notification =
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャン")
-                    .setContentText("スキャンはキャンセルされました。")
+                    .setContentTitle(getString(Res.string.bookshelf_info_notification_file_scan_title))
+                    .setContentText(getString(Res.string.bookshelf_info_notification_file_scan_cancelled))
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(NotificationR.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)

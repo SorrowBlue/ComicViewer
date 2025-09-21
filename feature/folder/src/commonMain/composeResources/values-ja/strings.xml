@@ -13,4 +13,8 @@
     <string name="folder_sorttype_label_date_desc">更新日時（降順）</string>
     <string name="folder_sorttype_label_size_asc">ファイルサイズ（昇順）</string>
     <string name="folder_sorttype_label_size_desc">ファイルサイズ（降順）</string>
+    
+    <!--App bar buttons-->
+    <string name="folder_btn_search">検索</string>
+    <string name="folder_btn_sort">並び替え</string>
 </resources>

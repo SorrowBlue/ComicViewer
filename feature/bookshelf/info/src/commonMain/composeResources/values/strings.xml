@@ -45,4 +45,14 @@
     <string name="bookshelf_info_delete_btn_delete">Delete</string>
     <string name="bookshelf_info_delete_btn_cancel">Cancel</string>
     <!--</editor-fold>-->
+    
+    <!--<editor-fold desc="Notification messages">-->
+    <string name="bookshelf_info_notification_thumbnail_scan_title">Thumbnail scan</string>
+    <string name="bookshelf_info_notification_thumbnail_scan_cancelled">Thumbnail scan was cancelled.</string>
+    <string name="bookshelf_info_notification_file_scan_title">File scan</string>
+    <string name="bookshelf_info_notification_file_scan_cancelled">File scan was cancelled.</string>
+    <!--</editor-fold>-->
+    
+    <!--Error messages-->
+    <string name="bookshelf_info_error_generic">Error</string>
  </resources>

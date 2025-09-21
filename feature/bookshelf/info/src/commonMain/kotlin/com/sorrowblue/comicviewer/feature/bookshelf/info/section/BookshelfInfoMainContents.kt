@@ -122,6 +122,6 @@ internal fun LoadingContents(modifier: Modifier = Modifier) {
 @Composable
 internal fun ErrorContents(modifier: Modifier = Modifier) {
     Box(contentAlignment = Alignment.Center, modifier = modifier) {
-        Text("Error")
+        Text(stringResource(Res.string.bookshelf_info_error_generic))
     }
 }
