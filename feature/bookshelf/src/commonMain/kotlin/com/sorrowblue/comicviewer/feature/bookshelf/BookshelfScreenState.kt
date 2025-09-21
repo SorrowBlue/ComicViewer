@@ -37,24 +37,24 @@ internal fun rememberBookshelfScreenState(
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ): BookshelfScreenState {
     val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    val stateImpl = remember {
+    val stateImpl = remember(scope, lazyGridState) {
         BookshelfScreenStateImpl(
-            pagingItems = pagingItems,
             scope = scope,
             lazyGridState = lazyGridState,
         )
     }
+    stateImpl.pagingItems = pagingItems
     stateImpl.scaffoldState =
         rememberCanonicalScaffoldState(onReSelect = stateImpl::onNavItemReSelected)
     return stateImpl
 }
 
 private class BookshelfScreenStateImpl(
-    override val pagingItems: LazyPagingItems<BookshelfFolder>,
     override val lazyGridState: LazyGridState,
     private val scope: CoroutineScope,
 ) : BookshelfScreenState {
 
+    override lateinit var pagingItems: LazyPagingItems<BookshelfFolder>
     override lateinit var scaffoldState: CanonicalScaffoldState<BookshelfId>
 
     override fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder) {

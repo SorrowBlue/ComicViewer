@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -17,4 +18,15 @@ kotlin {
 
 android {
     namespace = "com.sorrowblue.comicviewer.domain.usecase"
+    sourceSets {
+        debug {
+            manifest.srcFile("src/androidDebug/AndroidManifest.xml")
+        }
+    }
+}
+
+dependencies {
+    debugImplementation(libs.kotlinx.serialization.json)
+    debugImplementation(libs.androidx.appcompat)
+    debugImplementation(libs.koin.core)
 }
