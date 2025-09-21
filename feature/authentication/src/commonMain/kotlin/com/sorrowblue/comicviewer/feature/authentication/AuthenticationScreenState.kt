@@ -32,6 +32,7 @@ internal fun rememberAuthenticationScreenState(
     biometricManager: BiometricManager = rememberBiometricManager(),
     securitySettingsUseCase: ManageSecuritySettingsUseCase = koinInject(),
 ): AuthenticationScreenState = rememberListSaveable(
+    route,
     save = { arrayListOf(it.pinHistory, it.uiState.encodeToByteArray()) },
     restore = {
         pinHistory = it[0] as String

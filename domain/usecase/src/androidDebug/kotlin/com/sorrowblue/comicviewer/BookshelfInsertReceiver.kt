@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer.Auth
 import com.sorrowblue.comicviewer.domain.model.fold
@@ -17,6 +16,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import logcat.LogPriority
+import logcat.asLog
 import logcat.logcat
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -41,61 +42,65 @@ internal class BookshelfInsertReceiver : BroadcastReceiver(), KoinComponent {
                         )
                     ).fold(
                         onSuccess = { bookshelf ->
-                            Log.d(this::class.simpleName, "insert success. $bookshelf")
+                            logcat(TAG) { "insert success. $bookshelf" }
                         },
                         onError = { error ->
-                            Log.e(this::class.simpleName, "insert error. $error")
+                            logcat(TAG, LogPriority.ERROR) { "insert error. $error" }
                         }
                     )
                 }
             }
         }.onFailure {
-            Log.e(this::class.simpleName, "onReceive error: ${it.message}", it)
+            logcat(TAG, LogPriority.ERROR) { "onReceive error: ${it.message}" }
         }
     }
-}
 
-private fun BroadcastReceiver.goAsync(
-    coroutineContext: CoroutineContext = Dispatchers.Default,
-    block: suspend CoroutineScope.() -> Unit,
-) {
-    val parentScope = CoroutineScope(coroutineContext)
-    val pendingResult = goAsync()
+    private fun BroadcastReceiver.goAsync(
+        coroutineContext: CoroutineContext = Dispatchers.Default,
+        block: suspend CoroutineScope.() -> Unit,
+    ) {
+        val parentScope = CoroutineScope(coroutineContext)
+        val pendingResult = goAsync()
 
-    parentScope.launch {
-        try {
+        parentScope.launch {
             try {
-                // Use `coroutineScope` so that errors within `block` are rethrown at the end of
-                // this scope, instead of propagating up the Job hierarchy. If we use `parentScope`
-                // directly, then errors in child jobs `launch`ed by `block` would trigger the
-                // CoroutineExceptionHandler and crash the process.
-                coroutineScope { this.block() }
-            } catch (_: CancellationException) {
-                // Regular cancellation, do nothing. The scope will always be cancelled below.
-            } catch (e: Throwable) {
-                Log.e(this@goAsync::class.simpleName, "BroadcastReceiver execution failed", e)
+                try {
+                    // Use `coroutineScope` so that errors within `block` are rethrown at the end of
+                    // this scope, instead of propagating up the Job hierarchy. If we use `parentScope`
+                    // directly, then errors in child jobs `launch`ed by `block` would trigger the
+                    // CoroutineExceptionHandler and crash the process.
+                    coroutineScope { this.block() }
+                } catch (_: CancellationException) {
+                    // Regular cancellation, do nothing. The scope will always be cancelled below.
+                } catch (e: Throwable) {
+                    logcat(
+                        TAG,
+                        LogPriority.ERROR
+                    ) { "BroadcastReceiver execution failed. ${e.asLog()}" }
+                } finally {
+                    // Make sure the parent scope is cancelled in all cases. Nothing can be in the
+                    // `finally` block after this, as this throws a `CancellationException`.
+                    parentScope.cancel()
+                }
             } finally {
-                // Make sure the parent scope is cancelled in all cases. Nothing can be in the
-                // `finally` block after this, as this throws a `CancellationException`.
-                parentScope.cancel()
-            }
-        } finally {
-            // Notify ActivityManager that we are finished with this broadcast. This must be the
-            // last call, as the process may be killed after calling this.
-            try {
-                pendingResult.finish()
-            } catch (e: IllegalStateException) {
-                // On some OEM devices, this may throw an error about "Broadcast already finished".
-                // See b/257513022.
-                Log.e(
-                    this@goAsync::class.simpleName,
-                    "Error thrown when trying to finish broadcast",
-                    e
-                )
+                // Notify ActivityManager that we are finished with this broadcast. This must be the
+                // last call, as the process may be killed after calling this.
+                try {
+                    pendingResult.finish()
+                } catch (e: IllegalStateException) {
+                    // On some OEM devices, this may throw an error about "Broadcast already finished".
+                    // See b/257513022.
+                    logcat(
+                        TAG,
+                        LogPriority.ERROR
+                    ) { "Error thrown when trying to finish broadcast. ${e.asLog()}" }
+                }
             }
         }
     }
 }
+
+private val TAG = BookshelfInsertReceiver::class.java.simpleName
 
 @Serializable
 internal data class InsertJson(
