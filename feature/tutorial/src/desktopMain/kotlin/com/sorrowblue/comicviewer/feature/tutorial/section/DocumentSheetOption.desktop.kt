@@ -28,6 +28,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
 import comicviewer.feature.tutorial.generated.resources.Res
+import comicviewer.feature.tutorial.generated.resources.tutorial_label_install_folder
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_found_pdf_plugin
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_not_found_pdf_plugin
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_document_btn_download
@@ -63,7 +64,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
         }
         OutlinedTextField(
             label = {
-                Text("インストールフォルダを選択")
+                Text(stringResource(Res.string.tutorial_label_install_folder))
             },
             value = uiState.folderPath,
             onValueChange = {},
@@ -108,7 +109,7 @@ internal fun rememberDocumentSheetState(
     val settingsUseCase = koinInject<ManagePdfPluginSettingsUseCase>()
     val state = remember { DocumentSheetStateImpl(uriHandler, settingsUseCase, scope) }
     val pickerResultLauncher =
-        rememberDirectoryPickerLauncher("ComicViewer PDFプラグインのインストールディレクトリを選択") {
+        rememberDirectoryPickerLauncher(title = stringResource(Res.string.tutorial_folder_picker_title)) {
             state.onDirectoryPickerResult(it)
         }
     state.directoryPickerLauncher = pickerResultLauncher
