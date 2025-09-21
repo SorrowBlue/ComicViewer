@@ -25,7 +25,8 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
-import com.sorrowblue.comicviewer.framework.notification.R
+import com.sorrowblue.comicviewer.framework.notification.NotificationID
+import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
 import kotlin.random.Random
@@ -66,7 +67,7 @@ internal class RegenerateThumbnailsWorker(
                     .setContentTitle(getString(Res.string.bookshelf_info_notification_thumbnail_scan_title))
                     .setContentText(getString(Res.string.bookshelf_info_notification_thumbnail_scan_cancelled))
                     .setSubText(bookshelfInfo.bookshelf.displayName)
-                    .setSmallIcon(R.drawable.ic_sync_cancel_24dp)
+                    .setSmallIcon(NotificationR.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)
                     .build()
             if (ActivityCompat.checkSelfPermission(
@@ -90,7 +91,7 @@ internal class RegenerateThumbnailsWorker(
                 NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("サムネイルのスキャンが完了しました")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
-                    .setSmallIcon(R.drawable.ic_sync_done_24dp)
+                    .setSmallIcon(NotificationR.drawable.ic_sync_done_24dp)
                     .setOngoing(false)
                     .build()
             if (ActivityCompat.checkSelfPermission(
@@ -120,9 +121,9 @@ internal class RegenerateThumbnailsWorker(
                 setSubText(bookshelfName)
                 setContentText("$progress/$max")
                 setProgress(max.toInt(), progress.toInt(), init)
-                setSmallIcon(R.drawable.ic_sync_image_24dp)
+                setSmallIcon(NotificationR.drawable.ic_sync_image_24dp)
                 addAction(
-                    R.drawable.ic_sync_cancel_24dp,
+                    NotificationR.drawable.ic_sync_cancel_24dp,
                     applicationContext.getString(android.R.string.cancel),
                     cancelIntent
                 )

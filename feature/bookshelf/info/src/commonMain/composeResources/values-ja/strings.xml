@@ -17,10 +17,6 @@
     <string name="bookshelf_info_btn_edit">編集</string>
     <string name="bookshelf_info_btn_scan_file">スキャン</string>
     <string name="bookshelf_info_btn_scan_thumbnail">サムネイルスキャン</string>
-    <string name="bookshelf_info_delete_title">本棚の削除</string>
-    <string name="bookshelf_info_delete_text">「%1$s」を削除しますか？</string>
-    <string name="bookshelf_info_delete_text_null">本棚を削除しますか？</string>
-    <string name="bookshelf_info_delete_btn_delete">Delete</string>
     <string name="bookshelf_info_btn_delete">削除</string>
 
     <!--<editor-fold desc="Bookshelf info sheet">-->
