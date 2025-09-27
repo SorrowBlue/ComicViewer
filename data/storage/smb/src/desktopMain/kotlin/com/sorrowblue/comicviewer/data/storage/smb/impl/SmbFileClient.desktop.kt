@@ -261,10 +261,10 @@ private class SmbFileClient(override val bookshelf: SmbServer) : FileClient<SmbS
                 }
             }
         }
-        return sameAuth
-            && server == this@SmbFileClient.bookshelf.host
-            && share == this@SmbFileClient.bookshelf.smbFile(path).share
-            && url.port == this@SmbFileClient.bookshelf.port
+        return sameAuth &&
+            server == this@SmbFileClient.bookshelf.host &&
+            share == this@SmbFileClient.bookshelf.smbFile(path).share &&
+            url.port == this@SmbFileClient.bookshelf.port
     }
 
     private suspend fun smbFile(path: String): SmbFile {
