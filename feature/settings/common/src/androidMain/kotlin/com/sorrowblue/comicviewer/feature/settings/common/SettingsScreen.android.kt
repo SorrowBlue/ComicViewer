@@ -16,6 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import comicviewer.feature.settings.generated.resources.Res
+import comicviewer.feature.settings.generated.resources.settings_label_tutorial
+import org.jetbrains.compose.resources.stringResource
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL)
@@ -61,7 +64,7 @@ private fun PreviewSettingsScreen() {
                     }, checked = checked2, onCheckedChange = { checked2 = it }, onClick = {})
                 }
                 ListItem(
-                    headlineContent = { Text("settings_label_tutorial") },
+                    headlineContent = { Text(stringResource(Res.string.settings_label_tutorial)) },
                     leadingContent = { Icon(ComicIcons.Start, null) },
                     modifier = Modifier.clickable { },
                 )

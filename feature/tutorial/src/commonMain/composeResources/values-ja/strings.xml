@@ -10,4 +10,12 @@
     <string name="tutorial_text_document_btn_download">ダウンロード</string>
     <string name="tutorial_title_welcome">ようこそ、親愛なるユーザー！</string>
     <string name="tutorial_message_welcome">このアプリで何ができるかをご覧ください。</string>
+    <!-- Platform-specific strings -->
+    <string name="tutorial_btn_open_playstore">PlayStoreを開く</string>
+    <string name="tutorial_msg_plugin_installed">インストール済み</string>
+    <string name="tutorial_msg_plugin_old_version">インストールされているPDFプラグインのバージョンが古いです\n最新Verにアップデートしてください</string>
+    <string name="tutorial_msg_plugin_not_installed">プラグインがインストールされていません</string>
+    <string name="tutorial_label_install_folder">インストールフォルダを選択</string>
+    <string name="tutorial_folder_picker_title">ComicViewer PDFプラグインのインストールディレクトリを選択</string>
+    <string name="tutorial_msg_not_supported">このプラットフォームではサポートされていません</string>
 </resources>
