@@ -51,8 +51,8 @@ internal fun ComicViewerApp() {
         ) {
             NavGraphNavHost(
                 graphNavigation = ComicViewerAppNavGraph,
-                isCompact = isCompactWindowClass(),
                 navController = state.navController,
+                isCompact = isCompactWindowClass(),
                 modifier = Modifier.fillMaxSize().background(LocalContainerColor.current)
             )
         }

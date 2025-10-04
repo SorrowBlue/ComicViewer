@@ -14,15 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoData
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_no_books
 import org.jetbrains.compose.resources.stringResource

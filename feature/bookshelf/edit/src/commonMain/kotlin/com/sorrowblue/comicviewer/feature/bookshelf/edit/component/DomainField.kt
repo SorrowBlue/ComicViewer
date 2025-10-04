@@ -8,46 +8,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditorForm
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_hint_domain
 import org.jetbrains.compose.resources.stringResource
+import soil.form.compose.Field
 import soil.form.compose.Form
-import soil.form.compose.FormField
 import soil.form.compose.hasError
-import soil.form.compose.rememberField
 import soil.form.compose.watch
 
 @Composable
 internal fun DomainField(
-    form: Form<SmbEditScreenForm>,
+    form: Form<SmbEditorForm>,
     modifier: Modifier = Modifier,
-    field: FormField<String> = form.rememberDomainField(),
+    enabled: Boolean = true,
 ) {
-    OutlinedTextField(
-        value = field.value,
-        onValueChange = field::onValueChange,
-        label = { Text(text = field.name) },
-        isError = field.hasError,
-        enabled = field.isEnabled,
-        supportingText = field.supportingText(),
-        keyboardOptions = KeyboardOptions(
-            showKeyboardOnFocus = false,
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
-        ),
-        singleLine = true,
-        modifier = modifier.testTag("Domain"),
-    )
-}
-
-@Composable
-private fun Form<SmbEditScreenForm>.rememberDomainField(): FormField<String> {
-    return rememberField(
-        name = stringResource(Res.string.bookshelf_edit_hint_domain),
+    form.Field(
+        name = DomainField,
         selector = { it.domain },
         updater = { copy(domain = it) },
         dependsOn = setOf(AuthField),
-        enabled = watch { !value.isRunning }
-    )
+        enabled = enabled
+    ) { field ->
+        OutlinedTextField(
+            value = field.value,
+            onValueChange = field::onValueChange,
+            label = { Text(text = stringResource(Res.string.bookshelf_edit_hint_domain)) },
+            isError = field.hasError || form.watch { meta.fields[AuthField]?.error?.messages?.isNotEmpty() == true },
+            enabled = field.isEnabled,
+            supportingText = field.supportingText(),
+            keyboardOptions = KeyboardOptions(
+                showKeyboardOnFocus = false,
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            singleLine = true,
+            modifier = modifier
+                .handleFocusChanged(field)
+                .testTag(DomainField),
+        )
+    }
 }
+
+internal const val DomainField = "DomainField"

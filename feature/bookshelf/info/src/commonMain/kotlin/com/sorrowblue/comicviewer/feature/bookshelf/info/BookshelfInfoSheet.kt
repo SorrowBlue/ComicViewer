@@ -15,9 +15,11 @@ import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequest
@@ -30,7 +32,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.ErrorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.LoadingContents
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
@@ -43,7 +44,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 interface BookshelfInfoSheetNavigator {
     fun notificationRequest(type: ScanType)
-    fun onEditClick(id: BookshelfId)
     fun onRemoveClick(bookshelfId: BookshelfId)
 }
 
@@ -51,6 +51,7 @@ interface BookshelfInfoSheetNavigator {
 fun BookshelfInfoSheet(
     bookshelfId: BookshelfId,
     onCloseClick: () -> Unit,
+    onEditClick: (BookshelfId, BookshelfType) -> Unit,
     snackbarHostState: SnackbarHostState,
     navigator: BookshelfInfoSheetNavigator,
     deleteNavResultReceiver: NavResultReceiver<BookshelfDelete, Boolean>,
@@ -63,6 +64,7 @@ fun BookshelfInfoSheet(
     )
     val scrollState = rememberScrollState()
     BookshelfInfoSheet(
+        uiState = state.uiState,
         onAction = state::onAction,
         scrollState = scrollState,
         modifier = modifier,
@@ -98,7 +100,7 @@ fun BookshelfInfoSheet(
 
     EventEffect(state.events) {
         when (it) {
-            is BookshelfInfoSheetStateEvent.Edit -> navigator.onEditClick(it.id)
+            is BookshelfInfoSheetStateEvent.Edit -> onEditClick(it.id, it.type)
             is BookshelfInfoSheetStateEvent.Remove -> navigator.onRemoveClick(it.bookshelfId)
             BookshelfInfoSheetStateEvent.Back -> onCloseClick()
         }
@@ -119,6 +121,7 @@ internal sealed interface BookshelfInfoSheetAction {
 
 @Composable
 private fun BookshelfInfoSheet(
+    uiState: BookshelfInfoSheetUiState,
     onAction: (BookshelfInfoSheetAction) -> Unit,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
@@ -131,7 +134,8 @@ private fun BookshelfInfoSheet(
         actions = {
             BottomActions(
                 onEditClick = { onAction(BookshelfInfoSheetAction.Edit) },
-                onRemoveClick = { onAction(BookshelfInfoSheetAction.Remove) }
+                onRemoveClick = { onAction(BookshelfInfoSheetAction.Remove) },
+                enabled = uiState is BookshelfInfoSheetUiState.Loaded
             )
         },
         content = content,
@@ -152,7 +156,7 @@ private fun BookshelfInfoSheetPreview() {
     PreviewCanonicalScaffold(
         navigator = navigator,
         extraPane = {
-            BookshelfInfoSheet(onAction = {}) { contentPadding ->
+            BookshelfInfoSheet(uiState = uiState, onAction = {}) { contentPadding ->
                 BookshelfInfoMainContents(
                     uiState = BookshelfInfoMainContentsUiState(
                         uiState.bookshelfFolder.bookshelf,

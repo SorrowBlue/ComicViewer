@@ -29,4 +29,6 @@ dependencies {
     debugImplementation(libs.kotlinx.serialization.json)
     debugImplementation(libs.androidx.appcompat)
     debugImplementation(libs.koin.core)
+    // Suppressing highlights in @Serializable
+    debugImplementation(libs.androidx.annotation.experimental)
 }

@@ -21,7 +21,6 @@ import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZOut
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure.Type
 import kotlin.reflect.KClass
-import logcat.logcat
 
 sealed interface TransitionsConfigure {
     val type: Type
@@ -68,7 +67,6 @@ abstract class DestinationTransitions : NavTransitions() {
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransition(): EnterTransition {
         val initRoute = initialState.destination
         val targetRoute = targetState.destination
-        logcat { "***route enterTransition ${initRoute.route} ${targetRoute.route}" }
         return transitions.firstOrNull { configure ->
             when (configure) {
                 is BetweenScreen -> initRoute.hasRoute2(configure.from) && targetRoute.hasRoute2(configure.to)
@@ -80,7 +78,6 @@ abstract class DestinationTransitions : NavTransitions() {
                 }
             }
         }?.let {
-            logcat { "***** enterTransition $it" }
             when (it.type) {
                 Type.SharedAxisX -> materialSharedAxisXIn()
                 Type.SharedAxisY -> materialSharedAxisYIn()
@@ -94,7 +91,6 @@ abstract class DestinationTransitions : NavTransitions() {
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.exitTransition(): ExitTransition {
         val initRoute = initialState.destination
         val targetRoute = targetState.destination
-        logcat { "***route exitTransition ${initRoute.route} ${targetRoute.route}" }
         return transitions.firstOrNull { configure ->
             when (configure) {
                 is BetweenScreen -> initRoute.hasRoute2(configure.from) && targetRoute.hasRoute2(configure.to)
@@ -106,7 +102,6 @@ abstract class DestinationTransitions : NavTransitions() {
                 }
             }
         }?.let {
-            logcat { "***** exitTransition $it" }
             when (it.type) {
                 Type.SharedAxisX -> materialSharedAxisXOut()
                 Type.SharedAxisY -> materialSharedAxisYOut()
@@ -120,7 +115,6 @@ abstract class DestinationTransitions : NavTransitions() {
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.popEnterTransition(): EnterTransition {
         val initRoute = initialState.destination
         val targetRoute = targetState.destination
-        logcat { "***route popEnterTransition ${initRoute.route} ${targetRoute.route}" }
         return transitions.firstOrNull { configure ->
             when (configure) {
                 is BetweenScreen -> targetRoute.hasRoute2(configure.from) && initRoute.hasRoute2(configure.to)
@@ -132,7 +126,6 @@ abstract class DestinationTransitions : NavTransitions() {
                 }
             }
         }?.let {
-            logcat { "***** popEnterTransition $it" }
             when (it.type) {
                 Type.SharedAxisX -> materialSharedAxisXIn()
                 Type.SharedAxisY -> materialSharedAxisYIn()
@@ -146,7 +139,6 @@ abstract class DestinationTransitions : NavTransitions() {
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.popExitTransition(): ExitTransition {
         val initRoute = initialState.destination
         val targetRoute = targetState.destination
-        logcat { "***route popExitTransition ${initRoute.route} ${targetRoute.route}" }
         return transitions.firstOrNull { configure ->
             when (configure) {
                 is BetweenScreen -> targetRoute.hasRoute2(configure.from) && initRoute.hasRoute2(configure.to)
@@ -158,7 +150,6 @@ abstract class DestinationTransitions : NavTransitions() {
                 }
             }
         }?.let {
-            logcat { "***** popExitTransition $it" }
             when (it.type) {
                 Type.SharedAxisX -> materialSharedAxisXOut()
                 Type.SharedAxisY -> materialSharedAxisYOut()

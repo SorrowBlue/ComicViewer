@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.file.component
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiScreen
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile

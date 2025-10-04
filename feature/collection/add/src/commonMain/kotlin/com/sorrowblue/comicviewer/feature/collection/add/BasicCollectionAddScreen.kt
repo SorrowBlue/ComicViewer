@@ -32,6 +32,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -44,8 +46,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData

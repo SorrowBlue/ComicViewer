@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
@@ -26,8 +28,6 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaf
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 
 internal sealed interface BookshelfInfoMainContentsEvent {
     data class ShowNotificationPermissionRationale(val type: ScanType) :

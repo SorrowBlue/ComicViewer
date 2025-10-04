@@ -38,7 +38,6 @@ dependencies {
     dokka(projects.feature.bookshelf)
     dokka(projects.feature.bookshelf.edit)
     dokka(projects.feature.bookshelf.info)
-    dokka(projects.feature.bookshelf.selection)
     dokka(projects.feature.file)
     dokka(projects.feature.folder)
     dokka(projects.feature.history)

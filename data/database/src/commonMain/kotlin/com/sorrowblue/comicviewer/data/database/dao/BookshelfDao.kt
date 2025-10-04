@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.EmbeddedBookshelfFileCountEntity
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
  * inserting, updating, deleting, and querying bookshelf data.
  */
 @Dao
-internal interface BookshelfDao {
+internal abstract class BookshelfDao(val database: ComicViewerDatabase) {
 
     /**
      * Insert or update a bookshelf entity.
@@ -22,7 +23,7 @@ internal interface BookshelfDao {
      * @return The row ID of the inserted or updated entity.
      */
     @Upsert
-    suspend fun upsert(entity: BookshelfEntity): Long
+    abstract suspend fun upsert(entity: BookshelfEntity): Long
 
     /**
      * Delete a bookshelf by its ID.
@@ -31,7 +32,7 @@ internal interface BookshelfDao {
      * @return The number of rows deleted.
      */
     @Query("DELETE FROM bookshelf WHERE id = :bookshelfId")
-    suspend fun delete(bookshelfId: Int): Int
+    abstract suspend fun delete(bookshelfId: Int): Int
 
     /**
      * Update the deleted flag for a bookshelf.
@@ -40,7 +41,7 @@ internal interface BookshelfDao {
      * @param deleted The deleted flag value (0: not deleted, 1: deleted).
      */
     @Query("UPDATE bookshelf SET deleted = :deleted WHERE id = :bookshelfId")
-    suspend fun updateDeleted(bookshelfId: Int, deleted: Int)
+    abstract suspend fun updateDeleted(bookshelfId: Int, deleted: Int)
 
     /**
      * Get a bookshelf entity by its ID as a Flow.
@@ -49,7 +50,7 @@ internal interface BookshelfDao {
      * @return A Flow emitting the bookshelf entity, or null if not found.
      */
     @Query("SELECT * FROM bookshelf WHERE id = :bookshelfId")
-    fun flow(bookshelfId: Int): Flow<BookshelfEntity?>
+    abstract fun flow(bookshelfId: Int): Flow<BookshelfEntity?>
 
     /**
      * Get all non-deleted bookshelves and their root files with file count, as
@@ -60,7 +61,7 @@ internal interface BookshelfDao {
     @Query(
         "SELECT bookshelf.*, file.*, (SELECT COUNT(*) FROM file file2 WHERE bookshelf.id = file2.bookshelf_id AND file2.file_type = 'FILE') file_count FROM (SELECT * FROM bookshelf WHERE bookshelf.deleted = 0) bookshelf LEFT OUTER JOIN file ON bookshelf.id = file.bookshelf_id AND file.parent = '' ORDER BY bookshelf.id"
     )
-    fun pagingSourceNoDeleted(): PagingSource<Int, EmbeddedBookshelfFileCountEntity>
+    abstract fun pagingSourceNoDeleted(): PagingSource<Int, EmbeddedBookshelfFileCountEntity>
 
     /**
      * Get all bookshelf entities as a Flow.
@@ -68,5 +69,5 @@ internal interface BookshelfDao {
      * @return A Flow emitting a list of all bookshelf entities.
      */
     @Query("SELECT * FROM bookshelf ORDER BY ID")
-    fun allBookshelf(): Flow<List<BookshelfEntity>>
+    abstract fun allBookshelf(): Flow<List<BookshelfEntity>>
 }

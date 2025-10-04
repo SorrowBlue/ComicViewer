@@ -118,6 +118,32 @@ fun ScrollbarBox(
     }
 }
 
+@Composable
+fun VerticalScrollbarBox(
+    state: ScrollState,
+    modifier: Modifier = Modifier,
+    scrollbarWindowInsets: WindowInsets = WindowInsets.safeDrawing.only(
+        WindowInsetsSides.Vertical + WindowInsetsSides.End
+    ),
+    padding: PaddingValues = PaddingValues(),
+    alignment: Alignment = Alignment.CenterEnd,
+    content: @Composable () -> Unit,
+) {
+    Box(modifier = modifier) {
+        content()
+        val scrollbarAdapter = rememberScrollbarAdapter(state)
+        VerticalScrollbar(
+            adapter = scrollbarAdapter,
+            style = LocalScrollbarStyle.current,
+            modifier = Modifier
+                .fillMaxHeight()
+                .windowInsetsPadding(scrollbarWindowInsets)
+                .padding(padding)
+                .align(alignment),
+        )
+    }
+}
+
 /**
  * [CompositionLocal] used to pass [ScrollbarStyle] down the tree.
  * This value is typically set in some "Theme" composable function
