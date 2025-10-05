@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import comicviewer.feature.authentication.generated.resources.Res
+import comicviewer.feature.authentication.generated.resources.authentication_btn_cancel
 import comicviewer.feature.authentication.generated.resources.authentication_title_fingerprint_auth
 import kotlinx.coroutines.suspendCancellableCoroutine
 import logcat.logcat
@@ -43,7 +44,7 @@ internal actual class BiometricManager(
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
                 .setTitle(title)
-                .setNegativeButtonText("Cancel TODO")
+                .setNegativeButtonText(getString(Res.string.authentication_btn_cancel))
                 .build()
             biometricPrompt.authenticate(promptInfo)
         }

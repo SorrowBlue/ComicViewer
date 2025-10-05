@@ -2,4 +2,6 @@
 <resources>
     <string name="tutorial_msg_found_pdf_plugin">PDF plugin found</string>
     <string name="tutorial_msg_not_found_pdf_plugin">No PDF plugin found. Please specify the PDF plugin installation directory.</string>
+    <string name="tutorial_label_install_folder">Select installation folder</string>
+    <string name="tutorial_folder_picker_title">Select ComicViewer PDF plugin installation directory</string>
 </resources>

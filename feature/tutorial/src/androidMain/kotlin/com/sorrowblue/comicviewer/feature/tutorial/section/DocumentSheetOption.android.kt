@@ -22,8 +22,14 @@ import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import comicviewer.feature.tutorial.generated.resources.Res
+import comicviewer.feature.tutorial.generated.resources.tutorial_btn_open_playstore
+import comicviewer.feature.tutorial.generated.resources.tutorial_msg_plugin_installed
+import comicviewer.feature.tutorial.generated.resources.tutorial_msg_plugin_not_installed
+import comicviewer.feature.tutorial.generated.resources.tutorial_msg_plugin_old_version
 import logcat.LogPriority
 import logcat.logcat
+import org.jetbrains.compose.resources.stringResource
 
 private const val Pkg = "com.sorrowblue.comicviewer.plugin.pdf"
 private const val SupportMajorVersion = 0
@@ -43,10 +49,10 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
                 ) {
                     Icon(ComicIcons.OpenInBrowser, null)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("PlayStoreを開く")
+                    Text(stringResource(Res.string.tutorial_btn_open_playstore))
                 }
                 Spacer(Modifier.size(8.dp))
-                Text("インストール済み")
+                Text(stringResource(Res.string.tutorial_msg_plugin_installed))
             }
 
             PdfPluginState.OldVersion -> {
@@ -56,10 +62,10 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
                 ) {
                     Icon(ComicIcons.OpenInBrowser, null)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("PlayStoreを開く")
+                    Text(stringResource(Res.string.tutorial_btn_open_playstore))
                 }
                 Spacer(Modifier.size(8.dp))
-                Text("インストールされているPDFプラグインのバージョンが古いです\n最新Verにアップデートしてください")
+                Text(stringResource(Res.string.tutorial_msg_plugin_old_version))
             }
 
             PdfPluginState.NotInstalled -> {
@@ -69,10 +75,10 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
                 ) {
                     Icon(ComicIcons.OpenInBrowser, null)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("PlayStoreを開く")
+                    Text(stringResource(Res.string.tutorial_btn_open_playstore))
                 }
                 Spacer(Modifier.size(8.dp))
-                Text("プラグインがインストールされていません")
+                Text(stringResource(Res.string.tutorial_msg_plugin_not_installed))
             }
         }
     }

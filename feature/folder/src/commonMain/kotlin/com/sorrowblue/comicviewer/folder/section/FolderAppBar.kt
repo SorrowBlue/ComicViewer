@@ -15,6 +15,9 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.CanonicalAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import comicviewer.feature.folder.generated.resources.Res
+import comicviewer.feature.folder.generated.resources.folder_btn_search
+import comicviewer.feature.folder.generated.resources.folder_btn_sort
+import org.jetbrains.compose.resources.stringResource
 import comicviewer.feature.folder.generated.resources.folder_action_search
 import comicviewer.feature.folder.generated.resources.folder_action_settings
 import comicviewer.feature.folder.generated.resources.folder_action_show_hidden
@@ -57,7 +60,7 @@ internal fun CanonicalScaffoldState<*>.FolderAppBar(
                         )
                     },
                     label = {
-                        Text("Search")
+                        Text(stringResource(Res.string.folder_btn_search))
                     }
                 )
                 clickableItem(
@@ -66,7 +69,7 @@ internal fun CanonicalScaffoldState<*>.FolderAppBar(
                         Icon(ComicIcons.SortByAlpha, "sort")
                     },
                     label = {
-                        Text("Sort")
+                        Text(stringResource(Res.string.folder_btn_sort))
                     }
                 )
                 fileListDisplayItem(

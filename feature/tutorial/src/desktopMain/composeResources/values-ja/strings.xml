@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_msg_found_pdf_plugin">PDFプラグインが見つかりました</string>
+    <string name="tutorial_msg_not_found_pdf_plugin">PDFプラグインが見つかりませんでした</string>
+    <string name="tutorial_label_install_folder">インストールフォルダを選択</string>
+    <string name="tutorial_folder_picker_title">ComicViewer PDFプラグインのインストールディレクトリを選択</string>
+</resources>

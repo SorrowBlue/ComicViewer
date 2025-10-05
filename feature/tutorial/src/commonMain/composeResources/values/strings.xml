@@ -10,4 +10,12 @@
     <string name="tutorial_text_document_btn_download">Download</string>
     <string name="tutorial_title_welcome">Welcome, dear user!</string>
     <string name="tutorial_message_welcome">See what you can do with this app.</string>
+    <!-- Platform-specific strings -->
+    <string name="tutorial_btn_open_playstore">Open PlayStore</string>
+    <string name="tutorial_msg_plugin_installed">Plugin installed</string>
+    <string name="tutorial_msg_plugin_old_version">The installed PDF plugin version is old\nPlease update to the latest version</string>
+    <string name="tutorial_msg_plugin_not_installed">Plugin is not installed</string>
+    <string name="tutorial_label_install_folder">Select installation folder</string>
+    <string name="tutorial_folder_picker_title">Select ComicViewer PDF plugin installation directory</string>
+    <string name="tutorial_msg_not_supported">Feature not supported on this platform</string>
 </resources>

@@ -15,8 +15,9 @@
     <string name="authentication_error_incorrect_pin">Incorrect PIN</string>
 
     <string name="authentication_title_fingerprint_auth">Fingerprint authentication</string>
-    <string name="authentication_title_passcode_locking">パスコードロック中</string>
-    <string name="authentication_title_change_passcode">パスコードを変更する</string>
-    <string name="authentication_title_disable_passcode">パスコードロックを無効化する</string>
+    <string name="authentication_title_passcode_locking">Passcode locking</string>
+    <string name="authentication_title_change_passcode">Change passcode</string>
+    <string name="authentication_title_disable_passcode">Disable passcode lock</string>
     <string name="authentication_title_enable_passcode">Enable passcode</string>
+    <string name="authentication_btn_cancel">Cancel</string>
 </resources>
