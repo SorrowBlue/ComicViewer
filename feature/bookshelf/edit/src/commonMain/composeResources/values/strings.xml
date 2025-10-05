@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="bookshelf_edit_selection_title">Selection of bookshelves</string>
+
+    <string name="bookshelf_edit_selection_label_smb" translatable="false">SMB/LAN</string>
+    <string name="bookshelf_edit_selection_label_smb_detail">Folders shared by Windows, NAS, etc. can be added as bookshelves.</string>
+    <string name="bookshelf_edit_selection_label_device" translatable="false">Device</string>
+    <string name="bookshelf_edit_selection_label_device_detail">Add a folder on this terminal as a bookshelf.</string>
+
     <string name="bookshelf_edit_error_display_name">Please enter display name.</string>
     <string name="bookshelf_edit_error_select_folder">Please select a folder.</string>
     <string name="bookshelf_edit_hint_domain">Domain(optional)</string>
@@ -24,8 +32,13 @@
     <string name="bookshelf_edit_title_register">Registering bookshelf</string>
 
     <string name="bookshelf_edit_error_bad_auth">Please enter correct credentials</string>
-    <string name="bookshelf_edit_error_bad_host">Could not connect with IP/host name</string>
+    <string name="bookshelf_edit_error_bad_host">Please check the IP/host name</string>
+    <string name="bookshelf_edit_error_bad_port">Please check the port number</string>
     <string name="bookshelf_edit_error_bad_network">No valid network</string>
     <string name="bookshelf_edit_error_bad_path">Could not connect with the path</string>
     <string name="cancel">Cancel</string>
+
+    <string name="bookshelf_edit_discord_title">Discord unsaved changes?</string>
+    <string name="bookshelf_edit_discord_btn_confirm">Discord</string>
+    <string name="bookshelf_edit_discord_btn_dismiss">Keep editing</string>
 </resources>

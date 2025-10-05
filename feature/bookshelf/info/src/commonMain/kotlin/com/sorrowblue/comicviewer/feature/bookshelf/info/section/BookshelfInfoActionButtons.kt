@@ -18,12 +18,14 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun RowScope.BottomActions(
+    enabled: Boolean,
     onRemoveClick: () -> Unit,
     onEditClick: () -> Unit,
 ) {
     OutlinedButton(
         onClick = onRemoveClick,
-        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+        enabled = enabled
     ) {
         Icon(imageVector = ComicIcons.Delete, contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
@@ -32,6 +34,7 @@ internal fun RowScope.BottomActions(
     FilledTonalButton(
         onClick = onEditClick,
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+        enabled = enabled
     ) {
         Icon(imageVector = ComicIcons.Edit, contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))

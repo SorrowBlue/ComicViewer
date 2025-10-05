@@ -12,6 +12,8 @@ data class SmbServer private constructor(
     val auth: Auth,
 ) : Bookshelf {
 
+    override val type = BookshelfType.SMB
+
     fun copy(
         displayName: String = this.displayName,
         host: String = this.host,

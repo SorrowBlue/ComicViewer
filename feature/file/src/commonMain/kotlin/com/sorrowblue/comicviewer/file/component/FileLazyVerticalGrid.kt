@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
+import androidx.paging.compose.LazyPagingItems
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -25,7 +26,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumnType
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import kotlinx.serialization.Serializable
 
 @Serializable

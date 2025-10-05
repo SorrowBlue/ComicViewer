@@ -2,6 +2,7 @@
 aboutlibraries = "12.2.4"
 android-gradle = "8.13.0"
 androidx-activity = "1.11.0"
+androidx-annotation-experimental = "1.5.1"
 androidx-appcompat = "1.7.1"
 androidx-biometric = "1.4.0-alpha04"
 androidx-browser = "1.9.0"
@@ -31,7 +32,7 @@ detekt = "1.23.8"
 detekt-compose = "0.4.27"
 dokka = "2.1.0-Beta"
 edge2edgePreview = "0.7.1"
-filekit = "0.8.8"
+filekit = "0.11.0"
 google-ksp = "2.2.20-2.0.2"
 google-play-feature-delivery = "2.1.0"
 java = "21"
@@ -53,6 +54,7 @@ multiplatform-core = "1.1.0-alpha03"
 multiplatform-lifecycleCompose = "2.10.0-alpha01"
 multiplatform-navigationCompose = "2.9.0"
 pdfbox = "3.0.5"
+rin = "0.4.0"
 robolectric = "4.16"
 sevenzipjbinding = "16.02-2.01"
 sevenzipjbinding-android = "16.02-2.4"
@@ -67,6 +69,7 @@ aboutlibraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compos
 aboutlibraries-gradlePlugin = { group = "com.mikepenz.aboutlibraries.plugin", name = "com.mikepenz.aboutlibraries.plugin.gradle.plugin", version.ref = "aboutlibraries" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
+androidx-annotation-experimental = { group = "androidx.annotation", name = "annotation-experimental", version.ref = "androidx-annotation-experimental" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "androidx-biometric" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
@@ -78,6 +81,7 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore", version
 androidx-datastoreCoreOkio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "androidx-datastore" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "androidx-documentfile" }
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging" }
 androidx-paging-testing = { group = "androidx.paging", name = "paging-testing", version.ref = "androidx-paging" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
@@ -100,6 +104,7 @@ coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil-kt" }
 coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-kt" }
 coil3-networkKtor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil-kt" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "multiplatform-compose" }
+compose-multiplatform-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "multiplatform-compose" }
 compose-multiplatform-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version.ref = "multiplatform-core" }
 compose-multiplatform-lifecycleCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "multiplatform-lifecycleCompose" }
 compose-multiplatform-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "multiplatform-compose-material3" }
@@ -112,7 +117,8 @@ credential-secure-storage = { group = "com.microsoft", name = "credential-secure
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version.ref = "edge2edgePreview" }
-filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version.ref = "filekit" }
+filekit = { group = "io.github.vinceglb", name = "filekit-dialogs", version.ref = "filekit" }
+filekit-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
 google-android-play-feature-delivery-ktx = { group = "com.google.android.play", name = "feature-delivery-ktx", version.ref = "google-play-feature-delivery" }
 google-ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
@@ -142,6 +148,7 @@ kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotl
 licensee-gradlePlugin = { group = "app.cash.licensee", name = "licensee-gradle-plugin", version.ref = "licensee" }
 nlopez-compose-rules-detekt = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detekt-compose" }
 pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
+rin = { group = "io.github.takahirom.rin", name = "rin", version.ref = "rin" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 sevenzipjbinding = { group = "net.sf.sevenzipjbinding", name = "sevenzipjbinding", version.ref = "sevenzipjbinding" }
 sevenzipjbinding-allPlatforms = { group = "com.github.shayartzi.sevenzipjbinding", name = "sevenzipjbinding-all-platforms", version.ref = "sevenzipjbinding" }

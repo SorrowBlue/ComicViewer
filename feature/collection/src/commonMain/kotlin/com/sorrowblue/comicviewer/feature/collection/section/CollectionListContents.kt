@@ -13,6 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.feature.collection.component.CollectionActionsDropdown
@@ -23,9 +25,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoDat
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
-import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_no_collection
 import org.jetbrains.compose.resources.stringResource

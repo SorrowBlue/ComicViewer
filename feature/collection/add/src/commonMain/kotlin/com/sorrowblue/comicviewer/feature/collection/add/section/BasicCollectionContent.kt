@@ -6,10 +6,10 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionListItem
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.paging.itemKey
 
 @Composable
 internal fun BasicCollectionContent(

@@ -17,6 +17,7 @@ kotlin {
                 implementation(libs.coil3.compose)
                 // Paging
                 implementation(libs.androidx.paging.common)
+                implementation(libs.androidx.paging.compose)
                 // Di
                 implementation(libs.koin.composeViewModel)
             }

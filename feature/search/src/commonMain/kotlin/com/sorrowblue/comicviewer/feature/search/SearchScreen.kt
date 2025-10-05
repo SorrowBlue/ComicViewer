@@ -9,6 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -23,8 +25,6 @@ import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.KSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalScaffold
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable

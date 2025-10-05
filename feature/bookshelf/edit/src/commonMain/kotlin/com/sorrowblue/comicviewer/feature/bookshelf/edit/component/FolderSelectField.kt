@@ -7,35 +7,34 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.InternalStorageEditScreenForm
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.InternalStorageEditorForm
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_select_folder
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_select_folder
-import io.github.vinceglb.filekit.compose.PickerResultLauncher
-import io.github.vinceglb.filekit.compose.rememberDirectoryPickerLauncher
-import io.github.vinceglb.filekit.core.PlatformDirectory
+import io.github.vinceglb.filekit.bookmarkData
+import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
+import io.github.vinceglb.filekit.dialogs.compose.rememberDirectoryPickerLauncher
+import io.github.vinceglb.filekit.path
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
-import org.koin.core.annotation.Single
 import soil.form.FieldValidator
 import soil.form.compose.Form
 import soil.form.compose.FormField
 import soil.form.compose.hasError
 import soil.form.compose.rememberField
-import soil.form.compose.watch
 import soil.form.rule.notNull
 
 expect fun localUriToDisplayPath(path: String): String
-expect val PlatformDirectory.pathString: String
 
 @Composable
 internal fun FolderSelectField(
@@ -46,7 +45,7 @@ internal fun FolderSelectField(
     OutlinedTextField(
         value = state.formField.value?.let { localUriToDisplayPath(it) }.orEmpty(),
         onValueChange = {},
-        label = { Text(text = state.formField.name) },
+        label = { Text(text = stringResource(Res.string.bookshelf_edit_label_select_folder)) },
         isError = state.formField.hasError,
         enabled = state.formField.isEnabled,
         supportingText = state.formField.supportingText(),
@@ -82,17 +81,20 @@ internal interface FolderSelectFieldState {
 
 @Composable
 internal fun rememberFolderSelectFieldState(
-    form: Form<InternalStorageEditScreenForm>,
+    form: Form<InternalStorageEditorForm>,
     onOpenDocumentTreeCancel: () -> Unit,
     formField: FormField<String?> = form.rememberFolderSelectField(),
-    takePersistableUriPermission: TakePersistableUriPermission = koinInject(),
+    scope: CoroutineScope = rememberCoroutineScope(),
     pickerResultLauncher: PickerResultLauncher = rememberDirectoryPickerLauncher { platformDirectory ->
         logcat(
             "FolderSelectFieldState"
-        ) { "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.pathString}" }
+        ) { "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.path}" }
         platformDirectory?.let {
-            takePersistableUriPermission(it)
-            formField.onValueChange(it.pathString)
+            scope.launch {
+                // Take a persistable URI permission for the selected directory
+                platformDirectory.bookmarkData()
+                formField.onValueChange(it.path)
+            }
         } ?: run {
             onOpenDocumentTreeCancel()
         }
@@ -109,19 +111,14 @@ private class FolderSelectFieldStateImpl(
 ) : FolderSelectFieldState
 
 @Composable
-private fun Form<InternalStorageEditScreenForm>.rememberFolderSelectField(): FormField<String?> {
+private fun Form<InternalStorageEditorForm>.rememberFolderSelectField(): FormField<String?> {
     val errorMessage = stringResource(Res.string.bookshelf_edit_error_select_folder)
     return rememberField(
-        name = stringResource(Res.string.bookshelf_edit_label_select_folder),
+        name = FolderSelectFieldName,
         selector = { it.path },
         updater = { this.copy(path = it) },
         validator = FieldValidator { notNull { errorMessage } },
-        enabled = watch { !value.isRunning }
     )
 }
 
-@Single
-internal expect class TakePersistableUriPermission(context: PlatformContext) {
-
-    operator fun invoke(platformDirectory: PlatformDirectory)
-}
+internal const val FolderSelectFieldName = "FolderSelectField"

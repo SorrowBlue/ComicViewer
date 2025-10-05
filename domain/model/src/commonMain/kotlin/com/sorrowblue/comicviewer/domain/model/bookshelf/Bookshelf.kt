@@ -5,4 +5,6 @@ sealed interface Bookshelf {
     val displayName: String
     val fileCount: Int
     val isDeleted: Boolean
+
+    val type: BookshelfType? get() = null
 }

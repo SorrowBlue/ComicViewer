@@ -38,6 +38,11 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(libs.compose.multiplatform.lifecycleCompose)
                     implementation(libs.compose.multiplatform.navigationCompose)
                     implementation(libs.kotlinx.serialization.core)
+
+                    implementation(libs.androidx.paging.compose)
+
+                    implementation(libs.compose.multiplatform.backhandler)
+                    implementation(libs.rin)
                 }
 
                 sourceSets.androidMain.dependencies {

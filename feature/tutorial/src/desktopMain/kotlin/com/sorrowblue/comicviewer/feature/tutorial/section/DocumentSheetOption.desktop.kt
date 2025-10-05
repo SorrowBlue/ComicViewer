@@ -31,9 +31,10 @@ import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_found_pdf_plugin
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_not_found_pdf_plugin
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_document_btn_download
-import io.github.vinceglb.filekit.compose.PickerResultLauncher
-import io.github.vinceglb.filekit.compose.rememberDirectoryPickerLauncher
-import io.github.vinceglb.filekit.core.PlatformDirectory
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
+import io.github.vinceglb.filekit.dialogs.compose.rememberDirectoryPickerLauncher
+import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -141,7 +142,7 @@ private class DocumentSheetStateImpl(
         directoryPickerLauncher.launch()
     }
 
-    fun onDirectoryPickerResult(directory: PlatformDirectory?) {
+    fun onDirectoryPickerResult(directory: PlatformFile?) {
         uiState = uiState.copy(checking = true)
         scope.launch {
             logcat { "path=${directory?.path}" }
@@ -151,9 +152,9 @@ private class DocumentSheetStateImpl(
             }?.firstOrNull()?.let { jarFile ->
                 // OK
                 settingsUseCase.edit {
-                    it.copy(pluginJarPath = jarFile.absolutePath, pluginRootPath = directory.path!!)
+                    it.copy(pluginJarPath = jarFile.absolutePath, pluginRootPath = directory.path)
                 }
-                uiState = uiState.copy(folderPath = directory.path!!)
+                uiState = uiState.copy(folderPath = directory.path)
                 uiState = uiState.copy(
                     error = "",
                     info = getString(Res.string.tutorial_msg_found_pdf_plugin)

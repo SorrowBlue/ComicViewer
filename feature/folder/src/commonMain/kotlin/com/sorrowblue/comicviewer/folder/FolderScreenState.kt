@@ -14,6 +14,8 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.Resource
@@ -30,8 +32,6 @@ import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
 import com.sorrowblue.comicviewer.folder.section.FolderTopAppBarAction
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState

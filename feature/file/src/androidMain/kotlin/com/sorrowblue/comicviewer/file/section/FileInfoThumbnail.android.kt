@@ -7,12 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
