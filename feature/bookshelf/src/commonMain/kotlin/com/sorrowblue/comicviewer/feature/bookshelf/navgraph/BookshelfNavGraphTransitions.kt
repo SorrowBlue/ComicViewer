@@ -2,8 +2,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.navgraph
 
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
-import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.framework.ui.navigation.BetweenScreen
 import com.sorrowblue.comicviewer.framework.ui.navigation.DestinationTransitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.GraphFrom
@@ -19,21 +17,6 @@ object BookshelfNavGraphTransitions : DestinationTransitions() {
         BetweenScreen(
             BookshelfFolder::class,
             BookshelfFolder::class,
-            TransitionsConfigure.Type.SharedAxisX
-        ),
-        BetweenScreen(
-            Bookshelf::class,
-            BookshelfSelection::class,
-            TransitionsConfigure.Type.SharedAxisZ
-        ),
-        GraphFrom(
-            Bookshelf::class,
-            BookshelfEdit::class,
-            TransitionsConfigure.Type.SharedAxisZ
-        ),
-        GraphFrom(
-            BookshelfSelection::class,
-            BookshelfEdit::class,
             TransitionsConfigure.Type.SharedAxisX
         ),
         GraphFrom(

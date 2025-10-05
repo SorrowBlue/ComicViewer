@@ -101,8 +101,8 @@ internal fun SettingsScreen(
         }
         KoinScope<SettingsScope>(SettingsScope::class.simpleName.orEmpty()) {
             NavGraphNavHost(
-                navController = state.navController,
                 graphNavigation = SettingsDetailNavGraph,
+                navController = state.navController,
                 startDestination = state.navigator.currentDestination?.contentKey?.route
                     ?: SettingsDetailNavGraph.startDestination,
             )

@@ -38,6 +38,25 @@ inline fun <reified Original : Any> kSerializableSaver(): Saver<Original, Any> {
 }
 
 @OptIn(ExperimentalSerializationApi::class)
+inline fun <Original : Any, reified Saveable : Any> kSerializableSaver(
+    crossinline save: (Original) -> Saveable,
+    crossinline restore: (Saveable) -> Original,
+): Saver<Original, Any> {
+    return object : Saver<Original, Any> {
+        override fun SaverScope.save(value: Original): ByteArray? {
+            logcat { "save, $value" }
+            return kotlin.runCatching { Cbor.encodeToByteArray<Saveable>(save(value)) }.getOrNull()
+        }
+
+        override fun restore(value: Any): Original? {
+            logcat { "restore, $value" }
+            return kotlin.runCatching { Cbor.decodeFromByteArray<Saveable>(value as ByteArray) }
+                .getOrNull()?.let { restore(it) }
+        }
+    }
+}
+
+@OptIn(ExperimentalSerializationApi::class)
 inline fun <reified Original : Any> kSerializableByteArraySaver(): Saver<Original, ByteArray> {
     return object : Saver<Original, ByteArray> {
         override fun restore(value: ByteArray): Original? {

@@ -4,6 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
 import kotlinx.coroutines.CoroutineScope
@@ -11,7 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 internal sealed interface BookshelfInfoSheetStateEvent {
     data object Back : BookshelfInfoSheetStateEvent
-    data class Edit(val id: BookshelfId) : BookshelfInfoSheetStateEvent
+    data class Edit(val id: BookshelfId, val type: BookshelfType) : BookshelfInfoSheetStateEvent
     data class Remove(val bookshelfId: BookshelfId) : BookshelfInfoSheetStateEvent
 }
 

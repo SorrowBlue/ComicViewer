@@ -4,6 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
@@ -36,15 +38,24 @@ internal class BookshelfLocalDataSourceImpl(
         }
     }
 
-    override suspend fun updateOrCreate(bookshelf: Bookshelf): Bookshelf? {
+    override suspend fun updateOrCreate(
+        bookshelf: Bookshelf,
+        transaction: suspend (Bookshelf) -> Unit,
+    ): Bookshelf? {
         val entity = BookshelfEntity.fromModel(bookshelf)
-        return dao.upsert(entity).let {
-            if (it == -1L) {
-                dao.flow(bookshelf.id.value).first()
-            } else {
-                dao.flow(it.toInt()).first()
+        return dao.database.useWriterConnection { transactor ->
+            transactor.immediateTransaction {
+                dao.upsert(entity).let {
+                    if (it == -1L) {
+                        dao.flow(bookshelf.id.value).first()
+                    } else {
+                        dao.flow(it.toInt()).first()
+                    }
+                }?.toModel(0)?.also {
+                    transaction(it)
+                }
             }
-        }?.toModel(0)
+        }
     }
 
     override suspend fun delete(bookshelfId: BookshelfId): Resource<Unit, Resource.SystemError> {

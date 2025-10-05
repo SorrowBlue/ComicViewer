@@ -4,9 +4,7 @@ import com.sorrowblue.cmpdestinations.animation.NavTransitions
 import com.sorrowblue.cmpdestinations.annotation.NavGraph
 import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEdit
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
-import com.sorrowblue.comicviewer.feature.bookshelf.selection.BookshelfSelection
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import kotlin.reflect.KClass
 import kotlinx.serialization.Serializable
@@ -19,8 +17,6 @@ import org.koin.core.annotation.Single
         Bookshelf::class,
         BookshelfDelete::class,
         BookshelfFolder::class,
-        BookshelfSelection::class,
-        BookshelfEdit::class,
     ],
     transitions = NavTransitions.ApplyParent::class
 )

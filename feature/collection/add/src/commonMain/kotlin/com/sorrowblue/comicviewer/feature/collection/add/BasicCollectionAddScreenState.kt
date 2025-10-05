@@ -8,14 +8,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
 import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
-import com.sorrowblue.comicviewer.framework.ui.paging.collectAsLazyPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn

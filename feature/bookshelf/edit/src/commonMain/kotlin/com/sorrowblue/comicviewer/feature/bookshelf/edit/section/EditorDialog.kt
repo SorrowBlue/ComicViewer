@@ -4,81 +4,83 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditorForm
+import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_save
+import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_title_edit
 import comicviewer.feature.bookshelf.edit.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
 
+data class BookshelfEditorScreenUiState(
+    val progress: Boolean = true,
+)
+
 @Composable
 internal fun EditorDialog(
-    form: Form<out BookshelfEditForm>,
-    uiState: BookshelfEditScreenUiState,
+    form: Form<out BookshelfEditorForm>,
+    uiState: BookshelfEditorScreenUiState,
     onDismissRequest: () -> Unit,
     scrollState: ScrollState,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
+    AlertDialogContent(
+        title = {
+            Text(stringResource(Res.string.bookshelf_edit_title_edit))
+        },
+        scrollState = scrollState,
         confirmButton = {
+            val dialogTextStyle = LocalTextStyle.current
             TextButton(
                 onClick = form::handleSubmit,
-                enabled = form.meta.canSubmit
+                enabled = !uiState.progress,
+                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current)
             ) {
-                AnimatedContent(
-                    targetState = form.meta.canSubmit,
-                    label = "progress"
-                ) {
+                AnimatedContent(targetState = uiState.progress, label = "progress") {
                     if (it) {
-                        Text(text = stringResource(Res.string.bookshelf_edit_label_save))
-                    } else {
                         CircularProgressIndicator(
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(ButtonDefaults.IconSize)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(Res.string.bookshelf_edit_label_save),
+                            style = dialogTextStyle
                         )
                     }
                 }
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest, enabled = form.meta.canSubmit) {
-                Text(text = stringResource(Res.string.cancel))
+            val dialogTextStyle = LocalTextStyle.current
+            TextButton(
+                onClick = onDismissRequest,
+                enabled = !uiState.progress,
+                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current)
+            ) {
+                Text(text = stringResource(Res.string.cancel), style = dialogTextStyle)
             }
         },
-        title = {
-            Text(text = uiState.editMode.title)
-        },
-        text = {
+        modifier = modifier,
+        content = {
             Column {
-                if (scrollState.canScrollBackward) {
-                    HorizontalDivider()
-                }
-                Column(Modifier.verticalScroll(scrollState)) {
-                    content(this)
-                }
-                if (scrollState.canScrollForward) {
-                    HorizontalDivider()
-                }
+                content()
+                Spacer(Modifier.padding(bottom = 8.dp))
             }
-        },
-        properties = if (form.meta.canSubmit) {
-            DialogProperties()
-        } else {
-            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         }
     )
 }

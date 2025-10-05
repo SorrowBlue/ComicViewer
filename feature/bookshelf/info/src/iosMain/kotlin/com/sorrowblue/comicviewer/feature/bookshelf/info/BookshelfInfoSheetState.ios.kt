@@ -11,6 +11,10 @@ import androidx.compose.runtime.setValue
 import com.sorrowblue.cmpdestinations.result.NavResult
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
@@ -51,6 +55,8 @@ private class BookshelfInfoSheetStateImpl(
     private val scope: CoroutineScope,
 ) : BookshelfInfoSheetState {
 
+    lateinit var bookshelfType: BookshelfType
+
     override var uiState by mutableStateOf<BookshelfInfoSheetUiState>(
         BookshelfInfoSheetUiState.Loading
     )
@@ -61,7 +67,15 @@ private class BookshelfInfoSheetStateImpl(
             .onEach {
                 uiState = when (it) {
                     is Resource.Error -> BookshelfInfoSheetUiState.Error
-                    is Resource.Success -> BookshelfInfoSheetUiState.Loaded(it.data)
+                    is Resource.Success -> {
+                        BookshelfInfoSheetUiState.Loaded(it.data).apply {
+                            bookshelfType = when (it.data.bookshelf) {
+                                is InternalStorage -> BookshelfType.DEVICE
+                                ShareContents -> return@onEach
+                                is SmbServer -> BookshelfType.SMB
+                            }
+                        }
+                    }
                 }
             }.launchIn(scope)
     }
@@ -72,7 +86,13 @@ private class BookshelfInfoSheetStateImpl(
         when (action) {
             BookshelfInfoSheetAction.Close -> events.tryEmit(BookshelfInfoSheetStateEvent.Back)
             BookshelfInfoSheetAction.Edit ->
-                events.tryEmit(BookshelfInfoSheetStateEvent.Edit(bookshelfId))
+                events.tryEmit(
+                    BookshelfInfoSheetStateEvent.Edit(
+                        bookshelfId,
+                        (uiState as BookshelfInfoSheetUiState.Loaded).bookshelfFolder.bookshelf.type
+                            ?: return
+                    )
+                )
 
             BookshelfInfoSheetAction.Remove ->
                 events.tryEmit(BookshelfInfoSheetStateEvent.Remove(bookshelfId))

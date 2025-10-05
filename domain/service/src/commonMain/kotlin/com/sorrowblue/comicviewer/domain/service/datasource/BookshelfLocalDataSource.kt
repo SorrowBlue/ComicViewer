@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookshelfLocalDataSource {
 
-    suspend fun updateOrCreate(bookshelf: Bookshelf): Bookshelf?
+    suspend fun updateOrCreate(
+        bookshelf: Bookshelf,
+        transaction: suspend (Bookshelf) -> Unit,
+    ): Bookshelf?
 
     suspend fun delete(bookshelfId: BookshelfId): Resource<Unit, Resource.SystemError>
 

@@ -16,10 +16,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.cmpdestinations.result.NavResultReceiver
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditDialogWrapper
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheet
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoSheetNavigator
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
@@ -35,7 +37,6 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.PrimaryActionButton
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingItems
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
@@ -49,11 +50,10 @@ internal data object Bookshelf
 
 internal interface BookshelfScreenNavigator : BookshelfInfoSheetNavigator {
     fun onSettingsClick()
-    fun onFabClick()
     fun onBookshelfClick(bookshelfId: BookshelfId, path: String)
 }
 
-@Destination<Bookshelf>
+@Destination<Bookshelf>(wrappers = [BookshelfEditDialogWrapper::class])
 @Composable
 internal fun BookshelfScreen(
     deleteNavResultReceiver: NavResultReceiver<BookshelfDelete, Boolean>,
@@ -65,7 +65,7 @@ internal fun BookshelfScreen(
         scaffoldState = state.scaffoldState,
         lazyPagingItems = state.pagingItems,
         lazyGridState = state.lazyGridState,
-        onFabClick = navigator::onFabClick,
+        onFabClick = state::onFabClick,
         onSettingsClick = navigator::onSettingsClick,
         onBookshelfClick = navigator::onBookshelfClick,
         onBookshelfInfoClick = state::onBookshelfInfoClick,
@@ -73,6 +73,7 @@ internal fun BookshelfScreen(
         BookshelfInfoSheet(
             bookshelfId = contentKey,
             onCloseClick = state::onSheetCloseClick,
+            onEditClick = state::onEditClick,
             navigator = navigator,
             snackbarHostState = state.scaffoldState.snackbarHostState,
             deleteNavResultReceiver = deleteNavResultReceiver,

@@ -72,7 +72,13 @@ private class BookshelfInfoSheetStateImpl(
         when (action) {
             BookshelfInfoSheetAction.Close -> events.tryEmit(BookshelfInfoSheetStateEvent.Back)
             BookshelfInfoSheetAction.Edit ->
-                events.tryEmit(BookshelfInfoSheetStateEvent.Edit(bookshelfId))
+                events.tryEmit(
+                    BookshelfInfoSheetStateEvent.Edit(
+                        bookshelfId,
+                        (uiState as BookshelfInfoSheetUiState.Loaded).bookshelfFolder.bookshelf.type
+                            ?: return
+                    )
+                )
 
             BookshelfInfoSheetAction.Remove ->
                 events.tryEmit(BookshelfInfoSheetStateEvent.Remove(bookshelfId))

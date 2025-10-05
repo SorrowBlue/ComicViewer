@@ -9,6 +9,8 @@ data class InternalStorage private constructor(
     override val isDeleted: Boolean,
 ) : Bookshelf {
 
+    override val type = BookshelfType.DEVICE
+
     fun copy(displayName: String = this.displayName) = copy(id = id, displayName = displayName)
 
     companion object {
