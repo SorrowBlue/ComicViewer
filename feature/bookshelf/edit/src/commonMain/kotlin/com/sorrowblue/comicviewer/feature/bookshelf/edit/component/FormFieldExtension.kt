@@ -17,5 +17,4 @@ internal fun FormField<*>.supportingText(): (@Composable () -> Unit)? {
 
 fun Modifier.handleFocusChanged(formField: FormField<*>): Modifier {
     return onFocusChanged { state -> formField.handleFocus(state.isFocused || state.hasFocus) }
-//    return this
 }

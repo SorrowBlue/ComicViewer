@@ -9,7 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -26,7 +27,6 @@ import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
@@ -51,7 +51,7 @@ internal interface CollectionScreenState {
     val scaffoldState: CanonicalScaffoldState<File.Key>
     val uiState: SmartCollectionScreenUiState
     val events: EventFlow<CollectionScreenEvent>
-    val pagingDataFlow: Flow<PagingData<File>>
+    val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     fun onNavClick()
     fun onAppBarAction(action: CollectionAppBarAction)
@@ -72,33 +72,35 @@ internal fun rememberCollectionScreenState(
     val state = remember {
         CollectionScreenStateImpl(
             getCollectionUseCase = getCollectionUseCase,
-            pagingDataFlow = viewModel.pagingDataFlow,
-            lazyGridState = lazyGridState,
             route = route,
             scope = scope,
             displaySettingsUseCase = displaySettingsUseCase,
             deleteCollectionUseCase = deleteCollectionUseCase
         )
+    }.apply {
+        this.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+        this.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
+            onReSelect = ::onReSelected
+        )
+        this.scope = scope
+        this.lazyGridState = lazyGridState
     }
-    state.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
-        onReSelect = state::onReSelected
-    )
     return state
 }
 
 private class CollectionScreenStateImpl(
     getCollectionUseCase: GetCollectionUseCase,
-    override val pagingDataFlow: Flow<PagingData<File>>,
-    override val lazyGridState: LazyGridState,
     private val route: Collection,
-    private val scope: CoroutineScope,
+    var scope: CoroutineScope,
     private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : CollectionScreenState {
 
     override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
     override val events = EventFlow<CollectionScreenEvent>()
+    override lateinit var lazyGridState: LazyGridState
 
+    override lateinit var lazyPagingItems: LazyPagingItems<File>
     override var uiState by mutableStateOf(SmartCollectionScreenUiState())
     lateinit var collection: CollectionModel
 

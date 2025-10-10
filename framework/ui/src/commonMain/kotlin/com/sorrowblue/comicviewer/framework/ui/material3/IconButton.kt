@@ -17,8 +17,16 @@ fun SettingsIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    IconButton(onClick = onClick, modifier = modifier) {
+fun BackIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    IconButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier
+    ) {
         Icon(
             imageVector = ComicIcons.ArrowBack,
             contentDescription = null

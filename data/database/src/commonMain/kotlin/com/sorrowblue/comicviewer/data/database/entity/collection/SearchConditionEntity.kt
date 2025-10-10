@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.database.entity.collection
 
 import androidx.room.ColumnInfo
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType as SortTypeModel
 
 internal data class SearchConditionEntity(
     val query: String,
@@ -23,7 +24,29 @@ internal data class SearchConditionEntity(
     }
 
     fun toModel(): SearchCondition {
-        return SearchCondition(query)
+        return SearchCondition(
+            query = query,
+            range = when (range) {
+                Range.Bookshelf -> SearchCondition.Range.Bookshelf
+                Range.InFolder -> SearchCondition.Range.InFolder(rangeParent)
+                Range.SubFolder -> SearchCondition.Range.SubFolder(rangeParent)
+            },
+            period = period,
+            sortType = when (sortType) {
+                SortType.Name -> SortTypeModel.Name(
+                    sortTypeAsc
+                )
+
+                SortType.Date -> SortTypeModel.Date(
+                    sortTypeAsc
+                )
+
+                SortType.Size -> SortTypeModel.Size(
+                    sortTypeAsc
+                )
+            },
+            showHidden = showHidden
+        )
     }
 
     companion object {
@@ -42,9 +65,9 @@ internal data class SearchConditionEntity(
                 },
                 period = model.period,
                 sortType = when (model.sortType) {
-                    is com.sorrowblue.comicviewer.domain.model.settings.folder.SortType.Name -> SortType.Name
-                    is com.sorrowblue.comicviewer.domain.model.settings.folder.SortType.Date -> SortType.Date
-                    is com.sorrowblue.comicviewer.domain.model.settings.folder.SortType.Size -> SortType.Size
+                    is SortTypeModel.Name -> SortType.Name
+                    is SortTypeModel.Date -> SortType.Date
+                    is SortTypeModel.Size -> SortType.Size
                 },
                 sortTypeAsc = model.sortType.isAsc,
                 showHidden = model.showHidden,

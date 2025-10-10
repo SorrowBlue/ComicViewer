@@ -2,4 +2,5 @@
 <resources>
     <string name="collection_editor_label_collection_name">コレクション名</string>
     <string name="collection_editor_label_search_keyword">検索キーワード</string>
+    <string name="collection_editor_error_not_get_bookshelf">本棚を取得できませんでした</string>
 </resources>

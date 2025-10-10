@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -47,7 +46,7 @@ internal fun CollectionScreen(
     val state = rememberCollectionScreenState(route)
     CollectionScreen(
         scaffoldState = state.scaffoldState,
-        lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
+        lazyPagingItems = state.lazyPagingItems,
         uiState = state.uiState,
         lazyGridState = state.lazyGridState,
         onAppBarAction = state::onAppBarAction,

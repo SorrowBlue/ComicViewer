@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUse
 import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseCase
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.NotificationManager
+import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create_add
@@ -22,6 +23,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
+import soil.form.compose.Form
+import soil.form.compose.rememberForm
+import soil.form.compose.rememberFormState
 
 internal sealed interface BasicCollectionCreateScreenStateEvent {
     data object CreateComplete : BasicCollectionCreateScreenStateEvent
@@ -29,8 +33,9 @@ internal sealed interface BasicCollectionCreateScreenStateEvent {
 
 internal interface BasicCollectionCreateScreenState {
     val uiState: BasicCollectionsCreateScreenUiState
+    val form: Form<BasicCollectionForm>
     val event: EventFlow<BasicCollectionCreateScreenStateEvent>
-    fun onSubmit(formData: BasicCollectionEditorFormData)
+    fun onSubmit(formData: BasicCollectionForm)
 }
 
 @Composable
@@ -49,22 +54,29 @@ internal fun rememberBasicCollectionCreateScreenState(
             notificationManager = notificationManager,
             scope = scope
         )
+    }.apply {
+        val formState =
+            rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
+        this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
+        this.scope = scope
     }
 }
 
 private class BasicCollectionCreateScreenStateImpl(
+    var scope: CoroutineScope,
     private val route: BasicCollectionCreate,
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val notificationManager: NotificationManager,
-    private val scope: CoroutineScope,
 ) : BasicCollectionCreateScreenState {
+
+    override lateinit var form: Form<BasicCollectionForm>
 
     override val event = EventFlow<BasicCollectionCreateScreenStateEvent>()
 
     override val uiState by mutableStateOf(BasicCollectionsCreateScreenUiState())
 
-    override fun onSubmit(formData: BasicCollectionEditorFormData) {
+    override fun onSubmit(formData: BasicCollectionForm) {
         scope.launch {
             delay(300)
             createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
