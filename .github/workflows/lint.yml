@@ -17,7 +17,7 @@ jobs:
       - name: 🚨Run lint
         run: ./gradlew composeApp:lint${{ matrix.variant }}
       - name: Upload Lint SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: ${{ !cancelled() }}
         with:
           sarif_file: build/reports/lint/lint-result.sarif
