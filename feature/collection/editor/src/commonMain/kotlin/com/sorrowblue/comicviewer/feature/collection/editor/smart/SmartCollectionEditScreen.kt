@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.DestinationStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import comicviewer.feature.collection.editor.generated.resources.Res
@@ -15,7 +14,7 @@ import org.koin.compose.koinInject
 @Serializable
 internal data class SmartCollectionEdit(val collectionId: CollectionId)
 
-@Destination<SmartCollectionEdit>(style = DestinationStyle.Dialog::class)
+@Destination<SmartCollectionEdit>(style = AdaptiveDestinationStyle::class)
 @Composable
 internal fun SmartCollectionEditScreen(
     route: SmartCollectionEdit,

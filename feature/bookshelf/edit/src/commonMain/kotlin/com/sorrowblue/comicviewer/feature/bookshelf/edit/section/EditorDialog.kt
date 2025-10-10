@@ -42,7 +42,7 @@ internal fun EditorDialog(
         title = {
             Text(stringResource(Res.string.bookshelf_edit_title_edit))
         },
-        scrollState = scrollState,
+        scrollableState = scrollState,
         confirmButton = {
             val dialogTextStyle = LocalTextStyle.current
             TextButton(

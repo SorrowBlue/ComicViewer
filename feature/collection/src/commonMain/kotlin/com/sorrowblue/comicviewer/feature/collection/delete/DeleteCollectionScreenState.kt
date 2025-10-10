@@ -15,19 +15,20 @@ internal interface DeleteCollectionScreenState {
 
 @Composable
 internal fun rememberDeleteCollectionScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
     deleteCollectionUseCase: DeleteCollectionUseCase = koinInject(),
 ): DeleteCollectionScreenState = remember {
     DeleteCollectionScreenStateImpl(
-        scope = scope,
         deleteCollectionUseCase = deleteCollectionUseCase
     )
+}.apply {
+    scope = rememberCoroutineScope()
 }
 
 private class DeleteCollectionScreenStateImpl(
-    private val scope: CoroutineScope,
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : DeleteCollectionScreenState {
+
+    lateinit var scope: CoroutineScope
 
     override fun delete(id: CollectionId, onComplete: () -> Unit) {
         scope.launch {

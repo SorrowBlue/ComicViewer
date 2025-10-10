@@ -10,6 +10,7 @@
     <string name="collection_editor_label_collection_name">Collection name</string>
     <string name="collection_editor_label_search_keyword">Search by keyword</string>
     <string name="collection_editor_error_must_not_be_blank">must not be blank</string>
+    <string name="collection_editor_error_not_get_bookshelf">Could not get bookshelf</string>
 
     <string name="collection_editor_label_bookshelf">Bookshelf</string>
     <string name="collection_editor_label_all_bookshelf">All bookshelf</string>

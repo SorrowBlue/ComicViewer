@@ -25,9 +25,12 @@ import androidx.compose.material3.adaptive.navigationsuite.ext.AnimatedNavigatio
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
@@ -53,6 +56,9 @@ interface CanonicalScaffoldState<T : Any> : AnimatedVisibilityScope, SharedTrans
     val appBarState: AppBarState
     val floatingActionButtonState: FloatingActionButtonState
     val navigator: ThreePaneScaffoldNavigator<T>
+
+    val fabMenuExpanded: Boolean
+    fun toggleFabMenu(force: Boolean = !fabMenuExpanded)
 
     val navItems: List<NavItem>
     val currentNavItem: NavItem?
@@ -107,6 +113,12 @@ class CanonicalScaffoldStateImpl<T : Any>(
         scope.launch {
             navigationRailState.toggle()
         }
+    }
+
+    override var fabMenuExpanded: Boolean by mutableStateOf(false)
+
+    override fun toggleFabMenu(force: Boolean) {
+        fabMenuExpanded = force
     }
 
     override val navItems: List<NavItem> get() = appState.navItems

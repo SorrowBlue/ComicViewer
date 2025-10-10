@@ -13,12 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.sorrowblue.comicviewer.feature.collection.editor.component.supportingText
 import soil.form.compose.FormField
+import soil.form.compose.hasError
 
 @Composable
 internal fun <T> DropdownMenuField(
     field: FormField<T>,
     value: @Composable T.() -> String,
+    label: @Composable () -> Unit,
     menus: List<T>,
     modifier: Modifier = Modifier,
     fillMaxWidth: Boolean = true,
@@ -39,11 +42,13 @@ internal fun <T> DropdownMenuField(
                 }
             ),
             value = value(field.value),
+            isError = field.hasError,
+            supportingText = field.supportingText(),
             enabled = field.isEnabled,
             readOnly = true,
             onValueChange = {},
             singleLine = true,
-            label = { Text(text = field.name) },
+            label = { label() },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
         )
