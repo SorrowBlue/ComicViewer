@@ -1,7 +1,10 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.ScrollbarBox
+import androidx.compose.foundation.VerticalScrollbarBox
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,11 +12,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.scrollbarStyle
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
@@ -36,10 +38,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.takeOrElse
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.LocalScrollbarStyle
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarStyle
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.VerticalScrollbarBox
 
 @Composable
 fun AlertDialog(
@@ -206,33 +204,22 @@ private fun AlertDialogContent(
                             .align(Alignment.Start)
                     ) {
                         scrollableState?.let {
-                            CompositionLocalProvider(LocalScrollbarStyle provides scrollbarStyle) {
+                            CompositionLocalProvider(LocalScrollbarStyle provides AlertDialogDefaults.scrollbarStyle()) {
                                 when (scrollableState) {
                                     is LazyListState -> {
-                                        ScrollbarBox(
-                                            state = scrollableState,
-                                            scrollbarWindowInsets = WindowInsets(),
-                                            padding = PaddingValues()
-                                        ) {
+                                        ScrollbarBox(state = scrollableState) {
                                             content()
                                         }
                                     }
 
                                     is LazyGridState -> {
-                                        ScrollbarBox(
-                                            state = scrollableState,
-                                            scrollbarWindowInsets = WindowInsets(),
-                                            padding = DialogPaddingHorizonal
-                                        ) {
+                                        ScrollbarBox(state = scrollableState) {
                                             content()
                                         }
                                     }
 
                                     is ScrollState -> {
-                                        VerticalScrollbarBox(
-                                            state = scrollableState,
-                                            scrollbarWindowInsets = WindowInsets(),
-                                        ) {
+                                        VerticalScrollbarBox(state = scrollableState) {
                                             Column(
                                                 Modifier
                                                     .padding(DialogPaddingHorizonal)
@@ -272,14 +259,7 @@ private fun AlertDialogContent(
     }
 }
 
-private val scrollbarStyle = ScrollbarStyle(
-    minimalHeight = 16.dp,
-    thickness = 8.dp,
-    shape = RoundedCornerShape(8.dp),
-    hoverDurationMillis = 300,
-    unhoverColor = Color.Black.copy(alpha = 0.12f),
-    hoverColor = Color.Black.copy(alpha = 0.50f)
-)
+val AlertDialogDefaults.dialogPaddingHorizonal get() = DialogPaddingHorizonal
 
 private val DialogSpacing = 24.dp
 private val DialogPaddingHorizonal = PaddingValues(horizontal = DialogSpacing)

@@ -118,7 +118,8 @@ private fun SmartCollectionEditorScreen(
     } else {
         val scrollState = rememberScrollState()
         BasicAlertDialog(
-            onDismissRequest = onCancel
+            onDismissRequest = onCancel,
+            modifier = Modifier.padding(ComicTheme.dimension.margin)
         ) {
             AlertDialogContent(
                 title = title,

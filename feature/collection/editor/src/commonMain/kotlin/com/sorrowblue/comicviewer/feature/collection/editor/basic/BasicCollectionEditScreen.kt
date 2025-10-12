@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +38,7 @@ import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
+import com.sorrowblue.comicviewer.framework.ui.material3.dialogPaddingHorizonal
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_basic_edit
@@ -127,7 +129,8 @@ private fun BasicCollectionEditScreen(
         }
     } else {
         BasicAlertDialog(
-            onDismissRequest = onBackClick
+            onDismissRequest = onBackClick,
+            modifier = Modifier.padding(ComicTheme.dimension.margin)
         ) {
             val lazyListState = rememberLazyListState()
             AlertDialogContent(
@@ -151,6 +154,7 @@ private fun BasicCollectionEditScreen(
                                 .fillMaxWidth()
                         )
                     },
+                    contentPadding = AlertDialogDefaults.dialogPaddingHorizonal,
                     state = lazyListState,
                     onDeleteClick = onDeleteClick
                 )

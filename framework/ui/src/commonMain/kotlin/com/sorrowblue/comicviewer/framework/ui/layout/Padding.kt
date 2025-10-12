@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -66,14 +67,38 @@ fun PaddingValues.copyWhenZero(
  * @return
  */
 @Composable
-operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
-    val layoutDirection = LocalLayoutDirection.current
-    return PaddingValues(
-        start = calculateStartPadding(layoutDirection) + other.calculateStartPadding(layoutDirection),
-        top = calculateTopPadding() + other.calculateTopPadding(),
-        end = calculateEndPadding(layoutDirection) + other.calculateEndPadding(layoutDirection),
-        bottom = calculateBottomPadding() + other.calculateBottomPadding(),
-    )
+operator fun PaddingValues.plus(other: PaddingValues): PaddingValues =
+    AddedPaddingValues(this, other)
+
+@Immutable
+private class AddedPaddingValues(val first: PaddingValues, val second: PaddingValues) :
+    PaddingValues {
+    override fun calculateLeftPadding(layoutDirection: LayoutDirection): Dp {
+        return first.calculateLeftPadding(layoutDirection) +
+            second.calculateLeftPadding(layoutDirection)
+    }
+
+    override fun calculateTopPadding(): Dp {
+        return first.calculateTopPadding() + second.calculateTopPadding()
+    }
+
+    override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp {
+        return first.calculateRightPadding(layoutDirection) +
+            second.calculateRightPadding(layoutDirection)
+    }
+
+    override fun calculateBottomPadding(): Dp {
+        return first.calculateBottomPadding() + second.calculateBottomPadding()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is AddedPaddingValues) return false
+        return first == other.first && second == other.second
+    }
+
+    override fun hashCode() = first.hashCode() * 31 + second.hashCode()
+
+    override fun toString() = "($first + $second)"
 }
 
 /**

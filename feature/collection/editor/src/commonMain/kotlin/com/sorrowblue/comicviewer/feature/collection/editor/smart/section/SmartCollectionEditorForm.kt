@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart.section
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
@@ -33,7 +34,7 @@ internal fun SmartCollectionEditorForm(
     bookshelf: Map<BookshelfId?, String>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.wrapContentHeight()) {
         form.CollectionNameTextField2(
             enabled = uiState.enabledForm,
             modifier = Modifier.fillMaxWidth()

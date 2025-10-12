@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.basic.section
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -95,7 +94,7 @@ internal fun BasicCollectionContent(
                             }
                         },
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                        modifier = Modifier.clickable {}
+                        modifier = Modifier.animateItem()
                     )
                 }
             }

@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.section
 
+import androidx.compose.foundation.ScrollbarBox
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -17,7 +18,6 @@ import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.layout.union
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumnType
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 
 @Composable
 internal fun BookshelfGridList(
