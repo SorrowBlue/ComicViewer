@@ -72,9 +72,9 @@ internal interface FolderScreenState {
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     val pullRefreshState: PullToRefreshState
+
     fun onNavResult(navResult: NavResult<SortTypeSelect>)
     fun onFolderTopAppBarAction(action: FolderTopAppBarAction)
-
     fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
     fun onFolderContentsAction(action: FolderContentsAction)
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
@@ -90,61 +90,47 @@ internal fun rememberFolderScreenState(
     scope: CoroutineScope = rememberCoroutineScope(),
     lazyGridState: LazyGridState = rememberLazyGridState(),
 ): FolderScreenState {
-    val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val state = rememberSaveable(
-        saver = Saver(
-            save = {
-                it.isRestored
-            },
-            restore = {
-                FolderScreenStateImpl(
-                    lazyPagingItems = lazyPagingItems,
-                    lazyGridState = lazyGridState,
-                    pullRefreshState = pullRefreshState,
-                    scope = scope,
-                    args = args,
-                    folderDisplaySettingsUseCase = displaySettingsUseCase,
-                    getFileUseCase = getFileUseCase
-                ).apply {
-                    isRestored = it
-                }
-            }
+        saver = FolderScreenStateImpl.saver(
+            args = args,
+            scope = scope,
+            displaySettingsUseCase = displaySettingsUseCase,
+            getFileUseCase = getFileUseCase
         )
     ) {
         FolderScreenStateImpl(
-            lazyPagingItems = lazyPagingItems,
-            lazyGridState = lazyGridState,
-            pullRefreshState = pullRefreshState,
             scope = scope,
             args = args,
             folderDisplaySettingsUseCase = displaySettingsUseCase,
             getFileUseCase = getFileUseCase
         )
+    }.apply {
+        this.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+        this.lazyGridState = lazyGridState
+        this.pullRefreshState = pullRefreshState
+        this.scope = scope
+        scaffoldState = rememberCanonicalScaffoldState(onReSelect = ::onReSelected)
     }
-    state.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
-        onReSelect = state::onReSelected
-    )
     return state
 }
 
 private class FolderScreenStateImpl(
-    override val lazyPagingItems: LazyPagingItems<File>,
-    override val lazyGridState: LazyGridState,
-    override val pullRefreshState: PullToRefreshState,
-    private val scope: CoroutineScope,
     private val args: Folder,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+    var scope: CoroutineScope,
     getFileUseCase: GetFileUseCase,
 ) : FolderScreenState {
 
+    override lateinit var lazyPagingItems: LazyPagingItems<File>
+    override lateinit var lazyGridState: LazyGridState
+    override lateinit var pullRefreshState: PullToRefreshState
     override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
 
-    var isRestored by mutableStateOf(false)
-
     override val events = EventFlow<FolderScreenEvent>()
-
     override var uiState by mutableStateOf(FolderScreenUiState())
         private set
+
+    var isRestored by mutableStateOf(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val folderScopeOnly = folderDisplaySettingsUseCase.settings.mapLatest { settings ->
@@ -374,5 +360,28 @@ private class FolderScreenStateImpl(
         scope.launch {
             folderDisplaySettingsUseCase.edit(edit)
         }
+    }
+
+    companion object {
+        fun saver(
+            args: Folder,
+            scope: CoroutineScope,
+            displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+            getFileUseCase: GetFileUseCase,
+        ) = Saver<FolderScreenStateImpl, Boolean>(
+            save = {
+                it.isRestored
+            },
+            restore = {
+                FolderScreenStateImpl(
+                    args = args,
+                    scope = scope,
+                    folderDisplaySettingsUseCase = displaySettingsUseCase,
+                    getFileUseCase = getFileUseCase
+                ).apply {
+                    isRestored = it
+                }
+            }
+        )
     }
 }

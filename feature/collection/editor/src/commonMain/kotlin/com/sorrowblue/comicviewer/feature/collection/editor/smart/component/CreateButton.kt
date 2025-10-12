@@ -12,23 +12,27 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_create
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
+import soil.form.compose.watch
 
 @Composable
 internal fun CreateButton(
     form: Form<*>,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
 ) {
     ButtonWithIcon(
         modifier = modifier,
         onClick = form::handleSubmit,
-        enabled = form.meta.canSubmit,
-        iconEnabled = form.meta.canSubmit,
+        enabled = form.watch { meta.canSubmit } && !isLoading,
+        iconEnabled = form.watch { meta.canSubmit } && !isLoading,
         icon = {
-            CircularProgressIndicator(
-                strokeWidth = 2.dp,
-                color = ButtonDefaults.buttonColors().contentColor,
-                modifier = Modifier.size(ButtonDefaults.IconSize)
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    strokeWidth = 2.dp,
+                    color = ButtonDefaults.buttonColors().contentColor,
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+            }
         }
     ) {
         Text(text = stringResource(Res.string.collection_editor_label_create))

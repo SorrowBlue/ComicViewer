@@ -2,8 +2,9 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.DestinationStyle
+import com.sorrowblue.cmpdestinations.DestinationDialogStyle
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -19,7 +20,11 @@ internal data class SmartCollectionCreate(
     val searchCondition: SearchCondition = SearchCondition(),
 )
 
-@Destination<SmartCollectionCreate>(style = DestinationStyle.Dialog::class)
+object AdaptiveDestinationStyle : DestinationDialogStyle {
+    override val dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+}
+
+@Destination<SmartCollectionCreate>(style = AdaptiveDestinationStyle::class)
 @Composable
 internal fun SmartCollectionCreateScreen(
     route: SmartCollectionCreate,

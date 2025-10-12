@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -30,7 +31,7 @@ internal fun AuthField(
 ) {
     val list = remember { SmbEditorForm.Auth.entries }
     Column(modifier = modifier) {
-        SingleChoiceSegmentedButtonRow {
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
             list.forEachIndexed { index, auth ->
                 SegmentedButton(
                     selected = auth == field.value,

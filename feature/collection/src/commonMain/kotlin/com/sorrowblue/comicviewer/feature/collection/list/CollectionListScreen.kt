@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -43,7 +42,7 @@ internal fun CollectionListScreen(navigator: CollectionListScreenNavigator = koi
     val state = rememberCollectionListScreenState()
     CollectionListScreen(
         scaffoldState = state.scaffoldState,
-        lazyPagingItems = state.pagingDataFlow.collectAsLazyPagingItems(),
+        lazyPagingItems = state.lazyPagingItems,
         lazyListState = state.lazyListState,
         onContentsAction = {
             when (it) {
@@ -84,6 +83,7 @@ internal fun CollectionListScreen(
             PrimaryActionButtonMenu {
                 FloatingActionButtonMenuItem(
                     onClick = {
+                        scaffoldState.toggleFabMenu()
                         onCreateBasicCollectionClick()
                     },
                     text = {
@@ -98,6 +98,7 @@ internal fun CollectionListScreen(
                 )
                 FloatingActionButtonMenuItem(
                     onClick = {
+                        scaffoldState.toggleFabMenu()
                         onCreateSmartCollectionClick()
                     },
                     text = {

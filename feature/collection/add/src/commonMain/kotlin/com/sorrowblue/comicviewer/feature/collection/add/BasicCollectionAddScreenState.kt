@@ -39,37 +39,38 @@ internal interface BasicCollectionAddScreenState {
 @Composable
 internal fun rememberBasicCollectionAddScreenState(
     route: BasicCollectionAdd,
-    scope: CoroutineScope = rememberCoroutineScope(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     lazyListState: LazyListState = rememberLazyListState(),
     removeCollectionFileUseCase: RemoveCollectionFileUseCase = koinInject(),
     addCollectionFileUseCase: AddCollectionFileUseCase = koinInject(),
     collectionSettingsUseCase: CollectionSettingsUseCase = koinInject(),
     viewModel: BasicCollectionAddViewModel = koinViewModel { parametersOf(route) },
 ): BasicCollectionAddScreenState {
-    val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     return remember {
         BasicCollectionAddScreenStateImpl(
             route = route,
-            scope = scope,
-            lazyPagingItems = lazyPagingItems,
-            lazyListState = lazyListState,
+            coroutineScope = coroutineScope,
             removeCollectionFileUseCase = removeCollectionFileUseCase,
             addCollectionFileUseCase = addCollectionFileUseCase,
             collectionSettingsUseCase = collectionSettingsUseCase,
         )
+    }.apply {
+        this.coroutineScope = coroutineScope
+        this.lazyListState = lazyListState
+        this.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     }
 }
 
 private class BasicCollectionAddScreenStateImpl(
-    override val lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>,
-    override val lazyListState: LazyListState,
     private val route: BasicCollectionAdd,
-    private val scope: CoroutineScope,
+    var coroutineScope: CoroutineScope,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,
 ) : BasicCollectionAddScreenState {
 
+    override lateinit var lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>
+    override lateinit var lazyListState: LazyListState
     override var uiState by mutableStateOf(BasicCollectionAddScreenUiState())
         private set
 
@@ -77,11 +78,11 @@ private class BasicCollectionAddScreenStateImpl(
         collectionSettingsUseCase.settings.map { it.recent }.distinctUntilChanged().onEach {
             uiState =
                 uiState.copy(collectionSort = if (it) CollectionSort.Recent else CollectionSort.Created)
-        }.launchIn(scope)
+        }.launchIn(coroutineScope)
     }
 
     override fun onClickCollectionSort(sort: CollectionSort) {
-        scope.launch {
+        coroutineScope.launch {
             collectionSettingsUseCase.edit {
                 it.copy(sort == CollectionSort.Recent)
             }
@@ -90,7 +91,7 @@ private class BasicCollectionAddScreenStateImpl(
     }
 
     override fun onCollectionClick(collection: Collection, exist: Boolean) {
-        scope.launch {
+        coroutineScope.launch {
             if (exist) {
                 removeCollectionFileUseCase(
                     RemoveCollectionFileUseCase.Request(

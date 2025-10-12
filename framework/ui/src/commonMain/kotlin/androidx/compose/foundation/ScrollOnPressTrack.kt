@@ -1,5 +1,6 @@
-package com.sorrowblue.comicviewer.framework.ui.scrollbar
+package androidx.compose.foundation
 
+import androidx.compose.foundation.v2.SliderAdapter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEvent

@@ -7,66 +7,95 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.EmptyRequest
-import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
+import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseCase
-import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorFormData
+import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.BookshelfField
+import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
+import comicviewer.feature.collection.editor.generated.resources.Res
+import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_not_get_bookshelf
+import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_all_bookshelf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
+import soil.form.FieldError
+import soil.form.FormOptions
+import soil.form.compose.Form
+import soil.form.compose.FormPolicy
+import soil.form.compose.FormState
+import soil.form.compose.rememberForm
+import soil.form.compose.rememberFormState
 
 @Composable
 internal fun rememberSmartCollectionCreateScreenState(
     route: SmartCollectionCreate,
-    scope: CoroutineScope = rememberCoroutineScope(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     flowBookshelfListUseCase: FlowBookshelfListUseCase = koinInject(),
     createCollectionUseCase: CreateCollectionUseCase = koinInject(),
 ): SmartCollectionEditorScreenState {
+    val formState = rememberFormState(
+        initialValue = SmartCollectionForm(
+            bookshelfId = route.bookshelfId,
+            searchCondition = route.searchCondition
+        ),
+        saver = kSerializableSaver(),
+        policy = FormPolicy(FormOptions(false))
+    )
     return remember {
         SmartCollectionCreateScreenStateImpl(
-            route = route,
-            scope = scope,
+            coroutineScope = coroutineScope,
             flowBookshelfListUseCase = flowBookshelfListUseCase,
-            createCollectionUseCase = createCollectionUseCase
+            createCollectionUseCase = createCollectionUseCase,
+            formState = formState
         )
+    }.apply {
+        this.coroutineScope = coroutineScope
+        this.formState = formState
+        this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
     }
 }
 
 private class SmartCollectionCreateScreenStateImpl(
-    route: SmartCollectionCreate,
+    var coroutineScope: CoroutineScope,
+    var formState: FormState<SmartCollectionForm>,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
-    private val scope: CoroutineScope,
     private val createCollectionUseCase: CreateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
 
+    override lateinit var form: Form<SmartCollectionForm>
     override val event = EventFlow<SmartCollectionEditorScreenStateEvent>()
-    override var uiState by mutableStateOf(
-        SmartCollectionEditorScreenUiState(
-            formData = SmartCollectionEditorFormData(
-                bookshelfId = if (route.bookshelfId == BookshelfId()) null else route.bookshelfId,
-                searchCondition = route.searchCondition
-            )
-        )
-    )
+    override var uiState by mutableStateOf(SmartCollectionEditorScreenUiState())
 
     init {
-        flowBookshelfListUseCase(EmptyRequest).filterIsInstance<Resource.Success<List<Bookshelf>>>()
-            .onEach {
-                uiState = uiState.copy(bookshelfList = it.data)
-            }.launchIn(scope)
+        coroutineScope.launch {
+            uiState = uiState.copy(enabledForm = false)
+            flowBookshelfListUseCase(EmptyRequest).first().fold(
+                onSuccess = { list ->
+                    uiState = uiState.copy(
+                        bookshelf = buildMap {
+                            put(null, getString(Res.string.collection_editor_label_all_bookshelf))
+                            putAll(list.map { it.id to it.displayName })
+                        }
+                    )
+                },
+                onError = {
+                    formState.setError(
+                        BookshelfField to FieldError(getString(Res.string.collection_editor_error_not_get_bookshelf))
+                    )
+                }
+            )
+            uiState = uiState.copy(enabledForm = true)
+        }
     }
 
-    override fun onSubmit(formData: SmartCollectionEditorFormData) {
-        scope.launch {
-            delay(1000)
+    override fun onSubmit(formData: SmartCollectionForm) {
+        coroutineScope.launch {
             createCollectionUseCase(
                 CreateCollectionUseCase.Request(
                     SmartCollection(
@@ -76,6 +105,7 @@ private class SmartCollectionCreateScreenStateImpl(
                     )
                 )
             )
+            delay(1000)
             event.emit(SmartCollectionEditorScreenStateEvent.Complete)
         }
     }
