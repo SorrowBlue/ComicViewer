@@ -1,5 +1,5 @@
 [versions]
-aboutlibraries = "12.2.4"
+aboutlibraries = "13.0.0"
 android-gradle = "8.13.0"
 androidx-activity = "1.11.0"
 androidx-annotation-experimental = "1.5.1"
