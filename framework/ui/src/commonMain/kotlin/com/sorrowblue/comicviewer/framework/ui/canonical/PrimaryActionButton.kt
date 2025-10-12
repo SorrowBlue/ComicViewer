@@ -21,7 +21,6 @@ import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -86,7 +85,6 @@ fun CanonicalScaffoldState<*>.PrimaryActionButtonMenu(
     visible: Boolean = true,
     content: @Composable FloatingActionButtonMenuScope.() -> Unit,
 ) {
-    var fabMenuExpanded by remember { mutableStateOf(false) }
     FloatingActionButtonMenu(
         expanded = fabMenuExpanded,
         button = {
@@ -107,7 +105,7 @@ fun CanonicalScaffoldState<*>.PrimaryActionButtonMenu(
                     ),
                 checked = fabMenuExpanded,
                 containerSize = if (navigationSuiteType.isNavigationRail) ToggleFloatingActionButtonDefaults.containerSizeMedium() else ToggleFloatingActionButtonDefaults.containerSize(),
-                onCheckedChange = { fabMenuExpanded = !fabMenuExpanded }
+                onCheckedChange = ::toggleFabMenu
             ) {
                 val imageVector by remember(checkedProgress) {
                     derivedStateOf {

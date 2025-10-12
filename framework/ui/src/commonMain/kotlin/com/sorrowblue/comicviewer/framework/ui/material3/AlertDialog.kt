@@ -1,16 +1,21 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.ScrollbarBox
+import androidx.compose.foundation.VerticalScrollbarBox
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.scrollbarStyle
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
@@ -33,9 +38,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.takeOrElse
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.LocalScrollbarStyle
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarStyle
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.VerticalScrollbarBox
 
 @Composable
 fun AlertDialog(
@@ -75,11 +77,67 @@ fun AlertDialog(
 }
 
 @Composable
+fun AlertDialogContent(
+    modifier: Modifier = Modifier,
+    confirmButton: @Composable (() -> Unit)? = null,
+    dismissButton: @Composable (() -> Unit)? = null,
+    icon: @Composable (() -> Unit)? = null,
+    title: @Composable (() -> Unit)? = null,
+    scrollableState: ScrollableState? = null,
+    shape: Shape = AlertDialogDefaults.shape,
+    containerColor: Color = AlertDialogDefaults.containerColor,
+    iconContentColor: Color = AlertDialogDefaults.iconContentColor,
+    titleContentColor: Color = AlertDialogDefaults.titleContentColor,
+    textContentColor: Color = AlertDialogDefaults.textContentColor,
+    tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
+    content: @Composable (() -> Unit)? = null,
+) {
+    AlertDialogContent(
+        modifier = modifier,
+        buttons = if (confirmButton != null || dismissButton != null) {
+            {
+                val buttonPaddingFromMICS =
+                    LocalMinimumInteractiveComponentSize.current.takeOrElse { 0.dp } -
+                        ButtonDefaults.MinHeight
+                AlertDialogFlowRow(
+                    mainAxisSpacing = ButtonsMainAxisSpacing,
+                    crossAxisSpacing =
+                    (ButtonsCrossAxisSpacing - buttonPaddingFromMICS).coerceIn(
+                        0.dp,
+                        ButtonsCrossAxisSpacing,
+                    ),
+                ) {
+                    confirmButton?.invoke()
+                    dismissButton?.invoke()
+                }
+            }
+        } else {
+            null
+        },
+        icon = icon,
+        title = title,
+        content = content,
+        scrollableState = scrollableState,
+        shape = shape,
+        containerColor = containerColor,
+        tonalElevation = tonalElevation,
+        // Note that a button content color is provided here from the dialog's token, but in
+        // most cases, TextButtons should be used for dismiss and confirm buttons. TextButtons
+        // will not consume this provided content color value, and will used their own defined
+        // or default colors.
+        buttonContentColor = ComicTheme.colorScheme.primary,
+        iconContentColor = iconContentColor,
+        titleContentColor = titleContentColor,
+        textContentColor = textContentColor,
+    )
+}
+
+@Composable
 private fun AlertDialogContent(
     buttons: (@Composable () -> Unit)?,
     icon: (@Composable () -> Unit)?,
     title: (@Composable () -> Unit)?,
-    scrollState: ScrollState?,
+    scrollableState: ScrollableState?,
     shape: Shape,
     containerColor: Color,
     tonalElevation: Dp,
@@ -130,8 +188,8 @@ private fun AlertDialogContent(
                 }
             }
             content?.let {
-                scrollState?.let {
-                    AnimatedVisibility(visible = scrollState.canScrollBackward) {
+                scrollableState?.let {
+                    AnimatedVisibility(visible = scrollableState.canScrollBackward) {
                         HorizontalDivider()
                     }
                 }
@@ -145,18 +203,31 @@ private fun AlertDialogContent(
                             .weight(weight = 1f, fill = false)
                             .align(Alignment.Start)
                     ) {
-                        scrollState?.let {
-                            CompositionLocalProvider(LocalScrollbarStyle provides scrollbarStyle) {
-                                VerticalScrollbarBox(
-                                    state = scrollState,
-                                    scrollbarWindowInsets = WindowInsets(),
-                                ) {
-                                    Column(
-                                        Modifier
-                                            .padding(DialogPaddingHorizonal)
-                                            .verticalScroll(scrollState)
-                                    ) {
-                                        content()
+                        scrollableState?.let {
+                            CompositionLocalProvider(LocalScrollbarStyle provides AlertDialogDefaults.scrollbarStyle()) {
+                                when (scrollableState) {
+                                    is LazyListState -> {
+                                        ScrollbarBox(state = scrollableState) {
+                                            content()
+                                        }
+                                    }
+
+                                    is LazyGridState -> {
+                                        ScrollbarBox(state = scrollableState) {
+                                            content()
+                                        }
+                                    }
+
+                                    is ScrollState -> {
+                                        VerticalScrollbarBox(state = scrollableState) {
+                                            Column(
+                                                Modifier
+                                                    .padding(DialogPaddingHorizonal)
+                                                    .verticalScroll(scrollableState)
+                                            ) {
+                                                content()
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -167,8 +238,8 @@ private fun AlertDialogContent(
                         }
                     }
                 }
-                scrollState?.let {
-                    AnimatedVisibility(visible = scrollState.canScrollForward) {
+                scrollableState?.let {
+                    AnimatedVisibility(visible = scrollableState.canScrollForward) {
                         HorizontalDivider()
                     }
                 }
@@ -188,14 +259,7 @@ private fun AlertDialogContent(
     }
 }
 
-private val scrollbarStyle = ScrollbarStyle(
-    minimalHeight = 16.dp,
-    thickness = 8.dp,
-    shape = RoundedCornerShape(8.dp),
-    hoverDurationMillis = 300,
-    unhoverColor = Color.Black.copy(alpha = 0.12f),
-    hoverColor = Color.Black.copy(alpha = 0.50f)
-)
+val AlertDialogDefaults.dialogPaddingHorizonal get() = DialogPaddingHorizonal
 
 private val DialogSpacing = 24.dp
 private val DialogPaddingHorizonal = PaddingValues(horizontal = DialogSpacing)
@@ -216,62 +280,6 @@ internal fun ProvideContentColorTextStyle(
         LocalContentColor provides contentColor,
         LocalTextStyle provides mergedStyle,
         content = content,
-    )
-}
-
-@Composable
-fun AlertDialogContent(
-    modifier: Modifier = Modifier,
-    confirmButton: @Composable (() -> Unit)? = null,
-    dismissButton: @Composable (() -> Unit)? = null,
-    icon: @Composable (() -> Unit)? = null,
-    title: @Composable (() -> Unit)? = null,
-    scrollState: ScrollState? = null,
-    shape: Shape = AlertDialogDefaults.shape,
-    containerColor: Color = AlertDialogDefaults.containerColor,
-    iconContentColor: Color = AlertDialogDefaults.iconContentColor,
-    titleContentColor: Color = AlertDialogDefaults.titleContentColor,
-    textContentColor: Color = AlertDialogDefaults.textContentColor,
-    tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
-    content: @Composable (() -> Unit)? = null,
-) {
-    AlertDialogContent(
-        modifier = modifier,
-        buttons = if (confirmButton != null || dismissButton != null) {
-            {
-                val buttonPaddingFromMICS =
-                    LocalMinimumInteractiveComponentSize.current.takeOrElse { 0.dp } -
-                        ButtonDefaults.MinHeight
-                AlertDialogFlowRow(
-                    mainAxisSpacing = ButtonsMainAxisSpacing,
-                    crossAxisSpacing =
-                    (ButtonsCrossAxisSpacing - buttonPaddingFromMICS).coerceIn(
-                        0.dp,
-                        ButtonsCrossAxisSpacing,
-                    ),
-                ) {
-                    confirmButton?.invoke()
-                    dismissButton?.invoke()
-                }
-            }
-        } else {
-            null
-        },
-        icon = icon,
-        title = title,
-        content = content,
-        scrollState = scrollState,
-        shape = shape,
-        containerColor = containerColor,
-        tonalElevation = tonalElevation,
-        // Note that a button content color is provided here from the dialog's token, but in
-        // most cases, TextButtons should be used for dismiss and confirm buttons. TextButtons
-        // will not consume this provided content color value, and will used their own defined
-        // or default colors.
-        buttonContentColor = ComicTheme.colorScheme.primary,
-        iconContentColor = iconContentColor,
-        titleContentColor = titleContentColor,
-        textContentColor = textContentColor,
     )
 }
 

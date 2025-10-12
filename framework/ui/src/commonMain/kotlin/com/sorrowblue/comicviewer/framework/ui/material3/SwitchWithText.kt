@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.LocalTextStyle
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
@@ -24,7 +26,9 @@ fun SwitchWithText(
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         CompositionLocalProvider(LocalTextStyle provides ComicTheme.typography.bodyMedium) {
-            text()
+            Box(modifier = Modifier.alpha(if (enabled) 1f else 0.38f)) {
+                text()
+            }
         }
         Spacer(Modifier.weight(1f))
         Switch(

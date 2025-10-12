@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.info.license
 
+import androidx.compose.foundation.ScrollbarBox
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -37,7 +38,6 @@ import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
-import com.sorrowblue.comicviewer.framework.ui.scrollbar.ScrollbarBox
 import comicviewer.feature.settings.info.generated.resources.Res
 import comicviewer.feature.settings.info.generated.resources.settings_info_title_license
 import kotlinx.collections.immutable.ImmutableList
