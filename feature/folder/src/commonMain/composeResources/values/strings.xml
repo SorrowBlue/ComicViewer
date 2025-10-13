@@ -13,4 +13,8 @@
     <string name="folder_sorttype_label_date_desc">Timestamp (descending)</string>
     <string name="folder_sorttype_label_size_asc">File size (ascending)</string>
     <string name="folder_sorttype_label_size_desc">File size (descending)</string>
+    
+    <!--App bar buttons-->
+    <string name="folder_btn_search">Search</string>
+    <string name="folder_btn_sort">Sort</string>
 </resources>
