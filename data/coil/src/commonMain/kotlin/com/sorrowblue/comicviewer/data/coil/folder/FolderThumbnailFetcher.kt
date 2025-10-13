@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.first
 import logcat.LogPriority
 import logcat.logcat
 import okio.BufferedSource
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 internal class FolderThumbnailFetcher(
     options: Options,
@@ -87,7 +87,7 @@ internal class FolderThumbnailFetcher(
     }
 }
 
-@Single
+@Singleton
 @com.sorrowblue.comicviewer.data.coil.FolderThumbnailFetcher
 class FolderThumbnailFetcherFactory(
     private val lazyCoilDiskCache: Lazy<CoilDiskCache>,

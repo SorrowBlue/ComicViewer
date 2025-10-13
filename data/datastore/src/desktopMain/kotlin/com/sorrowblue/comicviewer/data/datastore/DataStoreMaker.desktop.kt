@@ -9,9 +9,9 @@ import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import kotlin.io.path.createDirectories
 import okio.FileSystem
 import okio.Path.Companion.toOkioPath
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal actual class DataStoreMaker actual constructor(private val context: PlatformContext) {
 
     actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {

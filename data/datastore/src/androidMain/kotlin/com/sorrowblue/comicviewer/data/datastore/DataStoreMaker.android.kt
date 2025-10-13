@@ -9,9 +9,9 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import okio.FileSystem
 import okio.Path.Companion.toPath
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal actual class DataStoreMaker actual constructor(private val context: PlatformContext) {
 
     actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {

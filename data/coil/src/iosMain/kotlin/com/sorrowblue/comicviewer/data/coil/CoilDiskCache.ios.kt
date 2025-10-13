@@ -4,13 +4,13 @@ import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import kotlinx.cinterop.ExperimentalForeignApi
 import okio.Path
 import okio.Path.Companion.toPath
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
-@Single
+@Singleton
 actual class CoilDiskCache actual constructor(context: PlatformContext) {
 
     actual fun resolve(folder: String): Path {

@@ -2,11 +2,11 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 private const val ALIAS = "library-data.password"
 
-@Single
+@Singleton
 @ProvidedTypeConverter
 internal class DecryptedPasswordConverters(private val cryptUtil: CryptUtil) {
 

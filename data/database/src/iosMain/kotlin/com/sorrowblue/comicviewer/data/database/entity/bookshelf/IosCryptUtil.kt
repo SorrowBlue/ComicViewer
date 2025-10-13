@@ -2,9 +2,9 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal class IosCryptUtil : CryptUtil {
     @OptIn(ExperimentalEncodingApi::class, ExperimentalForeignApi::class)
     override fun decrypt(alias: String, encryptedText: String): String? {

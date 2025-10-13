@@ -6,9 +6,9 @@ import coil3.request.ImageRequest
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
 import kotlinx.coroutines.Deferred
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal class ThumbnailDataSourceImpl(
     private val context: PlatformContext,
 ) : ThumbnailDataSource {

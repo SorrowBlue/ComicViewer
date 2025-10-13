@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.domain.service
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 @IoDispatcher
-@Single
+@Singleton
 fun provideIoDispatcherForKmp(): CoroutineDispatcher = Dispatchers.IO

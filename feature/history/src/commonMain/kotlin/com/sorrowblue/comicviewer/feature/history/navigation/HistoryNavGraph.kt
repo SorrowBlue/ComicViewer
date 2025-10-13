@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.feature.history.HistoryFolder
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import kotlin.reflect.KClass
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 @Serializable
 @NavGraph(
@@ -22,7 +22,7 @@ import org.koin.core.annotation.Single
 )
 data object HistoryNavGraph
 
-@Single
+@Singleton
 internal class HistoryNavGraphTabDisplayRoute : TabDisplayRoute {
     override val routes: List<KClass<*>> =
         listOf(History::class, HistoryFolder::class, ClearAllHistory::class)

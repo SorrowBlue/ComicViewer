@@ -26,7 +26,7 @@ import logcat.asLog
 import logcat.logcat
 import okio.Buffer
 import okio.BufferedSource
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 private var fileReader: FileReader? = null
 private var book: Book? = null
@@ -97,7 +97,7 @@ internal class BookPageImageFetcher(
     }
 }
 
-@Single
+@Singleton
 @com.sorrowblue.comicviewer.data.coil.BookPageImageFetcher
 internal class BookPageImageFetcherFactory(
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,

@@ -6,9 +6,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDelete
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
+import jakarta.inject.Singleton
 import kotlin.reflect.KClass
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Single
 
 @Serializable
 @NavGraph(
@@ -22,7 +22,7 @@ import org.koin.core.annotation.Single
 )
 data object BookshelfNavGraph
 
-@Single
+@Singleton
 internal class BookshelfNavGraphTabDisplayRoute : TabDisplayRoute {
     override val routes: List<KClass<*>> =
         listOf(Bookshelf::class, BookshelfFolder::class, BookshelfDelete::class)

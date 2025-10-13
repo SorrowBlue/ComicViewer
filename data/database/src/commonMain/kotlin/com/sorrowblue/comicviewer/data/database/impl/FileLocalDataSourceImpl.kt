@@ -35,9 +35,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
 import org.koin.core.annotation.Qualifier
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal class FileLocalDataSourceImpl(
     private val dao: FileDao,
     private val factory: FileModelRemoteMediator.Factory,

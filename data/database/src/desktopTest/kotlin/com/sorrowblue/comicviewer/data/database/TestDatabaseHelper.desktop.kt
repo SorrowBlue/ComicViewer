@@ -2,9 +2,9 @@ package com.sorrowblue.comicviewer.data.database
 
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal actual class TestDatabaseHelper {
 
     actual fun getDatabaseBuilder() =

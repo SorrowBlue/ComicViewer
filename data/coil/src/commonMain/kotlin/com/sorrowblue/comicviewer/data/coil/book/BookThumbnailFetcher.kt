@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.first
 import okio.Buffer
 import okio.BufferedSource
 import okio.use
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 internal class BookThumbnailFetcher(
     options: Options,
@@ -103,7 +103,7 @@ internal class BookThumbnailFetcher(
     }
 }
 
-@Single
+@Singleton
 @com.sorrowblue.comicviewer.data.coil.BookThumbnailFetcher
 internal class BookThumbnailFetcherFactory(
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
