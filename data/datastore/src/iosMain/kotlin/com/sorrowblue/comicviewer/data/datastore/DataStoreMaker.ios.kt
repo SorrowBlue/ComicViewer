@@ -9,13 +9,13 @@ import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import kotlinx.cinterop.ExperimentalForeignApi
 import okio.FileSystem
 import okio.Path.Companion.toPath
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
-@Single
+@Singleton
 internal actual class DataStoreMaker actual constructor(context: PlatformContext) {
 
     actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {

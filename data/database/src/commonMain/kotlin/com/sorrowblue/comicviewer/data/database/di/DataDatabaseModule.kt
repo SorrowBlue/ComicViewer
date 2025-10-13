@@ -6,25 +6,25 @@ import com.sorrowblue.comicviewer.data.database.DatabaseHelper
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPasswordConverters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal fun provideBookshelfDao(database: ComicViewerDatabase) = database.bookshelfDao()
 
-@Single
+@Singleton
 internal fun provideFileDao(database: ComicViewerDatabase) = database.fileDao()
 
-@Single
+@Singleton
 internal fun provideCollectionDao(database: ComicViewerDatabase) = database.collectionDao()
 
-@Single
+@Singleton
 internal fun provideCollectionFileDao(database: ComicViewerDatabase) = database.collectionFileDao()
 
-@Single
+@Singleton
 internal fun provideReadLaterFileDao(database: ComicViewerDatabase) =
     database.readLaterFileDao()
 
-@Single
+@Singleton
 internal fun getRoomDatabase(
     helper: DatabaseHelper,
     decryptedPasswordConverters: DecryptedPasswordConverters,

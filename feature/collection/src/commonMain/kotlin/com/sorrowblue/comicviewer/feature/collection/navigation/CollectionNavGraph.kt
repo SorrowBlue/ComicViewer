@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.feature.collection.list.CollectionList
 import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import kotlin.reflect.KClass
 import kotlinx.serialization.Serializable
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 @NavGraph(
     startDestination = CollectionList::class,
@@ -30,7 +30,7 @@ import org.koin.core.annotation.Single
 @Serializable
 data object CollectionNavGraph
 
-@Single
+@Singleton
 internal class CollectionNavGraphTabDisplayRoute : TabDisplayRoute {
     override val routes: List<KClass<*>> =
         listOf(Collection::class, CollectionList::class, CollectionFolder::class)

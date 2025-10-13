@@ -5,12 +5,12 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import kotlinx.cinterop.ExperimentalForeignApi
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-@Single
+@Singleton
 internal actual class DatabaseHelper actual constructor(context: PlatformContext) {
 
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {

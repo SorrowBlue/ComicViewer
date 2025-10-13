@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.framework.ui
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 expect class NotificationManager(context: PlatformContext) {
 
     fun toast(text: String, length: Int)

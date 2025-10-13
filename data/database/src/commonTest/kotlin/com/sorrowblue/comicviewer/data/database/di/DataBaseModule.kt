@@ -10,7 +10,7 @@ import kotlinx.coroutines.IO
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Configuration
 import org.koin.core.annotation.Module
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
 @Module
 @Configuration
@@ -21,7 +21,7 @@ internal class DatabaseModule
 @Configuration
 internal class OverrideDatabaseModule {
 
-    @Single
+    @Singleton
     internal fun providesRoomDatabaseForTest(
         helper: TestDatabaseHelper,
         decryptedPasswordConverters: DecryptedPasswordConverters,
@@ -34,6 +34,6 @@ internal class OverrideDatabaseModule {
             .build()
     }
 
-    @Single
+    @Singleton
     fun providesFakeCryptUtil(): CryptUtil = FakeCryptUtil()
 }

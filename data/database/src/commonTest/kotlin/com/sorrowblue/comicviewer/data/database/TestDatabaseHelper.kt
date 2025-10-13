@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.data.database
 
 import androidx.room.RoomDatabase
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal expect class TestDatabaseHelper() {
     fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase>
 }

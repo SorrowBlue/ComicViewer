@@ -7,9 +7,9 @@ import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.createDirectories
 import logcat.logcat
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 
-@Single
+@Singleton
 internal actual class DatabaseHelper actual constructor(private val context: PlatformContext) {
 
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {

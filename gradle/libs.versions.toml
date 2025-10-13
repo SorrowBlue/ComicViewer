@@ -128,6 +128,7 @@ koin-androidxCompose = { group = "io.insert-koin", name = "koin-androidx-compose
 koin-androidxStartup = { group = "io.insert-koin", name = "koin-androidx-startup", version.ref = "koin" }
 koin-androidxWorkmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
+koin-jsr330 = { group = "io.insert-koin", name = "koin-jsr330", version.ref = "koin-annotations" }
 koin-composeViewModel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-kspCompiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }

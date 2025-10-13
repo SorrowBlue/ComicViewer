@@ -4,7 +4,7 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 import org.koin.mp.KoinPlatform
 
 @Suppress("UnnecessaryAbstractClass")
@@ -18,7 +18,7 @@ abstract class DesktopContext {
     }
 }
 
-@Single
+@Singleton
 internal class DesktopContextImpl : DesktopContext() {
 
     private val os by lazy { System.getProperty("os.name").lowercase() }

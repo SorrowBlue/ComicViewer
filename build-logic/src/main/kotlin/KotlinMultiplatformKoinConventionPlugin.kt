@@ -20,6 +20,7 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
                 sourceSets.commonMain.dependencies {
                     implementation(libs.koin.core)
                     implementation(libs.koin.annotations)
+                    implementation(libs.koin.jsr330)
                 }
                 sourceSets.androidUnitTest.dependencies {
                     implementation(libs.koin.androidxCompose)

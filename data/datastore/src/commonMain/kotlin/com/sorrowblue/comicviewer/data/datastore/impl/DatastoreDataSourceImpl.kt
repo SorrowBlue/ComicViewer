@@ -23,10 +23,10 @@ import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Qualifier
-import org.koin.core.annotation.Single
+import jakarta.inject.Singleton
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Settings as GlobalSettings
 
-@Single
+@Singleton
 internal class DatastoreDataSourceImpl(
     @Qualifier(GlobalSettings::class) private val settingsDataStore: DataStore<Settings>,
     @Qualifier(Display::class) private val displaySettingsDataStore: DataStore<DisplaySettings>,
