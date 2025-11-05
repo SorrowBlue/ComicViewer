@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
@@ -39,10 +40,10 @@ import org.jetbrains.compose.resources.getString
 import comicviewer.framework.ui.generated.resources.Res as UiRes
 
 @Composable
-internal actual fun rememberSecuritySettingsScreenState(
-    scope: CoroutineScope,
-    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
-): SecuritySettingsScreenState {
+context(context: SecuritySettingsScreenContext)
+internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScreenState {
+    val scope = rememberCoroutineScope()
+    val manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val state = remember {

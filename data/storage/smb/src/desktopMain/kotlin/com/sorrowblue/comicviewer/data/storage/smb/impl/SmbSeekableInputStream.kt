@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.storage.smb.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import jcifs.SmbConstants
-import jcifs.smb.SmbFile
+import org.codelibs.jcifs.smb.SmbConstants
+import org.codelibs.jcifs.smb.impl.SmbFile
 
 internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) :
     SeekableInputStream {

@@ -4,10 +4,10 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionUseCase
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
-import org.koin.core.annotation.Factory
 
-@Factory
+@Inject
 internal class PagingCollectionInteractor(
     private val dataSource: CollectionLocalDataSource,
 ) : PagingCollectionUseCase() {

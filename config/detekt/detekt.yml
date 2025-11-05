@@ -15,8 +15,9 @@ exceptions:
   TooGenericExceptionCaught:
     active: false
 
-formatting:
+ktlint:
   active: true
+  code_style: 'android_studio'
   ImportOrdering:
     active: true
     layout: '*,^'
@@ -52,30 +53,30 @@ style:
     active: false
   ReturnCount:
     active: false
-  UnusedPrivateMember:
-    ignoreAnnotated:
-      - 'Preview'
-      - 'PreviewMultiScreen'
-      - 'PreviewLightDark'
-      - 'PreviewMultiScreenFixedWidth'
-      - 'PreviewMultiScreenDarkFixedWidth'
+#  UnusedPrivateMember:
+#    ignoreAnnotated:
+#      - 'Preview'
+#      - 'PreviewMultiScreen'
+#      - 'PreviewLightDark'
+#      - 'PreviewMultiScreenFixedWidth'
+#      - 'PreviewMultiScreenDarkFixedWidth'
 
 # https://mrmans0n.github.io/compose-rules/detekt/
 Compose:
   CompositionLocalAllowlist:
     active: true
-    allowedCompositionLocals:
-      - 'LocalScrollbarStyle'
-      - 'LocalDimension'
-      - 'LocalContainerColor'
-      - 'LocalNavigationState'
-      - 'LocalCanonicalScaffoldBound'
-      - 'LocalDestinationScope'
-      - 'LocalCoroutineScope'
-      - 'LocalAppLocaleIso'
-      - 'LocalAppLocaleIsoInternal'
-      - 'LocalDefaultLanguage'
-      - 'LocalAppState'
+#    allowedCompositionLocals:
+#      - 'LocalScrollbarStyle'
+#      - 'LocalDimension'
+#      - 'LocalContainerColor'
+#      - 'LocalNavigationState'
+#      - 'LocalCanonicalScaffoldBound'
+#      - 'LocalDestinationScope'
+#      - 'LocalCoroutineScope'
+#      - 'LocalAppLocaleIso'
+#      - 'LocalAppLocaleIsoInternal'
+#      - 'LocalDefaultLanguage'
+#      - 'LocalAppState'
     # You can optionally define a list of CompositionLocals that are allowed here
     # allowedCompositionLocals: LocalSomething,LocalSomethingElse
   ContentEmitterReturningValues:
@@ -86,8 +87,8 @@ Compose:
     active: true
   ModifierClickableOrder:
     active: true
-  ModifierComposable:
-    active: true
+#  ModifierComposable:
+#    active: true
   ModifierMissing:
     active: true
     # You can optionally control the visibility of which composables to check for here
@@ -127,9 +128,9 @@ Compose:
     active: false
   ViewModelForwarding:
     active: true
-    allowedStateHolderNames:
-      - '.*ScreenState'
-      - '.*ScreenStateImpl'
+#    allowedStateHolderNames:
+#      - '.*ScreenState'
+#      - '.*ScreenStateImpl'
     # You can optionally use this rule on things other than types ending in "ViewModel" or "Presenter" (which are the defaults). You can add your own via a regex here:
     # allowedStateHolderNames: .*ViewModel,.*Presenter
   ViewModelInjection:

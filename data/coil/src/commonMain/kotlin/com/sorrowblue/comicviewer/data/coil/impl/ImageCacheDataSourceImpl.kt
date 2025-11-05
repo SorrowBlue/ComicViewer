@@ -13,9 +13,12 @@ import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
-import jakarta.inject.Singleton
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 
-@Singleton
+@ContributesBinding(DataScope::class)
+@Inject
 internal class ImageCacheDataSourceImpl(
     private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
     private val imageCacheDiskCache: Lazy<DiskCache>,

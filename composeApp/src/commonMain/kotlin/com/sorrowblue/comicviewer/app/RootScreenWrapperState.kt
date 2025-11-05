@@ -8,6 +8,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.GraphExtension
+import dev.zacsweers.metro.Scope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -16,7 +20,6 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.compose.koinInject
 
 sealed interface AuthStatus {
     data object Unknown : AuthStatus
@@ -24,17 +27,31 @@ sealed interface AuthStatus {
     data object NoAuthRequired : AuthStatus
 }
 
+
+@Scope
+annotation class RootScreenWrapperScope
+
+@GraphExtension(RootScreenWrapperScope::class)
+interface RootScreenWrapperContext {
+    val loadSettingsUseCase: LoadSettingsUseCase
+    val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase
+
+    @ContributesTo(AppScope::class)
+    @GraphExtension.Factory
+    fun interface Factory {
+        fun createRootScreenWrapperContext(): RootScreenWrapperContext
+    }
+}
+
 @Composable
-internal fun rememberRootScreenWrapperState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    loadSettingsUseCase: LoadSettingsUseCase = koinInject(),
-    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase = koinInject(),
-): RootScreenWrapperState {
+context(context: RootScreenWrapperContext)
+internal fun rememberRootScreenWrapperState(): RootScreenWrapperState {
+    val coroutineScope = rememberCoroutineScope()
     return remember {
         RootScreenWrapperStateImpl(
-            scope = scope,
-            loadSettingsUseCase = loadSettingsUseCase,
-            manageSecuritySettingsUseCase = manageSecuritySettingsUseCase
+            scope = coroutineScope,
+            loadSettingsUseCase = context.loadSettingsUseCase,
+            manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
         )
     }
 }

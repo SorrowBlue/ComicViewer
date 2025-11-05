@@ -11,25 +11,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import com.sorrowblue.comicviewer.feature.authentication.Authentication
-import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreen
-import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenNavigator
-import com.sorrowblue.comicviewer.feature.authentication.ScreenType
-import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import logcat.logcat
-import org.koin.compose.viewmodel.koinViewModel
 
 private const val TAG = "RootScreenWrapper"
 
 @Composable
+context(context: RootScreenWrapperContext)
 internal fun RootScreenWrapper(
     finishApp: () -> Unit,
-    viewModel: MainViewModel = koinViewModel(),
+    viewModel: MainViewModel = viewModel(),
     content: @Composable () -> Unit,
 ) {
     val isInitialized by viewModel.isInitialized.collectAsState()
@@ -41,7 +36,7 @@ internal fun RootScreenWrapper(
         }
     }
     if (state.tutorialRequired) {
-        TutorialScreen(navigator = state::onTutorialComplete)
+        // TODO TutorialScreenRoot(navigator = state::onTutorialComplete)
         SideEffect {
             viewModel.shouldKeepSplash.value = false
         }
@@ -57,15 +52,15 @@ internal fun RootScreenWrapper(
                     enter = slideInVertically { it },
                     exit = slideOutVertically { it }
                 ) {
-                    AuthenticationScreen(
-                        route = Authentication(ScreenType.Authenticate),
-                        navigator = remember {
-                            object : AuthenticationScreenNavigator {
-                                override fun navigateUp() = finishApp()
-                                override fun onCompleted() = state.onAuthComplete()
-                            }
-                        }
-                    )
+//                    TODO AuthenticationScreen(
+//                        route = Authentication(ScreenType.Authenticate),
+//                        navigator = remember {
+//                            object : AuthenticationScreenNavigator {
+//                                override fun navigateUp() = finishApp()
+//                                override fun onCompleted() = state.onAuthComplete()
+//                            }
+//                        }
+//                    )
                     SideEffect {
                         viewModel.shouldKeepSplash.value = false
                     }

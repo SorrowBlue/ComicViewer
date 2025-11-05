@@ -16,10 +16,10 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
             entity = FileEntity::class,
             parentColumns = [FileEntity.PATH, FileEntity.BOOKSHELF_ID],
             childColumns = [ReadLaterFileEntity.FILE_PATH, ReadLaterFileEntity.BOOKSHELF_ID],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
-    indices = [Index(value = [ReadLaterFileEntity.FILE_PATH, ReadLaterFileEntity.BOOKSHELF_ID])]
+    indices = [Index(value = [ReadLaterFileEntity.FILE_PATH, ReadLaterFileEntity.BOOKSHELF_ID])],
 )
 internal data class ReadLaterFileEntity(
     @ColumnInfo(FILE_PATH) val filePath: String,
@@ -29,11 +29,11 @@ internal data class ReadLaterFileEntity(
     companion object {
         const val FILE_PATH = "file_path"
         const val BOOKSHELF_ID = "bookshelf_id"
-        fun fromModel(model: ReadLaterFile) =
-            ReadLaterFileEntity(
-                filePath = model.path,
-                bookshelfId = model.bookshelfId,
-                modifiedDate = model.modifiedDate
-            )
+
+        fun fromModel(model: ReadLaterFile) = ReadLaterFileEntity(
+            filePath = model.path,
+            bookshelfId = model.bookshelfId,
+            modifiedDate = model.modifiedDate,
+        )
     }
 }

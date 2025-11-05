@@ -32,9 +32,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import coil3.Bitmap
-import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.PluginManager
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -51,8 +50,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import kotlinx.serialization.Serializable
-import org.koin.compose.koinInject
 import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
 internal sealed interface BookScreenUiState {
@@ -69,44 +66,25 @@ internal sealed interface BookScreenUiState {
     ) : BookScreenUiState
 }
 
-interface BookScreenNavigator {
-    fun navigateUp()
-    fun onSettingsClick()
-    fun onNextBookClick(book: BookFile, collectionId: CollectionId)
-    fun onContainerLongClick()
-}
-
-@Serializable
-data class Book(
-    val bookshelfId: BookshelfId,
-    val path: String,
-    val name: String,
-    val collectionId: CollectionId = CollectionId(),
-)
-
-@Destination<Book>
-@Composable
-internal fun BookScreen(route: Book, navigator: BookScreenNavigator = koinInject()) {
-    BookScreen(
-        route = route,
-        onBackClick = navigator::navigateUp,
-        onSettingsClick = navigator::onSettingsClick,
-        onNextBookClick = navigator::onNextBookClick,
-        onContainerLongClick = navigator::onContainerLongClick,
-    )
-}
-
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun BookScreen(
-    route: Book,
+context(context: BookScreenContext)
+fun BookScreen(
+    bookshelfId: BookshelfId,
+    path: String,
+    name: String,
+    collectionId: CollectionId,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onNextBookClick: (BookFile, CollectionId) -> Unit,
     onContainerLongClick: () -> Unit,
-    loadingState: BookLoadingScreenState = rememberBookLoadingScreenState(route = route),
 ) {
-    val pluginManager: PluginManager = koinInject()
+    val prepareScreenState = rememberBookPrepareScreenState(
+        bookshelfId = bookshelfId,
+        path = path,
+        name = name,
+        collectionId = collectionId
+    )
     var error by remember { mutableStateOf("") }
     DisposableEffect(Unit) {
         val callback = object : PluginManager.Callback {
@@ -114,9 +92,9 @@ private fun BookScreen(
                 error = msg
             }
         }
-        pluginManager.addCallback(callback)
+        context.pluginManager.addCallback(callback)
         onDispose {
-            pluginManager.removeCallback(callback)
+            context.pluginManager.removeCallback(callback)
         }
     }
 
@@ -144,15 +122,15 @@ private fun BookScreen(
         Surface(
             modifier = Modifier.fillMaxSize()
                 .sharedBounds(
-                    rememberSharedContentState("${route.bookshelfId}:${route.path}"),
-                    LocalAnimatedContentScope.current,
+                    rememberSharedContentState("${bookshelfId}:${path}"),
+                    LocalNavAnimatedContentScope.current,
                     enter = materialFadeThroughIn(),
                     exit = materialFadeThroughOut(),
                     boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
                     resizeMode = scaleToBounds(ContentScale.Fit, Center),
                 )
         ) {
-            when (val uiState = loadingState.uiState) {
+            when (val uiState = prepareScreenState.uiState) {
                 is BookScreenUiState.Loading ->
                     BookLoadingScreen(uiState = uiState, onBackClick = onBackClick)
 
@@ -166,7 +144,7 @@ private fun BookScreen(
                         pagerState = state.pagerState,
                         currentList = state.currentList,
                         onBackClick = onBackClick,
-                        onNextBookClick = { onNextBookClick(it, route.collectionId) },
+                        onNextBookClick = { onNextBookClick(it, collectionId) },
                         onContainerClick = state::toggleTooltip,
                         onContainerLongClick = onContainerLongClick,
                         onPageChange = state::onPageChange,

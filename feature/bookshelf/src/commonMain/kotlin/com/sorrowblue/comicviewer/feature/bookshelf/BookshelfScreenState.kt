@@ -2,84 +2,60 @@ package com.sorrowblue.comicviewer.feature.bookshelf
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.ViewModel
+import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditDialogState
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
+import com.sorrowblue.comicviewer.framework.ui.rememberAdaptiveNavigationSuiteScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import logcat.logcat
-import org.koin.android.annotation.KoinViewModel
-import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 
-internal interface BookshelfScreenState {
+interface BookshelfScreenState {
     val bookshelfEditDialogState: BookshelfEditDialogState
-    val pagingItems: LazyPagingItems<BookshelfFolder>
-    val scaffoldState: CanonicalScaffoldState<BookshelfId>
+    val lazyPagingItems: LazyPagingItems<BookshelfFolder>
+    val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyGridState: LazyGridState
-    fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder)
     fun onNavItemReSelected()
-    fun onSheetCloseClick()
     fun onFabClick()
     fun onEditClick(id: BookshelfId, type: BookshelfType)
 }
 
-@KoinViewModel
-class CommonViewModel : ViewModel()
-
 @Composable
-internal fun rememberBookshelfScreenState(
-    viewModel: BookshelfViewModel = koinViewModel(),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    lazyGridState: LazyGridState = rememberLazyGridState(),
-): BookshelfScreenState {
-    val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    logcat("pagingItems") { "pagingItems $pagingItems" }
-    val stateImpl = remember(scope, lazyGridState) {
-        BookshelfScreenStateImpl(
-            scope = scope,
-            lazyGridState = lazyGridState,
-        )
+context(context: BookshelfScreenContext)
+internal fun rememberBookshelfScreenState(): BookshelfScreenState {
+    val stateImpl = remember {
+        BookshelfScreenStateImpl()
+    }.apply {
+        scope = rememberCoroutineScope()
+        lazyGridState = rememberLazyGridState()
+        lazyPagingItems = rememberPagingItems {
+            context.pagingBookshelfFolderUseCase(
+                PagingBookshelfFolderUseCase.Request(
+                    PagingConfig(
+                        20
+                    )
+                )
+            )
+        }
+        scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     }
-    stateImpl.bookshelfEditDialogState = koinInject()
-    stateImpl.pagingItems = pagingItems
-    stateImpl.scaffoldState =
-        rememberCanonicalScaffoldState(onReSelect = stateImpl::onNavItemReSelected)
     return stateImpl
 }
 
-private class BookshelfScreenStateImpl(
-    override val lazyGridState: LazyGridState,
-    private val scope: CoroutineScope,
-) : BookshelfScreenState {
+private class BookshelfScreenStateImpl : BookshelfScreenState {
+    override lateinit var lazyGridState: LazyGridState
+    lateinit var scope: CoroutineScope
+    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
     override lateinit var bookshelfEditDialogState: BookshelfEditDialogState
-    override lateinit var pagingItems: LazyPagingItems<BookshelfFolder>
-    override lateinit var scaffoldState: CanonicalScaffoldState<BookshelfId>
-
-    override fun onBookshelfInfoClick(bookshelfFolder: BookshelfFolder) {
-        scope.launch {
-            scaffoldState.navigator.navigateTo(
-                SupportingPaneScaffoldRole.Extra,
-                bookshelfFolder.bookshelf.id
-            )
-        }
-    }
-
-    override fun onSheetCloseClick() {
-        scope.launch {
-            scaffoldState.navigator.navigateBack()
-        }
-    }
+    override lateinit var lazyPagingItems: LazyPagingItems<BookshelfFolder>
 
     override fun onNavItemReSelected() {
         if (lazyGridState.canScrollBackward) {

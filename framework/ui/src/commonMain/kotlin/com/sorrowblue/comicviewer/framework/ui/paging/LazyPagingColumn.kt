@@ -53,7 +53,7 @@ fun <T : Any> LazyPagingColumn(
     LazyVerticalGrid(
         columns = type.columns,
         state = state,
-        contentPadding = contentPadding + padding,
+        contentPadding = contentPadding.plus(padding),
         verticalArrangement = if (fillWidth) Arrangement.Top else Arrangement.spacedBy(ComicTheme.dimension.padding),
         horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding),
         modifier = modifier

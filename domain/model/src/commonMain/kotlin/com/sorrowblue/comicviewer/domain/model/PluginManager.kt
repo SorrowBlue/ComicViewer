@@ -1,5 +1,8 @@
 package com.sorrowblue.comicviewer.domain.model
 
+import dev.zacsweers.metro.Inject
+
+@Inject
 class PluginManager {
 
     interface Callback {

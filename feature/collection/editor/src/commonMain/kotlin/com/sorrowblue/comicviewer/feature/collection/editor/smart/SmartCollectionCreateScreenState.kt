@@ -7,6 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.EmptyRequest
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
@@ -23,7 +25,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.koin.compose.koinInject
 import soil.form.FieldError
 import soil.form.FormOptions
 import soil.form.compose.Form
@@ -33,16 +34,16 @@ import soil.form.compose.rememberForm
 import soil.form.compose.rememberFormState
 
 @Composable
+context(context: SmartCollectionCreateScreenContext)
 internal fun rememberSmartCollectionCreateScreenState(
-    route: SmartCollectionCreate,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    flowBookshelfListUseCase: FlowBookshelfListUseCase = koinInject(),
-    createCollectionUseCase: CreateCollectionUseCase = koinInject(),
+    bookshelfId: BookshelfId?,
+    searchCondition: SearchCondition,
 ): SmartCollectionEditorScreenState {
+    val coroutineScope = rememberCoroutineScope()
     val formState = rememberFormState(
         initialValue = SmartCollectionForm(
-            bookshelfId = route.bookshelfId,
-            searchCondition = route.searchCondition
+            bookshelfId = bookshelfId,
+            searchCondition = searchCondition
         ),
         saver = kSerializableSaver(),
         policy = FormPolicy(FormOptions(false))
@@ -50,8 +51,8 @@ internal fun rememberSmartCollectionCreateScreenState(
     return remember {
         SmartCollectionCreateScreenStateImpl(
             coroutineScope = coroutineScope,
-            flowBookshelfListUseCase = flowBookshelfListUseCase,
-            createCollectionUseCase = createCollectionUseCase,
+            flowBookshelfListUseCase = context.flowBookshelfListUseCase,
+            createCollectionUseCase = context.createCollectionUseCase,
             formState = formState
         )
     }.apply {

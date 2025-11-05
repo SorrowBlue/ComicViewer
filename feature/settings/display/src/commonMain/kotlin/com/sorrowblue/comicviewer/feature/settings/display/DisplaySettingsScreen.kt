@@ -2,10 +2,8 @@ package com.sorrowblue.comicviewer.feature.settings.display
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -17,30 +15,7 @@ import comicviewer.feature.settings.display.generated.resources.settings_display
 import comicviewer.feature.settings.display.generated.resources.settings_display_label_show_last_folder
 import comicviewer.feature.settings.display.generated.resources.settings_display_label_system_default
 import comicviewer.feature.settings.display.generated.resources.settings_display_title
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
-
-internal interface DisplaySettingsScreenNavigator : SettingsDetailNavigator {
-    fun navigateToDarkMode()
-}
-
-@Serializable
-data object DisplaySettings
-
-@Destination<DisplaySettings>
-@Composable
-internal fun DisplaySettingsScreen(
-    navigator: DisplaySettingsScreenNavigator = koinInject(),
-    state: DisplaySettingsScreenState = rememberDisplaySettingsScreenState(),
-) {
-    DisplaySettingsScreen(
-        uiState = state.uiState,
-        onBackClick = navigator::navigateBack,
-        onRestoreOnLaunchChange = state::onRestoreOnLaunchChange,
-        onDarkModeClick = navigator::navigateToDarkMode,
-    )
-}
 
 internal data class SettingsDisplayScreenUiState(
     val darkMode: DarkMode = DarkMode.DEVICE,
@@ -48,7 +23,7 @@ internal data class SettingsDisplayScreenUiState(
 )
 
 @Composable
-private fun DisplaySettingsScreen(
+internal fun DisplaySettingsScreen(
     uiState: SettingsDisplayScreenUiState,
     onBackClick: () -> Unit,
     onRestoreOnLaunchChange: (Boolean) -> Unit,

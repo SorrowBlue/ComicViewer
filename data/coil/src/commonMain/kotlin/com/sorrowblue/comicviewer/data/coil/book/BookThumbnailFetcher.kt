@@ -19,11 +19,13 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import okio.Buffer
 import okio.BufferedSource
 import okio.use
-import jakarta.inject.Singleton
 
 internal class BookThumbnailFetcher(
     options: Options,
@@ -103,8 +105,9 @@ internal class BookThumbnailFetcher(
     }
 }
 
-@Singleton
 @com.sorrowblue.comicviewer.data.coil.BookThumbnailFetcher
+@ContributesBinding(DataScope::class)
+@Inject
 internal class BookThumbnailFetcherFactory(
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,

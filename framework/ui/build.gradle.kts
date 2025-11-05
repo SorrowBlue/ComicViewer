@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 kotlin {
@@ -18,8 +18,6 @@ kotlin {
                 // Paging
                 implementation(libs.androidx.paging.common)
                 implementation(libs.androidx.paging.compose)
-                // Di
-                implementation(libs.koin.composeViewModel)
             }
         }
         androidMain {

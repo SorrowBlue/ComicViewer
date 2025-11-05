@@ -87,7 +87,13 @@ fun ExtraPaneScaffold(
                 }
             }
         },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = if (singlePane) {
+            WindowInsets.safeDrawing
+        } else {
+            WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Vertical + WindowInsetsSides.End
+            )
+        },
         containerColor = containerColor,
         modifier = if (scrollBehavior != null) {
             modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -98,7 +104,11 @@ fun ExtraPaneScaffold(
                 }
             }
             modifier
-                .windowInsetsPadding(WindowInsets.safeDrawing.union(marginWindowInsets))
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Vertical + WindowInsetsSides.End
+                    ).union(marginWindowInsets)
+                )
                 .clip(ComicTheme.shapes.large)
         }
     ) {

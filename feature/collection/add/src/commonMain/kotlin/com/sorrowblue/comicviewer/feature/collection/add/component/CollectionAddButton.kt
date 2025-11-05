@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_add
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun CollectionAddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {

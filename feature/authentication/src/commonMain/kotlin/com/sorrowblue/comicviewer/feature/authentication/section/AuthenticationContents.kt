@@ -21,20 +21,16 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
-internal sealed interface AuthenticationContentsAction {
-    data object BackClick : AuthenticationContentsAction
-    data class PinChange(val pin: String) : AuthenticationContentsAction
-    data object NextClick : AuthenticationContentsAction
-}
-
 @Composable
 internal fun AuthenticationRowContents(
     uiState: AuthenticationScreenUiState,
-    onAction: (AuthenticationContentsAction) -> Unit,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        IconButton(onClick = { onAction(AuthenticationContentsAction.BackClick) }) {
+        IconButton(onClick = onBackClick) {
             if (uiState is AuthenticationScreenUiState.Authentication) {
                 Icon(imageVector = ComicIcons.Close, contentDescription = null)
             } else {
@@ -55,20 +51,20 @@ internal fun AuthenticationRowContents(
                 Spacer(Modifier.size(ComicTheme.dimension.padding))
                 Text(
                     text =
-                    when (uiState) {
-                        is AuthenticationScreenUiState.Authentication -> ""
-                        is AuthenticationScreenUiState.Change -> "PINを変更"
-                        is AuthenticationScreenUiState.Erase -> "PINを削除"
-                        is AuthenticationScreenUiState.Register -> "PINを登録"
-                    },
+                        when (uiState) {
+                            is AuthenticationScreenUiState.Authentication -> ""
+                            is AuthenticationScreenUiState.Change -> "PINを変更"
+                            is AuthenticationScreenUiState.Erase -> "PINを削除"
+                            is AuthenticationScreenUiState.Register -> "PINを登録"
+                        },
                     style = ComicTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                 )
             }
             InputContents(
                 uiState = uiState,
-                onPinChange = { onAction(AuthenticationContentsAction.PinChange(it)) },
-                onNextClick = { onAction(AuthenticationContentsAction.NextClick) },
+                onPinChange = onPinChange,
+                onNextClick = onNextClick,
                 modifier = Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically)
@@ -80,7 +76,9 @@ internal fun AuthenticationRowContents(
 @Composable
 internal fun AuthenticationColumnContents(
     uiState: AuthenticationScreenUiState,
-    onAction: (AuthenticationContentsAction) -> Unit,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -88,7 +86,7 @@ internal fun AuthenticationColumnContents(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconButton(
-            onClick = { onAction(AuthenticationContentsAction.BackClick) },
+            onClick = onBackClick,
             modifier = Modifier.align(Alignment.Start)
         ) {
             if (uiState is AuthenticationScreenUiState.Authentication) {
@@ -110,12 +108,12 @@ internal fun AuthenticationColumnContents(
             Spacer(Modifier.size(ComicTheme.dimension.padding))
             Text(
                 text =
-                when (uiState) {
-                    is AuthenticationScreenUiState.Authentication -> ""
-                    is AuthenticationScreenUiState.Change -> "PINを変更"
-                    is AuthenticationScreenUiState.Erase -> "PINを削除"
-                    is AuthenticationScreenUiState.Register -> "PINを登録"
-                },
+                    when (uiState) {
+                        is AuthenticationScreenUiState.Authentication -> ""
+                        is AuthenticationScreenUiState.Change -> "PINを変更"
+                        is AuthenticationScreenUiState.Erase -> "PINを削除"
+                        is AuthenticationScreenUiState.Register -> "PINを登録"
+                    },
                 style = ComicTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
             )
@@ -127,8 +125,8 @@ internal fun AuthenticationColumnContents(
         ) {
             InputContents(
                 uiState = uiState,
-                onPinChange = { onAction(AuthenticationContentsAction.PinChange(it)) },
-                onNextClick = { onAction(AuthenticationContentsAction.NextClick) },
+                onPinChange = onPinChange,
+                onNextClick = onNextClick,
             )
         }
     }

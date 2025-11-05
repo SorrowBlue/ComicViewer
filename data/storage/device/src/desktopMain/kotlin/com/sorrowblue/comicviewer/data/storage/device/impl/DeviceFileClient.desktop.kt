@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.storage.device.impl
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClient
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.extension
@@ -12,6 +11,9 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import java.io.RandomAccessFile
 import java.nio.file.Files
 import java.nio.file.Path
@@ -26,15 +28,18 @@ import okio.BufferedSource
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.buffer
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.InjectedParam
 
-@Factory
-@DeviceFileClient
-internal class DeviceFileClient(
-    @InjectedParam override val bookshelf: InternalStorage,
+@AssistedInject
+internal actual class DeviceFileClient(
+    @Assisted actual override val bookshelf: InternalStorage,
 ) : FileClient<InternalStorage> {
-    override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
+
+    @AssistedFactory
+    actual fun interface Factory : FileClient.Factory<InternalStorage> {
+        actual override fun create(bookshelf: InternalStorage): DeviceFileClient
+    }
+
+    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         logcat { "listFiles(file.path=${file.path}, resolveImageFolder=$resolveImageFolder)" }
         return kotlin.runCatching {
             Files.list(file.path.toPath().toNioPath()).map { it.toFileModel(resolveImageFolder) }
@@ -49,25 +54,25 @@ internal class DeviceFileClient(
         }
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         logcat { "exists(path=$path)" }
         return path.toPath().toNioPath().exists()
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         logcat { "current(path=$path, resolveImageFolder=$resolveImageFolder)" }
         return path.toPath().toNioPath().toFileModel(resolveImageFolder)
     }
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         return FileSystem.SYSTEM.source(file.path.toPath()).buffer()
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return LocalFileSeekableInputStream(file.path.toPath().toNioPath())
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         logcat { "connect(path=$path)" }
         kotlin.runCatching {
             path.toPath().toNioPath().exists()
@@ -85,7 +90,7 @@ internal class DeviceFileClient(
         }
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         TODO("Not yet implemented")
     }
 

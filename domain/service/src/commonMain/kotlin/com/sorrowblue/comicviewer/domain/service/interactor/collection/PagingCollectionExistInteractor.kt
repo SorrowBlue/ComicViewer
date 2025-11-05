@@ -6,12 +6,12 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.koin.core.annotation.Factory
 
-@Factory
+@Inject
 internal class PagingCollectionExistInteractor(
     private val dataSource: CollectionLocalDataSource,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,

@@ -8,11 +8,10 @@ import coil3.request.allowRgb565
 import coil3.request.bitmapConfig
 import com.sorrowblue.comicviewer.data.coil.BaseCoilInitializer
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
-import org.koin.androix.startup.KoinInitializer
 
 internal class CoilInitializer : BaseCoilInitializer(), Initializer<Unit> {
 
-    override fun create(context: Context) = initialize()
+    override fun create(context: Context) = initialize(context)
 
     override fun ImageLoader.Builder.setup() {
         allowRgb565(true)
@@ -21,6 +20,6 @@ internal class CoilInitializer : BaseCoilInitializer(), Initializer<Unit> {
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
         @Suppress("OPT_IN_USAGE")
-        return listOf(LogcatInitializer::class.java, KoinInitializer::class.java)
+        return listOf(LogcatInitializer::class.java)
     }
 }

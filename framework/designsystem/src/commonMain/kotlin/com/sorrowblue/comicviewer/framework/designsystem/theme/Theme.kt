@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.framework.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.framework.designsystem.locale.ProvideLocalAppLocaleIso
 
@@ -27,17 +28,28 @@ fun ComicTheme(
                 windowSizeClass.isWidthAtLeastBreakpoint(
                     WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND
                 ) -> expandedDimension
+
                 windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> mediumDimension
                 else -> compactDimension
             }
         )
     }
-    CompositionLocalProvider(LocalDimension provides dimension, ProvideLocalAppLocaleIso) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = AppTypography,
-            content = content
-        )
+    if (LocalInspectionMode.current) {
+        CompositionLocalProvider(LocalDimension provides dimension) {
+            MaterialExpressiveTheme(
+                colorScheme = colorScheme,
+                typography = AppTypography,
+                content = content
+            )
+        }
+    } else {
+        CompositionLocalProvider(LocalDimension provides dimension, ProvideLocalAppLocaleIso) {
+            MaterialExpressiveTheme(
+                colorScheme = colorScheme,
+                typography = AppTypography,
+                content = content
+            )
+        }
     }
 }
 

@@ -6,9 +6,9 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
-import org.koin.core.annotation.Factory
+import dev.zacsweers.metro.Inject
 
-@Factory
+@Inject
 internal class GetOtherImageCacheInfoInteractor(
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,

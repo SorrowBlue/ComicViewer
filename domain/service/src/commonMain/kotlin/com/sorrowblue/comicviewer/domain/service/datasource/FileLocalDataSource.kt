@@ -4,7 +4,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
@@ -92,20 +91,6 @@ interface FileLocalDataSource {
     fun pagingSource(
         bookshelfId: BookshelfId,
         pagingConfig: PagingConfig,
-    ): Flow<PagingData<BookThumbnail>>
-
-    fun pagingDataFlow(
-        pagingConfig: PagingConfig,
-        bookshelf: Bookshelf,
-        file: File,
-        searchCondition: () -> SearchCondition,
-    ): Flow<PagingData<File>>
-
-    fun pagingSourceBookThumbnail(
-        pagingConfig: PagingConfig,
-        bookshelf: Bookshelf,
-        file: File,
-        searchCondition: () -> SearchCondition,
     ): Flow<PagingData<BookThumbnail>>
 
     fun flow(bookshelfId: BookshelfId, path: String): Flow<File?>

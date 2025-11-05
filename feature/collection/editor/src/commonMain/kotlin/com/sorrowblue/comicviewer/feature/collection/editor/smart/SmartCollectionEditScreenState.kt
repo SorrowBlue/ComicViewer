@@ -8,6 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
@@ -26,7 +27,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.koin.compose.koinInject
 import soil.form.FieldError
 import soil.form.compose.Form
 import soil.form.compose.FormState
@@ -34,33 +34,31 @@ import soil.form.compose.rememberForm
 import soil.form.compose.rememberFormState
 
 @Composable
+context(context: SmartCollectionEditScreenContext)
 internal fun rememberSmartCollectionEditScreenState(
-    route: SmartCollectionEdit,
-    scope: CoroutineScope = rememberCoroutineScope(),
-    flowBookshelfListUseCase: FlowBookshelfListUseCase = koinInject(),
-    updateCollectionUseCase: UpdateCollectionUseCase = koinInject(),
-    getCollectionUseCase: GetCollectionUseCase = koinInject(),
+    collectionId: CollectionId,
 ): SmartCollectionEditorScreenState {
+    val scope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
     return rememberSaveable(
         saver = SmartCollectionEditScreenImpl.saver(
-            route = route,
+            collectionId = collectionId,
             scope = scope,
             formState = formState,
-            flowBookshelfListUseCase = flowBookshelfListUseCase,
-            getCollectionUseCase = getCollectionUseCase,
-            updateCollectionUseCase = updateCollectionUseCase
+            flowBookshelfListUseCase = context.flowBookshelfListUseCase,
+            getCollectionUseCase = context.getCollectionUseCase,
+            updateCollectionUseCase = context.updateCollectionUseCase
         )
     ) {
         SmartCollectionEditScreenImpl(
             isDataLoaded = false,
-            route = route,
+            collectionId = collectionId,
             coroutineScope = scope,
             formState = formState,
-            flowBookshelfListUseCase = flowBookshelfListUseCase,
-            updateCollectionUseCase = updateCollectionUseCase,
-            getCollectionUseCase = getCollectionUseCase,
+            flowBookshelfListUseCase = context.flowBookshelfListUseCase,
+            updateCollectionUseCase = context.updateCollectionUseCase,
+            getCollectionUseCase = context.getCollectionUseCase,
         )
     }.apply {
         this.formState = formState
@@ -71,7 +69,7 @@ internal fun rememberSmartCollectionEditScreenState(
 
 private class SmartCollectionEditScreenImpl(
     var isDataLoaded: Boolean,
-    private val route: SmartCollectionEdit,
+    private val collectionId: CollectionId,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
     private val getCollectionUseCase: GetCollectionUseCase,
     var coroutineScope: CoroutineScope,
@@ -81,7 +79,7 @@ private class SmartCollectionEditScreenImpl(
     companion object {
 
         fun saver(
-            route: SmartCollectionEdit,
+            collectionId: CollectionId,
             scope: CoroutineScope,
             formState: FormState<SmartCollectionForm>,
             flowBookshelfListUseCase: FlowBookshelfListUseCase,
@@ -92,7 +90,7 @@ private class SmartCollectionEditScreenImpl(
             restore = {
                 SmartCollectionEditScreenImpl(
                     isDataLoaded = it,
-                    route = route,
+                    collectionId = collectionId,
                     coroutineScope = scope,
                     flowBookshelfListUseCase = flowBookshelfListUseCase,
                     getCollectionUseCase = getCollectionUseCase,
@@ -113,7 +111,7 @@ private class SmartCollectionEditScreenImpl(
         if (!isDataLoaded) {
             coroutineScope.launch {
                 uiState = uiState.copy(enabledForm = false)
-                getCollectionUseCase(GetCollectionUseCase.Request(route.collectionId))
+                getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
                     .first().fold(
                         onSuccess = { collection ->
                             require(collection is SmartCollection)
@@ -156,7 +154,7 @@ private class SmartCollectionEditScreenImpl(
             uiState = uiState.copy(enabledForm = false)
             delay(1000)
             val collection =
-                getCollectionUseCase(GetCollectionUseCase.Request(route.collectionId)).first()
+                getCollectionUseCase(GetCollectionUseCase.Request(collectionId)).first()
                     .dataOrNull() as SmartCollection
             updateCollectionUseCase(
                 UpdateCollectionUseCase.Request(

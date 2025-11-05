@@ -20,58 +20,56 @@ internal data class SearchConditionEntity(
     }
 
     enum class SortType {
-        Name, Date, Size
+        Name,
+        Date,
+        Size,
     }
 
-    fun toModel(): SearchCondition {
-        return SearchCondition(
-            query = query,
-            range = when (range) {
-                Range.Bookshelf -> SearchCondition.Range.Bookshelf
-                Range.InFolder -> SearchCondition.Range.InFolder(rangeParent)
-                Range.SubFolder -> SearchCondition.Range.SubFolder(rangeParent)
-            },
-            period = period,
-            sortType = when (sortType) {
-                SortType.Name -> SortTypeModel.Name(
-                    sortTypeAsc
-                )
+    fun toModel(): SearchCondition = SearchCondition(
+        query = query,
+        range = when (range) {
+            Range.Bookshelf -> SearchCondition.Range.Bookshelf
+            Range.InFolder -> SearchCondition.Range.InFolder(rangeParent)
+            Range.SubFolder -> SearchCondition.Range.SubFolder(rangeParent)
+        },
+        period = period,
+        sortType = when (sortType) {
+            SortType.Name -> SortTypeModel.Name(
+                sortTypeAsc,
+            )
 
-                SortType.Date -> SortTypeModel.Date(
-                    sortTypeAsc
-                )
+            SortType.Date -> SortTypeModel.Date(
+                sortTypeAsc,
+            )
 
-                SortType.Size -> SortTypeModel.Size(
-                    sortTypeAsc
-                )
-            },
-            showHidden = showHidden
-        )
-    }
+            SortType.Size -> SortTypeModel.Size(
+                sortTypeAsc,
+            )
+        },
+        showHidden = showHidden,
+    )
 
     companion object {
-        fun fromModel(model: SearchCondition): SearchConditionEntity {
-            return SearchConditionEntity(
-                query = model.query,
-                range = when (model.range) {
-                    SearchCondition.Range.Bookshelf -> Range.Bookshelf
-                    is SearchCondition.Range.InFolder -> Range.InFolder
-                    is SearchCondition.Range.SubFolder -> Range.SubFolder
-                },
-                rangeParent = when (val range = model.range) {
-                    SearchCondition.Range.Bookshelf -> ""
-                    is SearchCondition.Range.InFolder -> range.parent
-                    is SearchCondition.Range.SubFolder -> range.parent
-                },
-                period = model.period,
-                sortType = when (model.sortType) {
-                    is SortTypeModel.Name -> SortType.Name
-                    is SortTypeModel.Date -> SortType.Date
-                    is SortTypeModel.Size -> SortType.Size
-                },
-                sortTypeAsc = model.sortType.isAsc,
-                showHidden = model.showHidden,
-            )
-        }
+        fun fromModel(model: SearchCondition): SearchConditionEntity = SearchConditionEntity(
+            query = model.query,
+            range = when (model.range) {
+                SearchCondition.Range.Bookshelf -> Range.Bookshelf
+                is SearchCondition.Range.InFolder -> Range.InFolder
+                is SearchCondition.Range.SubFolder -> Range.SubFolder
+            },
+            rangeParent = when (val range = model.range) {
+                SearchCondition.Range.Bookshelf -> ""
+                is SearchCondition.Range.InFolder -> range.parent
+                is SearchCondition.Range.SubFolder -> range.parent
+            },
+            period = model.period,
+            sortType = when (model.sortType) {
+                is SortTypeModel.Name -> SortType.Name
+                is SortTypeModel.Date -> SortType.Date
+                is SortTypeModel.Size -> SortType.Size
+            },
+            sortTypeAsc = model.sortType.isAsc,
+            showHidden = model.showHidden,
+        )
     }
 }

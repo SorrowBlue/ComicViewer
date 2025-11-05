@@ -8,10 +8,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import dev.zacsweers.metro.Scope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 @Stable
 internal interface DisplaySettingsScreenState {
@@ -22,34 +23,35 @@ internal interface DisplaySettingsScreenState {
 }
 
 @Composable
-internal fun rememberDisplaySettingsScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    displaySettingsUseCase: ManageDisplaySettingsUseCase = koinInject(),
-): DisplaySettingsScreenState = remember {
-    DisplaySettingsScreenStateImpl(
-        scope = scope,
-        displaySettingsUseCase = displaySettingsUseCase
-    )
+context(context: DisplaySettingsScreenContext)
+internal fun rememberDisplaySettingsScreenState(): DisplaySettingsScreenState {
+    val coroutineScope = rememberCoroutineScope()
+    return remember(coroutineScope) {
+        DisplaySettingsScreenStateImpl(
+            coroutineScope = coroutineScope,
+            displaySettingsUseCase = context.displaySettingsUseCase
+        )
+    }.apply {
+        this.coroutineScope = coroutineScope
+    }
 }
 
 private class DisplaySettingsScreenStateImpl(
-    private val scope: CoroutineScope,
     private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
+    var coroutineScope: CoroutineScope,
 ) : DisplaySettingsScreenState {
 
     override var uiState by mutableStateOf(SettingsDisplayScreenUiState())
         private set
 
     init {
-        scope.launch {
-            displaySettingsUseCase.settings.collectLatest {
-                uiState = uiState.copy(darkMode = it.darkMode, restoreOnLaunch = it.restoreOnLaunch)
-            }
-        }
+        displaySettingsUseCase.settings.onEach {
+            uiState = uiState.copy(darkMode = it.darkMode, restoreOnLaunch = it.restoreOnLaunch)
+        }.launchIn(coroutineScope)
     }
 
     override fun onRestoreOnLaunchChange(value: Boolean) {
-        scope.launch {
+        coroutineScope.launch {
             displaySettingsUseCase.edit {
                 it.copy(restoreOnLaunch = value)
             }

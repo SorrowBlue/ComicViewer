@@ -15,17 +15,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun rememberBookMenuScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookMenuViewModel = koinViewModel(),
-): BookMenuScreenState {
+context(context: BookMenuScreenContext)
+internal fun rememberBookMenuScreenState(): BookMenuScreenState {
+    val coroutineScope = rememberCoroutineScope()
     return remember {
         BookMenuScreenStateImpl(
-            scope = scope,
-            manageBookSettingsUseCase = viewModel.manageBookSettingsUseCase
+            coroutineScope = coroutineScope,
+            manageBookSettingsUseCase = context.manageBookSettingsUseCase
         )
     }
 }
@@ -37,7 +35,7 @@ internal interface BookMenuScreenState {
 }
 
 private class BookMenuScreenStateImpl(
-    private val scope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
     private val manageBookSettingsUseCase: ManageBookSettingsUseCase,
 ) : BookMenuScreenState {
 
@@ -62,11 +60,11 @@ private class BookMenuScreenStateImpl(
                     BookSettings.PageScale.FillBounds -> PageScale.FillBounds
                 }
             )
-        }.launchIn(scope)
+        }.launchIn(coroutineScope)
     }
 
     override fun onPageFormatChange(pageFormat2: PageFormat2) {
-        scope.launch {
+        coroutineScope.launch {
             manageBookSettingsUseCase.edit {
                 it.copy(
                     pageFormat = when (pageFormat2) {
@@ -81,7 +79,7 @@ private class BookMenuScreenStateImpl(
     }
 
     override fun onPageScaleChange(pageScale: PageScale) {
-        scope.launch {
+        coroutineScope.launch {
             manageBookSettingsUseCase.edit {
                 it.copy(
                     pageScale = when (pageScale) {

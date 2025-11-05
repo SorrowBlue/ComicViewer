@@ -29,10 +29,10 @@ import kotlinx.datetime.toLocalDateTime
             entity = BookshelfEntity::class,
             parentColumns = [BookshelfEntity.ID],
             childColumns = [CollectionEntity.BOOKSHELF_ID],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
-    indices = [Index(CollectionEntity.BOOKSHELF_ID)]
+    indices = [Index(CollectionEntity.BOOKSHELF_ID)],
 )
 internal data class CollectionEntity(
     @PrimaryKey(autoGenerate = true) val id: CollectionId,
@@ -43,65 +43,63 @@ internal data class CollectionEntity(
     @ColumnInfo("created_at", defaultValue = "CURRENT_TIMESTAMP") val createdAt: String,
     @ColumnInfo("updated_at", defaultValue = "CURRENT_TIMESTAMP") val updatedAt: String,
 ) {
-
     enum class Type {
         Smart,
         Basic,
     }
 
-    fun toModel(count: Int): Collection {
-        return when (type) {
-            Type.Smart -> SmartCollection(
-                id = id,
-                name = name,
-                bookshelfId = bookshelfId,
-                searchCondition = searchCondition?.toModel() ?: SearchCondition(),
-                count = count,
-                createdAt = Instant.parse(createdAt, SQLITE_DATETIME_FORMAT)
-                    .toLocalDateTime(TimeZone.UTC),
-                updatedAt = Instant.parse(updatedAt, SQLITE_DATETIME_FORMAT)
-                    .toLocalDateTime(TimeZone.UTC)
-            )
+    fun toModel(count: Int): Collection = when (type) {
+        Type.Smart -> SmartCollection(
+            id = id,
+            name = name,
+            bookshelfId = bookshelfId,
+            searchCondition = searchCondition?.toModel() ?: SearchCondition(),
+            count = count,
+            createdAt = Instant
+                .parse(createdAt, SQLITE_DATETIME_FORMAT)
+                .toLocalDateTime(TimeZone.UTC),
+            updatedAt = Instant
+                .parse(updatedAt, SQLITE_DATETIME_FORMAT)
+                .toLocalDateTime(TimeZone.UTC),
+        )
 
-            Type.Basic -> BasicCollection(
-                id = id,
-                name = name,
-                count = count,
-                createdAt = Instant.parse(createdAt, SQLITE_DATETIME_FORMAT)
-                    .toLocalDateTime(TimeZone.UTC),
-                updatedAt = Instant.parse(updatedAt, SQLITE_DATETIME_FORMAT)
-                    .toLocalDateTime(TimeZone.UTC)
-            )
-        }
+        Type.Basic -> BasicCollection(
+            id = id,
+            name = name,
+            count = count,
+            createdAt = Instant
+                .parse(createdAt, SQLITE_DATETIME_FORMAT)
+                .toLocalDateTime(TimeZone.UTC),
+            updatedAt = Instant
+                .parse(updatedAt, SQLITE_DATETIME_FORMAT)
+                .toLocalDateTime(TimeZone.UTC),
+        )
     }
 
     companion object {
-
         const val ID = "id"
         const val BOOKSHELF_ID = "bookshelf_id"
 
-        fun fromModel(model: Collection): CollectionEntity {
-            return when (model) {
-                is BasicCollection -> CollectionEntity(
-                    id = model.id,
-                    name = model.name,
-                    type = Type.Basic,
-                    bookshelfId = null,
-                    searchCondition = null,
-                    createdAt = "",
-                    updatedAt = ""
-                )
+        fun fromModel(model: Collection): CollectionEntity = when (model) {
+            is BasicCollection -> CollectionEntity(
+                id = model.id,
+                name = model.name,
+                type = Type.Basic,
+                bookshelfId = null,
+                searchCondition = null,
+                createdAt = "",
+                updatedAt = "",
+            )
 
-                is SmartCollection -> CollectionEntity(
-                    id = model.id,
-                    name = model.name,
-                    type = Type.Smart,
-                    bookshelfId = model.bookshelfId,
-                    searchCondition = SearchConditionEntity.fromModel(model.searchCondition),
-                    createdAt = "",
-                    updatedAt = ""
-                )
-            }
+            is SmartCollection -> CollectionEntity(
+                id = model.id,
+                name = model.name,
+                type = Type.Smart,
+                bookshelfId = model.bookshelfId,
+                searchCondition = SearchConditionEntity.fromModel(model.searchCondition),
+                createdAt = "",
+                updatedAt = "",
+            )
         }
 
         // YYYY-MM-DD HH:MM:SS

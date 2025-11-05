@@ -7,6 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer.Auth
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
+import com.sorrowblue.comicviewer.framework.common.platformGraph
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -19,14 +20,13 @@ import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-internal class BookshelfInsertReceiver : BroadcastReceiver(), KoinComponent {
-
-    private val registerBookshelfUseCase: RegisterBookshelfUseCase by inject()
+internal class BookshelfInsertReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
+        val factory = context.platformGraph as BookshelfInsertReceiverContext.Factory
+        val registerBookshelfUseCase =
+            factory.createBookshelfInsertReceiverContext().registerBookshelfUseCase
         logcat { "onReceive: ${intent.getStringExtra("json")}" }
         if (!intent.hasExtra("json")) return
         val jsonString = intent.getStringExtra("json") ?: return

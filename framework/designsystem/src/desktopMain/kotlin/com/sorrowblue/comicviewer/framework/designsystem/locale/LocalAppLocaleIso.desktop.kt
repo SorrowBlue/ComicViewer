@@ -9,13 +9,19 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
 import comicviewer.framework.designsystem.generated.resources.Res
 import comicviewer.framework.designsystem.generated.resources.locales
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 import java.util.Locale as JavaLocale
 
-actual object LocalAppLocaleIso {
+@SingleIn(AppScope::class)
+@Inject
+actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
 
-    private val LocalAppLocaleIsoInternal = staticCompositionLocalOf { JavaLocale.getDefault().toString() }
+    private val LocalAppLocaleIsoInternal =
+        staticCompositionLocalOf { JavaLocale.getDefault().toString() }
     private var currentLanguageTag: String? by mutableStateOf(null)
 
     @Suppress("ConstantLocale")
@@ -24,13 +30,13 @@ actual object LocalAppLocaleIso {
     actual val current: Locale?
         @Composable get() = if (currentLanguageTag.isNullOrEmpty()) null else Locale(languageTag = currentLanguageTag!!)
 
-    actual val locales
+    actual val locales: List<Locale>
         get() = runBlocking { getString(Res.string.locales) }.split(",").map {
             Locale(it)
         }
 
     actual fun set(locale: Locale?) {
-        LocaleHelper.save(locale?.platformLocale)
+        localeHelper.save(locale?.platformLocale)
         currentLanguageTag = locale?.toLanguageTag()
         // Uiに反映させる
         appLanguageTag = locale?.toLanguageTag()
@@ -42,7 +48,7 @@ actual object LocalAppLocaleIso {
             // 初回またはシステムデフォルト
             if (currentLanguageTag == null) {
                 // ファイルからロードしていないのでロード
-                currentLanguageTag = LocaleHelper.load()?.toLanguageTag().orEmpty()
+                currentLanguageTag = localeHelper.load()?.toLanguageTag().orEmpty()
             }
             if (currentLanguageTag.isNullOrEmpty()) {
                 // 保存したLocaleなし、デフォルト値を設定

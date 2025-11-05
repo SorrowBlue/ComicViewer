@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface ReadLaterFileDao {
-
     @Upsert
     suspend fun upsert(readLaterFileEntity: ReadLaterFileEntity): Long
 
@@ -25,7 +24,7 @@ internal interface ReadLaterFileDao {
     fun exists(bookshelfId: Int, path: String): Flow<Boolean>
 
     @Query(
-        "SELECT file.* FROM read_later_file INNER JOIN file ON read_later_file.bookshelf_id = file.bookshelf_id AND read_later_file.file_path = file.path ORDER BY read_later_file.modified_date ASC"
+        "SELECT file.* FROM read_later_file INNER JOIN file ON read_later_file.bookshelf_id = file.bookshelf_id AND read_later_file.file_path = file.path ORDER BY read_later_file.modified_date ASC",
     )
     fun pagingSourceReadLaterFile(): PagingSource<Int, FileEntity>
 }

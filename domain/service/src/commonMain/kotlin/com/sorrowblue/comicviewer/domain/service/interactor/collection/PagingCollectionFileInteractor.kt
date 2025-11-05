@@ -9,15 +9,15 @@ import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataS
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionFileUseCase
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.runBlocking
-import org.koin.core.annotation.Factory
 
-@Factory
+@Inject
 internal class PagingCollectionFileInteractor(
     private val dataSource: CollectionLocalDataSource,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,

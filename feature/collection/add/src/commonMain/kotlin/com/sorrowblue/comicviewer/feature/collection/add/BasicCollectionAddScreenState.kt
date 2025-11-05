@@ -8,23 +8,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
 import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
+import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
+import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 internal interface BasicCollectionAddScreenState {
 
@@ -37,32 +38,41 @@ internal interface BasicCollectionAddScreenState {
 }
 
 @Composable
+context(context: BasicCollectionAddScreenContext)
 internal fun rememberBasicCollectionAddScreenState(
-    route: BasicCollectionAdd,
+    bookshelfId: BookshelfId,
+    path: String,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     lazyListState: LazyListState = rememberLazyListState(),
-    removeCollectionFileUseCase: RemoveCollectionFileUseCase = koinInject(),
-    addCollectionFileUseCase: AddCollectionFileUseCase = koinInject(),
-    collectionSettingsUseCase: CollectionSettingsUseCase = koinInject(),
-    viewModel: BasicCollectionAddViewModel = koinViewModel { parametersOf(route) },
 ): BasicCollectionAddScreenState {
     return remember {
         BasicCollectionAddScreenStateImpl(
-            route = route,
+            bookshelfId = bookshelfId,
+            path = path,
             coroutineScope = coroutineScope,
-            removeCollectionFileUseCase = removeCollectionFileUseCase,
-            addCollectionFileUseCase = addCollectionFileUseCase,
-            collectionSettingsUseCase = collectionSettingsUseCase,
+            removeCollectionFileUseCase = context.removeCollectionFileUseCase,
+            addCollectionFileUseCase = context.addCollectionFileUseCase,
+            collectionSettingsUseCase = context.collectionSettingsUseCase,
         )
     }.apply {
         this.coroutineScope = coroutineScope
         this.lazyListState = lazyListState
-        this.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+        this.lazyPagingItems = rememberPagingItems {
+            context.pagingCollectionExistUseCase(
+                PagingCollectionExistUseCase.Request(
+                    pagingConfig = PagingConfig(20),
+                    bookshelfId = bookshelfId,
+                    path = path,
+                    collectionType = CollectionType.Basic,
+                )
+            )
+        }
     }
 }
 
 private class BasicCollectionAddScreenStateImpl(
-    private val route: BasicCollectionAdd,
+    private val bookshelfId: BookshelfId,
+    private val path: String,
     var coroutineScope: CoroutineScope,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
@@ -97,8 +107,8 @@ private class BasicCollectionAddScreenStateImpl(
                     RemoveCollectionFileUseCase.Request(
                         CollectionFile(
                             collection.id,
-                            route.bookshelfId,
-                            route.path
+                            bookshelfId,
+                            path
                         )
                     )
                 )
@@ -107,8 +117,8 @@ private class BasicCollectionAddScreenStateImpl(
                     AddCollectionFileUseCase.Request(
                         CollectionFile(
                             collection.id,
-                            route.bookshelfId,
-                            route.path
+                            bookshelfId,
+                            path
                         )
                     )
                 )

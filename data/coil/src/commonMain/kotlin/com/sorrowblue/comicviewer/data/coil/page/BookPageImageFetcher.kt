@@ -19,6 +19,9 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -26,7 +29,6 @@ import logcat.asLog
 import logcat.logcat
 import okio.Buffer
 import okio.BufferedSource
-import jakarta.inject.Singleton
 
 private var fileReader: FileReader? = null
 private var book: Book? = null
@@ -97,8 +99,9 @@ internal class BookPageImageFetcher(
     }
 }
 
-@Singleton
 @com.sorrowblue.comicviewer.data.coil.BookPageImageFetcher
+@ContributesBinding(DataScope::class)
+@Inject
 internal class BookPageImageFetcherFactory(
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,

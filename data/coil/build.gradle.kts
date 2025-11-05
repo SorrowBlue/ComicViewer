@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -16,8 +16,6 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.androidx.startup.runtime)
-                implementation(libs.coil3.networkKtor)
-                implementation(libs.koin.androidxStartup)
             }
         }
     }

@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface FileDao {
-
     @Upsert
     suspend fun upsert(fileEntity: FileEntity): Long
 
@@ -55,7 +54,7 @@ internal interface FileDao {
         val deleteFileData = findByNotPaths(
             entity.bookshelfId,
             entity.path,
-            entityList.map { it.path }
+            entityList.map { it.path },
         )
         // DBから削除
         deleteAll(deleteFileData)
@@ -96,31 +95,19 @@ internal interface FileDao {
     suspend fun bookshelfIdCacheKey(query: RoomRawQuery): List<BookshelfIdCacheKey>
 
     @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit"
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit",
     )
-    suspend fun findCacheKeyOrderSortIndex(
-        bookshelfId: Int,
-        parent: String,
-        limit: Int,
-    ): List<String>
+    suspend fun findCacheKeyOrderSortIndex(bookshelfId: Int, parent: String, limit: Int): List<String>
 
     @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit"
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit",
     )
-    suspend fun findCacheKeyOrderLastModified(
-        bookshelfId: Int,
-        parent: String,
-        limit: Int,
-    ): List<String>
+    suspend fun findCacheKeyOrderLastModified(bookshelfId: Int, parent: String, limit: Int): List<String>
 
     @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit"
+        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit",
     )
-    suspend fun findCacheKeysOrderLastRead(
-        bookshelfId: Int,
-        parent: String,
-        limit: Int,
-    ): List<String>
+    suspend fun findCacheKeysOrderLastRead(bookshelfId: Int, parent: String, limit: Int): List<String>
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key = :cacheKey")
     suspend fun deleteCacheKeyBy(cacheKey: String)
@@ -160,7 +147,7 @@ internal interface FileDao {
     suspend fun cacheKeyList(id: Int): List<String>
 
     @Query(
-        "SELECT * FROM file WHERE bookshelf_id = :id AND file_type = 'FILE' ORDER BY path LIMIT :limit OFFSET :offset"
+        "SELECT * FROM file WHERE bookshelf_id = :id AND file_type = 'FILE' ORDER BY path LIMIT :limit OFFSET :offset",
     )
     fun fileList(id: Int, limit: Int, offset: Long): Flow<List<FileEntity>>
 
@@ -223,19 +210,19 @@ internal fun FileDao.pagingSourceFileSearch(
     }
     val query = RoomRawQuery(
         """
-                SELECT
-                  *,
-                  CASE
-                    WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
-                    else 0
-                  END count
-                FROM
-                  file
-                WHERE
-                  ${selectionStr.joinToString(" AND ")}
-                ORDER BY
-                  $orderBy
-        """.trimIndent()
+        SELECT
+          *,
+          CASE
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+            else 0
+          END count
+        FROM
+          file
+        WHERE
+          ${selectionStr.joinToString(" AND ")}
+        ORDER BY
+          $orderBy
+        """.trimIndent(),
     ) {
         bindArgs.forEachIndexed { index, any ->
             when (any) {
@@ -304,20 +291,20 @@ internal suspend fun FileDao.bookshelfIdCacheKey(
     bindArgs += limit
     val query = RoomRawQuery(
         """
-                SELECT
-                  *,
-                  CASE
-                    WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
-                    else 0
-                  END count
-                FROM
-                  file
-                WHERE
-                  ${selectionStr.joinToString(" AND ")}
-                ORDER BY
-                  $orderBy
-                LIMIT :limit
-        """.trimIndent()
+        SELECT
+          *,
+          CASE
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+            else 0
+          END count
+        FROM
+          file
+        WHERE
+          ${selectionStr.joinToString(" AND ")}
+        ORDER BY
+          $orderBy
+        LIMIT :limit
+        """.trimIndent(),
     ) {
         bindArgs.forEachIndexed { index, any ->
             when (any) {

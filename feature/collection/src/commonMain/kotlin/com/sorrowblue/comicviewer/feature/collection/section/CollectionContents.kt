@@ -18,19 +18,13 @@ import comicviewer.feature.collection.generated.resources.collection_label_no_co
 import org.jetbrains.compose.resources.stringResource
 import com.sorrowblue.comicviewer.domain.model.file.File as FileModel
 
-internal sealed interface CollectionContentsAction {
-
-    data class File(val file: FileModel) : CollectionContentsAction
-
-    data class FileInfo(val file: FileModel) : CollectionContentsAction
-}
-
 @Composable
 internal fun CollectionContents(
     fileLazyVerticalGridUiState: FileLazyVerticalGridUiState,
     lazyPagingItems: LazyPagingItems<FileModel>,
     lazyGridState: LazyGridState,
-    onAction: (CollectionContentsAction) -> Unit,
+    onItemClick: (FileModel) -> Unit,
+    onItemInfoClick: (FileModel) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     if (lazyPagingItems.isEmptyData) {
@@ -48,8 +42,8 @@ internal fun CollectionContents(
             uiState = fileLazyVerticalGridUiState,
             lazyPagingItems = lazyPagingItems,
             contentPadding = contentPadding,
-            onItemClick = { onAction(CollectionContentsAction.File(it)) },
-            onItemInfoClick = { onAction(CollectionContentsAction.FileInfo(it)) },
+            onItemClick = onItemClick,
+            onItemInfoClick = onItemInfoClick,
             state = lazyGridState
         )
     }

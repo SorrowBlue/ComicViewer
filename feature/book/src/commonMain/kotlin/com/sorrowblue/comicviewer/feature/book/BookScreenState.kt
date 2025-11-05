@@ -34,9 +34,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
+context(context: BookScreenContext)
 internal fun rememberBookScreenState(
     uiState: BookScreenUiState.Loaded,
     currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() },
@@ -46,7 +46,6 @@ internal fun rememberBookScreenState(
     ),
     scope: CoroutineScope = rememberCoroutineScope(),
     systemUiController: SystemUiController = rememberSystemUiController(),
-    viewModel: BookViewModel = koinViewModel(),
 ): BookScreenState {
     val isCompactWindowClass = isCompactWindowClass()
     return remember(isCompactWindowClass) {
@@ -57,9 +56,9 @@ internal fun rememberBookScreenState(
             pagerState = pagerState,
             scope = scope,
             systemUiController = systemUiController,
-            getNextBookUseCase = viewModel.getNextBookUseCase,
-            manageBookSettingsUseCase = viewModel.manageBookSettingsUseCase,
-            updateLastReadPageUseCase = viewModel.updateLastReadPageUseCase
+            getNextBookUseCase = context.getNextBookUseCase,
+            manageBookSettingsUseCase = context.manageBookSettingsUseCase,
+            updateLastReadPageUseCase = context.updateLastReadPageUseCase
         )
     }
 }

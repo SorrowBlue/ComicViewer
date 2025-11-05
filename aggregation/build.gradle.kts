@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -15,7 +17,9 @@ kotlin {
                         logger.lifecycle("Skipping empty or non-source module: ${it.name}")
                     }
                 }
-                implementation(libs.cmpdestinations)
+                // Required for metro dependency resolution
+                implementation(libs.androidx.datastore)
+                implementation(projects.data.reader.zip)
             }
         }
     }

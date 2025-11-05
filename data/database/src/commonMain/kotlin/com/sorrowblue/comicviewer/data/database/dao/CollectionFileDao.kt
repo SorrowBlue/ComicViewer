@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 internal interface CollectionFileDao {
-
     /**
      * Inserts a CollectionFileEntity into the database. If the entity already
      * exists, the operation is ignored.
@@ -70,41 +69,47 @@ internal interface CollectionFileDao {
      * @return List of BookshelfIdCacheKey.
      */
     @Query(
-        "SELECT file.bookshelf_id, file.cache_key FROM collection_file INNER JOIN file ON collection_file.collection_id = :id AND collection_file.bookshelf_id == file.bookshelf_id AND collection_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit"
+        "SELECT file.bookshelf_id, file.cache_key FROM collection_file INNER JOIN file ON collection_file.collection_id = :id AND collection_file.bookshelf_id == file.bookshelf_id AND collection_file.file_path == file.path WHERE file_type != 'FOLDER' AND cache_key != '' LIMIT :limit",
     )
-    suspend fun findBasicCollectionFileCacheKey(
-        id: CollectionId,
-        limit: Int,
-    ): List<BookshelfIdCacheKey>
+    suspend fun findBasicCollectionFileCacheKey(id: CollectionId, limit: Int): List<BookshelfIdCacheKey>
 }
 
-internal fun CollectionFileDao.pagingSource(
-    collectionId: Int,
-    sortType: SortType,
-): PagingSource<Int, FileEntity> {
+internal fun CollectionFileDao.pagingSource(collectionId: Int, sortType: SortType): PagingSource<Int, FileEntity> {
     val orderBy = when (sortType) {
-        is SortType.Name -> if (sortType.isAsc) "file_type_order, sort_index" else "file_type_order DESC, sort_index DESC"
-        is SortType.Date -> if (sortType.isAsc) "file_type_order, last_modified, sort_index" else "file_type_order DESC, last_modified DESC, sort_index DESC"
-        is SortType.Size -> if (sortType.isAsc) "file_type_order, size, sort_index" else "file_type_order DESC, size DESC, sort_index DESC"
+        is SortType.Name -> if (sortType.isAsc) {
+            "file_type_order, sort_index"
+        } else {
+            "file_type_order DESC, sort_index DESC"
+        }
+        is SortType.Date -> if (sortType.isAsc) {
+            "file_type_order, last_modified, sort_index"
+        } else {
+            "file_type_order DESC, last_modified DESC, sort_index DESC"
+        }
+        is SortType.Size -> if (sortType.isAsc) {
+            "file_type_order, size, sort_index"
+        } else {
+            "file_type_order DESC, size DESC, sort_index DESC"
+        }
     }
     return pagingSource(
         RoomRawQuery(
             """
-                SELECT
-                  file.*
-                FROM
-                  collection_file
-                INNER JOIN
-                  file
-                ON
-                  collection_file.bookshelf_id = file.bookshelf_id AND collection_file.file_path = file.path
-                WHERE
-                  collection_id = :collectionId
-                ORDER BY
-                  $orderBy
-            """.trimIndent()
+            SELECT
+              file.*
+            FROM
+              collection_file
+            INNER JOIN
+              file
+            ON
+              collection_file.bookshelf_id = file.bookshelf_id AND collection_file.file_path = file.path
+            WHERE
+              collection_id = :collectionId
+            ORDER BY
+              $orderBy
+            """.trimIndent(),
         ) {
             it.bindLong(1, collectionId.toLong())
-        }
+        },
     )
 }

@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.storage.smb.impl
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.SmbFileClient
 import com.sorrowblue.comicviewer.data.storage.smb.ntStatusString
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
@@ -13,22 +12,14 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.URLDecoder
 import java.net.UnknownHostException
 import java.util.Properties
-import jcifs.CIFSContext
-import jcifs.DialectVersion
-import jcifs.SmbConstants
-import jcifs.config.PropertyConfiguration
-import jcifs.context.BaseContext
-import jcifs.smb.NtStatus
-import jcifs.smb.NtlmPasswordAuthenticator
-import jcifs.smb.SmbException
-import jcifs.smb.SmbFile
-import jcifs.util.transport.ConnectionTimeoutException
-import jcifs.util.transport.TransportException
 import kotlin.io.path.Path
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -38,28 +29,38 @@ import logcat.logcat
 import okio.BufferedSource
 import okio.buffer
 import okio.source
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.InjectedParam
-
-@SmbFileClient
-@Factory
-internal actual fun providesSmbFileClient(@InjectedParam bookshelf: SmbServer): FileClient<SmbServer> {
-    return SmbFileClient(bookshelf = bookshelf)
-}
+import org.codelibs.jcifs.smb.CIFSContext
+import org.codelibs.jcifs.smb.DialectVersion
+import org.codelibs.jcifs.smb.SmbConstants
+import org.codelibs.jcifs.smb.config.PropertyConfiguration
+import org.codelibs.jcifs.smb.context.BaseContext
+import org.codelibs.jcifs.smb.impl.NtStatus
+import org.codelibs.jcifs.smb.impl.NtlmPasswordAuthenticator
+import org.codelibs.jcifs.smb.impl.SmbException
+import org.codelibs.jcifs.smb.impl.SmbFile
+import org.codelibs.jcifs.smb.util.transport.ConnectionTimeoutException
+import org.codelibs.jcifs.smb.util.transport.TransportException
 
 private var rootSmbFile: SmbFile? = null
 
 private val mutex = Mutex()
 
-private class SmbFileClient(override val bookshelf: SmbServer) : FileClient<SmbServer> {
+@AssistedInject
+internal actual class SmbFileClient(@Assisted actual override val bookshelf: SmbServer) :
+    FileClient<SmbServer> {
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    @AssistedFactory
+    actual interface Factory : FileClient.Factory<SmbServer> {
+        actual override fun create(bookshelf: SmbServer): SmbFileClient
+    }
+
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         return runCommand {
             smbFile(file.path).openInputStream().source().buffer()
         }
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         kotlin.runCatching {
             smbFile(path).use {
                 it.connect()
@@ -101,19 +102,19 @@ private class SmbFileClient(override val bookshelf: SmbServer) : FileClient<SmbS
         }
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         return runCommand {
             smbFile(path).exists()
         }
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return runCommand {
             smbFile(path).toFileModel(resolveImageFolder)
         }
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         return runCommand {
             smbFile(path).run {
                 FileAttribute(
@@ -136,17 +137,14 @@ private class SmbFileClient(override val bookshelf: SmbServer) : FileClient<SmbS
         return attributes and attribute == attribute
     }
 
-    override suspend fun listFiles(
-        file: File,
-        resolveImageFolder: Boolean,
-    ): List<File> {
+    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         return runCommand {
             smbFile(file.path).listFiles()
                 .map { smbFile -> smbFile.toFileModel(resolveImageFolder) }
         }
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return runCommand {
             SmbSeekableInputStream(smbFile(file.path), false)
         }
@@ -299,7 +297,7 @@ private class SmbFileClient(override val bookshelf: SmbServer) : FileClient<SmbS
         }
         val context = BaseContext(PropertyConfiguration(prop))
         return when (val auth = this.bookshelf.auth) {
-            SmbServer.Auth.Guest -> context.withGuestCrendentials()
+            SmbServer.Auth.Guest -> context.withGuestCredentials()
             is SmbServer.Auth.UsernamePassword -> context.withCredentials(
                 NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password)
             )

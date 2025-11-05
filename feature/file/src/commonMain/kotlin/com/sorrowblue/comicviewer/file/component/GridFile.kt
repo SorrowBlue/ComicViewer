@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
@@ -78,7 +78,7 @@ fun GridFile(
                         modifier = Modifier
                             .sharedBounds(
                                 rememberSharedContentState("${file.bookshelfId}:${file.path}"),
-                                LocalAnimatedContentScope.current,
+                                LocalNavAnimatedContentScope.current,
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
                                 boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
@@ -94,7 +94,7 @@ fun GridFile(
                         modifier = Modifier
                             .sharedBounds(
                                 rememberSharedContentState("${file.bookshelfId}:${file.path}"),
-                                LocalAnimatedContentScope.current,
+                                LocalNavAnimatedContentScope.current,
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
                                 boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },

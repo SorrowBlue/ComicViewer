@@ -8,35 +8,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.sorrowblue.cmpdestinations.annotation.Destination
+import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_plugin
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-@Serializable
-data object PluginRoute
-
-@Destination<PluginRoute>
-@Composable
-internal fun PluginScreen() {
-    PluginScreen(
-        onBackClick = {},
-        snackbarHostState = remember { SnackbarHostState() }
-    )
-}
 
 @Composable
 internal fun PluginScreen(
     onBackClick: () -> Unit,
-    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_label_plugin)) },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -61,6 +47,8 @@ internal fun PluginScreen(
 @Composable
 private fun PreviewPluginScreen() {
     PreviewTheme {
-        PluginScreen()
+        PluginScreen(
+            onBackClick = {},
+        )
     }
 }

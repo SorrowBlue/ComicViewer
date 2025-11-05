@@ -5,7 +5,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.application)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -24,6 +24,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.domain.service)
+            implementation(projects.data.coil)
+            implementation(projects.data.database)
+            implementation(projects.data.datastore)
+            implementation(projects.data.storage.client)
             implementation(projects.framework.designsystem)
             implementation(projects.framework.ui)
             implementation(projects.aggregation)
@@ -31,6 +36,7 @@ kotlin {
             implementation(projects.feature.authentication)
             implementation(projects.feature.bookshelf)
             implementation(projects.feature.bookshelf.info)
+            implementation(projects.feature.bookshelf.edit)
             implementation(projects.feature.book)
             implementation(projects.feature.readlater)
             implementation(projects.feature.collection)
@@ -41,8 +47,6 @@ kotlin {
             implementation(projects.feature.settings.info)
             implementation(projects.feature.history)
 
-            // Di
-            implementation(libs.koin.composeViewModel)
 
             implementation(libs.kotlinx.serialization.json)
         }
@@ -52,7 +56,6 @@ kotlin {
             dependencies {
                 implementation(projects.framework.test)
                 implementation(libs.kotlin.test)
-                implementation(libs.koin.test)
             }
         }
 
@@ -60,9 +63,6 @@ kotlin {
             implementation(projects.framework.notification)
 
             implementation(libs.androidx.core.splashscreen)
-            implementation(libs.koin.androidxCompose)
-            implementation(libs.koin.androidxStartup)
-            implementation(libs.koin.androidxWorkmanager)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.google.android.play.feature.delivery.ktx)
         }

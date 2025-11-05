@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.info.license
 
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.rememberScrollState
@@ -40,7 +41,7 @@ internal fun LicenseDialog(
                     text = library.licenses.firstOrNull()?.licenseContent.orEmpty(),
                     modifier = Modifier.verticalScroll(scrollState)
                 )
-                androidx.compose.foundation.VerticalScrollbar(
+                VerticalScrollbar(
                     modifier = Modifier.align(Alignment.CenterEnd)
                         .fillMaxHeight(),
                     style = AlertDialogDefaults.scrollbarStyle(),

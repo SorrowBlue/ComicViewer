@@ -6,6 +6,7 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.Collection
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
 import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
+import com.sorrowblue.comicviewer.data.datastore.qualifier.GlobalSettings
 import com.sorrowblue.comicviewer.data.datastore.qualifier.PdfPlugin
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
@@ -21,23 +22,24 @@ import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
-import org.koin.core.annotation.Qualifier
-import jakarta.inject.Singleton
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Settings as GlobalSettings
 
-@Singleton
+@ContributesBinding(DataScope::class)
+@Inject
 internal class DatastoreDataSourceImpl(
-    @Qualifier(GlobalSettings::class) private val settingsDataStore: DataStore<Settings>,
-    @Qualifier(Display::class) private val displaySettingsDataStore: DataStore<DisplaySettings>,
-    @Qualifier(Viewer::class) private val viewerSettingsDataStore: DataStore<ViewerSettings>,
-    @Qualifier(Book::class) private val bookSettingsDataStore: DataStore<BookSettings>,
-    @Qualifier(FolderDisplay::class) private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
-    @Qualifier(Folder::class) private val folderSettingsDataStore: DataStore<FolderSettings>,
-    @Qualifier(ViewerOperation::class) private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
-    @Qualifier(Collection::class) private val collectionSettingsDataStore: DataStore<CollectionSettings>,
-    @Qualifier(Security::class) private val securitySettingsDataStore: DataStore<SecuritySettings>,
-    @Qualifier(PdfPlugin::class) private val pdfPluginSettingsDataStore: DataStore<PdfPluginSettings>,
+    @param:GlobalSettings private val settingsDataStore: DataStore<Settings>,
+    @param:Display private val displaySettingsDataStore: DataStore<DisplaySettings>,
+    @param:Viewer private val viewerSettingsDataStore: DataStore<ViewerSettings>,
+    @param:Book private val bookSettingsDataStore: DataStore<BookSettings>,
+    @param:FolderDisplay private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
+    @param:Folder private val folderSettingsDataStore: DataStore<FolderSettings>,
+    @param:ViewerOperation private val viewerOperationSettingsDataStore: DataStore<ViewerOperationSettings>,
+    @param:Collection private val collectionSettingsDataStore: DataStore<CollectionSettings>,
+    @param:Security private val securitySettingsDataStore: DataStore<SecuritySettings>,
+    @param:PdfPlugin private val pdfPluginSettingsDataStore: DataStore<PdfPluginSettings>,
 ) : DatastoreDataSource {
 
     override val settings = settingsDataStore.data

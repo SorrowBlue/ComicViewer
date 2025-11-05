@@ -7,9 +7,13 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
+import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonStateImpl.Companion.saver
 
 enum class FloatingActionButtonValue {
     Visible,
@@ -35,13 +39,17 @@ interface FloatingActionButtonState {
     suspend fun toggle()
 
     suspend fun snapTo(targetValue: FloatingActionButtonValue)
+
+    val menuExpanded: Boolean
+
+    fun toggleMenu(force: Boolean)
 }
 
 @Composable
 fun rememberFloatingActionButtonState(
     initialValue: FloatingActionButtonValue = FloatingActionButtonValue.Visible,
 ): FloatingActionButtonState {
-    return rememberSaveable(saver = FloatingActionButtonStateImpl.saver()) {
+    return rememberSaveable(saver = saver()) {
         FloatingActionButtonStateImpl(initialValue = initialValue)
     }
 }
@@ -90,6 +98,12 @@ private class FloatingActionButtonStateImpl(var initialValue: FloatingActionButt
     override suspend fun snapTo(targetValue: FloatingActionButtonValue) {
         val target = if (targetValue.isVisible) Visible else Hidden
         internalState.snapTo(target)
+    }
+
+    override var menuExpanded: Boolean by mutableStateOf(false)
+
+    override fun toggleMenu(force: Boolean) {
+        menuExpanded = force
     }
 
     companion object {

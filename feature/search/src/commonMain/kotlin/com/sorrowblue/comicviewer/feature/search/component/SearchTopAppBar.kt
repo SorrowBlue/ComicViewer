@@ -54,69 +54,26 @@ import comicviewer.feature.search.generated.resources.search_label_week1
 import org.jetbrains.compose.resources.stringResource
 import comicviewer.feature.folder.generated.resources.Res as FolderRes
 
-internal sealed interface SearchTopAppBarAction {
-
-    /** 戻るボタン */
-    data object BackClick : SearchTopAppBarAction
-
-    /** 設定 */
-    data object Settings : SearchTopAppBarAction
-
-    /** スマートコレクション */
-    data object SmartCollection : SearchTopAppBarAction
-
-    /**
-     * 検索クエリ
-     *
-     * @property value
-     */
-    data class QueryChange(val value: String) : SearchTopAppBarAction
-
-    /**
-     * 検索範囲
-     *
-     * @property range 検索範囲
-     */
-    data class RangeClick(val range: SearchCondition.Range) :
-        SearchTopAppBarAction
-
-    /**
-     * 検索期間
-     *
-     * @property period 検索期間
-     */
-    data class PeriodClick(val period: SearchCondition.Period) :
-        SearchTopAppBarAction
-
-    /**
-     * ソート
-     *
-     * @property sortType ソート
-     */
-    data class SortTypeClick(val sortType: SortType) :
-        SearchTopAppBarAction
-
-    /**
-     * 隠しファイルを表示するか
-     *
-     * @property value 隠しファイルを表示するか
-     */
-    data class ShowHiddenClick(val value: Boolean) : SearchTopAppBarAction
-}
-
 @Composable
 internal fun SearchTopAppBar(
     searchCondition: SearchCondition,
-    onAction: (SearchTopAppBarAction) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     scrollableState: ScrollableState,
+    onBackClick: () -> Unit,
+    onSmartCollectionClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onQueryChange: (String) -> Unit,
+    onRangeClick: (SearchCondition.Range) -> Unit,
+    onPeriodClick: (SearchCondition.Period) -> Unit,
+    onSortTypeClick: (SortType) -> Unit,
+    onShowHiddenClick: () -> Unit,
 ) {
     CanonicalTopAppBar(
         title = {
             val skc = LocalSoftwareKeyboardController.current
             TextField(
                 value = searchCondition.query,
-                onValueChange = { onAction(SearchTopAppBarAction.QueryChange(it)) },
+                onValueChange = onQueryChange,
                 placeholder = { Text(text = stringResource(Res.string.search_label_search)) },
                 maxLines = 1,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -127,7 +84,7 @@ internal fun SearchTopAppBar(
                     null
                 } else {
                     {
-                        IconButton(onClick = { onAction(SearchTopAppBarAction.QueryChange("")) }) {
+                        IconButton(onClick = { onQueryChange("") }) {
                             Icon(ComicIcons.Close, null)
                         }
                     }
@@ -138,13 +95,13 @@ internal fun SearchTopAppBar(
             )
         },
         navigationIcon = {
-            BackIconButton(onClick = { onAction(SearchTopAppBarAction.BackClick) })
+            BackIconButton(onClick = onBackClick)
         },
         actions = {
-            IconButton(onClick = { onAction(SearchTopAppBarAction.SmartCollection) }) {
+            IconButton(onClick = onSmartCollectionClick) {
                 Icon(ComicIcons.CollectionsBookmark, null)
             }
-            SettingsIconButton(onClick = { onAction(SearchTopAppBarAction.Settings) })
+            SettingsIconButton(onClick = onSettingsClick)
         },
         bottomComponent = {
             Row(
@@ -156,28 +113,28 @@ internal fun SearchTopAppBar(
             ) {
                 DropdownMenuChip(
                     text = stringResource(searchCondition.range.displayText),
-                    onChangeSelect = { onAction(SearchTopAppBarAction.RangeClick(it)) },
+                    onChangeSelect = onRangeClick,
                     menus = remember { SearchCondition.Range.entries }
                 ) {
                     Text(stringResource(it.displayText))
                 }
                 DropdownMenuChip(
                     text = stringResource(searchCondition.period.displayText),
-                    onChangeSelect = { onAction(SearchTopAppBarAction.PeriodClick(it)) },
+                    onChangeSelect = onPeriodClick,
                     menus = remember { SearchCondition.Period.entries }
                 ) {
                     Text(stringResource(it.displayText))
                 }
                 DropdownMenuChip(
                     text = stringResource(searchCondition.sortType.displayText),
-                    onChangeSelect = { onAction(SearchTopAppBarAction.SortTypeClick(it)) },
+                    onChangeSelect = onSortTypeClick,
                     menus = remember { SortType.entries }
                 ) {
                     Text(text = stringResource(it.displayText))
                 }
                 FilterChip(
                     selected = searchCondition.showHidden,
-                    onClick = { onAction(SearchTopAppBarAction.ShowHiddenClick(!searchCondition.showHidden)) },
+                    onClick = onShowHiddenClick,
                     label = { Text(text = stringResource(Res.string.search_label_show_hidden_files)) },
                     leadingIcon = {
                         if (searchCondition.showHidden) {
@@ -192,20 +149,22 @@ internal fun SearchTopAppBar(
     )
 }
 
-internal val SearchCondition.Period.displayText
+private val SearchCondition.Period.displayText
     get() = when (this) {
         SearchCondition.Period.None -> Res.string.search_label_none
         SearchCondition.Period.Hour24 -> Res.string.search_label_hour24
         SearchCondition.Period.Week1 -> Res.string.search_label_week1
         SearchCondition.Period.Month1 -> Res.string.search_label_month1
     }
-internal val SearchCondition.Range.displayText
+
+private val SearchCondition.Range.displayText
     get() = when (this) {
         SearchCondition.Range.Bookshelf -> Res.string.search_label_bookshelf
         is SearchCondition.Range.InFolder -> Res.string.search_label_in_folder
         is SearchCondition.Range.SubFolder -> Res.string.search_label_sub_folder
     }
-internal val SortType.displayText
+
+private val SortType.displayText
     get() = when (this) {
         is SortType.Date -> if (isAsc) FolderRes.string.folder_sorttype_label_date_asc else FolderRes.string.folder_sorttype_label_date_desc
         is SortType.Name -> if (isAsc) FolderRes.string.folder_sorttype_label_name_asc else FolderRes.string.folder_sorttype_label_name_desc

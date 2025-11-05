@@ -22,7 +22,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.koin.compose.koinInject
 import soil.form.compose.Form
 import soil.form.compose.rememberForm
 import soil.form.compose.rememberFormState
@@ -39,19 +38,19 @@ internal interface BasicCollectionCreateScreenState {
 }
 
 @Composable
+context(context: BasicCollectionCreateScreenContext)
 internal fun rememberBasicCollectionCreateScreenState(
-    route: BasicCollectionCreate,
-    createCollectionUseCase: CreateCollectionUseCase = koinInject(),
-    addCollectionFileUseCase: AddCollectionFileUseCase = koinInject(),
-    notificationManager: NotificationManager = koinInject(),
-    scope: CoroutineScope = rememberCoroutineScope(),
+    bookshelfId: BookshelfId,
+    path: String,
 ): BasicCollectionCreateScreenState {
+    val scope = rememberCoroutineScope()
     return remember {
         BasicCollectionCreateScreenStateImpl(
-            route = route,
-            createCollectionUseCase = createCollectionUseCase,
-            addCollectionFileUseCase = addCollectionFileUseCase,
-            notificationManager = notificationManager,
+            bookshelfId = bookshelfId,
+            path = path,
+            createCollectionUseCase = context.createCollectionUseCase,
+            addCollectionFileUseCase = context.addCollectionFileUseCase,
+            notificationManager = context.notificationManager,
             scope = scope
         )
     }.apply {
@@ -64,7 +63,8 @@ internal fun rememberBasicCollectionCreateScreenState(
 
 private class BasicCollectionCreateScreenStateImpl(
     var scope: CoroutineScope,
-    private val route: BasicCollectionCreate,
+    private val bookshelfId: BookshelfId,
+    private val path: String,
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val notificationManager: NotificationManager,
@@ -82,11 +82,11 @@ private class BasicCollectionCreateScreenStateImpl(
             createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
                 .fold(
                     onSuccess = { collection ->
-                        if (route.bookshelfId != BookshelfId() && route.path.isNotEmpty()) {
+                        if (bookshelfId != BookshelfId() && path.isNotEmpty()) {
                             addCollectionFile(
                                 collection = collection,
-                                bookshelfId = route.bookshelfId,
-                                path = route.path
+                                bookshelfId = bookshelfId,
+                                path = path
                             )
                         } else {
                             notificationManager.toast(

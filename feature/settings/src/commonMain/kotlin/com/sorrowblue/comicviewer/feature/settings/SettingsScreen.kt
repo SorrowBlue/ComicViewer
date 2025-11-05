@@ -1,36 +1,35 @@
 package com.sorrowblue.comicviewer.feature.settings
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.PermanentDrawerSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.NavGraphNavHost
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsScope
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsNavGraph
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsDetailNavGraph
-import com.sorrowblue.comicviewer.feature.settings.plugin.PluginRoute
-import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
-import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettings
-import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettings
+import com.sorrowblue.comicviewer.feature.settings.section.NavigationDrawerItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Plugin
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableListDetailPaneScaffold
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_app
 import comicviewer.feature.settings.generated.resources.settings_label_display
@@ -41,127 +40,117 @@ import comicviewer.feature.settings.generated.resources.settings_label_plugin
 import comicviewer.feature.settings.generated.resources.settings_label_security
 import comicviewer.feature.settings.generated.resources.settings_label_tutorial
 import comicviewer.feature.settings.generated.resources.settings_label_viewer
-import kotlin.reflect.KClass
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.serialization.Serializable
+import comicviewer.feature.settings.generated.resources.settings_title
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.StringResource
-import org.koin.compose.koinInject
-import org.koin.compose.module.rememberKoinModules
-import org.koin.compose.scope.KoinScope
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
+import org.jetbrains.compose.resources.stringResource
 
-internal interface SettingsScreenNavigator {
-    fun navigateUp()
-    fun onStartTutorialClick()
-}
+internal data class SettingsScreenUiState(
+    val currentSettings: SettingsItem = SettingsItem.DISPLAY,
+    val settingsList: ImmutableList<SettingsItem> = SettingsItem.entries.toImmutableList(),
+)
 
-@Serializable
-data object Settings
-
-fun nestedSettingsModule(
-    navController: NavController,
-    scaffoldNavigator: ThreePaneScaffoldNavigator<*>,
-    coroutineScope: CoroutineScope,
-) = module {
-    scope<SettingsScope> {
-        scoped { coroutineScope }
-        scoped { scaffoldNavigator }
-        scoped { navController }
-    }
-}
-
-@OptIn(KoinExperimentalAPI::class)
-@Destination<Settings>
 @Composable
 internal fun SettingsScreen(
-    screenNavigator: SettingsScreenNavigator = koinInject(),
-    state: SettingsScreenState = rememberSettingsScreenState(),
-) {
-    SettingsScreen(
-        navigator = state.navigator,
-        onBackClick = screenNavigator::navigateUp,
-        onSettingsClick = { state.onSettingsClick(it, screenNavigator::onStartTutorialClick) },
-        onSettingsLongClick = {
-            state.onSettingsLongClick(
-                it,
-                screenNavigator::onStartTutorialClick
-            )
-        },
-    ) {
-        val coroutineScope = rememberCoroutineScope()
-        rememberKoinModules {
-            listOf(
-                nestedSettingsModule(
-                    navController = state.navController,
-                    scaffoldNavigator = state.navigator,
-                    coroutineScope = coroutineScope
-                )
-            )
-        }
-        KoinScope<SettingsScope>(SettingsScope::class.simpleName.orEmpty()) {
-            NavGraphNavHost(
-                graphNavigation = SettingsDetailNavGraph,
-                navController = state.navController,
-                startDestination = state.navigator.currentDestination?.contentKey?.route
-                    ?: SettingsDetailNavGraph.startDestination,
-            )
-        }
-    }
-}
-
-@Composable
-private fun SettingsScreen(
-    navigator: ThreePaneScaffoldNavigator<SettingsItem>,
+    uiState: SettingsScreenUiState,
     onBackClick: () -> Unit,
     onSettingsClick: (SettingsItem) -> Unit,
     onSettingsLongClick: (SettingsItem) -> Unit,
-    content: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    NavigableListDetailPaneScaffold(
-        navigator = navigator,
-        detailPane = {
-            val modifier = if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
-                Modifier
-            } else {
-                Modifier.consumeWindowInsets(WindowInsets.safeDrawing.only(WindowInsetsSides.Start))
-            }
-            AnimatedPane(modifier = modifier) {
-                content()
-            }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+    val lazyListState = rememberLazyListState()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(Res.string.settings_title)) },
+                navigationIcon = { CloseIconButton(onBackClick) },
+                scrollBehavior = scrollBehavior,
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+            )
         },
-        listPane = {
-            val startPadding = WindowInsets.safeDrawing.asPaddingValues()
-                .calculateStartPadding(LocalLayoutDirection.current)
-            AnimatedPane(Modifier.preferredWidth(360.dp + startPadding)) {
-                SettingsListPane(
-                    navigator = navigator,
-                    onBackClick = onBackClick,
-                    onSettingsClick = onSettingsClick,
-                    onSettingsLongClick = onSettingsLongClick
-                )
+        contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { contentPadding ->
+        if (paneScaffoldDirective.maxHorizontalPartitions == 1) {
+            LazyColumn(
+                state = lazyListState,
+                contentPadding = contentPadding,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(uiState.settingsList) { settings ->
+                    ListItem(
+                        headlineContent = { Text(text = stringResource(settings.title)) },
+                        leadingContent = {
+                            Icon(
+                                imageVector = settings.icon,
+                                contentDescription = null
+                            )
+                        },
+                        modifier = Modifier.combinedClickable(
+                            onClick = { onSettingsClick(settings) },
+                            onLongClick = { onSettingsLongClick(settings) }
+                        )
+                    )
+                }
             }
-        },
-    )
+        } else {
+            PermanentDrawerSheet(
+                modifier = modifier,
+                drawerContainerColor = ComicTheme.colorScheme.surfaceContainerHighest,
+                windowInsets = WindowInsets(0)
+            ) {
+                LazyColumn(
+                    state = lazyListState,
+                    contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
+                        .asPaddingValues()
+                ) {
+                    item {
+                        TopAppBar(
+                            title = { Text(text = stringResource(Res.string.settings_title)) },
+                            navigationIcon = { CloseIconButton(onBackClick) },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = ComicTheme.colorScheme.surfaceContainerHighest
+                            ),
+                            windowInsets = WindowInsets(0)
+                        )
+                    }
+                    items(uiState.settingsList) { settings2 ->
+                        NavigationDrawerItem(
+                            label = { Text(text = stringResource(settings2.title)) },
+                            icon = {
+                                Icon(
+                                    imageVector = settings2.icon,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = { onSettingsClick(settings2) },
+                            onLongClick = { onSettingsLongClick(settings2) },
+                            selected = uiState.currentSettings == settings2,
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 enum class SettingsItem(
     val title: StringResource,
     val icon: ImageVector,
-    val route: KClass<*>? = null,
 ) {
-    DISPLAY(
-        Res.string.settings_label_display,
-        ComicIcons.DisplaySettings,
-        DisplaySettingsNavGraph::class
-    ),
-    FOLDER(Res.string.settings_label_folder, ComicIcons.FolderOpen, FolderSettingsNavGraph::class),
-    VIEWER(Res.string.settings_label_viewer, ComicIcons.Image, ViewerSettings::class),
-    SECURITY(Res.string.settings_label_security, ComicIcons.Lock, SecuritySettings::class),
-    APP(Res.string.settings_label_app, ComicIcons.Info, AppInfoSettingsNavGraph::class),
+    DISPLAY(Res.string.settings_label_display, ComicIcons.DisplaySettings),
+    FOLDER(Res.string.settings_label_folder, ComicIcons.FolderOpen),
+    VIEWER(Res.string.settings_label_viewer, ComicIcons.Image),
+    SECURITY(Res.string.settings_label_security, ComicIcons.Lock),
+    APP(Res.string.settings_label_app, ComicIcons.Info),
     TUTORIAL(Res.string.settings_label_tutorial, ComicIcons.Start),
 
-    Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage, ImageCache::class),
-    Plugin(Res.string.settings_label_plugin, ComicIcons.Plugin, PluginRoute::class),
-    LANGUAGE(Res.string.settings_label_language, ComicIcons.Language, InAppLanguagePicker::class),
+    Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage),
+    Plugin(Res.string.settings_label_plugin, ComicIcons.Plugin),
+    LANGUAGE(Res.string.settings_label_language, ComicIcons.Language),
 }

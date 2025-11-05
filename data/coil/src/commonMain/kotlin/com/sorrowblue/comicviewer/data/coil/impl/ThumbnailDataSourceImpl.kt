@@ -5,10 +5,13 @@ import coil3.SingletonImageLoader
 import coil3.request.ImageRequest
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Deferred
-import jakarta.inject.Singleton
 
-@Singleton
+@ContributesBinding(DataScope::class)
+@Inject
 internal class ThumbnailDataSourceImpl(
     private val context: PlatformContext,
 ) : ThumbnailDataSource {

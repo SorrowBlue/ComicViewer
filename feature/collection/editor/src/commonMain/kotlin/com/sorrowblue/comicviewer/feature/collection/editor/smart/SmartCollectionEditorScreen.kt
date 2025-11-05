@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -27,7 +26,6 @@ import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.Crea
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorForm
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
@@ -46,34 +44,14 @@ internal data class SmartCollectionEditorScreenUiState(
 
 @Composable
 internal fun SmartCollectionEditorScreen(
-    state: SmartCollectionEditorScreenState,
-    title: @Composable () -> Unit,
-    onCancel: () -> Unit,
-    onComplete: () -> Unit,
-) {
-    SmartCollectionEditorScreen(
-        form = state.form,
-        uiState = state.uiState,
-        title = title,
-        onCancel = onCancel,
-    )
-    EventEffect(state.event) {
-        when (it) {
-            SmartCollectionEditorScreenStateEvent.Complete -> onComplete()
-        }
-    }
-}
-
-@Composable
-private fun SmartCollectionEditorScreen(
     form: Form<SmartCollectionForm>,
     uiState: SmartCollectionEditorScreenUiState,
     title: @Composable () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     if (isCompactWindowClass()) {
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(
             topBar = {
                 TopAppBar(

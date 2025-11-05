@@ -11,31 +11,33 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 
 @Entity(
     tableName = "collection_file",
-    primaryKeys = [CollectionFileEntity.COLLECTION_ID, CollectionFileEntity.BOOKSHELF_ID, CollectionFileEntity.FILE_PATH],
+    primaryKeys = [
+        CollectionFileEntity.COLLECTION_ID,
+        CollectionFileEntity.BOOKSHELF_ID,
+        CollectionFileEntity.FILE_PATH,
+    ],
     foreignKeys = [
         ForeignKey(
             entity = CollectionEntity::class,
             parentColumns = [CollectionEntity.ID],
             childColumns = [CollectionFileEntity.COLLECTION_ID],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = FileEntity::class,
             parentColumns = [FileEntity.PATH, FileEntity.BOOKSHELF_ID],
             childColumns = [CollectionFileEntity.FILE_PATH, CollectionFileEntity.BOOKSHELF_ID],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
-    indices = [Index(value = [CollectionFileEntity.FILE_PATH, CollectionFileEntity.BOOKSHELF_ID])]
+    indices = [Index(value = [CollectionFileEntity.FILE_PATH, CollectionFileEntity.BOOKSHELF_ID])],
 )
 internal data class CollectionFileEntity(
     @ColumnInfo(COLLECTION_ID) val collectionId: CollectionId,
     @ColumnInfo(BOOKSHELF_ID) val bookshelfId: BookshelfId,
     @ColumnInfo(FILE_PATH) val filePath: String,
 ) {
-
     companion object {
-
         const val COLLECTION_ID = "collection_id"
         const val BOOKSHELF_ID = "bookshelf_id"
         const val FILE_PATH = "file_path"
@@ -43,7 +45,7 @@ internal data class CollectionFileEntity(
         fun fromModel(model: CollectionFile) = CollectionFileEntity(
             collectionId = model.id,
             filePath = model.path,
-            bookshelfId = model.bookshelfId
+            bookshelfId = model.bookshelfId,
         )
     }
 }

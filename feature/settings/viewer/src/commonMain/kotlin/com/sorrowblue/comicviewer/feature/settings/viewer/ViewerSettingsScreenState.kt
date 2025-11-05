@@ -12,7 +12,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 @Stable
 internal interface ViewerSettingsScreenState {
@@ -30,23 +29,24 @@ internal interface ViewerSettingsScreenState {
 }
 
 @Composable
-internal fun rememberViewerSettingsScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    settingsUseCase: ManageViewerSettingsUseCase = koinInject(),
-): ViewerSettingsScreenState = remember {
-    ViewerSettingsScreenStateImpl(scope = scope, settingsUseCase = settingsUseCase)
+context(context: ViewerSettingsScreenContext)
+internal fun rememberViewerSettingsScreenState(): ViewerSettingsScreenState {
+    val scope = rememberCoroutineScope()
+    return remember(scope) {
+        ViewerSettingsScreenStateImpl(scope = scope, manageViewerSettingsUseCase = TODO() /* context.manageViewerSettingsUseCase */)
+    }
 }
 
 private class ViewerSettingsScreenStateImpl(
     private val scope: CoroutineScope,
-    private val settingsUseCase: ManageViewerSettingsUseCase,
+    private val manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewerSettingsScreenState {
 
     override var uiState: SettingsViewerScreenUiState by mutableStateOf(SettingsViewerScreenUiState())
         private set
 
     init {
-        settingsUseCase.settings.onEach {
+        manageViewerSettingsUseCase.settings.onEach {
             uiState = uiState.copy(
                 isStatusBarShow = it.showStatusBar,
                 isNavigationBarShow = it.showNavigationBar,
@@ -64,19 +64,19 @@ private class ViewerSettingsScreenStateImpl(
 
     override fun onStatusBarShowChange(value: Boolean) {
         scope.launch {
-            settingsUseCase.edit { it.copy(showStatusBar = value) }
+            manageViewerSettingsUseCase.edit { it.copy(showStatusBar = value) }
         }
     }
 
     override fun onNavigationBarShowChange(value: Boolean) {
         scope.launch {
-            settingsUseCase.edit { it.copy(showNavigationBar = value) }
+            manageViewerSettingsUseCase.edit { it.copy(showNavigationBar = value) }
         }
     }
 
     override fun onTurnOnScreenChange(value: Boolean) {
         scope.launch {
-            settingsUseCase.edit { it.copy(keepOnScreen = value) }
+            manageViewerSettingsUseCase.edit { it.copy(keepOnScreen = value) }
         }
     }
 
@@ -94,25 +94,25 @@ private class ViewerSettingsScreenStateImpl(
 
     override fun onImageQualityChange(value: Float) {
         scope.launch {
-            settingsUseCase.edit { it.copy(imageQuality = value.toInt()) }
+            manageViewerSettingsUseCase.edit { it.copy(imageQuality = value.toInt()) }
         }
     }
 
     override fun onPreloadPagesChange(value: Float) {
         scope.launch {
-            settingsUseCase.edit { it.copy(readAheadPageCount = value.toInt()) }
+            manageViewerSettingsUseCase.edit { it.copy(readAheadPageCount = value.toInt()) }
         }
     }
 
     override fun onFixScreenBrightnessChange(value: Boolean) {
         scope.launch {
-            settingsUseCase.edit { it.copy(enableBrightnessControl = value) }
+            manageViewerSettingsUseCase.edit { it.copy(enableBrightnessControl = value) }
         }
     }
 
     override fun onScreenBrightnessChange(value: Float) {
         scope.launch {
-            settingsUseCase.edit { it.copy(screenBrightness = value) }
+            manageViewerSettingsUseCase.edit { it.copy(screenBrightness = value) }
         }
     }
 }

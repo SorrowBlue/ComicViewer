@@ -33,8 +33,9 @@ internal class UpdateFileEntityMinimumWithSortIndex(
                 is BookFolder -> FileEntity.Type.IMAGE_FOLDER
                 is Folder -> FileEntity.Type.FOLDER
             },
-            sortIndex = model.sortIndex
+            sortIndex = model.sortIndex,
         )
+
         fun fromFileEntity(entity: FileEntity) = UpdateFileEntityMinimumWithSortIndex(
             path = entity.path,
             bookshelfId = BookshelfId(entity.bookshelfId),
@@ -44,7 +45,7 @@ internal class UpdateFileEntityMinimumWithSortIndex(
             lastModified = entity.lastModified,
             isHidden = entity.isHidden,
             fileEntityType = entity.fileType,
-            sortIndex = entity.sortIndex
+            sortIndex = entity.sortIndex,
         )
     }
 }

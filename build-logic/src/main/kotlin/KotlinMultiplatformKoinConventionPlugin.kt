@@ -2,44 +2,34 @@ import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.kotlin
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
+class KotlinMultiplatformDiConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
             plugins {
                 id(libs.plugins.kotlin.multiplatform)
                 id(libs.plugins.google.ksp)
+                id(libs.plugins.metro)
             }
 
             kotlin<KotlinMultiplatformExtension> {
-                sourceSets.commonMain.dependencies {
-                    implementation(libs.koin.core)
-                    implementation(libs.koin.annotations)
-                    implementation(libs.koin.jsr330)
-                }
-                sourceSets.androidUnitTest.dependencies {
-                    implementation(libs.koin.androidxCompose)
-                }
+            }
+
+            metro {
+                contributesAsInject.set(true)
             }
 
             dependencies {
-                add("kspCommonMainMetadata", libs.koin.kspCompiler)
-                add("kspAndroid", libs.koin.kspCompiler)
-                add("kspAndroidTest", libs.koin.kspCompiler)
-                add("kspIosX64", libs.koin.kspCompiler)
-                add("kspIosX64Test", libs.koin.kspCompiler)
-                add("kspIosArm64", libs.koin.kspCompiler)
-                add("kspIosArm64Test", libs.koin.kspCompiler)
-                add("kspIosSimulatorArm64", libs.koin.kspCompiler)
-                add("kspIosSimulatorArm64Test", libs.koin.kspCompiler)
-                add("kspDesktop", libs.koin.kspCompiler)
-                add("kspDesktopTest", libs.koin.kspCompiler)
             }
         }
     }
 }
+
+private fun Project.metro(configure: Action<dev.zacsweers.metro.gradle.MetroPluginExtension>): Unit =
+    (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("metro", configure)

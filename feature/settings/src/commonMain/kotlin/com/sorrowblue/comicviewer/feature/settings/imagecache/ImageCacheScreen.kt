@@ -6,37 +6,16 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.ImageCache
 import com.sorrowblue.comicviewer.domain.model.OtherImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_image_cache
 import kotlin.math.floor
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
-
-@Serializable
-data object ImageCache
-
-@Destination<com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache>
-@Composable
-internal fun ImageCacheScreen(
-    navigator: SettingsDetailNavigator = koinInject(),
-    state: ImageCacheScreenState = rememberImageCacheScreenState(),
-) {
-    ImageCacheScreen(
-        uiState = state.uiState,
-        snackbarHostState = state.snackbarHostState,
-        onBackClick = navigator::navigateBack,
-        onClick = state::onClick,
-    )
-}
 
 internal data class ThumbnailScreenUiState(
     val imageCacheInfos: List<BookshelfImageCacheInfo> = emptyList(),

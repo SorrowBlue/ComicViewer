@@ -26,6 +26,9 @@ fun NamedDomainObjectContainer<ApplicationBuildType>.internal(action: Applicatio
 val NamedDomainObjectContainer<KotlinSourceSet>.desktopMain: NamedDomainObjectProvider<KotlinSourceSet> by KotlinSourceSetConvention
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
+val NamedDomainObjectContainer<KotlinSourceSet>.androidJvmMain: NamedDomainObjectProvider<KotlinSourceSet> by KotlinSourceSetConvention
+
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 val NamedDomainObjectContainer<KotlinSourceSet>.desktopTest: NamedDomainObjectProvider<KotlinSourceSet> by KotlinSourceSetConvention
 
 fun KotlinDependencyHandler.implementation(

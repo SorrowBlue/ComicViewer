@@ -18,11 +18,13 @@ import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import logcat.LogPriority
 import logcat.logcat
 import okio.BufferedSource
-import jakarta.inject.Singleton
 
 internal class FolderThumbnailFetcher(
     options: Options,
@@ -87,9 +89,10 @@ internal class FolderThumbnailFetcher(
     }
 }
 
-@Singleton
 @com.sorrowblue.comicviewer.data.coil.FolderThumbnailFetcher
-class FolderThumbnailFetcherFactory(
+@ContributesBinding(DataScope::class)
+@Inject
+internal class FolderThumbnailFetcherFactory(
     private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
     private val fileModelLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,

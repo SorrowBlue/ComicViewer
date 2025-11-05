@@ -27,7 +27,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_file_count
 import org.jetbrains.compose.resources.pluralStringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick: () -> Unit) {

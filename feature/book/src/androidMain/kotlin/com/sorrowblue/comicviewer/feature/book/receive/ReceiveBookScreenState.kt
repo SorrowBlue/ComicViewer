@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
@@ -33,8 +32,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import logcat.logcat
-import org.koin.android.annotation.KoinViewModel
-import org.koin.compose.viewmodel.koinViewModel
 
 internal interface ReceiveBookScreenState : SaveableScreenState {
 
@@ -48,30 +45,24 @@ internal interface ReceiveBookScreenState : SaveableScreenState {
     fun onPageLoaded(unratedPage: UnratedPage, bitmap: coil3.Bitmap)
 }
 
-@KoinViewModel
-internal class ReceiveBookViewModel(val getIntentBookUseCase: GetIntentBookUseCase) :
-    ViewModel()
-
 @Composable
-internal fun rememberReceiveBookScreenState(
-    uri: String?,
-    context: Context = LocalContext.current,
-    scope: CoroutineScope = rememberCoroutineScope(),
-    currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() },
-    pagerState: PagerState = rememberPagerState(initialPage = 0, pageCount = { currentList.size }),
-    systemUiController: SystemUiController = rememberSystemUiController(),
-    viewModel: ReceiveBookViewModel = koinViewModel(),
-): ReceiveBookScreenState {
+context(context: ReceiveBookScreenContext)
+internal fun rememberReceiveBookScreenState(uri: String?): ReceiveBookScreenState {
+    val appContext = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() }
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { currentList.size })
+    val systemUiController = rememberSystemUiController()
     return rememberSaveableScreenState {
         ReceiveBookScreenStateImpl(
             uri = uri,
-            context = context,
+            context = appContext,
             scope = scope,
             pagerState = pagerState,
             systemUiController = systemUiController,
             currentList = currentList,
             savedStateHandle = it,
-            getIntentBookUseCase = viewModel.getIntentBookUseCase
+            getIntentBookUseCase = context.getIntentBookUseCase
         )
     }
 }
@@ -160,6 +151,7 @@ private class ReceiveBookScreenStateImpl(
             }
         }
     }
+
     private fun onSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
         if (bitmap.width < bitmap.height) {

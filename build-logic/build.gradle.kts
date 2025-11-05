@@ -1,5 +1,4 @@
-import io.gitlab.arturbosch.detekt.Detekt
-import org.gradle.kotlin.dsl.withType
+import dev.detekt.gradle.Detekt
 
 plugins {
     `kotlin-dsl`
@@ -24,6 +23,7 @@ tasks {
 
 dependencies {
     compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.metro.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.kotlin.compose.gradlePlugin)
     compileOnly(libs.kotlinx.kover.gradlePlugin)
@@ -47,10 +47,9 @@ detekt {
 tasks.withType<Detekt>().configureEach {
     reports {
         html.required.set(false)
-        md.required.set(false)
+        markdown.required.set(false)
         sarif.required.set(true)
-        txt.required.set(false)
-        xml.required.set(false)
+        checkstyle.required.set(false)
     }
 }
 
@@ -79,8 +78,8 @@ gradlePlugin {
         register(libs.plugins.comicviewer.kotlinMultiplatform.compose) {
             implementationClass = "KotlinMultiplatformComposeConventionPlugin"
         }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.koin) {
-            implementationClass = "KotlinMultiplatformKoinConventionPlugin"
+        register(libs.plugins.comicviewer.kotlinMultiplatform.di) {
+            implementationClass = "KotlinMultiplatformDiConventionPlugin"
         }
         register(libs.plugins.comicviewer.kotlinMultiplatform.dynamicfeature) {
             implementationClass = "KotlinMultiplatformAndroidDynamicFeatureConventionPlugin"

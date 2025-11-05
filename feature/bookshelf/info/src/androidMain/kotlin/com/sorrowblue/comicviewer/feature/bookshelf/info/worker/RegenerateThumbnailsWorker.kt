@@ -24,27 +24,55 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
+import com.sorrowblue.comicviewer.framework.common.platformGraph
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.R
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.GraphExtension
+import dev.zacsweers.metro.Scope
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-import org.koin.android.annotation.KoinWorker
 
-@KoinWorker
+@Scope
+annotation class RegenerateThumbnailsWorkerScope
+
+@GraphExtension(RegenerateThumbnailsWorkerScope::class)
+interface RegenerateThumbnailsWorkerContext {
+    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
+    val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase
+
+    @ContributesTo(AppScope::class)
+    @GraphExtension.Factory
+    fun interface Factory {
+        fun createRegenerateThumbnailsWorkerContext(): RegenerateThumbnailsWorkerContext
+    }
+}
+
 internal class RegenerateThumbnailsWorker(
     appContext: Context,
     workerParams: WorkerParameters,
-    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
-    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
 ) : CoroutineWorker(appContext, workerParams) {
 
     private val notificationManager = NotificationManagerCompat.from(appContext)
     private val notificationID = Random.nextInt()
+
+    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
+    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase
+
+    init {
+        (appContext.platformGraph as RegenerateThumbnailsWorkerContext.Factory).createRegenerateThumbnailsWorkerContext()
+            .apply {
+                this@RegenerateThumbnailsWorker.getBookshelfInfoUseCase = getBookshelfInfoUseCase
+                this@RegenerateThumbnailsWorker.regenerateThumbnailsUseCase =
+                    regenerateThumbnailsUseCase
+            }
+    }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return createForegroundInfo("", 0, 0, true)

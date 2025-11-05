@@ -34,7 +34,7 @@
 
     <!--Notification Request dialog-->
     <string name="bookshelf_info_notification_title">通知で確認する</string>
-    <string name="bookshelf_info_notification_text_scan_file">ファイルのスキャン状況を通知で確認できます。\n「許可しない」を選択すると、通知なしでファイルをスキャンします。</string>
-    <string name="bookshelf_info_notification_text_scan_thumbnail">サムネイルのスキャン状況を通知で確認できます。\n「許可しない」を選択すると、通知なしでサムネイルをスキャンします。</string>
+    <string name="bookshelf_info_notification_text_scan_file">ファイルのスキャン状況を通知で確認できます。\nファイルのスキャンは実行中です。</string>
+    <string name="bookshelf_info_notification_text_scan_thumbnail">サムネイルのスキャン状況を通知で確認できます。\nサムネイルのスキャンは実行中です。</string>
     <string name="bookshelf_info_notification_btn_not_allowed">許可しない</string>
 </resources>

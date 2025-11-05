@@ -19,15 +19,18 @@ import kotlinx.datetime.toLocalDateTime
 import om.sorrowblue.comicviewer.feature.settings.BuildKonfig
 
 internal interface AppInfoSettingsScreenState {
-    fun launchReview()
+
     var uiState: SettingsAppInfoScreenUiState
+
+    fun launchReview()
 }
 
 @Composable
-internal fun rememberAppInfoSettingsScreenState(
-    urlHandler: UriHandler = LocalUriHandler.current,
-): AppInfoSettingsScreenState = remember {
-    AppInfoSettingsScreenStateImpl(urlHandler = urlHandler)
+internal fun rememberAppInfoSettingsScreenState(): AppInfoSettingsScreenState {
+    val urlHandler = LocalUriHandler.current
+    return remember(urlHandler) {
+        AppInfoSettingsScreenStateImpl(urlHandler = urlHandler)
+    }
 }
 
 private class AppInfoSettingsScreenStateImpl(

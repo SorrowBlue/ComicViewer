@@ -1,11 +1,13 @@
 package com.sorrowblue.comicviewer.framework.common
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
-import jakarta.inject.Singleton
-import org.koin.mp.KoinPlatform
 
 @Suppress("UnnecessaryAbstractClass")
 abstract class DesktopContext {
@@ -14,12 +16,13 @@ abstract class DesktopContext {
 
     companion object {
 
-        val INSTANCE get(): DesktopContext = KoinPlatform.getKoin().get()
+        lateinit var platformGraph: PlatformGraph
     }
 }
 
-@Singleton
-internal class DesktopContextImpl : DesktopContext() {
+@ContributesBinding(AppScope::class, binding = binding<PlatformContext>())
+@Inject
+class DesktopContextImpl : DesktopContext() {
 
     private val os by lazy { System.getProperty("os.name").lowercase() }
 

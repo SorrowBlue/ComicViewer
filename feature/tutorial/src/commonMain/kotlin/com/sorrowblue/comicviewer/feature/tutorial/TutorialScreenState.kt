@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.tutorial
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,7 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 internal interface TutorialScreenState {
     val enabledBack: Boolean
@@ -28,21 +26,20 @@ internal interface TutorialScreenState {
 }
 
 @Composable
+context(context: TutorialScreenContext)
 internal fun rememberTutorialScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase = koinInject(),
-    pageState: PagerState = rememberPagerState { TutorialSheet.entries.size },
 ): TutorialScreenState {
+    val scope = rememberCoroutineScope()
+    val pageState = rememberPagerState { TutorialSheet.entries.size }
     return remember {
         TutorialScreenStateImpl(
             scope = scope,
-            manageViewerOperationSettingsUseCase = manageViewerOperationSettingsUseCase,
+            manageViewerOperationSettingsUseCase = context.manageViewerOperationSettingsUseCase,
             pageState = pageState
         )
     }
 }
 
-@Stable
 private class TutorialScreenStateImpl(
     private val scope: CoroutineScope,
     private val manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase,

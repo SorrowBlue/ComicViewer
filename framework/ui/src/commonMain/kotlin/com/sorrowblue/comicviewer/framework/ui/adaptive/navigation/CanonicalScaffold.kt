@@ -133,7 +133,7 @@ fun <T : Any> CanonicalScaffold(
                         )
                     }
                     CompositionLocalProvider(LocalCanonicalScaffoldBound provides scaffoldBound) {
-                        content(contentPadding + PaddingValues(bottom = fabHeight))
+                        content(contentPadding.plus(PaddingValues(bottom = fabHeight)))
                     }
                 }
             }

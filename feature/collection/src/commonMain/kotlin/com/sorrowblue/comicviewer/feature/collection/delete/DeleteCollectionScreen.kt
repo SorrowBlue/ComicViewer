@@ -5,10 +5,6 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.DestinationStyle
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
@@ -17,41 +13,26 @@ import comicviewer.feature.collection.generated.resources.collection_label_delet
 import comicviewer.feature.collection.generated.resources.collection_label_delete_confirm
 import comicviewer.feature.collection.generated.resources.collection_title_delete
 import comicviewer.framework.ui.generated.resources.cancel
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
+import androidx.compose.ui.tooling.preview.Preview
 
-@Serializable
-internal data class DeleteCollection(val id: CollectionId, val name: String)
+data class DeleteCollectionScreenUiState(
+    val name: String = "",
+)
 
-@Destination<DeleteCollection>(style = DestinationStyle.Dialog::class)
 @Composable
 internal fun DeleteCollectionScreen(
-    route: DeleteCollection,
-    navController: NavController = koinInject(),
-) {
-    val state = rememberDeleteCollectionScreenState()
-    DeleteCollectionScreen(
-        name = route.name,
-        onDismissRequest = navController::popBackStack,
-        onConfirm = { state.delete(route.id, navController::popBackStack) },
-    )
-}
-
-@Composable
-private fun DeleteCollectionScreen(
-    name: String,
-    onDismissRequest: () -> Unit,
+    uiState: DeleteCollectionScreenUiState,
+    onBackClick: () -> Unit,
     onConfirm: () -> Unit,
 ) {
     AlertDialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = onBackClick,
         title = {
             Text(stringResource(Res.string.collection_title_delete))
         },
         text = {
-            Text(stringResource(Res.string.collection_label_delete_confirm, name))
+            Text(stringResource(Res.string.collection_label_delete_confirm, uiState.name))
         },
         confirmButton = {
             FilledTonalButton(onClick = onConfirm) {
@@ -59,7 +40,7 @@ private fun DeleteCollectionScreen(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(onClick = onBackClick) {
                 Text(stringResource(FrameworkResString.cancel))
             }
         },
@@ -71,8 +52,10 @@ private fun DeleteCollectionScreen(
 private fun DeleteCollectionScreenPreview() {
     PreviewTheme {
         DeleteCollectionScreen(
-            name = fakeBasicCollection().name,
-            onDismissRequest = {},
+            uiState = DeleteCollectionScreenUiState(
+                name = fakeBasicCollection().name,
+            ),
+            onBackClick = {},
             onConfirm = {},
         )
     }

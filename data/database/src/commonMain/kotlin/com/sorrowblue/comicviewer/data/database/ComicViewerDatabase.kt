@@ -32,7 +32,7 @@ internal const val DATABASE_NAME = "comic_viewer_database"
         FileEntity::class,
         CollectionEntity::class,
         CollectionFileEntity::class,
-        ReadLaterFileEntity::class
+        ReadLaterFileEntity::class,
     ],
     version = DATABASE_VERSION,
     autoMigrations = [
@@ -44,12 +44,11 @@ internal const val DATABASE_NAME = "comic_viewer_database"
         AutoMigration(6, 7),
         AutoMigration(7, 8, ComicViewerDatabase.AutoMigration7to8::class),
     ],
-    exportSchema = true
+    exportSchema = true,
 )
 @ConstructedBy(ComicViewerDatabaseConstructor::class)
 @TypeConverters(DecryptedPasswordConverters::class)
 internal abstract class ComicViewerDatabase : RoomDatabase() {
-
     abstract fun bookshelfDao(): BookshelfDao
 
     abstract fun fileDao(): FileDao
@@ -68,37 +67,37 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
         override fun migrate(connection: SQLiteConnection) {
             connection.execSQL(
                 """
-                        INSERT INTO
-                          collection(id, name, type, bookshelf_id, query, range, range_parent, period, sort_type, sort_type_asc, show_hidden)
-                        SELECT
-                          id,
-                          name,
-                          'Basic' as type,
-                          null as bookshelf_id,
-                          null as query,
-                          null as range,
-                          null as range_parent,
-                          null as period,
-                          null as sort_type,
-                          null as sort_type_asc,
-                          null as show_hidden
-                        FROM
-                          favorite
-                        ;
-                """.trimIndent()
+                INSERT INTO
+                  collection(id, name, type, bookshelf_id, query, range, range_parent, period, sort_type, sort_type_asc, show_hidden)
+                SELECT
+                  id,
+                  name,
+                  'Basic' as type,
+                  null as bookshelf_id,
+                  null as query,
+                  null as range,
+                  null as range_parent,
+                  null as period,
+                  null as sort_type,
+                  null as sort_type_asc,
+                  null as show_hidden
+                FROM
+                  favorite
+                ;
+                """.trimIndent(),
             )
             connection.execSQL(
                 """
-                        INSERT INTO
-                          collection_file(collection_id, bookshelf_id, file_path)
-                        SELECT
-                          favorite_id,
-                          bookshelf_id,
-                          file_path
-                        FROM
-                          favorite_file
-                        ;
-                """.trimIndent()
+                INSERT INTO
+                  collection_file(collection_id, bookshelf_id, file_path)
+                SELECT
+                  favorite_id,
+                  bookshelf_id,
+                  file_path
+                FROM
+                  favorite_file
+                ;
+                """.trimIndent(),
             )
         }
     }

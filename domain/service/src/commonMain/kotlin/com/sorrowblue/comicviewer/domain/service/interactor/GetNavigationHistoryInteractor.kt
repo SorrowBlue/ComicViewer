@@ -9,12 +9,12 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import org.koin.core.annotation.Factory
 
-@Factory
+@Inject
 internal class GetNavigationHistoryInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,

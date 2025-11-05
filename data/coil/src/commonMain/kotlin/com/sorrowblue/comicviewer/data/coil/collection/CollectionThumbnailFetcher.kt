@@ -11,17 +11,18 @@ import com.sorrowblue.comicviewer.data.coil.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
-import com.sorrowblue.comicviewer.data.coil.CollectionFetcher
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import logcat.LogPriority
 import logcat.logcat
 import okio.BufferedSource
-import jakarta.inject.Singleton
 
 internal class CollectionThumbnailFetcher(
     options: Options,
@@ -74,8 +75,9 @@ internal class CollectionThumbnailFetcher(
     }
 }
 
-@Singleton
-@CollectionFetcher
+@com.sorrowblue.comicviewer.data.coil.CollectionThumbnailFetcher
+@ContributesBinding(DataScope::class)
+@Inject
 internal class CollectionThumbnailFetcherFactory(
     private val diskCache: Lazy<DiskCache>,
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,

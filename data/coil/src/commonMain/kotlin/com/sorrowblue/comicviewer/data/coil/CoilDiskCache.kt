@@ -6,9 +6,7 @@ import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import kotlin.concurrent.atomics.AtomicReference
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import okio.Path
-import jakarta.inject.Singleton
 
-@Singleton
 expect class CoilDiskCache(context: PlatformContext) {
     fun resolve(folder: String): Path
 }

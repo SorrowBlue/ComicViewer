@@ -33,7 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigableExtraPaneScaffold
@@ -70,7 +70,7 @@ interface CanonicalScaffoldState<T : Any> : AnimatedVisibilityScope, SharedTrans
 @Composable
 inline fun <reified T : @Serializable Any> rememberCanonicalScaffoldState(
     navigator: ThreePaneScaffoldNavigator<T> = rememberCanonicalScaffoldNavigator(),
-    animatedContentScope: AnimatedContentScope = LocalAnimatedContentScope.current,
+    animatedContentScope: AnimatedContentScope = LocalNavAnimatedContentScope.current,
     suiteScaffoldState: NavigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState(),
     navigationRailState: WideNavigationRailState = rememberWideNavigationRailState(),
     appBarState: AppBarState = rememberAppBarState(),

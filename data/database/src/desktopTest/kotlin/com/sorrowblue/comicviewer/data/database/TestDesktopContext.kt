@@ -1,15 +1,14 @@
 package com.sorrowblue.comicviewer.data.database
 
 import com.sorrowblue.comicviewer.framework.common.DesktopContext
+import dev.zacsweers.metro.Inject
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
-import jakarta.inject.Singleton
 
-@Singleton
+@Inject
 internal class TestDesktopContext : DesktopContext() {
-
     private val os by lazy { System.getProperty("os.name").lowercase() }
     private val currentTime = System.currentTimeMillis().toString()
 
@@ -18,14 +17,14 @@ internal class TestDesktopContext : DesktopContext() {
             os.contains("win") -> Path(
                 System.getenv("APPDATA") ?: "${System.getProperty(USER_HOME)}\\AppData\\Local",
                 "Temp",
-                "$IDENTIFIER-$currentTime"
+                "$IDENTIFIER-$currentTime",
             )
 
             os.contains("mac") -> Path(
                 System.getProperty(USER_HOME),
                 "Library",
                 "Caches",
-                "$IDENTIFIER-$currentTime"
+                "$IDENTIFIER-$currentTime",
             )
 
             else -> Path(System.getProperty(USER_HOME), ".cache", "$IDENTIFIER-$currentTime")
@@ -40,14 +39,14 @@ internal class TestDesktopContext : DesktopContext() {
             os.contains("win") -> Path(
                 System.getenv("APPDATA") ?: "${System.getProperty(USER_HOME)}\\AppData\\Local",
                 "Temp",
-                "$IDENTIFIER-cache-$currentTime"
+                "$IDENTIFIER-cache-$currentTime",
             )
 
             os.contains("mac") -> Path(
                 System.getProperty(USER_HOME),
                 "Library",
                 "Caches",
-                "$IDENTIFIER-cache-$currentTime"
+                "$IDENTIFIER-cache-$currentTime",
             )
 
             else -> Path(System.getProperty(USER_HOME), ".cache", "$IDENTIFIER-cache-$currentTime")

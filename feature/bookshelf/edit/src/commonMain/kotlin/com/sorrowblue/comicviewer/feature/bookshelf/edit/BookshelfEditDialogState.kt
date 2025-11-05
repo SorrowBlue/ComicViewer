@@ -27,7 +27,7 @@ internal interface InternalBookshelfEditDialogState : BookshelfEditDialogState {
 }
 
 @Composable
-internal fun rememberBookshelfEditDialogState(): InternalBookshelfEditDialogState {
+fun rememberBookshelfEditDialogState(): BookshelfEditDialogState {
     return rememberSaveable(saver = BookshelfEditDialogStateImpl.Saver) {
         BookshelfEditDialogStateImpl()
     }

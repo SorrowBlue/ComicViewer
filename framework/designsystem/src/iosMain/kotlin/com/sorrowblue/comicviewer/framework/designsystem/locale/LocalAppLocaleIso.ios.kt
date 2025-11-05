@@ -4,15 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import platform.Foundation.NSLocale
 import platform.Foundation.NSLocaleIdentifier
 import platform.Foundation.NSUserDefaults
 import platform.Foundation.languageIdentifier
 import platform.Foundation.preferredLanguages
 
-actual object LocalAppLocaleIso {
+private const val LANG_KEY = "AppleLanguages"
 
-    private const val LANG_KEY = "AppleLanguages"
+@SingleIn(AppScope::class)
+@Inject
+actual class AppLocaleIso {
 
     private val default = NSLocale.preferredLanguages.first() as String
 

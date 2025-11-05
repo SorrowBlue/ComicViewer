@@ -16,31 +16,32 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
+
+internal interface BookshelfDeleteScreenState {
+    val uiState: BookshelfDeleteScreenUiState
+
+    fun onConfirmClick(done: () -> Unit)
+}
 
 @Composable
 internal fun rememberBookshelfDeleteScreenState(
     bookshelfId: BookshelfId,
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: BookshelfDeleteViewModel = koinViewModel(),
+    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
 ): BookshelfDeleteScreenState {
+    val coroutineScope = rememberCoroutineScope()
     return remember {
         BookshelfDeleteScreenStateImpl(
-            bookshelfInfoUseCase = viewModel.bookshelfInfoUseCase,
-            scope = scope,
+            getBookshelfInfoUseCase = getBookshelfInfoUseCase,
+            scope = coroutineScope,
             bookshelfId = bookshelfId,
-            updateDeletionFlagUseCase = viewModel.updateDeletionFlagUseCase
+            updateDeletionFlagUseCase = updateDeletionFlagUseCase
         )
     }
 }
 
-internal interface BookshelfDeleteScreenState {
-    val uiState: BookshelfDeleteScreenUiState
-    fun onConfirmClick(done: () -> Unit)
-}
-
 private class BookshelfDeleteScreenStateImpl(
-    bookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val scope: CoroutineScope,
     private val bookshelfId: BookshelfId,
     private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
@@ -50,7 +51,7 @@ private class BookshelfDeleteScreenStateImpl(
         private set
 
     init {
-        bookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
+        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
             .onEach {
                 uiState = uiState.copy(title = it.dataOrNull()?.bookshelf?.displayName)
             }.launchIn(scope)

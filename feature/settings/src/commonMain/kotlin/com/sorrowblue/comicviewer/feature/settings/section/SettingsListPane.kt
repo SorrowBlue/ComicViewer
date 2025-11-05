@@ -32,11 +32,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,40 +54,7 @@ import comicviewer.feature.settings.generated.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun SettingsListPane(
-    navigator: ThreePaneScaffoldNavigator<SettingsItem>,
-    onBackClick: () -> Unit,
-    onSettingsClick: (SettingsItem) -> Unit,
-    onSettingsLongClick: (SettingsItem) -> Unit,
-    modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState(),
-) {
-    val settingsList = remember { SettingsItem.entries }
-    if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
-        CompactListPane(
-            settingsList = settingsList,
-            onSettingsClick = onSettingsClick,
-            onSettingsLongClick = onSettingsLongClick,
-            onBackClick = onBackClick,
-            modifier = modifier,
-            lazyListState = lazyListState
-        )
-    } else {
-        ListPane(
-            settingsList = settingsList,
-            currentSettings = navigator.currentDestination?.contentKey
-                ?: SettingsItem.DISPLAY,
-            onSettingsClick = onSettingsClick,
-            onSettingsLongClick = onSettingsLongClick,
-            onBackClick = onBackClick,
-            modifier = modifier,
-            lazyListState = lazyListState
-        )
-    }
-}
-
-@Composable
-private fun CompactListPane(
+internal fun CompactListPane(
     settingsList: List<SettingsItem>,
     onSettingsClick: (SettingsItem) -> Unit,
     onSettingsLongClick: (SettingsItem) -> Unit,
@@ -135,7 +100,7 @@ private fun CompactListPane(
 }
 
 @Composable
-private fun ListPane(
+internal fun ListPane(
     settingsList: List<SettingsItem>,
     currentSettings: SettingsItem?,
     onSettingsClick: (SettingsItem) -> Unit,

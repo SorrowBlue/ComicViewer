@@ -30,13 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onLayoutRectChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.cmpdestinations.DestinationStyle
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSortDropdownMenu
@@ -45,51 +41,21 @@ import com.sorrowblue.comicviewer.feature.collection.add.section.CollectionAddAp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
-import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_add
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
-
-@Serializable
-internal data class BasicCollectionAdd(val bookshelfId: BookshelfId, val path: String)
-
-interface BasicCollectionAddNavigator {
-    fun onCollectionCreateClick(bookshelfId: BookshelfId, path: String)
-}
-
-@Destination<BasicCollectionAdd>(style = DestinationStyle.Dialog::class)
-@Composable
-internal fun BasicCollectionAddScreen(
-    route: BasicCollectionAdd,
-    navController: NavController = koinInject(),
-    navigator: BasicCollectionAddNavigator = koinInject(),
-    state: BasicCollectionAddScreenState = rememberBasicCollectionAddScreenState(route),
-) {
-    BasicCollectionAddScreen(
-        uiState = state.uiState,
-        lazyPagingItems = state.lazyPagingItems,
-        lazyListState = state.lazyListState,
-        onDismissRequest = navController::popBackStack,
-        onClick = state::onCollectionClick,
-        onClickCollectionSort = state::onClickCollectionSort,
-        onCollectionCreateClick = {
-            navigator.onCollectionCreateClick(route.bookshelfId, route.path)
-        }
-    )
-}
+import androidx.compose.ui.tooling.preview.Preview
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
 internal data class BasicCollectionAddScreenUiState(
     val collectionSort: CollectionSort = CollectionSort.Recent,
 )
 
 @Composable
-private fun BasicCollectionAddScreen(
+internal fun BasicCollectionAddScreen(
     uiState: BasicCollectionAddScreenUiState,
     lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>,
     onDismissRequest: () -> Unit,
@@ -133,8 +99,7 @@ private fun BasicCollectionAddScreen(
                 BasicCollectionContent(
                     state = lazyListState,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = contentPadding
-                        .plus(PaddingValues(top = ButtonDefaults.MinHeight, bottom = buttonHeight)),
+                    contentPadding = contentPadding.plus(PaddingValues(top = ButtonDefaults.MinHeight, bottom = buttonHeight)),
                     onClick = onClick
                 )
                 CollectionSortDropdownMenu(

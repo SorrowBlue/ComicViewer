@@ -7,9 +7,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import com.sorrowblue.cmpdestinations.DestinationStyle
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.book.section.PageFormat2
 import com.sorrowblue.comicviewer.feature.book.section.PageScale
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
@@ -19,7 +16,6 @@ import comicviewer.feature.book.generated.resources.book_label_display_format
 import comicviewer.feature.book.generated.resources.book_label_scale
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Serializable
 data object BookMenu
@@ -29,17 +25,12 @@ internal data class BookMenuScreenUiState(
     val pageScale: PageScale = PageScale.Fit,
 )
 
-@Destination<BookMenu>(style = DestinationStyle.Dialog::class)
 @Composable
-internal fun BookMenuScreen(navController: NavController = koinInject()) {
-    BookMenuScreen(onDismissRequest = navController::navigateUp)
-}
-
-@Composable
-private fun BookMenuScreen(
-    state: BookMenuScreenState = rememberBookMenuScreenState(),
+context(context: BookMenuScreenContext)
+internal fun BookMenuScreenRoot(
     onDismissRequest: () -> Unit,
 ) {
+    val state = rememberBookMenuScreenState()
     BookMenuScreen(
         uiState = state.uiState,
         onDismissRequest = onDismissRequest,
@@ -49,7 +40,7 @@ private fun BookMenuScreen(
 }
 
 @Composable
-internal fun BookMenuScreen(
+private fun BookMenuScreen(
     uiState: BookMenuScreenUiState,
     onDismissRequest: () -> Unit,
     onPageFormatChange: (PageFormat2) -> Unit,

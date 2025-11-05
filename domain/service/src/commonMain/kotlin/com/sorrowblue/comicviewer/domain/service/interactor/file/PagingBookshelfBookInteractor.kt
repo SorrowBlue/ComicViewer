@@ -4,10 +4,10 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
-import org.koin.core.annotation.Factory
 
-@Factory
+@Inject
 internal class PagingBookshelfBookInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
 ) : PagingBookshelfBookUseCase() {

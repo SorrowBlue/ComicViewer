@@ -13,54 +13,59 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.sorrowblue.comicviewer.app.AppNavItem.Bookshelf
-import com.sorrowblue.comicviewer.app.AppNavItem.History
-import com.sorrowblue.comicviewer.app.AppNavItem.Readlater
-import com.sorrowblue.comicviewer.app.navigation.ComicViewerAppNavGraph
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfFolder
-import com.sorrowblue.comicviewer.feature.bookshelf.navgraph.BookshelfNavGraph
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavItem
-import com.sorrowblue.comicviewer.framework.ui.navigation.TabDisplayRoute
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.GraphExtension
+import dev.zacsweers.metro.Scope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
-import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.component.KoinComponent
+
+@Scope
+annotation class ComicViewerAppScope
+
+@GraphExtension(ComicViewerAppScope::class)
+interface ComicViewerAppContext {
+    val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase
+    val getNavigationHistoryUseCase: GetNavigationHistoryUseCase
+
+    @ContributesTo(AppScope::class)
+    @GraphExtension.Factory
+    fun interface Factory {
+        fun createComicViewerAppContext(): ComicViewerAppContext
+    }
+}
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
+context(context: ComicViewerAppContext)
 internal fun rememberComicViewerAppState(
     sharedTransitionScope: SharedTransitionScope,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     scope: CoroutineScope = rememberCoroutineScope(),
-    manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase = koinInject(),
-    getNavigationHistoryUseCase: GetNavigationHistoryUseCase = koinInject(),
-    mainViewModel: MainViewModel = koinViewModel(),
+    mainViewModel: MainViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
 ): ComicViewerAppState {
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
@@ -76,8 +81,8 @@ internal fun rememberComicViewerAppState(
             sharedTransitionScope = sharedTransitionScope,
             snackbarHostState = snackbarHostState,
             scope = scope,
-            manageDisplaySettingsUseCase = manageDisplaySettingsUseCase,
-            getNavigationHistoryUseCase = getNavigationHistoryUseCase,
+            manageDisplaySettingsUseCase = context.manageDisplaySettingsUseCase,
+            getNavigationHistoryUseCase = context.getNavigationHistoryUseCase,
             completeInit = {
                 mainViewModel.shouldKeepSplash.value = false
                 mainViewModel.isInitialized.value = true
@@ -106,9 +111,9 @@ private class ComicViewerAppStateImpl(
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val completeInit: () -> Unit,
     override val navController: NavHostController,
-) : ComicViewerAppState, KoinComponent, SharedTransitionScope by sharedTransitionScope {
+) : ComicViewerAppState, SharedTransitionScope by sharedTransitionScope {
 
-    override val navItems = mutableStateListOf(Bookshelf, AppNavItem.Collection, Readlater, History)
+    override val navItems: SnapshotStateList<AppNavItem> = mutableStateListOf()
 
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)
 
@@ -135,32 +140,6 @@ private class ComicViewerAppStateImpl(
     var isNavigationRestored by mutableStateOf(false)
 
     init {
-        val tabDisplayRoutes = getKoin().getAll<TabDisplayRoute>().flatMap(TabDisplayRoute::routes)
-        logcat { "init" }
-        navController.currentBackStackEntryFlow
-            .filter { it.destination is ComposeNavigator.Destination }
-            .onEach { backStackEntry ->
-                val hierarchy = backStackEntry.destination.hierarchy
-                val currentTab = navItems.find { tab ->
-                    hierarchy.any { destination ->
-                        tabDisplayRoutes.any { destination.hasRoute(it) } &&
-                            destination.parent?.hasRoute(tab.navGraph::class) == true
-                    }
-                }
-                if (currentNavItem == null && currentTab != null) {
-                    // 画面が更新されてからNavigationを表示します。
-                    delay(250)
-                }
-                currentNavItem = currentTab
-                logcat {
-                    "destination.hierarchy=${
-                        backStackEntry.destination.hierarchy.joinToString(",") {
-                            it.route?.split('/')?.firstOrNull().orEmpty().ifEmpty { "null" }
-                        }
-                    }"
-                }
-            }.flowWithLifecycle(lifecycle)
-            .launchIn(scope)
         if (!isNavigationRestored) {
             scope.launch {
                 if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
@@ -177,60 +156,60 @@ private class ComicViewerAppStateImpl(
     private fun restoreNavigation(): Job {
         return scope.launch {
             val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
-            navController.navigate(
-                BookshelfNavGraph,
-                navOptions {
-                    popUpTo(ComicViewerAppNavGraph) {
-                        inclusive = true
-                    }
-                }
-            )
+//            navController.navigate(
+//                BookshelfNavGraph,
+//                navOptions {
+//                    popUpTo(ComicViewerAppNavGraph) {
+//                        inclusive = true
+//                    }
+//                }
+//            )
             if (history?.folderList.isNullOrEmpty()) {
                 completeRestoreHistory()
             } else {
                 val (folderList, book) = history.value
                 val bookshelfId = folderList.first().bookshelfId
                 if (folderList.size == 1) {
-                    navController.navigate(
-                        BookshelfFolder(
-                            bookshelfId = bookshelfId,
-                            path = folderList.first().path,
-                            restorePath = book.path
-                        )
-                    )
+//                    navController.navigate(
+//                        BookshelfFolder(
+//                            bookshelfId = bookshelfId,
+//                            path = folderList.first().path,
+//                            restorePath = book.path
+//                        )
+//                    )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                 } else {
-                    navController.navigate(
-                        BookshelfFolder(
-                            bookshelfId = bookshelfId,
-                            path = folderList.first().path,
-                            restorePath = null
-                        )
-                    )
+//                    navController.navigate(
+//                        BookshelfFolder(
+//                            bookshelfId = bookshelfId,
+//                            path = folderList.first().path,
+//                            restorePath = null
+//                        )
+//                    )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
                     }
                     folderList.drop(1).dropLast(1).forEach { folder ->
-                        navController.navigate(
-                            BookshelfFolder(
-                                bookshelfId = bookshelfId,
-                                path = folder.path,
-                                restorePath = null
-                            )
-                        )
+//                        navController.navigate(
+//                            BookshelfFolder(
+//                                bookshelfId = bookshelfId,
+//                                path = folder.path,
+//                                restorePath = null
+//                            )
+//                        )
                         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                             "-> folder(${folder.path})"
                         }
                     }
-                    navController.navigate(
-                        BookshelfFolder(
-                            bookshelfId = bookshelfId,
-                            path = folderList.last().path,
-                            restorePath = book.path
-                        )
-                    )
+//                    navController.navigate(
+//                        BookshelfFolder(
+//                            bookshelfId = bookshelfId,
+//                            path = folderList.last().path,
+//                            restorePath = book.path
+//                        )
+//                    )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "-> folder${folderList.last().path}, ${book.path}"
                     }

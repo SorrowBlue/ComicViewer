@@ -7,7 +7,6 @@ import androidx.documentfile.provider.DocumentFile
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.DeviceFileClient
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.extension
@@ -16,22 +15,27 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import okio.BufferedSource
 import okio.buffer
 import okio.source
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.InjectedParam
 
-@Factory
-@DeviceFileClient
-internal class DeviceFileClient(
-    @InjectedParam override val bookshelf: InternalStorage,
+@AssistedInject
+internal actual class DeviceFileClient(
+    @Assisted actual override val bookshelf: InternalStorage,
     private val context: Context,
 ) : FileClient<InternalStorage> {
 
+    @AssistedFactory
+    actual fun interface Factory : FileClient.Factory<InternalStorage> {
+        actual override fun create(bookshelf: InternalStorage): DeviceFileClient
+    }
+
     private val contentResolver = context.contentResolver
 
-    override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun bufferedSource(file: File): BufferedSource {
         return kotlin.runCatching {
             ParcelFileDescriptor.AutoCloseInputStream(
                 contentResolver.openFileDescriptor(file.uri, "r")
@@ -46,11 +50,11 @@ internal class DeviceFileClient(
         }
     }
 
-    override suspend fun attribute(path: String): FileAttribute {
+    actual override suspend fun attribute(path: String): FileAttribute {
         return FileAttribute()
     }
 
-    override suspend fun connect(path: String) {
+    actual override suspend fun connect(path: String) {
         kotlin.runCatching {
             documentFile(path).exists()
         }.fold({
@@ -67,7 +71,7 @@ internal class DeviceFileClient(
         }
     }
 
-    override suspend fun exists(path: String): Boolean {
+    actual override suspend fun exists(path: String): Boolean {
         return kotlin.runCatching {
             documentFile(path).exists()
         }.getOrElse {
@@ -80,7 +84,7 @@ internal class DeviceFileClient(
         }
     }
 
-    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         return kotlin.runCatching {
             documentFile(path).toFileModel(resolveImageFolder)
         }.getOrElse {
@@ -93,7 +97,7 @@ internal class DeviceFileClient(
         }
     }
 
-    override suspend fun listFiles(
+    actual override suspend fun listFiles(
         file: File,
         resolveImageFolder: Boolean,
     ): List<File> {
@@ -109,7 +113,7 @@ internal class DeviceFileClient(
         }
     }
 
-    override suspend fun seekableInputStream(file: File): SeekableInputStream {
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
         return kotlin.runCatching {
             DeviceSeekableInputStream(context, file.uri)
         }.getOrElse {

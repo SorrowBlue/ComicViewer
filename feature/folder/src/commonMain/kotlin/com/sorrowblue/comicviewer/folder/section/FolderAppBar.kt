@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.folder.section
 import androidx.compose.material3.AppBarRow2
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -10,6 +11,10 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.file.component.fileListDisplayItem
 import com.sorrowblue.comicviewer.file.component.gridSizeItem
+import com.sorrowblue.comicviewer.file.component.hiddenFilesToggleableItem
+import com.sorrowblue.comicviewer.file.component.rememberFileListDisplayItemState
+import com.sorrowblue.comicviewer.file.component.rememberGridSizeItemState
+import com.sorrowblue.comicviewer.file.component.rememberHiddenFilesToggleableItemState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.canonical.CanonicalAppBar
@@ -17,7 +22,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_action_search
 import comicviewer.feature.folder.generated.resources.folder_action_settings
-import comicviewer.feature.folder.generated.resources.folder_action_show_hidden
 import org.jetbrains.compose.resources.stringResource
 
 internal data class FolderAppBarUiState(
@@ -38,18 +42,24 @@ internal sealed interface FolderTopAppBarAction {
 }
 
 @Composable
-internal fun CanonicalScaffoldState<*>.FolderAppBar(
+internal fun FolderAppBar(
     uiState: FolderAppBarUiState,
-    onAction: (FolderTopAppBarAction) -> Unit,
+    onBackClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    onSortClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    CanonicalAppBar(
+    TopAppBar(
         title = { Text(text = uiState.title) },
-        navigationIcon = { BackIconButton(onClick = { onAction(FolderTopAppBarAction.Back) }) },
+        navigationIcon = { BackIconButton(onClick = onBackClick) },
         actions = {
+            val gridSizeItemState = rememberGridSizeItemState()
+            val fileListDisplayItemState = rememberFileListDisplayItemState()
+            val hiddenFilesToggleableItemState = rememberHiddenFilesToggleableItemState()
             AppBarRow2 {
                 clickableItem(
-                    onClick = { onAction(FolderTopAppBarAction.Search) },
+                    onClick = onSearchClick,
                     icon = {
                         Icon(
                             ComicIcons.Search,
@@ -61,7 +71,7 @@ internal fun CanonicalScaffoldState<*>.FolderAppBar(
                     }
                 )
                 clickableItem(
-                    onClick = { onAction(FolderTopAppBarAction.Sort) },
+                    onClick = onSortClick,
                     icon = {
                         Icon(ComicIcons.SortByAlpha, "sort")
                     },
@@ -69,25 +79,11 @@ internal fun CanonicalScaffoldState<*>.FolderAppBar(
                         Text("Sort")
                     }
                 )
-                fileListDisplayItem(
-                    fileListDisplay = uiState.fileListDisplay,
-                    onClick = { onAction(FolderTopAppBarAction.FileListDisplay) }
-                )
-                gridSizeItem(
-                    fileListDisplay = uiState.fileListDisplay,
-                    onClick = { onAction(FolderTopAppBarAction.GridSize) }
-                )
-                toggleableItem(
-                    checked = uiState.showHiddenFile,
-                    autoDismiss = false,
-                    onCheckedChange = { onAction(FolderTopAppBarAction.HiddenFile) },
-                    icon = { Icon(ComicIcons.FolderOff, null) },
-                    label = {
-                        Text(stringResource(Res.string.folder_action_show_hidden))
-                    }
-                )
+                fileListDisplayItemState.fileListDisplayItem()
+                gridSizeItemState.gridSizeItem()
+                hiddenFilesToggleableItemState.hiddenFilesToggleableItem()
                 clickableItem(
-                    onClick = { onAction(FolderTopAppBarAction.Settings) },
+                    onClick = onSettingsClick,
                     icon = { Icon(ComicIcons.Settings, null) },
                     label = { Text(stringResource(Res.string.folder_action_settings)) }
                 )

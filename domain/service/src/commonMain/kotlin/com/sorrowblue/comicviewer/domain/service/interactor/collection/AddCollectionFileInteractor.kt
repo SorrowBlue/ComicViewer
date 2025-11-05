@@ -4,10 +4,10 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
-import org.koin.core.annotation.Factory
 
-@Factory
+@Inject
 internal class AddCollectionFileInteractor(
     private val collectionLocalDataSource: CollectionLocalDataSource,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,

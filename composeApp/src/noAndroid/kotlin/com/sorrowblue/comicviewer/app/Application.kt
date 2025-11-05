@@ -1,54 +1,24 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import com.sorrowblue.comicviewer.framework.common.AppCoroutineContext
+import com.sorrowblue.comicviewer.AppContext
 import com.sorrowblue.comicviewer.framework.common.Initializer
+import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import org.koin.compose.KoinApplication
-import org.koin.compose.currentKoinScope
-import org.koin.compose.module.rememberKoinModules
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.core.qualifier.Qualifier
-import org.koin.core.qualifier.TypeQualifier
-import org.koin.core.scope.Scope
-import org.koin.dsl.KoinAppDeclaration
-import org.koin.dsl.module
-
-internal expect fun mainApplication(): KoinAppDeclaration
 
 @Composable
+context(context: AppContext)
 fun Application(finishApp: () -> Unit) {
-    KoinApplication(application = mainApplication()) {
-        val coroutineScope = rememberCoroutineScope()
-        @OptIn(KoinExperimentalAPI::class)
-        rememberKoinModules {
-            listOf(
-                module {
-                    single(TypeQualifier(AppCoroutineContext::class)) { coroutineScope }
-                }
-            )
-        }
-        val initializing = koinInjectAll<Initializer<*>>()
-        LaunchedEffect(Unit) {
-            Initializer.initialize(initializing)
-        }
-        ComicTheme {
-            RootScreenWrapper(finishApp = finishApp) {
-                ComicViewerApp()
-            }
-        }
+    LaunchedEffect(Unit) {
+        Initializer.initialize(context.initializer.toList())
     }
-}
-
-@Composable
-private inline fun <reified T> koinInjectAll(
-    qualifier: Qualifier? = null,
-    scope: Scope = currentKoinScope(),
-): List<T> {
-    return remember(qualifier, scope) {
-        scope.getAll(T::class)
+    CompositionLocalProvider(LocalPlatformContext provides context.platformContext) {
+        ComicTheme {
+//            RootScreenWrapper(finishApp = finishApp) {
+//                ComicViewerApp()
+//            }
+        }
     }
 }

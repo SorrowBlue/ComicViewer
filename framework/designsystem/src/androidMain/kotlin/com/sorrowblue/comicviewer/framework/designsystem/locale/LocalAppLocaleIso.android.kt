@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.framework.designsystem.locale
 
 import android.app.LocaleConfig
-import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
@@ -12,14 +11,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.intl.Locale
 import androidx.core.os.LocaleListCompat
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import comicviewer.framework.designsystem.generated.resources.Res
 import comicviewer.framework.designsystem.generated.resources.locales
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
-import org.koin.mp.KoinPlatform
 import java.util.Locale as JavaLocale
 
-actual object LocalAppLocaleIso {
+@SingleIn(AppScope::class)
+@Inject
+actual class AppLocaleIso(private val context: PlatformContext) {
 
     private var currentLocale by mutableStateOf(resolveLocale())
 
@@ -28,7 +32,7 @@ actual object LocalAppLocaleIso {
      */
     actual val locales: List<Locale>
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            LocaleConfig(KoinPlatform.getKoin().get<Context>()).supportedLocales?.run {
+            LocaleConfig(context).supportedLocales?.run {
                 List(size()) {
                     Locale(get(it).toLanguageTag())
                 }

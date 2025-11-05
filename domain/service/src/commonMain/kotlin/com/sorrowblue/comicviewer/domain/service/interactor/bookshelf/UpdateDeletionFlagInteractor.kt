@@ -3,9 +3,9 @@ package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
-import org.koin.core.annotation.Factory
+import dev.zacsweers.metro.Inject
 
-@Factory
+@Inject
 internal class UpdateDeletionFlagInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : UpdateDeletionFlagUseCase() {

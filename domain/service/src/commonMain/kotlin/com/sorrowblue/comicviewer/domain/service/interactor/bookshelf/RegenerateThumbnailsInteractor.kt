@@ -8,20 +8,19 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
 import com.sorrowblue.comicviewer.domain.service.limitedCoroutineScope
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.Qualifier
 
-@Factory
+@Inject
 internal class RegenerateThumbnailsInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val thumbnailDataSource: ThumbnailDataSource,
-    @Qualifier(IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : RegenerateThumbnailsUseCase() {
 
     override suspend fun run(request: Request): Resource<Unit, Error> {

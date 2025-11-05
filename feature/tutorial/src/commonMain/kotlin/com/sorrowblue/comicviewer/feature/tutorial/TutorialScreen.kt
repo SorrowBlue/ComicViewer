@@ -7,7 +7,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.tutorial.component.TutorialBottomBar
 import com.sorrowblue.comicviewer.feature.tutorial.section.ArchiveSheet
@@ -15,38 +14,6 @@ import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.DocumentSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
-import com.sorrowblue.comicviewer.framework.ui.BackHandler
-import kotlinx.serialization.Serializable
-import org.koin.compose.koinInject
-
-@Serializable
-data object Tutorial
-
-fun interface TutorialScreenNavigator {
-    fun onCompleteTutorial()
-}
-
-@Composable
-fun TutorialScreen(navigator: TutorialScreenNavigator) {
-    TutorialScreen(navigator = navigator, state = rememberTutorialScreenState())
-}
-
-@Destination<Tutorial>
-@Composable
-internal fun TutorialScreen(
-    navigator: TutorialScreenNavigator = koinInject(),
-    state: TutorialScreenState = rememberTutorialScreenState(),
-) {
-    val uiState = state.uiState
-    TutorialScreen(
-        uiState = uiState,
-        pageState = state.pageState,
-        onNextClick = { state.onNextClick(navigator::onCompleteTutorial) },
-        onBindingDirectionChange = state::updateReadingDirection
-    )
-
-    BackHandler(state.enabledBack, state::onBack)
-}
 
 internal enum class TutorialSheet {
     WELCOME,

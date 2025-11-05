@@ -12,14 +12,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface CollectionDao {
-
     @Query(
         """
             INSERT INTO collection
               (name, type, bookshelf_id, `query`, `range`, range_parent, period, sort_type, sort_type_asc, show_hidden)
             VALUES
               (:name, :type, :bookshelfId, :query, :range, :rangeParent, :period, :sortType, :sortTypeAsc, :showHidden)
-        """
+        """,
     )
     suspend fun insert(
         name: String,
@@ -49,7 +48,7 @@ internal interface CollectionDao {
                   show_hidden = null,
                   updated_at = CURRENT_TIMESTAMP
             WHERE id = :id
-        """
+        """,
     )
     suspend fun updateBasic(
         id: CollectionId,
@@ -72,7 +71,7 @@ internal interface CollectionDao {
                   show_hidden = :showHidden,
                   updated_at = CURRENT_TIMESTAMP
             WHERE id = :id
-        """
+        """,
     )
     suspend fun updateSmart(
         id: CollectionId,
@@ -129,7 +128,7 @@ internal interface CollectionDao {
               collection
             WHERE
               id = :id
-        """
+        """,
     )
     fun flow(id: CollectionId): Flow<CollectionEntityCount?>
 
@@ -171,7 +170,7 @@ internal interface CollectionDao {
                 END
               ) as count
             FROM collection ORDER BY created_at DESC
-        """
+        """,
     )
     fun pagingSource(): PagingSource<Int, CollectionEntityCount>
 
@@ -215,12 +214,9 @@ internal interface CollectionDao {
                 WHERE id = collection_id AND bookshelf_id = :bookshelfId AND file_path = :path
               ) exist
             FROM collection ORDER BY created_at DESC
-        """
+        """,
     )
-    fun pagingSource(
-        bookshelfId: BookshelfId,
-        path: String,
-    ): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSource(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
 
     @Query(
         """
@@ -262,12 +258,9 @@ internal interface CollectionDao {
                 WHERE id = collection_id AND bookshelf_id = :bookshelfId AND file_path = :path
               ) exist
             FROM collection ORDER BY updated_at DESC
-        """
+        """,
     )
-    fun pagingSourceRecent(
-        bookshelfId: BookshelfId,
-        path: String,
-    ): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSourceRecent(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
 
     @Query(
         """
@@ -280,12 +273,9 @@ internal interface CollectionDao {
                 WHERE id = collection_id AND bookshelf_id = :bookshelfId AND file_path = :path
               ) exist
             FROM collection WHERE type = 'Basic' ORDER BY created_at DESC
-        """
+        """,
     )
-    fun pagingSourceBasic(
-        bookshelfId: BookshelfId,
-        path: String,
-    ): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSourceBasic(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
 
     @Query(
         """
@@ -298,28 +288,23 @@ internal interface CollectionDao {
                 WHERE id = collection_id AND bookshelf_id = :bookshelfId AND file_path = :path
               ) exist
             FROM collection WHERE type = 'Basic' ORDER BY updated_at DESC
-        """
+        """,
     )
-    fun pagingSourceBasicRecent(
-        bookshelfId: BookshelfId,
-        path: String,
-    ): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSourceBasicRecent(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
 }
 
-internal suspend fun CollectionDao.insert(entity: CollectionEntity): Long {
-    return insert(
-        name = entity.name,
-        type = entity.type,
-        bookshelfId = entity.bookshelfId,
-        query = entity.searchCondition?.query,
-        range = entity.searchCondition?.range?.name,
-        rangeParent = entity.searchCondition?.rangeParent,
-        period = entity.searchCondition?.period?.name,
-        sortType = entity.searchCondition?.sortType?.name,
-        sortTypeAsc = entity.searchCondition?.sortTypeAsc,
-        showHidden = entity.searchCondition?.showHidden,
-    )
-}
+internal suspend fun CollectionDao.insert(entity: CollectionEntity): Long = insert(
+    name = entity.name,
+    type = entity.type,
+    bookshelfId = entity.bookshelfId,
+    query = entity.searchCondition?.query,
+    range = entity.searchCondition?.range?.name,
+    rangeParent = entity.searchCondition?.rangeParent,
+    period = entity.searchCondition?.period?.name,
+    sortType = entity.searchCondition?.sortType?.name,
+    sortTypeAsc = entity.searchCondition?.sortTypeAsc,
+    showHidden = entity.searchCondition?.showHidden,
+)
 
 internal suspend fun CollectionDao.update(entity: CollectionEntity) {
     when (entity.type) {

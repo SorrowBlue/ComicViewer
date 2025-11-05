@@ -1,6 +1,9 @@
 package com.sorrowblue.comicviewer.framework.designsystem.locale
 
-import com.sorrowblue.comicviewer.framework.common.DesktopContext
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import java.util.Properties
 import kotlin.io.path.createFile
 import kotlin.io.path.exists
@@ -8,10 +11,12 @@ import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
 import java.util.Locale as JavaLocale
 
-internal object LocaleHelper {
+@SingleIn(AppScope::class)
+@Inject
+class LocaleHelper(private val context: PlatformContext) {
 
     private val file by lazy {
-        DesktopContext.INSTANCE.filesDir.resolve("lang.properties").apply {
+        context.filesDir.resolve("lang.properties").apply {
             if (!exists()) {
                 createFile()
             }
@@ -45,6 +50,6 @@ internal object LocaleHelper {
             }
         }.getOrNull()
     }
-
-    private const val KEY_TAG = "language_tag"
 }
+
+private const val KEY_TAG = "language_tag"

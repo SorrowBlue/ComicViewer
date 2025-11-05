@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 kotlin {
@@ -13,13 +14,11 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.androidx.appcompat)
-                implementation(libs.koin.core)
             }
         }
         noAndroid {
             dependencies {
                 implementation(projects.domain.usecase)
-                implementation(libs.koin.composeViewModel)
             }
         }
     }

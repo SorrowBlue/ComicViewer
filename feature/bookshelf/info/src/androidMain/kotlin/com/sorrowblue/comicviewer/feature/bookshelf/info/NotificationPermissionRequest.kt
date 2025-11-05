@@ -21,6 +21,7 @@ interface NotificationPermissionRequest {
 
         ActivityCompat.shouldShowRequestPermissionRationale(activity, POST_NOTIFICATIONS) -> {
             logcat { "Need to show UI that shows rationale for permission" }
+            action()
             showInContextUI()
         }
 

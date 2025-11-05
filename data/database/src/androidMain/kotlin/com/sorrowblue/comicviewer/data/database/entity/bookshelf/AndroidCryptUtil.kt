@@ -3,19 +3,30 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.Binds
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Inject
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import javax.crypto.Cipher
-import jakarta.inject.Singleton
 
 private const val PROVIDER = "AndroidKeyStore"
 
 private const val CIPHER_TRANSFORMATION =
     "${KeyProperties.KEY_ALGORITHM_RSA}/${KeyProperties.BLOCK_MODE_ECB}/${KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1}"
 
-@Singleton
-internal class AndroidCryptUtil : CryptUtil {
+@ContributesTo(DataScope::class)
+interface AndroidDatabaseBindings {
+    @Binds
+    @Suppress("UnusedPrivateProperty")
+    private val AndroidCryptUtil.bind: CryptUtil get() = this
+}
 
+@ContributesBinding(DataScope::class)
+@Inject
+internal class AndroidCryptUtil : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String? {
         val keyStore = KeyStore.getInstance(PROVIDER)
         keyStore.load(null)
@@ -44,12 +55,10 @@ internal class AndroidCryptUtil : CryptUtil {
         return Base64.encodeToString(bytes, Base64.URL_SAFE)
     }
 
-    private fun createKeyPairGeneratorSpec(alias: String): KeyGenParameterSpec {
-        return KeyGenParameterSpec.Builder(
+    private fun createKeyPairGeneratorSpec(alias: String): KeyGenParameterSpec = KeyGenParameterSpec
+        .Builder(
             alias,
-            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-        )
-            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
-            .build()
-    }
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT,
+        ).setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
+        .build()
 }

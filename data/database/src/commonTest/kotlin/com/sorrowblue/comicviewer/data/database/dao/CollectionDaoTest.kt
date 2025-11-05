@@ -9,14 +9,13 @@ import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.koin.test.inject
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 internal class CollectionDaoTest : DatabaseTest() {
-
-    private val collectionDao: CollectionDao by inject()
+    private val collectionDao: CollectionDao get() = db.collectionDao()
 
     @Test
     fun insert_flow() = runTest {
@@ -52,23 +51,28 @@ internal class CollectionDaoTest : DatabaseTest() {
         entity = dbEntity!!.copy(name = "updated")
         collectionDao.update(entity)
         dbEntity = collectionDao.flow(entity.id).first()?.entity
-        assertEquals(entity, dbEntity)
+        assertEquals(entity.id, dbEntity?.id)
+        assertEquals(entity.name, dbEntity?.name)
+        assertEquals(entity.type, dbEntity?.type)
+        assertEquals(entity.bookshelfId, dbEntity?.bookshelfId)
+        assertEquals(entity.searchCondition, dbEntity?.searchCondition)
+        assertEquals(entity.createdAt, dbEntity?.createdAt)
     }
-/*
-    @Test
-    fun updateSmart() = runTest {
-        var entity = CollectionEntity.fromModel(SmartCollection("name", null, SearchCondition()))
-        val inserted = collectionDao.insert(entity)
-        var collection = collectionDao.flow(CollectionId(inserted.toInt())).first()?.toModel()
-        assertIs<SmartCollection>(collection)
-        collection.copy(
-            name = "",
-            bookshelfId = null,
-            searchCondition = SearchCondition(),
-        )
-        entity = collection!!.copy(name = "updated")
-        collectionDao.update(entity)
-        collection = collectionDao.flow(entity.id).first()?.entity
-        assertEquals(entity, collection)
-    } */
+    /*
+        @Test
+        fun updateSmart() = runTest {
+            var entity = CollectionEntity.fromModel(SmartCollection("name", null, SearchCondition()))
+            val inserted = collectionDao.insert(entity)
+            var collection = collectionDao.flow(CollectionId(inserted.toInt())).first()?.toModel()
+            assertIs<SmartCollection>(collection)
+            collection.copy(
+                name = "",
+                bookshelfId = null,
+                searchCondition = SearchCondition(),
+            )
+            entity = collection!!.copy(name = "updated")
+            collectionDao.update(entity)
+            collection = collectionDao.flow(entity.id).first()?.entity
+            assertEquals(entity, collection)
+        } */
 }

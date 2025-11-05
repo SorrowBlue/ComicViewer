@@ -1,30 +1,30 @@
 package com.sorrowblue.comicviewer.app
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnticipateInterpolator
+import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.ComicViewerUI
 import logcat.logcat
 
 /** Main activity */
-internal class MainActivity : AppCompatActivity() {
+internal class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         logcat { "onCreate" }
         installSplashScreen().apply {
@@ -36,21 +36,33 @@ internal class MainActivity : AppCompatActivity() {
             setKeepOnScreenCondition(viewModel.shouldKeepSplash::value)
         }
 
+        val bookData = if (intent.action == Intent.ACTION_VIEW &&
+            (intent.categories == null || intent.hasCategory(Intent.CATEGORY_BROWSABLE) || intent.hasCategory(
+                Intent.CATEGORY_DEFAULT
+            )) &&
+            intent.scheme in listOf("file", "content") &&
+            intent.type in listOf("application/pdf", "application/zip")
+        ) {
+            intent.dataString
+        } else {
+            null
+        }
+
+
         @OptIn(ExperimentalComposeUiApi::class)
         ComposeUiFlags.isSemanticAutofillEnabled = true
         setContent {
-            ComicTheme {
-                RootScreenWrapper(finishApp = ::finish) {
-                    ComicViewerApp()
-                }
+            LaunchedEffect(Unit) {
+                viewModel.shouldKeepSplash.value = false
             }
+            ComicViewerUI(bookData)
         }
     }
 }
 
 /** Start shrinking animation */
 private fun SplashScreenViewProvider.startShrinkingAnimation() {
-    kotlin.runCatching {
+    runCatching {
         ObjectAnimator.ofFloat(view, View.SCALE_X, 1f, 0f).apply {
             interpolator = AnticipateInterpolator()
             doOnEnd { remove() }

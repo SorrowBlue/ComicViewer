@@ -1,10 +1,10 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import jcifs.smb.NtStatus
+import org.codelibs.jcifs.smb.impl.NtStatus
 
 internal fun ntStatusString(status: Int): String {
     return when (status) {
-        NtStatus.NT_STATUS_OK -> "NT_STATUS_OK"
+        NtStatus.NT_STATUS_SUCCESS -> "NT_STATUS_SUCCESS"
         NtStatus.NT_STATUS_PENDING -> "NT_STATUS_PENDING"
         NtStatus.NT_STATUS_NOTIFY_ENUM_DIR -> "NT_STATUS_NOTIFY_ENUM_DIR"
         NtStatus.NT_STATUS_BUFFER_OVERFLOW -> "NT_STATUS_BUFFER_OVERFLOW"

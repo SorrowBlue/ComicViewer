@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.database.dao
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
-import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
 import com.sorrowblue.comicviewer.data.database.DatabaseTest
+import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPassword
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.EmbeddedBookshelfFileCountEntity
@@ -32,7 +32,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
             port = 0,
             domain = "",
             username = "",
-            password = DecryptedPassword("")
+            password = DecryptedPassword(""),
         )
         dao.upsert(entity)
         val result = dao.flow(1).first()
@@ -50,7 +50,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
             port = 0,
             domain = "",
             username = "",
-            password = DecryptedPassword("")
+            password = DecryptedPassword(""),
         )
         dao.upsert(entity)
         val deletedCount = dao.delete(3)
@@ -68,7 +68,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
             port = 0,
             domain = "",
             username = "",
-            password = DecryptedPassword("")
+            password = DecryptedPassword(""),
         )
         dao.upsert(entity)
         dao.updateDeleted(4, 1)
@@ -98,7 +98,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
         } as PagingSource.LoadResult.Page
         assertContentEquals(
             page.data.map(EmbeddedBookshelfFileCountEntity::entity),
-            bookshelfList.filterNot(BookshelfEntity::deleted)
+            bookshelfList.filterNot(BookshelfEntity::deleted),
         )
     }
 

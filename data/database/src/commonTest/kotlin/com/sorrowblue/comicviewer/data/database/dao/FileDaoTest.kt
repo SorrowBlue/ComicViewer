@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.database.dao
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
-import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
 import com.sorrowblue.comicviewer.data.database.DatabaseTest
+import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.test.MultiplatformAndroidJUnit4
 import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
@@ -14,7 +14,6 @@ import kotlinx.coroutines.test.runTest
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 internal class FileDaoTest : DatabaseTest() {
-
     private val dao: BookshelfDao get() = db.bookshelfDao()
 
     @Test
@@ -30,7 +29,7 @@ internal class FileDaoTest : DatabaseTest() {
             factory.createFileEntity(
                 index = it,
                 bookshelfId = bookshelfEntity.id,
-                lastReadTime = 10L - it
+                lastReadTime = 10L - it,
             )
         }
         val dao = db.fileDao()

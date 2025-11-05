@@ -24,6 +24,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditorScreenUiState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_auth
@@ -32,6 +33,10 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_err
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_path
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_port
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_msg_cancelled_folder_selection
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.GraphExtension
+import dev.zacsweers.metro.Scope
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -39,7 +44,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-import org.koin.compose.koinInject
 import soil.form.FieldError
 import soil.form.FieldOptions
 import soil.form.FieldValidationMode
@@ -80,11 +84,25 @@ internal interface InternalStorageEditorScreenState : BookshelfEditorScreenState
     override val form: Form<InternalStorageEditorForm>
 }
 
+@Scope
+annotation class BookshelfEditScreenScope
+
+@GraphExtension(BookshelfEditScreenScope::class)
+interface BookshelfEditScreenContext : ScreenContext {
+    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
+    val registerBookshelfUseCase: RegisterBookshelfUseCase
+
+    @ContributesTo(AppScope::class)
+    @GraphExtension.Factory
+    fun interface Factory {
+        fun createBookshelfEditScreenContext(): BookshelfEditScreenContext
+    }
+}
+
 @Composable
+context(context: BookshelfEditScreenContext)
 internal fun rememberBookshelfEditorScreenState(
     editorType: BookshelfEditorType,
-    getBookshelfInfoUseCase: GetBookshelfInfoUseCase = koinInject(),
-    registerBookshelfUseCase: RegisterBookshelfUseCase = koinInject(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): BookshelfEditorScreenState {
     val state = when (editorType.bookshelfType) {
@@ -106,8 +124,8 @@ internal fun rememberBookshelfEditorScreenState(
             rememberRetained {
                 SmbEditScreenStateImpl(
                     editorType = editorType,
-                    getBookshelfInfoUseCase = getBookshelfInfoUseCase,
-                    registerBookshelfUseCase = registerBookshelfUseCase,
+                    getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
+                    registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
                     formState = formState
                 ).apply {
@@ -124,8 +142,8 @@ internal fun rememberBookshelfEditorScreenState(
             rememberRetained {
                 InternalStorageEditScreenStateImpl(
                     editorType = editorType,
-                    getBookshelfInfoUseCase = getBookshelfInfoUseCase,
-                    registerBookshelfUseCase = registerBookshelfUseCase,
+                    getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
+                    registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
                     formState = formState
                 ).apply {
