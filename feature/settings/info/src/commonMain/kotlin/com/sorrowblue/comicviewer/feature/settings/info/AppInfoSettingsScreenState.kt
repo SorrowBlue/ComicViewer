@@ -19,7 +19,6 @@ import kotlinx.datetime.toLocalDateTime
 import om.sorrowblue.comicviewer.feature.settings.BuildKonfig
 
 internal interface AppInfoSettingsScreenState {
-
     var uiState: SettingsAppInfoScreenUiState
 
     fun launchReview()
@@ -33,27 +32,28 @@ internal fun rememberAppInfoSettingsScreenState(): AppInfoSettingsScreenState {
     }
 }
 
-private class AppInfoSettingsScreenStateImpl(
-    private val urlHandler: UriHandler,
-) : AppInfoSettingsScreenState {
-
+private class AppInfoSettingsScreenStateImpl(private val urlHandler: UriHandler) :
+    AppInfoSettingsScreenState {
     @OptIn(ExperimentalTime::class)
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
             versionName = BuildKonfig.VERSION_NAME,
-            buildAt = Instant.fromEpochMilliseconds(BuildKonfig.TIMESTAMP)
+            buildAt = Instant
+                .fromEpochMilliseconds(BuildKonfig.TIMESTAMP)
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .format(
                     LocalDateTime.Format {
                         date(LocalDate.Formats.ISO)
                         char(' ')
                         time(LocalTime.Formats.ISO)
-                    }
-                )
-        )
+                    },
+                ),
+        ),
     )
 
     override fun launchReview() {
-        urlHandler.openUri("http://play.google.com/store/apps/details?id=com.sorrowblue.comicviewer")
+        urlHandler.openUri(
+            "http://play.google.com/store/apps/details?id=com.sorrowblue.comicviewer",
+        )
     }
 }

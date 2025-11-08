@@ -8,19 +8,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_add
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun CollectionAddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Icon(imageVector = ComicIcons.Add, contentDescription = null)
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))

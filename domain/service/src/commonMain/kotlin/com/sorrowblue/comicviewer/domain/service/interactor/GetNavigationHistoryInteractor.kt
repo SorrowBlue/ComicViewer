@@ -27,7 +27,7 @@ internal class GetNavigationHistoryInteractor(
                     val book = fileLocalDataSource.findBy(file.bookshelfId, file.path) as? Book
                     if (book != null) {
                         return@map Resource.Success(
-                            NavigationHistory(getFolderList(bookshelf, book.parent), book)
+                            NavigationHistory(getFolderList(bookshelf, book.parent), book),
                         )
                     }
                 }
@@ -36,10 +36,7 @@ internal class GetNavigationHistoryInteractor(
         }
     }
 
-    private suspend fun getFolderList(
-        bookshelf: Bookshelf,
-        path: String,
-    ): List<Folder> {
+    private suspend fun getFolderList(bookshelf: Bookshelf, path: String): List<Folder> {
         val list = mutableListOf<Folder>()
         var parent: String? = path
         while (!parent.isNullOrEmpty()) {
@@ -54,7 +51,6 @@ internal class GetNavigationHistoryInteractor(
         return list
     }
 
-    private suspend fun getFolder(bookshelf: Bookshelf, path: String): Folder? {
-        return fileLocalDataSource.findBy(bookshelf.id, path) as? Folder
-    }
+    private suspend fun getFolder(bookshelf: Bookshelf, path: String): Folder? =
+        fileLocalDataSource.findBy(bookshelf.id, path) as? Folder
 }

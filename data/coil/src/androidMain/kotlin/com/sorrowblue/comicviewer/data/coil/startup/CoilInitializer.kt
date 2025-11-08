@@ -9,8 +9,9 @@ import coil3.request.bitmapConfig
 import com.sorrowblue.comicviewer.data.coil.BaseCoilInitializer
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 
-internal class CoilInitializer : BaseCoilInitializer(), Initializer<Unit> {
-
+internal class CoilInitializer :
+    BaseCoilInitializer(),
+    Initializer<Unit> {
     override fun create(context: Context) = initialize(context)
 
     override fun ImageLoader.Builder.setup() {

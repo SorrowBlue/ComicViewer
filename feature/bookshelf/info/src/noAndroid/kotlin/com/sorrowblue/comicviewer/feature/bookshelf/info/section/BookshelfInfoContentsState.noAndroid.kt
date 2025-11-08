@@ -26,8 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
-context(context: BookshelfInfoScreenContext)
 @Composable
+context(context: BookshelfInfoScreenContext)
 internal actual fun rememberBookshelfInfoContentsState(
     bookshelfFolder: BookshelfFolder,
     coroutineScope: CoroutineScope,
@@ -40,15 +40,15 @@ internal actual fun rememberBookshelfInfoContentsState(
             globalSnackbarState = globalSnackbarState,
             appCoroutineScope = appCoroutineScope,
             regenerateThumbnailsUseCase = context.regenerateThumbnailsUseCase,
-            scanBookshelfUseCase = context.scanBookshelfUseCase
+            scanBookshelfUseCase = context.scanBookshelfUseCase,
         )
     }.apply {
         lazyPagingItems = rememberPagingItems {
             context.pagingBookshelfBookUseCase(
                 PagingBookshelfBookUseCase.Request(
                     bookshelfFolder.bookshelf.id,
-                    PagingConfig(4)
-                )
+                    PagingConfig(4),
+                ),
             )
         }
     }
@@ -61,7 +61,6 @@ private class BookshelfInfoContentsStateImpl(
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
 ) : BookshelfInfoContentsState {
-
     override lateinit var lazyPagingItems: LazyPagingItems<BookThumbnail>
 
     private lateinit var currentScanType: ScanType
@@ -71,8 +70,8 @@ private class BookshelfInfoContentsStateImpl(
     override var uiState by mutableStateOf(
         BookshelfInfoContentsUiState(
             bookshelf = bookshelfFolder.bookshelf,
-            folder = bookshelfFolder.folder
-        )
+            folder = bookshelfFolder.folder,
+        ),
     )
         private set
 
@@ -90,8 +89,10 @@ private class BookshelfInfoContentsStateImpl(
         showSnackbar()
         appCoroutineScope.launch {
             scanBookshelfUseCase.invoke(
-                ScanBookshelfUseCase.Request(bookshelfId = uiState.bookshelf.id) { bookshelf, file ->
-                }
+                ScanBookshelfUseCase.Request(
+                    bookshelfId = uiState.bookshelf.id,
+                ) { bookshelf, file ->
+                },
             )
         }
     }
@@ -100,8 +101,10 @@ private class BookshelfInfoContentsStateImpl(
         showSnackbar()
         appCoroutineScope.launch {
             regenerateThumbnailsUseCase.invoke(
-                RegenerateThumbnailsUseCase.Request(bookshelfId = uiState.bookshelf.id) { bookshelf, progress, max ->
-                }
+                RegenerateThumbnailsUseCase.Request(
+                    bookshelfId = uiState.bookshelf.id,
+                ) { bookshelf, progress, max ->
+                },
             )
         }
     }
@@ -113,8 +116,8 @@ private class BookshelfInfoContentsStateImpl(
                     when (currentScanType) {
                         ScanType.File -> Res.string.bookshelf_info_label_scanning_file
                         ScanType.Thumbnail -> Res.string.bookshelf_info_label_scanning_thumbnails
-                    }
-                )
+                    },
+                ),
             )
         }
     }

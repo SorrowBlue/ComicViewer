@@ -14,10 +14,7 @@ import comicviewer.feature.settings.info.generated.resources.settings_info_rate_
 import comicviewer.feature.settings.info.generated.resources.settings_info_title
 import org.jetbrains.compose.resources.stringResource
 
-internal data class SettingsAppInfoScreenUiState(
-    val versionName: String = "",
-    val buildAt: String,
-)
+internal data class SettingsAppInfoScreenUiState(val versionName: String = "", val buildAt: String)
 
 @Composable
 internal fun AppInfoSettingsScreen(
@@ -33,12 +30,12 @@ internal fun AppInfoSettingsScreen(
         Setting(
             title = stringResource(Res.string.settings_info_label_version),
             onClick = { },
-            summary = uiState.versionName
+            summary = uiState.versionName,
         )
         Setting(
             title = stringResource(Res.string.settings_info_label_build),
             onClick = { },
-            summary = uiState.buildAt
+            summary = uiState.buildAt,
         )
         Setting(
             title = Res.string.settings_info_label_license,
@@ -48,7 +45,7 @@ internal fun AppInfoSettingsScreen(
             title = Res.string.settings_info_label_rate,
             summary = Res.string.settings_info_rate_app_summary,
             onClick = onRateAppClick,
-            icon = ComicIcons.Star
+            icon = ComicIcons.Star,
         )
     }
 }

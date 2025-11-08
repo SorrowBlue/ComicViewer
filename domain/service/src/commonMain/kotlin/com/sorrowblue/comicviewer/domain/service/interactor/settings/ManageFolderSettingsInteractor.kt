@@ -9,7 +9,6 @@ import dev.zacsweers.metro.Inject
 internal class ManageFolderSettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageFolderSettingsUseCase {
-
     override val settings = datastoreDataSource.folderSettings
 
     override suspend fun edit(action: (FolderSettings) -> FolderSettings) {

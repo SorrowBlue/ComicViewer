@@ -15,13 +15,12 @@ import kotlinx.coroutines.flow.map
 internal class FlowBookshelfListInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : FlowBookshelfListUseCase() {
-    override fun run(request: EmptyRequest): Flow<Resource<List<Bookshelf>, Error>> {
-        return bookshelfLocalDataSource.allBookshelf().fold({ flow ->
+    override fun run(request: EmptyRequest): Flow<Resource<List<Bookshelf>, Error>> =
+        bookshelfLocalDataSource.allBookshelf().fold({ flow ->
             flow.map {
                 Resource.Success(it)
             }
         }, {
             flowOf(Resource.Error(Error.System))
         })
-    }
 }

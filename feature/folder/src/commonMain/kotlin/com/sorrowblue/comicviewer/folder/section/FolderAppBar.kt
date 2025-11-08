@@ -16,8 +16,6 @@ import com.sorrowblue.comicviewer.file.component.rememberFileListDisplayItemStat
 import com.sorrowblue.comicviewer.file.component.rememberGridSizeItemState
 import com.sorrowblue.comicviewer.file.component.rememberHiddenFilesToggleableItemState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.canonical.CanonicalAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_action_search
@@ -33,11 +31,17 @@ internal data class FolderAppBarUiState(
 
 internal sealed interface FolderTopAppBarAction {
     data object Back : FolderTopAppBarAction
+
     data object Search : FolderTopAppBarAction
+
     data object Sort : FolderTopAppBarAction
+
     data object FileListDisplay : FolderTopAppBarAction
+
     data object GridSize : FolderTopAppBarAction
+
     data object HiddenFile : FolderTopAppBarAction
+
     data object Settings : FolderTopAppBarAction
 }
 
@@ -63,12 +67,12 @@ internal fun FolderAppBar(
                     icon = {
                         Icon(
                             ComicIcons.Search,
-                            stringResource(Res.string.folder_action_search)
+                            stringResource(Res.string.folder_action_search),
                         )
                     },
                     label = {
                         Text("Search")
-                    }
+                    },
                 )
                 clickableItem(
                     onClick = onSortClick,
@@ -77,7 +81,7 @@ internal fun FolderAppBar(
                     },
                     label = {
                         Text("Sort")
-                    }
+                    },
                 )
                 fileListDisplayItemState.fileListDisplayItem()
                 gridSizeItemState.gridSizeItem()
@@ -85,10 +89,10 @@ internal fun FolderAppBar(
                 clickableItem(
                     onClick = onSettingsClick,
                     icon = { Icon(ComicIcons.Settings, null) },
-                    label = { Text(stringResource(Res.string.folder_action_settings)) }
+                    label = { Text(stringResource(Res.string.folder_action_settings)) },
                 )
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }

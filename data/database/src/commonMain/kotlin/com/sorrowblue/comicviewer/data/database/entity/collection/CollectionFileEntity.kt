@@ -12,35 +12,35 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 @Entity(
     tableName = "collection_file",
     primaryKeys = [
-        CollectionFileEntity.COLLECTION_ID,
-        CollectionFileEntity.BOOKSHELF_ID,
-        CollectionFileEntity.FILE_PATH,
+        CollectionFileEntity.CollectionId,
+        CollectionFileEntity.BookshelfId,
+        CollectionFileEntity.FilePath,
     ],
     foreignKeys = [
         ForeignKey(
             entity = CollectionEntity::class,
             parentColumns = [CollectionEntity.ID],
-            childColumns = [CollectionFileEntity.COLLECTION_ID],
+            childColumns = [CollectionFileEntity.CollectionId],
             onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = FileEntity::class,
-            parentColumns = [FileEntity.PATH, FileEntity.BOOKSHELF_ID],
-            childColumns = [CollectionFileEntity.FILE_PATH, CollectionFileEntity.BOOKSHELF_ID],
+            parentColumns = [FileEntity.PATH, FileEntity.BookshelfId],
+            childColumns = [CollectionFileEntity.FilePath, CollectionFileEntity.BookshelfId],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index(value = [CollectionFileEntity.FILE_PATH, CollectionFileEntity.BOOKSHELF_ID])],
+    indices = [Index(value = [CollectionFileEntity.FilePath, CollectionFileEntity.BookshelfId])],
 )
 internal data class CollectionFileEntity(
-    @ColumnInfo(COLLECTION_ID) val collectionId: CollectionId,
-    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: BookshelfId,
-    @ColumnInfo(FILE_PATH) val filePath: String,
+    @ColumnInfo(CollectionId) val collectionId: CollectionId,
+    @ColumnInfo(BookshelfId) val bookshelfId: BookshelfId,
+    @ColumnInfo(FilePath) val filePath: String,
 ) {
     companion object {
-        const val COLLECTION_ID = "collection_id"
-        const val BOOKSHELF_ID = "bookshelf_id"
-        const val FILE_PATH = "file_path"
+        const val CollectionId = "collection_id"
+        const val BookshelfId = "bookshelf_id"
+        const val FilePath = "file_path"
 
         fun fromModel(model: CollectionFile) = CollectionFileEntity(
             collectionId = model.id,

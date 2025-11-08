@@ -11,10 +11,8 @@ import dev.zacsweers.metro.AssistedInject
 import okio.BufferedSource
 
 @AssistedInject
-internal actual class ShareFileClient(
-    @Assisted actual override val bookshelf: ShareContents,
-) : FileClient<ShareContents> {
-
+internal actual class ShareFileClient(@Assisted actual override val bookshelf: ShareContents) :
+    FileClient<ShareContents> {
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<ShareContents> {
         actual override fun create(bookshelf: ShareContents): ShareFileClient

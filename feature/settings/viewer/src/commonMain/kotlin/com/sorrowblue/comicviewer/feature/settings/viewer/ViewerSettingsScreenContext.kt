@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer
 
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo

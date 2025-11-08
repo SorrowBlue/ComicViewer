@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
@@ -65,6 +64,7 @@ interface AdaptiveNavigationSuiteState {
     val navItems: List<NavigationKey>
     val currentNavItem: NavigationKey
     var navigationSuiteType: NavigationSuiteType
+
     fun onNavItemClick(navItem: NavigationKey)
 }
 
@@ -73,6 +73,7 @@ interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
     val wideNavigationRailState: WideNavigationRailState
     val navItems: List<NavigationKey>
     val currentNavItem: NavigationKey
+
     fun onNavItemClick(navItem: NavigationKey)
 
     val floatingActionButtonState: FloatingActionButtonState
@@ -85,7 +86,7 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaff
     return remember {
         AdaptiveNavigationSuiteScaffoldStateImpl(
             adaptiveNavigationSuiteState = adaptiveNavigationSuiteState,
-            navigationSuiteScaffoldState = navigationSuiteScaffoldState
+            navigationSuiteScaffoldState = navigationSuiteScaffoldState,
         )
     }.apply {
         wideNavigationRailState = rememberWideNavigationRailState()
@@ -98,7 +99,6 @@ private class AdaptiveNavigationSuiteScaffoldStateImpl(
     private val adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState,
 ) : AdaptiveNavigationSuiteScaffoldState,
     NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
-
     override lateinit var wideNavigationRailState: WideNavigationRailState
 
     override val navItems: List<NavigationKey> get() = adaptiveNavigationSuiteState.navItems
@@ -139,7 +139,7 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             shortNavigationBarContainerColor = ComicTheme.colorScheme.surfaceContainer,
             wideNavigationRailColors = WideNavigationRailDefaults.colors(
-                containerColor = LocalContainerColor.current
+                containerColor = LocalContainerColor.current,
             ),
         ),
         containerColor = LocalContainerColor.current,
@@ -148,7 +148,7 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
         navigationItemVerticalArrangement = Arrangement.Top,
         primaryActionContent = primaryActionContent,
         primaryActionContentHorizontalAlignment = primaryActionContentHorizontalAlignment,
-        content = content
+        content = content,
     )
 }
 
@@ -168,15 +168,15 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButton(
                 text = text,
                 icon = icon,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                modifier = modifier.padding(start = 20.dp)
+                modifier = modifier
+                    .padding(start = 20.dp)
                     .animateFloatingActionButton(
                         visible = floatingActionButtonState.targetValue.isVisible,
-                        alignment = Alignment.Center
-                    )
-                    .animateEnterExit(
+                        alignment = Alignment.Center,
+                    ).animateEnterExit(
                         enter = FloatingActionButtonTransitionEnter,
-                        exit = FloatingActionButtonTransitionExit
-                    )
+                        exit = FloatingActionButtonTransitionExit,
+                    ),
             )
         } else {
             FloatingActionButton(
@@ -184,12 +184,11 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButton(
                 modifier = modifier
                     .animateFloatingActionButton(
                         visible = visible && floatingActionButtonState.targetValue.isVisible,
-                        alignment = Alignment.BottomEnd
-                    )
-                    .animateEnterExit(
+                        alignment = Alignment.BottomEnd,
+                    ).animateEnterExit(
                         enter = FloatingActionButtonTransitionEnter,
-                        exit = FloatingActionButtonTransitionExit
-                    )
+                        exit = FloatingActionButtonTransitionExit,
+                    ),
             ) {
                 Icon(imageVector = ComicIcons.Add, contentDescription = null)
             }
@@ -209,23 +208,30 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButtonMenu(
             with(LocalNavAnimatedContentScope.current) {
                 ToggleFloatingActionButton(
                     modifier =
-                        Modifier.semantics {
+                    Modifier
+                        .semantics {
                             traversalIndex = -1f
                             stateDescription =
                                 if (floatingActionButtonState.menuExpanded) "Expanded" else "Collapsed"
                             contentDescription = "Toggle menu"
-                        }
-                            .animateFloatingActionButton(
-                                visible = visible && floatingActionButtonState.targetValue.isVisible || floatingActionButtonState.menuExpanded,
-                                alignment = Alignment.BottomEnd
-                            )
-                            .animateEnterExit(
-                                enter = FloatingActionButtonTransitionEnter,
-                                exit = FloatingActionButtonTransitionExit
-                            ),
+                        }.animateFloatingActionButton(
+                            visible =
+                            visible && floatingActionButtonState.targetValue.isVisible ||
+                                floatingActionButtonState.menuExpanded,
+                            alignment = Alignment.BottomEnd,
+                        ).animateEnterExit(
+                            enter = FloatingActionButtonTransitionEnter,
+                            exit = FloatingActionButtonTransitionExit,
+                        ),
                     checked = floatingActionButtonState.menuExpanded,
-                    containerSize = if (navigationSuiteType.isNavigationRail) ToggleFloatingActionButtonDefaults.containerSizeMedium() else ToggleFloatingActionButtonDefaults.containerSize(),
-                    onCheckedChange = floatingActionButtonState::toggleMenu
+                    containerSize = if (navigationSuiteType.isNavigationRail) {
+                        ToggleFloatingActionButtonDefaults
+                            .containerSizeMedium()
+                    } else {
+                        ToggleFloatingActionButtonDefaults
+                            .containerSize()
+                    },
+                    onCheckedChange = floatingActionButtonState::toggleMenu,
                 ) {
                     val imageVector by remember(checkedProgress) {
                         derivedStateOf {
@@ -237,30 +243,39 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButtonMenu(
                         contentDescription = null,
                         modifier = Modifier.animateIcon(
                             checkedProgress = { checkedProgress },
-                            size = if (navigationSuiteType.isNavigationRail) ToggleFloatingActionButtonDefaults.iconSizeMedium() else ToggleFloatingActionButtonDefaults.iconSize()
-                        )
+                            size = if (navigationSuiteType.isNavigationRail) {
+                                ToggleFloatingActionButtonDefaults
+                                    .iconSizeMedium()
+                            } else {
+                                ToggleFloatingActionButtonDefaults.iconSize()
+                            },
+                        ),
                     )
                 }
             }
         },
         content = content,
         // TODO FloatingActionButtonMenuの余分なPadding対策
-        modifier = modifier.offset(16.dp, 16.dp)
+        modifier = modifier.offset(16.dp, 16.dp),
     )
 }
 
-private val FloatingActionButtonTransitionEnter = scaleIn(
-    animationSpec = ExpressiveMotion.Spatial.fast(),
-    initialScale = 0f
-) + fadeIn(
-    animationSpec = ExpressiveMotion.Effects.fast(),
-    initialAlpha = 0f
-)
+private val FloatingActionButtonTransitionEnter
+    @Composable
+    get() = scaleIn(
+        animationSpec = ComicTheme.motionScheme.fastSpatialSpec(),
+        initialScale = 0f,
+    ) + fadeIn(
+        animationSpec = ComicTheme.motionScheme.fastEffectsSpec(),
+        initialAlpha = 0f,
+    )
 
-private val FloatingActionButtonTransitionExit = scaleOut(
-    animationSpec = ExpressiveMotion.Spatial.fast(),
-    targetScale = 0f
-) + fadeOut(
-    animationSpec = ExpressiveMotion.Effects.fast(),
-    targetAlpha = 0f
-)
+private val FloatingActionButtonTransitionExit
+    @Composable
+    get() = scaleOut(
+        animationSpec = ComicTheme.motionScheme.fastSpatialSpec(),
+        targetScale = 0f,
+    ) + fadeOut(
+        animationSpec = ComicTheme.motionScheme.fastEffectsSpec(),
+        targetAlpha = 0f,
+    )

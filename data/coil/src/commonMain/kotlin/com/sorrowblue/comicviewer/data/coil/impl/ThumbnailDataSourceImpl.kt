@@ -12,15 +12,16 @@ import kotlinx.coroutines.Deferred
 
 @ContributesBinding(DataScope::class)
 @Inject
-internal class ThumbnailDataSourceImpl(
-    private val context: PlatformContext,
-) : ThumbnailDataSource {
-
+internal class ThumbnailDataSourceImpl(private val context: PlatformContext) :
+    ThumbnailDataSource {
     override fun load(fileThumbnail: FileThumbnail): Deferred<Any> {
-        val request = ImageRequest.Builder(context)
+        val request = ImageRequest
+            .Builder(context)
             .data(fileThumbnail)
-            .size(300)
+            .size(ImageSize)
             .build()
         return SingletonImageLoader.get(context).enqueue(request).job
     }
 }
+
+private const val ImageSize = 300

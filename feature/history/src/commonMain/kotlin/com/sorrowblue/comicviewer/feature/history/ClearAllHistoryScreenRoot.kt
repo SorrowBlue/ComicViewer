@@ -13,9 +13,7 @@ val ClearAllHistoryScreenResultKey = SerializableNavigationResultKey(
 )
 
 @Serializable
-data class ClearAllHistoryScreenResult(
-    val confirmed: Boolean,
-)
+data class ClearAllHistoryScreenResult(val confirmed: Boolean)
 
 @Composable
 fun ClearAllHistoryScreenRoot(onClose: () -> Unit) {
@@ -25,7 +23,7 @@ fun ClearAllHistoryScreenRoot(onClose: () -> Unit) {
             resultProducer.setResult(
                 Json,
                 ClearAllHistoryScreenResultKey,
-                ClearAllHistoryScreenResult(confirmed = false)
+                ClearAllHistoryScreenResult(confirmed = false),
             )
             onClose()
         },
@@ -33,9 +31,9 @@ fun ClearAllHistoryScreenRoot(onClose: () -> Unit) {
             resultProducer.setResult(
                 Json,
                 ClearAllHistoryScreenResultKey,
-                ClearAllHistoryScreenResult(confirmed = true)
+                ClearAllHistoryScreenResult(confirmed = true),
             )
             onClose()
-        }
+        },
     )
 }

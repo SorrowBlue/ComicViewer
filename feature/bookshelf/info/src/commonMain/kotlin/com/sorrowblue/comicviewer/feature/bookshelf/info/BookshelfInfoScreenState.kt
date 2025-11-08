@@ -44,7 +44,6 @@ internal fun rememberBookshelfInfoScreenState(bookshelfId: BookshelfId): Bookshe
     return stateImpl
 }
 
-
 private class BookshelfInfoScreenStateImpl(
     bookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
@@ -52,9 +51,8 @@ private class BookshelfInfoScreenStateImpl(
     private val globalSnackbarState: GlobalSnackbarState,
     private val scope: CoroutineScope,
 ) : BookshelfInfoScreenState {
-
     override var uiState by mutableStateOf<BookshelfInfoSheetUiState>(
-        BookshelfInfoSheetUiState.Loading
+        BookshelfInfoSheetUiState.Loading,
     )
         private set
 
@@ -73,7 +71,7 @@ private class BookshelfInfoScreenStateImpl(
             globalSnackbarState.showSnackbar(
                 message = getString(Res.string.bookshelf_info_msg_remove),
                 actionLabel = getString(Res.string.bookshelf_info_label_undo),
-                duration = SnackbarDuration.Long
+                duration = SnackbarDuration.Long,
             ) {
                 when (it) {
                     SnackbarResult.Dismissed -> Unit
@@ -81,8 +79,8 @@ private class BookshelfInfoScreenStateImpl(
                         updateDeletionFlagUseCase(
                             UpdateDeletionFlagUseCase.Request(
                                 bookshelfId,
-                                false
-                            )
+                                false,
+                            ),
                         )
                     }
                 }

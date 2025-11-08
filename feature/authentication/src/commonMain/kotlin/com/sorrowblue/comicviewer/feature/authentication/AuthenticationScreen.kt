@@ -25,7 +25,6 @@ import kotlinx.serialization.Serializable
 import logcat.logcat
 import org.jetbrains.compose.resources.StringResource
 
-
 @Serializable
 internal sealed interface AuthenticationScreenUiState {
     val pin: String
@@ -121,13 +120,15 @@ internal fun AuthenticationScreen(
     val isCompactWindowClass = isCompactWindowClass()
     DetectOrientation(Modifier.fillMaxSize()) { isLandscape ->
         val isCompactLandscape by remember(isCompactWindowClass, isLandscape) {
-            logcat("AuthenticationScreen") { "isCompactWindowClass=$isCompactWindowClass, isLandscape=$isLandscape" }
+            logcat(
+                "AuthenticationScreen",
+            ) { "isCompactWindowClass=$isCompactWindowClass, isLandscape=$isLandscape" }
             mutableStateOf(isCompactWindowClass && isLandscape)
         }
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             containerColor = ComicTheme.colorScheme.surfaceContainer,
-            contentWindowInsets = WindowInsets.safeDrawing
+            contentWindowInsets = WindowInsets.safeDrawing,
         ) { contentPadding ->
             if (isCompactLandscape) {
                 AuthenticationRowContents(
@@ -138,7 +139,7 @@ internal fun AuthenticationScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(contentPadding)
-                        .padding(ComicTheme.dimension.margin)
+                        .padding(ComicTheme.dimension.margin),
                 )
             } else {
                 AuthenticationColumnContents(
@@ -149,7 +150,7 @@ internal fun AuthenticationScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(contentPadding)
-                        .padding(ComicTheme.dimension.margin)
+                        .padding(ComicTheme.dimension.margin),
                 )
             }
         }

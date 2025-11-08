@@ -15,6 +15,6 @@ fun ImageFormatScreenRoot(imageFormat: ImageFormat, onDismissRequest: () -> Unit
             resultProducer.setResult(Json, ImageFormatScreenResultKey, it)
             onDismissRequest()
         },
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     )
 }

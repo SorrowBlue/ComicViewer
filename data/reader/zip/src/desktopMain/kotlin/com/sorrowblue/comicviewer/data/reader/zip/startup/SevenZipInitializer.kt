@@ -10,13 +10,13 @@ import net.sf.sevenzipjbinding.SevenZip
 
 @Inject
 internal class SevenZipInitializer : Initializer<Unit> {
-
     override fun create() {
         SevenZip.initSevenZipFromPlatformJAR()
-        logcat(LogPriority.INFO) { "Initialized SevenZip. ${SevenZip.getSevenZipJBindingVersion()}." }
+        logcat(
+            LogPriority.INFO,
+        ) { "Initialized SevenZip. ${SevenZip.getSevenZipJBindingVersion()}." }
     }
 
-    override fun dependencies(): List<KClass<out Initializer<*>>?> {
-        return listOf(LogcatInitializer::class)
-    }
+    override fun dependencies(): List<KClass<out Initializer<*>>?> =
+        listOf(LogcatInitializer::class)
 }

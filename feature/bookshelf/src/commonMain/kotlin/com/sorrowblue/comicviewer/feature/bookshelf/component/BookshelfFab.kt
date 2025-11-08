@@ -17,6 +17,6 @@ internal fun BookshelfFab(expanded: Boolean, onClick: () -> Unit, modifier: Modi
         onClick = onClick,
         text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
         icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
-        modifier = modifier
+        modifier = modifier,
     )
 }

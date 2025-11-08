@@ -14,14 +14,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 internal sealed interface FileInfoPrepareUiState {
-
     data object Loading : FileInfoPrepareUiState
+
     data class Success(val file: File, val isOpenFolderEnabled: Boolean) : FileInfoPrepareUiState
+
     data object Error : FileInfoPrepareUiState
 }
 
 internal interface FileInfoPrepareState {
-
     val uiState: FileInfoPrepareUiState
 }
 
@@ -48,7 +48,6 @@ private class FileInfoPrepareStateImpl(
     val coroutineScope: CoroutineScope,
     val getFileUseCase: GetFileUseCase,
 ) : FileInfoPrepareState {
-
     override var uiState by mutableStateOf<FileInfoPrepareUiState>(FileInfoPrepareUiState.Loading)
 
     init {
@@ -63,8 +62,6 @@ private class FileInfoPrepareStateImpl(
                         FileInfoPrepareUiState.Error
                     }
                 }
-            }
-            .launchIn(coroutineScope)
+            }.launchIn(coroutineScope)
     }
-
 }

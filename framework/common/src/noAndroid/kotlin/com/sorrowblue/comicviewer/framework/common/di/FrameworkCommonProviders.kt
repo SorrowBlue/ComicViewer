@@ -9,7 +9,6 @@ import dev.zacsweers.metro.Provides
 
 @ContributesTo(DataScope::class)
 interface FrameworkCommonProviders {
-
     @Provides
     @IntoSet
     private fun provideCoilInitializer(): Initializer<*> = LogcatInitializer()

@@ -54,13 +54,13 @@ inline fun <reified T : FolderKey, reified V : FileInfoKey> EntryProviderScope<N
         onFileClick = onFileClick,
         onFileInfoClick = onFileInfoClick,
         onSortClick = onSortClick,
-        onRestored = onRestored
+        onRestored = onRestored,
     )
     fileInfoEntry<V>(
         "${sceneKey}Folder",
         onBackClick = onBackClick,
         onCollectionClick = onCollectionClick,
-        onOpenFolderClick = onOpenFolderClick
+        onOpenFolderClick = onOpenFolderClick,
     )
 }
 
@@ -73,7 +73,7 @@ inline fun <reified T : FileInfoKey> EntryProviderScope<NavKey>.fileInfoEntry(
 ) {
     entryScreen<T, FileInfoScreenContext>(
         createContext = { (graph as FileInfoScreenContext.Factory).createFileInfoScreenContext() },
-        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey)
+        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey),
     ) {
         FileInfoScreenRoot(
             fileKey = it.fileKey,
@@ -99,7 +99,7 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
         clazzContentKey = { it.toString() },
         createContext = { (graph as FolderScreenContext.Factory).createFolderScreenContext() },
         metadata = SupportingPaneSceneStrategy.mainPane(sceneKey) +
-            NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey)
+            NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey),
     ) {
         FolderScreenRoot(
             bookshelfId = it.bookshelfId,
@@ -110,7 +110,7 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
             onFileClick = onFileClick,
             onFileInfoClick = onFileInfoClick,
             onSortClick = onSortClick,
-            onRestored = onRestored
+            onRestored = onRestored,
         )
     }
 }

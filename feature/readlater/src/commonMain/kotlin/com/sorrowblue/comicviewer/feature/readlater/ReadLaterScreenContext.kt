@@ -13,7 +13,6 @@ annotation class ReadLaterScreenScope
 
 @GraphExtension(ReadLaterScreenScope::class)
 interface ReadLaterScreenContext : ScreenContext {
-
     val pagingReadLaterFileUseCase: PagingReadLaterFileUseCase
     val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase
 

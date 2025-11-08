@@ -71,7 +71,7 @@ fun AnimatedNavigationSuiteScaffold(
         NavigationSuiteScaffoldLayout(
             navigationSuite = {
                 CompositionLocalProvider(
-                    LocalShortNavigationBarOverride provides FixedDefaultShortNavigationBarOverride
+                    LocalShortNavigationBarOverride provides FixedDefaultShortNavigationBarOverride,
                 ) {
                     NavigationSuite(
                         navigationSuiteType = navigationSuiteType,
@@ -82,8 +82,8 @@ fun AnimatedNavigationSuiteScaffold(
                         modifier = Modifier.navigationSuiteScaffoldSharedElement(
                             navigationSuiteType,
                             visibilityScope,
-                            transitionScope
-                        )
+                            transitionScope,
+                        ),
                     )
                 }
             },
@@ -93,7 +93,7 @@ fun AnimatedNavigationSuiteScaffold(
             primaryActionContentHorizontalAlignment = primaryActionContentHorizontalAlignment,
             content = {
                 Box(
-                    Modifier.navigationSuiteScaffoldConsumeWindowInsets(navigationSuiteType, state)
+                    Modifier.navigationSuiteScaffoldConsumeWindowInsets(navigationSuiteType, state),
                 ) {
                     content()
                 }
@@ -108,74 +108,72 @@ private fun Modifier.navigationSuiteScaffoldSharedElement(
     navigationSuiteType: NavigationSuiteType,
     visibilityScope: AnimatedVisibilityScope,
     transitionScope: SharedTransitionScope,
-): Modifier =
-    with(transitionScope) {
-        with(visibilityScope) {
-            LaunchedEffect(navigationSuiteType.isNavigationRail) {
-                logcat { "navigationSuiteType.isNavigationRail=${navigationSuiteType.isNavigationRail}" }
-            }
-            if (navigationSuiteType.isNavigationBar) {
-                Modifier
-                    .animateEnterExit(
-                        enter = NavigationBarTransitionEnter,
-                        exit = NavigationBarTransitionExit
-                    )
-                    .sharedElement(
-                        animatedVisibilityScope = visibilityScope,
-                        sharedContentState = rememberSharedContentState(
-                            NavigationBarSharedElementKey
-                        )
-                    )
-            } else if (navigationSuiteType.isNavigationRail) {
-                Modifier
-                    .animateEnterExit(
-                        enter = NavigationRailTransitionEnter,
-                        exit = NavigationRailTransitionExit
-                    )
-                    .sharedElement(
-                        animatedVisibilityScope = visibilityScope,
-                        sharedContentState = rememberSharedContentState(
-                            NavigationRailSharedElementKey
-                        )
-                    )
-            } else {
-                Modifier
+): Modifier = with(transitionScope) {
+    with(visibilityScope) {
+        LaunchedEffect(navigationSuiteType.isNavigationRail) {
+            logcat {
+                "navigationSuiteType.isNavigationRail=${navigationSuiteType.isNavigationRail}"
             }
         }
+        if (navigationSuiteType.isNavigationBar) {
+            Modifier
+                .animateEnterExit(
+                    enter = NavigationBarTransitionEnter,
+                    exit = NavigationBarTransitionExit,
+                ).sharedElement(
+                    animatedVisibilityScope = visibilityScope,
+                    sharedContentState = rememberSharedContentState(
+                        NavigationBarSharedElementKey,
+                    ),
+                )
+        } else if (navigationSuiteType.isNavigationRail) {
+            Modifier
+                .animateEnterExit(
+                    enter = NavigationRailTransitionEnter,
+                    exit = NavigationRailTransitionExit,
+                ).sharedElement(
+                    animatedVisibilityScope = visibilityScope,
+                    sharedContentState = rememberSharedContentState(
+                        NavigationRailSharedElementKey,
+                    ),
+                )
+        } else {
+            Modifier
+        }
     }
+}
 
 @Composable
 private fun Modifier.navigationSuiteScaffoldConsumeWindowInsets(
     navigationSuiteType: NavigationSuiteType,
     state: NavigationSuiteScaffoldState,
-): Modifier =
-    consumeWindowInsets(
-        if (state.currentValue == NavigationSuiteScaffoldValue.Hidden && !state.isAnimating) {
-            NoWindowInsets
-        } else {
-            when (navigationSuiteType) {
-                NavigationSuiteType.ShortNavigationBarCompact,
-                NavigationSuiteType.ShortNavigationBarMedium,
-                ->
-                    ShortNavigationBarDefaults.windowInsets.only(WindowInsetsSides.Bottom)
+): Modifier = consumeWindowInsets(
+    if (state.currentValue == NavigationSuiteScaffoldValue.Hidden && !state.isAnimating) {
+        NoWindowInsets
+    } else {
+        when (navigationSuiteType) {
+            NavigationSuiteType.ShortNavigationBarCompact,
+            NavigationSuiteType.ShortNavigationBarMedium,
+            ->
+                ShortNavigationBarDefaults.windowInsets.only(WindowInsetsSides.Bottom)
 
-                NavigationSuiteType.WideNavigationRailCollapsed,
-                NavigationSuiteType.WideNavigationRailExpanded,
-                ->
-                    WideNavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
+            NavigationSuiteType.WideNavigationRailCollapsed,
+            NavigationSuiteType.WideNavigationRailExpanded,
+            ->
+                WideNavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
 
-                NavigationSuiteType.NavigationBar ->
-                    NavigationBarDefaults.windowInsets.only(WindowInsetsSides.Bottom)
+            NavigationSuiteType.NavigationBar ->
+                NavigationBarDefaults.windowInsets.only(WindowInsetsSides.Bottom)
 
-                NavigationSuiteType.NavigationRail ->
-                    NavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
+            NavigationSuiteType.NavigationRail ->
+                NavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
 
-                NavigationSuiteType.NavigationDrawer ->
-                    DrawerDefaults.windowInsets.only(WindowInsetsSides.Start)
+            NavigationSuiteType.NavigationDrawer ->
+                DrawerDefaults.windowInsets.only(WindowInsetsSides.Start)
 
-                else -> NoWindowInsets
-            }
+            else -> NoWindowInsets
         }
-    )
+    },
+)
 
 private val NoWindowInsets = WindowInsets(0, 0, 0, 0)

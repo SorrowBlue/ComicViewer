@@ -58,34 +58,34 @@ internal fun ViewerSettingsScreen(
         SwitchSetting(
             title = Res.string.settings_viewer_title_show_status_bar,
             checked = uiState.isStatusBarShow,
-            onCheckedChange = onStatusBarShowChange
+            onCheckedChange = onStatusBarShowChange,
         )
         SwitchSetting(
             title = Res.string.settings_viewer_title_show_navigation_bar,
             checked = uiState.isNavigationBarShow,
-            onCheckedChange = onNavigationBarShowChange
+            onCheckedChange = onNavigationBarShowChange,
         )
         SwitchSetting(
             title = Res.string.settings_viewer_title_not_turn_off_screen,
             checked = uiState.isTurnOnScreen,
-            onCheckedChange = onTurnOnScreenChange
+            onCheckedChange = onTurnOnScreenChange,
         )
         SwitchSetting(
             title = Res.string.settings_viewer_title_cut_whitespace,
             checked = uiState.isCutWhitespace,
-            onCheckedChange = onCutWhitespaceChange
+            onCheckedChange = onCutWhitespaceChange,
         )
         SwitchSetting(
             title = Res.string.settings_viewer_label_cache_images,
             checked = uiState.isCacheImage,
-            onCheckedChange = onCacheImageChange
+            onCheckedChange = onCacheImageChange,
         )
         Setting(title = Res.string.settings_viewer_title_binding_direction, onClick = {})
         Setting(title = Res.string.settings_viewer_label_binding_direction_each, onClick = {})
         SwitchSetting(
             title = Res.string.settings_viewer_label_display_first_page,
             checked = uiState.isDisplayFirstPage,
-            onCheckedChange = onDisplayFirstPageChange
+            onCheckedChange = onDisplayFirstPageChange,
         )
         SliderSetting(
             title = Res.string.settings_viewer_label_preload_pages,
@@ -105,7 +105,7 @@ internal fun ViewerSettingsScreen(
             SwitchSetting(
                 title = Res.string.settings_viewer_title_brightness_control,
                 checked = uiState.isFixScreenBrightness,
-                onCheckedChange = onFixScreenBrightnessChange
+                onCheckedChange = onFixScreenBrightnessChange,
             )
         }
         SliderSetting(

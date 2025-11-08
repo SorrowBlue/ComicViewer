@@ -11,7 +11,6 @@ import dev.zacsweers.metro.IntoMap
 
 @ContributesTo(DataScope::class)
 interface ReaderDocumentProviders {
-
     @Binds
     @IntoMap
     @FileReaderKey(FileReaderType.Document)

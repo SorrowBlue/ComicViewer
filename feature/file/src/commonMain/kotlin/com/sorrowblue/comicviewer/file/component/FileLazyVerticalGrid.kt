@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
@@ -14,7 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -25,15 +28,18 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumnType
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FileLazyVerticalGridUiState(
     val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
     val columnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
-    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.isSavedThumbnail,
-    val fontSize: Int = FolderDisplaySettingsDefaults.fontSize,
+    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.SavedThumbnail,
+    val fontSize: Int = FolderDisplaySettingsDefaults.FontSize,
     val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
     val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
 )
@@ -54,7 +60,7 @@ fun <T : File> FileLazyVerticalGrid(
             when (uiState.imageScale) {
                 ImageScale.Crop -> ContentScale.Crop
                 ImageScale.Fit -> ContentScale.Fit
-            }
+            },
         )
     }
     val filterQuality by remember(uiState.imageFilterQuality) {
@@ -64,22 +70,22 @@ fun <T : File> FileLazyVerticalGrid(
                 ImageFilterQuality.Low -> FilterQuality.Low
                 ImageFilterQuality.Medium -> FilterQuality.Medium
                 ImageFilterQuality.High -> FilterQuality.High
-            }
+            },
         )
     }
     val type by rememberLazyPagingColumnType(
         fileListDisplay = uiState.fileListDisplay,
-        gridColumnSize = uiState.columnSize
+        gridColumnSize = uiState.columnSize,
     )
     LazyPagingColumn(
         state = state,
         lazyPagingItems = lazyPagingItems,
         contentPadding = contentPadding,
         type = type,
-        modifier = modifier
+        modifier = modifier,
     ) { _, item ->
         when (type) {
-            LazyPagingColumnType.List -> {
+            LazyPagingColumn.List -> {
                 ListFile(
                     file = item,
                     onLongClick = { onItemInfoClick(item) },
@@ -91,11 +97,11 @@ fun <T : File> FileLazyVerticalGrid(
                         Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                     } else {
                         Modifier
-                    }.animateItem().clickable { onItemClick(item) }
+                    }.animateItem().clickable { onItemClick(item) },
                 )
             }
 
-            LazyPagingColumnType.ListMedium -> {
+            LazyPagingColumn.ListMedium -> {
                 ListFileCard(
                     file = item,
                     onClick = { onItemClick(item) },
@@ -108,11 +114,11 @@ fun <T : File> FileLazyVerticalGrid(
                         Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                     } else {
                         Modifier
-                    }.animateItem()
+                    }.animateItem(),
                 )
             }
 
-            is LazyPagingColumnType.Grid -> GridFile(
+            is LazyPagingColumn.Grid -> GridFile(
                 file = item,
                 onClick = { onItemClick(item) },
                 onInfoClick = { onItemInfoClick(item) },
@@ -124,7 +130,7 @@ fun <T : File> FileLazyVerticalGrid(
                     Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                 } else {
                     Modifier
-                }.animateItem()
+                }.animateItem(),
             )
         }
     }
@@ -134,23 +140,30 @@ fun <T : File> FileLazyVerticalGrid(
 fun rememberLazyPagingColumnType(
     fileListDisplay: FileListDisplay,
     gridColumnSize: GridColumnSize,
-): State<LazyPagingColumnType> {
+): State<LazyPagingColumn> {
     val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     return remember(fileListDisplay, gridColumnSize) {
         mutableStateOf(
             when (fileListDisplay) {
-                FileListDisplay.List -> if (scaffoldDirective.maxHorizontalPartitions == 1) LazyPagingColumnType.List else LazyPagingColumnType.ListMedium
+                FileListDisplay.List -> if (scaffoldDirective.maxHorizontalPartitions ==
+                    1
+                ) {
+                    LazyPagingColumn.List
+                } else {
+                    LazyPagingColumn.ListMedium
+                }
+
                 FileListDisplay.Grid -> when {
                     windowSizeClass.isWidthAtLeastBreakpoint(
-                        WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND
+                        WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
                     ) -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 160
                         GridColumnSize.Large -> 200
                     }
 
                     windowSizeClass.isWidthAtLeastBreakpoint(
-                        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
+                        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
                     ) -> when (gridColumnSize) {
                         GridColumnSize.Medium -> 160
                         GridColumnSize.Large -> 200
@@ -160,8 +173,25 @@ fun rememberLazyPagingColumnType(
                         GridColumnSize.Medium -> 120
                         GridColumnSize.Large -> 180
                     }
-                }.let(LazyPagingColumnType::Grid)
-            }
+                }.let(LazyPagingColumn::Grid)
+            },
         )
+    }
+}
+
+@PreviewMultiplatform
+@Composable
+private fun GridFileLazyGridPreview() {
+    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
+    PreviewTheme {
+        Scaffold {
+            FileLazyVerticalGrid(
+                uiState = FileLazyVerticalGridUiState(),
+                lazyPagingItems = lazyPagingItems,
+                onItemClick = {},
+                onItemInfoClick = {},
+                contentPadding = it,
+            )
+        }
     }
 }

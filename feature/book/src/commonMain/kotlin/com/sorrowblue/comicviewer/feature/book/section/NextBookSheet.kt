@@ -46,7 +46,7 @@ internal fun NextBookSheet(
             .verticalScroll(rememberScrollState())
             .padding(ComicTheme.dimension.margin),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
     ) {
         if (nextPage.nextBooks.isNotEmpty()) {
             nextPage.nextBooks.forEach {
@@ -60,12 +60,12 @@ internal fun NextBookSheet(
                 contentDescription = null,
                 modifier = Modifier
                     .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
-                    .fillMaxWidth(0.5f)
+                    .fillMaxWidth(0.5f),
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.minPadding))
             Text(
                 text = stringResource(Res.string.book_label_no_next_book),
-                style = ComicTheme.typography.titleLarge
+                style = ComicTheme.typography.titleLarge,
             )
         }
     }
@@ -76,7 +76,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
     ElevatedCard(
         modifier = Modifier
             .widthIn(max = 480.dp)
-            .fillMaxWidth(1f)
+            .fillMaxWidth(1f),
     ) {
         Text(
             text = when (nextBook) {
@@ -87,7 +87,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 16.dp)
-                .padding(top = 16.dp)
+                .padding(top = 16.dp),
         )
         AsyncImage(
             model = FileThumbnail.from(nextBook.book),
@@ -97,7 +97,7 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
                 .padding(horizontal = 16.dp)
                 .padding(top = 8.dp)
                 .heightIn(max = 200.dp)
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth(0.5f),
         )
         Text(
             text = nextBook.book.name,
@@ -105,13 +105,13 @@ private fun OtherBook(nextBook: NextBook, onClick: () -> Unit) {
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 8.dp)
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
         )
         FilledTonalButton(
             onClick = onClick,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 8.dp, bottom = 16.dp)
+                .padding(top = 8.dp, bottom = 16.dp),
         ) {
             Text(text = stringResource(Res.string.book_action_read))
         }

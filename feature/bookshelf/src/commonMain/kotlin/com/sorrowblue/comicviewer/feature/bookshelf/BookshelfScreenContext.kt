@@ -12,7 +12,6 @@ annotation class BookshelfScreenScope
 
 @GraphExtension(BookshelfScreenScope::class)
 interface BookshelfScreenContext : ScreenContext {
-
     val pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase
 
     @ContributesTo(AppScope::class)

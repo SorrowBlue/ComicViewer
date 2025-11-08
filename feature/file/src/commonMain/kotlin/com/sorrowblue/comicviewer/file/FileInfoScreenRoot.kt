@@ -24,7 +24,7 @@ fun FileInfoScreenRoot(
                 onCollectionClick = { onCollectionClick(state.uiState.file) },
                 onOpenFolderClick = {
                     onOpenFolderClick(state.uiState.file)
-                }
+                },
             )
         }
 

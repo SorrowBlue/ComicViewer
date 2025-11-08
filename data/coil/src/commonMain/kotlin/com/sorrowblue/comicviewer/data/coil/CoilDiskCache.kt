@@ -12,22 +12,22 @@ expect class CoilDiskCache(context: PlatformContext) {
 }
 
 @OptIn(ExperimentalAtomicApi::class)
-internal fun CoilDiskCache.thumbnailDiskCache(bookshelfId: BookshelfId): DiskCache {
-    return diskCaches.load().getOrPut("thumbnail_cache_${bookshelfId.value}") {
-        DiskCache.Builder()
+internal fun CoilDiskCache.thumbnailDiskCache(bookshelfId: BookshelfId): DiskCache =
+    diskCaches.load().getOrPut("thumbnail_cache_${bookshelfId.value}") {
+        DiskCache
+            .Builder()
             .directory(resolve("thumbnail_cache_${bookshelfId.value}"))
             .build()
     }
-}
 
 @OptIn(ExperimentalAtomicApi::class)
-internal fun CoilDiskCache.pageDiskCache(bookshelfId: BookshelfId): DiskCache {
-    return diskCaches.load().getOrPut("page_cache_${bookshelfId.value}") {
-        DiskCache.Builder()
+internal fun CoilDiskCache.pageDiskCache(bookshelfId: BookshelfId): DiskCache =
+    diskCaches.load().getOrPut("page_cache_${bookshelfId.value}") {
+        DiskCache
+            .Builder()
             .directory(resolve("page_cache_${bookshelfId.value}"))
             .build()
     }
-}
 
 @OptIn(ExperimentalAtomicApi::class)
 private val diskCaches = AtomicReference(mutableMapOf<String, DiskCache>())

@@ -23,9 +23,8 @@ private data class ScrollOnPressTrackElement(
     private val reverseLayout: Boolean,
     private val sliderAdapter: SliderAdapter,
 ) : ModifierNodeElement<ScrollOnPressTrackNode>() {
-    override fun create(): ScrollOnPressTrackNode {
-        return ScrollOnPressTrackNode(isVertical, sliderAdapter, reverseLayout)
-    }
+    override fun create(): ScrollOnPressTrackNode =
+        ScrollOnPressTrackNode(isVertical, sliderAdapter, reverseLayout)
 
     override fun update(node: ScrollOnPressTrackNode) {
         node.update(isVertical, sliderAdapter, reverseLayout)
@@ -36,10 +35,11 @@ private class ScrollOnPressTrackNode(
     private var isVertical: Boolean,
     private var sliderAdapter: SliderAdapter,
     private var reverseLayout: Boolean,
-) : Modifier.Node(), PointerInputModifierNode {
-
+) : Modifier.Node(),
+    PointerInputModifierNode {
     var scroller: TrackPressScroller? = null
     var buttonPressed = false
+
     fun update(isVertical: Boolean, sliderAdapter: SliderAdapter, reverseLayout: Boolean) {
         this.isVertical = isVertical
         this.sliderAdapter = sliderAdapter
@@ -61,7 +61,12 @@ private class ScrollOnPressTrackNode(
             PointerEventType.Press -> {
                 if (!buttonPressed) {
                     buttonPressed = true
-                    scroller?.onPress(pointerEvent.changes.first().position.onScrollAxis())
+                    scroller?.onPress(
+                        pointerEvent.changes
+                            .first()
+                            .position
+                            .onScrollAxis(),
+                    )
                     return
                 }
             }

@@ -14,7 +14,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 
-internal const val TEST_DB_NAME = "migration-test"
+internal const val TestDatabaseName = "migration-test"
 
 internal expect val AutoMigration_2_3_Impl: Migration
 internal expect val AutoMigration_3_4_Impl: Migration
@@ -124,13 +124,17 @@ internal class MigrationTest : DatabaseTest() {
             version = 6,
             migration = AutoMigration_6_7_Impl,
             before = {
-                prepare("SELECT COUNT(*) FROM sqlite_master WHERE TYPE='table' AND name='collection'").use {
+                prepare(
+                    "SELECT COUNT(*) FROM sqlite_master WHERE TYPE='table' AND name='collection'",
+                ).use {
                     assertTrue(it.step())
                     assertEquals(it.getInt(0), 0)
                 }
             },
             after = {
-                prepare("SELECT COUNT(*) FROM sqlite_master WHERE TYPE='table' AND name='collection'").use {
+                prepare(
+                    "SELECT COUNT(*) FROM sqlite_master WHERE TYPE='table' AND name='collection'",
+                ).use {
                     assertTrue(it.step())
                     assertEquals(it.getInt(0), 1)
                 }
@@ -196,13 +200,19 @@ internal class MigrationTest : DatabaseTest() {
         }
     }
 
-    private fun SQLiteStatement.getText(column: String): String? = getColumnNames().indexOf(column).let { index ->
-        if (isNull(index)) null else getText(index)
-    }
+    private fun SQLiteStatement.getText(column: String): String? = getColumnNames()
+        .indexOf(
+            column,
+        ).let { index ->
+            if (isNull(index)) null else getText(index)
+        }
 
-    private fun SQLiteStatement.getInt(column: String): Int? = getColumnNames().indexOf(column).let { index ->
-        if (isNull(index)) null else getInt(index)
-    }
+    private fun SQLiteStatement.getInt(column: String): Int? = getColumnNames()
+        .indexOf(
+            column,
+        ).let { index ->
+            if (isNull(index)) null else getInt(index)
+        }
 
     private fun migration(
         version: Int,

@@ -43,13 +43,13 @@ internal fun BookshelfInfoContents(
         onScanFileClick = state::onScanFileClick,
         onScanThumbnailClick = state::onScanThumbnailClick,
         contentPadding = contentPadding,
-        modifier = modifier
+        modifier = modifier,
     )
 
     EventEffect(state.events) {
         when (it) {
             is BookshelfInfoContentsEvent.ShowNotificationPermissionRationale -> showNotificationPermissionRationale(
-                it.type
+                it.type,
             )
         }
     }
@@ -67,9 +67,13 @@ internal fun BookshelfInfoContents(
     Column(modifier = modifier) {
         FileThumbnailsCarousel(
             lazyPagingItems = lazyPagingItems,
-            contentPadding = contentPadding.only(PaddingValuesSides.Horizontal + PaddingValuesSides.Top).plus(
-                PaddingValues(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding)),
-            modifier = Modifier.fillMaxWidth()
+            contentPadding = contentPadding
+                .only(
+                    PaddingValuesSides.Horizontal + PaddingValuesSides.Top,
+                ).plus(
+                    PaddingValues(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+                ),
+            modifier = Modifier.fillMaxWidth(),
         )
         BookshelfInfoActionChips(
             isScanningFile = uiState.isScanningFile,
@@ -80,14 +84,14 @@ internal fun BookshelfInfoContents(
                 .fillMaxWidth()
                 .padding(contentPadding.only(PaddingValuesSides.Horizontal))
                 .padding(top = ComicTheme.dimension.targetSpacing)
-                .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding)
+                .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
         )
         BookshelfInfo(
             bookshelf = uiState.bookshelf,
             folder = uiState.folder,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(contentPadding.only(PaddingValuesSides.Horizontal))
+                .padding(contentPadding.only(PaddingValuesSides.Horizontal)),
         )
     }
 }

@@ -32,12 +32,10 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaf
 
 @Composable
 internal fun ErrorContents() {
-
 }
 
 @Composable
 internal fun LoadingContents() {
-
 }
 
 @Composable
@@ -55,20 +53,20 @@ internal fun FileInfoScreen(
     ExtraPaneScaffold(
         title = { Text(text = file.name) },
         onCloseClick = onBackClick,
-        modifier = modifier
+        modifier = modifier,
     ) { contentPadding ->
         Box {
             Column(
                 Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
-                    .padding(top = contentPadding.calculateTopPadding())
+                    .padding(top = contentPadding.calculateTopPadding()),
             ) {
                 FileInfoThumbnail(
                     file = file,
                     lazyPagingItems = lazyPagingItems,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
                 )
                 SheetActionButtons(
                     uiState = uiState.sheetActionButtonsUiState,
@@ -79,9 +77,8 @@ internal fun FileInfoScreen(
                         .fillMaxWidth()
                         .padding(
                             layoutDirection = LocalLayoutDirection.current,
-                            horizontal = contentPadding
-                        )
-                        .padding(top = ComicTheme.dimension.padding * 2)
+                            horizontal = contentPadding,
+                        ).padding(top = ComicTheme.dimension.padding * 2)
                         .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
                 )
                 FileInfoList(
@@ -90,9 +87,8 @@ internal fun FileInfoScreen(
                         .fillMaxWidth()
                         .padding(
                             layoutDirection = LocalLayoutDirection.current,
-                            horizontal = contentPadding
-                        )
-                        .padding(top = ComicTheme.dimension.padding * 2)
+                            horizontal = contentPadding,
+                        ).padding(top = ComicTheme.dimension.padding * 2)
                         .padding(horizontal = 8.dp),
                 )
                 uiState.attribute?.let {
@@ -101,15 +97,15 @@ internal fun FileInfoScreen(
                         modifier = Modifier
                             .padding(
                                 layoutDirection = LocalLayoutDirection.current,
-                                horizontal = contentPadding
-                            )
-                            .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+                                horizontal = contentPadding,
+                            ).padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
                     )
                 }
                 Spacer(
                     modifier = Modifier.height(
-                        contentPadding.calculateBottomPadding() + ExtraPaneScaffoldDefaults.HorizontalPadding
-                    )
+                        contentPadding.calculateBottomPadding() +
+                            ExtraPaneScaffoldDefaults.HorizontalPadding,
+                    ),
                 )
             }
         }

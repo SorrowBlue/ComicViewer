@@ -54,7 +54,7 @@ internal fun SearchScreen(
                 onShowHiddenClick = onShowHiddenClick,
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         SearchList(
             uiState = uiState.searchContentsUiState,
@@ -62,7 +62,7 @@ internal fun SearchScreen(
             lazyListState = lazyGridState,
             onItemClick = onItemClick,
             onItemInfoClick = onItemInfoClick,
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
         )
     }
 }

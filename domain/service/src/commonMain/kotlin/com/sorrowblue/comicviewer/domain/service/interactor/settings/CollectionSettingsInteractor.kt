@@ -7,9 +7,8 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
 @Inject
-internal class CollectionSettingsInteractor(
-    private val dataSource: DatastoreDataSource,
-) : CollectionSettingsUseCase {
+internal class CollectionSettingsInteractor(private val dataSource: DatastoreDataSource) :
+    CollectionSettingsUseCase {
     override val settings: Flow<CollectionSettings> = dataSource.collectionSettings
 
     override suspend fun edit(action: (CollectionSettings) -> CollectionSettings) {

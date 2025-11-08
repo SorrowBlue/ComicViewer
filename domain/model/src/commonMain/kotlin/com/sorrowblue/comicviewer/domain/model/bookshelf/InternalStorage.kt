@@ -8,20 +8,16 @@ data class InternalStorage private constructor(
     override val fileCount: Int,
     override val isDeleted: Boolean,
 ) : Bookshelf {
-
     override val type = BookshelfType.DEVICE
 
     fun copy(displayName: String = this.displayName) = copy(id = id, displayName = displayName)
 
     companion object {
-
-        operator fun invoke(
-            displayName: String,
-        ) = InternalStorage(
+        operator fun invoke(displayName: String) = InternalStorage(
             id = BookshelfId(),
             displayName = displayName,
             fileCount = 0,
-            isDeleted = false
+            isDeleted = false,
         )
 
         @InternalDataApi
@@ -34,7 +30,7 @@ data class InternalStorage private constructor(
             id = id,
             displayName = displayName,
             fileCount = fileCount,
-            isDeleted = isDeleted
+            isDeleted = isDeleted,
         )
     }
 }

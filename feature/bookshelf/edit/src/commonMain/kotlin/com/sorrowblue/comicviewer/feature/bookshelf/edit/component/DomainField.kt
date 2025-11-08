@@ -28,19 +28,26 @@ internal fun DomainField(
         selector = { it.domain },
         updater = { copy(domain = it) },
         dependsOn = setOf(AuthField),
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
             onValueChange = field::onValueChange,
             label = { Text(text = stringResource(Res.string.bookshelf_edit_hint_domain)) },
-            isError = field.hasError || form.watch { meta.fields[AuthField]?.error?.messages?.isNotEmpty() == true },
+            isError =
+            field.hasError ||
+                form.watch {
+                    meta.fields[AuthField]
+                        ?.error
+                        ?.messages
+                        ?.isNotEmpty() == true
+                },
             enabled = field.isEnabled,
             supportingText = field.supportingText(),
             keyboardOptions = KeyboardOptions(
                 showKeyboardOnFocus = false,
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             singleLine = true,
             modifier = modifier

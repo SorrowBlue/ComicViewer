@@ -1,3 +1,5 @@
+@file:Suppress("detekt.all")
+
 package androidx.compose.material3.adaptive.navigation3.kmp
 
 import androidx.collection.mutableIntListOf
@@ -89,10 +91,7 @@ public class ListDetailSceneStrategy<T : Any>(
         var idx = entries.lastIndex
         while (idx >= 0) {
             val entry = entries[idx]
-            val paneMetadata = getPaneMetadata(entry)
-            if (paneMetadata == null) {
-                break
-            }
+            val paneMetadata = getPaneMetadata(entry) ?: break
 
             if (paneMetadata.sceneKey == sceneKey) {
                 scaffoldEntryIndices.add(0, idx)
@@ -160,7 +159,8 @@ public class ListDetailSceneStrategy<T : Any>(
     }
 
     public companion object {
-        internal val ListDetailRoleKey: String = ListDetailPaneScaffoldRole::class.qualifiedName!!
+        internal const val ListDetailRoleKey: String =
+            "androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole"
 
         /**
          * Constructs metadata to mark a [NavEntry] as belonging to a

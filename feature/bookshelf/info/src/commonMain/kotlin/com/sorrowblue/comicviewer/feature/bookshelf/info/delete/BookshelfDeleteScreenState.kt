@@ -35,7 +35,7 @@ internal fun rememberBookshelfDeleteScreenState(
             getBookshelfInfoUseCase = getBookshelfInfoUseCase,
             scope = coroutineScope,
             bookshelfId = bookshelfId,
-            updateDeletionFlagUseCase = updateDeletionFlagUseCase
+            updateDeletionFlagUseCase = updateDeletionFlagUseCase,
         )
     }
 }
@@ -46,7 +46,6 @@ private class BookshelfDeleteScreenStateImpl(
     private val bookshelfId: BookshelfId,
     private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
 ) : BookshelfDeleteScreenState {
-
     override var uiState by mutableStateOf(BookshelfDeleteScreenUiState())
         private set
 
@@ -63,7 +62,7 @@ private class BookshelfDeleteScreenStateImpl(
             delay(300)
             when (
                 updateDeletionFlagUseCase(
-                    UpdateDeletionFlagUseCase.Request(bookshelfId, true)
+                    UpdateDeletionFlagUseCase.Request(bookshelfId, true),
                 )
             ) {
                 is Resource.Error -> {

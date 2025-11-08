@@ -17,7 +17,7 @@ internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.conf
             } else if (this is ApplicationDefaultConfig || this is DynamicFeatureDefaultConfig) {
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                    "proguard-rules.pro",
                 )
             }
         }

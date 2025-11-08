@@ -13,7 +13,6 @@ annotation class CollectionScreenScope
 
 @GraphExtension(CollectionScreenScope::class)
 interface CollectionScreenContext : ScreenContext {
-
     val pagingCollectionFileUseCase: PagingCollectionFileUseCase
     val getCollectionUseCase: GetCollectionUseCase
 

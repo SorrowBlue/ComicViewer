@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +19,8 @@ import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileBundle
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_archive
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_archive_description
@@ -36,13 +39,13 @@ internal fun ArchiveSheet(contentPadding: PaddingValues) {
             Text(
                 text = stringResource(Res.string.tutorial_text_archive_description),
                 modifier = Modifier.widthIn(max = 420.dp),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.margin))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(
                     ComicTheme.dimension.padding,
-                    alignment = Alignment.CenterHorizontally
+                    alignment = Alignment.CenterHorizontally,
                 ),
                 verticalArrangement = Arrangement.spacedBy(
                     0.dp,
@@ -54,6 +57,18 @@ internal fun ArchiveSheet(contentPadding: PaddingValues) {
                 }
             }
         },
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     )
+}
+
+@PreviewMultiplatform
+@Composable
+private fun ArchiveSheetPreview() {
+    PreviewTheme {
+        Surface {
+            ArchiveSheet(
+                contentPadding = PaddingValues(),
+            )
+        }
+    }
 }

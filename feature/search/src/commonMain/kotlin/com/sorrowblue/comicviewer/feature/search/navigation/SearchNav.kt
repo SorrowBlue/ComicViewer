@@ -35,25 +35,27 @@ val SearchKeySerializersModule = SerializersModule {
 
 @Serializable
 sealed interface SearchKey : ScreenKey {
-
     @Serializable
     data class List(val bookshelfId: BookshelfId, val path: PathString) : SearchKey
 
     @Serializable
-    data class FileInfo(override val fileKey: File.Key) : SearchKey, FileInfoKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        SearchKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
     @Serializable
-    data class FileInfo2(override val fileKey: File.Key) : SearchKey, FileInfoKey {
+    data class FileInfo2(override val fileKey: File.Key) :
+        SearchKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
     @Serializable
-    data class Folder(
-        override val bookshelfId: BookshelfId,
-        override val path: String,
-    ) : SearchKey, FolderKey {
+    data class Folder(override val bookshelfId: BookshelfId, override val path: String) :
+        SearchKey,
+        FolderKey {
         override val restorePath: String? = null
     }
 }
@@ -74,7 +76,7 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
             when (it) {
                 is Book -> onBookClick(it)
                 is Folder -> appNavigationState.addToBackStack(
-                    SearchKey.Folder(it.bookshelfId, it.path)
+                    SearchKey.Folder(it.bookshelfId, it.path),
                 )
             }
         },
@@ -88,9 +90,9 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = {
             appNavigationState.addToBackStack(
-                SearchKey.Folder(it.bookshelfId, it.parent)
+                SearchKey.Folder(it.bookshelfId, it.parent),
             )
-        }
+        },
     )
 
     folderEntryGroup<SearchKey.Folder, SearchKey.FileInfo2>(
@@ -101,7 +103,7 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
             when (file) {
                 is Book -> onBookClick(file)
                 is Folder -> appNavigationState.addToBackStack(
-                    SearchKey.Folder(file.bookshelfId, file.path)
+                    SearchKey.Folder(file.bookshelfId, file.path),
                 )
             }
         },
@@ -115,9 +117,9 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = {
             appNavigationState.addToBackStack(
-                SearchKey.Folder(it.bookshelfId, it.parent)
+                SearchKey.Folder(it.bookshelfId, it.parent),
             )
-        }
+        },
     )
 }
 
@@ -131,7 +133,7 @@ private fun EntryProviderScope<NavKey>.searchEntry(
 ) {
     entryScreen<SearchKey.List, SearchScreenContext>(
         createContext = { (graph as SearchScreenContext.Factory).createSearchScreenContext() },
-        metadata = SupportingPaneSceneStrategy.mainPane("Search")
+        metadata = SupportingPaneSceneStrategy.mainPane("Search"),
     ) {
         SearchScreenRoot(
             bookshelfId = it.bookshelfId,
@@ -155,6 +157,6 @@ private fun EntryProviderScope<NavKey>.searchFileInfoEntry(
         "Search",
         onBackClick = onBackClick,
         onCollectionClick = onCollectionClick,
-        onOpenFolderClick = onOpenFolderClick
+        onOpenFolderClick = onOpenFolderClick,
     )
 }

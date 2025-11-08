@@ -9,13 +9,12 @@ import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
 
-@Suppress("UnnecessaryAbstractClass")
+@Suppress("AbstractClassCanBeInterface")
 abstract class DesktopContext {
     abstract val filesDir: Path
     abstract val cacheDir: Path
 
     companion object {
-
         lateinit var platformGraph: PlatformGraph
     }
 }
@@ -23,24 +22,23 @@ abstract class DesktopContext {
 @ContributesBinding(AppScope::class, binding = binding<PlatformContext>())
 @Inject
 class DesktopContextImpl : DesktopContext() {
-
     private val os by lazy { System.getProperty("os.name").lowercase() }
 
     override val filesDir: Path
         get() = when {
             os.contains("win") -> Path(
-                System.getenv("APPDATA") ?: "${System.getProperty(USER_HOME)}\\AppData\\Local",
-                IDENTIFIER
+                System.getenv("APPDATA") ?: "${System.getProperty(UserHome)}\\AppData\\Local",
+                IDENTIFIER,
             )
 
             os.contains("mac") -> Path(
-                System.getProperty(USER_HOME),
+                System.getProperty(UserHome),
                 "Library",
                 "Application Support",
-                IDENTIFIER
+                IDENTIFIER,
             )
 
-            else -> Path(System.getProperty(USER_HOME), IDENTIFIER)
+            else -> Path(System.getProperty(UserHome), IDENTIFIER)
         }.also {
             if (it.notExists()) {
                 it.createDirectories()
@@ -50,19 +48,19 @@ class DesktopContextImpl : DesktopContext() {
     override val cacheDir: Path
         get() = when {
             os.contains("win") -> Path(
-                System.getenv("APPDATA") ?: "${System.getProperty(USER_HOME)}\\AppData\\Local",
+                System.getenv("APPDATA") ?: "${System.getProperty(UserHome)}\\AppData\\Local",
                 "Temp",
-                IDENTIFIER
+                IDENTIFIER,
             )
 
             os.contains("mac") -> Path(
-                System.getProperty(USER_HOME),
+                System.getProperty(UserHome),
                 "Library",
                 "Caches",
-                IDENTIFIER
+                IDENTIFIER,
             )
 
-            else -> Path(System.getProperty(USER_HOME), ".cache", IDENTIFIER)
+            else -> Path(System.getProperty(UserHome), ".cache", IDENTIFIER)
         }.also {
             if (it.notExists()) {
                 it.createDirectories()
@@ -71,6 +69,6 @@ class DesktopContextImpl : DesktopContext() {
 
     companion object {
         private const val IDENTIFIER = "com.sorrowblue.comicviewer"
-        private const val USER_HOME = "user.home"
+        private const val UserHome = "user.home"
     }
 }

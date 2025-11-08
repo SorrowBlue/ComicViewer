@@ -4,7 +4,6 @@ import com.sorrowblue.comicviewer.domain.service.FileReader
 import dev.zacsweers.metro.MapKey
 
 interface FileReaderFactory {
-
     fun create(mimeType: String, seekableInputStream: SeekableInputStream): FileReader
 }
 

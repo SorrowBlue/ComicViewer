@@ -18,10 +18,7 @@ import comicviewer.feature.settings.generated.resources.settings_label_plugin
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun PluginScreen(
-    onBackClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+internal fun PluginScreen(onBackClick: () -> Unit, modifier: Modifier = Modifier) {
     val snackbarHostState = remember { SnackbarHostState() }
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_label_plugin)) },
@@ -38,7 +35,7 @@ internal fun PluginScreen(
                 }) {
                     Icon(imageVector = ComicIcons.Settings, contentDescription = null)
                 }
-            }
+            },
         )
     }
 }

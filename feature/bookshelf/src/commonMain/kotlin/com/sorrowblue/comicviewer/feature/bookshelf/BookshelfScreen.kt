@@ -43,9 +43,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
             PrimaryActionButton(
                 text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
                 icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
-                onClick = onFabClick
+                onClick = onFabClick,
             )
-        }
+        },
     ) {
         Scaffold(
             topBar = {
@@ -53,14 +53,14 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
                     title = { Text(text = stringResource(Res.string.bookshelf_label_bookshelf)) },
                     actions = { SettingsIconButton(onClick = onSettingsClick) },
                 )
-            }
+            },
         ) {
             BookshelfSheet(
                 lazyPagingItems = lazyPagingItems,
                 lazyGridState = lazyGridState,
                 onBookshelfClick = onBookshelfClick,
                 onBookshelfInfoClick = onBookshelfInfoClick,
-                contentPadding = it
+                contentPadding = it,
             )
         }
     }

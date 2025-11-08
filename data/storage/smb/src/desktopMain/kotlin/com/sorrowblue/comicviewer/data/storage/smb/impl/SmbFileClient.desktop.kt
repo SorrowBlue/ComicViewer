@@ -48,139 +48,142 @@ private val mutex = Mutex()
 @AssistedInject
 internal actual class SmbFileClient(@Assisted actual override val bookshelf: SmbServer) :
     FileClient<SmbServer> {
-
     @AssistedFactory
     actual interface Factory : FileClient.Factory<SmbServer> {
         actual override fun create(bookshelf: SmbServer): SmbFileClient
     }
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource {
-        return runCommand {
-            smbFile(file.path).openInputStream().source().buffer()
-        }
+    actual override suspend fun bufferedSource(file: File): BufferedSource = runCommand {
+        smbFile(file.path).openInputStream().source().buffer()
     }
 
     actual override suspend fun connect(path: String) {
-        kotlin.runCatching {
-            smbFile(path).use {
-                it.connect()
-                it.exists()
-            }
-        }.fold({
-            if (!it) {
-                throw FileClientException.InvalidPath()
-            }
-        }) {
-            when (it) {
-                is SmbException -> {
-                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
-                    when (it.ntStatus) {
-                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> throw FileClientException.InvalidPath()
-                        NtStatus.NT_STATUS_LOGON_FAILURE -> throw FileClientException.InvalidAuth()
-                        NtStatus.NT_STATUS_INVALID_PARAMETER -> throw FileClientException.InvalidPath()
-                        NtStatus.NT_STATUS_UNSUCCESSFUL -> {
-                            if (it.cause is ConnectionTimeoutException || it.cause is TransportException || it.cause is UnknownHostException) {
-                                throw FileClientException.InvalidServer()
-                            } else if (it.message == "IPC signing is enforced, but no signing is available") {
-                                throw FileClientException.InvalidAuth()
-                            } else {
-                                throw it
+        kotlin
+            .runCatching {
+                smbFile(path).use {
+                    it.connect()
+                    it.exists()
+                }
+            }.fold({
+                if (!it) {
+                    throw FileClientException.InvalidPath()
+                }
+            }) {
+                throw when (it) {
+                    is SmbException -> {
+                        logcat(
+                            LogPriority.INFO,
+                        ) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
+                        when (it.ntStatus) {
+                            NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath()
+                            NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth()
+                            NtStatus.NT_STATUS_INVALID_PARAMETER ->
+                                FileClientException
+                                    .InvalidPath()
+                            NtStatus.NT_STATUS_UNSUCCESSFUL -> {
+                                if (it.cause is ConnectionTimeoutException ||
+                                    it.cause is TransportException ||
+                                    it.cause is UnknownHostException
+                                ) {
+                                    FileClientException.InvalidServer()
+                                } else if (it.message ==
+                                    "IPC signing is enforced, but no signing is available"
+                                ) {
+                                    FileClientException.InvalidAuth()
+                                } else {
+                                    it
+                                }
                             }
-                        }
 
-                        else -> throw it
+                            else -> it
+                        }
+                    }
+
+                    is URISyntaxException -> FileClientException.InvalidPath()
+
+                    else -> {
+                        logcat(LogPriority.INFO) { it.asLog() }
+                        it
                     }
                 }
-
-                is URISyntaxException -> throw FileClientException.InvalidPath()
-
-                else -> {
-                    logcat(LogPriority.INFO) { it.asLog() }
-                    throw it
-                }
             }
-        }
     }
 
-    actual override suspend fun exists(path: String): Boolean {
-        return runCommand {
-            smbFile(path).exists()
-        }
+    actual override suspend fun exists(path: String): Boolean = runCommand {
+        smbFile(path).exists()
     }
 
-    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
-        return runCommand {
+    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File =
+        runCommand {
             smbFile(path).toFileModel(resolveImageFolder)
         }
-    }
 
-    actual override suspend fun attribute(path: String): FileAttribute {
-        return runCommand {
-            smbFile(path).run {
-                FileAttribute(
-                    archive = hasAttributes(SmbConstants.ATTR_ARCHIVE),
-                    compressed = hasAttributes(SmbConstants.ATTR_COMPRESSED),
-                    directory = hasAttributes(SmbConstants.ATTR_DIRECTORY),
-                    normal = hasAttributes(SmbConstants.ATTR_NORMAL),
-                    readonly = hasAttributes(SmbConstants.ATTR_READONLY),
-                    system = hasAttributes(SmbConstants.ATTR_SYSTEM),
-                    temporary = hasAttributes(SmbConstants.ATTR_TEMPORARY),
-                    sharedRead = hasAttributes(SmbConstants.FILE_SHARE_READ),
-                    hidden = hasAttributes(SmbConstants.ATTR_HIDDEN),
-                    volume = hasAttributes(SmbConstants.ATTR_VOLUME)
-                )
-            }
+    actual override suspend fun attribute(path: String): FileAttribute = runCommand {
+        smbFile(path).run {
+            FileAttribute(
+                archive = hasAttributes(SmbConstants.ATTR_ARCHIVE),
+                compressed = hasAttributes(SmbConstants.ATTR_COMPRESSED),
+                directory = hasAttributes(SmbConstants.ATTR_DIRECTORY),
+                normal = hasAttributes(SmbConstants.ATTR_NORMAL),
+                readonly = hasAttributes(SmbConstants.ATTR_READONLY),
+                system = hasAttributes(SmbConstants.ATTR_SYSTEM),
+                temporary = hasAttributes(SmbConstants.ATTR_TEMPORARY),
+                sharedRead = hasAttributes(SmbConstants.FILE_SHARE_READ),
+                hidden = hasAttributes(SmbConstants.ATTR_HIDDEN),
+                volume = hasAttributes(SmbConstants.ATTR_VOLUME),
+            )
         }
     }
 
-    private fun SmbFile.hasAttributes(attribute: Int): Boolean {
-        return attributes and attribute == attribute
-    }
+    private fun SmbFile.hasAttributes(attribute: Int): Boolean =
+        attributes and attribute == attribute
 
-    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
-        return runCommand {
-            smbFile(file.path).listFiles()
+    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> =
+        runCommand {
+            smbFile(file.path)
+                .listFiles()
                 .map { smbFile -> smbFile.toFileModel(resolveImageFolder) }
         }
+
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream = runCommand {
+        SmbSeekableInputStream(smbFile(file.path), false)
     }
 
-    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
-        return runCommand {
-            SmbSeekableInputStream(smbFile(file.path), false)
-        }
-    }
-
-    private inline fun <R> runCommand(action: () -> R): R {
-        return runCatching {
-            action()
-        }.getOrElse {
-            throw when (it) {
-                is SmbException -> {
-                    logcat(LogPriority.INFO) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
-                    when (it.ntStatus) {
-                        NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath()
-                        NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth()
-                        NtStatus.NT_STATUS_INVALID_PARAMETER -> FileClientException.InvalidPath()
-                        NtStatus.NT_STATUS_UNSUCCESSFUL -> {
-                            if (it.cause is ConnectionTimeoutException || it.cause is TransportException) {
-                                FileClientException.InvalidServer()
-                            } else if (it.message == "IPC signing is enforced, but no signing is available") {
-                                FileClientException.InvalidAuth()
-                            } else {
-                                it
-                            }
+    private inline fun <R> runCommand(action: () -> R): R = runCatching {
+        action()
+    }.getOrElse {
+        throw when (it) {
+            is SmbException -> {
+                logcat(
+                    LogPriority.INFO,
+                ) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
+                when (it.ntStatus) {
+                    NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath()
+                    NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth()
+                    NtStatus.NT_STATUS_INVALID_PARAMETER -> FileClientException.InvalidPath()
+                    NtStatus.NT_STATUS_UNSUCCESSFUL -> {
+                        if (it.cause is ConnectionTimeoutException ||
+                            it.cause is TransportException
+                        ) {
+                            FileClientException.InvalidServer()
+                        } else if (it.message ==
+                            "IPC signing is enforced, but no signing is available"
+                        ) {
+                            FileClientException.InvalidAuth()
+                        } else {
+                            it
                         }
-
-                        else -> it
                     }
-                }
 
-                is URISyntaxException -> FileClientException.InvalidPath()
-
-                else -> {
-                    logcat(LogPriority.INFO) { it.asLog() }
-                    it
+                    else -> it
                 }
+            }
+
+            is URISyntaxException -> FileClientException.InvalidPath()
+
+            else -> {
+                logcat(LogPriority.INFO) { it.asLog() }
+                it
             }
         }
     }
@@ -189,7 +192,7 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
         if (resolveImageFolder && isDirectory && runCatching {
                 listFiles { it.isFile && it.name.extension in SUPPORTED_IMAGE }.isNotEmpty()
             }.getOrDefault(
-                false
+                false,
             )
         ) {
             return BookFolder(
@@ -207,7 +210,11 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent?.toString().orEmpty().replace("\\", "/")
+                parent = Path(url.path)
+                    .parent
+                    ?.toString()
+                    .orEmpty()
+                    .replace("\\", "/")
                     .removeSuffix("/") + "/",
                 size = 0,
                 lastModifier = lastModified,
@@ -218,7 +225,11 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent?.toString().orEmpty().replace("\\", "/")
+                parent = Path(url.path)
+                    .parent
+                    ?.toString()
+                    .orEmpty()
+                    .replace("\\", "/")
                     .removeSuffix("/") + "/",
                 size = length(),
                 lastModifier = lastModified,
@@ -227,20 +238,18 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
         }
     }
 
-    private fun SmbServer.smbFile(path: String): SmbFile {
-        return SmbFile(
-            URI(
-                "smb",
-                null,
-                host,
-                port,
-                path,
-                null,
-                null
-            ).decode(),
-            cifsContext()
-        )
-    }
+    private fun SmbServer.smbFile(path: String): SmbFile = SmbFile(
+        URI(
+            "smb",
+            null,
+            host,
+            port,
+            path,
+            null,
+            null,
+        ).decode(),
+        cifsContext(),
+    )
 
     private fun SmbFile.isSame(path: String): Boolean {
         val credentials = context.credentials
@@ -254,7 +263,7 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                     NtlmPasswordAuthenticator(
                         bookshelfAuth.domain,
                         bookshelfAuth.username,
-                        bookshelfAuth.password
+                        bookshelfAuth.password,
                     ) == credentials
                 }
             }
@@ -265,31 +274,36 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
             url.port == this@SmbFileClient.bookshelf.port
     }
 
-    private suspend fun smbFile(path: String): SmbFile {
-        return mutex.withLock {
-            rootSmbFile?.let { smbFile ->
-                if (smbFile.isSame(path)) {
-                    val nPath = path.removePrefix("/${smbFile.share}/")
-                    if (nPath.isEmpty() || nPath == "/") smbFile else smbFile.resolve(nPath) as SmbFile
+    private suspend fun smbFile(path: String): SmbFile = mutex.withLock {
+        rootSmbFile?.let { smbFile ->
+            if (smbFile.isSame(path)) {
+                val nPath = path.removePrefix("/${smbFile.share}/")
+                if (nPath.isEmpty() || nPath == "/") {
+                    smbFile
                 } else {
-                    null
+                    smbFile.resolve(
+                        nPath,
+                    ) as SmbFile
                 }
-            } ?: run {
-                val smbFile = this.bookshelf.smbFile(path)
-                smbFile.share?.let { share ->
-                    this.bookshelf.smbFile("/$share/").let {
-                        rootSmbFile = it
-                        val nPath = path.removePrefix("/${smbFile.share}/")
-                        if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
-                    }
-                } ?: smbFile.also {
-                    rootSmbFile = smbFile
+            } else {
+                null
+            }
+        } ?: run {
+            val smbFile = this.bookshelf.smbFile(path)
+            smbFile.share?.let { share ->
+                this.bookshelf.smbFile("/$share/").let {
+                    rootSmbFile = it
+                    val nPath = path.removePrefix("/${smbFile.share}/")
+                    if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
                 }
+            } ?: smbFile.also {
+                rootSmbFile = smbFile
             }
         }
     }
 
     private fun URI.decode() = URLDecoder.decode(toString().replace("+", "%2B"), "UTF-8")
+
     private fun cifsContext(): CIFSContext {
         val prop = Properties().apply {
             setProperty("jcifs.smb.client.minVersion", DialectVersion.SMB202.name)
@@ -301,7 +315,7 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
         return when (val auth = this.bookshelf.auth) {
             SmbServer.Auth.Guest -> context.withGuestCredentials()
             is SmbServer.Auth.UsernamePassword -> context.withCredentials(
-                NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password)
+                NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password),
             )
         }
     }

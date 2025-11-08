@@ -15,6 +15,6 @@ fun ImageScaleScreenRoot(imageScale: ImageScale, onDismissRequest: () -> Unit) {
             resultProducer.setResult(Json, ImageScaleScreenResultKey, it)
             onDismissRequest()
         },
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     )
 }

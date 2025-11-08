@@ -22,7 +22,6 @@ internal class RegenerateThumbnailsInteractor(
     private val thumbnailDataSource: ThumbnailDataSource,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : RegenerateThumbnailsUseCase() {
-
     override suspend fun run(request: Request): Resource<Unit, Error> {
         val bookshelf = bookshelfLocalDataSource.flow(request.bookshelfId).first()
         if (bookshelf != null) {
@@ -30,20 +29,22 @@ internal class RegenerateThumbnailsInteractor(
             val limit = 1
             var offset = 0L
             val count = fileLocalDataSource.count(request.bookshelfId)
-            limitedCoroutineScope(6, context = dispatcher) {
+            limitedCoroutineScope(MaxParallelCoroutines, context = dispatcher) {
                 List(count.toInt()) {
                     async {
                         val list = mutex.withLock {
-                            fileLocalDataSource.fileList(
-                                request.bookshelfId,
-                                limit = limit,
-                                offset = offset
-                            ).also {
-                                offset += it.size
-                            }
+                            fileLocalDataSource
+                                .fileList(
+                                    request.bookshelfId,
+                                    limit = limit,
+                                    offset = offset,
+                                ).also {
+                                    offset += it.size
+                                }
                         }
                         if (list.isNotEmpty()) {
-                            thumbnailDataSource.load(FileThumbnail.from(list.first()))
+                            thumbnailDataSource
+                                .load(FileThumbnail.from(list.first()))
                                 .await()
                             request.process(bookshelf, offset, count)
                         }
@@ -54,3 +55,5 @@ internal class RegenerateThumbnailsInteractor(
         return Resource.Success(Unit)
     }
 }
+
+private const val MaxParallelCoroutines = 6

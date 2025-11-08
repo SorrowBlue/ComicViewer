@@ -9,13 +9,12 @@ import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 internal class CollectionDaoTest : DatabaseTest() {
-    private val collectionDao: CollectionDao get() = db.collectionDao()
+    private val collectionDao: CollectionDao get() = database.collectionDao()
 
     @Test
     fun insert_flow() = runTest {

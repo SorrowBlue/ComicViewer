@@ -45,7 +45,6 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesTo(DataScope::class)
 interface DataStoreProviders {
-
     @Book
     @SingleIn(DataScope::class)
     @Provides
@@ -55,13 +54,16 @@ interface DataStoreProviders {
     @Display
     @SingleIn(DataScope::class)
     @Provides
-    private fun displaySettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<DisplaySettings> =
-        dataStoreMaker.createDataStore(DisplaySettingsSerializer)
+    private fun displaySettingsDataStore(
+        dataStoreMaker: DataStoreMaker,
+    ): DataStore<DisplaySettings> = dataStoreMaker.createDataStore(DisplaySettingsSerializer)
 
     @FolderDisplay
     @SingleIn(DataScope::class)
     @Provides
-    private fun folderDisplaySettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<FolderDisplaySettings> =
+    private fun folderDisplaySettingsDataStore(
+        dataStoreMaker: DataStoreMaker,
+    ): DataStore<FolderDisplaySettings> =
         dataStoreMaker.createDataStore(FolderDisplaySettingsSerializer)
 
     @Folder
@@ -73,8 +75,9 @@ interface DataStoreProviders {
     @Security
     @SingleIn(DataScope::class)
     @Provides
-    private fun securitySettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<SecuritySettings> =
-        dataStoreMaker.createDataStore(SecuritySettingsSerializer)
+    private fun securitySettingsDataStore(
+        dataStoreMaker: DataStoreMaker,
+    ): DataStore<SecuritySettings> = dataStoreMaker.createDataStore(SecuritySettingsSerializer)
 
     @GlobalSettings
     @SingleIn(AppScope::class)
@@ -85,7 +88,9 @@ interface DataStoreProviders {
     @ViewerOperation
     @SingleIn(DataScope::class)
     @Provides
-    private fun viewerOperationSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<ViewerOperationSettings> =
+    private fun viewerOperationSettingsDataStore(
+        dataStoreMaker: DataStoreMaker,
+    ): DataStore<ViewerOperationSettings> =
         dataStoreMaker.createDataStore(ViewerOperationSettingsSerializer)
 
     @Viewer
@@ -97,14 +102,16 @@ interface DataStoreProviders {
     @Collection
     @SingleIn(DataScope::class)
     @Provides
-    private fun collectionSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<CollectionSettings> =
-        dataStoreMaker.createDataStore(CollectionSettingsSerializer)
+    private fun collectionSettingsDataStore(
+        dataStoreMaker: DataStoreMaker,
+    ): DataStore<CollectionSettings> = dataStoreMaker.createDataStore(CollectionSettingsSerializer)
 
     @PdfPlugin
     @SingleIn(DataScope::class)
     @Provides
-    private fun pdfPluginSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<PdfPluginSettings> =
-        dataStoreMaker.createDataStore(PdfPluginSettingsSerializer)
+    private fun pdfPluginSettingsDataStore(
+        dataStoreMaker: DataStoreMaker,
+    ): DataStore<PdfPluginSettings> = dataStoreMaker.createDataStore(PdfPluginSettingsSerializer)
 
     @Binds
     private fun DatastoreDataSourceImpl.bind(): DatastoreDataSource = this
@@ -115,7 +122,6 @@ annotation class DataStoreScope
 
 @GraphExtension(DataStoreScope::class)
 interface DataStoreGraph {
-
     val datastoreDataSource: DatastoreDataSource
 
     @ContributesTo(AppScope::class)

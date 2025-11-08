@@ -22,8 +22,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 context(context: ImageCacheScreenContext)
-internal fun rememberImageCacheScreenState(
-): ImageCacheScreenState {
+internal fun rememberImageCacheScreenState(): ImageCacheScreenState {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     return remember(scope, snackbarHostState) {
@@ -32,13 +31,14 @@ internal fun rememberImageCacheScreenState(
             snackbarHostState = snackbarHostState,
             getBookshelfImageCacheInfoUseCase = context.getBookshelfImageCacheInfoUseCase,
             getOtherImageCacheInfoUseCase = context.getOtherImageCacheInfoUseCase,
-            clearImageCacheUseCase = context.clearImageCacheUseCase
+            clearImageCacheUseCase = context.clearImageCacheUseCase,
         )
     }
 }
 
 internal interface ImageCacheScreenState {
     fun onClick(bookshelfId: BookshelfId, imageCache: ImageCache)
+
     val snackbarHostState: SnackbarHostState
     val uiState: ThumbnailScreenUiState
 }
@@ -76,7 +76,8 @@ private class ImageCacheScreenStateImpl(
 
     private fun fetch() {
         scope.launch {
-            getBookshelfImageCacheInfoUseCase(GetBookshelfImageCacheInfoUseCase.Request).first()
+            getBookshelfImageCacheInfoUseCase(GetBookshelfImageCacheInfoUseCase.Request)
+                .first()
                 .onSuccess {
                     uiState = uiState.copy(imageCacheInfos = it)
                 }

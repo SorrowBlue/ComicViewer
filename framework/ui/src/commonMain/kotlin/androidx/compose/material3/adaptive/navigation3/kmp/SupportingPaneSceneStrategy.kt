@@ -1,10 +1,10 @@
+@file:Suppress("detekt.all")
+
 package androidx.compose.material3.adaptive.navigation3.kmp
 
 import androidx.collection.mutableIntListOf
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.layout.PaneAdaptedValue.Companion
-import androidx.compose.material3.adaptive.layout.PaneAdaptedValue.Companion.Expanded
 import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldDefaults
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
@@ -36,7 +36,7 @@ import androidx.navigation3.scene.SceneStrategyScope
 @Composable
 public fun <T : Any> rememberSupportingPaneSceneStrategy(
     backNavigationBehavior: BackNavigationBehavior =
-        BackNavigationBehavior.PopUntilScaffoldValueChange,
+        BackNavigationBehavior.PopUntilCurrentDestinationChange,
     directive: PaneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo()),
     adaptStrategies: ThreePaneScaffoldAdaptStrategies =
         SupportingPaneScaffoldDefaults.adaptStrategies(),
@@ -83,10 +83,7 @@ public class SupportingPaneSceneStrategy<T : Any>(
         var idx = entries.lastIndex
         while (idx >= 0) {
             val entry = entries[idx]
-            val paneMetadata = getPaneMetadata(entry)
-            if (paneMetadata == null) {
-                break
-            }
+            val paneMetadata = getPaneMetadata(entry) ?: break
 
             if (paneMetadata.sceneKey == sceneKey) {
                 scaffoldEntryIndices.add(0, idx)
@@ -106,7 +103,7 @@ public class SupportingPaneSceneStrategy<T : Any>(
 
         val scene =
             ThreePaneScaffoldScene(
-                key = lastPaneMetadata.sceneKey,
+                key = sceneKey,
                 onBack = onBack,
                 backNavBehavior = backNavigationBehavior,
                 directive = directive,
@@ -148,8 +145,8 @@ public class SupportingPaneSceneStrategy<T : Any>(
     }
 
     public companion object {
-        internal val SupportingPaneRoleKey: String =
-            SupportingPaneScaffoldRole::class.qualifiedName!!
+        internal const val SupportingPaneRoleKey: String =
+            "androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole"
 
         /**
          * Constructs metadata to mark a [NavEntry] as belonging to a

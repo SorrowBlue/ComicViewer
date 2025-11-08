@@ -34,17 +34,21 @@ internal fun HistoryBookList(
             text = stringResource(Res.string.history_label_no_history),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
+                .padding(contentPadding),
         )
     } else {
         FileLazyVerticalGrid(
-            uiState = remember { FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List) },
+            uiState = remember {
+                FileLazyVerticalGridUiState(
+                    fileListDisplay = FileListDisplay.List,
+                )
+            },
             state = lazyGridState,
             lazyPagingItems = lazyPagingItems,
             onItemClick = onItemClick,
             onItemInfoClick = onItemInfoClick,
             contentPadding = contentPadding,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import okio.BufferedSource
 
 internal expect class DeviceFileClient : FileClient<InternalStorage> {
-
     fun interface Factory : FileClient.Factory<InternalStorage> {
         override fun create(bookshelf: InternalStorage): DeviceFileClient
     }

@@ -23,7 +23,7 @@ internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScree
         SecuritySettingsScreenStateImpl(
             scope = scope,
             manageSecuritySettingsUseCase = manageSecuritySettingsUseCase,
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
         )
     }
 }
@@ -37,13 +37,14 @@ private class SecuritySettingsScreenStateImpl(
 
     init {
         uiState = uiState.copy(isBiometricCanBeUsed = false)
-        manageSecuritySettingsUseCase.settings.onEach {
-            uiState = uiState.copy(
-                isAuthEnabled = it.password != null,
-                isBackgroundLockEnabled = it.lockOnBackground,
-                isBiometricEnabled = it.useBiometrics
-            )
-        }.launchIn(scope)
+        manageSecuritySettingsUseCase.settings
+            .onEach {
+                uiState = uiState.copy(
+                    isAuthEnabled = it.password != null,
+                    isBackgroundLockEnabled = it.lockOnBackground,
+                    isBiometricEnabled = it.useBiometrics,
+                )
+            }.launchIn(scope)
     }
 
     override fun onChangeBackgroundLockEnabled(value: Boolean) {

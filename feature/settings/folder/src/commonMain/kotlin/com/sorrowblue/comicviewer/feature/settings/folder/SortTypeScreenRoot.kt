@@ -15,6 +15,6 @@ fun SortTypeScreenRoot(sortType: SortType, onDismissRequest: () -> Unit) {
             resultProducer.setResult(Json, SortTypeScreenResultKey, it)
             onDismissRequest()
         },
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     )
 }

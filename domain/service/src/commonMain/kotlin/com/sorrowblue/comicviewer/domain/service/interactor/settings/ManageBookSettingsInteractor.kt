@@ -6,11 +6,10 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseC
 import dev.zacsweers.metro.Inject
 
 @Inject
-internal class ManageBookSettingsInteractor(
-    private val datastoreDataSource: DatastoreDataSource,
-) : ManageBookSettingsUseCase {
-
+internal class ManageBookSettingsInteractor(private val datastoreDataSource: DatastoreDataSource) :
+    ManageBookSettingsUseCase {
     override val settings = datastoreDataSource.bookSettings
+
     override suspend fun edit(action: (BookSettings) -> BookSettings) {
         datastoreDataSource.updateBookSettings(action)
     }

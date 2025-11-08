@@ -67,12 +67,12 @@ fun rememberAdaptiveNavigationSuiteState(
     appNavigationState: AppNavigationState,
 ): AdaptiveNavigationSuiteState {
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
-        currentWindowAdaptiveInfo()
+        currentWindowAdaptiveInfo(),
     )
     val state = remember {
         AdaptiveNavigationSuiteStateImpl(
             appNavigationState = appNavigationState,
-            navigationSuiteType = navigationSuiteType
+            navigationSuiteType = navigationSuiteType,
         )
     }
     LaunchedEffect(appNavigationState.currentBackStack.lastOrNull()) {
@@ -93,7 +93,6 @@ private class AdaptiveNavigationSuiteStateImpl(
     private val appNavigationState: AppNavigationState,
     override var navigationSuiteType: NavigationSuiteType,
 ) : AdaptiveNavigationSuiteState {
-
     override val navItems =
         listOf(BookshelfKey.List, CollectionKey.List, ReadLaterKey.List, HistoryKey.List)
 
@@ -126,7 +125,9 @@ context(context: PlatformContext)
 fun ComicViewerUI(bookData: String?) {
     CompositionLocalProvider(LocalPlatformContext provides context) {
         ComicTheme {
-            SharedTransitionLayout(modifier = Modifier.background(ComicTheme.colorScheme.background)) {
+            SharedTransitionLayout(
+                modifier = Modifier.background(ComicTheme.colorScheme.background),
+            ) {
                 val appNavigationState = rememberAppNavigationState(bookData)
                 val state = rememberAdaptiveNavigationSuiteState(appNavigationState)
                 val scope = rememberCoroutineScope()
@@ -137,15 +138,15 @@ fun ComicViewerUI(bookData: String?) {
                     LocalAdaptiveNavigationSuiteState provides state,
                     LocalAppState provides appState,
                     LocalCoroutineScope provides scope,
-                    LocalGlobalSnackbarState provides globalSnackbarHostState
+                    LocalGlobalSnackbarState provides globalSnackbarHostState,
                 ) {
                     Scaffold(
-                        snackbarHost = { SnackbarHost(globalSnackbarHostState.snackbarHostState) }
+                        snackbarHost = { SnackbarHost(globalSnackbarHostState.snackbarHostState) },
                     ) {
                         val platformGraph = context.platformGraph
                         val supportingPaneSceneStrategy =
                             rememberSupportingPaneSceneStrategy<NavKey>(
-                                backNavigationBehavior = BackNavigationBehavior.PopUntilContentChange
+                                backNavigationBehavior = BackNavigationBehavior.PopUntilContentChange,
                             )
                         val listDetailSceneStrategy = rememberListDetailSceneStrategy<NavKey>()
                         val entryProvider = entryProvider {
@@ -160,8 +161,8 @@ fun ComicViewerUI(bookData: String?) {
                                             appNavigationState.addToBackStack(
                                                 SearchKey.List(
                                                     id,
-                                                    path
-                                                )
+                                                    path,
+                                                ),
                                             )
                                         },
                                         onBookClick = { book ->
@@ -169,16 +170,16 @@ fun ComicViewerUI(bookData: String?) {
                                                 BookKey(
                                                     bookshelfId = book.bookshelfId,
                                                     path = book.path,
-                                                    name = book.name
-                                                )
+                                                    name = book.name,
+                                                ),
                                             )
                                         },
                                         onRestored = {
                                             logcat { "Bookshelf restored" }
                                         },
                                         onCollectionClick = { file ->
-                                            /* TODO */
-                                        }
+                                            // TODO
+                                        },
                                     )
                                     historyEntryGroup(
                                         onSettingsClick = onSettingsClick,
@@ -187,11 +188,11 @@ fun ComicViewerUI(bookData: String?) {
                                                 BookKey(
                                                     bookshelfId = book.bookshelfId,
                                                     path = book.path,
-                                                    name = book.name
-                                                )
+                                                    name = book.name,
+                                                ),
                                             )
                                         },
-                                        onCollectionClick = {}
+                                        onCollectionClick = {},
                                     )
                                     collectionEntryGroup(
                                         onSettingsClick = onSettingsClick,
@@ -199,8 +200,8 @@ fun ComicViewerUI(bookData: String?) {
                                             appNavigationState.addToBackStack(
                                                 SearchKey.List(
                                                     id,
-                                                    path
-                                                )
+                                                    path,
+                                                ),
                                             )
                                         },
                                         onCollectionBookClick = { book, collectionId ->
@@ -209,8 +210,8 @@ fun ComicViewerUI(bookData: String?) {
                                                     bookshelfId = book.bookshelfId,
                                                     path = book.path,
                                                     name = book.name,
-                                                    collectionId = collectionId
-                                                )
+                                                    collectionId = collectionId,
+                                                ),
                                             )
                                         },
                                         onBookClick = { book ->
@@ -218,10 +219,10 @@ fun ComicViewerUI(bookData: String?) {
                                                 BookKey(
                                                     bookshelfId = book.bookshelfId,
                                                     path = book.path,
-                                                    name = book.name
-                                                )
+                                                    name = book.name,
+                                                ),
                                             )
-                                        }
+                                        },
                                     )
                                     readLaterEntryGroup(
                                         onSettingsClick = onSettingsClick,
@@ -229,8 +230,8 @@ fun ComicViewerUI(bookData: String?) {
                                             appNavigationState.addToBackStack(
                                                 SearchKey.List(
                                                     id,
-                                                    path
-                                                )
+                                                    path,
+                                                ),
                                             )
                                         },
                                         onBookClick = { book ->
@@ -238,35 +239,8 @@ fun ComicViewerUI(bookData: String?) {
                                                 BookKey(
                                                     bookshelfId = book.bookshelfId,
                                                     path = book.path,
-                                                    name = book.name
-                                                )
-                                            )
-                                        },
-                                        onCollectionClick = { book ->
-                                            appNavigationState.addToBackStack(
-                                                BookKey(
-                                                    bookshelfId = book.bookshelfId,
-                                                    path = book.path,
-                                                    name = book.name
-                                                )
-                                            )
-                                        }
-                                    )
-
-                                    searchEntryGroup(
-                                        onSettingsClick = onSettingsClick,
-                                        onSearchClick = { id, path ->
-                                            appNavigationState.addToBackStack(
-                                                SearchKey.List(id, path)
-                                            )
-                                        },
-                                        onBookClick = { book ->
-                                            appNavigationState.addToBackStack(
-                                                BookKey(
-                                                    bookshelfId = book.bookshelfId,
-                                                    path = book.path,
-                                                    name = book.name
-                                                )
+                                                    name = book.name,
+                                                ),
                                             )
                                         },
                                         onCollectionClick = { book ->
@@ -275,41 +249,68 @@ fun ComicViewerUI(bookData: String?) {
                                                     bookshelfId = book.bookshelfId,
                                                     path = book.path,
                                                     name = book.name,
-                                                )
+                                                ),
+                                            )
+                                        },
+                                    )
+
+                                    searchEntryGroup(
+                                        onSettingsClick = onSettingsClick,
+                                        onSearchClick = { id, path ->
+                                            appNavigationState.addToBackStack(
+                                                SearchKey.List(id, path),
+                                            )
+                                        },
+                                        onBookClick = { book ->
+                                            appNavigationState.addToBackStack(
+                                                BookKey(
+                                                    bookshelfId = book.bookshelfId,
+                                                    path = book.path,
+                                                    name = book.name,
+                                                ),
+                                            )
+                                        },
+                                        onCollectionClick = { book ->
+                                            appNavigationState.addToBackStack(
+                                                BookKey(
+                                                    bookshelfId = book.bookshelfId,
+                                                    path = book.path,
+                                                    name = book.name,
+                                                ),
                                             )
                                         },
                                         onSmartCollectionClick = { id, searchCondition ->
                                             appNavigationState.addToBackStack(
-                                                CollectionKey.CreateSmart(id, searchCondition)
+                                                CollectionKey.CreateSmart(id, searchCondition),
                                             )
-                                        }
+                                        },
                                     )
                                     settingsEntryGroup(
                                         onChangeAuthEnable = {
                                             if (it) {
                                                 appNavigationState.addToBackStack(
                                                     AuthenticationKey(
-                                                        ScreenType.Register
-                                                    )
+                                                        ScreenType.Register,
+                                                    ),
                                                 )
                                             } else {
                                                 appNavigationState.addToBackStack(
                                                     AuthenticationKey(
-                                                        ScreenType.Erase
-                                                    )
+                                                        ScreenType.Erase,
+                                                    ),
                                                 )
                                             }
                                         },
                                         onPasswordChangeClick = {
                                             appNavigationState.addToBackStack(
                                                 AuthenticationKey(
-                                                    ScreenType.Change
-                                                )
+                                                    ScreenType.Change,
+                                                ),
                                             )
                                         },
                                         onTutorialClick = {
                                             appNavigationState.addToBackStack(TutorialKey)
-                                        }
+                                        },
                                     )
                                     tutorialEntryGroup()
                                     authenticationEntryGroup()
@@ -317,7 +318,7 @@ fun ComicViewerUI(bookData: String?) {
                                     sortTypeSelectEntry(
                                         onBackClick = {
                                             appNavigationState.onBackPressed()
-                                        }
+                                        },
                                     )
 
                                     bookEntryGroup(onSettingsClick = onSettingsClick)
@@ -331,13 +332,13 @@ fun ComicViewerUI(bookData: String?) {
                                     entryProvider = entryProvider,
                                 ),
                                 rememberSaveableStateHolderNavEntryDecorator(),
-                                rememberViewModelStoreNavEntryDecorator()
+                                rememberViewModelStoreNavEntryDecorator(),
                             ),
                             sceneStrategy = supportingPaneSceneStrategy
                                 .then(listDetailSceneStrategy)
                                 .then(remember { DialogSceneStrategy() }),
                             backStack = appNavigationState.currentBackStack,
-                            entryProvider = entryProvider
+                            entryProvider = entryProvider,
                         )
                     }
                 }

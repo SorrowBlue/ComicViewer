@@ -3,7 +3,10 @@ package com.sorrowblue.comicviewer.data.database.entity.collection
 import androidx.room.Embedded
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 
-internal class CollectionEntityCount(@Embedded val entity: CollectionEntity, private val count: Int) {
+internal class CollectionEntityCount(
+    @Embedded val entity: CollectionEntity,
+    private val count: Int,
+) {
     fun toModel(): Collection = entity.toModel(count)
 }
 

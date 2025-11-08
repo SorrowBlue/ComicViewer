@@ -7,8 +7,8 @@ import okio.Path.Companion.toOkioPath
 
 @Inject
 actual class CoilDiskCache actual constructor(private val context: PlatformContext) {
-
-    actual fun resolve(folder: String): Path {
-        return context.cacheDir.resolve(folder).apply { mkdirs() }.toOkioPath()
-    }
+    actual fun resolve(folder: String): Path = context.cacheDir
+        .resolve(folder)
+        .apply { mkdirs() }
+        .toOkioPath()
 }

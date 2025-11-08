@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface BookshelfEditorType {
-
     val bookshelfType: BookshelfType
 
     @Serializable

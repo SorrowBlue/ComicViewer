@@ -14,20 +14,20 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 
 @Entity(
     tableName = "file",
-    primaryKeys = [FileEntity.PATH, FileEntity.BOOKSHELF_ID],
+    primaryKeys = [FileEntity.PATH, FileEntity.BookshelfId],
     foreignKeys = [
         ForeignKey(
             entity = BookshelfEntity::class,
             parentColumns = [BookshelfEntity.ID],
-            childColumns = [FileEntity.BOOKSHELF_ID],
+            childColumns = [FileEntity.BookshelfId],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index(value = [FileEntity.BOOKSHELF_ID, FileEntity.PATH])],
+    indices = [Index(value = [FileEntity.BookshelfId, FileEntity.PATH])],
 )
 internal data class FileEntity(
     @ColumnInfo(PATH) val path: String,
-    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: Int,
+    @ColumnInfo(BookshelfId) val bookshelfId: Int,
     val name: String,
     val parent: String,
     val size: Long,
@@ -41,7 +41,7 @@ internal data class FileEntity(
 ) {
     companion object {
         const val PATH = "path"
-        const val BOOKSHELF_ID = "bookshelf_id"
+        const val BookshelfId = "bookshelf_id"
 
         fun fromModel(model: File) = when (model) {
             is BookFile -> FileEntity(

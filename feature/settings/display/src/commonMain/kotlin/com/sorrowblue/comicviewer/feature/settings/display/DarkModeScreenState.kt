@@ -15,18 +15,18 @@ import kotlinx.coroutines.launch
 
 internal interface DarkModeScreenState {
     val uiState: DarkModeScreenUiState
+
     fun onDarkModeChange(darkMode: DarkMode, done: () -> Unit)
 }
 
 @Composable
 context(context: DarkModeScreenContext)
-internal fun rememberDarkModeScreenState(
-): DarkModeScreenState {
+internal fun rememberDarkModeScreenState(): DarkModeScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember(coroutineScope) {
         DarkModeScreenStateImpl(
             displaySettingsUseCase = context.displaySettingsUseCase,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }.apply {
         this.coroutineScope = coroutineScope
@@ -37,13 +37,13 @@ private class DarkModeScreenStateImpl(
     private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
     var coroutineScope: CoroutineScope,
 ) : DarkModeScreenState {
-
     override var uiState by mutableStateOf(DarkModeScreenUiState())
 
     init {
-        displaySettingsUseCase.settings.onEach {
-            uiState = uiState.copy(darkMode = it.darkMode)
-        }.launchIn(coroutineScope)
+        displaySettingsUseCase.settings
+            .onEach {
+                uiState = uiState.copy(darkMode = it.darkMode)
+            }.launchIn(coroutineScope)
     }
 
     override fun onDarkModeChange(darkMode: DarkMode, done: () -> Unit) {

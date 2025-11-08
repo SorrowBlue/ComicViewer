@@ -7,10 +7,8 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
 @Inject
-internal class LoadSettingsInteractor(
-    private val datastoreDataSource: DatastoreDataSource,
-) : LoadSettingsUseCase {
-
+internal class LoadSettingsInteractor(private val datastoreDataSource: DatastoreDataSource) :
+    LoadSettingsUseCase {
     override val settings: Flow<Settings> = datastoreDataSource.settings
 
     override suspend fun edit(action: (Settings) -> Settings) {

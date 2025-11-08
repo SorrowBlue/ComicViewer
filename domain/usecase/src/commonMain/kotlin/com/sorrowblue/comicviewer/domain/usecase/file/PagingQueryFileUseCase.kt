@@ -7,9 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
 
-abstract class PagingQueryFileUseCase :
-    PagingUseCase<PagingQueryFileUseCase.Request, File>() {
-
+abstract class PagingQueryFileUseCase : PagingUseCase<PagingQueryFileUseCase.Request, File>() {
     class Request(
         val pagingConfig: PagingConfig,
         val bookshelfId: BookshelfId,

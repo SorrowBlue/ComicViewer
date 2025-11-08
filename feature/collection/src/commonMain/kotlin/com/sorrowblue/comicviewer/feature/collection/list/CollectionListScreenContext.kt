@@ -12,7 +12,6 @@ annotation class CollectionListScreenScope
 
 @GraphExtension(CollectionListScreenScope::class)
 interface CollectionListScreenContext : ScreenContext {
-
     val pagingCollectionUseCase: PagingCollectionUseCase
 
     @ContributesTo(AppScope::class)

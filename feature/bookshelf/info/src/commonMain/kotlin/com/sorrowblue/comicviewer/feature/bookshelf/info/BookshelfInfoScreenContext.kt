@@ -16,7 +16,6 @@ annotation class BookshelfInfoScreenScope
 
 @GraphExtension(BookshelfInfoScreenScope::class)
 interface BookshelfInfoScreenContext : ScreenContext {
-
     val bookshelfInfoUseCase: GetBookshelfInfoUseCase
     val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase
     val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase

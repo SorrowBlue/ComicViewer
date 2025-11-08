@@ -24,14 +24,13 @@ internal class PagingCollectionFileInteractor(
     private val datastoreDataSource: DatastoreDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : PagingCollectionFileUseCase() {
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun run(request: Request): Flow<PagingData<File>> {
-        return dataSource.flow(request.collectionId).filterNotNull().flatMapLatest {
+    override fun run(request: Request): Flow<PagingData<File>> =
+        dataSource.flow(request.collectionId).filterNotNull().flatMapLatest {
             when (it) {
                 is BasicCollection -> collectionFileLocalDataSource.pagingDataFlow(
                     request.collectionId,
-                    request.pagingConfig
+                    request.pagingConfig,
                 ) {
                     runBlocking { datastoreDataSource.folderDisplaySettings.first() }.sortType
                 }
@@ -39,9 +38,8 @@ internal class PagingCollectionFileInteractor(
                 is SmartCollection -> fileLocalDataSource.pagingDataFlow(
                     request.pagingConfig,
                     it.bookshelfId,
-                    it::searchCondition
+                    it::searchCondition,
                 )
             }
         }
-    }
 }

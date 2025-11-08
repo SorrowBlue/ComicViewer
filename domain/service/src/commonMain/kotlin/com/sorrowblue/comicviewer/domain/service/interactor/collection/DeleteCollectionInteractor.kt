@@ -6,10 +6,8 @@ import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseC
 import dev.zacsweers.metro.Inject
 
 @Inject
-internal class DeleteCollectionInteractor(
-    private val dataSource: CollectionLocalDataSource,
-) : DeleteCollectionUseCase() {
-
+internal class DeleteCollectionInteractor(private val dataSource: CollectionLocalDataSource) :
+    DeleteCollectionUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Unit> {
         dataSource.delete(request.id)
         return Resource.Success(Unit)

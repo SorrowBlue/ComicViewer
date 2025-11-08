@@ -37,13 +37,13 @@ fun BookshelfDeleteScreen(
     val state = rememberBookshelfDeleteScreenState(
         bookshelfId = bookshelfId,
         getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
-        updateDeletionFlagUseCase = context.updateDeletionFlagUseCase
+        updateDeletionFlagUseCase = context.updateDeletionFlagUseCase,
     )
     BookshelfDeleteScreen(
         uiState = state.uiState,
         onDismissRequest = onBackClick,
         onDismissClick = onBackClick,
-        onConfirmClick = { state.onConfirmClick(onComplete) }
+        onConfirmClick = { state.onConfirmClick(onComplete) },
     )
 }
 
@@ -69,14 +69,14 @@ internal fun BookshelfDeleteScreen(
             TextButton(
                 onClick = onConfirmClick,
                 enabled = !uiState.isProcessing,
-                contentPadding = if (uiState.isProcessing) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding
+                contentPadding = if (uiState.isProcessing) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding,
             ) {
                 AnimatedVisibility(uiState.isProcessing, label = "progress") {
                     Row {
                         CircularProgressIndicator(
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(ButtonDefaults.IconSize),
-                            color = ButtonDefaults.textButtonColors().disabledContentColor
+                            color = ButtonDefaults.textButtonColors().disabledContentColor,
                         )
                         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
                     }
@@ -87,7 +87,7 @@ internal fun BookshelfDeleteScreen(
         dismissButton = {
             TextButton(
                 onClick = onDismissClick,
-                enabled = !uiState.isProcessing
+                enabled = !uiState.isProcessing,
             ) {
                 Text(stringResource(Res.string.bookshelf_info_delete_btn_cancel))
             }
@@ -96,6 +96,6 @@ internal fun BookshelfDeleteScreen(
             DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false)
         } else {
             DialogProperties()
-        }
+        },
     )
 }

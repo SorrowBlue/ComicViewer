@@ -5,6 +5,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
@@ -14,11 +15,8 @@ import comicviewer.feature.collection.generated.resources.collection_label_delet
 import comicviewer.feature.collection.generated.resources.collection_title_delete
 import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 
-data class DeleteCollectionScreenUiState(
-    val name: String = "",
-)
+data class DeleteCollectionScreenUiState(val name: String = "")
 
 @Composable
 internal fun DeleteCollectionScreen(

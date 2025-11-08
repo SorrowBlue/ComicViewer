@@ -18,10 +18,10 @@ internal fun FileAttributeChips(fileAttribute: FileAttribute, modifier: Modifier
         Text(
             text = "属性",
             style = ComicTheme.typography.labelSmall,
-            modifier = Modifier
+            modifier = Modifier,
         )
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.minPadding)
+            horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.minPadding),
         ) {
             fileAttribute.let {
                 if (it.archive) {

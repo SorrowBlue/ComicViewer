@@ -1,3 +1,5 @@
+@file:Suppress("detekt.all")
+
 package com.sorrowblue.comicviewer.framework.designsystem.icon.brand
 
 import androidx.compose.foundation.Image

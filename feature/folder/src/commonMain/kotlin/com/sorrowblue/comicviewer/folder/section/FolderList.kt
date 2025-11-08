@@ -51,13 +51,15 @@ internal fun FolderList(
     modifier: Modifier = Modifier,
 ) {
     val pullRefreshState = rememberPullToRefreshState()
-    val isRefreshing by remember(lazyPagingItems.loadState) { derivedStateOf { lazyPagingItems.loadState.isLoading } }
+    val isRefreshing by remember(
+        lazyPagingItems.loadState,
+    ) { derivedStateOf { lazyPagingItems.loadState.isLoading } }
     LinearPullRefreshContainer(
         pullRefreshState = pullRefreshState,
         contentPadding = contentPadding,
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
-        modifier = modifier
+        modifier = modifier,
     ) {
         if (lazyPagingItems.isEmptyData) {
             EmptyContent(
@@ -66,12 +68,12 @@ internal fun FolderList(
                     .verticalScroll(rememberScrollState())
                     .padding(contentPadding),
                 imageVector = ComicIcons.UndrawResumeFolder,
-                text = stringResource(Res.string.folder_text_nothing_in_folder, uiState.title)
+                text = stringResource(Res.string.folder_text_nothing_in_folder, uiState.title),
             )
         } else {
             ScrollbarBox(
                 state = lazyGridState,
-                scrollbarWindowInsets = scrollbarWindowInsets(contentPadding)
+                scrollbarWindowInsets = scrollbarWindowInsets(contentPadding),
             ) {
                 FileLazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
@@ -81,7 +83,7 @@ internal fun FolderList(
                     onItemClick = onFileClick,
                     onItemInfoClick = onFileInfoClick,
                     state = lazyGridState,
-                    emphasisPath = uiState.emphasisPath
+                    emphasisPath = uiState.emphasisPath,
                 )
             }
         }
@@ -89,7 +91,9 @@ internal fun FolderList(
 }
 
 @Composable
-private fun scrollbarWindowInsets(contentPadding: PaddingValues): WindowInsets {
-    return WindowInsets.safeDrawing.only(WindowInsetsSides.Companion.Vertical + WindowInsetsSides.Companion.End) union contentPadding.asWindowInsets()
+private fun scrollbarWindowInsets(contentPadding: PaddingValues): WindowInsets =
+    WindowInsets.safeDrawing.only(
+        WindowInsetsSides.Companion.Vertical + WindowInsetsSides.Companion.End,
+    ) union contentPadding
+        .asWindowInsets()
         .only(WindowInsetsSides.Companion.Vertical)
-}

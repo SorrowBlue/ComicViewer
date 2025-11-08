@@ -25,7 +25,7 @@ fun SecuritySettingsScreenRoot(
     if (state.uiState.isBiometricsDialogShow) {
         BiometricsRequestScreen(
             onConfirmClick = state::onBiometricsDialogClick,
-            onDismissRequest = state::onBiometricsDialogDismissRequest
+            onDismissRequest = state::onBiometricsDialogDismissRequest,
         )
     }
 

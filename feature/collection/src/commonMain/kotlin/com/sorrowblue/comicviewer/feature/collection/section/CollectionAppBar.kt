@@ -48,7 +48,7 @@ internal fun CollectionAppBar(
                     label = {
                         Text(stringResource(Res.string.collection_label_edit))
                     },
-                    onClick = onEditClick
+                    onClick = onEditClick,
                 )
                 fileListDisplayItemState.fileListDisplayItem()
                 gridSizeItemState.gridSizeItem()
@@ -59,7 +59,7 @@ internal fun CollectionAppBar(
                     label = {
                         Text(stringResource(Res.string.collection_label_delete))
                     },
-                    onClick = onDeleteClick
+                    onClick = onDeleteClick,
                 )
                 settingsItem(onClick = onSettingsClick)
             }

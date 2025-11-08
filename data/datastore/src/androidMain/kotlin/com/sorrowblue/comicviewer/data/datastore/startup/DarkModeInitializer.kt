@@ -13,7 +13,6 @@ import logcat.LogPriority
 import logcat.logcat
 
 internal class DarkModeInitializer : Initializer<Unit> {
-
     override fun create(context: Context) {
         require(context.platformGraph is DataStoreGraph.Factory)
         val darkMode =

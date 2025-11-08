@@ -23,7 +23,7 @@ fun rememberDonationScreenState(
     DonationScreenStateImpl(
 //        context = context,
 //        scope = scope,
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -33,7 +33,6 @@ private class DonationScreenStateImpl(
 //    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     override val snackbarHostState: SnackbarHostState,
 ) : DonationScreenState {
-
     override var uiState by mutableStateOf(DonationScreenUiState())
         private set
     /*

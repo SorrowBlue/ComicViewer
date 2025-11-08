@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.common.platformGraph
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
+import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
 import dev.zacsweers.metro.AppScope
@@ -37,7 +38,6 @@ import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 
 @Scope
 annotation class ScanFileWorkerScope
@@ -54,11 +54,8 @@ interface ScanFileWorkerContext {
     }
 }
 
-internal class ScanFileWorker(
-    appContext: Context,
-    workerParams: WorkerParameters,
-) : CoroutineWorker(appContext, workerParams) {
-
+internal class ScanFileWorker(appContext: Context, workerParams: WorkerParameters) :
+    CoroutineWorker(appContext, workerParams) {
     private val notificationManager = NotificationManagerCompat.from(appContext)
     private val notificationID = Random.nextInt()
 
@@ -66,29 +63,29 @@ internal class ScanFileWorker(
     private val scanBookshelfUseCase: ScanBookshelfUseCase
 
     init {
-        val context = (appContext.platformGraph as ScanFileWorkerContext.Factory).createScanFileWorkerContext()
+        val context = (appContext.platformGraph as ScanFileWorkerContext.Factory)
+            .createScanFileWorkerContext()
         getBookshelfInfoUseCase = context.getBookshelfInfoUseCase
         scanBookshelfUseCase = context.scanBookshelfUseCase
     }
 
-
-    override suspend fun getForegroundInfo(): ForegroundInfo {
-        return createForegroundInfo("", "")
-    }
+    override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo("", "")
 
     override suspend fun doWork(): Result {
         @OptIn(InternalDataApi::class)
         val bookshelfId = BookshelfId(inputData.getInt(BOOKSHELF_ID, 0))
         val bookshelfInfo =
             getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
-                .first().dataOrNull() ?: return Result.failure()
+                .first()
+                .dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
         return try {
             innerWork(bookshelfInfo)
         } catch (e: kotlinx.coroutines.CancellationException) {
             logcat { "catch: ${e.asLog()}" }
             val notification =
-                NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
+                NotificationCompat
+                    .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("本棚のスキャン")
                     .setContentText("スキャンはキャンセルされました。")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
@@ -97,7 +94,7 @@ internal class ScanFileWorker(
                     .build()
             if (ActivityCompat.checkSelfPermission(
                     applicationContext,
-                    Manifest.permission.POST_NOTIFICATIONS
+                    Manifest.permission.POST_NOTIFICATIONS,
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 notificationManager.notify(notificationID, notification)
@@ -112,14 +109,15 @@ internal class ScanFileWorker(
                 setProgress(
                     workDataOf(
                         "path" to file.path,
-                        "id" to file.bookshelfId.value
-                    )
+                        "id" to file.bookshelfId.value,
+                    ),
                 )
                 setForeground(createForegroundInfo(bookshelf.displayName, file.path))
             }
         return scanBookshelfUseCase(useCaseRequest).fold({
             val notification =
-                NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
+                NotificationCompat
+                    .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
                     .setContentTitle("本棚のスキャンが完了しました")
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(NotificationR.drawable.ic_sync_done_24dp)
@@ -127,7 +125,7 @@ internal class ScanFileWorker(
                     .build()
             if (ActivityCompat.checkSelfPermission(
                     applicationContext,
-                    Manifest.permission.POST_NOTIFICATIONS
+                    Manifest.permission.POST_NOTIFICATIONS,
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 notificationManager.notify(Random.nextInt(), notification)
@@ -143,31 +141,34 @@ internal class ScanFileWorker(
         path: String,
         init: Boolean = false,
     ): ForegroundInfo {
-        val cancelIntent = WorkManager.getInstance(applicationContext)
+        val cancelIntent = WorkManager
+            .getInstance(applicationContext)
             .createCancelPendingIntent(id)
         val notification =
-            NotificationCompat.Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id).apply {
-                setContentTitle(getString(Res.string.bookshelf_info_title_scan))
-                setSubText(bookshelfName)
-                setContentText(path)
-                setSmallIcon(NotificationR.drawable.ic_sync_book_24dp)
-                addAction(
-                    NotificationR.drawable.ic_sync_cancel_24dp,
-                    applicationContext.getString(android.R.string.cancel),
-                    cancelIntent
-                )
-                // 消去不可
-                setOngoing(true)
-                // サイレント通知
-                setSilent(!init)
-                // 即時表示
-                setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            }.build()
+            NotificationCompat
+                .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
+                .apply {
+                    setContentTitle(getString(Res.string.bookshelf_info_title_scan))
+                    setSubText(bookshelfName)
+                    setContentText(path)
+                    setSmallIcon(NotificationR.drawable.ic_sync_book_24dp)
+                    addAction(
+                        NotificationR.drawable.ic_sync_cancel_24dp,
+                        applicationContext.getString(android.R.string.cancel),
+                        cancelIntent,
+                    )
+                    // 消去不可
+                    setOngoing(true)
+                    // サイレント通知
+                    setSilent(!init)
+                    // 即時表示
+                    setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+                }.build()
 
         return ForegroundInfo(
             notificationID,
             notification,
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
         )
     }
 
@@ -175,18 +176,22 @@ internal class ScanFileWorker(
         const val BOOKSHELF_ID = "BOOKSHELF_ID"
 
         fun enqueueUniqueWork(context: Context, bookshelfId: BookshelfId) {
-            val constraints = Constraints.Builder().apply {
-                // 有効なネットワーク接続が必要
-                setRequiredNetworkType(NetworkType.CONNECTED)
-                // ユーザーのデバイスの保存容量が少なすぎる場合以外
-                setRequiresStorageNotLow(true)
-            }.build()
-            val myWorkRequest = OneTimeWorkRequest.Builder(ScanFileWorker::class.java)
+            val constraints = Constraints
+                .Builder()
+                .apply {
+                    // 有効なネットワーク接続が必要
+                    setRequiredNetworkType(NetworkType.CONNECTED)
+                    // ユーザーのデバイスの保存容量が少なすぎる場合以外
+                    setRequiresStorageNotLow(true)
+                }.build()
+            val myWorkRequest = OneTimeWorkRequest
+                .Builder(ScanFileWorker::class.java)
                 .setConstraints(constraints)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .setInputData(workDataOf(BOOKSHELF_ID to bookshelfId.value))
                 .build()
-            WorkManager.getInstance(context)
+            WorkManager
+                .getInstance(context)
                 .enqueueUniqueWork("scan", ExistingWorkPolicy.KEEP, myWorkRequest)
         }
     }

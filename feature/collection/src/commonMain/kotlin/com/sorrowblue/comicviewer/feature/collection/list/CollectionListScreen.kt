@@ -57,9 +57,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                         icon = {
                             Icon(
                                 imageVector = ComicIcons.Favorite,
-                                contentDescription = null
+                                contentDescription = null,
                             )
-                        }
+                        },
                     )
                     FloatingActionButtonMenuItem(
                         onClick = {
@@ -72,12 +72,12 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                         icon = {
                             Icon(
                                 imageVector = ComicIcons.CollectionsBookmark,
-                                contentDescription = null
+                                contentDescription = null,
                             )
-                        }
+                        },
                     )
                 }
-            }
+            },
         ) { contentPadding ->
             CollectionList(
                 lazyPagingItems = lazyPagingItems,

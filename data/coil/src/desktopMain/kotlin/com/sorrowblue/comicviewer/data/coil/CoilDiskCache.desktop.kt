@@ -8,8 +8,6 @@ import okio.Path.Companion.toOkioPath
 
 @Inject
 actual class CoilDiskCache actual constructor(context: PlatformContext) {
-
-    actual fun resolve(folder: String): Path {
-        return File(System.getProperty("java.io.tmpdir"), folder).toOkioPath()
-    }
+    actual fun resolve(folder: String): Path =
+        File(System.getProperty("java.io.tmpdir"), folder).toOkioPath()
 }

@@ -44,7 +44,6 @@ internal data class SmbEditorForm(
     val username: String = "",
     val password: String = "",
 ) : BookshelfEditorForm {
-
     /**
      * SMB authentication type.
      */
@@ -73,7 +72,6 @@ internal data class InternalStorageEditorForm(
     override val displayName: String = "",
     val path: String? = null,
 ) : BookshelfEditorForm {
-
     override fun <T : BookshelfEditorForm> update(displayName: String): T {
         @Suppress("UNCHECKED_CAST")
         return copy(displayName = displayName) as T

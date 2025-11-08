@@ -37,7 +37,7 @@ fun BookshelfInfoScreenRoot(
                     bookshelfFolder = uiState.bookshelfFolder,
                     showNotificationPermissionRationale = showNotificationPermissionRationale,
                     contentPadding = contentPadding,
-                    modifier = Modifier.verticalScroll(scrollState)
+                    modifier = Modifier.verticalScroll(scrollState),
                 )
             }
 
@@ -45,14 +45,14 @@ fun BookshelfInfoScreenRoot(
                 BookshelfLoadingContents(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(contentPadding)
+                        .padding(contentPadding),
                 )
 
             BookshelfInfoSheetUiState.Error ->
                 BookshelfErrorContents(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(contentPadding)
+                        .padding(contentPadding),
                 )
         }
     }

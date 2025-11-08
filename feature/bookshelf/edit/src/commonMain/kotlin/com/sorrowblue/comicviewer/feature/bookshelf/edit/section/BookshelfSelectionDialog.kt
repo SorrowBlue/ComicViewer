@@ -25,10 +25,7 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_tit
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun BookshelfSelectionDialog(
-    onBackClick: () -> Unit,
-    onTypeClick: (BookshelfType) -> Unit,
-) {
+fun BookshelfSelectionDialog(onBackClick: () -> Unit, onTypeClick: (BookshelfType) -> Unit) {
     val isFullScreenDialog = isCompactWindowClass()
     val items = remember { BookshelfType.entries.toList() }
     val listState = rememberLazyListState()
@@ -49,7 +46,7 @@ fun BookshelfSelectionDialog(
     }
     BasicAlertDialog(
         onDismissRequest = onBackClick,
-        properties = DialogProperties(usePlatformDefaultWidth = !isFullScreenDialog)
+        properties = DialogProperties(usePlatformDefaultWidth = !isFullScreenDialog),
     ) {
         if (isFullScreenDialog) {
             Scaffold(
@@ -61,14 +58,14 @@ fun BookshelfSelectionDialog(
                     )
                 },
                 contentWindowInsets = WindowInsets.safeDrawing.add(ContentWindowInsets),
-                content = content
+                content = content,
             )
         } else {
             AlertDialogContent(
                 title = title,
                 content = {
                     content(PaddingValues())
-                }
+                },
             )
         }
     }

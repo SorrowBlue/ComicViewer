@@ -19,7 +19,6 @@ internal class GetNextBookInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
 ) : GetNextBookUseCase() {
-
     override suspend fun run(request: Request): Resource<Book, Error> {
         val settings = datastoreDataSource.folderDisplaySettings.first()
         return when (val location = request.location) {
@@ -28,14 +27,14 @@ internal class GetNextBookInteractor(
                 location.collectionId,
                 request.bookshelfId,
                 request.path,
-                settings.sortType
+                settings.sortType,
             )
 
             Location.Folder -> folder(
                 request.isNext,
                 request.bookshelfId,
                 request.path,
-                settings.sortType
+                settings.sortType,
             )
         }
     }
@@ -45,25 +44,23 @@ internal class GetNextBookInteractor(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
-    ): Resource<Book, Error> {
-        return runCatching {
-            if (isNext) {
-                fileLocalDataSource.nextFileModel(bookshelfId, path, sortType)
+    ): Resource<Book, Error> = runCatching {
+        if (isNext) {
+            fileLocalDataSource.nextFileModel(bookshelfId, path, sortType)
+        } else {
+            fileLocalDataSource.prevFileModel(bookshelfId, path, sortType)
+        }
+    }.fold({ modelFlow ->
+        modelFlow.first().let {
+            if (it is Book) {
+                Resource.Success(it)
             } else {
-                fileLocalDataSource.prevFileModel(bookshelfId, path, sortType)
+                Resource.Error(Error.NotFound)
             }
-        }.fold({ modelFlow ->
-            modelFlow.first().let {
-                if (it is Book) {
-                    Resource.Success(it)
-                } else {
-                    Resource.Error(Error.NotFound)
-                }
-            }
-        }, {
-            Resource.Error(Error.System)
-        })
-    }
+        }
+    }, {
+        Resource.Error(Error.System)
+    })
 
     private suspend fun collection(
         isNext: Boolean,
@@ -71,31 +68,29 @@ internal class GetNextBookInteractor(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
-    ): Resource<Book, Error> {
-        return runCatching {
-            if (isNext) {
-                collectionFileLocalDataSource.flowNextCollectionFile(
-                    CollectionFile(collectionId, bookshelfId, path),
-                    sortType
-                )
+    ): Resource<Book, Error> = runCatching {
+        if (isNext) {
+            collectionFileLocalDataSource.flowNextCollectionFile(
+                CollectionFile(collectionId, bookshelfId, path),
+                sortType,
+            )
+        } else {
+            collectionFileLocalDataSource.flowPrevCollectionFile(
+                CollectionFile(collectionId, bookshelfId, path),
+                sortType,
+            )
+        }
+    }.fold({ modelFlow ->
+        modelFlow.first().let {
+            if (it is Book) {
+                Resource.Success(it)
             } else {
-                collectionFileLocalDataSource.flowPrevCollectionFile(
-                    CollectionFile(collectionId, bookshelfId, path),
-                    sortType
+                Resource.Error(
+                    Error.NotFound,
                 )
             }
-        }.fold({ modelFlow ->
-            modelFlow.first().let {
-                if (it is Book) {
-                    Resource.Success(it)
-                } else {
-                    Resource.Error(
-                        Error.NotFound
-                    )
-                }
-            }
-        }, {
-            Resource.Error(Error.System)
-        })
-    }
+        }
+    }, {
+        Resource.Error(Error.System)
+    })
 }

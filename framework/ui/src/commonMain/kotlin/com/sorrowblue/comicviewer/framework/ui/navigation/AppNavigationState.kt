@@ -4,7 +4,6 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
 interface AppNavigationState {
-
     fun addToBackStack(screenKey: ScreenKey)
 
     fun onBackPressed()

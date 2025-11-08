@@ -18,6 +18,6 @@ fun ImageFilterQualityScreenRoot(
             resultProducer.setResult(Json, ImageFilterQualityScreenResultKey, it)
             onDismissRequest()
         },
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     )
 }

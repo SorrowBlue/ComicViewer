@@ -16,7 +16,6 @@ import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {

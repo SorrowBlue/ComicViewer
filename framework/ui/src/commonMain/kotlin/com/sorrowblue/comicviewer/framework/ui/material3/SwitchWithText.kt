@@ -26,7 +26,7 @@ fun SwitchWithText(
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         CompositionLocalProvider(LocalTextStyle provides ComicTheme.typography.bodyMedium) {
-            Box(modifier = Modifier.alpha(if (enabled) 1f else 0.38f)) {
+            Box(modifier = Modifier.alpha(if (enabled) EnableAlpha else DisableAlpha)) {
                 text()
             }
         }
@@ -36,7 +36,10 @@ fun SwitchWithText(
             onCheckedChange = onCheckedChange,
             enabled = enabled,
             thumbContent = thumbContent,
-            colors = colors
+            colors = colors,
         )
     }
 }
+
+private const val DisableAlpha = 0.38f
+private const val EnableAlpha = 1f

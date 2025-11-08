@@ -34,6 +34,7 @@ internal interface BasicCollectionCreateScreenState {
     val uiState: BasicCollectionsCreateScreenUiState
     val form: Form<BasicCollectionForm>
     val event: EventFlow<BasicCollectionCreateScreenStateEvent>
+
     fun onSubmit(formData: BasicCollectionForm)
 }
 
@@ -51,7 +52,7 @@ internal fun rememberBasicCollectionCreateScreenState(
             createCollectionUseCase = context.createCollectionUseCase,
             addCollectionFileUseCase = context.addCollectionFileUseCase,
             notificationManager = context.notificationManager,
-            scope = scope
+            scope = scope,
         )
     }.apply {
         val formState =
@@ -69,7 +70,6 @@ private class BasicCollectionCreateScreenStateImpl(
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val notificationManager: NotificationManager,
 ) : BasicCollectionCreateScreenState {
-
     override lateinit var form: Form<BasicCollectionForm>
 
     override val event = EventFlow<BasicCollectionCreateScreenStateEvent>()
@@ -86,20 +86,20 @@ private class BasicCollectionCreateScreenStateImpl(
                             addCollectionFile(
                                 collection = collection,
                                 bookshelfId = bookshelfId,
-                                path = path
+                                path = path,
                             )
                         } else {
                             notificationManager.toast(
                                 getString(
                                     Res.string.collection_editor_msg_success_create,
-                                    collection.name
+                                    collection.name,
                                 ),
-                                NotificationManager.LENGTH_SHORT
+                                NotificationManager.LengthShort,
                             )
                             event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                         }
                     },
-                    onError = {}
+                    onError = {},
                 )
         }
     }
@@ -110,19 +110,19 @@ private class BasicCollectionCreateScreenStateImpl(
         path: String,
     ) {
         addCollectionFileUseCase(
-            AddCollectionFileUseCase.Request(CollectionFile(collection.id, bookshelfId, path))
+            AddCollectionFileUseCase.Request(CollectionFile(collection.id, bookshelfId, path)),
         ).fold(
             onSuccess = {
                 event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                 notificationManager.toast(
                     getString(
                         Res.string.collection_editor_msg_success_create_add,
-                        collection.name
+                        collection.name,
                     ),
-                    NotificationManager.LENGTH_SHORT
+                    NotificationManager.LengthShort,
                 )
             },
-            onError = {}
+            onError = {},
         )
     }
 }

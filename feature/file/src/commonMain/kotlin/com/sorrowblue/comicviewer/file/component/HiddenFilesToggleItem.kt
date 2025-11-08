@@ -37,7 +37,7 @@ fun HiddenFilesToggleableItemState.hiddenFilesToggleableItem() {
         icon = { Icon(ComicIcons.FolderOff, null) },
         label = {
             Text(stringResource(Res.string.file_action_show_hidden))
-        }
+        },
     )
 }
 
@@ -50,7 +50,7 @@ fun rememberHiddenFilesToggleableItemState(): HiddenFilesToggleableItemState {
     return remember {
         HiddenFilesToggleableItemStateImpl(
             manageFolderDisplaySettingsUseCase = graph.manageFolderDisplaySettingsUseCase,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }.apply {
         this.coroutineScope = coroutineScope
@@ -59,6 +59,7 @@ fun rememberHiddenFilesToggleableItemState(): HiddenFilesToggleableItemState {
 
 interface HiddenFilesToggleableItemState {
     val showHiddenFile: Boolean
+
     fun onCheckedChange(checked: Boolean)
 }
 
@@ -66,12 +67,13 @@ private class HiddenFilesToggleableItemStateImpl(
     private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     var coroutineScope: CoroutineScope,
 ) : HiddenFilesToggleableItemState {
-
     override var showHiddenFile: Boolean by mutableStateOf(false)
 
     init {
-        manageFolderDisplaySettingsUseCase.settings.map { it.showHiddenFiles }
-            .distinctUntilChanged().onEach {
+        manageFolderDisplaySettingsUseCase.settings
+            .map { it.showHiddenFiles }
+            .distinctUntilChanged()
+            .onEach {
                 showHiddenFile = it
             }.launchIn(coroutineScope)
     }
@@ -82,7 +84,6 @@ private class HiddenFilesToggleableItemStateImpl(
                 it.copy(showHiddenFiles = checked)
             }
         }
-
     }
 }
 
@@ -91,7 +92,6 @@ annotation class HiddenFilesToggleItemScope
 
 @GraphExtension(HiddenFilesToggleItemScope::class)
 interface HiddenFilesToggleableItemGraph {
-
     val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
 
     @ContributesTo(AppScope::class)

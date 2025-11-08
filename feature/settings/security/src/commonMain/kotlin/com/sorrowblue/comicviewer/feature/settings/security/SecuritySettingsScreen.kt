@@ -45,7 +45,7 @@ internal fun SecuritySettingsScreen(
         Setting(
             title = Res.string.settings_security_title_change_password,
             onClick = onPasswordChangeClick,
-            enabled = uiState.isAuthEnabled
+            enabled = uiState.isAuthEnabled,
         )
         if (uiState.isBiometricCanBeUsed) {
             SwitchSetting(

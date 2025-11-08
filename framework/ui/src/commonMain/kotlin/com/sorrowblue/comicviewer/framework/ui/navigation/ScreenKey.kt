@@ -11,7 +11,6 @@ import kotlin.jvm.JvmSuppressWildcards
 interface ScreenKey : NavKey
 
 interface NavigationKey : ScreenKey {
-
     val title: String
         @Composable
         get
@@ -29,7 +28,7 @@ inline fun <reified T : NavKey, V : ScreenContext> EntryProviderScope<NavKey>.en
 ) {
     entry<T>(
         clazzContentKey = clazzContentKey,
-        metadata = metadata
+        metadata = metadata,
     ) {
         with(rememberRetained { createContext() }) {
             content(it)

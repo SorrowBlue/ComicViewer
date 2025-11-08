@@ -47,7 +47,7 @@ internal fun NotificationRequestScreen(
                 ScanType.Thumbnail -> Res.string.bookshelf_info_notification_text_scan_thumbnail
             }
             Text(text = stringResource(id))
-        }
+        },
     )
 }
 

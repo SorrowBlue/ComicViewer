@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import okio.BufferedSource
 
 internal expect class ShareFileClient : FileClient<ShareContents> {
-
     fun interface Factory : FileClient.Factory<ShareContents> {
         override fun create(bookshelf: ShareContents): ShareFileClient
     }

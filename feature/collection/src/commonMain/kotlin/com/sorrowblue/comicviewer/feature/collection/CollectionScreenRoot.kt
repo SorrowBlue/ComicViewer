@@ -25,6 +25,6 @@ fun CollectionScreenRoot(
         onEditClick = { onEditClick(id) },
         onSettingsClick = onSettingsClick,
         onFileClick = onFileClick,
-        onFileInfoClick = onFileInfoClick
+        onFileInfoClick = onFileInfoClick,
     )
 }

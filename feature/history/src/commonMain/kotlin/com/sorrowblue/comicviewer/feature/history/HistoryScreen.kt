@@ -29,17 +29,17 @@ internal fun AdaptiveNavigationSuiteScaffoldState.HistoryScreen(
                 HistoryTopAppBar(
                     onDeleteAllClick = onDeleteAllClick,
                     onSettingsClick = onSettingsClick,
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
                 )
             },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { contentPadding ->
             HistoryBookList(
                 lazyPagingItems = lazyPagingItems,
                 onItemClick = onBookClick,
                 onItemInfoClick = onBookInfoClick,
                 lazyGridState = lazyGridState,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
             )
         }
     }

@@ -34,7 +34,6 @@ internal class RemoteDataSourceImpl(
     fileClientFactory: Map<FileClientType, FileClient.Factory<*>>,
     private val fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
 ) : RemoteDataSource {
-
     @AssistedFactory
     fun interface Factory : RemoteDataSource.Factory {
         override fun create(bookshelf: Bookshelf): RemoteDataSourceImpl
@@ -42,46 +41,51 @@ internal class RemoteDataSourceImpl(
 
     @Suppress("UNCHECKED_CAST")
     private val fileClient = when (bookshelf) {
-        is InternalStorage -> fileClientFactory.getValue(FileClientType.Device) as FileClient.Factory<Bookshelf>
-        is SmbServer -> fileClientFactory.getValue(FileClientType.Smb) as FileClient.Factory<Bookshelf>
-        ShareContents -> fileClientFactory.getValue(FileClientType.Share) as FileClient.Factory<Bookshelf>
+        is InternalStorage -> fileClientFactory.getValue(
+            FileClientType.Device,
+        ) as FileClient.Factory<Bookshelf>
+        is SmbServer -> fileClientFactory.getValue(
+            FileClientType.Smb,
+        ) as FileClient.Factory<Bookshelf>
+        ShareContents -> fileClientFactory.getValue(
+            FileClientType.Share,
+        ) as FileClient.Factory<Bookshelf>
     }.create(bookshelf)
 
     override suspend fun connect(path: String) {
-        kotlin.runCatching {
-            withContext(dispatcher) {
-                fileClient.connect(path)
-            }
-        }.getOrElse {
-            throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
+        kotlin
+            .runCatching {
+                withContext(dispatcher) {
+                    fileClient.connect(path)
                 }
+            }.getOrElse {
+                throw when (it) {
+                    is FileClientException -> when (it) {
+                        is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                        is FileClientException.InvalidPath -> RemoteException.NotFound()
+                        is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                        is FileClientException.NoNetwork -> RemoteException.NoNetwork()
+                    }
 
-                else -> RemoteException.Unknown()
+                    else -> RemoteException.Unknown()
+                }
             }
-        }
     }
 
-    override suspend fun exists(path: String): Boolean {
-        return runCatching {
-            withContext(dispatcher) {
-                fileClient.exists(path)
+    override suspend fun exists(path: String): Boolean = runCatching {
+        withContext(dispatcher) {
+            fileClient.exists(path)
+        }
+    }.getOrElse {
+        throw when (it) {
+            is FileClientException -> when (it) {
+                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                is FileClientException.InvalidPath -> RemoteException.NotFound()
+                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
             }
-        }.getOrElse {
-            throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                }
 
-                else -> it
-            }
+            else -> it
         }
     }
 
@@ -89,47 +93,43 @@ internal class RemoteDataSourceImpl(
         file: File,
         resolveImageFolder: Boolean,
         filter: (File) -> Boolean,
-    ): List<File> {
-        return runCatching {
-            withContext(dispatcher) {
-                fileClient.listFiles(file, resolveImageFolder).filter(filter)
+    ): List<File> = runCatching {
+        withContext(dispatcher) {
+            fileClient.listFiles(file, resolveImageFolder).filter(filter)
+        }
+    }.getOrElse {
+        throw when (it) {
+            is FileClientException -> when (it) {
+                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                is FileClientException.InvalidPath -> RemoteException.NotFound()
+                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
             }
-        }.getOrElse {
-            throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                }
 
-                else -> it
-            }
+            else -> it
         }
     }
 
-    override suspend fun file(path: String, resolveImageFolder: Boolean): File {
-        return runCatching {
-            withContext(dispatcher) {
-                fileClient.current(path, resolveImageFolder)
+    override suspend fun file(path: String, resolveImageFolder: Boolean): File = runCatching {
+        withContext(dispatcher) {
+            fileClient.current(path, resolveImageFolder)
+        }
+    }.getOrElse {
+        throw when (it) {
+            is FileClientException -> when (it) {
+                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                is FileClientException.InvalidPath -> RemoteException.NotFound()
+                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
             }
-        }.getOrElse {
-            throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                }
 
-                else -> it
-            }
+            else -> it
         }
     }
 
-    override suspend fun fileReader(book: Book): FileReader {
-        return withContext(dispatcher) {
-            kotlin.runCatching {
+    override suspend fun fileReader(book: Book): FileReader = withContext(dispatcher) {
+        kotlin
+            .runCatching {
                 when (book) {
                     is BookFile -> {
                         val seekableInputStream = fileClient.seekableInputStream(book)
@@ -160,11 +160,10 @@ internal class RemoteDataSourceImpl(
                     else -> it
                 }
             }
-        }
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute? {
-        return kotlin.runCatching {
+    override suspend fun getAttribute(path: String): FileAttribute? = kotlin
+        .runCatching {
             withContext(dispatcher) {
                 fileClient.attribute(path = path)
             }
@@ -180,5 +179,4 @@ internal class RemoteDataSourceImpl(
                 else -> RemoteException.Unknown()
             }
         }
-    }
 }

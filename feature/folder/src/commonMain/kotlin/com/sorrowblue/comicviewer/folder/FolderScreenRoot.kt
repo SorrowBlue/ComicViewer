@@ -36,7 +36,6 @@ fun FolderScreenRoot(
 
     NavigationResultEffect(SortTypeSelectScreenResultKey, state::onSortTypeSelectScreenResult)
 
-
     EventEffect(state.events) {
         when (it) {
             FolderScreenEvent.Restore -> onRestored()

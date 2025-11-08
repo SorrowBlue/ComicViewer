@@ -20,6 +20,7 @@ internal interface LicenseScreenState {
     val libs: Libs?
 
     fun onLibraryClick(library: Library)
+
     fun closeDialog()
 }
 
@@ -33,14 +34,10 @@ internal fun rememberLicenseScreenState(): LicenseScreenState {
     return remember(libs, uriHandler) {
         LicenseScreenStateImpl(libs, uriHandler)
     }
-
 }
 
-private class LicenseScreenStateImpl(
-    override val libs: Libs?,
-    val uriHandler: UriHandler,
-) : LicenseScreenState {
-
+private class LicenseScreenStateImpl(override val libs: Libs?, val uriHandler: UriHandler) :
+    LicenseScreenState {
     override var uiState by mutableStateOf(LicenseScreenUiState(libs))
 
     override fun onLibraryClick(library: Library) {
@@ -54,7 +51,7 @@ private class LicenseScreenStateImpl(
                 } catch (t: Throwable) {
                     logcat(
                         tag = "LibrariesContainerFixed",
-                        priority = LogPriority.ERROR
+                        priority = LogPriority.ERROR,
                     ) { t.asLog() }
                 }
             }

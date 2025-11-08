@@ -35,7 +35,7 @@ internal fun PortField(
             minimum(0) { rangeErrorMessage }
             maximum(65535) { rangeErrorMessage }
         },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = if (field.value < 0) "" else field.value.toString(),
@@ -47,7 +47,7 @@ internal fun PortField(
             keyboardOptions = KeyboardOptions(
                 showKeyboardOnFocus = false,
                 keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             singleLine = true,
             modifier = modifier

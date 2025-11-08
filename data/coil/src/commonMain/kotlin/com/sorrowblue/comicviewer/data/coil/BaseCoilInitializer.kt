@@ -14,33 +14,30 @@ import com.sorrowblue.comicviewer.framework.common.platformGraph
 import logcat.LogPriority
 import logcat.logcat
 
-internal abstract class BaseCoilInitializer {
-
+internal open class BaseCoilInitializer {
     fun initialize(platformContext: com.sorrowblue.comicviewer.framework.common.PlatformContext) {
         require(platformContext.platformGraph is CoilGraph.Factory)
         with((platformContext.platformGraph as CoilGraph.Factory).createCoilGraph()) {
-            SingletonImageLoader.setSafe(object : SingletonImageLoader.Factory {
-                override fun newImageLoader(context: PlatformContext): ImageLoader {
-                    return ImageLoader(context).newBuilder()
-                        .components {
-                            add(BookThumbnailKeyer)
-                            add(bookThumbnailFetcher)
+            SingletonImageLoader.setSafe { context ->
+                ImageLoader(context)
+                    .newBuilder()
+                    .components {
+                        add(BookThumbnailKeyer)
+                        add(bookThumbnailFetcher)
 
-                            add(FolderThumbnailKeyer)
-                            add(folderThumbnailFetcher)
+                        add(FolderThumbnailKeyer)
+                        add(folderThumbnailFetcher)
 
-                            add(BookPageImageKeyer)
-                            add(bookPageImageFetcher)
+                        add(BookPageImageKeyer)
+                        add(bookPageImageFetcher)
 
-                            add(CollectionKeyer)
-                            add(collectionThumbnailFetcher)
-                        }
-                        .crossfade(true)
-                        .precision(Precision.INEXACT)
-                        .apply { setup() }
-                        .build()
-                }
-            })
+                        add(CollectionKeyer)
+                        add(collectionThumbnailFetcher)
+                    }.crossfade(true)
+                    .precision(Precision.INEXACT)
+                    .apply { setup() }
+                    .build()
+            }
         }
         logcat(LogPriority.INFO) { "Initialized coil." }
     }

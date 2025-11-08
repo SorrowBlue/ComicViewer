@@ -11,7 +11,6 @@ internal class ClearImageCacheInteractor(
     private val imageCacheDataSource: ImageCacheDataSource,
     private val localDataSource: FileLocalDataSource,
 ) : ClearImageCacheUseCase() {
-
     override suspend fun run(request: Request): Resource<Unit, Unit> {
         when (request) {
             is BookshelfRequest -> {

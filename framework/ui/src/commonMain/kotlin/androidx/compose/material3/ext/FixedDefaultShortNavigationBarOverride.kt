@@ -33,7 +33,8 @@ object FixedDefaultShortNavigationBarOverride : ShortNavigationBarOverride {
         Surface(color = containerColor, contentColor = contentColor, modifier = modifier) {
             Layout(
                 modifier =
-                Modifier.windowInsetsPadding(windowInsets)
+                Modifier
+                    .windowInsetsPadding(windowInsets)
                     .defaultMinSize(minHeight = ContainerHeight)
                     .selectableGroup(),
                 content = content,
@@ -93,12 +94,12 @@ private class FixedEqualWeightContentMeasurePolicy : MeasurePolicy {
             itemsPlaceables =
                 measurables.fastMap {
                     // TODO Correct 0 in minWidth because it doesn't animation correctly in SharedElement
-                    val constraints = constraints.copy(minWidth = 0)
+                    val constraintsFixed = constraints.copy(minWidth = 0)
 
                     it.measure(
-                        constraints.constrain(
-                            Constraints.fixed(width = itemWidth, height = itemHeight)
-                        )
+                        constraintsFixed.constrain(
+                            Constraints.fixed(width = itemWidth, height = itemHeight),
+                        ),
                     )
                 }
         }
@@ -164,12 +165,12 @@ private class FixedCenteredContentMeasurePolicy : MeasurePolicy {
                     }
 
                     // TODO Correct 0 in minWidth because it doesn't animation correctly in SharedElement
-                    val constraints = constraints.copy(minWidth = 0)
+                    val constraintsFixed = constraints.copy(minWidth = 0)
 
                     it.measure(
-                        constraints.constrain(
-                            Constraints.fixed(width = currentItemWidth, height = itemHeight)
-                        )
+                        constraintsFixed.constrain(
+                            Constraints.fixed(width = currentItemWidth, height = itemHeight),
+                        ),
                     )
                 }
         }
@@ -189,8 +190,9 @@ private class FixedCenteredContentMeasurePolicy : MeasurePolicy {
  * @see androidx.compose.material3.calculateCenteredContentHorizontalPadding
  */
 private fun calculateCenteredContentHorizontalPadding(itemsCount: Int, barWidth: Int): Int {
-    if (itemsCount > 6) return 0
+    if (itemsCount > MaxItemCount) return 0
     // Formula to calculate the padding percentage based on the number of items and bar width.
+    @Suppress("MagicNumber")
     val paddingPercentage = ((100 - 10 * (itemsCount + 3)) / 2f) / 100
     return (paddingPercentage * barWidth).roundToInt()
 }
@@ -199,3 +201,5 @@ private fun calculateCenteredContentHorizontalPadding(itemsCount: Int, barWidth:
  * @see androidx.compose.material3.tokens.NavigationBarTokens.ContainerHeight
  */
 private val ContainerHeight = 64.0.dp
+
+private const val MaxItemCount = 6

@@ -28,8 +28,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
-
-    ) {
+) {
     AdaptiveNavigationSuiteScaffold {
         Scaffold(
             topBar = {
@@ -38,9 +37,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
                     onBackClick = onBackClick,
                     onEditClick = onEditClick,
                     onDeleteClick = onDeleteClick,
-                    onSettingsClick = onSettingsClick
+                    onSettingsClick = onSettingsClick,
                 )
-            }
+            },
         ) { contentPadding ->
             CollectionContents(
                 fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,

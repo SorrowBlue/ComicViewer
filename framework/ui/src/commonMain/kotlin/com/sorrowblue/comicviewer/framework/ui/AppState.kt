@@ -30,7 +30,7 @@ fun rememberAppState(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ): AppState {
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
-        currentWindowAdaptiveInfo()
+        currentWindowAdaptiveInfo(),
     )
     val appState = remember {
         AppStateImpl(navigationSuiteType, sharedTransitionScope, snackbarHostState)
@@ -59,7 +59,6 @@ private class AppStateImpl(
     override var snackbarHostState: SnackbarHostState,
 ) : AppState,
     SharedTransitionScope by sharedTransitionScope {
-
     override fun onNavItemClick(navItem: NavItem) = Unit
 
     override val navItems = mutableStateListOf<NavItem>(
@@ -86,7 +85,7 @@ private class AppStateImpl(
                 @Composable
                 get() = stringResource(Res.string.label_settings)
             override val icon = ComicIcons.Settings
-        }
+        },
     )
     override var currentNavItem by mutableStateOf<NavItem?>(null)
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)

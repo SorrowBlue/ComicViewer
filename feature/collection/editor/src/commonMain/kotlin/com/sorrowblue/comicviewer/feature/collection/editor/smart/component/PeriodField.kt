@@ -26,7 +26,7 @@ internal fun Form<SmartCollectionForm>.PeriodField(
         name = PeriodField,
         selector = { it.searchCondition.period },
         updater = { copy(searchCondition = searchCondition.copy(period = it)) },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         DropdownMenuField(
             field = field,
@@ -35,7 +35,7 @@ internal fun Form<SmartCollectionForm>.PeriodField(
             },
             value = { stringResource(displayText) },
             menus = remember { SearchCondition.Period.entries },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

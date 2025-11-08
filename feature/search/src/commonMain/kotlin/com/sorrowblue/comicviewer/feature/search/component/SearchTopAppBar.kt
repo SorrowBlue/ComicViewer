@@ -35,6 +35,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
+import comicviewer.feature.folder.generated.resources.Res as FolderRes
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_asc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_desc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_name_asc
@@ -52,7 +53,6 @@ import comicviewer.feature.search.generated.resources.search_label_show_hidden_f
 import comicviewer.feature.search.generated.resources.search_label_sub_folder
 import comicviewer.feature.search.generated.resources.search_label_week1
 import org.jetbrains.compose.resources.stringResource
-import comicviewer.feature.folder.generated.resources.Res as FolderRes
 
 @Composable
 internal fun SearchTopAppBar(
@@ -78,7 +78,7 @@ internal fun SearchTopAppBar(
                 maxLines = 1,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
+                    unfocusedBorderColor = Color.Transparent,
                 ),
                 trailingIcon = if (searchCondition.query.isEmpty()) {
                     null
@@ -91,7 +91,7 @@ internal fun SearchTopAppBar(
                 },
                 keyboardActions = KeyboardActions(onSearch = { skc?.hide() }),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         },
         navigationIcon = {
@@ -107,45 +107,50 @@ internal fun SearchTopAppBar(
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
-                    .padding(horizontal = ComicTheme.dimension.margin),
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal),
+                    ).padding(horizontal = ComicTheme.dimension.margin),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 DropdownMenuChip(
                     text = stringResource(searchCondition.range.displayText),
                     onChangeSelect = onRangeClick,
-                    menus = remember { SearchCondition.Range.entries }
+                    menus = remember { SearchCondition.Range.entries },
                 ) {
                     Text(stringResource(it.displayText))
                 }
                 DropdownMenuChip(
                     text = stringResource(searchCondition.period.displayText),
                     onChangeSelect = onPeriodClick,
-                    menus = remember { SearchCondition.Period.entries }
+                    menus = remember { SearchCondition.Period.entries },
                 ) {
                     Text(stringResource(it.displayText))
                 }
                 DropdownMenuChip(
                     text = stringResource(searchCondition.sortType.displayText),
                     onChangeSelect = onSortTypeClick,
-                    menus = remember { SortType.entries }
+                    menus = remember { SortType.entries },
                 ) {
                     Text(text = stringResource(it.displayText))
                 }
                 FilterChip(
                     selected = searchCondition.showHidden,
                     onClick = onShowHiddenClick,
-                    label = { Text(text = stringResource(Res.string.search_label_show_hidden_files)) },
+                    label = {
+                        Text(
+                            text = stringResource(Res.string.search_label_show_hidden_files),
+                        )
+                    },
                     leadingIcon = {
                         if (searchCondition.showHidden) {
                             Icon(imageVector = ComicIcons.Check, contentDescription = null)
                         }
-                    }
+                    },
                 )
             }
         },
         scrollBehavior = scrollBehavior,
-        scrollableState = scrollableState
+        scrollableState = scrollableState,
     )
 }
 

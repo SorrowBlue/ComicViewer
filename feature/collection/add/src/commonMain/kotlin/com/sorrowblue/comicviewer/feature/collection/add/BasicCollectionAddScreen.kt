@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onLayoutRectChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -41,14 +42,13 @@ import com.sorrowblue.comicviewer.feature.collection.add.section.CollectionAddAp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_add
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
 internal data class BasicCollectionAddScreenUiState(
     val collectionSort: CollectionSort = CollectionSort.Recent,
@@ -70,7 +70,7 @@ internal fun BasicCollectionAddScreen(
         sheetState = sheetState,
         dragHandle = null,
         contentWindowInsets = { WindowInsets(0) },
-        modifier = Modifier.statusBarsPadding()
+        modifier = Modifier.statusBarsPadding(),
     ) {
         var buttonHeight by remember { mutableStateOf(0.dp) }
         val density = LocalDensity.current
@@ -90,7 +90,7 @@ internal fun BasicCollectionAddScreen(
                             with(density) {
                                 buttonHeight = it.height.toDp() + FabSpacing
                             }
-                        }
+                        },
                 )
             },
             contentWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
@@ -99,14 +99,19 @@ internal fun BasicCollectionAddScreen(
                 BasicCollectionContent(
                     state = lazyListState,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = contentPadding.plus(PaddingValues(top = ButtonDefaults.MinHeight, bottom = buttonHeight)),
-                    onClick = onClick
+                    contentPadding = contentPadding.plus(
+                        PaddingValues(top = ButtonDefaults.MinHeight, bottom = buttonHeight),
+                    ),
+                    onClick = onClick,
                 )
                 CollectionSortDropdownMenu(
                     collectionSort = uiState.collectionSort,
                     onClick = onClickCollectionSort,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                        .padding(contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.End))
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(
+                            contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.End),
+                        ),
                 )
             }
         }
@@ -121,7 +126,8 @@ private fun BasicCollectionAddScreenPreview() {
     PreviewTheme {
         BasicCollectionAddScreen(
             uiState = BasicCollectionAddScreenUiState(),
-            lazyPagingItems = PagingData.flowData { fakeBasicCollection(it) as Collection to true }
+            lazyPagingItems = PagingData
+                .flowData { fakeBasicCollection(it) as Collection to true }
                 .collectAsLazyPagingItems(),
             onDismissRequest = {},
             onClick = { _, _ -> },
@@ -129,8 +135,8 @@ private fun BasicCollectionAddScreenPreview() {
             onCollectionCreateClick = {},
             sheetState = rememberStandardBottomSheetState(
                 initialValue = SheetValue.Expanded,
-                skipHiddenState = true
-            )
+                skipHiddenState = true,
+            ),
         )
     }
 }

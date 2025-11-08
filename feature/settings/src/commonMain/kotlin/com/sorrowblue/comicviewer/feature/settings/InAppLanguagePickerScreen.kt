@@ -29,12 +29,12 @@ internal fun InAppLanguagePickerScreen(
         if (currentLocale == null) {
             CheckedSetting(
                 title = stringResource(Res.string.settings_language_label_system_default),
-                onClick = {}
+                onClick = {},
             )
         } else {
             Setting(
                 title = stringResource(Res.string.settings_language_label_system_default),
-                onClick = { context.appLocaleIso.set(null) }
+                onClick = { context.appLocaleIso.set(null) },
             )
         }
 
@@ -43,12 +43,12 @@ internal fun InAppLanguagePickerScreen(
                 if (currentLocale?.toLanguageTag() == locale.toLanguageTag()) {
                     CheckedSetting(
                         title = locale.displayLanguageName,
-                        onClick = {}
+                        onClick = {},
                     )
                 } else {
                     Setting(
                         title = locale.displayLanguageName,
-                        onClick = { context.appLocaleIso.set(locale) }
+                        onClick = { context.appLocaleIso.set(locale) },
                     )
                 }
             }

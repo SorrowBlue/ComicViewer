@@ -20,9 +20,10 @@ internal actual val AutoMigration_5_6_Impl: Migration =
 internal actual val AutoMigration_6_7_Impl: Migration =
     ComicViewerDatabase_AutoMigration_6_7_Impl()
 
-internal actual fun getMigrationTestHelper(platformContext: PlatformContext): MigrationTestHelper = MigrationTestHelper(
-    schemaDirectoryPath = "schemas",
-    fileName = TEST_DB_NAME,
-    driver = BundledSQLiteDriver(),
-    databaseClass = ComicViewerDatabase::class,
-)
+internal actual fun getMigrationTestHelper(platformContext: PlatformContext): MigrationTestHelper =
+    MigrationTestHelper(
+        schemaDirectoryPath = "schemas",
+        fileName = TestDatabaseName,
+        driver = BundledSQLiteDriver(),
+        databaseClass = ComicViewerDatabase::class,
+    )

@@ -56,7 +56,6 @@ val BookshelfKeySerializersModule = SerializersModule {
 
 @Serializable
 sealed interface BookshelfKey : NavigationKey {
-
     override val title
         @Composable
         get() = stringResource(Res.string.bookshelf_label_bookshelf)
@@ -86,12 +85,13 @@ sealed interface BookshelfKey : NavigationKey {
         override val bookshelfId: BookshelfId,
         override val path: String,
         override val restorePath: String?,
-    ) : BookshelfKey, FolderKey
+    ) : BookshelfKey,
+        FolderKey
 
     @Serializable
-    data class FileInfo(
-        override val fileKey: File.Key,
-    ) : BookshelfKey, FileInfoKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        BookshelfKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 }
@@ -104,7 +104,6 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
     onRestored: () -> Unit,
     onCollectionClick: (File) -> Unit,
 ) {
-
     bookshelfEntry(
         onSettingsClick = onSettingsClick,
         onFabClick = {
@@ -115,31 +114,31 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
                 BookshelfKey.Folder(
                     id,
                     path,
-                    null
-                )
+                    null,
+                ),
             )
         },
         onBookshelfInfoClick = {
             appNavigationState.addToBackStack(BookshelfKey.Info(it.bookshelf.id))
-        }
+        },
     )
     notificationEntry(
-        onBackClick = appNavigationState::onBackPressed
+        onBackClick = appNavigationState::onBackPressed,
     )
     bookshelfSelectionEntry(
         onBackClick = appNavigationState::onBackPressed,
         onTypeClick = { type ->
             appNavigationState.addToBackStack(
                 BookshelfKey.Edit(
-                    BookshelfEditorType.Register(type)
-                )
+                    BookshelfEditorType.Register(type),
+                ),
             )
-        }
+        },
     )
     bookshelfEditEntry(
         onBackClick = appNavigationState::onBackPressed,
         discardConfirm = appNavigationState::onBackPressed,
-        onEditComplete = appNavigationState::onBackPressed
+        onEditComplete = appNavigationState::onBackPressed,
     )
     bookshelfInfoEntry(
         onBackClick = appNavigationState::onBackPressed,
@@ -149,17 +148,17 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
         onEditClick = { id, type ->
             appNavigationState.addToBackStack(
                 BookshelfKey.Edit(
-                    BookshelfEditorType.Edit(id, type)
-                )
+                    BookshelfEditorType.Edit(id, type),
+                ),
             )
         },
         showNotificationPermissionRationale = {
             appNavigationState.addToBackStack(BookshelfKey.Notification(it))
-        }
+        },
     )
     bookshelfDeleteEntry(
         onBackClick = appNavigationState::onBackPressed,
-        onComplete = appNavigationState::onBackPressed
+        onComplete = appNavigationState::onBackPressed,
     )
     folderEntryGroup<BookshelfKey.Folder, BookshelfKey.FileInfo>(
         sceneKey = "BookshelfFolder",
@@ -177,8 +176,8 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
                         BookshelfKey.Folder(
                             file.bookshelfId,
                             file.path,
-                            null
-                        )
+                            null,
+                        ),
                     )
                 }
             }
@@ -191,7 +190,7 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
         },
         onRestored = onRestored,
         onCollectionClick = onCollectionClick,
-        onOpenFolderClick = { /* Do noting */ }
+        onOpenFolderClick = { /* Do noting */ },
     )
 }
 
@@ -203,8 +202,10 @@ private fun EntryProviderScope<NavKey>.bookshelfEntry(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
 ) {
     entryScreen<BookshelfKey.List, BookshelfScreenContext>(
-        createContext = { (graph as BookshelfScreenContext.Factory).createBookshelfScreenContext() },
-        metadata = SupportingPaneSceneStrategy.mainPane("Bookshelf")
+        createContext = {
+            (graph as BookshelfScreenContext.Factory).createBookshelfScreenContext()
+        },
+        metadata = SupportingPaneSceneStrategy.mainPane("Bookshelf"),
     ) {
         BookshelfScreenRoot(
             onSettingsClick = onSettingsClick,
@@ -224,29 +225,30 @@ private fun EntryProviderScope<NavKey>.bookshelfInfoEntry(
     showNotificationPermissionRationale: (ScanType) -> Unit,
 ) {
     entryScreen<BookshelfKey.Info, BookshelfInfoScreenContext>(
-        createContext = { (graph as BookshelfInfoScreenContext.Factory).createBookshelfInfoScreenContext() },
-        metadata = SupportingPaneSceneStrategy.extraPane("Bookshelf")
+        createContext = {
+            (graph as BookshelfInfoScreenContext.Factory)
+                .createBookshelfInfoScreenContext()
+        },
+        metadata = SupportingPaneSceneStrategy.extraPane("Bookshelf"),
     ) {
         BookshelfInfoScreenRoot(
             bookshelfId = it.id,
             onBackClick = onBackClick,
             onRemoveClick = { onRemoveClick(it.id) },
             showNotificationPermissionRationale = showNotificationPermissionRationale,
-            onEditClick = onEditClick
+            onEditClick = onEditClick,
         )
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.notificationEntry(
-    onBackClick: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.notificationEntry(onBackClick: () -> Unit) {
     entry<BookshelfKey.Notification>(
-        metadata = DialogSceneStrategy.dialog()
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         NotificationRequestScreenRoot(
             scanType = it.scanType,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         )
     }
 }
@@ -258,13 +260,13 @@ private fun EntryProviderScope<NavKey>.bookshelfSelectionEntry(
     entry<BookshelfKey.Selection>(
         metadata = DialogSceneStrategy.dialog(
             dialogProperties = DialogProperties(
-                usePlatformDefaultWidth = false
-            )
-        )
+                usePlatformDefaultWidth = false,
+            ),
+        ),
     ) {
         BookshelfSelectionDialog(
             onBackClick = onBackClick,
-            onTypeClick = onTypeClick
+            onTypeClick = onTypeClick,
         )
     }
 }
@@ -276,14 +278,17 @@ private fun EntryProviderScope<NavKey>.bookshelfEditEntry(
     onEditComplete: () -> Unit,
 ) {
     entryScreen<BookshelfKey.Edit, BookshelfEditScreenContext>(
-        createContext = { (graph as BookshelfEditScreenContext.Factory).createBookshelfEditScreenContext() },
-        metadata = DialogSceneStrategy.dialog()
+        createContext = {
+            (graph as BookshelfEditScreenContext.Factory)
+                .createBookshelfEditScreenContext()
+        },
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         BookshelfEditorDialog(
             type = it.type,
             onBackClick = onBackClick,
             discardConfirm = discardConfirm,
-            onEditComplete = onEditComplete
+            onEditComplete = onEditComplete,
         )
     }
 }
@@ -297,12 +302,12 @@ private fun EntryProviderScope<NavKey>.bookshelfDeleteEntry(
         createContext = {
             (graph as BookshelfDeleteScreenContext.Factory).createBookshelfDeleteScreenContext()
         },
-        metadata = DialogSceneStrategy.dialog()
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         BookshelfDeleteScreen(
             it.id,
             onBackClick = onBackClick,
-            onComplete = onComplete
+            onComplete = onComplete,
         )
     }
 }

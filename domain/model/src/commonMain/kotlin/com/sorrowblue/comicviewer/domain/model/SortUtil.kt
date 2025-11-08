@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.domain.model
 import com.sorrowblue.comicviewer.domain.model.file.File
 
 expect object SortUtil {
-
     val compareFile: Comparator<File>
 
     fun filter(file: File, supportExtensions: List<String>): Boolean
@@ -19,5 +18,5 @@ val SUPPORTED_IMAGE = setOf(
     "png",
     "webp",
     "heic",
-    "heif"
+    "heif",
 )

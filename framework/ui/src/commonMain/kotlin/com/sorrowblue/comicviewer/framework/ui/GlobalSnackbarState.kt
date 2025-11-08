@@ -15,7 +15,6 @@ val LocalGlobalSnackbarState = staticCompositionLocalOf<GlobalSnackbarState> {
 }
 
 interface GlobalSnackbarState {
-
     val snackbarHostState: SnackbarHostState
 
     fun showSnackbar(
@@ -41,7 +40,6 @@ private class GlobalSnackbarStateImpl(
     val coroutineScope: CoroutineScope,
     override val snackbarHostState: SnackbarHostState,
 ) : GlobalSnackbarState {
-
     override fun showSnackbar(
         message: String,
         actionLabel: String?,
@@ -54,7 +52,7 @@ private class GlobalSnackbarStateImpl(
                 message = message,
                 actionLabel = actionLabel,
                 withDismissAction = withDismissAction,
-                duration = duration
+                duration = duration,
             )
             onResult(result)
         }

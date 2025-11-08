@@ -12,7 +12,13 @@ import kotlinx.coroutines.runBlocking
 @Composable
 internal actual fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): ColorScheme {
     val context = LocalPlatformContext.current.platformGraph as ThemeContext
-    return when (runBlocking { context.settingsUseCase.settings.first().darkMode }) {
+    return when (
+        runBlocking {
+            context.settingsUseCase.settings
+                .first()
+                .darkMode
+        }
+    ) {
         DarkMode.DEVICE -> when {
             darkTheme -> darkScheme
             else -> lightScheme

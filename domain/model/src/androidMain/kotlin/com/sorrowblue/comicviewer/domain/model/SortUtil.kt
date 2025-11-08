@@ -10,7 +10,6 @@ import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import java.util.Locale
 
 actual object SortUtil {
-
     private val collator: Collator
         get() {
             val us = Collator.getInstance(Locale.US) as RuleBasedCollator
@@ -24,18 +23,16 @@ actual object SortUtil {
     actual val compareFile = compareBy<File> { if (it is BookFile) 1 else 0 }
         .thenBy({ a, b -> collator.compare(a, b) }, { it.name })
 
-    actual fun filter(file: File, supportExtensions: List<String>): Boolean {
-        return file is IFolder || (file is BookFile && file.extension in supportExtensions)
-    }
+    actual fun filter(file: File, supportExtensions: List<String>): Boolean =
+        file is IFolder || (file is BookFile && file.extension in supportExtensions)
 
-    actual fun sortedIndex(list: List<File>): List<File> {
-        return list.sortedWith(compareFile)
-            .mapIndexed { index, fileModel ->
-                when (fileModel) {
-                    is BookFile -> fileModel.copy(sortIndex = index)
-                    is Folder -> fileModel.copy(sortIndex = index)
-                    is BookFolder -> fileModel.copy(sortIndex = index)
-                }
+    actual fun sortedIndex(list: List<File>): List<File> = list
+        .sortedWith(compareFile)
+        .mapIndexed { index, fileModel ->
+            when (fileModel) {
+                is BookFile -> fileModel.copy(sortIndex = index)
+                is Folder -> fileModel.copy(sortIndex = index)
+                is BookFolder -> fileModel.copy(sortIndex = index)
             }
-    }
+        }
 }

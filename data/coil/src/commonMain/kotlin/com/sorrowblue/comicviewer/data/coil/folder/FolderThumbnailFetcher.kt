@@ -33,7 +33,6 @@ internal class FolderThumbnailFetcher(
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileFetcher<FolderThumbnailMetadata>(options, diskCache) {
-
     override val diskCacheKey
         get() = options.diskCacheKey ?: "folder:${data.bookshelfId.value}:${data.path}"
 
@@ -46,7 +45,7 @@ internal class FolderThumbnailFetcher(
             data.path,
             data.bookshelfId.value,
             data.lastModifier,
-            thumbnailCache?.first
+            thumbnailCache?.first,
         )
     }
 
@@ -62,17 +61,19 @@ internal class FolderThumbnailFetcher(
             return SourceFetchResult(
                 source = thumbnailCache.second.toImageSource(),
                 mimeType = null,
-                dataSource = DataSource.DISK
+                dataSource = DataSource.DISK,
             )
         }
     }
 
-    private suspend fun getThumbnailCache(folderThumbnailOrder: FolderThumbnailOrder): CacheKeySnapshot? {
+    private suspend fun getThumbnailCache(
+        folderThumbnailOrder: FolderThumbnailOrder,
+    ): CacheKeySnapshot? {
         val thumbnailCache = fileLocalDataSource.getCacheKeys(
             data.bookshelfId,
             data.path,
-            10,
-            FolderThumbnailOrder.valueOf(folderThumbnailOrder.name)
+            CachesFetchCount,
+            FolderThumbnailOrder.valueOf(folderThumbnailOrder.name),
         )
         if (thumbnailCache.isEmpty()) {
             logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
@@ -89,6 +90,8 @@ internal class FolderThumbnailFetcher(
     }
 }
 
+private const val CachesFetchCount = 4
+
 @com.sorrowblue.comicviewer.data.coil.FolderThumbnailFetcher
 @ContributesBinding(DataScope::class)
 @Inject
@@ -97,18 +100,15 @@ internal class FolderThumbnailFetcherFactory(
     private val fileModelLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : Fetcher.Factory<FolderThumbnail> {
-
     override fun create(
         data: FolderThumbnail,
         options: Options,
         imageLoader: ImageLoader,
-    ): Fetcher {
-        return FolderThumbnailFetcher(
-            options,
-            lazy { lazyCoilDiskCache.value.thumbnailDiskCache(data.bookshelfId) },
-            data,
-            fileModelLocalDataSource,
-            datastoreDataSource
-        )
-    }
+    ): Fetcher = FolderThumbnailFetcher(
+        options,
+        lazy { lazyCoilDiskCache.value.thumbnailDiskCache(data.bookshelfId) },
+        data,
+        fileModelLocalDataSource,
+        datastoreDataSource,
+    )
 }

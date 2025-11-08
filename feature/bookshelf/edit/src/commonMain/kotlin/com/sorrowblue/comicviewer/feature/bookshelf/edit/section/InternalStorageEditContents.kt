@@ -34,7 +34,7 @@ internal fun InternalStorageEditorContents(
                 state = state.folderSelectFieldState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = dimension.padding)
+                    .padding(top = dimension.padding),
             )
         }
     }

@@ -20,7 +20,6 @@ internal actual class DocumentFileReader(
     @Assisted seekableInputStream: SeekableInputStream,
     private val dataSource: DatastoreDataSource,
 ) : FileReader {
-
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(
@@ -40,17 +39,11 @@ internal actual class DocumentFileReader(
     private val reader: com.sorrowblue.comicviewer.plugin.pdf.FileReader =
         OutsideDocumentFileReader.getReader(readImpl, mimeType)
 
-    actual override suspend fun pageCount(): Int {
-        return reader.pageCount()
-    }
+    actual override suspend fun pageCount(): Int = reader.pageCount()
 
-    actual override suspend fun fileName(pageIndex: Int): String {
-        return ""
-    }
+    actual override suspend fun fileName(pageIndex: Int): String = ""
 
-    actual override suspend fun fileSize(pageIndex: Int): Long {
-        return 0
-    }
+    actual override suspend fun fileSize(pageIndex: Int): Long = 0
 
     private val mutex = Mutex()
 

@@ -1,19 +1,15 @@
 package com.sorrowblue.comicviewer.feature.settings.info.license
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import logcat.logcat
 
 @Composable
 context(context: LicenseScreenContext)
-fun LicenseScreenRoot(
-    onBackClick: () -> Unit,
-) {
+fun LicenseScreenRoot(onBackClick: () -> Unit) {
     val state = rememberLicenseScreenState()
     LicenseScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
-        onLibraryClick = state::onLibraryClick
+        onLibraryClick = state::onLibraryClick,
     )
 
     if (state.uiState.openDialog != null) {
@@ -21,7 +17,7 @@ fun LicenseScreenRoot(
             library = state.uiState.openDialog!!,
             onDismissRequest = {
                 state.closeDialog()
-            }
+            },
         )
     }
 }

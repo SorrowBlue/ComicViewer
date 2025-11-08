@@ -43,20 +43,19 @@ private class DeleteCollectionScreenStateImpl(
     getCollectionUseCase: GetCollectionUseCase,
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : DeleteCollectionScreenState {
-
     init {
-        getCollectionUseCase(GetCollectionUseCase.Request(id)).onEach {
-            when (it) {
-                is Resource.Success<Collection> -> {
-                    uiState = uiState.copy(name = it.data.name)
-                }
+        getCollectionUseCase(GetCollectionUseCase.Request(id))
+            .onEach {
+                when (it) {
+                    is Resource.Success<Collection> -> {
+                        uiState = uiState.copy(name = it.data.name)
+                    }
 
-                is Resource.Error<GetCollectionUseCase.Error> -> {
-                    // TODO()
+                    is Resource.Error<GetCollectionUseCase.Error> -> {
+                        // TODO()
+                    }
                 }
-
-            }
-        }.launchIn(coroutineScope)
+            }.launchIn(coroutineScope)
     }
 
     override var uiState by mutableStateOf(DeleteCollectionScreenUiState())

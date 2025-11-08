@@ -32,7 +32,7 @@ internal fun BookshelfInfoActionChips(
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.targetSpacing),
-        modifier = modifier
+        modifier = modifier,
     ) {
         AssistChip(
             onClick = onScanFileClick,
@@ -42,12 +42,12 @@ internal fun BookshelfInfoActionChips(
                 if (isScanningFile) {
                     CircularProgressIndicator(
                         strokeWidth = 2.dp,
-                        modifier = Modifier.size(AssistChipDefaults.IconSize)
+                        modifier = Modifier.size(AssistChipDefaults.IconSize),
                     )
                 } else {
                     Icon(imageVector = ComicIcons.ShelvesSync, contentDescription = null)
                 }
-            }
+            },
         )
         AssistChip(
             onClick = onScanThumbnailClick,
@@ -57,12 +57,12 @@ internal fun BookshelfInfoActionChips(
                 if (isScanningThumbnail) {
                     CircularProgressIndicator(
                         strokeWidth = 2.dp,
-                        modifier = Modifier.size(AssistChipDefaults.IconSize)
+                        modifier = Modifier.size(AssistChipDefaults.IconSize),
                     )
                 } else {
                     Icon(imageVector = ComicIcons.ImageSync, contentDescription = null)
                 }
-            }
+            },
         )
     }
 }

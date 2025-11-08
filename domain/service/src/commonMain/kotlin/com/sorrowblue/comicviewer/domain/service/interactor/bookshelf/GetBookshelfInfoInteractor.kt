@@ -16,15 +16,16 @@ internal class GetBookshelfInfoInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetBookshelfInfoUseCase() {
-
-    override fun run(request: Request): Flow<Resource<BookshelfFolder, Error>> {
-        return localBookshelfLocalDataSource.flow(request.bookshelfId).map { bookshelf ->
+    override fun run(request: Request): Flow<Resource<BookshelfFolder, Error>> =
+        localBookshelfLocalDataSource.flow(request.bookshelfId).map { bookshelf ->
             if (bookshelf != null) {
                 val folder = fileLocalDataSource.root(request.bookshelfId)
                 if (folder != null) {
                     Resource.Success(BookshelfFolder(bookshelf, folder))
                 } else {
-                    sendFatalErrorUseCase(SendFatalErrorUseCase.Request(RuntimeException("NotFound")))
+                    sendFatalErrorUseCase(
+                        SendFatalErrorUseCase.Request(RuntimeException("NotFound")),
+                    )
                     Resource.Error(Error.NotFound)
                 }
             } else {
@@ -32,5 +33,4 @@ internal class GetBookshelfInfoInteractor(
                 Resource.Error(Error.NotFound)
             }
         }
-    }
 }

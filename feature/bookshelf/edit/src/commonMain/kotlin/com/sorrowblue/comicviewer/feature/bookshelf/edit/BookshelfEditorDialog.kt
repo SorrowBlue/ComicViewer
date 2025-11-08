@@ -26,7 +26,7 @@ fun BookshelfEditorDialog(
                 discardConfirm
             }
         },
-        properties = DialogProperties(usePlatformDefaultWidth = !isFullScreenDialog)
+        properties = DialogProperties(usePlatformDefaultWidth = !isFullScreenDialog),
     ) {
         when (state) {
             is InternalStorageEditorScreenState -> InternalStorageEditorContents(

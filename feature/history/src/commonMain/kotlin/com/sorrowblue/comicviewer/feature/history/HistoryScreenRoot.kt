@@ -29,7 +29,7 @@ fun HistoryScreenRoot(
     )
     val resultConsumer = LocalNavigationResultConsumer.current
     val navigationResult: SerializedNavigationResult<ClearAllHistoryScreenResult>? by remember(
-        resultConsumer
+        resultConsumer,
     ) {
         resultConsumer.getResultState(Json, ClearAllHistoryScreenResultKey)
     }

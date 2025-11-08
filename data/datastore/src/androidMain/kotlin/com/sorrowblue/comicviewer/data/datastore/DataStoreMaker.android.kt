@@ -13,19 +13,19 @@ import okio.Path.Companion.toPath
 
 @Inject
 internal actual class DataStoreMaker actual constructor(private val context: PlatformContext) {
-
-    actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {
-        return DataStoreFactory.create(
+    actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> =
+        DataStoreFactory.create(
             storage = OkioStorage(
                 fileSystem = FileSystem.SYSTEM,
                 producePath = {
-                    context.applicationContext.dataStoreFile(
-                        okioSerializer.fileName
-                    ).absolutePath.toPath()
+                    context.applicationContext
+                        .dataStoreFile(
+                            okioSerializer.fileName,
+                        ).absolutePath
+                        .toPath()
                 },
-                serializer = okioSerializer
+                serializer = okioSerializer,
             ),
             corruptionHandler = ReplaceFileCorruptionHandler { okioSerializer.defaultValue },
         )
-    }
 }

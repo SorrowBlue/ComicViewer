@@ -6,6 +6,5 @@ import androidx.compose.runtime.Composable
 internal expect fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher
 
 internal expect class AppLocaleSettingsLauncher {
-
     fun launch(fallback: () -> Unit)
 }

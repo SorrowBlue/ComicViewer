@@ -9,7 +9,6 @@ import dev.zacsweers.metro.Inject
 internal class ManageDisplaySettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageDisplaySettingsUseCase {
-
     override val settings = datastoreDataSource.displaySettings
 
     override suspend fun edit(action: (DisplaySettings) -> DisplaySettings) {

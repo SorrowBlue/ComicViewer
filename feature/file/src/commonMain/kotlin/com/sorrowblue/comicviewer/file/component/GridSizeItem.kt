@@ -37,7 +37,7 @@ fun GridSizeItemState.gridSizeItem() {
         autoDismiss = false,
         label = { Text(stringResource(Res.string.file_action_change_grid_size)) },
         icon = { Icon(ComicIcons.Grid4x4, null) },
-        onClick = ::onClick
+        onClick = ::onClick,
     )
 }
 
@@ -49,7 +49,7 @@ fun rememberGridSizeItemState(): GridSizeItemState {
     return remember {
         GridSizeItemStateImpl(
             graph.manageFolderDisplaySettingsUseCase,
-            coroutineScope
+            coroutineScope,
         )
     }.apply {
         this.coroutineScope = coroutineScope
@@ -58,6 +58,7 @@ fun rememberGridSizeItemState(): GridSizeItemState {
 
 interface GridSizeItemState {
     val fileListDisplay: FileListDisplay
+
     fun onClick()
 }
 
@@ -65,12 +66,13 @@ private class GridSizeItemStateImpl(
     private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     var coroutineScope: CoroutineScope,
 ) : GridSizeItemState {
-
     override var fileListDisplay by mutableStateOf(FileListDisplay.Grid)
 
     init {
-        manageFolderDisplaySettingsUseCase.settings.map { it.fileListDisplay }
-            .distinctUntilChanged().onEach {
+        manageFolderDisplaySettingsUseCase.settings
+            .map { it.fileListDisplay }
+            .distinctUntilChanged()
+            .onEach {
                 fileListDisplay = it
             }.launchIn(coroutineScope)
     }
@@ -82,11 +84,10 @@ private class GridSizeItemStateImpl(
                     gridColumnSize = when (it.gridColumnSize) {
                         GridColumnSize.Medium -> GridColumnSize.Large
                         GridColumnSize.Large -> GridColumnSize.Medium
-                    }
+                    },
                 )
             }
         }
-
     }
 }
 
@@ -95,7 +96,6 @@ annotation class GridSizeItemScope
 
 @GraphExtension(GridSizeItemScope::class)
 interface GridSizeItemGraph {
-
     val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
 
     @ContributesTo(AppScope::class)

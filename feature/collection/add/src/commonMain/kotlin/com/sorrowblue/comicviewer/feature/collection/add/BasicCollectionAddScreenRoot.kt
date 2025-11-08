@@ -22,6 +22,6 @@ fun BasicCollectionAddScreenRoot(
         onClickCollectionSort = state::onClickCollectionSort,
         onCollectionCreateClick = {
             onCollectionCreateClick(bookshelfId, path)
-        }
+        },
     )
 }

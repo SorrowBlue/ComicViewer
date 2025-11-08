@@ -14,7 +14,6 @@ import logcat.logcat
 internal class GetIntentBookInteractor(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : GetIntentBookUseCase() {
-
     override fun run(request: Request): Flow<Resource<BookFile, Error>> {
         val bookshelf = ShareContents
         val remoteDataSource = remoteDataSourceFactory.create(bookshelf)

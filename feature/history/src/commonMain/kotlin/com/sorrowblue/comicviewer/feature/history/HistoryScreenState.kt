@@ -20,31 +20,27 @@ internal interface HistoryScreenState {
     val lazyPagingItems: LazyPagingItems<Book>
     val lazyGridState: LazyGridState
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
+
     fun onNavResult(result: Boolean)
 }
 
 @Composable
 context(context: HistoryScreenContext)
-internal fun rememberHistoryScreenState(
-): HistoryScreenState {
-    return remember {
-        HistoryScreenStateImpl(clearAllHistoryUseCase = context.clearAllHistoryUseCase)
-    }.apply {
-        this.lazyGridState = rememberLazyGridState()
-        this.scope = rememberCoroutineScope()
-        this.lazyPagingItems = rememberPagingItems {
-            context.pagingHistoryBookUseCase(
-                PagingHistoryBookUseCase.Request(PagingConfig(20))
-            )
-        }
-        this.scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+internal fun rememberHistoryScreenState(): HistoryScreenState = remember {
+    HistoryScreenStateImpl(clearAllHistoryUseCase = context.clearAllHistoryUseCase)
+}.apply {
+    this.lazyGridState = rememberLazyGridState()
+    this.scope = rememberCoroutineScope()
+    this.lazyPagingItems = rememberPagingItems {
+        context.pagingHistoryBookUseCase(
+            PagingHistoryBookUseCase.Request(PagingConfig(20)),
+        )
     }
+    this.scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
 }
 
-private class HistoryScreenStateImpl(
-    private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
-) : HistoryScreenState {
-
+private class HistoryScreenStateImpl(private val clearAllHistoryUseCase: ClearAllHistoryUseCase) :
+    HistoryScreenState {
     override lateinit var lazyGridState: LazyGridState
     override lateinit var lazyPagingItems: LazyPagingItems<Book>
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState

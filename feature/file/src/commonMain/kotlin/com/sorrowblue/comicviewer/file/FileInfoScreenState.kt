@@ -48,7 +48,7 @@ internal fun rememberFileInfoScreenState(
             existsReadlaterUseCase = context.existsReadlaterUseCase,
             addReadLaterUseCase = context.addReadLaterUseCase,
             deleteReadLaterUseCase = context.deleteReadLaterUseCase,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }.apply {
         this.coroutineScope = coroutineScope
@@ -57,8 +57,8 @@ internal fun rememberFileInfoScreenState(
                 PagingFolderBookThumbnailsUseCase.Request(
                     file.bookshelfId,
                     file.path,
-                    PagingConfig(10)
-                )
+                    PagingConfig(10),
+                ),
             )
         }
     }
@@ -86,38 +86,44 @@ private class FileInfoScreenStateImpl(
     override var uiState by mutableStateOf(
         FileInfoScreenUiState(
             file = file,
-            sheetActionButtonsUiState = SheetActionButtonsUiState(isOpenFolderEnabled = isOpenFolderEnabled)
-        )
+            sheetActionButtonsUiState = SheetActionButtonsUiState(
+                isOpenFolderEnabled = isOpenFolderEnabled,
+            ),
+        ),
     )
     override lateinit var lazyPagingItems: LazyPagingItems<BookThumbnail>
 
     init {
         existsReadlaterUseCase(
-            ExistsReadlaterUseCase.Request(file.bookshelfId, file.path)
+            ExistsReadlaterUseCase.Request(file.bookshelfId, file.path),
         ).onEach { resource ->
             resource.onSuccess {
                 updateFileInfoSheetUiStateFile {
                     copy(
                         sheetActionButtonsUiState = sheetActionButtonsUiState.copy(
                             readLaterChecked = it,
-                            readLaterLoading = false
-                        )
+                            readLaterLoading = false,
+                        ),
                     )
                 }
             }
-        }.launchIn(coroutineScope).let(runningJob::add)
+        }.launchIn(coroutineScope)
+            .let(runningJob::add)
         getFileAttributeUseCase(
-            GetFileAttributeUseCase.Request(file.bookshelfId, file.path)
+            GetFileAttributeUseCase.Request(file.bookshelfId, file.path),
         ).onEach {
             updateFileInfoSheetUiStateFile {
                 copy(attribute = it.dataOrNull())
             }
-        }.launchIn(coroutineScope).let(runningJob::add)
+        }.launchIn(coroutineScope)
+            .let(runningJob::add)
     }
 
     override fun onReadLaterClick() {
         uiState = uiState.copy(
-            sheetActionButtonsUiState = uiState.sheetActionButtonsUiState.copy(readLaterLoading = true)
+            sheetActionButtonsUiState = uiState.sheetActionButtonsUiState.copy(
+                readLaterLoading = true,
+            ),
         )
         coroutineScope.launch {
             delay(300)

@@ -216,7 +216,10 @@ internal interface CollectionDao {
             FROM collection ORDER BY created_at DESC
         """,
     )
-    fun pagingSource(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSource(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): PagingSource<Int, CollectionEntityCountExist>
 
     @Query(
         """
@@ -260,7 +263,10 @@ internal interface CollectionDao {
             FROM collection ORDER BY updated_at DESC
         """,
     )
-    fun pagingSourceRecent(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSourceRecent(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): PagingSource<Int, CollectionEntityCountExist>
 
     @Query(
         """
@@ -275,7 +281,10 @@ internal interface CollectionDao {
             FROM collection WHERE type = 'Basic' ORDER BY created_at DESC
         """,
     )
-    fun pagingSourceBasic(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSourceBasic(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): PagingSource<Int, CollectionEntityCountExist>
 
     @Query(
         """
@@ -290,7 +299,10 @@ internal interface CollectionDao {
             FROM collection WHERE type = 'Basic' ORDER BY updated_at DESC
         """,
     )
-    fun pagingSourceBasicRecent(bookshelfId: BookshelfId, path: String): PagingSource<Int, CollectionEntityCountExist>
+    fun pagingSourceBasicRecent(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): PagingSource<Int, CollectionEntityCountExist>
 }
 
 internal suspend fun CollectionDao.insert(entity: CollectionEntity): Long = insert(

@@ -12,7 +12,6 @@ import dev.zacsweers.metro.IntoMap
 
 @ContributesTo(DataScope::class)
 interface StorageDeviceProviders {
-
     @Binds
     @IntoMap
     @FileClientKey(FileClientType.Device)

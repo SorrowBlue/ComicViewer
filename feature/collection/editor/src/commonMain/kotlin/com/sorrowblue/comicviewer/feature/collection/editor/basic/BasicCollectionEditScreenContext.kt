@@ -15,7 +15,6 @@ annotation class BasicCollectionEditScreenScope
 
 @GraphExtension(BasicCollectionEditScreenScope::class)
 interface BasicCollectionEditScreenContext : ScreenContext {
-
     val pagingCollectionFileUseCase: PagingCollectionFileUseCase
     val getCollectionUseCase: GetCollectionUseCase
     val updateCollectionUseCase: UpdateCollectionUseCase

@@ -10,7 +10,6 @@ import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.platformGraph
 
 expect class AppLocaleIso {
-
     /**
      * 現在の[Locale]。nullの場合はシステムデフォルト。
      */
@@ -46,7 +45,8 @@ expect val Locale.displayLanguageName: String
 val ProvideLocalAppLocaleIso: ProvidedValue<*>
     @Composable
     get() {
-        return (LocalPlatformContext.current.platformGraph as LocaleGraph).appLocaleIso provides appLanguageTag
+        return (LocalPlatformContext.current.platformGraph as LocaleGraph).appLocaleIso provides
+            appLanguageTag
     }
 
 interface LocaleGraph {

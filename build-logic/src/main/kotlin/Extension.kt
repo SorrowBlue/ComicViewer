@@ -14,11 +14,15 @@ fun NamedDomainObjectContainer<out AndroidSourceSet>.debug(action: AndroidSource
     action(getByName("debug"))
 }
 
-fun NamedDomainObjectContainer<ApplicationBuildType>.prerelease(action: ApplicationBuildType.() -> Unit) {
+fun NamedDomainObjectContainer<ApplicationBuildType>.prerelease(
+    action: ApplicationBuildType.() -> Unit,
+) {
     action(getByName("prerelease"))
 }
 
-fun NamedDomainObjectContainer<ApplicationBuildType>.internal(action: ApplicationBuildType.() -> Unit) {
+fun NamedDomainObjectContainer<ApplicationBuildType>.internal(
+    action: ApplicationBuildType.() -> Unit,
+) {
     action(getByName("internal"))
 }
 

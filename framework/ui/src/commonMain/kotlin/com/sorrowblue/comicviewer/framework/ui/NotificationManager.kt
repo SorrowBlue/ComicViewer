@@ -5,10 +5,9 @@ import dev.zacsweers.metro.Inject
 
 @Inject
 expect class NotificationManager(context: PlatformContext) {
-
     fun toast(text: String, length: Int)
 
     companion object {
-        val LENGTH_SHORT: Int
+        val LengthShort: Int
     }
 }

@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.startup.Initializer
-import com.sorrowblue.comicviewer.data.reader.document.PDF_PLUGIN_PACKAGE
-import com.sorrowblue.comicviewer.data.reader.document.PDF_PLUGIN_SERVICE
+import com.sorrowblue.comicviewer.data.reader.document.PdfPluginPackage
+import com.sorrowblue.comicviewer.data.reader.document.PdfPluginService
 import com.sorrowblue.comicviewer.data.reader.document.di.ReaderDocumentContext
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
@@ -18,10 +18,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-private const val SUPPORT_MAJOR = 1
+private const val SupportMajorVersion = 1
 
 internal class DocumentInitializer : Initializer<Unit> {
-
     override fun create(context: Context) {
         runBlocking {
             runCatching {
@@ -29,7 +28,7 @@ internal class DocumentInitializer : Initializer<Unit> {
                     updatePdfPluginSupport(context)
                 }
             }.onFailure {
-                logcat(LogPriority.WARN) { "$PDF_PLUGIN_PACKAGE: ${it.asLog()}" }
+                logcat(LogPriority.WARN) { "$PdfPluginPackage: ${it.asLog()}" }
             }
         }
     }
@@ -39,16 +38,21 @@ internal class DocumentInitializer : Initializer<Unit> {
         val datastoreDataSource = context.datastoreDataSource
         if (checkPdfService(platformContext)) {
             val versionName =
-                platformContext.packageManager.getPackageInfo(PDF_PLUGIN_PACKAGE, 0).versionName
-            val targetMajor = versionName!!.split(".")[0].toInt()
-            logcat(LogPriority.INFO) { "PdfPlugin versionName=$versionName, supportMajor=$SUPPORT_MAJOR, targetMajor=$targetMajor" }
-            if (SUPPORT_MAJOR <= targetMajor) {
+                platformContext.packageManager.getPackageInfo(PdfPluginPackage, 0).versionName
+            val targetMajor = requireNotNull(versionName).split(".")[0].toInt()
+            logcat(
+                LogPriority.INFO,
+            ) {
+                "PdfPlugin versionName=$versionName, supportMajor=$SupportMajorVersion, targetMajor=$targetMajor"
+            }
+            if (SupportMajorVersion <= targetMajor) {
                 // Supported
                 datastoreDataSource.updateFolderSettings { settings ->
                     settings.copy(
-                        supportExtension = settings.supportExtension.toMutableSet()
+                        supportExtension = settings.supportExtension
+                            .toMutableSet()
                             .apply { addAll(SupportExtension.Document.entries) }
-                            .toList()
+                            .toList(),
                     )
                 }
             } else {
@@ -56,7 +60,10 @@ internal class DocumentInitializer : Initializer<Unit> {
                 logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
                 datastoreDataSource.updateFolderSettings { settings ->
                     settings.copy(
-                        supportExtension = settings.supportExtension.filterNot { it in SupportExtension.Document.entries }
+                        supportExtension = settings.supportExtension.filterNot {
+                            it in
+                                SupportExtension.Document.entries
+                        },
                     )
                 }
             }
@@ -64,12 +71,15 @@ internal class DocumentInitializer : Initializer<Unit> {
             logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
             datastoreDataSource.updateFolderSettings { settings ->
                 settings.copy(
-                    supportExtension = settings.supportExtension.filterNot { it in SupportExtension.Document.entries }
+                    supportExtension = settings.supportExtension.filterNot {
+                        it in
+                            SupportExtension.Document.entries
+                    },
                 )
             }
         }
         logcat(
-            LogPriority.INFO
+            LogPriority.INFO,
         ) { "Initialized document. ${datastoreDataSource.folderSettings.first().supportExtension}" }
     }
 
@@ -78,9 +88,9 @@ internal class DocumentInitializer : Initializer<Unit> {
     private fun checkPdfService(context: Context): Boolean {
         val resolveInfos = context.packageManager.queryIntentServices(
             Intent().apply {
-                component = ComponentName(PDF_PLUGIN_PACKAGE, PDF_PLUGIN_SERVICE)
+                component = ComponentName(PdfPluginPackage, PdfPluginService)
             },
-            PackageManager.MATCH_DEFAULT_ONLY
+            PackageManager.MATCH_DEFAULT_ONLY,
         )
         return resolveInfos.isNotEmpty()
     }

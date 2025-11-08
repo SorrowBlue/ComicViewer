@@ -35,17 +35,17 @@ import comicviewer.feature.settings.folder.generated.resources.settings_folder_t
 import org.jetbrains.compose.resources.stringResource
 
 internal data class FolderSettingsScreenUiState(
-    val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.isDisplayHiddenFile,
-    val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.isDisplayFileExtension,
+    val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.DisplayHiddenFile,
+    val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.DisplayFileExtension,
     val fileSort: SortType = FolderDisplaySettingsDefaults.sortType,
-    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.isDisplayThumbnail,
+    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.DisplayThumbnail,
     val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
     val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
     val imageFormat: ImageFormat = FolderDisplaySettingsDefaults.imageFormat,
-    val thumbnailQuality: Int = FolderDisplaySettingsDefaults.thumbnailQuality,
-    val isSavedThumbnail: Boolean = FolderDisplaySettingsDefaults.isSavedThumbnail,
+    val thumbnailQuality: Int = FolderDisplaySettingsDefaults.ThumbnailQuality,
+    val isSavedThumbnail: Boolean = FolderDisplaySettingsDefaults.SavedThumbnail,
     val isOpenImageFolder: Boolean = false,
-    val fontSize: Int = FolderDisplaySettingsDefaults.fontSize,
+    val fontSize: Int = FolderDisplaySettingsDefaults.FontSize,
     val folderThumbnailOrder: FolderThumbnailOrder = FolderDisplaySettingsDefaults.folderThumbnailOrder,
 )
 
@@ -73,67 +73,67 @@ internal fun FolderSettingsScreen(
         SwitchSetting(
             title = Res.string.settings_folder_label_show_hidden_files,
             checked = uiState.showHiddenFiles,
-            onCheckedChange = onShowHiddenFilesChange
+            onCheckedChange = onShowHiddenFilesChange,
         )
         SwitchSetting(
             title = Res.string.settings_folder_label_show_files_extension,
             checked = uiState.showFilesExtension,
-            onCheckedChange = onShowFilesExtensionChange
+            onCheckedChange = onShowFilesExtensionChange,
         )
         Setting(
             title = Res.string.settings_folder_label_file_sort,
             summary = uiState.fileSort.displayText,
-            onClick = onSortTypeClick
+            onClick = onSortTypeClick,
         )
         SwitchSetting(
             title = Res.string.settings_folder_label_image_folder,
             summary = Res.string.settings_folder_desc_image_folder,
             checked = uiState.isOpenImageFolder,
-            onCheckedChange = onChangeOpenImageFolder
+            onCheckedChange = onChangeOpenImageFolder,
         )
 
         SliderSetting(
             title = Res.string.settings_folder_label_font_size,
             value = uiState.fontSize,
             onValueChange = onFontSizeChange,
-            valueRange = 8..20
+            valueRange = 8..20,
         )
         SettingsCategory(title = Res.string.settings_folder_label_thumbnail) {
             SwitchSetting(
                 title = Res.string.settings_folder_label_show_thumbnail,
                 checked = uiState.showThumbnails,
-                onCheckedChange = onShowThumbnailsChange
+                onCheckedChange = onShowThumbnailsChange,
             )
             Setting(
                 title = Res.string.settings_folder_label_image_scale,
                 summary = uiState.imageScale.displayText,
-                onClick = onImageScaleClick
+                onClick = onImageScaleClick,
             )
             Setting(
                 title = Res.string.settings_folder_label_image_filter_quality,
                 summary = uiState.imageFilterQuality.displayText,
-                onClick = onImageFilterQualityClick
+                onClick = onImageFilterQualityClick,
             )
             Setting(
                 title = Res.string.settings_folder_label_image_format,
                 summary = uiState.imageFormat.summaryText,
-                onClick = onImageFormatClick
+                onClick = onImageFormatClick,
             )
             SliderSetting(
                 title = Res.string.settings_folder_label_image_quality,
                 value = uiState.thumbnailQuality,
                 onValueChange = onThumbnailQualityChange,
-                valueRange = 0..100
+                valueRange = 0..100,
             )
             SwitchSetting(
                 title = Res.string.settings_folder_label_save_thumbnail,
                 checked = uiState.isSavedThumbnail,
-                onCheckedChange = onSavedThumbnailChange
+                onCheckedChange = onSavedThumbnailChange,
             )
             Setting(
                 title = Res.string.settings_folder_label_folder_thumbnail_order,
                 summary = uiState.folderThumbnailOrder.displayText,
-                onClick = onFolderThumbnailOrderClick
+                onClick = onFolderThumbnailOrderClick,
             )
         }
     }

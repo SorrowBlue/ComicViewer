@@ -31,14 +31,14 @@ annotation class CoilScope
 
 @ContributesTo(DataScope::class)
 interface DataCoilProviders {
+    @Provides
+    private fun provideDiskCache(coilDiskCache: CoilDiskCache): DiskCache =
+        DiskCache.Builder().directory(coilDiskCache.resolve("image_cache")).build()
 
     @Provides
-    private fun provideDiskCache(coilDiskCache: CoilDiskCache): DiskCache {
-        return DiskCache.Builder().directory(coilDiskCache.resolve("image_cache")).build()
-    }
-
-    @Provides
-    private fun provideCoilDiskCache(context: PlatformContext): CoilDiskCache = CoilDiskCache(context)
+    private fun provideCoilDiskCache(context: PlatformContext): CoilDiskCache = CoilDiskCache(
+        context,
+    )
 
     @Binds
     private fun ImageCacheDataSourceImpl.bind(): ImageCacheDataSource = this

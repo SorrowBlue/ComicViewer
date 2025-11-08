@@ -14,7 +14,6 @@ annotation class ImageCacheScreenScope
 
 @GraphExtension(ImageCacheScreenScope::class)
 interface ImageCacheScreenContext : ScreenContext {
-
     val getBookshelfImageCacheInfoUseCase: GetBookshelfImageCacheInfoUseCase
     val getOtherImageCacheInfoUseCase: GetOtherImageCacheInfoUseCase
     val clearImageCacheUseCase: ClearImageCacheUseCase

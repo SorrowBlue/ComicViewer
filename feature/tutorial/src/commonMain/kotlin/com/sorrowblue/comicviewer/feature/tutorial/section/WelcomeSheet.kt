@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentWithReceiverOf
@@ -23,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_message_welcome
 import comicviewer.feature.tutorial.generated.resources.tutorial_title_welcome
@@ -37,12 +40,12 @@ internal fun WelcomeSheet(contentPadding: PaddingValues) {
             Image(
                 imageVector = ComicIcons.Launcher,
                 contentDescription = null,
-                modifier = Modifier.size(160.dp)
+                modifier = Modifier.size(160.dp),
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
             Text(
                 text = stringResource(FrameworkUiRes.string.app_name),
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
             )
         }
     }
@@ -72,7 +75,7 @@ internal fun WelcomeSheet(contentPadding: PaddingValues) {
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     icon()
                 }
@@ -94,7 +97,7 @@ internal fun WelcomeSheet(contentPadding: PaddingValues) {
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     icon()
                 }
@@ -109,6 +112,18 @@ internal fun WelcomeSheet(contentPadding: PaddingValues) {
                     Spacer(modifier = Modifier.weight(0.2f))
                 }
             }
+        }
+    }
+}
+
+@PreviewMultiplatform
+@Composable
+private fun WelcomeSheetPreview() {
+    PreviewTheme {
+        Surface {
+            WelcomeSheet(
+                contentPadding = PaddingValues(),
+            )
         }
     }
 }

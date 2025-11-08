@@ -11,7 +11,6 @@ import dev.zacsweers.metro.Provides
 
 @ContributesTo(DataScope::class)
 interface DataStorageClientModule {
-
     @Provides
     @ImageExtension
     fun bindSupportedImage(): Set<String> = SUPPORTED_IMAGE

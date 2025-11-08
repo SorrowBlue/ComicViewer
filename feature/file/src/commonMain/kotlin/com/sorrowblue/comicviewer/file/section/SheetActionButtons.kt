@@ -35,7 +35,7 @@ internal fun SheetActionButtons(
             checked = uiState.readLaterChecked,
             loading = uiState.readLaterLoading,
             onClick = onReadLaterClick,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Spacer(Modifier.size(ComicTheme.dimension.padding * 2))
 

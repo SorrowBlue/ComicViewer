@@ -25,7 +25,7 @@ internal fun ImageScaleScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_imagescale_title)) }
+        title = { Text(text = stringResource(Res.string.settings_folder_imagescale_title)) },
     ) {
         Column {
             ImageScale.entries.forEach { imageScale ->
@@ -38,7 +38,7 @@ internal fun ImageScaleScreen(
                     headlineContent = {
                         Text(text = stringResource(imageScale.displayText))
                     },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
             }
         }

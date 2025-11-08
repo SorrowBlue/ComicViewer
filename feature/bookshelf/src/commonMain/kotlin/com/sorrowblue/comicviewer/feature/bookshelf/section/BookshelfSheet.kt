@@ -36,7 +36,7 @@ internal fun BookshelfSheet(
                     .fillMaxSize()
                     .padding(contentPadding),
                 imageVector = ComicIcons.UndrawBookshelves,
-                text = stringResource(Res.string.bookshelf_label_no_bookshelf)
+                text = stringResource(Res.string.bookshelf_label_no_bookshelf),
             )
         } else {
             BookshelfGridList(
@@ -44,14 +44,14 @@ internal fun BookshelfSheet(
                 lazyPagingItems = lazyPagingItems,
                 onBookshelfClick = onBookshelfClick,
                 onBookshelfInfoClick = onBookshelfInfoClick,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
             )
         }
         if (lazyPagingItems.loadState.refresh is LoadState.Loading) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = contentPadding.calculateTopPadding())
+                    .padding(top = contentPadding.calculateTopPadding()),
             )
         }
     }

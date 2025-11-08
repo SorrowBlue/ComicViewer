@@ -33,12 +33,15 @@ private fun EntryProviderScope<NavKey>.authenticationEntry(
     onComplete: () -> Unit,
 ) {
     entryScreen<AuthenticationKey, AuthenticationScreenContext>(
-        createContext = { (graph as AuthenticationScreenContext.Factory).createAuthenticationScreenContext() },
+        createContext = {
+            (graph as AuthenticationScreenContext.Factory)
+                .createAuthenticationScreenContext()
+        },
     ) {
         AuthenticationScreenRoot(
             screenType = it.type,
             onBackClick = onBackClick,
-            onComplete = onComplete
+            onComplete = onComplete,
         )
     }
 }

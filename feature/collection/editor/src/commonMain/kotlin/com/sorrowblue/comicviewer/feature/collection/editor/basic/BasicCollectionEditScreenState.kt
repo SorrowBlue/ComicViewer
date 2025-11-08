@@ -36,13 +36,13 @@ internal sealed interface BasicCollectionEditScreenStateEvent {
 }
 
 internal interface BasicCollectionEditScreenState {
-
     val uiState: BasicCollectionEditScreenUiState
     val form: Form<BasicCollectionForm>
     val events: EventFlow<BasicCollectionEditScreenStateEvent>
     val lazyPagingItems: LazyPagingItems<File>
 
     fun onSubmit(formData: BasicCollectionForm)
+
     fun onDeleteClick(file: File)
 }
 
@@ -67,7 +67,7 @@ internal fun rememberBasicCollectionEditScreenState(
         this.scope = scope
         this.lazyPagingItems = rememberPagingItems {
             context.pagingCollectionFileUseCase(
-                PagingCollectionFileUseCase.Request(PagingConfig(20), collectionId)
+                PagingCollectionFileUseCase.Request(PagingConfig(20), collectionId),
             )
         }
     }
@@ -81,7 +81,6 @@ private class BasicCollectionEditScreenStateImpl(
     private val updateCollectionUseCase: UpdateCollectionUseCase,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
 ) : BasicCollectionEditScreenState {
-
     override var uiState by mutableStateOf(BasicCollectionEditScreenUiState())
         private set
     private var initialForm = BasicCollectionForm()
@@ -96,7 +95,8 @@ private class BasicCollectionEditScreenStateImpl(
             uiState = uiState.copy(isLoading = true)
             getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }
-                .first().let {
+                .first()
+                .let {
                     initialForm = BasicCollectionForm(name = it.name)
                     formState.reset(initialForm)
                     uiState = uiState.copy(isLoading = false)
@@ -111,9 +111,9 @@ private class BasicCollectionEditScreenStateImpl(
                     CollectionFile(
                         collectionId,
                         file.bookshelfId,
-                        file.path
-                    )
-                )
+                        file.path,
+                    ),
+                ),
             )
         }
     }
@@ -124,9 +124,11 @@ private class BasicCollectionEditScreenStateImpl(
             val collection = getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }
                 .first()
-            updateCollectionUseCase(UpdateCollectionUseCase.Request(collection.copy(name = formData.name))).fold(
+            updateCollectionUseCase(
+                UpdateCollectionUseCase.Request(collection.copy(name = formData.name)),
+            ).fold(
                 onSuccess = {},
-                onError = {}
+                onError = {},
             )
             events.tryEmit(BasicCollectionEditScreenStateEvent.EditComplete)
         }

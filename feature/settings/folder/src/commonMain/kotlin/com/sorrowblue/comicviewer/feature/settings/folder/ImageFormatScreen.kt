@@ -29,7 +29,7 @@ internal fun ImageFormatScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_imageformat_title)) }
+        title = { Text(text = stringResource(Res.string.settings_folder_imageformat_title)) },
     ) {
         Column {
             ImageFormat.entries.forEach { imageFormat ->
@@ -47,7 +47,7 @@ internal fun ImageFormatScreen(
                         .clickable { onImageFormatChange(imageFormat) }
                         .padding(it.copy(top = 0.dp, bottom = 0.dp))
                         .padding(vertical = 12.dp),
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
             }
         }

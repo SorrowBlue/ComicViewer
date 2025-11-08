@@ -104,7 +104,6 @@ import dev.zacsweers.metro.ContributesTo
 
 @ContributesTo(DataScope::class)
 interface ServiceProviders {
-
     @Binds
     private val FlowBookshelfListInteractor.bind: FlowBookshelfListUseCase get() = this
 
@@ -183,7 +182,8 @@ interface ServiceProviders {
     private val PagingFileInteractor.bind: PagingFileUseCase get() = this
 
     @Binds
-    private val PagingFolderBookThumbnailsInteractor.bind: PagingFolderBookThumbnailsUseCase get() = this
+    private val PagingFolderBookThumbnailsInteractor.bind: PagingFolderBookThumbnailsUseCase
+        get() = this
 
     @Binds
     private val PagingHistoryBookInteractor.bind: PagingHistoryBookUseCase get() = this
@@ -224,7 +224,8 @@ interface ServiceProviders {
     private val ManageDisplaySettingsInteractor.bind: ManageDisplaySettingsUseCase get() = this
 
     @Binds
-    private val ManageFolderDisplaySettingsInteractor.bind: ManageFolderDisplaySettingsUseCase get() = this
+    private val ManageFolderDisplaySettingsInteractor.bind: ManageFolderDisplaySettingsUseCase
+        get() = this
 
     @Binds
     private val ManageFolderSettingsInteractor.bind: ManageFolderSettingsUseCase get() = this
@@ -236,7 +237,8 @@ interface ServiceProviders {
     private val ManageSecuritySettingsInteractor.bind: ManageSecuritySettingsUseCase get() = this
 
     @Binds
-    private val ManageViewerOperationSettingsInteractor.bind: ManageViewerOperationSettingsUseCase get() = this
+    private val ManageViewerOperationSettingsInteractor.bind: ManageViewerOperationSettingsUseCase
+        get() = this
 
     //
 
@@ -244,7 +246,8 @@ interface ServiceProviders {
     private val ClearImageCacheInteractor.bind: ClearImageCacheUseCase get() = this
 
     @Binds
-    private val GetBookshelfImageCacheInfoInteractor.bind: GetBookshelfImageCacheInfoUseCase get() = this
+    private val GetBookshelfImageCacheInfoInteractor.bind: GetBookshelfImageCacheInfoUseCase
+        get() = this
 
     @Binds
     private val GetNavigationHistoryInteractor.bind: GetNavigationHistoryUseCase get() = this
@@ -257,5 +260,4 @@ interface ServiceProviders {
 
     @Binds
     private val ManageViewerSettingsInteractor.bind: ManageViewerSettingsUseCase get() = this
-
 }

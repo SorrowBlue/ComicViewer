@@ -45,7 +45,7 @@ internal fun CollectionList(
             text = stringResource(Res.string.collection_label_no_collection),
             modifier = modifier
                 .fillMaxSize()
-                .padding(contentPadding)
+                .padding(contentPadding),
         )
     } else {
         val isCompact = isCompactWindowClass()
@@ -54,21 +54,21 @@ internal fun CollectionList(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(
                 if (isCompact) 0.dp else ComicTheme.dimension.padding,
-                Alignment.Top
+                Alignment.Top,
             ),
-            modifier = modifier
+            modifier = modifier,
         ) {
             items(
                 count = lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { it.id.value },
-                contentType = { isCompact }
+                contentType = { isCompact },
             ) { index ->
                 lazyPagingItems[index]?.let {
                     val content = remember {
                         movableContentOf {
                             CollectionActionsDropdown(
                                 onEditClick = { onEditClick(it) },
-                                onDeleteClick = { onDeleteClick(it) }
+                                onDeleteClick = { onDeleteClick(it) },
                             )
                         }
                     }
@@ -76,13 +76,13 @@ internal fun CollectionList(
                         CollectionListItem(
                             collection = it,
                             onClick = { onItemClick(it) },
-                            content = content
+                            content = content,
                         )
                     } else {
                         CollectionListCardItem(
                             collection = it,
                             onClick = { onItemClick(it) },
-                            content = content
+                            content = content,
                         )
                     }
                 }

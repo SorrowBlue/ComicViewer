@@ -8,11 +8,8 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
 @Inject
-internal class PagingCollectionInteractor(
-    private val dataSource: CollectionLocalDataSource,
-) : PagingCollectionUseCase() {
-
-    override fun run(request: Request): Flow<PagingData<Collection>> {
-        return dataSource.pagingDataFlow(request.pagingConfig)
-    }
+internal class PagingCollectionInteractor(private val dataSource: CollectionLocalDataSource) :
+    PagingCollectionUseCase() {
+    override fun run(request: Request): Flow<PagingData<Collection>> =
+        dataSource.pagingDataFlow(request.pagingConfig)
 }

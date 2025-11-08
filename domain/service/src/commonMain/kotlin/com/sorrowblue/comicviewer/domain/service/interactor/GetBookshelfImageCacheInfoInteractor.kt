@@ -20,22 +20,19 @@ internal class GetBookshelfImageCacheInfoInteractor(
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetBookshelfImageCacheInfoUseCase() {
-
-    override fun run(request: Request): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> {
-        return bookshelfLocalDataSource.allBookshelf().fold(
+    override fun run(request: Request): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> =
+        bookshelfLocalDataSource.allBookshelf().fold(
             onSuccess = { flow -> flow.map { Resource.Success(imageCacheInfoList(it)) } },
             onError = {
                 flow {
                     sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
                     emit(Resource.Error(Unit))
                 }
-            }
+            },
         )
-    }
 
-    private fun imageCacheInfoList(list: List<Bookshelf>): List<BookshelfImageCacheInfo> {
-        return list.mapNotNull {
+    private fun imageCacheInfoList(list: List<Bookshelf>): List<BookshelfImageCacheInfo> =
+        list.mapNotNull {
             imageCacheDataSource.getBookshelfImageCacheInfo(it).dataOrNull()
         }
-    }
 }

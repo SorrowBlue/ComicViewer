@@ -13,7 +13,6 @@ import okio.BufferedSource
 @AssistedInject
 internal actual class SmbFileClient(@Assisted actual override val bookshelf: SmbServer) :
     FileClient<SmbServer> {
-
     @AssistedFactory
     actual interface Factory : FileClient.Factory<SmbServer> {
         actual override fun create(bookshelf: SmbServer): SmbFileClient

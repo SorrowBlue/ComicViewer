@@ -30,8 +30,11 @@ fun EntryProviderScope<NavKey>.viewerSettingsEntryGroup() {
 context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.viewerSettingsEntry(onBackClick: () -> Unit) {
     entryScreen<ViewerSettingsKey, ViewerSettingsScreenContext>(
-        createContext = { (graph as ViewerSettingsScreenContext.Factory).createViewerSettingsScreenContext() },
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
+        createContext = {
+            (graph as ViewerSettingsScreenContext.Factory)
+                .createViewerSettingsScreenContext()
+        },
+        metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         ViewerSettingsScreenRoot(onBackClick = onBackClick)
     }

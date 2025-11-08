@@ -8,14 +8,18 @@ import dev.zacsweers.metro.createGraphFactory
 import logcat.LogPriority
 import logcat.logcat
 
-internal class MainApplication : SplitCompatApplication(), PlatformApplication {
-
+internal class MainApplication :
+    SplitCompatApplication(),
+    PlatformApplication {
     override fun onCreate() {
         super.onCreate()
         logcat(LogPriority.INFO) { "onCreate" }
     }
 
     override val platformGraph: PlatformGraph by lazy {
-        createGraphFactory<AndroidAppGraph.Factory>().createAndroidAppGraph(this, LicenseeHelperImpl())
+        createGraphFactory<AndroidAppGraph.Factory>().createAndroidAppGraph(
+            this,
+            LicenseeHelperImpl(),
+        )
     }
 }

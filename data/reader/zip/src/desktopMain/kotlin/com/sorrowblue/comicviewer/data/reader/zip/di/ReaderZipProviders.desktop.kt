@@ -9,7 +9,6 @@ import dev.zacsweers.metro.IntoSet
 
 @ContributesTo(DataScope::class)
 interface DesktopReaderZipProviders {
-
     @Binds
     @IntoSet
     private fun SevenZipInitializer.bind(): Initializer<*> = this

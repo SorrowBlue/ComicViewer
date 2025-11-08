@@ -27,7 +27,11 @@ internal fun ImageFilterQualityScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_imagefilterquality_title)) }
+        title = {
+            Text(
+                text = stringResource(Res.string.settings_folder_imagefilterquality_title),
+            )
+        },
     ) {
         Column {
             ImageFilterQuality.entries.forEach { imageFilterQuality ->
@@ -37,13 +41,13 @@ internal fun ImageFilterQualityScreen(
                     leadingContent = {
                         RadioButton(
                             selected = imageFilterQuality == currentImageFilterQuality,
-                            onClick = null
+                            onClick = null,
                         )
                     },
                     headlineContent = {
                         Text(text = stringResource(imageFilterQuality.displayText))
                     },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
             }
         }

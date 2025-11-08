@@ -9,7 +9,6 @@ import dev.zacsweers.metro.Inject
 internal class RemoveCollectionFileInteractor(
     private val dataSource: CollectionFileLocalDataSource,
 ) : RemoveCollectionFileUseCase() {
-
     override suspend fun run(request: Request): Resource<Unit, Error> {
         dataSource.remove(request.file)
         return Resource.Success(Unit)

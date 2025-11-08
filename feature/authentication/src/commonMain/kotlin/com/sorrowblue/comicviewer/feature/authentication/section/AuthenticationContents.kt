@@ -41,22 +41,22 @@ internal fun AuthenticationRowContents(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(1f).fillMaxHeight()
+                modifier = Modifier.weight(1f).fillMaxHeight(),
             ) {
                 Image(
                     imageVector = ComicIcons.Launcher,
                     contentDescription = null,
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(80.dp),
                 )
                 Spacer(Modifier.size(ComicTheme.dimension.padding))
                 Text(
                     text =
-                        when (uiState) {
-                            is AuthenticationScreenUiState.Authentication -> ""
-                            is AuthenticationScreenUiState.Change -> "PINを変更"
-                            is AuthenticationScreenUiState.Erase -> "PINを削除"
-                            is AuthenticationScreenUiState.Register -> "PINを登録"
-                        },
+                    when (uiState) {
+                        is AuthenticationScreenUiState.Authentication -> ""
+                        is AuthenticationScreenUiState.Change -> "PINを変更"
+                        is AuthenticationScreenUiState.Erase -> "PINを削除"
+                        is AuthenticationScreenUiState.Register -> "PINを登録"
+                    },
                     style = ComicTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                 )
@@ -67,7 +67,7 @@ internal fun AuthenticationRowContents(
                 onNextClick = onNextClick,
                 modifier = Modifier
                     .weight(1f)
-                    .align(Alignment.CenterVertically)
+                    .align(Alignment.CenterVertically),
             )
         }
     }
@@ -83,11 +83,11 @@ internal fun AuthenticationColumnContents(
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         IconButton(
             onClick = onBackClick,
-            modifier = Modifier.align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start),
         ) {
             if (uiState is AuthenticationScreenUiState.Authentication) {
                 Icon(imageVector = ComicIcons.Close, contentDescription = null)
@@ -97,23 +97,23 @@ internal fun AuthenticationColumnContents(
         }
         Column(
             modifier = Modifier.weight(1f).fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 imageVector = ComicIcons.Launcher,
                 contentDescription = null,
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.size(80.dp),
             )
             Spacer(Modifier.size(ComicTheme.dimension.padding))
             Text(
                 text =
-                    when (uiState) {
-                        is AuthenticationScreenUiState.Authentication -> ""
-                        is AuthenticationScreenUiState.Change -> "PINを変更"
-                        is AuthenticationScreenUiState.Erase -> "PINを削除"
-                        is AuthenticationScreenUiState.Register -> "PINを登録"
-                    },
+                when (uiState) {
+                    is AuthenticationScreenUiState.Authentication -> ""
+                    is AuthenticationScreenUiState.Change -> "PINを変更"
+                    is AuthenticationScreenUiState.Erase -> "PINを削除"
+                    is AuthenticationScreenUiState.Register -> "PINを登録"
+                },
                 style = ComicTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
             )
@@ -121,7 +121,7 @@ internal fun AuthenticationColumnContents(
         }
         Column(
             modifier = Modifier.weight(1f).fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             InputContents(
                 uiState = uiState,

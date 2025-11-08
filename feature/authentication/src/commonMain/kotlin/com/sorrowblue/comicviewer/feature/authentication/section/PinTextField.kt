@@ -5,9 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
@@ -36,9 +39,11 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.authentication.PinDrawable
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 @Composable
 internal fun PinTextField(
@@ -60,7 +65,7 @@ internal fun PinTextField(
                     false
                 }
             },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         val pinCount by remember(pin) { mutableIntStateOf(pin.count()) }
         val focusRequester = remember { FocusRequester() }
@@ -68,14 +73,14 @@ internal fun PinTextField(
         var hasFocus by remember { mutableStateOf(false) }
         val colors = OutlinedTextFieldDefaults.colors()
         val borderColor by animateColorAsState(
-            if (hasFocus) colors.focusedIndicatorColor else colors.unfocusedIndicatorColor
+            if (hasFocus) colors.focusedIndicatorColor else colors.unfocusedIndicatorColor,
         )
         TextField(
             value = pin,
             onValueChange = onPinChange,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             colors = TextFieldDefaults.colors(),
             keyboardActions = KeyboardActions(onNext = { onNextClick() }),
@@ -83,7 +88,7 @@ internal fun PinTextField(
                 .size(1.dp)
                 .alpha(0f)
                 .onFocusChanged { hasFocus = it.hasFocus }
-                .focusRequester(focusRequester)
+                .focusRequester(focusRequester),
         )
         val keyboardController = LocalSoftwareKeyboardController.current
         LazyRow(
@@ -96,15 +101,14 @@ internal fun PinTextField(
                     } else {
                         colors.disabledIndicatorColor
                     },
-                    shape = ComicTheme.shapes.small
-                )
-                .clickable(enabled = enabled) {
+                    shape = ComicTheme.shapes.small,
+                ).clickable(enabled = enabled) {
                     focusRequester.requestFocus()
                     keyboardController?.show()
                 },
             state = scrollState,
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             items(pinCount) { index ->
                 PinDrawable(
@@ -113,7 +117,7 @@ internal fun PinTextField(
                     enabled = enabled,
                     modifier = Modifier
                         .aspectRatio(1f)
-                        .animateItem()
+                        .animateItem(),
                 )
             }
         }
@@ -123,6 +127,24 @@ internal fun PinTextField(
         }
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewPinTextField() {
+    PreviewTheme {
+        Column {
+            var pin by remember { mutableStateOf("1111") }
+            PinTextField(
+                pin = pin,
+                onPinChange = { pin = it },
+                onNextClick = { pin = "" },
+                modifier = Modifier
+                    .width(240.dp)
+                    .height(48.dp),
+            )
         }
     }
 }

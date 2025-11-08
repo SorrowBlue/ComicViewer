@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 @Composable
-internal actual fun rememberNotificationRequestScreenState(): NotificationRequestScreenState {
-    return remember {
+internal actual fun rememberNotificationRequestScreenState(): NotificationRequestScreenState =
+    remember {
         object : NotificationRequestScreenState {
             override fun onConfirmClick(onComplete: () -> Unit) {
                 // Do nothing on non-Android platforms
@@ -13,4 +13,3 @@ internal actual fun rememberNotificationRequestScreenState(): NotificationReques
             }
         }
     }
-}

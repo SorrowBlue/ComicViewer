@@ -6,14 +6,17 @@ import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class RegisterBookshelfUseCase :
     OneShotUseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfUseCase.Error>() {
-
     data class Request(val bookshelf: Bookshelf, val path: String) : OneShotUseCase.Request
 
     sealed interface Error : Resource.AppError {
         data object Host : Error
+
         data object Path : Error
+
         data object Auth : Error
+
         data object Network : Error
+
         data object System : Error
     }
 }

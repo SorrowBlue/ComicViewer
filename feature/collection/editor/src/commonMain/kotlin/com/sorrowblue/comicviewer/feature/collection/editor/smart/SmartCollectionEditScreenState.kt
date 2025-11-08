@@ -48,8 +48,8 @@ internal fun rememberSmartCollectionEditScreenState(
             formState = formState,
             flowBookshelfListUseCase = context.flowBookshelfListUseCase,
             getCollectionUseCase = context.getCollectionUseCase,
-            updateCollectionUseCase = context.updateCollectionUseCase
-        )
+            updateCollectionUseCase = context.updateCollectionUseCase,
+        ),
     ) {
         SmartCollectionEditScreenImpl(
             isDataLoaded = false,
@@ -77,7 +77,6 @@ private class SmartCollectionEditScreenImpl(
     private val updateCollectionUseCase: UpdateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
     companion object {
-
         fun saver(
             collectionId: CollectionId,
             scope: CoroutineScope,
@@ -95,9 +94,9 @@ private class SmartCollectionEditScreenImpl(
                     flowBookshelfListUseCase = flowBookshelfListUseCase,
                     getCollectionUseCase = getCollectionUseCase,
                     updateCollectionUseCase = updateCollectionUseCase,
-                    formState = formState
+                    formState = formState,
                 )
-            }
+            },
         )
     }
 
@@ -112,7 +111,8 @@ private class SmartCollectionEditScreenImpl(
             coroutineScope.launch {
                 uiState = uiState.copy(enabledForm = false)
                 getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
-                    .first().fold(
+                    .first()
+                    .fold(
                         onSuccess = { collection ->
                             require(collection is SmartCollection)
                             isDataLoaded = true
@@ -121,10 +121,10 @@ private class SmartCollectionEditScreenImpl(
                                     name = collection.name,
                                     bookshelfId = collection.bookshelfId ?: BookshelfId(),
                                     searchCondition = collection.searchCondition,
-                                )
+                                ),
                             )
                         },
-                        onError = {}
+                        onError = {},
                     )
                 flowBookshelfListUseCase(EmptyRequest).first().fold(
                     onSuccess = { list ->
@@ -132,17 +132,19 @@ private class SmartCollectionEditScreenImpl(
                             bookshelf = buildMap {
                                 put(
                                     null,
-                                    getString(Res.string.collection_editor_label_all_bookshelf)
+                                    getString(Res.string.collection_editor_label_all_bookshelf),
                                 )
                                 putAll(list.map { it.id to it.displayName })
-                            }
+                            },
                         )
                     },
                     onError = {
                         formState.setError(
-                            BookshelfField to FieldError(getString(Res.string.collection_editor_error_not_get_bookshelf))
+                            BookshelfField to FieldError(
+                                getString(Res.string.collection_editor_error_not_get_bookshelf),
+                            ),
                         )
-                    }
+                    },
                 )
                 uiState = uiState.copy(enabledForm = true)
             }
@@ -154,21 +156,28 @@ private class SmartCollectionEditScreenImpl(
             uiState = uiState.copy(enabledForm = false)
             delay(1000)
             val collection =
-                getCollectionUseCase(GetCollectionUseCase.Request(collectionId)).first()
+                getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
+                    .first()
                     .dataOrNull() as SmartCollection
             updateCollectionUseCase(
                 UpdateCollectionUseCase.Request(
                     collection.copy(
                         name = formData.name,
-                        bookshelfId = if (formData.bookshelfId == BookshelfId()) null else formData.bookshelfId,
-                        searchCondition = formData.searchCondition
-                    )
-                )
+                        bookshelfId = if (formData.bookshelfId ==
+                            BookshelfId()
+                        ) {
+                            null
+                        } else {
+                            formData.bookshelfId
+                        },
+                        searchCondition = formData.searchCondition,
+                    ),
+                ),
             ).fold(
                 onSuccess = {
                     event.emit(SmartCollectionEditorScreenStateEvent.Complete)
                 },
-                onError = {}
+                onError = {},
             )
         }
     }

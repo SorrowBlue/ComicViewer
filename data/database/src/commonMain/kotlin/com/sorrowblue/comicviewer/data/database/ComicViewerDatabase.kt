@@ -23,9 +23,10 @@ import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFile
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 
-internal const val DATABASE_VERSION = 8
-internal const val DATABASE_NAME = "comic_viewer_database"
+internal const val DatabaseVersion = 8
+internal const val DatabaseName = "comic_viewer_database"
 
+@Suppress("MagicNumber")
 @Database(
     entities = [
         BookshelfEntity::class,
@@ -34,7 +35,7 @@ internal const val DATABASE_NAME = "comic_viewer_database"
         CollectionFileEntity::class,
         ReadLaterFileEntity::class,
     ],
-    version = DATABASE_VERSION,
+    version = DatabaseVersion,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),

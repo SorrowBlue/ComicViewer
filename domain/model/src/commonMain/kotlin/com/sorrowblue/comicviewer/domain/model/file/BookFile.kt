@@ -18,17 +18,15 @@ data class BookFile private constructor(
     override val lastReadTime: Long,
     override val sortIndex: Int,
 ) : Book {
-
     val extension get() = name.extension
 
     fun copy(sortIndex: Int = this.sortIndex, totalPageCount: Int = this.totalPageCount) = copy(
         bookshelfId = bookshelfId,
         totalPageCount = totalPageCount,
-        sortIndex = sortIndex
+        sortIndex = sortIndex,
     )
 
     companion object {
-
         @InternalDataApi
         operator fun invoke(
             bookshelfId: BookshelfId,

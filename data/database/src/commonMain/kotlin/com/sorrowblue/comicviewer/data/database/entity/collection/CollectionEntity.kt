@@ -28,17 +28,17 @@ import kotlinx.datetime.toLocalDateTime
         ForeignKey(
             entity = BookshelfEntity::class,
             parentColumns = [BookshelfEntity.ID],
-            childColumns = [CollectionEntity.BOOKSHELF_ID],
+            childColumns = [CollectionEntity.BookshelfId],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index(CollectionEntity.BOOKSHELF_ID)],
+    indices = [Index(CollectionEntity.BookshelfId)],
 )
 internal data class CollectionEntity(
     @PrimaryKey(autoGenerate = true) val id: CollectionId,
     val name: String,
     val type: Type,
-    @ColumnInfo(BOOKSHELF_ID) val bookshelfId: BookshelfId?,
+    @ColumnInfo(BookshelfId) val bookshelfId: BookshelfId?,
     @Embedded val searchCondition: SearchConditionEntity?,
     @ColumnInfo("created_at", defaultValue = "CURRENT_TIMESTAMP") val createdAt: String,
     @ColumnInfo("updated_at", defaultValue = "CURRENT_TIMESTAMP") val updatedAt: String,
@@ -78,7 +78,7 @@ internal data class CollectionEntity(
 
     companion object {
         const val ID = "id"
-        const val BOOKSHELF_ID = "bookshelf_id"
+        const val BookshelfId = "bookshelf_id"
 
         fun fromModel(model: Collection): CollectionEntity = when (model) {
             is BasicCollection -> CollectionEntity(

@@ -22,7 +22,6 @@ import logcat.asLog
 import logcat.logcat
 
 internal class BookshelfInsertReceiver : BroadcastReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
         val factory = context.platformGraph as BookshelfInsertReceiverContext.Factory
         val registerBookshelfUseCase =
@@ -31,22 +30,22 @@ internal class BookshelfInsertReceiver : BroadcastReceiver() {
         if (!intent.hasExtra("json")) return
         val jsonString = intent.getStringExtra("json") ?: return
         runCatching {
-            Json.Default.decodeFromString<InsertJson>(jsonString)
+            Json.decodeFromString<InsertJson>(jsonString)
         }.onSuccess { insertJson ->
             goAsync {
                 insertJson.bookshelf.forEach {
                     registerBookshelfUseCase(
                         RegisterBookshelfUseCase.Request(
                             it.toModel(),
-                            it.path
-                        )
+                            it.path,
+                        ),
                     ).fold(
                         onSuccess = { bookshelf ->
                             logcat(TAG) { "insert success. $bookshelf" }
                         },
                         onError = { error ->
                             logcat(TAG, LogPriority.ERROR) { "insert error. $error" }
-                        }
+                        },
                     )
                 }
             }
@@ -72,10 +71,10 @@ internal class BookshelfInsertReceiver : BroadcastReceiver() {
                     coroutineScope { this.block() }
                 } catch (_: CancellationException) {
                     // Regular cancellation, do nothing. The scope will always be cancelled below.
-                } catch (e: Throwable) {
+                } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
                     logcat(
                         TAG,
-                        LogPriority.ERROR
+                        LogPriority.ERROR,
                     ) { "BroadcastReceiver execution failed. ${e.asLog()}" }
                 } finally {
                     // Make sure the parent scope is cancelled in all cases. Nothing can be in the
@@ -92,7 +91,7 @@ internal class BookshelfInsertReceiver : BroadcastReceiver() {
                     // See b/257513022.
                     logcat(
                         TAG,
-                        LogPriority.ERROR
+                        LogPriority.ERROR,
                     ) { "Error thrown when trying to finish broadcast. ${e.asLog()}" }
                 }
             }
@@ -103,9 +102,7 @@ internal class BookshelfInsertReceiver : BroadcastReceiver() {
 private val TAG = BookshelfInsertReceiver::class.java.simpleName
 
 @Serializable
-internal data class InsertJson(
-    val bookshelf: List<SmbServerJson>,
-)
+internal data class InsertJson(val bookshelf: List<SmbServerJson>)
 
 @Serializable
 internal data class SmbServerJson(
@@ -117,11 +114,10 @@ internal data class SmbServerJson(
     val password: String,
     val path: String,
 ) {
-
     fun toModel() = SmbServer(
         displayName = displayName,
         host = host,
         port = port,
-        auth = Auth.UsernamePassword(domain, username, password)
+        auth = Auth.UsernamePassword(domain, username, password),
     )
 }

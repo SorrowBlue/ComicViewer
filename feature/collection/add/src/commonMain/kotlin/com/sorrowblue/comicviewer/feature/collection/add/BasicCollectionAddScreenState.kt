@@ -28,12 +28,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 internal interface BasicCollectionAddScreenState {
-
     val uiState: BasicCollectionAddScreenUiState
     val lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>
     val lazyListState: LazyListState
 
     fun onCollectionClick(collection: Collection, exist: Boolean)
+
     fun onClickCollectionSort(sort: CollectionSort)
 }
 
@@ -44,29 +44,27 @@ internal fun rememberBasicCollectionAddScreenState(
     path: String,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     lazyListState: LazyListState = rememberLazyListState(),
-): BasicCollectionAddScreenState {
-    return remember {
-        BasicCollectionAddScreenStateImpl(
-            bookshelfId = bookshelfId,
-            path = path,
-            coroutineScope = coroutineScope,
-            removeCollectionFileUseCase = context.removeCollectionFileUseCase,
-            addCollectionFileUseCase = context.addCollectionFileUseCase,
-            collectionSettingsUseCase = context.collectionSettingsUseCase,
+): BasicCollectionAddScreenState = remember {
+    BasicCollectionAddScreenStateImpl(
+        bookshelfId = bookshelfId,
+        path = path,
+        coroutineScope = coroutineScope,
+        removeCollectionFileUseCase = context.removeCollectionFileUseCase,
+        addCollectionFileUseCase = context.addCollectionFileUseCase,
+        collectionSettingsUseCase = context.collectionSettingsUseCase,
+    )
+}.apply {
+    this.coroutineScope = coroutineScope
+    this.lazyListState = lazyListState
+    this.lazyPagingItems = rememberPagingItems {
+        context.pagingCollectionExistUseCase(
+            PagingCollectionExistUseCase.Request(
+                pagingConfig = PagingConfig(20),
+                bookshelfId = bookshelfId,
+                path = path,
+                collectionType = CollectionType.Basic,
+            ),
         )
-    }.apply {
-        this.coroutineScope = coroutineScope
-        this.lazyListState = lazyListState
-        this.lazyPagingItems = rememberPagingItems {
-            context.pagingCollectionExistUseCase(
-                PagingCollectionExistUseCase.Request(
-                    pagingConfig = PagingConfig(20),
-                    bookshelfId = bookshelfId,
-                    path = path,
-                    collectionType = CollectionType.Basic,
-                )
-            )
-        }
     }
 }
 
@@ -78,17 +76,21 @@ private class BasicCollectionAddScreenStateImpl(
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,
 ) : BasicCollectionAddScreenState {
-
     override lateinit var lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>
     override lateinit var lazyListState: LazyListState
     override var uiState by mutableStateOf(BasicCollectionAddScreenUiState())
         private set
 
     init {
-        collectionSettingsUseCase.settings.map { it.recent }.distinctUntilChanged().onEach {
-            uiState =
-                uiState.copy(collectionSort = if (it) CollectionSort.Recent else CollectionSort.Created)
-        }.launchIn(coroutineScope)
+        collectionSettingsUseCase.settings
+            .map { it.recent }
+            .distinctUntilChanged()
+            .onEach {
+                uiState =
+                    uiState.copy(
+                        collectionSort = if (it) CollectionSort.Recent else CollectionSort.Created,
+                    )
+            }.launchIn(coroutineScope)
     }
 
     override fun onClickCollectionSort(sort: CollectionSort) {
@@ -108,9 +110,9 @@ private class BasicCollectionAddScreenStateImpl(
                         CollectionFile(
                             collection.id,
                             bookshelfId,
-                            path
-                        )
-                    )
+                            path,
+                        ),
+                    ),
                 )
             } else {
                 addCollectionFileUseCase(
@@ -118,9 +120,9 @@ private class BasicCollectionAddScreenStateImpl(
                         CollectionFile(
                             collection.id,
                             bookshelfId,
-                            path
-                        )
-                    )
+                            path,
+                        ),
+                    ),
                 )
             }
         }

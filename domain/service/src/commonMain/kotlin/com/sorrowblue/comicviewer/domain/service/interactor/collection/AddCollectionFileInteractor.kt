@@ -12,7 +12,6 @@ internal class AddCollectionFileInteractor(
     private val collectionLocalDataSource: CollectionLocalDataSource,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
 ) : AddCollectionFileUseCase() {
-
     override suspend fun run(request: Request): Resource<Unit, Error> {
         collectionFileLocalDataSource.add(request.file)
         collectionLocalDataSource.flow(request.file.id).first()?.let {

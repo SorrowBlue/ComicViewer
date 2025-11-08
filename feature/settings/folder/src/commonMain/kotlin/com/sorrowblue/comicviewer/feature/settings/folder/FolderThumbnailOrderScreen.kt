@@ -26,7 +26,7 @@ internal fun FolderThumbnailOrderScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_folderthumbnail_title)) }
+        title = { Text(text = stringResource(Res.string.settings_folder_folderthumbnail_title)) },
     ) {
         Column {
             FolderThumbnailOrder.entries.forEach { order ->
@@ -39,7 +39,7 @@ internal fun FolderThumbnailOrderScreen(
                     headlineContent = {
                         Text(text = stringResource(order.displayText))
                     },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
             }
         }

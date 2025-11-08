@@ -23,10 +23,11 @@ import kotlinx.coroutines.runBlocking
 
 sealed interface AuthStatus {
     data object Unknown : AuthStatus
+
     data class AuthRequired(val authed: Boolean) : AuthStatus
+
     data object NoAuthRequired : AuthStatus
 }
-
 
 @Scope
 annotation class RootScreenWrapperScope
@@ -51,7 +52,7 @@ internal fun rememberRootScreenWrapperState(): RootScreenWrapperState {
         RootScreenWrapperStateImpl(
             scope = coroutineScope,
             loadSettingsUseCase = context.loadSettingsUseCase,
-            manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
+            manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase,
         )
     }
 }
@@ -59,8 +60,11 @@ internal fun rememberRootScreenWrapperState(): RootScreenWrapperState {
 internal interface RootScreenWrapperState {
     val authStatus: AuthStatus
     val tutorialRequired: Boolean
+
     fun onAuthComplete()
+
     fun onStop()
+
     fun onTutorialComplete()
 }
 
@@ -70,18 +74,23 @@ private class RootScreenWrapperStateImpl(
     private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
 ) : RootScreenWrapperState {
-
     override var authStatus by mutableStateOf<AuthStatus>(AuthStatus.Unknown)
         private set
 
-    override var tutorialRequired by mutableStateOf(runBlocking { !loadSettingsUseCase.settings.first().doneTutorial })
+    override var tutorialRequired by mutableStateOf(
+        runBlocking { !loadSettingsUseCase.settings.first().doneTutorial },
+    )
         private set
 
     init {
-        loadSettingsUseCase.settings.mapLatest { it.doneTutorial }.distinctUntilChanged().onEach {
-            tutorialRequired = !it
-        }.launchIn(scope)
-        manageSecuritySettingsUseCase.settings.mapLatest { !it.password.isNullOrEmpty() }
+        loadSettingsUseCase.settings
+            .mapLatest { it.doneTutorial }
+            .distinctUntilChanged()
+            .onEach {
+                tutorialRequired = !it
+            }.launchIn(scope)
+        manageSecuritySettingsUseCase.settings
+            .mapLatest { !it.password.isNullOrEmpty() }
             .distinctUntilChanged()
             .onEach {
                 authStatus = if (it) {
@@ -98,7 +107,9 @@ private class RootScreenWrapperStateImpl(
 
     override fun onStop() {
         runBlocking {
-            if (authStatus is AuthStatus.AuthRequired && manageSecuritySettingsUseCase.settings.first().lockOnBackground) {
+            if (authStatus is AuthStatus.AuthRequired &&
+                manageSecuritySettingsUseCase.settings.first().lockOnBackground
+            ) {
                 authStatus = AuthStatus.AuthRequired(authed = false)
             }
         }

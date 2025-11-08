@@ -49,7 +49,7 @@ internal fun BasicCollectionContent(
         Column(
             modifier = Modifier,
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             header()
             Image(
@@ -57,25 +57,25 @@ internal fun BasicCollectionContent(
                 contentDescription = null,
                 modifier = Modifier
                     .sizeIn(maxWidth = 120.dp, maxHeight = 120.dp)
-                    .padding(top = ComicTheme.dimension.padding)
+                    .padding(top = ComicTheme.dimension.padding),
             )
             Text(
                 text = stringResource(Res.string.collection_editor_label_no_books),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
-                    .padding(top = ComicTheme.dimension.padding)
+                    .padding(top = ComicTheme.dimension.padding),
             )
         }
     } else {
         LazyColumn(
             state = state,
             contentPadding = contentPadding,
-            modifier = Modifier
+            modifier = Modifier,
         ) {
             item { header() }
             items(
                 lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" }
+                key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" },
             ) {
                 val item = lazyPagingItems[it]
                 if (item != null) {
@@ -85,7 +85,7 @@ internal fun BasicCollectionContent(
                             AsyncImage(
                                 model = FileThumbnail.from(item),
                                 null,
-                                Modifier.size(56.dp)
+                                Modifier.size(56.dp),
                             )
                         },
                         trailingContent = {
@@ -94,7 +94,7 @@ internal fun BasicCollectionContent(
                             }
                         },
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                        modifier = Modifier.animateItem()
+                        modifier = Modifier.animateItem(),
                     )
                 }
             }

@@ -14,7 +14,6 @@ annotation class BasicCollectionCreateScreenScope
 
 @GraphExtension(BasicCollectionCreateScreenScope::class)
 interface BasicCollectionCreateScreenContext : ScreenContext {
-
     val createCollectionUseCase: CreateCollectionUseCase
     val addCollectionFileUseCase: AddCollectionFileUseCase
     val notificationManager: NotificationManager

@@ -69,16 +69,18 @@ internal fun CompactListPane(
                 title = { Text(text = stringResource(Res.string.settings_title)) },
                 navigationIcon = { CloseIconButton(onBackClick) },
                 scrollBehavior = scrollBehavior,
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                ),
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         LazyColumn(
             state = lazyListState,
             contentPadding = contentPadding,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             items(settingsList) { settings ->
                 ListItem(
@@ -86,13 +88,13 @@ internal fun CompactListPane(
                     leadingContent = {
                         Icon(
                             imageVector = settings.icon,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     modifier = Modifier.combinedClickable(
                         onClick = { onSettingsClick(settings) },
-                        onLongClick = { onSettingsLongClick(settings) }
-                    )
+                        onLongClick = { onSettingsLongClick(settings) },
+                    ),
                 )
             }
         }
@@ -112,21 +114,23 @@ internal fun ListPane(
     PermanentDrawerSheet(
         modifier = modifier,
         drawerContainerColor = ComicTheme.colorScheme.surfaceContainerHighest,
-        windowInsets = WindowInsets(0)
+        windowInsets = WindowInsets(0),
     ) {
         LazyColumn(
             state = lazyListState,
-            contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
-                .asPaddingValues()
+            contentPadding = WindowInsets.safeDrawing
+                .only(
+                    WindowInsetsSides.Start + WindowInsetsSides.Vertical,
+                ).asPaddingValues(),
         ) {
             item {
                 TopAppBar(
                     title = { Text(text = stringResource(Res.string.settings_title)) },
                     navigationIcon = { CloseIconButton(onBackClick) },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = ComicTheme.colorScheme.surfaceContainerHighest
+                        containerColor = ComicTheme.colorScheme.surfaceContainerHighest,
                     ),
-                    windowInsets = WindowInsets(0)
+                    windowInsets = WindowInsets(0),
                 )
             }
             items(settingsList) { settings2 ->
@@ -137,7 +141,7 @@ internal fun ListPane(
                     onLongClick = { onSettingsLongClick(settings2) },
                     selected = currentSettings == settings2,
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 16.dp),
                 )
             }
         }
@@ -169,17 +173,16 @@ fun NavigationDrawerItem(
                 indication = ripple(
                     bounded = true,
                     radius = Dp.Unspecified,
-                    color = Color.Unspecified
+                    color = Color.Unspecified,
                 ),
-                onClick = { }
-            )
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+                onClick = { },
+            ).combinedClickable(onClick = onClick, onLongClick = onLongClick),
         shape = shape,
         color = colors.containerColor(selected).value,
     ) {
         Row(
             Modifier.padding(start = 16.dp, end = 24.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             if (icon != null) {
                 val iconColor = colors.iconColor(selected).value

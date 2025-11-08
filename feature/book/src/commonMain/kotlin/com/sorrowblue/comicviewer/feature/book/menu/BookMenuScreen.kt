@@ -27,15 +27,13 @@ internal data class BookMenuScreenUiState(
 
 @Composable
 context(context: BookMenuScreenContext)
-internal fun BookMenuScreenRoot(
-    onDismissRequest: () -> Unit,
-) {
+internal fun BookMenuScreenRoot(onDismissRequest: () -> Unit) {
     val state = rememberBookMenuScreenState()
     BookMenuScreen(
         uiState = state.uiState,
         onDismissRequest = onDismissRequest,
         onPageFormatChange = state::onPageFormatChange,
-        onPageScaleChange = state::onPageScaleChange
+        onPageScaleChange = state::onPageScaleChange,
     )
 }
 
@@ -48,7 +46,7 @@ private fun BookMenuScreen(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        contentWindowInsets = { PaddingValues().asWindowInsets() }
+        contentWindowInsets = { PaddingValues().asWindowInsets() },
     ) {
         ExposedDropdownMenu(
             label = stringResource(Res.string.book_label_display_format),

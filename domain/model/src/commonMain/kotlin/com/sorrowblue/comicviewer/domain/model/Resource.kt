@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.domain.model
 
 sealed interface Resource<out D, out E> {
-
     class Success<D>(val data: D) : Resource<D, Nothing>
 
     class Error<out E>(val error: E) : Resource<Nothing, E>
@@ -10,6 +9,7 @@ sealed interface Resource<out D, out E> {
     interface IError
 
     interface AppError : IError
+
     class SystemError(val throwable: Throwable) : IError
 }
 
@@ -19,14 +19,9 @@ val Resource<*, *>.isSuccess
         is Resource.Success -> true
     }
 
-inline fun <D, E, R> Resource<D, E>.fold(
-    onSuccess: (D) -> R,
-    onError: (E) -> R,
-): R {
-    return when (this) {
-        is Resource.Error -> onError(error)
-        is Resource.Success -> onSuccess(data)
-    }
+inline fun <D, E, R> Resource<D, E>.fold(onSuccess: (D) -> R, onError: (E) -> R): R = when (this) {
+    is Resource.Error -> onError(error)
+    is Resource.Success -> onSuccess(data)
 }
 
 inline fun <D, E> Resource<D, E>.onError(onError: (E) -> Unit): Resource<D, E> {

@@ -7,9 +7,9 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 
-internal class UpdateFileEntityMinimumWithSortIndex(
+internal data class UpdateFileEntityMinimumWithSortIndex(
     val path: String,
-    @ColumnInfo(name = FileEntity.BOOKSHELF_ID) val bookshelfId: BookshelfId,
+    @ColumnInfo(name = FileEntity.BookshelfId) val bookshelfId: BookshelfId,
     val name: String,
     val parent: String,
     val size: Long,

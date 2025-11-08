@@ -25,7 +25,7 @@ internal fun TutorialBottomBar(pageState: PagerState, onNextClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(ComicTheme.dimension.margin)
+            .padding(ComicTheme.dimension.margin),
     ) {
         HorizontalPagerIndicator(
             pagerState = pageState,

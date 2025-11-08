@@ -10,11 +10,7 @@ import kotlin.io.path.createDirectories
 import logcat.logcat
 
 @Inject
-internal actual class DatabaseHelper actual constructor(
-    @Suppress(
-        "UnusedPrivateProperty",
-    ) private val context: PlatformContext,
-) {
+internal actual class DatabaseHelper actual constructor(private val context: PlatformContext) {
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {
         val dbPath = context.filesDir.resolve("database").also {
             it.createDirectories()
@@ -22,7 +18,7 @@ internal actual class DatabaseHelper actual constructor(
         }
         return Room
             .databaseBuilder<ComicViewerDatabase>(
-                name = dbPath.resolve(DATABASE_NAME).absolutePathString(),
+                name = dbPath.resolve(DatabaseName).absolutePathString(),
             ).setDriver(BundledSQLiteDriver())
     }
 }

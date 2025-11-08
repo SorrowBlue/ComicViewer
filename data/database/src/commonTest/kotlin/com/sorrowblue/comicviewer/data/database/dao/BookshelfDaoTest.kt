@@ -19,7 +19,7 @@ import kotlinx.coroutines.test.runTest
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 internal class BookshelfDaoTest : DatabaseTest() {
-    private val dao: BookshelfDao get() = db.bookshelfDao()
+    private val dao: BookshelfDao get() = database.bookshelfDao()
 
     @Test
     fun upsert_and_flow() = runTest {
@@ -82,7 +82,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
         val bookshelfList = List(100) {
             factory.createBookshelfEntity(it + 1, deleted = it % 2 == 0)
         }
-        val fileDao = db.fileDao()
+        val fileDao = database.fileDao()
         bookshelfList.forEach {
             dao.upsert(it)
             fileDao.upsert(factory.createFileEntity(1, it.id, ""))

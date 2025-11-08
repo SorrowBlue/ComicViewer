@@ -28,7 +28,7 @@ internal actual fun PinDrawable(
                 ComicTheme.colorScheme.onSurfaceVariant
             } else {
                 ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-            }
-        )
+            },
+        ),
     )
 }

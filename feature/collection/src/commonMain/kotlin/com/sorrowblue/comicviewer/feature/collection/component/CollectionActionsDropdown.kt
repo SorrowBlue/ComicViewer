@@ -18,10 +18,7 @@ import comicviewer.feature.collection.generated.resources.collection_label_edit
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun CollectionActionsDropdown(
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit,
-) {
+internal fun CollectionActionsDropdown(onEditClick: () -> Unit, onDeleteClick: () -> Unit) {
     Box {
         var expanded by rememberSaveable { mutableStateOf(false) }
         IconButton(onClick = { expanded = !expanded }) {
@@ -29,7 +26,7 @@ internal fun CollectionActionsDropdown(
         }
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.collection_label_edit)) },
@@ -37,7 +34,7 @@ internal fun CollectionActionsDropdown(
                 onClick = {
                     expanded = false
                     onEditClick()
-                }
+                },
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.collection_label_delete)) },
@@ -45,7 +42,7 @@ internal fun CollectionActionsDropdown(
                 onClick = {
                     expanded = false
                     onDeleteClick()
-                }
+                },
             )
         }
     }

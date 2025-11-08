@@ -9,7 +9,6 @@ import dev.zacsweers.metro.Inject
 internal class ManageSecuritySettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageSecuritySettingsUseCase {
-
     override val settings = datastoreDataSource.securitySettings
 
     override suspend fun edit(action: (SecuritySettings) -> SecuritySettings) {

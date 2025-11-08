@@ -9,7 +9,6 @@ import dev.zacsweers.metro.Inject
 internal class ManageViewerOperationSettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageViewerOperationSettingsUseCase {
-
     override val settings = datastoreDataSource.viewerOperationSettings
 
     override suspend fun edit(action: (ViewerOperationSettings) -> ViewerOperationSettings) {

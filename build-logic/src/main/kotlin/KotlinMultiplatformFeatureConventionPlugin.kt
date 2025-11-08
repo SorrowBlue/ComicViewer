@@ -7,7 +7,6 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {

@@ -15,15 +15,13 @@ internal class PagingQueryFileInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : PagingQueryFileUseCase() {
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun run(request: Request): Flow<PagingData<File>> {
-        return bookshelfLocalDataSource.flow(request.bookshelfId).flatMapLatest {
+    override fun run(request: Request): Flow<PagingData<File>> =
+        bookshelfLocalDataSource.flow(request.bookshelfId).flatMapLatest {
             fileLocalDataSource.pagingDataFlow(
                 request.pagingConfig,
                 request.bookshelfId,
-                request.searchCondition
+                request.searchCondition,
             )
         }
-    }
 }

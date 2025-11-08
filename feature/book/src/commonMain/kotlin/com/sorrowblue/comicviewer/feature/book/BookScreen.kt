@@ -27,6 +27,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -46,14 +47,12 @@ import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Plugin
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
 import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
 internal sealed interface BookScreenUiState {
-
     data class Loading(val name: String) : BookScreenUiState
 
     data class Error(val name: String) : BookScreenUiState
@@ -83,7 +82,7 @@ fun BookScreen(
         bookshelfId = bookshelfId,
         path = path,
         name = name,
-        collectionId = collectionId
+        collectionId = collectionId,
     )
     var error by remember { mutableStateOf("") }
     DisposableEffect(Unit) {
@@ -102,33 +101,35 @@ fun BookScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Icon(
                 modifier = Modifier.size(96.dp),
                 painter = rememberVectorPainter(image = ComicIcons.Plugin),
-                contentDescription = null
+                contentDescription = null,
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
             Text(
                 text = error,
-                style = ComicTheme.typography.bodyLarge
+                style = ComicTheme.typography.bodyLarge,
             )
         }
         return
     }
 
     with(LocalAppState.current) {
+        val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
         Surface(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .sharedBounds(
-                    rememberSharedContentState("${bookshelfId}:${path}"),
+                    rememberSharedContentState("$bookshelfId:$path"),
                     LocalNavAnimatedContentScope.current,
                     enter = materialFadeThroughIn(),
                     exit = materialFadeThroughOut(),
-                    boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                    boundsTransform = { _, _ -> boundsTransform },
                     resizeMode = scaleToBounds(ContentScale.Fit, Center),
-                )
+                ),
         ) {
             when (val uiState = prepareScreenState.uiState) {
                 is BookScreenUiState.Loading ->
@@ -179,12 +180,12 @@ internal fun BookScreen(
             AnimatedVisibility(
                 visible = uiState.isVisibleTooltip,
                 enter = slideInVertically { -it },
-                exit = slideOutVertically { -it }
+                exit = slideOutVertically { -it },
             ) {
                 BookAppBar(
                     title = uiState.book.name,
                     onBackClick = onBackClick,
-                    onSettingsClick = onSettingsClick
+                    onSettingsClick = onSettingsClick,
                 )
             }
         },
@@ -192,16 +193,16 @@ internal fun BookScreen(
             AnimatedVisibility(
                 visible = uiState.isVisibleTooltip,
                 enter = slideInVertically { it },
-                exit = slideOutVertically { it }
+                exit = slideOutVertically { it },
             ) {
                 BookBottomBar(
                     pageRange = 1f..uiState.book.totalPageCount.toFloat(),
                     currentPage = pagerState.currentPage,
-                    onPageChange = onPageChange
+                    onPageChange = onPageChange,
                 )
             }
         },
-        contentWindowInsets = WindowInsets.safeDrawing
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { _ ->
         BookSheet(
             uiState = uiState.bookSheetUiState,
@@ -210,7 +211,7 @@ internal fun BookScreen(
             onClick = onContainerClick,
             onLongClick = onContainerLongClick,
             onNextBookClick = onNextBookClick,
-            onPageLoad = onPageLoad
+            onPageLoad = onPageLoad,
         )
     }
 }

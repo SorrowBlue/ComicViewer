@@ -26,12 +26,14 @@ fun ComicTheme(
         mutableStateOf(
             when {
                 windowSizeClass.isWidthAtLeastBreakpoint(
-                    WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND
+                    WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
                 ) -> expandedDimension
 
-                windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> mediumDimension
+                windowSizeClass.isWidthAtLeastBreakpoint(
+                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
+                ) -> mediumDimension
                 else -> compactDimension
-            }
+            },
         )
     }
     if (LocalInspectionMode.current) {
@@ -39,7 +41,7 @@ fun ComicTheme(
             MaterialExpressiveTheme(
                 colorScheme = colorScheme,
                 typography = AppTypography,
-                content = content
+                content = content,
             )
         }
     } else {
@@ -47,7 +49,7 @@ fun ComicTheme(
             MaterialExpressiveTheme(
                 colorScheme = colorScheme,
                 typography = AppTypography,
-                content = content
+                content = content,
             )
         }
     }

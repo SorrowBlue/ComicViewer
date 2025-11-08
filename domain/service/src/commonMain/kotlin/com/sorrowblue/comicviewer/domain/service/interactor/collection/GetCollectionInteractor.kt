@@ -9,17 +9,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @Inject
-internal class GetCollectionInteractor(
-    private val dataSource: CollectionLocalDataSource,
-) : GetCollectionUseCase() {
-
-    override fun run(request: Request): Flow<Resource<Collection, Error>> {
-        return dataSource.flow(request.id).map {
+internal class GetCollectionInteractor(private val dataSource: CollectionLocalDataSource) :
+    GetCollectionUseCase() {
+    override fun run(request: Request): Flow<Resource<Collection, Error>> =
+        dataSource.flow(request.id).map {
             if (it == null) {
                 Resource.Error(Error.NotFound)
             } else {
                 Resource.Success(it)
             }
         }
-    }
 }

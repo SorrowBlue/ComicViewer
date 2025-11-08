@@ -27,15 +27,14 @@ internal class GetBookInteractor(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val folderSettingsInteractor: ManageFolderSettingsInteractor,
 ) : GetBookUseCase() {
-    override fun run(request: Request): Flow<Resource<Book, Error>> {
-        return bookshelfLocalDataSource.flow(request.bookshelfId).map {
+    override fun run(request: Request): Flow<Resource<Book, Error>> =
+        bookshelfLocalDataSource.flow(request.bookshelfId).map {
             if (it != null) {
                 fetch(it, request.path)
             } else {
                 Resource.Error(Error.NotFound)
             }
         }
-    }
 
     private suspend fun fetch(bookshelf: Bookshelf, path: String): Resource<Book, Error> {
         logcat { "fetch(): bookshelf=$bookshelf, path=$path" }
@@ -63,7 +62,7 @@ internal class GetBookInteractor(
                         Resource.Error(Error.ReportedSystemError)
                     }
                 }
-            }
+            },
         )
     }
 
@@ -72,31 +71,34 @@ internal class GetBookInteractor(
         book: Book,
     ): Resource<Book, Error> {
         logcat { "updateTotalPageCount()" }
-        return kotlin.runCatching {
-            datSource.fileReader(book)?.use {
-                it.pageCount()
-            }?.let { totalPageCount ->
-                logcat { "totalPageCount: $totalPageCount" }
-                when (book) {
-                    is BookFile -> book.copy(totalPageCount = totalPageCount)
-                    is BookFolder -> book.copy(totalPageCount = totalPageCount)
-                }.also {
-                    fileLocalDataSource.addUpdate(it)
-                }
-            }
-        }.fold(
-            onSuccess = {
-                if (it != null) {
-                    Resource.Success(it)
-                } else {
-                    Resource.Error(Error.NotFound)
-                }
-            },
-            onFailure = {
-                logcat { it.asLog() }
-                // TODO Report Error
-                Resource.Error(Error.ReportedSystemError)
-            }
-        )
+        return kotlin
+            .runCatching {
+                datSource
+                    .fileReader(book)
+                    ?.use {
+                        it.pageCount()
+                    }?.let { totalPageCount ->
+                        logcat { "totalPageCount: $totalPageCount" }
+                        when (book) {
+                            is BookFile -> book.copy(totalPageCount = totalPageCount)
+                            is BookFolder -> book.copy(totalPageCount = totalPageCount)
+                        }.also {
+                            fileLocalDataSource.addUpdate(it)
+                        }
+                    }
+            }.fold(
+                onSuccess = {
+                    if (it != null) {
+                        Resource.Success(it)
+                    } else {
+                        Resource.Error(Error.NotFound)
+                    }
+                },
+                onFailure = {
+                    logcat { it.asLog() }
+                    // TODO Report Error
+                    Resource.Error(Error.ReportedSystemError)
+                },
+            )
     }
 }

@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 
 interface BookshelfEditDialogState {
     fun showSelectionDialog()
+
     fun showEditorDialog(bookshelfId: BookshelfId, bookshelfType: BookshelfType)
 }
 
@@ -27,21 +28,21 @@ internal interface InternalBookshelfEditDialogState : BookshelfEditDialogState {
 }
 
 @Composable
-fun rememberBookshelfEditDialogState(): BookshelfEditDialogState {
-    return rememberSaveable(saver = BookshelfEditDialogStateImpl.Saver) {
+fun rememberBookshelfEditDialogState(): BookshelfEditDialogState =
+    rememberSaveable(saver = BookshelfEditDialogStateImpl.Saver) {
         BookshelfEditDialogStateImpl()
     }
-}
 
 private class BookshelfEditDialogStateImpl : InternalBookshelfEditDialogState {
     companion object {
         val Saver = kSerializableSaver<BookshelfEditDialogStateImpl, BookshelfEditDialogUiState>(
             save = { it.uiState },
-            restore = { BookshelfEditDialogStateImpl().apply { uiState = it } }
+            restore = { BookshelfEditDialogStateImpl().apply { uiState = it } },
         )
     }
 
     override var uiState by mutableStateOf(BookshelfEditDialogUiState())
+
     override fun showSelectionDialog() {
         uiState = uiState.copy(type = BookshelfEditDialogType.Selection)
     }
@@ -49,8 +50,8 @@ private class BookshelfEditDialogStateImpl : InternalBookshelfEditDialogState {
     override fun showRegisterDialog(bookshelfType: BookshelfType) {
         uiState = uiState.copy(
             type = BookshelfEditDialogType.Editor(
-                BookshelfEditorType.Register(bookshelfType)
-            )
+                BookshelfEditorType.Register(bookshelfType),
+            ),
         )
     }
 
@@ -69,8 +70,8 @@ private class BookshelfEditDialogStateImpl : InternalBookshelfEditDialogState {
     override fun showEditorDialog(bookshelfId: BookshelfId, bookshelfType: BookshelfType) {
         uiState = uiState.copy(
             type = BookshelfEditDialogType.Editor(
-                BookshelfEditorType.Edit(bookshelfId, bookshelfType)
-            )
+                BookshelfEditorType.Edit(bookshelfId, bookshelfType),
+            ),
         )
     }
 }

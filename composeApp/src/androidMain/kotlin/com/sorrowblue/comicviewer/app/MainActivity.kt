@@ -22,14 +22,13 @@ import logcat.logcat
 
 /** Main activity */
 internal class MainActivity : ComponentActivity() {
-
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         logcat { "onCreate" }
         installSplashScreen().apply {
             enableEdgeToEdge(
-                navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+                navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
             )
             super.onCreate(savedInstanceState)
             setOnExitAnimationListener(SplashScreenViewProvider::startShrinkingAnimation)
@@ -37,9 +36,13 @@ internal class MainActivity : ComponentActivity() {
         }
 
         val bookData = if (intent.action == Intent.ACTION_VIEW &&
-            (intent.categories == null || intent.hasCategory(Intent.CATEGORY_BROWSABLE) || intent.hasCategory(
-                Intent.CATEGORY_DEFAULT
-            )) &&
+            (
+                intent.categories == null || intent.hasCategory(
+                    Intent.CATEGORY_BROWSABLE,
+                ) || intent.hasCategory(
+                    Intent.CATEGORY_DEFAULT,
+                )
+                ) &&
             intent.scheme in listOf("file", "content") &&
             intent.type in listOf("application/pdf", "application/zip")
         ) {
@@ -47,7 +50,6 @@ internal class MainActivity : ComponentActivity() {
         } else {
             null
         }
-
 
         @OptIn(ExperimentalComposeUiApi::class)
         ComposeUiFlags.isSemanticAutofillEnabled = true
@@ -63,17 +65,37 @@ internal class MainActivity : ComponentActivity() {
 /** Start shrinking animation */
 private fun SplashScreenViewProvider.startShrinkingAnimation() {
     runCatching {
-        ObjectAnimator.ofFloat(view, View.SCALE_X, 1f, 0f).apply {
-            interpolator = AnticipateInterpolator()
-            doOnEnd { remove() }
-            duration =
-                if (iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis < 0) 300 else iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
-        }.start()
-        ObjectAnimator.ofFloat(view, View.SCALE_Y, 1f, 0f).apply {
-            interpolator = AnticipateInterpolator()
-            doOnEnd { remove() }
-            duration =
-                if (iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis < 0) 300 else iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
-        }.start()
+        ObjectAnimator
+            .ofFloat(view, View.SCALE_X, 1f, 0f)
+            .apply {
+                interpolator = AnticipateInterpolator()
+                doOnEnd { remove() }
+                duration =
+                    if (iconAnimationDurationMillis - System.currentTimeMillis() +
+                        iconAnimationStartMillis <
+                        0
+                    ) {
+                        300
+                    } else {
+                        iconAnimationDurationMillis - System.currentTimeMillis() +
+                            iconAnimationStartMillis
+                    }
+            }.start()
+        ObjectAnimator
+            .ofFloat(view, View.SCALE_Y, 1f, 0f)
+            .apply {
+                interpolator = AnticipateInterpolator()
+                doOnEnd { remove() }
+                duration =
+                    if (iconAnimationDurationMillis - System.currentTimeMillis() +
+                        iconAnimationStartMillis <
+                        0
+                    ) {
+                        300
+                    } else {
+                        iconAnimationDurationMillis - System.currentTimeMillis() +
+                            iconAnimationStartMillis
+                    }
+            }.start()
     }.onFailure { remove() }
 }

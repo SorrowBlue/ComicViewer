@@ -17,12 +17,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
@@ -66,14 +60,13 @@ internal fun rememberComicViewerAppState(
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     scope: CoroutineScope = rememberCoroutineScope(),
     mainViewModel: MainViewModel = viewModel(),
-    navController: NavHostController = rememberNavController(),
 ): ComicViewerAppState {
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
-        currentWindowAdaptiveInfo()
+        currentWindowAdaptiveInfo(),
     )
     val comicViewerAppState = rememberListSaveable(
         save = { listOf(it.isNavigationRestored) },
-        restore = { isNavigationRestored = it[0] as Boolean }
+        restore = { isNavigationRestored = it[0] as Boolean },
     ) {
         ComicViewerAppStateImpl(
             lifecycle = lifecycle,
@@ -87,7 +80,6 @@ internal fun rememberComicViewerAppState(
                 mainViewModel.shouldKeepSplash.value = false
                 mainViewModel.isInitialized.value = true
             },
-            navController = navController,
         )
     }
     comicViewerAppState.navigationSuiteType = navigationSuiteType
@@ -96,7 +88,6 @@ internal fun rememberComicViewerAppState(
 
 internal interface ComicViewerAppState : AppState {
 
-    val navController: NavHostController
     fun onNavigationHistoryRestore()
 }
 
@@ -110,9 +101,8 @@ private class ComicViewerAppStateImpl(
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val completeInit: () -> Unit,
-    override val navController: NavHostController,
-) : ComicViewerAppState, SharedTransitionScope by sharedTransitionScope {
-
+) : ComicViewerAppState,
+    SharedTransitionScope by sharedTransitionScope {
     override val navItems: SnapshotStateList<AppNavItem> = mutableStateListOf()
 
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)
@@ -123,18 +113,23 @@ private class ComicViewerAppStateImpl(
         require(navItem is AppNavItem)
         val navGraph = navItem.navGraph
         logcat { "Clicked navItem.navGraph = $navGraph" }
-        if (navController.currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(navGraph::class) } != true) {
-            navController.navigate(
-                navGraph,
-                navOptions {
-                    popUpTo(navController.graph.findStartDestination().route!!) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            )
-        }
+//        if (navController.currentBackStackEntry?.destination?.hierarchy?.any {
+//                it.hasRoute(
+//                    navGraph::class,
+//                )
+//            } != true
+//        ) {
+//            navController.navigate(
+//                navGraph,
+//                navOptions {
+//                    popUpTo(navController.graph.findStartDestination().route!!) {
+//                        saveState = true
+//                    }
+//                    launchSingleTop = true
+//                    restoreState = true
+//                },
+//            )
+//        }
     }
 
     var isNavigationRestored by mutableStateOf(false)
@@ -153,9 +148,8 @@ private class ComicViewerAppStateImpl(
         }
     }
 
-    private fun restoreNavigation(): Job {
-        return scope.launch {
-            val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
+    private fun restoreNavigation(): Job = scope.launch {
+        val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
 //            navController.navigate(
 //                BookshelfNavGraph,
 //                navOptions {
@@ -164,12 +158,12 @@ private class ComicViewerAppStateImpl(
 //                    }
 //                }
 //            )
-            if (history?.folderList.isNullOrEmpty()) {
-                completeRestoreHistory()
-            } else {
-                val (folderList, book) = history.value
-                val bookshelfId = folderList.first().bookshelfId
-                if (folderList.size == 1) {
+        if (history?.folderList.isNullOrEmpty()) {
+            completeRestoreHistory()
+        } else {
+            val (folderList, book) = history.value
+            val bookshelfId = folderList.first().bookshelfId
+            if (folderList.size == 1) {
 //                    navController.navigate(
 //                        BookshelfFolder(
 //                            bookshelfId = bookshelfId,
@@ -177,10 +171,10 @@ private class ComicViewerAppStateImpl(
 //                            restorePath = book.path
 //                        )
 //                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                    }
-                } else {
+                logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                    "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
+                }
+            } else {
 //                    navController.navigate(
 //                        BookshelfFolder(
 //                            bookshelfId = bookshelfId,
@@ -188,10 +182,10 @@ private class ComicViewerAppStateImpl(
 //                            restorePath = null
 //                        )
 //                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                    }
-                    folderList.drop(1).dropLast(1).forEach { folder ->
+                logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                    "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
+                }
+                folderList.drop(1).dropLast(1).forEach { folder ->
 //                        navController.navigate(
 //                            BookshelfFolder(
 //                                bookshelfId = bookshelfId,
@@ -199,10 +193,10 @@ private class ComicViewerAppStateImpl(
 //                                restorePath = null
 //                            )
 //                        )
-                        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                            "-> folder(${folder.path})"
-                        }
+                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                        "-> folder(${folder.path})"
                     }
+                }
 //                    navController.navigate(
 //                        BookshelfFolder(
 //                            bookshelfId = bookshelfId,
@@ -210,9 +204,8 @@ private class ComicViewerAppStateImpl(
 //                            restorePath = book.path
 //                        )
 //                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "-> folder${folderList.last().path}, ${book.path}"
-                    }
+                logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                    "-> folder${folderList.last().path}, ${book.path}"
                 }
             }
         }

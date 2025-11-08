@@ -8,13 +8,11 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Scope
 
-
 @Scope
 annotation class FolderSettingsScreenScope
 
 @GraphExtension(FolderSettingsScreenScope::class)
 interface FolderSettingsScreenContext : ScreenContext {
-
     val manageFolderSettingsUseCase: ManageFolderSettingsUseCase
     val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
 

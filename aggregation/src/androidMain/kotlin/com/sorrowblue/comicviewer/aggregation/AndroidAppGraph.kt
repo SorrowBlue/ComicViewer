@@ -20,7 +20,6 @@ interface AndroidAppGraph :
     CoilGraph.Factory,
     ReaderDocumentContext,
     LocaleGraph {
-
     @DependencyGraph.Factory
     fun interface Factory {
         fun createAndroidAppGraph(

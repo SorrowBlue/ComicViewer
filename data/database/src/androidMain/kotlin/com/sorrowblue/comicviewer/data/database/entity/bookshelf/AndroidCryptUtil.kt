@@ -5,7 +5,6 @@ import android.security.keystore.KeyProperties
 import android.util.Base64
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.Binds
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
 import java.security.KeyPairGenerator
@@ -14,17 +13,15 @@ import javax.crypto.Cipher
 
 private const val PROVIDER = "AndroidKeyStore"
 
-private const val CIPHER_TRANSFORMATION =
+private const val CiperTransformation =
     "${KeyProperties.KEY_ALGORITHM_RSA}/${KeyProperties.BLOCK_MODE_ECB}/${KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1}"
 
 @ContributesTo(DataScope::class)
 interface AndroidDatabaseBindings {
     @Binds
-    @Suppress("UnusedPrivateProperty")
     private val AndroidCryptUtil.bind: CryptUtil get() = this
 }
 
-@ContributesBinding(DataScope::class)
 @Inject
 internal class AndroidCryptUtil : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String? {
@@ -33,7 +30,7 @@ internal class AndroidCryptUtil : CryptUtil {
         if (!keyStore.containsAlias(alias)) {
             return null
         }
-        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val cipher = Cipher.getInstance(CiperTransformation)
         cipher.init(Cipher.DECRYPT_MODE, keyStore.getKey(alias, null))
         val bytes = Base64.decode(encryptedText, Base64.URL_SAFE)
         val b = cipher.doFinal(bytes)
@@ -49,7 +46,7 @@ internal class AndroidCryptUtil : CryptUtil {
             keyPairGenerator.initialize(createKeyPairGeneratorSpec(alias))
             keyPairGenerator.generateKeyPair()
         }
-        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val cipher = Cipher.getInstance(CiperTransformation)
         cipher.init(Cipher.ENCRYPT_MODE, keyStore.getCertificate(alias).publicKey)
         val bytes = cipher.doFinal(text.toByteArray(Charsets.UTF_8))
         return Base64.encodeToString(bytes, Base64.URL_SAFE)

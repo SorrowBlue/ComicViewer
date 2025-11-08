@@ -43,17 +43,17 @@ internal fun rememberSmartCollectionCreateScreenState(
     val formState = rememberFormState(
         initialValue = SmartCollectionForm(
             bookshelfId = bookshelfId,
-            searchCondition = searchCondition
+            searchCondition = searchCondition,
         ),
         saver = kSerializableSaver(),
-        policy = FormPolicy(FormOptions(false))
+        policy = FormPolicy(FormOptions(false)),
     )
     return remember {
         SmartCollectionCreateScreenStateImpl(
             coroutineScope = coroutineScope,
             flowBookshelfListUseCase = context.flowBookshelfListUseCase,
             createCollectionUseCase = context.createCollectionUseCase,
-            formState = formState
+            formState = formState,
         )
     }.apply {
         this.coroutineScope = coroutineScope
@@ -68,7 +68,6 @@ private class SmartCollectionCreateScreenStateImpl(
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
     private val createCollectionUseCase: CreateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
-
     override lateinit var form: Form<SmartCollectionForm>
     override val event = EventFlow<SmartCollectionEditorScreenStateEvent>()
     override var uiState by mutableStateOf(SmartCollectionEditorScreenUiState())
@@ -82,14 +81,16 @@ private class SmartCollectionCreateScreenStateImpl(
                         bookshelf = buildMap {
                             put(null, getString(Res.string.collection_editor_label_all_bookshelf))
                             putAll(list.map { it.id to it.displayName })
-                        }
+                        },
                     )
                 },
                 onError = {
                     formState.setError(
-                        BookshelfField to FieldError(getString(Res.string.collection_editor_error_not_get_bookshelf))
+                        BookshelfField to FieldError(
+                            getString(Res.string.collection_editor_error_not_get_bookshelf),
+                        ),
                     )
-                }
+                },
             )
             uiState = uiState.copy(enabledForm = true)
         }
@@ -102,9 +103,9 @@ private class SmartCollectionCreateScreenStateImpl(
                     SmartCollection(
                         formData.name,
                         formData.bookshelfId,
-                        formData.searchCondition
-                    )
-                )
+                        formData.searchCondition,
+                    ),
+                ),
             )
             delay(1000)
             event.emit(SmartCollectionEditorScreenStateEvent.Complete)

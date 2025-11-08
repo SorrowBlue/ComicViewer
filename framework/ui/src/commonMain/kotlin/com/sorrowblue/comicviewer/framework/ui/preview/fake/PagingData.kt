@@ -12,8 +12,8 @@ fun <T : Any> PagingData.Companion.flowEmptyData() = MutableStateFlow(
             refresh = LoadState.NotLoading(true),
             append = LoadState.NotLoading(true),
             prepend = LoadState.NotLoading(true),
-        )
-    )
+        ),
+    ),
 )
 
 fun <T : Any> PagingData.Companion.flowLoadingData() = MutableStateFlow(
@@ -21,11 +21,10 @@ fun <T : Any> PagingData.Companion.flowLoadingData() = MutableStateFlow(
         sourceLoadStates = LoadStates(
             LoadState.Loading,
             LoadState.NotLoading(false),
-            LoadState.NotLoading(false)
-        )
-    )
+            LoadState.NotLoading(false),
+        ),
+    ),
 )
 
-fun <T : Any> PagingData.Companion.flowData(size: Int = 20, init: (Int) -> T): Flow<PagingData<T>> {
-    return MutableStateFlow(from(data = List(size, init)))
-}
+fun <T : Any> PagingData.Companion.flowData(size: Int = 20, init: (Int) -> T): Flow<PagingData<T>> =
+    MutableStateFlow(from(data = List(size, init)))

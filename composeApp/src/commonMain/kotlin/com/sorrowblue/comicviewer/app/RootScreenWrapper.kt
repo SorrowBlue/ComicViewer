@@ -42,7 +42,12 @@ internal fun RootScreenWrapper(
         }
     } else {
         LifecycleEventEffect(Lifecycle.Event.ON_STOP, onEvent = state::onStop)
-        if (isInitialized || state.authStatus is AuthStatus.NoAuthRequired || (state.authStatus is AuthStatus.AuthRequired && (state.authStatus as AuthStatus.AuthRequired).authed)) {
+        if (isInitialized || state.authStatus is AuthStatus.NoAuthRequired ||
+            (
+                state.authStatus is AuthStatus.AuthRequired &&
+                    (state.authStatus as AuthStatus.AuthRequired).authed
+                )
+        ) {
             content()
         }
         when (val authStatus = state.authStatus) {
@@ -50,7 +55,7 @@ internal fun RootScreenWrapper(
                 AnimatedVisibility(
                     visible = !authStatus.authed || !isInitialized,
                     enter = slideInVertically { it },
-                    exit = slideOutVertically { it }
+                    exit = slideOutVertically { it },
                 ) {
 //                    TODO AuthenticationScreen(
 //                        route = Authentication(ScreenType.Authenticate),

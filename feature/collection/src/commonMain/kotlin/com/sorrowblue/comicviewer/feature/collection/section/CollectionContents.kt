@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.file.File as FileModel
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -16,7 +17,6 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_no_contents
 import org.jetbrains.compose.resources.stringResource
-import com.sorrowblue.comicviewer.domain.model.file.File as FileModel
 
 @Composable
 internal fun CollectionContents(
@@ -33,7 +33,7 @@ internal fun CollectionContents(
             text = stringResource(Res.string.collection_label_no_contents),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
+                .padding(contentPadding),
         )
     } else {
         FileLazyVerticalGrid(
@@ -44,7 +44,7 @@ internal fun CollectionContents(
             contentPadding = contentPadding,
             onItemClick = onItemClick,
             onItemInfoClick = onItemInfoClick,
-            state = lazyGridState
+            state = lazyGridState,
         )
     }
 }

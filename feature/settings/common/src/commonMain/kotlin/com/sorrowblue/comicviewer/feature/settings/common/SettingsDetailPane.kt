@@ -44,7 +44,10 @@ fun SettingsDetailPane(
     actions: @Composable (RowScope.() -> Unit) = {},
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
     scrollBehavior: TopAppBarScrollBehavior =
-        if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)) {
+        if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
+                WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
+            )
+        ) {
             TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         } else {
             TopAppBarDefaults.pinnedScrollBehavior()
@@ -55,7 +58,7 @@ fun SettingsDetailPane(
     Scaffold(
         topBar = {
             if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
-                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
+                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
                 )
             ) {
                 LargeTopAppBar(
@@ -63,7 +66,7 @@ fun SettingsDetailPane(
                     actions = actions,
                     windowInsets = WindowInsets.safeDrawing
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
                 )
             } else {
                 TopAppBar(
@@ -72,20 +75,20 @@ fun SettingsDetailPane(
                         IconButton(onClick = onBackClick) {
                             Icon(
                                 imageVector = ComicIcons.ArrowBack,
-                                contentDescription = "上へ移動"
+                                contentDescription = "上へ移動",
                             )
                         }
                     },
                     actions = actions,
                     windowInsets = WindowInsets.safeDrawing
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
                 )
             }
         },
         snackbarHost = snackbarHost,
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -93,7 +96,7 @@ fun SettingsDetailPane(
                 // TODO .drawVerticalScrollbar(scrollState)
                 .verticalScroll(scrollState)
                 .padding(innerPadding),
-            content = content
+            content = content,
         )
     }
 }

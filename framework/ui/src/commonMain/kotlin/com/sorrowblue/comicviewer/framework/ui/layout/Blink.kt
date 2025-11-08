@@ -48,8 +48,9 @@ private class DrawBlinkNode(
     var color: Color = Color.Red,
     var range: ClosedFloatingPointRange<Float>,
     var shape: Shape,
-) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
-
+) : Modifier.Node(),
+    DrawModifierNode,
+    CompositionLocalConsumerModifierNode {
     private val alpha = Animatable(range.endInclusive)
     private val count = mutableIntStateOf(0)
     private var job: Job? = null
@@ -62,7 +63,7 @@ private class DrawBlinkNode(
     override fun ContentDrawScope.draw() {
         drawContent()
         with(
-            currentValueOf(LocalDensity)
+            currentValueOf(LocalDensity),
         ) {
             drawRoundRect(
                 color = Color.Red,
@@ -70,8 +71,8 @@ private class DrawBlinkNode(
                 alpha = alpha.value,
                 cornerRadius = CornerRadius(
                     (shape as RoundedCornerShape).topStart.toPx(size, this),
-                    (shape as RoundedCornerShape).topStart.toPx(size, this)
-                )
+                    (shape as RoundedCornerShape).topStart.toPx(size, this),
+                ),
             )
         }
     }
@@ -85,6 +86,7 @@ private class DrawBlinkNode(
         }
     }
 
+    @Suppress("MagicNumber")
     private fun update() {
         job?.cancel()
         count.intValue = 0

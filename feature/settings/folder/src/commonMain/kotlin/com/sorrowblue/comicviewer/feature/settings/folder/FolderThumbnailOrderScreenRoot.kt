@@ -18,10 +18,10 @@ fun FolderThumbnailOrderScreenRoot(
             resultProducer.setResult(
                 Json,
                 FolderThumbnailOrderScreenResultKey,
-                it
+                it,
             )
             onDismissRequest()
         },
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     )
 }

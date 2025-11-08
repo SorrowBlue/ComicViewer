@@ -27,7 +27,7 @@ fun Modifier.scratch(color: Color, strokeWidth: Dp = 1.dp, alpha: Float = 0.25f)
                     outline = Outline.Rectangle(Rect(0f, 0f, size.width, size.height)),
                     color = color,
                     alpha = alpha,
-                    style = Stroke(strokeWidth.toPx())
+                    style = Stroke(strokeWidth.toPx()),
                 )
             }
 
@@ -36,28 +36,29 @@ fun Modifier.scratch(color: Color, strokeWidth: Dp = 1.dp, alpha: Float = 0.25f)
                 color = color,
                 topLeft = Offset(0f, 0f),
                 size = Size(16.dp.toPx(), 16.dp.toPx()),
-                alpha = alpha
+                alpha = alpha,
             )
             drawRect(
                 color = color,
                 topLeft = Offset(0f, size.height - 16.dp.toPx()),
                 size = Size(16.dp.toPx(), 16.dp.toPx()),
-                alpha = alpha
+                alpha = alpha,
             )
             drawRect(
                 color = color,
                 topLeft = Offset(size.width - 16.dp.toPx(), 0f),
                 size = Size(16.dp.toPx(), 16.dp.toPx()),
-                alpha = alpha
+                alpha = alpha,
             )
             drawRect(
                 color = color,
                 topLeft = Offset(size.width - 16.dp.toPx(), size.height - 16.dp.toPx()),
                 size = Size(16.dp.toPx(), 16.dp.toPx()),
-                alpha = alpha
+                alpha = alpha,
             )
 
             // Draw diagonal line
+            @Suppress("MagicNumber")
             val max = (size.width / 100).roundToInt()
             with(density) {
                 for (i in 0..max) {
@@ -66,14 +67,14 @@ fun Modifier.scratch(color: Color, strokeWidth: Dp = 1.dp, alpha: Float = 0.25f)
                         Offset(size.width / max * i, 0f),
                         Offset(size.width, size.height / max * (max - i)),
                         strokeWidth = strokeWidth.toPx(),
-                        alpha = alpha
+                        alpha = alpha,
                     )
                     drawLine(
                         color.copy(alpha = 0.5f),
                         Offset(size.width / max * i, 0f),
                         Offset(0f, size.height / max * i),
                         strokeWidth = strokeWidth.toPx(),
-                        alpha = alpha
+                        alpha = alpha,
                     )
                     if (i > 0) {
                         drawLine(
@@ -81,14 +82,14 @@ fun Modifier.scratch(color: Color, strokeWidth: Dp = 1.dp, alpha: Float = 0.25f)
                             Offset(0f, size.height / max * i),
                             Offset(size.width / max * (max - i), size.height),
                             strokeWidth = strokeWidth.toPx(),
-                            alpha = alpha
+                            alpha = alpha,
                         )
                         drawLine(
                             color.copy(alpha = 0.5f),
                             Offset(size.width / max * i, size.height),
                             Offset(size.width, (size.height / max) * i),
                             strokeWidth = strokeWidth.toPx(),
-                            alpha = alpha
+                            alpha = alpha,
                         )
                     }
                 }

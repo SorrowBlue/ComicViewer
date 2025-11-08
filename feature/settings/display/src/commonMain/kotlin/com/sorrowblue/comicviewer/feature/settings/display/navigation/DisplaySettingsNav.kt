@@ -33,11 +33,11 @@ context(graph: PlatformGraph, state: AppNavigationState)
 fun EntryProviderScope<NavKey>.displaySettingsEntryGroup() {
     displaySettingsEntry(
         onBackClick = state::onBackPressed,
-        onDarkModeClick = { state.addToBackStack(DarkModeKey) }
+        onDarkModeClick = { state.addToBackStack(DarkModeKey) },
     )
     darkModeEntry(
         onDismissRequest = state::onBackPressed,
-        onComplete = state::onBackPressed
+        onComplete = state::onBackPressed,
     )
 }
 
@@ -47,12 +47,15 @@ private fun EntryProviderScope<NavKey>.displaySettingsEntry(
     onDarkModeClick: () -> Unit,
 ) {
     entryScreen<DisplaySettingsKey, DisplaySettingsScreenContext>(
-        createContext = { (graph as DisplaySettingsScreenContext.Factory).createDisplaySettingsScreenContext() },
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
+        createContext = {
+            (graph as DisplaySettingsScreenContext.Factory)
+                .createDisplaySettingsScreenContext()
+        },
+        metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         DisplaySettingsScreenRoot(
             onBackClick = onBackClick,
-            onDarkModeClick = onDarkModeClick
+            onDarkModeClick = onDarkModeClick,
         )
     }
 }
@@ -64,11 +67,11 @@ private fun EntryProviderScope<NavKey>.darkModeEntry(
 ) {
     entryScreen<DarkModeKey, DarkModeScreenContext>(
         createContext = { (graph as DarkModeScreenContext.Factory).createDarkModeScreenContext() },
-        metadata = DialogSceneStrategy.dialog()
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         DarkModeScreenRoot(
             onDismissRequest = onDismissRequest,
-            onComplete = onComplete
+            onComplete = onComplete,
         )
     }
 }

@@ -60,10 +60,11 @@ internal sealed interface BookshelfEditScreenEvent {
 }
 
 internal interface IBookshelfEditorScreenState {
-
     val uiState: BookshelfEditorScreenUiState
     val events: EventFlow<BookshelfEditScreenEvent>
+
     fun onSubmit(form: BookshelfEditorForm)
+
     val formState: FormState<out BookshelfEditorForm>
     val form: Form<out BookshelfEditorForm>
     var initialForm: BookshelfEditorForm
@@ -116,10 +117,10 @@ internal fun rememberBookshelfEditorScreenState(
                         fieldOptions = FieldOptions(
                             validationStrategy = FieldValidationStrategy(
                                 initial = FieldValidationMode.Change,
-                                next = { _, _ -> FieldValidationMode.Change }
+                                next = { _, _ -> FieldValidationMode.Change },
                             ),
-                        )
-                    )
+                        ),
+                    ),
                 )
             rememberRetained {
                 SmbEditScreenStateImpl(
@@ -127,7 +128,7 @@ internal fun rememberBookshelfEditorScreenState(
                     getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
                     registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
-                    formState = formState
+                    formState = formState,
                 ).apply {
                     initialForm = SmbEditorForm()
                 }
@@ -145,7 +146,7 @@ internal fun rememberBookshelfEditorScreenState(
                     getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
                     registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
-                    formState = formState
+                    formState = formState,
                 ).apply {
                     initialForm = InternalStorageEditorForm()
                 }
@@ -154,7 +155,7 @@ internal fun rememberBookshelfEditorScreenState(
                 this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
                 this.folderSelectFieldState = rememberFolderSelectFieldState(
                     form = form,
-                    onOpenDocumentTreeCancel = ::onOpenDocumentTreeCancel
+                    onOpenDocumentTreeCancel = ::onOpenDocumentTreeCancel,
                 )
             }
         }
@@ -173,7 +174,7 @@ private class SmbEditScreenStateImpl(
     getBookshelfInfoUseCase,
     registerBookshelfUseCase,
     coroutineScope,
-    formState
+    formState,
 ),
     SmbEditorScreenState {
     override lateinit var form: Form<SmbEditorForm>
@@ -190,15 +191,18 @@ private class InternalStorageEditScreenStateImpl(
     getBookshelfInfoUseCase,
     registerBookshelfUseCase,
     coroutineScope,
-    formState
+    formState,
 ),
     InternalStorageEditorScreenState {
     override lateinit var form: Form<InternalStorageEditorForm>
     override lateinit var folderSelectFieldState: FolderSelectFieldState
+
     override fun onOpenDocumentTreeCancel() {
         coroutineScope.launch {
             formState.setError(
-                FolderSelectFieldName to FieldError(getString(Res.string.bookshelf_edit_msg_cancelled_folder_selection))
+                FolderSelectFieldName to FieldError(
+                    getString(Res.string.bookshelf_edit_msg_cancelled_folder_selection),
+                ),
             )
         }
     }
@@ -211,7 +215,6 @@ private abstract class BookshelfEditScreenStateImpl(
     var coroutineScope: CoroutineScope,
     override val formState: FormState<out BookshelfEditorForm>,
 ) : IBookshelfEditorScreenState {
-
     override lateinit var initialForm: BookshelfEditorForm
 
     override val events: EventFlow<BookshelfEditScreenEvent> = EventFlow()
@@ -240,7 +243,7 @@ private abstract class BookshelfEditScreenStateImpl(
                         is InternalStorage -> {
                             form = InternalStorageEditorForm(
                                 displayName = bookshelf.displayName,
-                                path = it.folder.path
+                                path = it.folder.path,
                             )
                         }
 
@@ -249,7 +252,9 @@ private abstract class BookshelfEditScreenStateImpl(
                                 displayName = bookshelf.displayName,
                                 host = bookshelf.host,
                                 port = bookshelf.port,
-                                path = it.folder.path.removePrefix("/").removeSuffix("/"),
+                                path = it.folder.path
+                                    .removePrefix("/")
+                                    .removeSuffix("/"),
                                 auth = when (bookshelf.auth) {
                                     is SmbServer.Auth.Guest -> SmbEditorForm.Auth.Guest
                                     is SmbServer.Auth.UsernamePassword ->
@@ -266,7 +271,7 @@ private abstract class BookshelfEditScreenStateImpl(
                                 password = when (val auth = bookshelf.auth) {
                                     is SmbServer.Auth.Guest -> ""
                                     is SmbServer.Auth.UsernamePassword -> auth.password
-                                }
+                                },
                             )
                         }
 
@@ -277,7 +282,7 @@ private abstract class BookshelfEditScreenStateImpl(
                     uiState = uiState.copy(progress = false)
                 },
                 onError = {
-                }
+                },
             )
         }
     }
@@ -309,7 +314,7 @@ private abstract class BookshelfEditScreenStateImpl(
                         SmbEditorForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
                             domain = form.domain,
                             username = form.username,
-                            password = form.password
+                            password = form.password,
                         )
                     }
                     when (editorType) {
@@ -346,28 +351,38 @@ private abstract class BookshelfEditScreenStateImpl(
                     when (it) {
                         RegisterBookshelfUseCase.Error.Auth -> {
                             formState.setError(
-                                AuthField to FieldError(getString(Res.string.bookshelf_edit_error_bad_auth))
+                                AuthField to FieldError(
+                                    getString(Res.string.bookshelf_edit_error_bad_auth),
+                                ),
                             )
                         }
 
                         RegisterBookshelfUseCase.Error.Host -> {
                             formState.setError(
-                                HostField to FieldError(getString(Res.string.bookshelf_edit_error_bad_host))
+                                HostField to FieldError(
+                                    getString(Res.string.bookshelf_edit_error_bad_host),
+                                ),
                             )
                             formState.setError(
-                                PortField to FieldError(getString(Res.string.bookshelf_edit_error_bad_port))
+                                PortField to FieldError(
+                                    getString(Res.string.bookshelf_edit_error_bad_port),
+                                ),
                             )
                         }
 
                         RegisterBookshelfUseCase.Error.Network -> {
                             formState.setError(
-                                "auth" to FieldError(getString(Res.string.bookshelf_edit_error_bad_network))
+                                "auth" to FieldError(
+                                    getString(Res.string.bookshelf_edit_error_bad_network),
+                                ),
                             )
                         }
 
                         RegisterBookshelfUseCase.Error.Path -> {
                             formState.setError(
-                                PathFieldName to FieldError(getString(Res.string.bookshelf_edit_error_bad_path))
+                                PathFieldName to FieldError(
+                                    getString(Res.string.bookshelf_edit_error_bad_path),
+                                ),
                             )
                         }
 
@@ -375,13 +390,14 @@ private abstract class BookshelfEditScreenStateImpl(
                             formState.setError("auth" to FieldError("unknown error"))
                         }
                     }
-                }
+                },
             )
         }
     }
 
-    suspend fun getBookshelf(id: BookshelfId): Bookshelf {
-        return getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(id)).first()
-            .dataOrNull()!!.bookshelf
-    }
+    suspend fun getBookshelf(id: BookshelfId): Bookshelf =
+        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(id))
+            .first()
+            .dataOrNull()!!
+            .bookshelf
 }

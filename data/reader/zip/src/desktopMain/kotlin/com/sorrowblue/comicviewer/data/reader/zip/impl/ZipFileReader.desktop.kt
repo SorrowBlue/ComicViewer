@@ -27,7 +27,6 @@ internal actual class ZipFileReader(
     @ImageExtension supportedException: Set<String>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
-
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(
@@ -46,7 +45,8 @@ internal actual class ZipFileReader(
         }
 
     private val entries =
-        archive.archiveItems.filter { !it.isFolder && it.path.extension() in supportedException }
+        archive.archiveItems
+            .filter { !it.isFolder && it.path.extension() in supportedException }
             .sortedWith(Comparator.comparing(ISimpleInArchiveItem::getPath, collator::compare))
 
     private val mutex = Mutex()
@@ -64,9 +64,7 @@ internal actual class ZipFileReader(
         }
     }
 
-    actual override suspend fun pageCount(): Int {
-        return entries.size
-    }
+    actual override suspend fun pageCount(): Int = entries.size
 
     actual override fun close() {
         runBlocking {

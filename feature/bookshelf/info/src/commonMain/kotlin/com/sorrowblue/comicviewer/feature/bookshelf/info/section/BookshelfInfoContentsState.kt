@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.paging.compose.LazyPagingItems
@@ -20,6 +19,7 @@ internal interface BookshelfInfoContentsState {
     val uiState: BookshelfInfoContentsUiState
     val lazyPagingItems: LazyPagingItems<BookThumbnail>
     val events: EventFlow<BookshelfInfoContentsEvent>
+
     fun onScanFileClick()
 
     fun onScanThumbnailClick()

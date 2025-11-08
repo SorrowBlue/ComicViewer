@@ -68,17 +68,19 @@ internal fun SettingsScreen(
                 title = { Text(text = stringResource(Res.string.settings_title)) },
                 navigationIcon = { CloseIconButton(onBackClick) },
                 scrollBehavior = scrollBehavior,
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                ),
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         if (paneScaffoldDirective.maxHorizontalPartitions == 1) {
             LazyColumn(
                 state = lazyListState,
                 contentPadding = contentPadding,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 items(uiState.settingsList) { settings ->
                     ListItem(
@@ -86,13 +88,13 @@ internal fun SettingsScreen(
                         leadingContent = {
                             Icon(
                                 imageVector = settings.icon,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         },
                         modifier = Modifier.combinedClickable(
                             onClick = { onSettingsClick(settings) },
-                            onLongClick = { onSettingsLongClick(settings) }
-                        )
+                            onLongClick = { onSettingsLongClick(settings) },
+                        ),
                     )
                 }
             }
@@ -100,21 +102,23 @@ internal fun SettingsScreen(
             PermanentDrawerSheet(
                 modifier = modifier,
                 drawerContainerColor = ComicTheme.colorScheme.surfaceContainerHighest,
-                windowInsets = WindowInsets(0)
+                windowInsets = WindowInsets(0),
             ) {
                 LazyColumn(
                     state = lazyListState,
-                    contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
-                        .asPaddingValues()
+                    contentPadding = WindowInsets.safeDrawing
+                        .only(
+                            WindowInsetsSides.Start + WindowInsetsSides.Vertical,
+                        ).asPaddingValues(),
                 ) {
                     item {
                         TopAppBar(
                             title = { Text(text = stringResource(Res.string.settings_title)) },
                             navigationIcon = { CloseIconButton(onBackClick) },
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = ComicTheme.colorScheme.surfaceContainerHighest
+                                containerColor = ComicTheme.colorScheme.surfaceContainerHighest,
                             ),
-                            windowInsets = WindowInsets(0)
+                            windowInsets = WindowInsets(0),
                         )
                     }
                     items(uiState.settingsList) { settings2 ->
@@ -123,14 +127,14 @@ internal fun SettingsScreen(
                             icon = {
                                 Icon(
                                     imageVector = settings2.icon,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             },
                             onClick = { onSettingsClick(settings2) },
                             onLongClick = { onSettingsLongClick(settings2) },
                             selected = uiState.currentSettings == settings2,
                             modifier = Modifier
-                                .padding(horizontal = 16.dp)
+                                .padding(horizontal = 16.dp),
                         )
                     }
                 }
@@ -139,10 +143,7 @@ internal fun SettingsScreen(
     }
 }
 
-enum class SettingsItem(
-    val title: StringResource,
-    val icon: ImageVector,
-) {
+enum class SettingsItem(val title: StringResource, val icon: ImageVector) {
     DISPLAY(Res.string.settings_label_display, ComicIcons.DisplaySettings),
     FOLDER(Res.string.settings_label_folder, ComicIcons.FolderOpen),
     VIEWER(Res.string.settings_label_viewer, ComicIcons.Image),

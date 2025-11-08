@@ -12,7 +12,6 @@ import org.gradle.kotlin.dsl.withType
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 internal class DetektConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -52,13 +51,14 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 "detektAndroidAll" to "(?i)^(?!.*metadata).*android.*$".toRegex(),
                 "detektDesktopAll" to "(?i)^(?!.*metadata).*desktop.*$".toRegex(),
                 "detektIosAll" to "(?i)^(?!.*metadata).*ios.*$".toRegex(),
-                "detektMetadataAll" to "(?i)^.*metadata.*$".toRegex()
+                "detektMetadataAll" to "(?i)^.*metadata.*$".toRegex(),
             ).forEach { (taskName, regex) ->
                 tasks.register(taskName) {
                     group = LifecycleBasePlugin.VERIFICATION_GROUP
                     dependsOn(
-                        tasks.withType<Detekt>()
-                            .matching { detekt -> detekt.name.contains(regex) }
+                        tasks
+                            .withType<Detekt>()
+                            .matching { detekt -> detekt.name.contains(regex) },
                     )
                 }
             }

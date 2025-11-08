@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnailsUseCase
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -23,16 +24,16 @@ internal class PagingFolderBookThumbnailsInteractor(
     private val fileRemoteDataSource: FileRemoteDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : PagingFolderBookThumbnailsUseCase() {
-
-    override fun run(request: Request): Flow<PagingData<BookThumbnail>> {
-        return bookshelfLocalDataSource.flow(request.bookshelfId).flatMapLatest { bookshelf ->
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun run(request: Request): Flow<PagingData<BookThumbnail>> =
+        bookshelfLocalDataSource.flow(request.bookshelfId).flatMapLatest { bookshelf ->
             if (bookshelf != null) {
                 val file = fileLocalDataSource.findBy(request.bookshelfId, request.path)
                 if (file is IFolder) {
                     fileRemoteDataSource.pagingSourceBookThumbnail(
                         request.pagingConfig,
                         bookshelf,
-                        file
+                        file,
                     ) {
                         val settings =
                             runBlocking { datastoreDataSource.folderDisplaySettings.first() }
@@ -51,5 +52,4 @@ internal class PagingFolderBookThumbnailsInteractor(
                 emptyFlow()
             }
         }
-    }
 }

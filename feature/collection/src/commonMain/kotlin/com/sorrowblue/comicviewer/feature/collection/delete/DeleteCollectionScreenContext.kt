@@ -13,7 +13,6 @@ annotation class DeleteCollectionScreenScope
 
 @GraphExtension(DeleteCollectionScreenScope::class)
 interface DeleteCollectionScreenContext : ScreenContext {
-
     val deleteCollectionUseCase: DeleteCollectionUseCase
     val getCollectionUseCase: GetCollectionUseCase
 

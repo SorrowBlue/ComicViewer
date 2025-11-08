@@ -23,4 +23,4 @@ fun <T : Any> rememberPagingItems(
     }.collectAsLazyPagingItems()
 }
 
-internal class PagingViewModel() : ViewModel()
+internal class PagingViewModel : ViewModel()

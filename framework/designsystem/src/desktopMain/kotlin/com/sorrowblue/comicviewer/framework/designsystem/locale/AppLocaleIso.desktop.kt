@@ -12,23 +12,30 @@ import comicviewer.framework.designsystem.generated.resources.locales
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import java.util.Locale as JavaLocale
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
-import java.util.Locale as JavaLocale
 
 @SingleIn(AppScope::class)
 @Inject
 actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
-
-    private val LocalAppLocaleIsoInternal =
+    private val localAppLocaleIsoInternal =
         staticCompositionLocalOf { JavaLocale.getDefault().toString() }
+
+    @Suppress("VarCouldBeVal")
     private var currentLanguageTag: String? by mutableStateOf(null)
 
     @Suppress("ConstantLocale")
     private val systemDefault = JavaLocale.getDefault()
 
     actual val current: Locale?
-        @Composable get() = if (currentLanguageTag.isNullOrEmpty()) null else Locale(languageTag = currentLanguageTag!!)
+        @Composable get() = if (currentLanguageTag.isNullOrEmpty()) {
+            null
+        } else {
+            Locale(
+                languageTag = currentLanguageTag!!,
+            )
+        }
 
     actual val locales: List<Locale>
         get() = runBlocking { getString(Res.string.locales) }.split(",").map {
@@ -64,7 +71,7 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
         }
 
         JavaLocale.setDefault(locale.platformLocale)
-        return LocalAppLocaleIsoInternal.provides(locale.toLanguageTag())
+        return localAppLocaleIsoInternal.provides(locale.toLanguageTag())
     }
 }
 

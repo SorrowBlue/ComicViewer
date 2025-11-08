@@ -29,7 +29,7 @@ internal fun SortTypeScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_filesort_title)) }
+        title = { Text(text = stringResource(Res.string.settings_folder_filesort_title)) },
     ) {
         Column {
             SortType.entries.forEach { sortType ->
@@ -42,7 +42,7 @@ internal fun SortTypeScreen(
                     headlineContent = {
                         Text(text = stringResource(sortType.displayText))
                     },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
             }
         }

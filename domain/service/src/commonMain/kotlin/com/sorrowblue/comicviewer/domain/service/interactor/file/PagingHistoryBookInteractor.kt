@@ -8,11 +8,8 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
 @Inject
-internal class PagingHistoryBookInteractor(
-    private val fileLocalDataSource: FileLocalDataSource,
-) : PagingHistoryBookUseCase() {
-
-    override fun run(request: Request): Flow<PagingData<Book>> {
-        return fileLocalDataSource.pagingHistoryBookSource(request.pagingConfig)
-    }
+internal class PagingHistoryBookInteractor(private val fileLocalDataSource: FileLocalDataSource) :
+    PagingHistoryBookUseCase() {
+    override fun run(request: Request): Flow<PagingData<Book>> =
+        fileLocalDataSource.pagingHistoryBookSource(request.pagingConfig)
 }

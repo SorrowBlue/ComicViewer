@@ -17,7 +17,6 @@ annotation class FileInfoScreenScope
 
 @GraphExtension(FileInfoScreenScope::class)
 interface FileInfoScreenContext : ScreenContext {
-
     val getFileUseCase: GetFileUseCase
     val getFileAttributeUseCase: GetFileAttributeUseCase
     val existsReadlaterUseCase: ExistsReadlaterUseCase

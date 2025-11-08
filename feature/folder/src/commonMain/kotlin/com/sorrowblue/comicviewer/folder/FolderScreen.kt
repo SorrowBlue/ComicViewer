@@ -31,7 +31,7 @@ internal data class FolderScreenUiState(
     val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
     val folderListUiState: FolderListUiState = FolderListUiState(),
     val sortType: SortType = SortType.Name(true),
-    val folderScopeOnly: Boolean = false
+    val folderScopeOnly: Boolean = false,
 )
 
 @Composable
@@ -55,7 +55,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
                     onSortClick = onSortClick,
                     onSettingsClick = {},
                 )
-            }
+            },
         ) { contentPadding ->
             FolderList(
                 uiState = uiState.folderListUiState,

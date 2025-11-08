@@ -1,19 +1,14 @@
 package com.sorrowblue.comicviewer.feature.settings.folder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
-import io.github.irgaly.navigation3.resultstate.LocalNavigationResultConsumer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
-import io.github.irgaly.navigation3.resultstate.getResultState
-import kotlinx.serialization.json.Json
 
 @Composable
 context(context: FolderSettingsScreenContext)
@@ -40,7 +35,11 @@ fun FolderSettingsScreenRoot(
         onFontSizeChange = state::onFontSizeChange,
         onImageFormatClick = { onImageFormatClick(state.uiState.imageFormat) },
         onThumbnailQualityChange = state::onThumbnailQualityChange,
-        onFolderThumbnailOrderClick = { onFolderThumbnailOrderClick(state.uiState.folderThumbnailOrder) },
+        onFolderThumbnailOrderClick = {
+            onFolderThumbnailOrderClick(
+                state.uiState.folderThumbnailOrder,
+            )
+        },
     )
 
     NavigationResultEffect(SortTypeScreenResultKey, state::onFileSortChange)

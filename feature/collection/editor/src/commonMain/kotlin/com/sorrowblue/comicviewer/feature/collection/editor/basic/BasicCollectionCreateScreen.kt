@@ -14,9 +14,7 @@ import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
 
 @Serializable
-internal data class BasicCollectionsCreateScreenUiState(
-    val isLoading: Boolean = false,
-)
+internal data class BasicCollectionsCreateScreenUiState(val isLoading: Boolean = false)
 
 @Serializable
 internal data class BasicCollectionForm(val name: String = "")
@@ -39,10 +37,10 @@ internal fun BasicCollectionCreateScreen(
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest,
-                enabled = !uiState.isLoading
+                enabled = !uiState.isLoading,
             ) {
                 Text(text = stringResource(Res.string.collection_editor_label_cancel))
             }
-        }
+        },
     )
 }

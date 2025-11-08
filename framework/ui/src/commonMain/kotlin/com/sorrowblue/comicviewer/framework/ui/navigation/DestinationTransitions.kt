@@ -1,23 +1,5 @@
 package com.sorrowblue.comicviewer.framework.ui.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.SizeTransform
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
-import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialContainerTransformOut
-import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisXIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisXOut
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisYOut
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZIn
-import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZOut
 import com.sorrowblue.comicviewer.framework.ui.navigation.TransitionsConfigure.Type
 import kotlin.reflect.KClass
 
@@ -33,29 +15,19 @@ sealed interface TransitionsConfigure {
     }
 }
 
-data class GraphFrom(
-    val from: KClass<*>?,
-    val to: KClass<*>,
-    override val type: Type,
-) : TransitionsConfigure {
-
-    override fun toString(): String {
-        return "GraphFrom(from=${from?.simpleName}, to=${to.simpleName}, type=$type)"
-    }
+data class GraphFrom(val from: KClass<*>?, val to: KClass<*>, override val type: Type) :
+    TransitionsConfigure {
+    override fun toString(): String =
+        "GraphFrom(from=${from?.simpleName}, to=${to.simpleName}, type=$type)"
 }
 
-data class BetweenScreen(
-    val from: KClass<*>,
-    val to: KClass<*>,
-    override val type: Type,
-) : TransitionsConfigure {
-
-    override fun toString(): String {
-        return "BetweenScreen(from=${from.simpleName}, to=${to.simpleName}, type=$type)"
-    }
+data class BetweenScreen(val from: KClass<*>, val to: KClass<*>, override val type: Type) :
+    TransitionsConfigure {
+    override fun toString(): String =
+        "BetweenScreen(from=${from.simpleName}, to=${to.simpleName}, type=$type)"
 }
 
-//abstract class DestinationTransitions : NavTransitions() {
+// abstract class DestinationTransitions : NavTransitions() {
 //
 //    abstract val transitions: List<TransitionsConfigure>
 //
@@ -162,4 +134,4 @@ data class BetweenScreen(
 //    override fun AnimatedContentTransitionScope<NavBackStackEntry>.sizeTransform(): SizeTransform? {
 //        return null
 //    }
-//}
+// }

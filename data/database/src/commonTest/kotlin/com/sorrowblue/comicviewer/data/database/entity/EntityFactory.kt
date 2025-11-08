@@ -11,17 +11,18 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 internal class EntityFactory {
-    fun createBookshelfEntity(id: Int = 0, deleted: Boolean = false): BookshelfEntity = BookshelfEntity(
-        id = BookshelfId(id),
-        displayName = "displayName$id",
-        type = BookshelfEntity.Type.INTERNAL,
-        deleted = deleted,
-        host = "",
-        port = 0,
-        domain = "",
-        username = "",
-        password = DecryptedPassword(""),
-    )
+    fun createBookshelfEntity(id: Int = 0, deleted: Boolean = false): BookshelfEntity =
+        BookshelfEntity(
+            id = BookshelfId(id),
+            displayName = "displayName$id",
+            type = BookshelfEntity.Type.INTERNAL,
+            deleted = deleted,
+            host = "",
+            port = 0,
+            domain = "",
+            username = "",
+            password = DecryptedPassword(""),
+        )
 
     @OptIn(ExperimentalTime::class)
     fun createFileEntity(

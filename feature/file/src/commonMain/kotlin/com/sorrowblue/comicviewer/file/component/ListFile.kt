@@ -22,23 +22,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
-import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
@@ -55,11 +63,12 @@ fun ListFile(
     modifier: Modifier = Modifier,
     colors: ListItemColors = ListItemDefaults.colors(),
 ) {
-    with(LocalAppState.current) {
+    with(LocalSharedTransitionScope.current) {
         ListItem(
             leadingContent = {
                 if (showThumbnail) {
                     Box {
+                        val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                         FileThumbnailAsyncImage(
                             fileThumbnail = FileThumbnail.from(file),
                             contentScale = contentScale,
@@ -70,15 +79,19 @@ fun ListFile(
                                     LocalNavAnimatedContentScope.current,
                                     enter = materialFadeThroughIn(),
                                     exit = materialFadeThroughOut(),
-                                    boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                    boundsTransform = { _, _ -> boundsTransform },
                                     resizeMode = scaleToBounds(contentScale, Alignment.Center),
-                                )
-                                .size(80.dp)
+                                ).size(80.dp)
                                 .clip(CardDefaults.shape)
-                                .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
+                                .background(
+                                    ComicTheme.colorScheme.imageBackground(
+                                        ListItemDefaults.containerColor,
+                                    ),
+                                ),
                         )
                     }
                 } else {
+                    val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                     Box(
                         modifier = Modifier
                             .sharedBounds(
@@ -86,13 +99,12 @@ fun ListFile(
                                 LocalNavAnimatedContentScope.current,
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
-                                boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                boundsTransform = { _, _ -> boundsTransform },
                                 resizeMode = scaleToBounds(contentScale, Alignment.Center),
-                            )
-                            .size(80.dp)
+                            ).size(80.dp)
                             .clip(CardDefaults.shape)
                             .background(ComicTheme.colorScheme.surfaceContainer),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         if (file is Book) {
                             Icon(imageVector = ComicIcons.Book, contentDescription = null)
@@ -119,9 +131,9 @@ fun ListFile(
                                     drawScope = this,
                                     stopSize = 0.dp,
                                     color = color,
-                                    strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                                    strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
                                 )
-                            }
+                            },
                         )
                     }
                 }
@@ -130,12 +142,12 @@ fun ListFile(
                 IconButton(onClick = onLongClick) {
                     Icon(
                         imageVector = ComicIcons.MoreVert,
-                        contentDescription = stringResource(Res.string.file_desc_open_file_info)
+                        contentDescription = stringResource(Res.string.file_desc_open_file_info),
                     )
                 }
             },
             colors = colors,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -171,7 +183,64 @@ fun ListFileCard(
             fontSize = fontSize,
             contentScale = contentScale,
             filterQuality = filterQuality,
-            colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         )
     }
+}
+
+@Preview
+@PreviewLightDark
+@Composable
+private fun FileListPreview(@PreviewParameter(BooleanProvider::class) showThumbnail: Boolean) {
+    PreviewTheme {
+        Column {
+            ListFile(
+                file = fakeBookFile(name = "Fake book name"),
+                onLongClick = {},
+                showThumbnail = showThumbnail,
+                fontSize = FolderDisplaySettingsDefaults.FontSize,
+                contentScale = ContentScale.Crop,
+                filterQuality = FilterQuality.None,
+            )
+            ListFile(
+                file = fakeFolder(),
+                onLongClick = {},
+                showThumbnail = showThumbnail,
+                fontSize = FolderDisplaySettingsDefaults.FontSize,
+                contentScale = ContentScale.Crop,
+                filterQuality = FilterQuality.None,
+            )
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun FileListCardPreview(@PreviewParameter(BooleanProvider::class) showThumbnail: Boolean) {
+    PreviewTheme {
+        Column {
+            ListFileCard(
+                file = fakeBookFile(name = "Fake book name"),
+                onClick = {},
+                onLongClick = {},
+                showThumbnail = showThumbnail,
+                fontSize = FolderDisplaySettingsDefaults.FontSize,
+                contentScale = ContentScale.Crop,
+                filterQuality = FilterQuality.None,
+            )
+            ListFileCard(
+                file = fakeFolder(),
+                onClick = {},
+                onLongClick = {},
+                showThumbnail = showThumbnail,
+                fontSize = FolderDisplaySettingsDefaults.FontSize,
+                contentScale = ContentScale.Crop,
+                filterQuality = FilterQuality.None,
+            )
+        }
+    }
+}
+
+private class BooleanProvider : PreviewParameterProvider<Boolean> {
+    override val values = sequenceOf(true, false)
 }

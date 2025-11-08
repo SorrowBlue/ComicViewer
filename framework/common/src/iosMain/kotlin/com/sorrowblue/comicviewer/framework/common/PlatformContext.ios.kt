@@ -10,8 +10,8 @@ actual typealias PlatformContext = IosContext
 actual val PlatformContext.platformGraph: PlatformGraph
     get() = IosContext.platformGraph
 
+@Suppress("UtilityClassWithPublicConstructor")
 abstract class IosContext {
-
     companion object {
         lateinit var platformGraph: PlatformGraph
     }

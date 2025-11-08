@@ -15,11 +15,11 @@ import kotlinx.coroutines.flow.Flow
 
 sealed interface LocalDataSourceQueryError : Resource.IError {
     data object NotFound : LocalDataSourceQueryError
+
     data class SystemError(val throwable: Throwable) : LocalDataSourceQueryError
 }
 
 interface FileLocalDataSource {
-
     fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelfId: BookshelfId?,
@@ -64,6 +64,7 @@ interface FileLocalDataSource {
     )
 
     suspend fun updateSimpleAll(list: List<File>)
+
     suspend fun updateSimple(list: File): Resource<File, LocalDataSourceQueryError>
 
     suspend fun selectByNotPaths(
@@ -94,14 +95,12 @@ interface FileLocalDataSource {
     ): Flow<PagingData<BookThumbnail>>
 
     fun flow(bookshelfId: BookshelfId, path: String): Flow<File?>
+
     suspend fun findBy(bookshelfId: BookshelfId, path: String): File?
+
     fun nextFileModel(bookshelfId: BookshelfId, path: String, sortType: SortType): Flow<File?>
 
-    fun prevFileModel(
-        bookshelfId: BookshelfId,
-        path: String,
-        sortType: SortType,
-    ): Flow<File?>
+    fun prevFileModel(bookshelfId: BookshelfId, path: String, sortType: SortType): Flow<File?>
 
     suspend fun getCacheKeys(
         bookshelfId: BookshelfId,
@@ -117,13 +116,22 @@ interface FileLocalDataSource {
     fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>>
 
     suspend fun deleteThumbnails()
+
     suspend fun clearCacheKey(bookshelfId: BookshelfId)
+
     suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>)
+
     suspend fun deleteAllHistory()
+
     suspend fun updateHistory(file: File, files: List<File>)
+
     suspend fun deleteAll2(bookshelfModelId: BookshelfId)
+
     suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String>
+
     fun lastHistory(): Flow<File?>
+
     suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File>
+
     suspend fun count(bookshelfId: BookshelfId): Long
 }

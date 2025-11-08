@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.Binds
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
 import java.io.BufferedReader
@@ -20,23 +19,21 @@ import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
 
-private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
+private const val CipherTransformation = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
 
 @ContributesTo(DataScope::class)
 interface DesktopDatabaseBindings {
     @Binds
-    @Suppress("UnusedPrivateProperty")
     private val DesktopCryptUtil.bind: CryptUtil get() = this
 }
 
-@ContributesBinding(DataScope::class)
 @Inject
 internal class DesktopCryptUtil(private val context: PlatformContext) : CryptUtil {
-    override fun decrypt(alias: String, encryptedText: String): String? {
+    override fun decrypt(alias: String, encryptedText: String): String {
         val key = loadKeyStore(alias)
         val iv = IvParameterSpec(IV.toByteArray())
-        val decrypter = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val decrypter = Cipher.getInstance(CipherTransformation)
         decrypter.init(Cipher.DECRYPT_MODE, key, iv)
         return String(decrypter.doFinal(Base64.decode(encryptedText)))
     }
@@ -44,7 +41,7 @@ internal class DesktopCryptUtil(private val context: PlatformContext) : CryptUti
     override fun encrypt(alias: String, text: String): String {
         val key = this.loadKeyStore(alias)
         val iv = IvParameterSpec(IV.toByteArray())
-        val encrypter = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val encrypter = Cipher.getInstance(CipherTransformation)
         encrypter.init(Cipher.ENCRYPT_MODE, key, iv)
         return Base64.encode(encrypter.doFinal(text.toByteArray()))
     }

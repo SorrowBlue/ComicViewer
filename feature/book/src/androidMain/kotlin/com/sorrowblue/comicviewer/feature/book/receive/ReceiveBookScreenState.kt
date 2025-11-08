@@ -14,7 +14,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.SavedStateHandle
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
@@ -23,9 +22,7 @@ import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
-import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -33,15 +30,16 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import logcat.logcat
 
-internal interface ReceiveBookScreenState : SaveableScreenState {
-
+internal interface ReceiveBookScreenState {
     val uiState: BookScreenUiState
     val currentList: SnapshotStateList<PageItem>
     val pagerState: PagerState
     val systemUiController: SystemUiController
 
     fun toggleTooltip()
+
     fun onPageChange(page: Int)
+
     fun onPageLoaded(unratedPage: UnratedPage, bitmap: coil3.Bitmap)
 }
 
@@ -53,7 +51,7 @@ internal fun rememberReceiveBookScreenState(uri: String?): ReceiveBookScreenStat
     val currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { currentList.size })
     val systemUiController = rememberSystemUiController()
-    return rememberSaveableScreenState {
+    return remember {
         ReceiveBookScreenStateImpl(
             uri = uri,
             context = appContext,
@@ -61,8 +59,7 @@ internal fun rememberReceiveBookScreenState(uri: String?): ReceiveBookScreenStat
             pagerState = pagerState,
             systemUiController = systemUiController,
             currentList = currentList,
-            savedStateHandle = it,
-            getIntentBookUseCase = context.getIntentBookUseCase
+            getIntentBookUseCase = context.getIntentBookUseCase,
         )
     }
 }
@@ -74,7 +71,6 @@ private class ReceiveBookScreenStateImpl(
     override val pagerState: PagerState,
     override val systemUiController: SystemUiController,
     override val currentList: SnapshotStateList<PageItem>,
-    override val savedStateHandle: SavedStateHandle,
     private val getIntentBookUseCase: GetIntentBookUseCase,
 ) : ReceiveBookScreenState {
     init {
@@ -90,7 +86,7 @@ private class ReceiveBookScreenStateImpl(
                             uiState = BookScreenUiState.Loaded(
                                 resource.data,
                                 CollectionId(),
-                                BookSheetUiState(resource.data)
+                                BookSheetUiState(resource.data),
                             )
                             currentList.clear()
                             currentList.addAll(
@@ -98,9 +94,9 @@ private class ReceiveBookScreenStateImpl(
                                     addAll(
                                         (1..resource.data.totalPageCount).map {
                                             BookPage.Default(it - 1)
-                                        }
+                                        },
                                     )
-                                }
+                                },
                             )
                         }
                     }
@@ -115,7 +111,9 @@ private class ReceiveBookScreenStateImpl(
     override fun toggleTooltip() {
         if (uiState !is BookScreenUiState.Loaded) return
         uiState =
-            (uiState as BookScreenUiState.Loaded).copy(isVisibleTooltip = !systemUiController.isSystemBarsVisible)
+            (uiState as BookScreenUiState.Loaded).copy(
+                isVisibleTooltip = !systemUiController.isSystemBarsVisible,
+            )
         systemUiController.isSystemBarsVisible = !systemUiController.isSystemBarsVisible
     }
 
@@ -126,6 +124,7 @@ private class ReceiveBookScreenStateImpl(
     }
 
     val mutex = Mutex()
+
     override fun onPageLoaded(unratedPage: UnratedPage, bitmap: Bitmap) {
         scope.launch {
             mutex.withLock {

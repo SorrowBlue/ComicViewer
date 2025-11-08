@@ -42,7 +42,7 @@ internal fun Modifier.immatureRectangleProgressBorder(
     val visibilityFactor by animateFloatAsState(
         targetValue = if (enable) 1.0f else 0.0f,
         animationSpec = tween(durationMillis = 500),
-        label = "visibility_factor"
+        label = "visibility_factor",
     )
 
     // visibilityFactorが0の場合は描画自体をスキップ
@@ -60,9 +60,9 @@ internal fun Modifier.immatureRectangleProgressBorder(
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(ROTATION_ANIMATION_DURATION, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
+            repeatMode = RepeatMode.Restart,
         ),
-        label = "start_position"
+        label = "start_position",
     )
 
     val sweepLengthRatio by infiniteTransition.animateFloat(
@@ -70,9 +70,9 @@ internal fun Modifier.immatureRectangleProgressBorder(
         targetValue = 0.7f,
         animationSpec = infiniteRepeatable(
             animation = tween(SWEEP_ANIMATION_DURATION, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
+            repeatMode = RepeatMode.Reverse,
         ),
-        label = "sweep_length"
+        label = "sweep_length",
     )
 
     // --- 描画のための準備 ---
@@ -88,10 +88,10 @@ internal fun Modifier.immatureRectangleProgressBorder(
                 RoundRect(
                     rect = Rect(
                         offset = Offset(halfStroke, halfStroke),
-                        size = Size(size.width - strokeWidthPx, size.height - strokeWidthPx)
+                        size = Size(size.width - strokeWidthPx, size.height - strokeWidthPx),
                     ),
-                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
-                )
+                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                ),
             )
             pathMeasure.setPath(path, false)
             val totalLength = pathMeasure.length
@@ -104,24 +104,39 @@ internal fun Modifier.immatureRectangleProgressBorder(
 
             progressPath.reset()
             if (endDistance > totalLength) {
-                pathMeasure.getSegment(startDistance, totalLength, progressPath, startWithMoveTo = true)
-                pathMeasure.getSegment(0f, endDistance - totalLength, progressPath, startWithMoveTo = true)
+                pathMeasure.getSegment(
+                    startDistance,
+                    totalLength,
+                    progressPath,
+                    startWithMoveTo = true,
+                )
+                pathMeasure.getSegment(
+                    0f,
+                    endDistance - totalLength,
+                    progressPath,
+                    startWithMoveTo = true,
+                )
             } else {
-                pathMeasure.getSegment(startDistance, endDistance, progressPath, startWithMoveTo = true)
+                pathMeasure.getSegment(
+                    startDistance,
+                    endDistance,
+                    progressPath,
+                    startWithMoveTo = true,
+                )
             }
 
             // 1. 背景のうすーいパス（ガイド線）もフェードアウトさせる
             drawPath(
                 path = path,
                 color = Color.LightGray.copy(alpha = 0.4f * visibilityFactor),
-                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
             )
 
             // 2. 主役の進捗パス
             drawPath(
                 path = progressPath,
                 color = color,
-                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
             )
         }
 }

@@ -13,7 +13,6 @@ annotation class SmartCollectionCreateScreenScope
 
 @GraphExtension(SmartCollectionCreateScreenScope::class)
 interface SmartCollectionCreateScreenContext : ScreenContext {
-
     val flowBookshelfListUseCase: FlowBookshelfListUseCase
     val createCollectionUseCase: CreateCollectionUseCase
 

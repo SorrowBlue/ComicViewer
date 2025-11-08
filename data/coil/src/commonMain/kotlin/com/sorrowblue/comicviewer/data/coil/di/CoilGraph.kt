@@ -15,7 +15,6 @@ import dev.zacsweers.metro.GraphExtension
 
 @GraphExtension(CoilScope::class)
 interface CoilGraph {
-
     @BookThumbnailFetcher
     val bookThumbnailFetcher: Fetcher.Factory<BookThumbnail>
 

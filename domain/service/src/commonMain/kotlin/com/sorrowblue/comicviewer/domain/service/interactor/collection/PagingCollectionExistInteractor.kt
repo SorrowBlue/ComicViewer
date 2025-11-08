@@ -16,9 +16,8 @@ internal class PagingCollectionExistInteractor(
     private val dataSource: CollectionLocalDataSource,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,
 ) : PagingCollectionExistUseCase() {
-
-    override fun run(request: Request): Flow<PagingData<Pair<Collection, Boolean>>> {
-        return dataSource.pagingDataFlow(
+    override fun run(request: Request): Flow<PagingData<Pair<Collection, Boolean>>> =
+        dataSource.pagingDataFlow(
             request.pagingConfig,
             request.bookshelfId,
             request.path,
@@ -26,5 +25,4 @@ internal class PagingCollectionExistInteractor(
             val collectionSettings = runBlocking { collectionSettingsUseCase.settings.first() }
             CollectionCriteria(type = request.collectionType, recent = collectionSettings.recent)
         }
-    }
 }

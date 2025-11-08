@@ -10,6 +10,6 @@ actual class NotificationManager actual constructor(context: PlatformContext) {
     }
 
     actual companion object {
-        actual val LENGTH_SHORT = 0
+        actual val LengthShort = 0
     }
 }

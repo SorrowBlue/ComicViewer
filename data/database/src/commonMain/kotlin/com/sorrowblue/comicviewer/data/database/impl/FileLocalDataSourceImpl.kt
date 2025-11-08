@@ -25,8 +25,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQueryError
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +33,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
-@ContributesBinding(DataScope::class)
 @Inject
 internal class FileLocalDataSourceImpl(
     private val dao: FileDao,
@@ -46,7 +43,10 @@ internal class FileLocalDataSourceImpl(
             it.toModel()
         }
 
-    override suspend fun count(bookshelfId: BookshelfId): Long = dao.count(bookshelfId.value).first()
+    override suspend fun count(bookshelfId: BookshelfId): Long = dao
+        .count(
+            bookshelfId.value,
+        ).first()
 
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
@@ -62,7 +62,12 @@ internal class FileLocalDataSourceImpl(
         }
     }
 
-    override suspend fun updateHistory(path: String, bookshelfId: BookshelfId, lastReadPage: Int, lastReading: Long) {
+    override suspend fun updateHistory(
+        path: String,
+        bookshelfId: BookshelfId,
+        lastReadPage: Int,
+        lastReading: Long,
+    ) {
         withContext(dispatcher) {
             dao.updateHistory(UpdateFileHistoryEntity(path, bookshelfId, lastReadPage, lastReading))
         }
@@ -85,27 +90,33 @@ internal class FileLocalDataSourceImpl(
         }
     }
 
-    override suspend fun updateSimple(list: File): Resource<File, LocalDataSourceQueryError> = withContext(dispatcher) {
-        runCatching {
-            dao.updateSimpleGet(UpdateFileEntityMinimum.fromModel(list))?.toModel()
-        }.fold(
-            onSuccess = {
-                if (it != null) {
-                    Resource.Success(it)
-                } else {
-                    Resource.Error(LocalDataSourceQueryError.NotFound)
-                }
-            },
-            onFailure = {
-                Resource.Error(LocalDataSourceQueryError.SystemError(it))
-            },
-        )
-    }
-
-    override suspend fun selectByNotPaths(bookshelfId: BookshelfId, path: String, list: List<String>): List<File> =
-        withContext(dispatcher) {
-            dao.findByNotPaths(bookshelfId.value, path, list).map(FileEntity::toModel)
+    override suspend fun updateSimple(list: File): Resource<File, LocalDataSourceQueryError> =
+        withContext(
+            dispatcher,
+        ) {
+            runCatching {
+                dao.updateSimpleGet(UpdateFileEntityMinimum.fromModel(list))?.toModel()
+            }.fold(
+                onSuccess = {
+                    if (it != null) {
+                        Resource.Success(it)
+                    } else {
+                        Resource.Error(LocalDataSourceQueryError.NotFound)
+                    }
+                },
+                onFailure = {
+                    Resource.Error(LocalDataSourceQueryError.SystemError(it))
+                },
+            )
         }
+
+    override suspend fun selectByNotPaths(
+        bookshelfId: BookshelfId,
+        path: String,
+        list: List<String>,
+    ): List<File> = withContext(dispatcher) {
+        dao.findByNotPaths(bookshelfId.value, path, list).map(FileEntity::toModel)
+    }
 
     override suspend fun deleteAll(list: List<File>) {
         withContext(dispatcher) {
@@ -113,36 +124,52 @@ internal class FileLocalDataSourceImpl(
         }
     }
 
-    override suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean = withContext(dispatcher) {
+    override suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean = withContext(
+        dispatcher,
+    ) {
         dao.find(bookshelfId.value, path) != null
     }
 
-    override fun pagingSource(bookshelfId: BookshelfId, pagingConfig: PagingConfig): Flow<PagingData<BookThumbnail>> =
-        Pager(pagingConfig) {
-            dao.pagingSourceFileOnBookshelf(bookshelfId.value)
-        }.flow.map { pagingData ->
-            pagingData.map { BookThumbnail.from(it.toModel() as Book) }
-        }
+    override fun pagingSource(
+        bookshelfId: BookshelfId,
+        pagingConfig: PagingConfig,
+    ): Flow<PagingData<BookThumbnail>> = Pager(pagingConfig) {
+        dao.pagingSourceFileOnBookshelf(bookshelfId.value)
+    }.flow.map { pagingData ->
+        pagingData.map { BookThumbnail.from(it.toModel() as Book) }
+    }
 
     override suspend fun root(id: BookshelfId): Folder? = withContext(dispatcher) {
         dao.findRootFile(id.value)?.toModel() as? Folder
     }
 
-    override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = withContext(dispatcher) {
+    override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = withContext(
+        dispatcher,
+    ) {
         dao.find(bookshelfId.value, path)?.toModel()
     }
 
-    override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = dao.flow(bookshelfId.value, path).map {
-        it?.toModel()
-    }
+    override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = dao
+        .flow(
+            bookshelfId.value,
+            path,
+        ).map {
+            it?.toModel()
+        }
 
-    override fun nextFileModel(bookshelfId: BookshelfId, path: String, sortType: SortType): Flow<File?> =
-        flowPrevNextFile(bookshelfId, path, true, sortType)
-            .map { it.firstOrNull()?.toModel() }
+    override fun nextFileModel(
+        bookshelfId: BookshelfId,
+        path: String,
+        sortType: SortType,
+    ): Flow<File?> = flowPrevNextFile(bookshelfId, path, true, sortType)
+        .map { it.firstOrNull()?.toModel() }
 
-    override fun prevFileModel(bookshelfId: BookshelfId, path: String, sortType: SortType): Flow<File?> =
-        flowPrevNextFile(bookshelfId, path, false, sortType)
-            .map { it.firstOrNull()?.toModel() }
+    override fun prevFileModel(
+        bookshelfId: BookshelfId,
+        path: String,
+        sortType: SortType,
+    ): Flow<File?> = flowPrevNextFile(bookshelfId, path, false, sortType)
+        .map { it.firstOrNull()?.toModel() }
 
     override suspend fun getCacheKeys(
         bookshelfId: BookshelfId,
@@ -175,9 +202,13 @@ internal class FileLocalDataSourceImpl(
         dao.deleteCacheKeyBy(diskCacheKey)
     }
 
-    override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>> = Pager(pagingConfig) {
-        dao.pagingSourceHistory()
-    }.flow.map { pagingData -> pagingData.map { it.toModel() as Book } }
+    override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>> =
+        Pager(
+            pagingConfig,
+        ) {
+            dao.pagingSourceHistory()
+        }.flow
+            .map { pagingData -> pagingData.map { it.toModel() as Book } }
 
     override fun lastHistory(): Flow<File?> = dao.lastHistory().map { it?.toModel() }
 
@@ -217,7 +248,9 @@ internal class FileLocalDataSourceImpl(
         }
     }
 
-    override suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String> = withContext(dispatcher) {
+    override suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String> = withContext(
+        dispatcher,
+    ) {
         dao.cacheKeyList(bookshelfId.value)
     }
 

@@ -30,7 +30,7 @@ fun EntryProviderScope<NavKey>.securitySettingsEntryGroup(
     securitySettingsEntry(
         onBackClick = state::onBackPressed,
         onChangeAuthEnable = onChangeAuthEnable,
-        onPasswordChangeClick = onPasswordChangeClick
+        onPasswordChangeClick = onPasswordChangeClick,
     )
 }
 
@@ -41,13 +41,16 @@ private fun EntryProviderScope<NavKey>.securitySettingsEntry(
     onPasswordChangeClick: () -> Unit,
 ) {
     entryScreen<SecuritySettingsKey, SecuritySettingsScreenContext>(
-        createContext = { (graph as SecuritySettingsScreenContext.Factory).createSecuritySettingsScreenContext() },
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
+        createContext = {
+            (graph as SecuritySettingsScreenContext.Factory)
+                .createSecuritySettingsScreenContext()
+        },
+        metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         SecuritySettingsScreenRoot(
             onBackClick = onBackClick,
             onChangeAuthEnable = onChangeAuthEnable,
-            onPasswordChangeClick = onPasswordChangeClick
+            onPasswordChangeClick = onPasswordChangeClick,
         )
     }
 }

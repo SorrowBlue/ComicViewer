@@ -11,7 +11,6 @@ annotation class BookshelfInsertReceiverScope
 
 @GraphExtension(BookshelfInsertReceiverScope::class)
 interface BookshelfInsertReceiverContext {
-
     val registerBookshelfUseCase: RegisterBookshelfUseCase
 
     @ContributesTo(AppScope::class)

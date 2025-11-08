@@ -42,9 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
 
 @Serializable
-internal data class BasicCollectionEditScreenUiState(
-    val isLoading: Boolean = false,
-)
+internal data class BasicCollectionEditScreenUiState(val isLoading: Boolean = false)
 
 @Composable
 internal fun BasicCollectionEditScreen(
@@ -68,23 +66,25 @@ internal fun BasicCollectionEditScreen(
                     navigationIcon = {
                         BackIconButton(
                             onClick = onBackClick,
-                            enabled = !uiState.isLoading
+                            enabled = !uiState.isLoading,
                         )
                     },
                     actions = {
                         IconButton(
                             onClick = form::handleSubmit,
-                            enabled = form.meta.canSubmit && !uiState.isLoading
+                            enabled = form.meta.canSubmit && !uiState.isLoading,
                         ) {
                             Icon(ComicIcons.Save, null)
                         }
                     },
-                    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
-                    scrollBehavior = scrollBehavior
+                    windowInsets = WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                    ),
+                    scrollBehavior = scrollBehavior,
                 )
             },
             contentWindowInsets = WindowInsets.safeDrawing,
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { contentPadding ->
             BasicCollectionContent(
                 lazyPagingItems = lazyPagingItems,
@@ -97,14 +97,16 @@ internal fun BasicCollectionEditScreen(
                             .padding(horizontal = ComicTheme.dimension.margin),
                     )
                 },
-                contentPadding = contentPadding.only(PaddingValuesSides.Horizontal + PaddingValuesSides.Bottom),
-                onDeleteClick = onDeleteClick
+                contentPadding = contentPadding.only(
+                    PaddingValuesSides.Horizontal + PaddingValuesSides.Bottom,
+                ),
+                onDeleteClick = onDeleteClick,
             )
         }
     } else {
         BasicAlertDialog(
             onDismissRequest = onBackClick,
-            modifier = Modifier.padding(ComicTheme.dimension.margin)
+            modifier = Modifier.padding(ComicTheme.dimension.margin),
         ) {
             val lazyListState = rememberLazyListState()
             AlertDialogContent(
@@ -117,7 +119,7 @@ internal fun BasicCollectionEditScreen(
                         Text(text = stringResource(Res.string.collection_editor_label_cancel))
                     }
                 },
-                scrollableState = lazyListState
+                scrollableState = lazyListState,
             ) {
                 BasicCollectionContent(
                     lazyPagingItems = lazyPagingItems,
@@ -125,12 +127,12 @@ internal fun BasicCollectionEditScreen(
                         CollectionNameTextField(
                             form = form,
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .fillMaxWidth(),
                         )
                     },
                     contentPadding = AlertDialogDefaults.dialogPaddingHorizonal,
                     state = lazyListState,
-                    onDeleteClick = onDeleteClick
+                    onDeleteClick = onDeleteClick,
                 )
             }
         }

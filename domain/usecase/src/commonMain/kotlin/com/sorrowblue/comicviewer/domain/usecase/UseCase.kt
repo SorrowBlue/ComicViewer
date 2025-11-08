@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import logcat.logcat
 
 abstract class UseCase<in R : UseCase.Request, out D, out E> {
-
     interface Request
 
     operator fun invoke(request: R): Flow<Resource<D, E>> {
@@ -17,7 +16,6 @@ abstract class UseCase<in R : UseCase.Request, out D, out E> {
 }
 
 abstract class OneShotUseCase<in R : OneShotUseCase.Request, out D, out E> {
-
     interface Request
 
     suspend operator fun invoke(request: R): Resource<D, E> {

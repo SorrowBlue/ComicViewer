@@ -6,9 +6,8 @@ import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
 import dev.zacsweers.metro.Inject
 
 @Inject
-internal class ClearAllHistoryInteractor(
-    private val fileLocalDataSource: FileLocalDataSource,
-) : ClearAllHistoryUseCase() {
+internal class ClearAllHistoryInteractor(private val fileLocalDataSource: FileLocalDataSource) :
+    ClearAllHistoryUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Unit> {
         fileLocalDataSource.deleteAllHistory()
         return Resource.Success(Unit)

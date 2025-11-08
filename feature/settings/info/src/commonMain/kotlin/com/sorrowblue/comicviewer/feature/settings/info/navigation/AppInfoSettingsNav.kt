@@ -33,7 +33,7 @@ fun EntryProviderScope<NavKey>.appInfoSettingsEntryGroup() {
         onBackClick = state::onBackPressed,
         onLicenceClick = {
             state.addToBackStack(LicenseKey)
-        }
+        },
     )
     licenseEntry(onBackClick = state::onBackPressed)
 }
@@ -44,18 +44,20 @@ private fun EntryProviderScope<NavKey>.appInfoSettingsEntry(
     onLicenceClick: () -> Unit,
 ) {
     entry<AppInfoSettingsKey>(
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
+        metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         AppInfoSettingsScreenRoot(
             onBackClick = onBackClick,
-            onLicenceClick = onLicenceClick
+            onLicenceClick = onLicenceClick,
         )
     }
 }
 
 context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.licenseEntry(onBackClick: () -> Unit) {
-    entryScreen<LicenseKey, LicenseScreenContext>(createContext = { (graph as LicenseScreenContext.Factory).createLicenseScreenContext() }) {
+    entryScreen<LicenseKey, LicenseScreenContext>(
+        createContext = { (graph as LicenseScreenContext.Factory).createLicenseScreenContext() },
+    ) {
         LicenseScreenRoot(onBackClick)
     }
 }

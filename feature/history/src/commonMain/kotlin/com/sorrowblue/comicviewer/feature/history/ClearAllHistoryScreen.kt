@@ -8,15 +8,12 @@ import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_btn_clear_all
 import comicviewer.feature.history.generated.resources.history_text_clear_all
 import comicviewer.feature.history.generated.resources.history_title_clear_all
+import comicviewer.framework.ui.generated.resources.Res as FrameworkUiRes
 import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
-import comicviewer.framework.ui.generated.resources.Res as FrameworkUiRes
 
 @Composable
-internal fun ClearAllHistoryScreen(
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit,
-) {
+internal fun ClearAllHistoryScreen(onDismissRequest: () -> Unit, onConfirm: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
@@ -30,6 +27,6 @@ internal fun ClearAllHistoryScreen(
             }
         },
         title = { Text(text = stringResource(Res.string.history_title_clear_all)) },
-        text = { Text(text = stringResource(Res.string.history_text_clear_all)) }
+        text = { Text(text = stringResource(Res.string.history_text_clear_all)) },
     )
 }

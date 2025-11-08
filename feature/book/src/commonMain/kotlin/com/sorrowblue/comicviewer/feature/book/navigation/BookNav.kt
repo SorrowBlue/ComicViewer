@@ -52,13 +52,13 @@ fun EntryProviderScope<NavKey>.bookEntryGroup(onSettingsClick: () -> Unit) {
                     bookshelfId = book.bookshelfId,
                     path = book.path,
                     name = book.name,
-                    collectionId = collectionId
-                )
+                    collectionId = collectionId,
+                ),
             )
         },
         onContainerLongClick = {
             state.addToBackStack(BookMenuKey)
-        }
+        },
     )
     bookMenuEntry(onDismissRequest = state::onBackPressed)
     receiveBookEntry(onCloseClick = state::onBackPressed)
@@ -82,21 +82,19 @@ private fun EntryProviderScope<NavKey>.bookEntry(
             onBackClick = onBackClick,
             onSettingsClick = onSettingsClick,
             onNextBookClick = onNextBookClick,
-            onContainerLongClick = onContainerLongClick
+            onContainerLongClick = onContainerLongClick,
         )
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.bookMenuEntry(
-    onDismissRequest: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.bookMenuEntry(onDismissRequest: () -> Unit) {
     entryScreen<BookMenuKey, BookMenuScreenContext>(
         createContext = { (graph as BookMenuScreenContext.Factory).createBookMenuScreenContext() },
-        metadata = DialogSceneStrategy.dialog()
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         BookMenuScreenRoot(
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
         )
     }
 }

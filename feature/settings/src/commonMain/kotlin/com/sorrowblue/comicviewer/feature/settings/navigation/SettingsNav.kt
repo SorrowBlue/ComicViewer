@@ -98,7 +98,7 @@ fun EntryProviderScope<NavKey>.settingsEntryGroup(
 
                 SettingsItem.LANGUAGE -> appNavigationState.addToBackStack(InAppLanguagePickerKey)
             }
-        }
+        },
     )
     pluginSettingsEntry(onBackClick = appNavigationState::onBackPressed)
     imageCacheSettingsEntry(onBackClick = appNavigationState::onBackPressed)
@@ -109,7 +109,7 @@ fun EntryProviderScope<NavKey>.settingsEntryGroup(
     appInfoSettingsEntryGroup()
     securitySettingsEntryGroup(
         onChangeAuthEnable = onChangeAuthEnable,
-        onPasswordChangeClick = onPasswordChangeClick
+        onPasswordChangeClick = onPasswordChangeClick,
     )
     viewerSettingsEntryGroup()
 }
@@ -122,13 +122,15 @@ private fun EntryProviderScope<NavKey>.settingsMainEntry(
 ) {
     entry<SettingsKey>(
         metadata = ListDetailSceneStrategy.listPane("Settings", detailPlaceholder = {
-            with((graph as DisplaySettingsScreenContext.Factory).createDisplaySettingsScreenContext()) {
+            with(
+                (graph as DisplaySettingsScreenContext.Factory).createDisplaySettingsScreenContext(),
+            ) {
                 DisplaySettingsScreenRoot(
                     onBackClick = onBackClick,
-                    onDarkModeClick = {}
+                    onDarkModeClick = {},
                 )
             }
-        })
+        }),
     ) {
         SettingsScreenRoot(
             onBackClick = onBackClick,
@@ -139,11 +141,9 @@ private fun EntryProviderScope<NavKey>.settingsMainEntry(
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.pluginSettingsEntry(
-    onBackClick: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.pluginSettingsEntry(onBackClick: () -> Unit) {
     entry<PluginSettingsKey>(
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
+        metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         PluginScreenRoot(
             onBackClick = onBackClick,
@@ -152,24 +152,25 @@ private fun EntryProviderScope<NavKey>.pluginSettingsEntry(
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.imageCacheSettingsEntry(
-    onBackClick: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.imageCacheSettingsEntry(onBackClick: () -> Unit) {
     entryScreen<ImageCacheSettingsKey, ImageCacheScreenContext>(
-        createContext = { (graph as ImageCacheScreenContext.Factory).createImageCacheScreenContext() },
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
+        createContext = {
+            (graph as ImageCacheScreenContext.Factory).createImageCacheScreenContext()
+        },
+        metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         ImageCacheScreenRoot(onBackClick = onBackClick)
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.inAppLanguagePickerEntry(
-    onBackClick: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.inAppLanguagePickerEntry(onBackClick: () -> Unit) {
     entryScreen<InAppLanguagePickerKey, InAppLanguagePickerScreenContext>(
-        createContext = { (graph as InAppLanguagePickerScreenContext.Factory).createInAppLanguagePickerScreenContext() },
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
+        createContext = {
+            (graph as InAppLanguagePickerScreenContext.Factory)
+                .createInAppLanguagePickerScreenContext()
+        },
+        metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         InAppLanguagePickerScreenRoot(onBackClick = onBackClick)
     }

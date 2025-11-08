@@ -81,7 +81,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
             trailingIcon = {
                 if (uiState.checking) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
                     )
                 } else {
                     IconButton(
@@ -91,13 +91,12 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
                     }
                 }
             },
-
             modifier = Modifier
                 .testTag("FolderSelect")
                 .immatureRectangleProgressBorder(
                     color = ComicTheme.colorScheme.secondary,
-                    enable = uiState.checking
-                )
+                    enable = uiState.checking,
+                ),
         )
     }
 }
@@ -108,7 +107,9 @@ internal fun rememberDocumentSheetState(
     scope: CoroutineScope = LocalCoroutineScope.current,
 ): DocumentSheetState {
     val managePdfPluginSettingsUseCase =
-        (LocalPlatformContext.current as TutorialScreenContext.Factory).createTutorialScreenContext().managePdfPluginSettingsUseCase
+        (LocalPlatformContext.current as TutorialScreenContext.Factory)
+            .createTutorialScreenContext()
+            .managePdfPluginSettingsUseCase
     val state =
         remember { DocumentSheetStateImpl(uriHandler, managePdfPluginSettingsUseCase, scope) }
     val pickerResultLauncher =
@@ -120,10 +121,10 @@ internal fun rememberDocumentSheetState(
 }
 
 internal interface DocumentSheetState {
-
     val uiState: DocumentSheetUiState
 
     fun onDocumentDownloadClick()
+
     fun onSettingsClick()
 }
 
@@ -132,7 +133,6 @@ private class DocumentSheetStateImpl(
     private val settingsUseCase: ManagePdfPluginSettingsUseCase,
     private val scope: CoroutineScope,
 ) : DocumentSheetState {
-
     lateinit var directoryPickerLauncher: PickerResultLauncher
 
     override var uiState by mutableStateOf(DocumentSheetUiState())
@@ -149,26 +149,33 @@ private class DocumentSheetStateImpl(
         uiState = uiState.copy(checking = true)
         scope.launch {
             logcat { "path=${directory?.path}" }
-            directory?.file?.resolve("app")?.listFiles {
-                logcat { "path=${it.path}" }
-                it.name.startsWith("pdf-desktop-") && it.extension == "jar"
-            }?.firstOrNull()?.let { jarFile ->
-                // OK
-                settingsUseCase.edit {
-                    it.copy(pluginJarPath = jarFile.absolutePath, pluginRootPath = directory.path)
-                }
-                uiState = uiState.copy(folderPath = directory.path)
-                uiState = uiState.copy(
-                    error = "",
-                    info = getString(Res.string.tutorial_msg_found_pdf_plugin)
-                )
-                delay(500)
-                uiState = uiState.copy(checking = false)
-            } ?: run {
+            directory
+                ?.file
+                ?.resolve("app")
+                ?.listFiles {
+                    logcat { "path=${it.path}" }
+                    it.name.startsWith("pdf-desktop-") && it.extension == "jar"
+                }?.firstOrNull()
+                ?.let { jarFile ->
+                    // OK
+                    settingsUseCase.edit {
+                        it.copy(
+                            pluginJarPath = jarFile.absolutePath,
+                            pluginRootPath = directory.path,
+                        )
+                    }
+                    uiState = uiState.copy(folderPath = directory.path)
+                    uiState = uiState.copy(
+                        error = "",
+                        info = getString(Res.string.tutorial_msg_found_pdf_plugin),
+                    )
+                    delay(500)
+                    uiState = uiState.copy(checking = false)
+                } ?: run {
                 uiState = uiState.copy(checking = false)
                 uiState = uiState.copy(
                     error = getString(Res.string.tutorial_msg_not_found_pdf_plugin),
-                    info = ""
+                    info = "",
                 )
             }
         }

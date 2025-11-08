@@ -11,15 +11,12 @@ import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionUseCase
 import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import com.sorrowblue.comicviewer.framework.ui.rememberAdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 internal interface CollectionListScreenState {
-
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyPagingItems: LazyPagingItems<Collection>
     val lazyListState: LazyListState
@@ -48,7 +45,6 @@ internal fun rememberCollectionListScreenState(
 
 @Stable
 private class CollectionListScreenStateImpl : CollectionListScreenState {
-
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
     override lateinit var lazyListState: LazyListState
     lateinit var scope: CoroutineScope

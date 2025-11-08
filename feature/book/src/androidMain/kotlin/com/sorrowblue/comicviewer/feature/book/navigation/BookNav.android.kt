@@ -8,13 +8,11 @@ import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 
 context(graph: PlatformGraph)
-internal actual fun EntryProviderScope<NavKey>.receiveBookEntry(
-    onCloseClick: () -> Unit,
-) {
+internal actual fun EntryProviderScope<NavKey>.receiveBookEntry(onCloseClick: () -> Unit) {
     entryScreen<ReceiveBookKey, ReceiveBookScreenContext>(
         createContext = {
             (graph as ReceiveBookScreenContext.Factory).createReceiveBookScreenContext()
-        }
+        },
     ) {
         ReceiveBookScreenRoot(it.uri)
     }

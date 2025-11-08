@@ -97,24 +97,23 @@ sealed interface CollectionKey : NavigationKey {
     data class Delete(val id: CollectionId) : CollectionKey
 
     @Serializable
-    data class Folder(
-        override val bookshelfId: BookshelfId,
-        override val path: String,
-    ) : CollectionKey, FolderKey {
+    data class Folder(override val bookshelfId: BookshelfId, override val path: String) :
+        CollectionKey,
+        FolderKey {
         override val restorePath: String? = null
     }
 
     @Serializable
-    data class FileInfo(
-        override val fileKey: File.Key,
-    ) : CollectionKey, FileInfoKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        CollectionKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
     @Serializable
-    data class FileInfo2(
-        override val fileKey: File.Key,
-    ) : CollectionKey, FileInfoKey {
+    data class FileInfo2(override val fileKey: File.Key) :
+        CollectionKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 }
@@ -146,25 +145,25 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
         },
         onCreateSmartCollectionClick = {
             state.addToBackStack(CollectionKey.CreateSmart())
-        }
+        },
     )
 
     collectionCreateBasicEntry(
         onBackClick = state::onBackPressed,
-        onComplete = state::onBackPressed
+        onComplete = state::onBackPressed,
     )
     collectionEditBasicEntry(
         onBackClick = state::onBackPressed,
-        onComplete = state::onBackPressed
+        onComplete = state::onBackPressed,
     )
 
     collectionCreateSmartEntry(
         onCancelClick = state::onBackPressed,
-        onComplete = state::onBackPressed
+        onComplete = state::onBackPressed,
     )
     collectionEditSmartEntry(
         onCancelClick = state::onBackPressed,
-        onComplete = state::onBackPressed
+        onComplete = state::onBackPressed,
     )
 
     collectionDetailEntry(
@@ -177,7 +176,7 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
 
                 is Folder -> {
                     state.addToBackStack(
-                        CollectionKey.Folder(file.bookshelfId, file.path)
+                        CollectionKey.Folder(file.bookshelfId, file.path),
                     )
                 }
             }
@@ -186,17 +185,17 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
             state.addToBackStack(CollectionKey.FileInfo2(it.key()))
         },
         onEditClick = { id ->
-            /* TODO */
+            // TODO
         },
         onDeleteClick = { id ->
             state.addToBackStack(CollectionKey.Delete(id))
         },
-        onSettingsClick = onSettingsClick
+        onSettingsClick = onSettingsClick,
     )
 
     collectionDeleteEntry(
         onBackClick = state::onBackPressed,
-        onComplete = state::onBackPressed
+        onComplete = state::onBackPressed,
     )
 
     folderEntryGroup<CollectionKey.Folder, CollectionKey.FileInfo>(
@@ -211,7 +210,7 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
 
                 is Folder -> {
                     state.addToBackStack(
-                        CollectionKey.Folder(file.bookshelfId, file.path)
+                        CollectionKey.Folder(file.bookshelfId, file.path),
                     )
                 }
             }
@@ -235,7 +234,7 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
         onCollectionClick = {},
         onOpenFolderClick = {
             state.addToBackStack(CollectionKey.Folder(it.bookshelfId, it.path))
-        }
+        },
     )
 }
 
@@ -249,7 +248,10 @@ private fun EntryProviderScope<NavKey>.collectionListEntry(
     onCreateSmartCollectionClick: () -> Unit,
 ) {
     entryScreen<CollectionKey.List, CollectionListScreenContext>(
-        createContext = { (graph as CollectionListScreenContext.Factory).createCollectionListScreenContext() },
+        createContext = {
+            (graph as CollectionListScreenContext.Factory)
+                .createCollectionListScreenContext()
+        },
     ) {
         CollectionListScreenRoot(
             onItemClick = { onItemClick(it.id) },
@@ -268,8 +270,11 @@ private fun EntryProviderScope<NavKey>.collectionCreateBasicEntry(
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.CreateBasic, BasicCollectionCreateScreenContext>(
-        createContext = { (graph as BasicCollectionCreateScreenContext.Factory).createBasicCollectionCreateScreenContext() },
-        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+        createContext = {
+            (graph as BasicCollectionCreateScreenContext.Factory)
+                .createBasicCollectionCreateScreenContext()
+        },
+        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
         BasicCollectionCreateScreenRoot(
             bookshelfId = it.bookshelfId,
@@ -286,8 +291,11 @@ private fun EntryProviderScope<NavKey>.collectionEditBasicEntry(
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.EditBasic, BasicCollectionEditScreenContext>(
-        createContext = { (graph as BasicCollectionEditScreenContext.Factory).createBasicCollectionEditScreenContext() },
-        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+        createContext = {
+            (graph as BasicCollectionEditScreenContext.Factory)
+                .createBasicCollectionEditScreenContext()
+        },
+        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
         BasicCollectionEditScreenRoot(
             collectionId = it.collectionId,
@@ -303,14 +311,17 @@ private fun EntryProviderScope<NavKey>.collectionCreateSmartEntry(
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.CreateSmart, SmartCollectionCreateScreenContext>(
-        createContext = { (graph as SmartCollectionCreateScreenContext.Factory).createSmartCollectionCreateScreenContext() },
-        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+        createContext = {
+            (graph as SmartCollectionCreateScreenContext.Factory)
+                .createSmartCollectionCreateScreenContext()
+        },
+        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
         SmartCollectionCreateScreenRoot(
             bookshelfId = it.bookshelfId,
             searchCondition = it.searchCondition,
             onCancelClick = onCancelClick,
-            onComplete = onComplete
+            onComplete = onComplete,
         )
     }
 }
@@ -321,13 +332,16 @@ private fun EntryProviderScope<NavKey>.collectionEditSmartEntry(
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.EditSmart, SmartCollectionEditScreenContext>(
-        createContext = { (graph as SmartCollectionEditScreenContext.Factory).createSmartCollectionEditScreenContext() },
-        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+        createContext = {
+            (graph as SmartCollectionEditScreenContext.Factory)
+                .createSmartCollectionEditScreenContext()
+        },
+        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
         SmartCollectionEditScreenRoot(
             collectionId = it.collectionId,
             onCancelClick = onCancelClick,
-            onComplete = onComplete
+            onComplete = onComplete,
         )
     }
 }
@@ -342,8 +356,10 @@ private fun EntryProviderScope<NavKey>.collectionDetailEntry(
     onSettingsClick: () -> Unit,
 ) {
     entryScreen<CollectionKey.Detail, CollectionScreenContext>(
-        createContext = { (graph as CollectionScreenContext.Factory).createCollectionScreenContext() },
-        metadata = SupportingPaneSceneStrategy.mainPane("Collection")
+        createContext = {
+            (graph as CollectionScreenContext.Factory).createCollectionScreenContext()
+        },
+        metadata = SupportingPaneSceneStrategy.mainPane("Collection"),
     ) { detail ->
         CollectionScreenRoot(
             id = detail.id,
@@ -363,13 +379,16 @@ private fun EntryProviderScope<NavKey>.collectionDeleteEntry(
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.Delete, DeleteCollectionScreenContext>(
-        createContext = { (graph as DeleteCollectionScreenContext.Factory).createDeleteCollectionScreenContext() },
-        metadata = DialogSceneStrategy.dialog()
+        createContext = {
+            (graph as DeleteCollectionScreenContext.Factory)
+                .createDeleteCollectionScreenContext()
+        },
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         DeleteCollectionScreenRoot(
             id = it.id,
             onBackClick = onBackClick,
-            onComplete = onComplete
+            onComplete = onComplete,
         )
     }
 }

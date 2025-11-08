@@ -11,7 +11,5 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 @Inject
 internal class LicenseeHelperImpl : LicenseeHelper {
     @OptIn(ExperimentalResourceApi::class)
-    override suspend fun loadLibraries(): ByteArray {
-        return Res.readBytes("files/aboutlibraries.json")
-    }
+    override suspend fun loadLibraries(): ByteArray = Res.readBytes("files/aboutlibraries.json")
 }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
@@ -21,6 +22,8 @@ import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
 
 @Composable
 internal fun BookshelfImageCacheInfoItem(
@@ -33,15 +36,15 @@ internal fun BookshelfImageCacheInfoItem(
         modifier = modifier,
         title = {
             Text(text = imageCacheInfo.bookshelf.displayName)
-        }
+        },
     ) {
         ThumbnailImageCacheItem(
             imageCache = imageCacheInfo.thumbnailImageCache,
-            onClick = onThumbnailImageCacheClick
+            onClick = onThumbnailImageCacheClick,
         )
         BookPageImageCacheItem(
             imageCache = imageCacheInfo.bookPageImageCache,
-            onClick = onBookPageImageCacheClick
+            onClick = onBookPageImageCacheClick,
         )
     }
 }
@@ -58,7 +61,7 @@ private fun ThumbnailImageCacheItem(imageCache: ThumbnailImageCache, onClick: ()
                 Text(
                     modifier = Modifier.align(Alignment.End),
                     style = ComicTheme.typography.bodySmall,
-                    text = "${imageCache.size.megaByte}MB / ${imageCache.maxSize.megaByte}MB"
+                    text = "${imageCache.size.megaByte}MB / ${imageCache.maxSize.megaByte}MB",
                 )
                 val color = ProgressIndicatorDefaults.linearColor
                 LinearProgressIndicator(
@@ -72,9 +75,9 @@ private fun ThumbnailImageCacheItem(imageCache: ThumbnailImageCache, onClick: ()
                             drawScope = this,
                             stopSize = 0.dp,
                             color = color,
-                            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
                         )
-                    }
+                    },
                 )
             }
         },
@@ -82,7 +85,7 @@ private fun ThumbnailImageCacheItem(imageCache: ThumbnailImageCache, onClick: ()
             IconButton(onClick = onClick) {
                 Icon(imageVector = ComicIcons.Delete, contentDescription = null)
             }
-        }
+        },
     )
 }
 
@@ -98,7 +101,7 @@ private fun BookPageImageCacheItem(imageCache: BookPageImageCache, onClick: () -
                 Text(
                     modifier = Modifier.align(Alignment.End),
                     style = ComicTheme.typography.bodySmall,
-                    text = "${imageCache.size.megaByte}MB / ${imageCache.maxSize.megaByte}MB"
+                    text = "${imageCache.size.megaByte}MB / ${imageCache.maxSize.megaByte}MB",
                 )
                 val color = ProgressIndicatorDefaults.linearColor
                 LinearProgressIndicator(
@@ -112,9 +115,9 @@ private fun BookPageImageCacheItem(imageCache: BookPageImageCache, onClick: () -
                             drawScope = this,
                             stopSize = 0.dp,
                             color = color,
-                            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
                         )
-                    }
+                    },
                 )
             }
         },
@@ -122,47 +125,22 @@ private fun BookPageImageCacheItem(imageCache: BookPageImageCache, onClick: () -
             IconButton(onClick = onClick) {
                 Icon(imageVector = ComicIcons.Delete, contentDescription = null)
             }
-        }
+        },
     )
 }
 
+@Preview
 @Composable
-internal fun OtherImageCacheItem(
-    imageCache: ImageCache,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    SettingsCategory(
-        modifier = modifier,
-        title = { Text(text = "その他の画像キャッシュ") }
-    ) {
-        Setting(title = {}, onClick = {}, widget = {
-            IconButton(onClick = onClick) {
-                Icon(imageVector = ComicIcons.Delete, contentDescription = null)
-            }
-        }, summary = {
-            Column {
-                Text(
-                    style = ComicTheme.typography.bodySmall,
-                    text = "${imageCache.size.megaByte}MB / ${imageCache.maxSize.megaByte}MB"
-                )
-                val color = ProgressIndicatorDefaults.linearColor
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    strokeCap = StrokeCap.Butt,
-                    gapSize = 0.dp,
-                    progress = { imageCache.size.toFloat() / imageCache.maxSize },
-                    drawStopIndicator = {
-                        drawStopIndicator(
-                            drawScope = this,
-                            stopSize = 0.dp,
-                            color = color,
-                            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
-                        )
-                    }
-                )
-            }
-        })
+private fun BookshelfImageCacheInfoItemPreview() {
+    PreviewTheme {
+        BookshelfImageCacheInfoItem(
+            imageCacheInfo = BookshelfImageCacheInfo(
+                fakeInternalStorage(),
+                ThumbnailImageCache(123456, 1234567),
+                BookPageImageCache(1234, 12345),
+            ),
+            onThumbnailImageCacheClick = {},
+            onBookPageImageCacheClick = {},
+        )
     }
 }

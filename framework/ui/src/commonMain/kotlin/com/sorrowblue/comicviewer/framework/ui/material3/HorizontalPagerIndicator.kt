@@ -39,7 +39,7 @@ fun HorizontalPagerIndicator(
 
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(spacing),
@@ -65,15 +65,14 @@ fun HorizontalPagerIndicator(
                             0f,
                             (pageCount - 1)
                                 .coerceAtLeast(0)
-                                .toFloat()
+                                .toFloat(),
                         )
 
                     IntOffset(
                         x = ((spacingPx + indicatorWidthPx) * scrollPosition).toInt(),
-                        y = 0
+                        y = 0,
                     )
-                }
-                .size(width = indicatorWidth, height = indicatorHeight)
+                }.size(width = indicatorWidth, height = indicatorHeight)
                 .then(
                     if (pageCount > 0) {
                         Modifier.background(
@@ -82,8 +81,8 @@ fun HorizontalPagerIndicator(
                         )
                     } else {
                         Modifier
-                    }
-                )
+                    },
+                ),
         )
     }
 }

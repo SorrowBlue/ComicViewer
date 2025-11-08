@@ -14,7 +14,6 @@ annotation class BasicCollectionAddScreenScope
 
 @GraphExtension(BasicCollectionAddScreenScope::class)
 interface BasicCollectionAddScreenContext {
-
     val removeCollectionFileUseCase: RemoveCollectionFileUseCase
     val addCollectionFileUseCase: AddCollectionFileUseCase
     val collectionSettingsUseCase: CollectionSettingsUseCase

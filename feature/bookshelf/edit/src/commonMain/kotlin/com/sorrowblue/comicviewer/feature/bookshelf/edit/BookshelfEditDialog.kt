@@ -33,13 +33,13 @@ fun BookshelfEditDialog(state: BookshelfEditDialogState) {
                 type = type.editorType,
                 onBackClick = state::hideDialog,
                 discardConfirm = state::showDiscard,
-                onEditComplete = state::hideDialog
+                onEditComplete = state::hideDialog,
             )
 
         BookshelfEditDialogType.Selection ->
             BookshelfSelectionDialog(
                 onBackClick = state::hideDialog,
-                onTypeClick = state::showRegisterDialog
+                onTypeClick = state::showRegisterDialog,
             )
 
         BookshelfEditDialogType.Hide -> Unit

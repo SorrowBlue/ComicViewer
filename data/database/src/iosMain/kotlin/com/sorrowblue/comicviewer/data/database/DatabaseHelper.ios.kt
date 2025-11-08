@@ -13,7 +13,7 @@ import platform.Foundation.NSUserDomainMask
 @Inject
 internal actual class DatabaseHelper actual constructor(context: PlatformContext) {
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {
-        val dbFilePath = documentDirectory() + "/$DATABASE_NAME"
+        val dbFilePath = documentDirectory() + "/$DatabaseName"
         return Room
             .databaseBuilder<ComicViewerDatabase>(
                 name = dbFilePath,

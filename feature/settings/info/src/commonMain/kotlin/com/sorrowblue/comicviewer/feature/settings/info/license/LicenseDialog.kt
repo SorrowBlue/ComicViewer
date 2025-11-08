@@ -20,10 +20,7 @@ import comicviewer.feature.settings.info.generated.resources.settings_info_label
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun LicenseDialog(
-    library: Library,
-    onDismissRequest: () -> Unit,
-) {
+internal fun LicenseDialog(library: Library, onDismissRequest: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
@@ -32,22 +29,31 @@ internal fun LicenseDialog(
             }
         },
         title = {
-            Text(library.licenses.firstOrNull()?.name.orEmpty())
+            Text(
+                library.licenses
+                    .firstOrNull()
+                    ?.name
+                    .orEmpty(),
+            )
         },
         text = {
             Box(modifier = Modifier.fillMaxHeight()) {
                 val scrollState = rememberScrollState()
                 Text(
-                    text = library.licenses.firstOrNull()?.licenseContent.orEmpty(),
-                    modifier = Modifier.verticalScroll(scrollState)
+                    text = library.licenses
+                        .firstOrNull()
+                        ?.licenseContent
+                        .orEmpty(),
+                    modifier = Modifier.verticalScroll(scrollState),
                 )
                 VerticalScrollbar(
-                    modifier = Modifier.align(Alignment.CenterEnd)
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
                         .fillMaxHeight(),
                     style = AlertDialogDefaults.scrollbarStyle(),
-                    adapter = rememberScrollbarAdapter(scrollState)
+                    adapter = rememberScrollbarAdapter(scrollState),
                 )
             }
-        }
+        },
     )
 }

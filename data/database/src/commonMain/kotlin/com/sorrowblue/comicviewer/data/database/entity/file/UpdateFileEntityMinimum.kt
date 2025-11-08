@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 
 internal class UpdateFileEntityMinimum(
     val path: String,
-    @ColumnInfo(name = FileEntity.BOOKSHELF_ID) val bookshelfId: BookshelfId,
+    @ColumnInfo(name = FileEntity.BookshelfId) val bookshelfId: BookshelfId,
     val size: Long,
     @ColumnInfo(name = "last_modified") val lastModified: Long,
     @ColumnInfo(name = "hidden") val isHidden: Boolean,

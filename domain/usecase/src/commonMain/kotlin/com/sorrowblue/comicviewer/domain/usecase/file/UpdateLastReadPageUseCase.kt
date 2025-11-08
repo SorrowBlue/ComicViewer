@@ -7,7 +7,6 @@ import kotlin.time.ExperimentalTime
 
 abstract class UpdateLastReadPageUseCase :
     OneShotUseCase<UpdateLastReadPageUseCase.Request, Unit, Unit>() {
-
     @OptIn(ExperimentalTime::class)
     class Request(
         val bookshelfId: BookshelfId,

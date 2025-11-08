@@ -48,7 +48,6 @@ internal actual fun rememberBookshelfInfoContentsState(
     bookshelfFolder: BookshelfFolder,
     coroutineScope: CoroutineScope,
 ): BookshelfInfoContentsState {
-
     @SuppressLint("ContextCastToActivity")
     val activity = LocalContext.current as Activity
     val globalSnackbarState = LocalGlobalSnackbarState.current
@@ -64,15 +63,15 @@ internal actual fun rememberBookshelfInfoContentsState(
             context.pagingBookshelfBookUseCase(
                 PagingBookshelfBookUseCase.Request(
                     bookshelfFolder.bookshelf.id,
-                    PagingConfig(4)
-                )
+                    PagingConfig(4),
+                ),
             )
         }
     }
 
     stateImpl.permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
-        stateImpl::onNotificationResult
+        stateImpl::onNotificationResult,
     )
     stateImpl.intentLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
@@ -84,8 +83,9 @@ private class BookshelfInfoMainContentsStateImpl(
     override val activity: Activity,
     private val globalSnackbarState: GlobalSnackbarState,
     private val scope: CoroutineScope,
-) : BookshelfInfoContentsState, NotificationPermissionRequest, IntentLauncher {
-
+) : BookshelfInfoContentsState,
+    NotificationPermissionRequest,
+    IntentLauncher {
     override lateinit var lazyPagingItems: LazyPagingItems<BookThumbnail>
 
     private lateinit var currentScanType: ScanType
@@ -98,8 +98,8 @@ private class BookshelfInfoMainContentsStateImpl(
     override var uiState by mutableStateOf(
         BookshelfInfoContentsUiState(
             bookshelf = bookshelfFolder.bookshelf,
-            folder = bookshelfFolder.folder
-        )
+            folder = bookshelfFolder.folder,
+        ),
     )
         private set
 
@@ -110,10 +110,10 @@ private class BookshelfInfoMainContentsStateImpl(
             showInContextUI = {
                 events.tryEmit(
                     BookshelfInfoContentsEvent.ShowNotificationPermissionRationale(
-                        ScanType.File
-                    )
+                        ScanType.File,
+                    ),
                 )
-            }
+            },
         )
     }
 
@@ -124,10 +124,10 @@ private class BookshelfInfoMainContentsStateImpl(
             showInContextUI = {
                 events.tryEmit(
                     BookshelfInfoContentsEvent.ShowNotificationPermissionRationale(
-                        ScanType.Thumbnail
-                    )
+                        ScanType.Thumbnail,
+                    ),
                 )
-            }
+            },
         )
     }
 
@@ -164,8 +164,8 @@ private class BookshelfInfoMainContentsStateImpl(
                         when (currentScanType) {
                             ScanType.File -> Res.string.bookshelf_info_label_scanning_file
                             ScanType.Thumbnail -> Res.string.bookshelf_info_label_scanning_thumbnails
-                        }
-                    )
+                        },
+                    ),
                 )
             } else {
                 globalSnackbarState.showSnackbar(
@@ -173,10 +173,10 @@ private class BookshelfInfoMainContentsStateImpl(
                         when (currentScanType) {
                             ScanType.File -> Res.string.bookshelf_info_label_scanning_file_no_notification
                             ScanType.Thumbnail -> Res.string.bookshelf_info_label_scanning_thumbnails_no_notification
-                        }
+                        },
                     ),
                     actionLabel = getString(Res.string.bookshelf_info_label_notification_settings),
-                    duration = SnackbarDuration.Long
+                    duration = SnackbarDuration.Long,
                 ) {
                     when (it) {
                         SnackbarResult.Dismissed -> Unit

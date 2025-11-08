@@ -23,14 +23,16 @@ internal fun rememberBookMenuScreenState(): BookMenuScreenState {
     return remember {
         BookMenuScreenStateImpl(
             coroutineScope = coroutineScope,
-            manageBookSettingsUseCase = context.manageBookSettingsUseCase
+            manageBookSettingsUseCase = context.manageBookSettingsUseCase,
         )
     }
 }
 
 internal interface BookMenuScreenState {
     val uiState: BookMenuScreenUiState
+
     fun onPageFormatChange(pageFormat2: PageFormat2)
+
     fun onPageScaleChange(pageScale: PageScale)
 }
 
@@ -38,29 +40,29 @@ private class BookMenuScreenStateImpl(
     private val coroutineScope: CoroutineScope,
     private val manageBookSettingsUseCase: ManageBookSettingsUseCase,
 ) : BookMenuScreenState {
-
     override var uiState by mutableStateOf(BookMenuScreenUiState())
         private set
 
     init {
-        manageBookSettingsUseCase.settings.onEach {
-            uiState = uiState.copy(
-                pageFormat2 = when (it.pageFormat) {
-                    PageFormat.Default -> PageFormat2.Default
-                    PageFormat.Spread -> PageFormat2.Spread
-                    PageFormat.Split -> PageFormat2.Split
-                    PageFormat.Auto -> PageFormat2.SplitSpread
-                },
-                pageScale = when (it.pageScale) {
-                    BookSettings.PageScale.Fit -> PageScale.Fit
-                    BookSettings.PageScale.FillWidth -> PageScale.FillWidth
-                    BookSettings.PageScale.FillHeight -> PageScale.FillHeight
-                    BookSettings.PageScale.Inside -> PageScale.Inside
-                    BookSettings.PageScale.None -> PageScale.None
-                    BookSettings.PageScale.FillBounds -> PageScale.FillBounds
-                }
-            )
-        }.launchIn(coroutineScope)
+        manageBookSettingsUseCase.settings
+            .onEach {
+                uiState = uiState.copy(
+                    pageFormat2 = when (it.pageFormat) {
+                        PageFormat.Default -> PageFormat2.Default
+                        PageFormat.Spread -> PageFormat2.Spread
+                        PageFormat.Split -> PageFormat2.Split
+                        PageFormat.Auto -> PageFormat2.SplitSpread
+                    },
+                    pageScale = when (it.pageScale) {
+                        BookSettings.PageScale.Fit -> PageScale.Fit
+                        BookSettings.PageScale.FillWidth -> PageScale.FillWidth
+                        BookSettings.PageScale.FillHeight -> PageScale.FillHeight
+                        BookSettings.PageScale.Inside -> PageScale.Inside
+                        BookSettings.PageScale.None -> PageScale.None
+                        BookSettings.PageScale.FillBounds -> PageScale.FillBounds
+                    },
+                )
+            }.launchIn(coroutineScope)
     }
 
     override fun onPageFormatChange(pageFormat2: PageFormat2) {
@@ -72,7 +74,7 @@ private class BookMenuScreenStateImpl(
                         PageFormat2.Split -> PageFormat.Split
                         PageFormat2.Spread -> PageFormat.Spread
                         PageFormat2.SplitSpread -> PageFormat.Auto
-                    }
+                    },
                 )
             }
         }
@@ -89,7 +91,7 @@ private class BookMenuScreenStateImpl(
                         PageScale.Inside -> BookSettings.PageScale.Inside
                         PageScale.None -> BookSettings.PageScale.None
                         PageScale.FillBounds -> BookSettings.PageScale.FillBounds
-                    }
+                    },
                 )
             }
         }

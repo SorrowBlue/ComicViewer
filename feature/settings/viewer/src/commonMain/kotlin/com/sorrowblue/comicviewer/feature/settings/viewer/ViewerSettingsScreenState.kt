@@ -16,15 +16,25 @@ import kotlinx.coroutines.launch
 @Stable
 internal interface ViewerSettingsScreenState {
     val uiState: SettingsViewerScreenUiState
+
     fun onStatusBarShowChange(value: Boolean)
+
     fun onNavigationBarShowChange(value: Boolean)
+
     fun onTurnOnScreenChange(value: Boolean)
+
     fun onCutWhitespaceChange(value: Boolean)
+
     fun onCacheImageChange(value: Boolean)
+
     fun onDisplayFirstPageChange(value: Boolean)
+
     fun onImageQualityChange(value: Float)
+
     fun onPreloadPagesChange(value: Float)
+
     fun onFixScreenBrightnessChange(value: Boolean)
+
     fun onScreenBrightnessChange(value: Float)
 }
 
@@ -33,7 +43,10 @@ context(context: ViewerSettingsScreenContext)
 internal fun rememberViewerSettingsScreenState(): ViewerSettingsScreenState {
     val scope = rememberCoroutineScope()
     return remember(scope) {
-        ViewerSettingsScreenStateImpl(scope = scope, manageViewerSettingsUseCase = TODO() /* context.manageViewerSettingsUseCase */)
+        ViewerSettingsScreenStateImpl(
+            scope = scope,
+            manageViewerSettingsUseCase = TODO(), // context.manageViewerSettingsUseCase
+        )
     }
 }
 
@@ -41,25 +54,27 @@ private class ViewerSettingsScreenStateImpl(
     private val scope: CoroutineScope,
     private val manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewerSettingsScreenState {
-
-    override var uiState: SettingsViewerScreenUiState by mutableStateOf(SettingsViewerScreenUiState())
+    override var uiState: SettingsViewerScreenUiState by mutableStateOf(
+        SettingsViewerScreenUiState(),
+    )
         private set
 
     init {
-        manageViewerSettingsUseCase.settings.onEach {
-            uiState = uiState.copy(
-                isStatusBarShow = it.showStatusBar,
-                isNavigationBarShow = it.showNavigationBar,
-                isTurnOnScreen = it.keepOnScreen,
-                isCacheImage = false,
-                isDisplayFirstPage = false,
-                isCutWhitespace = false,
-                preloadPages = it.readAheadPageCount.toFloat(),
-                imageQuality = it.imageQuality.toFloat(),
-                isFixScreenBrightness = it.enableBrightnessControl,
-                screenBrightness = it.screenBrightness
-            )
-        }.launchIn(scope)
+        manageViewerSettingsUseCase.settings
+            .onEach {
+                uiState = uiState.copy(
+                    isStatusBarShow = it.showStatusBar,
+                    isNavigationBarShow = it.showNavigationBar,
+                    isTurnOnScreen = it.keepOnScreen,
+                    isCacheImage = false,
+                    isDisplayFirstPage = false,
+                    isCutWhitespace = false,
+                    preloadPages = it.readAheadPageCount.toFloat(),
+                    imageQuality = it.imageQuality.toFloat(),
+                    isFixScreenBrightness = it.enableBrightnessControl,
+                    screenBrightness = it.screenBrightness,
+                )
+            }.launchIn(scope)
     }
 
     override fun onStatusBarShowChange(value: Boolean) {

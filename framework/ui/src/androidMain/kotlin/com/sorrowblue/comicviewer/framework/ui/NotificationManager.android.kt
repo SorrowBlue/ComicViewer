@@ -11,6 +11,6 @@ actual class NotificationManager actual constructor(private val context: Platfor
     }
 
     actual companion object {
-        actual const val LENGTH_SHORT: Int = Toast.LENGTH_SHORT
+        actual const val LengthShort: Int = Toast.LENGTH_SHORT
     }
 }

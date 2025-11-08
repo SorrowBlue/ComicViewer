@@ -10,7 +10,7 @@ import dev.zacsweers.metro.Inject
 internal actual class DatabaseHelper actual constructor(private val context: PlatformContext) {
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {
         val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath(DATABASE_NAME)
+        val dbFile = appContext.getDatabasePath(DatabaseName)
         return Room
             .databaseBuilder<ComicViewerDatabase>(
                 context = appContext,

@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
 
 abstract class PagingFolderBookThumbnailsUseCase :
     PagingUseCase<PagingFolderBookThumbnailsUseCase.Request, BookThumbnail>() {
-
     class Request(val bookshelfId: BookshelfId, val path: String, val pagingConfig: PagingConfig) :
         BaseRequest
 

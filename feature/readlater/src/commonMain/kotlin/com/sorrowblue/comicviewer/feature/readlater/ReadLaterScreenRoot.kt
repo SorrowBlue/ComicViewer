@@ -17,6 +17,6 @@ fun ReadLaterScreenRoot(
         onSettingsClick = onSettingsClick,
         onClearAllClick = state::onClearAllClick,
         onFileClick = onFileClick,
-        onFileInfoClick = onFileInfoClick
+        onFileInfoClick = onFileInfoClick,
     )
 }

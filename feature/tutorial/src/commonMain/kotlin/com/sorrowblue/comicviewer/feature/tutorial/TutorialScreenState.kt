@@ -21,21 +21,22 @@ internal interface TutorialScreenState {
     val pageState: PagerState
 
     fun onNextClick(onComplete: () -> Unit)
+
     fun updateReadingDirection(bindingDirection: BindingDirection)
+
     fun onBack()
 }
 
 @Composable
 context(context: TutorialScreenContext)
-internal fun rememberTutorialScreenState(
-): TutorialScreenState {
+internal fun rememberTutorialScreenState(): TutorialScreenState {
     val scope = rememberCoroutineScope()
     val pageState = rememberPagerState { TutorialSheet.entries.size }
     return remember {
         TutorialScreenStateImpl(
             scope = scope,
             manageViewerOperationSettingsUseCase = context.manageViewerOperationSettingsUseCase,
-            pageState = pageState
+            pageState = pageState,
         )
     }
 }
@@ -45,23 +46,27 @@ private class TutorialScreenStateImpl(
     private val manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase,
     override val pageState: PagerState,
 ) : TutorialScreenState {
-
     override val enabledBack: Boolean get() = pageState.currentPage != 0
     override var uiState by mutableStateOf(TutorialScreenUiState())
 
     init {
-        manageViewerOperationSettingsUseCase.settings.onEach {
-            uiState = uiState.copy(
-                directionSheetUiState = uiState.directionSheetUiState.copy(
-                    direction = it.bindingDirection
+        manageViewerOperationSettingsUseCase.settings
+            .onEach {
+                uiState = uiState.copy(
+                    directionSheetUiState = uiState.directionSheetUiState.copy(
+                        direction = it.bindingDirection,
+                    ),
                 )
-            )
-        }.launchIn(scope)
+            }.launchIn(scope)
     }
 
     override fun updateReadingDirection(bindingDirection: BindingDirection) {
         scope.launch {
-            manageViewerOperationSettingsUseCase.edit { it.copy(bindingDirection = bindingDirection) }
+            manageViewerOperationSettingsUseCase.edit {
+                it.copy(
+                    bindingDirection = bindingDirection,
+                )
+            }
         }
     }
 

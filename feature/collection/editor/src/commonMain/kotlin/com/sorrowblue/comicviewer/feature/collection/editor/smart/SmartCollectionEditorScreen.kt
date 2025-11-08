@@ -65,39 +65,42 @@ internal fun SmartCollectionEditorScreen(
                             icon = {
                                 CircularProgressIndicator(
                                     strokeWidth = 2.dp,
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    modifier = Modifier.size(ButtonDefaults.IconSize),
                                 )
                             },
                             iconEnabled = !uiState.enabledForm,
-                            enabled = uiState.enabledForm && form.meta.canSubmit
+                            enabled = uiState.enabledForm && form.meta.canSubmit,
                         ) {
                             // TODO
                             Text(text = "Save")
                         }
                     },
-                    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
-                    scrollBehavior = scrollBehavior
+                    windowInsets = WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                    ),
+                    scrollBehavior = scrollBehavior,
                 )
             },
             contentWindowInsets = WindowInsets.safeDrawing,
             modifier = modifier
                 .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { contentPadding ->
             SmartCollectionEditorForm(
                 form = form,
                 uiState = uiState,
                 bookshelf = uiState.bookshelf,
-                modifier = Modifier.verticalScroll(rememberScrollState())
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = ComicTheme.dimension.margin)
-                    .padding(contentPadding)
+                    .padding(contentPadding),
             )
         }
     } else {
         val scrollState = rememberScrollState()
         BasicAlertDialog(
             onDismissRequest = onCancel,
-            modifier = Modifier.padding(ComicTheme.dimension.margin)
+            modifier = Modifier.padding(ComicTheme.dimension.margin),
         ) {
             AlertDialogContent(
                 title = title,
@@ -109,7 +112,7 @@ internal fun SmartCollectionEditorScreen(
                         Text(text = stringResource(Res.string.collection_editor_label_cancel))
                     }
                 },
-                scrollableState = scrollState
+                scrollableState = scrollState,
             ) {
                 SmartCollectionEditorForm(
                     form = form,

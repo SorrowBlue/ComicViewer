@@ -17,7 +17,6 @@ import platform.Foundation.NSUserDomainMask
 
 @Inject
 internal actual class DataStoreMaker actual constructor(context: PlatformContext) {
-
     actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {
         val producePath = {
             @OptIn(ExperimentalForeignApi::class)

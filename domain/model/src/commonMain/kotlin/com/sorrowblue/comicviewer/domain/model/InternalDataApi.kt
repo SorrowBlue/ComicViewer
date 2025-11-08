@@ -8,7 +8,7 @@ package com.sorrowblue.comicviewer.domain.model
  */
 @RequiresOptIn(
     message = "This is an internal API for the data module. Do not use it in other modules.",
-    level = RequiresOptIn.Level.ERROR
+    level = RequiresOptIn.Level.ERROR,
 )
 @Retention(AnnotationRetention.BINARY)
 annotation class InternalDataApi

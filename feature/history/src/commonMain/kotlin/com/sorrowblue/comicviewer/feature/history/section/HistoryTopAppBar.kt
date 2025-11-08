@@ -26,6 +26,6 @@ internal fun HistoryTopAppBar(
             }
             SettingsIconButton(onClick = onSettingsClick)
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
     )
 }

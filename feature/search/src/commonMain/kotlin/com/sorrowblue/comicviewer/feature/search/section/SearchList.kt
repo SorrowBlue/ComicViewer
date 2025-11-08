@@ -43,7 +43,7 @@ internal fun SearchList(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .imePadding()
+                .imePadding(),
         )
     } else {
         FileLazyVerticalGrid(
@@ -52,7 +52,7 @@ internal fun SearchList(
             contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
             onItemClick = onItemClick,
-            onItemInfoClick = onItemInfoClick
+            onItemInfoClick = onItemInfoClick,
         )
     }
 }

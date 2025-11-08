@@ -8,14 +8,12 @@ data class FolderThumbnail private constructor(
     override val lastModifier: Long,
     override val size: Long,
 ) : FileThumbnail {
-
     companion object {
-
         fun from(folder: Folder) = FolderThumbnail(
             bookshelfId = folder.bookshelfId,
             path = folder.path,
             lastModifier = folder.lastModifier,
-            size = folder.size
+            size = folder.size,
         )
     }
 }

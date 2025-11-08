@@ -21,14 +21,14 @@ import androidx.window.core.layout.WindowSizeClass
 @Composable
 internal fun <T> rememberFixListDetailPaneScaffoldNavigator(
     scaffoldDirective: PaneScaffoldDirective = calculatePaneScaffoldDirective(
-        currentWindowAdaptiveInfo()
+        currentWindowAdaptiveInfo(),
     ),
     initialDestinationHistory: List<ThreePaneScaffoldDestinationItem<T>> = listOf(
-        ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.List)
+        ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.List),
     ),
 ) = rememberListDetailPaneScaffoldNavigator(
     scaffoldDirective = scaffoldDirective,
-    initialDestinationHistory = initialDestinationHistory
+    initialDestinationHistory = initialDestinationHistory,
 )
 
 internal fun calculateLowerInfoPaneScaffoldDirective(
@@ -38,7 +38,9 @@ internal fun calculateLowerInfoPaneScaffoldDirective(
     val maxHorizontalPartitions: Int
     val horizontalPartitionSpacerSize: Dp
     when {
-        windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
+        windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
+            WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
+        ) -> {
             maxHorizontalPartitions = 2
             horizontalPartitionSpacerSize = 0.dp
         }
@@ -69,16 +71,15 @@ internal fun calculateLowerInfoPaneScaffoldDirective(
         defaultPanePreferredWidth,
         getExcludedVerticalBounds(
             windowAdaptiveInfo.windowPosture,
-            verticalHingePolicy
-        )
+            verticalHingePolicy,
+        ),
     )
 }
 
-private fun getExcludedVerticalBounds(posture: Posture, hingePolicy: HingePolicy): List<Rect> {
-    return when (hingePolicy) {
+private fun getExcludedVerticalBounds(posture: Posture, hingePolicy: HingePolicy): List<Rect> =
+    when (hingePolicy) {
         HingePolicy.AvoidSeparating -> posture.separatingVerticalHingeBounds
         HingePolicy.AvoidOccluding -> posture.occludingVerticalHingeBounds
         HingePolicy.AlwaysAvoid -> posture.allVerticalHingeBounds
         else -> emptyList()
     }
-}

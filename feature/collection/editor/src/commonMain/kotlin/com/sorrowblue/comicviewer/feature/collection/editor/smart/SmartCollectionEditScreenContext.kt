@@ -14,7 +14,6 @@ annotation class SmartCollectionEditScreenScope
 
 @GraphExtension(SmartCollectionEditScreenScope::class)
 interface SmartCollectionEditScreenContext : ScreenContext {
-
     val flowBookshelfListUseCase: FlowBookshelfListUseCase
     val updateCollectionUseCase: UpdateCollectionUseCase
     val getCollectionUseCase: GetCollectionUseCase

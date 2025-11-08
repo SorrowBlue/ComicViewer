@@ -32,7 +32,6 @@ internal class CollectionThumbnailFetcher(
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : FileFetcher<CollectionThumbnailMetadata>(options, diskCache) {
-
     override val diskCacheKey get() = options.diskCacheKey ?: "collection:${data.id.value}"
 
     override suspend fun metadata(): CollectionThumbnailMetadata {
@@ -53,13 +52,16 @@ internal class CollectionThumbnailFetcher(
             return SourceFetchResult(
                 source = thumbnailCache.second.toImageSource(),
                 mimeType = null,
-                dataSource = DataSource.DISK
+                dataSource = DataSource.DISK,
             )
         }
     }
 
     private suspend fun getThumbnailCache(): CacheKeySnapshot? {
-        val cacheKeyList = collectionFileLocalDataSource.getCacheKeyList(data.id, 4)
+        val cacheKeyList = collectionFileLocalDataSource.getCacheKeyList(
+            data.id,
+            CachesFetchCount,
+        )
         if (cacheKeyList.isEmpty()) {
             logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
             return null
@@ -75,6 +77,8 @@ internal class CollectionThumbnailFetcher(
     }
 }
 
+private const val CachesFetchCount = 4
+
 @com.sorrowblue.comicviewer.data.coil.CollectionThumbnailFetcher
 @ContributesBinding(DataScope::class)
 @Inject
@@ -84,7 +88,6 @@ internal class CollectionThumbnailFetcherFactory(
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
     private val fileModelLocalDataSource: FileLocalDataSource,
 ) : Fetcher.Factory<Collection> {
-
     override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
         CollectionThumbnailFetcher(
             options = options,
@@ -92,6 +95,6 @@ internal class CollectionThumbnailFetcherFactory(
             coilDiskCacheLazy = coilDiskCacheLazy,
             data = data,
             collectionFileLocalDataSource = collectionFileLocalDataSource,
-            fileLocalDataSource = fileModelLocalDataSource
+            fileLocalDataSource = fileModelLocalDataSource,
         )
 }

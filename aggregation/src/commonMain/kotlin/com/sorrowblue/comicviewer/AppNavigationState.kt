@@ -55,9 +55,7 @@ fun rememberAppNavigationState(bookData: String?): AppNavigationState {
     }
 }
 
-private class AppNavigationStateImpl(
-) : AppNavigationState {
-
+private class AppNavigationStateImpl : AppNavigationState {
     override lateinit var currentBackStack: NavBackStack<NavKey>
 
     override fun addToBackStack(screenKey: ScreenKey) {

@@ -41,17 +41,17 @@ internal fun AdaptiveNavigationSuiteScaffoldState.ReadLaterScreen(
                 ReadLaterTopAppBar(
                     scrollBehavior = scrollBehavior,
                     onClearAllClick = onClearAllClick,
-                    onSettingsClick = onSettingsClick
+                    onSettingsClick = onSettingsClick,
                 )
             },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { contentPadding ->
             ReadLaterContents(
                 lazyPagingItems = lazyPagingItems,
                 lazyGridState = lazyGridState,
                 onItemClick = onFileClick,
                 onItemInfoClick = onFileInfoClick,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
             )
         }
     }
@@ -71,7 +71,7 @@ private fun ReadLaterContents(
             text = stringResource(Res.string.readlater_label_nothing_to_read_later),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
+                .padding(contentPadding),
         )
     } else {
         FileLazyVerticalGrid(
@@ -82,7 +82,7 @@ private fun ReadLaterContents(
             onItemInfoClick = onItemInfoClick,
             state = lazyGridState,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         )
     }
 }

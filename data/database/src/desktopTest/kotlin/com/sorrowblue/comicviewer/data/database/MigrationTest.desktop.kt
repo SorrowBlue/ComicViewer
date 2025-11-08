@@ -29,7 +29,7 @@ internal actual fun getMigrationTestHelper(platformContext: PlatformContext): Mi
     dbPath.deleteRecursively()
     return MigrationTestHelper(
         schemaDirectoryPath = Path("schemas"),
-        databasePath = dbPath.resolve(TEST_DB_NAME),
+        databasePath = dbPath.resolve(TestDatabaseName),
         driver = BundledSQLiteDriver(),
         databaseClass = ComicViewerDatabase::class,
     )

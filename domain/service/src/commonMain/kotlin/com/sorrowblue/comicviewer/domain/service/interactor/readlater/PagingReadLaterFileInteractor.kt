@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.Flow
 internal class PagingReadLaterFileInteractor(
     private val readLaterFileLocalDataSource: ReadLaterFileLocalDataSource,
 ) : PagingReadLaterFileUseCase() {
-
-    override fun run(request: Request): Flow<PagingData<File>> {
-        return readLaterFileLocalDataSource.pagingDataFlow(request.pagingConfig)
-    }
+    override fun run(request: Request): Flow<PagingData<File>> =
+        readLaterFileLocalDataSource.pagingDataFlow(request.pagingConfig)
 }

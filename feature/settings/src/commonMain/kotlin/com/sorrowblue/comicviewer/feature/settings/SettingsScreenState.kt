@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.feature.settings.utils.AppLocaleSettingsLaunch
 import com.sorrowblue.comicviewer.feature.settings.utils.rememberAppLocaleSettingsLauncher
 
 internal interface SettingsScreenState {
-
     val uiState: SettingsScreenUiState
 
     fun onSettingsClick(item: SettingsItem, onSettingsClick: (SettingsItem) -> Unit)
@@ -27,7 +26,6 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
 private class SettingsScreenStateImpl(
     private val appLocaleSettingsLauncher: AppLocaleSettingsLauncher,
 ) : SettingsScreenState {
-
     override val uiState by mutableStateOf(SettingsScreenUiState())
 
     override fun onSettingsClick(item: SettingsItem, onSettingsClick: (SettingsItem) -> Unit) {

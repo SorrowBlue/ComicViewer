@@ -36,8 +36,14 @@ fun FileListDisplayItemState.fileListDisplayItem() {
         onClick = ::onClick,
         icon = {
             Icon(
-                if (fileListDisplay == FileListDisplay.Grid) ComicIcons.ViewList else ComicIcons.GridView,
-                null
+                if (fileListDisplay ==
+                    FileListDisplay.Grid
+                ) {
+                    ComicIcons.ViewList
+                } else {
+                    ComicIcons.GridView
+                },
+                null,
             )
         },
         label = {
@@ -46,10 +52,10 @@ fun FileListDisplayItemState.fileListDisplayItem() {
                     stringResource(Res.string.file_list_label_switch_list_view)
                 } else {
                     stringResource(Res.string.file_list_label_switch_grid_view)
-                }
+                },
             )
         },
-        autoDismiss = false
+        autoDismiss = false,
     )
 }
 
@@ -61,7 +67,7 @@ fun rememberFileListDisplayItemState(): FileListDisplayItemState {
     return remember {
         FileListDisplayItemStateImpl(
             manageFolderDisplaySettingsUseCase = graph.manageFolderDisplaySettingsUseCase,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }.apply {
         this.coroutineScope = coroutineScope
@@ -70,6 +76,7 @@ fun rememberFileListDisplayItemState(): FileListDisplayItemState {
 
 interface FileListDisplayItemState {
     val fileListDisplay: FileListDisplay
+
     fun onClick()
 }
 
@@ -77,12 +84,13 @@ private class FileListDisplayItemStateImpl(
     private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     var coroutineScope: CoroutineScope,
 ) : FileListDisplayItemState {
-
     override var fileListDisplay by mutableStateOf(FileListDisplay.Grid)
 
     init {
-        manageFolderDisplaySettingsUseCase.settings.map { it.fileListDisplay }
-            .distinctUntilChanged().onEach {
+        manageFolderDisplaySettingsUseCase.settings
+            .map { it.fileListDisplay }
+            .distinctUntilChanged()
+            .onEach {
                 fileListDisplay = it
             }.launchIn(coroutineScope)
     }
@@ -94,11 +102,10 @@ private class FileListDisplayItemStateImpl(
                     fileListDisplay = when (it.fileListDisplay) {
                         FileListDisplay.Grid -> FileListDisplay.List
                         FileListDisplay.List -> FileListDisplay.Grid
-                    }
+                    },
                 )
             }
         }
-
     }
 }
 
@@ -107,7 +114,6 @@ annotation class FileListDisplayItemScope
 
 @GraphExtension(FileListDisplayItemScope::class)
 interface FileListDisplayItemGraph {
-
     val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
 
     @ContributesTo(AppScope::class)

@@ -63,7 +63,6 @@ private data class SortTypeKey(val sortType: SortType) : ScreenKey
 
 context(graph: PlatformGraph, state: AppNavigationState)
 fun EntryProviderScope<NavKey>.folderSettingsEntryGroup() {
-
     folderSettingsEntry(
         onBackClick = state::onBackPressed,
         onSortTypeClick = {
@@ -80,7 +79,7 @@ fun EntryProviderScope<NavKey>.folderSettingsEntryGroup() {
         },
         onImageFilterQualityClick = {
             state.addToBackStack(ImageFilterQualityKey(it))
-        }
+        },
     )
 
     folderThumbnailOrderEntry(onDismissRequest = state::onBackPressed)
@@ -100,15 +99,18 @@ private fun EntryProviderScope<NavKey>.folderSettingsEntry(
     onImageFilterQualityClick: (ImageFilterQuality) -> Unit,
 ) {
     entryScreen<FolderSettingsKey, FolderSettingsScreenContext>(
-        createContext = { (graph as FolderSettingsScreenContext.Factory).createFolderSettingsScreenContext() },
+        createContext = {
+            (graph as FolderSettingsScreenContext.Factory)
+                .createFolderSettingsScreenContext()
+        },
         metadata = ListDetailSceneStrategy.detailPane("Settings") +
             NavigationResultMetadata.resultConsumer(
                 SortTypeScreenResultKey,
                 ImageScaleScreenResultKey,
                 ImageFilterQualityScreenResultKey,
                 ImageFormatScreenResultKey,
-                FolderThumbnailOrderScreenResultKey
-            )
+                FolderThumbnailOrderScreenResultKey,
+            ),
     ) {
         FolderSettingsScreenRoot(
             onBackClick = onBackClick,
@@ -116,69 +118,59 @@ private fun EntryProviderScope<NavKey>.folderSettingsEntry(
             onFolderThumbnailOrderClick = onFolderThumbnailOrderClick,
             onImageFormatClick = onImageFormatClick,
             onImageScaleClick = onImageScaleClick,
-            onImageFilterQualityClick = onImageFilterQualityClick
+            onImageFilterQualityClick = onImageFilterQualityClick,
         )
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.folderThumbnailOrderEntry(
-    onDismissRequest: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.folderThumbnailOrderEntry(onDismissRequest: () -> Unit) {
     entry<FolderThumbnailOrderKey>(
-        metadata = DialogSceneStrategy.dialog()
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         FolderThumbnailOrderScreenRoot(
             folderThumbnailOrder = it.folderThumbnailOrder,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
         )
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.imageFilterQualityEntry(
-    onDismissRequest: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.imageFilterQualityEntry(onDismissRequest: () -> Unit) {
     entry<ImageFilterQualityKey>(metadata = DialogSceneStrategy.dialog()) {
         ImageFilterQualityScreenRoot(
             imageFilterQuality = it.imageFilterQuality,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
         )
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.imageFormatEntry(
-    onDismissRequest: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.imageFormatEntry(onDismissRequest: () -> Unit) {
     entry<ImageFormatKey>(metadata = DialogSceneStrategy.dialog()) {
         ImageFormatScreenRoot(
             imageFormat = it.imageFormat,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
         )
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.imageScaleEntry(
-    onDismissRequest: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.imageScaleEntry(onDismissRequest: () -> Unit) {
     entry<ImageScaleKey>(metadata = DialogSceneStrategy.dialog()) {
         ImageScaleScreenRoot(
             imageScale = it.imageScale,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
         )
     }
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.sortTypeEntry(
-    onDismissRequest: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.sortTypeEntry(onDismissRequest: () -> Unit) {
     entry<SortTypeKey>(metadata = DialogSceneStrategy.dialog()) {
         SortTypeScreenRoot(
             sortType = it.sortType,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
         )
     }
 }

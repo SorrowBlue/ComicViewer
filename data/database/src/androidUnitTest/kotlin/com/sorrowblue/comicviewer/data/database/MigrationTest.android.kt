@@ -25,7 +25,7 @@ internal actual fun getMigrationTestHelper(platformContext: PlatformContext): Mi
     val instrumentation = InstrumentationRegistry.getInstrumentation()
     return MigrationTestHelper(
         instrumentation = InstrumentationRegistry.getInstrumentation(),
-        file = instrumentation.context.filesDir.resolve(TEST_DB_NAME),
+        file = instrumentation.context.filesDir.resolve(TestDatabaseName),
         driver = AndroidSQLiteDriver(),
         databaseClass = ComicViewerDatabase::class,
     )

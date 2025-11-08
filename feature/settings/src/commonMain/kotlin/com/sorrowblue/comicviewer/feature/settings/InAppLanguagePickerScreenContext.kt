@@ -12,7 +12,6 @@ annotation class InAppLanguagePickerScope
 
 @GraphExtension(InAppLanguagePickerScope::class)
 interface InAppLanguagePickerScreenContext : ScreenContext {
-
     val appLocaleIso: AppLocaleIso
 
     @ContributesTo(AppScope::class)

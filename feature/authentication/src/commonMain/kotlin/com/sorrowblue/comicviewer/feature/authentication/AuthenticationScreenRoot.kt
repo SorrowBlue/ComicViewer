@@ -17,7 +17,7 @@ internal fun AuthenticationScreenRoot(
         snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onNextClick = state::onNextClick,
-        onPinChange = state::onPinChange
+        onPinChange = state::onPinChange,
     )
 
     val keyboardController = LocalSoftwareKeyboardController.current

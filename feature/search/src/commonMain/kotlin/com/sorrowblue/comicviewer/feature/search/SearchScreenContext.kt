@@ -13,7 +13,6 @@ annotation class SearchScreenScope
 
 @GraphExtension(SearchScreenScope::class)
 interface SearchScreenContext : ScreenContext {
-
     val pagingQueryFileUseCase: PagingQueryFileUseCase
     val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
 

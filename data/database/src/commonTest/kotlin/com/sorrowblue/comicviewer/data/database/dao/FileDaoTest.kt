@@ -14,7 +14,7 @@ import kotlinx.coroutines.test.runTest
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 internal class FileDaoTest : DatabaseTest() {
-    private val dao: BookshelfDao get() = db.bookshelfDao()
+    private val dao: BookshelfDao get() = database.bookshelfDao()
 
     @Test
     fun pagingSourceHistoryTest() = runTest {
@@ -32,7 +32,7 @@ internal class FileDaoTest : DatabaseTest() {
                 lastReadTime = 10L - it,
             )
         }
-        val dao = db.fileDao()
+        val dao = database.fileDao()
         dao.upsertAll(fileEntities)
 
         val pagingSource = dao.pagingSourceHistory()

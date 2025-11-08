@@ -7,11 +7,8 @@ import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseC
 import dev.zacsweers.metro.Inject
 
 @Inject
-internal class CreateCollectionInteractor(
-    private val dataSource: CollectionLocalDataSource,
-) : CreateCollectionUseCase() {
-
-    override suspend fun run(request: Request): Resource<Collection, Error> {
-        return Resource.Success(dataSource.create(request.collection))
-    }
+internal class CreateCollectionInteractor(private val dataSource: CollectionLocalDataSource) :
+    CreateCollectionUseCase() {
+    override suspend fun run(request: Request): Resource<Collection, Error> =
+        Resource.Success(dataSource.create(request.collection))
 }

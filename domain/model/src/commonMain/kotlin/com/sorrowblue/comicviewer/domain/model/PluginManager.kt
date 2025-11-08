@@ -4,7 +4,6 @@ import dev.zacsweers.metro.Inject
 
 @Inject
 class PluginManager {
-
     interface Callback {
         fun onError(msg: String)
     }

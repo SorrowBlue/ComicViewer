@@ -8,9 +8,10 @@ sealed interface ImageCache {
 }
 
 data class ThumbnailImageCache(override val size: Long, override val maxSize: Long) : ImageCache
+
 data class BookPageImageCache(override val size: Long, override val maxSize: Long) : ImageCache
-data class OtherImageCache(override val size: Long, override val maxSize: Long) :
-    ImageCache
+
+data class OtherImageCache(override val size: Long, override val maxSize: Long) : ImageCache
 
 data class BookshelfImageCacheInfo(
     val bookshelf: Bookshelf,

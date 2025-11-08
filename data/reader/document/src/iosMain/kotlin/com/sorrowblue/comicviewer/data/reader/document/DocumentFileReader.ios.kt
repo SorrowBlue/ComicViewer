@@ -13,7 +13,6 @@ internal actual class DocumentFileReader(
     @Assisted private val mimeType: String,
     @Assisted private val seekableInputStream: SeekableInputStream,
 ) : FileReader {
-
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(

@@ -10,19 +10,17 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
-internal class LimitedCoroutineScope(
-    private val underlying: CoroutineScope,
-    limit: Int,
-) : CoroutineScope by underlying {
-
+internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int) :
+    CoroutineScope by underlying {
     private val semaphore: Semaphore = Semaphore(limit)
 
-    private fun <T> withPermit(block: suspend CoroutineScope.() -> T): suspend CoroutineScope.() -> T =
-        {
-            semaphore.withPermit {
-                block()
-            }
+    private fun <T> withPermit(
+        block: suspend CoroutineScope.() -> T,
+    ): suspend CoroutineScope.() -> T = {
+        semaphore.withPermit {
+            block()
         }
+    }
 
     fun <T> async(
         context: CoroutineContext = EmptyCoroutineContext,
@@ -35,7 +33,6 @@ internal suspend fun <T> limitedCoroutineScope(
     limit: Int,
     context: CoroutineContext = EmptyCoroutineContext,
     block: suspend LimitedCoroutineScope.() -> T,
-): T =
-    withContext(context) {
-        LimitedCoroutineScope(this, limit).block()
-    }
+): T = withContext(context) {
+    LimitedCoroutineScope(this, limit).block()
+}

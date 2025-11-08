@@ -7,9 +7,8 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
 @Inject
-internal class ManagePdfPluginSettingsInteractor(
-    private val dataSource: DatastoreDataSource,
-) : ManagePdfPluginSettingsUseCase {
+internal class ManagePdfPluginSettingsInteractor(private val dataSource: DatastoreDataSource) :
+    ManagePdfPluginSettingsUseCase {
     override val settings: Flow<PdfPluginSettings> = dataSource.pdfPluginSettings
 
     override suspend fun edit(action: (PdfPluginSettings) -> PdfPluginSettings) {

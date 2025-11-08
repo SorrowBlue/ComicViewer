@@ -12,7 +12,6 @@ import org.jetbrains.compose.ComposePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -35,7 +34,6 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
                     // Navigation
                     implementation(libs.compose.multiplatform.lifecycleCompose)
-                    implementation(libs.compose.multiplatform.navigationCompose)
                     implementation(libs.multiplatform.lifecycle.viewmodelNavigation3)
                     implementation(libs.kotlinx.serialization.core)
 

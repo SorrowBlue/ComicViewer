@@ -7,7 +7,6 @@ sealed interface PageItem {
 }
 
 data class NextPage(val isNext: Boolean, val nextBooks: List<NextBook>) : PageItem {
-
     override val key = "next:$isNext"
 }
 
@@ -15,13 +14,13 @@ sealed interface NextBook {
     val book: Book
 
     data class Folder(override val book: Book) : NextBook
+
     data class Collection(override val book: Book) : NextBook
 }
 
 sealed interface UnratedPage
 
 sealed interface BookPage : PageItem {
-
     /** 読み取ったページをそのまま表示 */
     data class Default(val index: Int) : BookPage {
         override val key = "Default:$index"
@@ -31,7 +30,9 @@ sealed interface BookPage : PageItem {
     sealed interface Spread : BookPage {
         val index: Int
 
-        data class Unrated(override val index: Int) : Spread, UnratedPage {
+        data class Unrated(override val index: Int) :
+            Spread,
+            UnratedPage {
             override val key = "Spread:$index"
         }
 
@@ -51,7 +52,9 @@ sealed interface BookPage : PageItem {
     sealed interface Split : BookPage {
         val index: Int
 
-        data class Unrated(override val index: Int) : Split, UnratedPage {
+        data class Unrated(override val index: Int) :
+            Split,
+            UnratedPage {
             override val key = "Split:$index"
         }
 

@@ -1,3 +1,5 @@
+@file:Suppress("detekt.all")
+
 package androidx.compose.material3.adaptive.navigation3.kmp
 
 import androidx.collection.IntList
@@ -189,7 +191,8 @@ internal class ThreePaneScaffoldScene<T : Any>(
 
         val previousScaffoldValue = onBackResult.previousScaffoldValue
 
-        val gestureState = rememberNavigationEventState(currentInfo = NavigationEventInfo.None)
+        val gestureInfo = remember(key, entries) { ThreePaneScaffoldSceneInfo(key, entries) }
+        val gestureState = rememberNavigationEventState(currentInfo = gestureInfo)
         NavigationBackHandler(
             state = gestureState,
             isBackEnabled = previousScaffoldValue != null,
@@ -301,6 +304,9 @@ internal class ThreePaneScaffoldScene<T : Any>(
             "scaffoldEntryIndices=$scaffoldEntryIndices, entriesAsNavItems=$entriesAsNavItems)"
     }
 }
+
+private data class ThreePaneScaffoldSceneInfo(val key: Any, val entries: List<NavEntry<*>>) :
+    NavigationEventInfo()
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private fun backProgressToStateProgress(

@@ -13,12 +13,13 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import comicviewer.composeapp.generated.resources.Res
 import comicviewer.composeapp.generated.resources.app_label_exit
-import dev.zacsweers.metro.createGraph
+import dev.zacsweers.metro.createGraphFactory
 import java.awt.Dimension
 import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
-    val appGraph = createGraph<DesktopAppGraph>()
+    val appGraph =
+        createGraphFactory<DesktopAppGraph.Factory>().createDesktopAppGraph(LicenseeHelperImpl())
     PlatformContext.platformGraph = appGraph
     val trayState = rememberTrayState()
     val notification =

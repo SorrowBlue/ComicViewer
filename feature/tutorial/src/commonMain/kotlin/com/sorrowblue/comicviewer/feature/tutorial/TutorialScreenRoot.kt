@@ -5,15 +5,13 @@ import com.sorrowblue.comicviewer.framework.ui.BackHandler
 
 @Composable
 context(context: TutorialScreenContext)
-fun TutorialScreenRoot(
-    onComplete: () -> Unit,
-) {
+fun TutorialScreenRoot(onComplete: () -> Unit) {
     val state = rememberTutorialScreenState()
     TutorialScreen(
         uiState = state.uiState,
         pageState = state.pageState,
         onNextClick = { state.onNextClick(onComplete) },
-        onBindingDirectionChange = state::updateReadingDirection
+        onBindingDirectionChange = state::updateReadingDirection,
     )
 
     BackHandler(state.enabledBack, state::onBack)

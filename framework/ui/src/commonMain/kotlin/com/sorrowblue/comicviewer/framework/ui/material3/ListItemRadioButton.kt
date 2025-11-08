@@ -53,7 +53,7 @@ fun ListItemRadioButton(
         Box(
             Modifier
                 .matchParentSize()
-                .clickable(enabled = enabled, onClick = { onCheckedChange.invoke(!selected) })
+                .clickable(enabled = enabled, onClick = { onCheckedChange.invoke(!selected) }),
         )
     }
 }

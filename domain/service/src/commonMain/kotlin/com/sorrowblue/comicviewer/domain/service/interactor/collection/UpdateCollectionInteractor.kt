@@ -6,10 +6,8 @@ import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseC
 import dev.zacsweers.metro.Inject
 
 @Inject
-internal class UpdateCollectionInteractor(
-    private val dataSource: CollectionLocalDataSource,
-) : UpdateCollectionUseCase() {
-
+internal class UpdateCollectionInteractor(private val dataSource: CollectionLocalDataSource) :
+    UpdateCollectionUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Error> {
         dataSource.update(request.collection)
         return Resource.Success(Unit)

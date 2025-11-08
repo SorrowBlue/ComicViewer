@@ -15,10 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-internal data class BookSheetUiState(
-    val book: Book,
-    val pageScale: PageScale = PageScale.Fit,
-)
+internal data class BookSheetUiState(val book: Book, val pageScale: PageScale = PageScale.Fit)
 
 @Composable
 internal fun BookSheet(
@@ -58,7 +55,7 @@ internal fun BookSheet(
                         }
                     }
                 }
-            }
+            },
     ) { pageIndex ->
         when (val item = pages[pageIndex]) {
             is NextPage -> NextBookSheet(item, onClick = onNextBookClick)

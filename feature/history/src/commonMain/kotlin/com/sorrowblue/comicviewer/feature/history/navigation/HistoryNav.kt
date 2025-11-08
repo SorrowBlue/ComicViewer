@@ -37,7 +37,6 @@ val HistoryKeySerializersModule = SerializersModule {
 
 @Serializable
 sealed interface HistoryKey : NavigationKey {
-
     override val title
         @Composable
         get() = stringResource(Res.string.history_title)
@@ -47,9 +46,9 @@ sealed interface HistoryKey : NavigationKey {
     data object List : HistoryKey
 
     @Serializable
-    data class FileInfo(
-        override val fileKey: File.Key,
-    ) : HistoryKey, FileInfoKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        HistoryKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
@@ -70,7 +69,7 @@ fun EntryProviderScope<NavKey>.historyEntryGroup(
         onBookInfoClick = { state.addToBackStack(HistoryKey.FileInfo(it.key())) },
     )
     historyClearAllEntry(
-        onClose = state::onBackPressed
+        onClose = state::onBackPressed,
     )
     historyFileInfoEntry(
         onBackClick = state::onBackPressed,
@@ -89,7 +88,7 @@ private fun EntryProviderScope<NavKey>.historyEntry(
     entryScreen<HistoryKey.List, HistoryScreenContext>(
         createContext = { (graph as HistoryScreenContext.Factory).createHistoryScreenContext() },
         metadata = SupportingPaneSceneStrategy.mainPane("History") +
-            NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey)
+            NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey),
     ) {
         HistoryScreenRoot(
             onSettingsClick = onSettingsClick,
@@ -101,11 +100,9 @@ private fun EntryProviderScope<NavKey>.historyEntry(
 }
 
 context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.historyClearAllEntry(
-    onClose: () -> Unit,
-) {
+private fun EntryProviderScope<NavKey>.historyClearAllEntry(onClose: () -> Unit) {
     entry<HistoryKey.ClearAll>(
-        metadata = DialogSceneStrategy.dialog()
+        metadata = DialogSceneStrategy.dialog(),
     ) {
         ClearAllHistoryScreenRoot(onClose)
     }

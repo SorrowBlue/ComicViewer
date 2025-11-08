@@ -6,7 +6,6 @@ import logcat.LogcatLogger.Companion.install
 import logcat.LogcatLogger.Companion.uninstall
 
 interface LogcatLogger {
-
     /**
      * Whether a log with the provided priority should be logged and the
      * corresponding message providing lambda evaluated. Called by [logcat].
@@ -14,15 +13,10 @@ interface LogcatLogger {
     fun isLoggable(priority: LogPriority) = true
 
     /** Write a log to its destination. Called by [logcat]. */
-    fun log(
-        priority: LogPriority,
-        tag: String,
-        message: String,
-    )
+    fun log(priority: LogPriority, tag: String, message: String)
 
     @OptIn(ExperimentalAtomicApi::class)
     companion object {
-
         private val aLogger = AtomicReference<LogcatLogger>(NoLog)
 
         @PublishedApi
@@ -51,7 +45,7 @@ interface LogcatLogger {
                     LogPriority.ERROR,
                     "LogcatLogger",
                     "Installing $logger even though a logger was previously installed here: " +
-                        installedThrowable!!.asLog()
+                        requireNotNull(installedThrowable).asLog(),
                 )
             }
             installedThrowable = RuntimeException("Previous logger installed here")
@@ -68,10 +62,7 @@ interface LogcatLogger {
     private object NoLog : LogcatLogger {
         override fun isLoggable(priority: LogPriority) = false
 
-        override fun log(
-            priority: LogPriority,
-            tag: String,
-            message: String,
-        ) = error("Should never receive any log")
+        override fun log(priority: LogPriority, tag: String, message: String) =
+            error("Should never receive any log")
     }
 }

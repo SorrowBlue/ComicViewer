@@ -5,11 +5,15 @@ import androidx.compose.runtime.Composable
 
 internal interface SecuritySettingsScreenState {
     fun onChangeBackgroundLockEnabled(value: Boolean)
+
     fun onChangeBiometricEnabled(value: Boolean)
+
     fun onResume()
+
     fun onBiometricsDialogClick()
 
     fun onBiometricsDialogDismissRequest()
+
     val snackbarHostState: SnackbarHostState
     var uiState: SecuritySettingsScreenUiState
 }

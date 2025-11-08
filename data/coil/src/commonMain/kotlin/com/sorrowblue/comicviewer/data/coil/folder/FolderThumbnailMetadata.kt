@@ -12,7 +12,6 @@ internal data class FolderThumbnailMetadata(
     val lastModifier: Long,
     val thumbnails: String?,
 ) : CoilMetadata {
-
     override fun writeTo(bufferedSink: BufferedSink) {
         bufferedSink.writeUtf8(Json.encodeToString(this))
     }

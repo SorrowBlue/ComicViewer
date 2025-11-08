@@ -9,17 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 @Composable
-internal actual fun rememberNotificationRequestScreenState(): NotificationRequestScreenState {
-    return remember {
+internal actual fun rememberNotificationRequestScreenState(): NotificationRequestScreenState =
+    remember {
         NotificationRequestScreenStateImpl()
     }.apply {
         permissionLauncher =
             rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {}
     }
-}
 
 private class NotificationRequestScreenStateImpl : NotificationRequestScreenState {
-
     lateinit var permissionLauncher: ManagedActivityResultLauncher<String, Boolean>
 
     override fun onConfirmClick(onComplete: () -> Unit) {

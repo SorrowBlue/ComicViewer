@@ -11,7 +11,6 @@ import dev.zacsweers.metro.IntoMap
 
 @ContributesTo(DataScope::class)
 interface StorageSmbProviders {
-
     @Binds
     @IntoMap
     @FileClientKey(FileClientType.Smb)

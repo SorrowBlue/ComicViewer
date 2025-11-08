@@ -7,7 +7,6 @@ data class BookSettings(
     val pageFormat: PageFormat = PageFormat.Default,
     val pageScale: PageScale = PageScale.Fit,
 ) {
-
     @Serializable
     enum class PageFormat {
         Default,

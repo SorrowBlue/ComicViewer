@@ -8,7 +8,6 @@ import org.jetbrains.dokka.gradle.DokkaExtension
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 
 internal class DokkaConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -26,7 +25,7 @@ internal class DokkaConventionPlugin : Plugin<Project> {
                 dokkaGeneratorIsolation.set(
                     ProcessIsolation {
                         maxHeapSize.set("6g")
-                    }
+                    },
                 )
             }
         }

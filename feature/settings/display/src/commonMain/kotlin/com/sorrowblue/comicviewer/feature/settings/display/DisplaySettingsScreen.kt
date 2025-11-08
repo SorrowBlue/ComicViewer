@@ -39,13 +39,13 @@ internal fun DisplaySettingsScreen(
             title = Res.string.settings_display_label_appearance,
             summary = uiState.darkMode.label,
             icon = ComicIcons.DarkMode,
-            onClick = onDarkModeClick
+            onClick = onDarkModeClick,
         )
         SwitchSetting(
             title = Res.string.settings_display_label_show_last_folder,
             summary = Res.string.settings_display_desc_show_last_folder,
             checked = uiState.restoreOnLaunch,
-            onCheckedChange = onRestoreOnLaunchChange
+            onCheckedChange = onRestoreOnLaunchChange,
         )
     }
 }

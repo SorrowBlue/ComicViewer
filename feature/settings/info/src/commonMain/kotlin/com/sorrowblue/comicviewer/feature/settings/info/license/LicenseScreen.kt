@@ -25,10 +25,7 @@ import comicviewer.feature.settings.info.generated.resources.Res
 import comicviewer.feature.settings.info.generated.resources.settings_info_title_license
 import org.jetbrains.compose.resources.stringResource
 
-internal data class LicenseScreenUiState(
-    val libs: Libs? = null,
-    val openDialog: Library? = null,
-)
+internal data class LicenseScreenUiState(val libs: Libs? = null, val openDialog: Library? = null)
 
 @Composable
 internal fun LicenseScreen(
@@ -46,15 +43,16 @@ internal fun LicenseScreen(
                 navigationIcon = {
                     BackIconButton(onClick = onBackClick)
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         val lazyListState = rememberLazyListState()
         ScrollbarBox(
             state = lazyListState,
-            padding = contentPadding.only(PaddingValuesSides.Vertical + PaddingValuesSides.End)
+            padding = contentPadding
+                .only(PaddingValuesSides.Vertical + PaddingValuesSides.End)
                 .plus(PaddingValues(end = 8.dp)),
         ) {
             LibrariesContainer(
@@ -64,8 +62,8 @@ internal fun LicenseScreen(
                 onLibraryClick = onLibraryClick,
                 colors = LibraryDefaults.libraryColors(
                     libraryBackgroundColor = ComicTheme.colorScheme.surfaceContainer,
-                    libraryContentColor = ComicTheme.colorScheme.onSurface
-                )
+                    libraryContentColor = ComicTheme.colorScheme.onSurface,
+                ),
             )
         }
     }

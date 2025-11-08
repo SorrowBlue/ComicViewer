@@ -13,16 +13,14 @@ internal class GetOtherImageCacheInfoInteractor(
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetOtherImageCacheInfoUseCase() {
-
-    override suspend fun run(request: Request): Resource<OtherImageCache, Unit> {
-        return imageCacheDataSource.getOtherImageCache().fold(
+    override suspend fun run(request: Request): Resource<OtherImageCache, Unit> =
+        imageCacheDataSource.getOtherImageCache().fold(
             onSuccess = {
                 Resource.Success(it)
             },
             onError = {
                 sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
                 Resource.Error(Unit)
-            }
+            },
         )
-    }
 }

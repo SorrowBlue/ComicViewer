@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.Flow
 internal class PagingBookshelfFolderInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : PagingBookshelfFolderUseCase() {
-
-    override fun run(request: Request): Flow<PagingData<BookshelfFolder>> {
-        return bookshelfLocalDataSource.pagingSource(request.pagingConfig)
-    }
+    override fun run(request: Request): Flow<PagingData<BookshelfFolder>> =
+        bookshelfLocalDataSource.pagingSource(request.pagingConfig)
 }

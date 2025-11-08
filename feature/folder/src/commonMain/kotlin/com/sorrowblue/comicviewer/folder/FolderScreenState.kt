@@ -45,7 +45,6 @@ internal sealed interface FolderScreenEvent {
 
 @Stable
 internal interface FolderScreenState {
-
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val events: EventFlow<FolderScreenEvent>
     val lazyPagingItems: LazyPagingItems<File>
@@ -53,6 +52,7 @@ internal interface FolderScreenState {
     val uiState: FolderScreenUiState
 
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
+
     fun onSortTypeSelectScreenResult(result: SortTypeSelectScreenResult)
 }
 
@@ -72,7 +72,7 @@ internal fun rememberFolderScreenState(
             folderDisplaySettingsUseCase = context.displaySettingsUseCase,
             getFileUseCase = context.getFileUseCase,
             scope = coroutineScope,
-        )
+        ),
     ) {
         FolderScreenStateImpl(
             bookshelfId = bookshelfId,
@@ -88,8 +88,8 @@ internal fun rememberFolderScreenState(
                 PagingFileUseCase.Request(
                     PagingConfig(20),
                     bookshelfId,
-                    path
-                )
+                    path,
+                ),
             )
         }
         scope = coroutineScope
@@ -112,7 +112,6 @@ private class FolderScreenStateImpl(
     var scope: CoroutineScope,
     getFileUseCase: GetFileUseCase,
 ) : FolderScreenState {
-
     override lateinit var lazyPagingItems: LazyPagingItems<File>
     override lateinit var lazyGridState: LazyGridState
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
@@ -125,36 +124,54 @@ private class FolderScreenStateImpl(
 
     init {
         uiState =
-            uiState.copy(folderListUiState = uiState.folderListUiState.copy(emphasisPath = restorePath.orEmpty()))
-        folderDisplaySettingsUseCase.settings.distinctUntilChanged().onEach {
-            uiState = uiState.copy(
-                folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                    fileListDisplay = it.fileListDisplay,
-                    gridColumnSize = it.gridColumnSize,
-                    showHiddenFile = it.showHiddenFiles
-                ),
+            uiState.copy(
                 folderListUiState = uiState.folderListUiState.copy(
-                    fileLazyVerticalGridUiState = uiState.folderListUiState.fileLazyVerticalGridUiState.copy(
-                        fileListDisplay = it.fileListDisplay,
-                        columnSize = it.gridColumnSize,
-                        imageScale = it.imageScale,
-                        imageFilterQuality = it.imageFilterQuality,
-                        fontSize = it.fontSize,
-                        showThumbnails = it.showThumbnails
-                    )
+                    emphasisPath = restorePath.orEmpty(),
                 ),
-                folderScopeOnly = it.folderScopeOnlyList.any { scopeOnly -> scopeOnly.bookshelfId == bookshelfId && scopeOnly.path == path },
-                sortType = it.folderScopeOnlyList.find { scopeOnly -> scopeOnly.bookshelfId == bookshelfId && scopeOnly.path == path }?.sortType
-                    ?: it.sortType
             )
-        }.launchIn(scope)
+        folderDisplaySettingsUseCase.settings
+            .distinctUntilChanged()
+            .onEach {
+                uiState = uiState.copy(
+                    folderAppBarUiState = uiState.folderAppBarUiState.copy(
+                        fileListDisplay = it.fileListDisplay,
+                        gridColumnSize = it.gridColumnSize,
+                        showHiddenFile = it.showHiddenFiles,
+                    ),
+                    folderListUiState = uiState.folderListUiState.copy(
+                        fileLazyVerticalGridUiState = uiState.folderListUiState.fileLazyVerticalGridUiState
+                            .copy(
+                                fileListDisplay = it.fileListDisplay,
+                                columnSize = it.gridColumnSize,
+                                imageScale = it.imageScale,
+                                imageFilterQuality = it.imageFilterQuality,
+                                fontSize = it.fontSize,
+                                showThumbnails = it.showThumbnails,
+                            ),
+                    ),
+                    folderScopeOnly = it.folderScopeOnlyList.any { scopeOnly ->
+                        scopeOnly.bookshelfId ==
+                            bookshelfId &&
+                            scopeOnly.path == path
+                    },
+                    sortType =
+                    it.folderScopeOnlyList
+                        .find { scopeOnly ->
+                            scopeOnly.bookshelfId == bookshelfId &&
+                                scopeOnly.path == path
+                        }?.sortType
+                        ?: it.sortType,
+                )
+            }.launchIn(scope)
         getFileUseCase(GetFileUseCase.Request(bookshelfId, path))
             .onEach {
                 when (it) {
                     is Resource.Error -> Unit
                     is Resource.Success -> {
                         uiState = uiState.copy(
-                            folderAppBarUiState = uiState.folderAppBarUiState.copy(title = it.data.name)
+                            folderAppBarUiState = uiState.folderAppBarUiState.copy(
+                                title = it.data.name,
+                            ),
                         )
                     }
                 }
@@ -166,7 +183,9 @@ private class FolderScreenStateImpl(
     }
 
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
-        logcat { "isRestored: $isRestored, restorePath: ${restorePath}, itemCount: ${lazyPagingItems.itemCount}" }
+        logcat {
+            "isRestored: $isRestored, restorePath: $restorePath, itemCount: ${lazyPagingItems.itemCount}"
+        }
         if (!isRestored && restorePath != null && 0 < lazyPagingItems.itemCount) {
             val index = lazyPagingItems.indexOf { it?.path == restorePath }
             if (0 <= index) {
@@ -213,27 +232,32 @@ private class FolderScreenStateImpl(
             var refresh = false
             folderDisplaySettingsUseCase.edit { settings ->
                 val beforeFolderScopeOnly =
-                    settings.folderScopeOnlyList.find { it.bookshelfId == bookshelfId && it.path == path }
+                    settings.folderScopeOnlyList.find {
+                        it.bookshelfId == bookshelfId &&
+                            it.path == path
+                    }
                 when {
                     result.folderScopeOnly -> {
                         if (beforeFolderScopeOnly == null) {
                             refresh = true
                             settings.copy(
-                                folderScopeOnlyList = settings.folderScopeOnlyList + FolderScopeOnly(
+                                folderScopeOnlyList =
+                                settings.folderScopeOnlyList + FolderScopeOnly(
                                     bookshelfId,
                                     path,
-                                    result.sortType
-                                )
+                                    result.sortType,
+                                ),
                             )
                         } else if (beforeFolderScopeOnly.sortType != result.sortType) {
                             refresh = true
                             val new = FolderScopeOnly(
                                 bookshelfId,
                                 path,
-                                result.sortType
+                                result.sortType,
                             )
                             settings.copy(
-                                folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly + new
+                                folderScopeOnlyList =
+                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
                             )
                         } else {
                             settings
@@ -243,7 +267,8 @@ private class FolderScreenStateImpl(
                     !result.folderScopeOnly && beforeFolderScopeOnly != null -> {
                         refresh = true
                         settings.copy(
-                            folderScopeOnlyList = settings.folderScopeOnlyList - beforeFolderScopeOnly
+                            folderScopeOnlyList =
+                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
                         )
                     }
 
@@ -271,7 +296,9 @@ private class FolderScreenStateImpl(
         }
     }
 
-    private fun updateFolderDisplaySettings(edit: (FolderDisplaySettings) -> FolderDisplaySettings) {
+    private fun updateFolderDisplaySettings(
+        edit: (FolderDisplaySettings) -> FolderDisplaySettings,
+    ) {
         scope.launch {
             folderDisplaySettingsUseCase.edit(edit)
         }
@@ -296,11 +323,11 @@ private class FolderScreenStateImpl(
                     restorePath = restorePath,
                     scope = scope,
                     folderDisplaySettingsUseCase = folderDisplaySettingsUseCase,
-                    getFileUseCase = getFileUseCase
+                    getFileUseCase = getFileUseCase,
                 ).apply {
                     isRestored = it
                 }
-            }
+            },
         )
     }
 }

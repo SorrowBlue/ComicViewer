@@ -16,7 +16,6 @@ annotation class BookPrepareScreenScope
 
 @GraphExtension(BookPrepareScreenScope::class)
 interface BookScreenContext : ScreenContext {
-
     val getBookUseCase: GetBookUseCase
     val getNextBookUseCase: GetNextBookUseCase
     val updateLastReadPageUseCase: UpdateLastReadPageUseCase
@@ -26,7 +25,6 @@ interface BookScreenContext : ScreenContext {
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory
     fun interface Factory {
-
         fun createBookScreenContext(): BookScreenContext
     }
 }

@@ -11,17 +11,16 @@ import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@ContributesBinding(DataScope::class)
 @Inject
 internal class ReadLaterFileLocalDataSourceImpl(private val readLaterFileDao: ReadLaterFileDao) :
     ReadLaterFileLocalDataSource {
-    override suspend fun updateOrAdd(file: ReadLaterFile): Resource<ReadLaterFile, Resource.SystemError> = kotlin
+    override suspend fun updateOrAdd(
+        file: ReadLaterFile,
+    ): Resource<ReadLaterFile, Resource.SystemError> = kotlin
         .runCatching {
             readLaterFileDao.upsert(ReadLaterFileEntity.fromModel(file))
         }.fold(
@@ -55,7 +54,9 @@ internal class ReadLaterFileLocalDataSourceImpl(private val readLaterFileDao: Re
             Resource.Error(Resource.SystemError(it))
         })
 
-    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> = Pager(pagingConfig) {
+    override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> = Pager(
+        pagingConfig,
+    ) {
         readLaterFileDao.pagingSourceReadLaterFile()
     }.flow
         .map { it.map(FileEntity::toModel) }

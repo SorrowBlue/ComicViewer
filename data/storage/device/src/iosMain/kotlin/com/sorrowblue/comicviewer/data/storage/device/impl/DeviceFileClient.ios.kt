@@ -28,10 +28,8 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 
 @AssistedInject
-internal actual class DeviceFileClient(
-    @Assisted actual override val bookshelf: InternalStorage,
-) : FileClient<InternalStorage> {
-
+internal actual class DeviceFileClient(@Assisted actual override val bookshelf: InternalStorage) :
+    FileClient<InternalStorage> {
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<InternalStorage> {
         actual override fun create(bookshelf: InternalStorage): DeviceFileClient
@@ -40,14 +38,17 @@ internal actual class DeviceFileClient(
     @OptIn(ExperimentalForeignApi::class)
     actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         val url = NSURL.URLWithString(URLString = file.path)!!
-        return NSFileManager.defaultManager.contentsOfDirectoryAtURL(
-            url = url,
-            includingPropertiesForKeys = null,
-            options = NSDirectoryEnumerationSkipsSubdirectoryDescendants,
-            error = null
-        ).orEmpty().filterIsInstance<NSURL>().map {
-            it.toFileModel(resolveImageFolder)
-        }
+        return NSFileManager.defaultManager
+            .contentsOfDirectoryAtURL(
+                url = url,
+                includingPropertiesForKeys = null,
+                options = NSDirectoryEnumerationSkipsSubdirectoryDescendants,
+                error = null,
+            ).orEmpty()
+            .filterIsInstance<NSURL>()
+            .map {
+                it.toFileModel(resolveImageFolder)
+            }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -69,25 +70,25 @@ internal actual class DeviceFileClient(
         return file.openInputStream()!!.toOkioSource().buffer()
     }
 
-    actual override suspend fun seekableInputStream(file: File): SeekableInputStream {
-        return LocalFileSeekableInputStream(file.path)
-    }
+    actual override suspend fun seekableInputStream(file: File): SeekableInputStream =
+        LocalFileSeekableInputStream(file.path)
 
     actual override suspend fun connect(path: String) {
         logcat { "connect(path=$path)" }
-        kotlin.runCatching {
-            exists(path)
-        }.fold({
-            if (!it) {
-                throw FileClientException.InvalidPath()
+        kotlin
+            .runCatching {
+                exists(path)
+            }.fold({
+                if (!it) {
+                    throw FileClientException.InvalidPath()
+                }
+            }) {
+                it.printStackTrace()
+                when (it) {
+                    is IllegalArgumentException -> throw FileClientException.InvalidPath()
+                    else -> throw it
+                }
             }
-        }) {
-            it.printStackTrace()
-            when (it) {
-                is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                else -> throw it
-            }
-        }
     }
 
     actual override suspend fun attribute(path: String): FileAttribute {
@@ -114,9 +115,10 @@ internal actual class DeviceFileClient(
         val parent = absoluteString?.removeSuffix(lastPath).orEmpty()
         val file = FileUtils.fromString(input = path, hasDirectoryPath)
             ?: throw FileClientException.InvalidPath()
-        return if (resolveImageFolder && !file.list { dir, name ->
-                name.extension in SUPPORTED_IMAGE
-            }.isNullOrEmpty()
+        return if (resolveImageFolder && !file
+                .list { dir, name ->
+                    name.extension in SUPPORTED_IMAGE
+                }.isNullOrEmpty()
         ) {
             BookFolder(
                 path = path,

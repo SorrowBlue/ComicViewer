@@ -50,7 +50,8 @@ interface DatabaseProviders {
 
     @SingleIn(DataScope::class)
     @Provides
-    private fun provideBookshelfDao(database: ComicViewerDatabase): BookshelfDao = database.bookshelfDao()
+    private fun provideBookshelfDao(database: ComicViewerDatabase): BookshelfDao = database
+        .bookshelfDao()
 
     @SingleIn(DataScope::class)
     @Provides
@@ -58,7 +59,8 @@ interface DatabaseProviders {
 
     @SingleIn(DataScope::class)
     @Provides
-    private fun provideCollectionDao(database: ComicViewerDatabase): CollectionDao = database.collectionDao()
+    private fun provideCollectionDao(database: ComicViewerDatabase): CollectionDao = database
+        .collectionDao()
 
     @SingleIn(DataScope::class)
     @Provides
@@ -67,7 +69,8 @@ interface DatabaseProviders {
 
     @SingleIn(DataScope::class)
     @Provides
-    private fun provideReadLaterFileDao(database: ComicViewerDatabase): ReadLaterFileDao = database.readLaterFileDao()
+    private fun provideReadLaterFileDao(database: ComicViewerDatabase): ReadLaterFileDao = database
+        .readLaterFileDao()
 
     @IoDispatcher
     @SingleIn(DataScope::class)

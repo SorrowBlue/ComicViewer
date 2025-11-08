@@ -26,8 +26,7 @@ internal interface ReadLaterScreenState {
 
 @Composable
 context(context: ReadLaterScreenContext)
-internal fun rememberReadLaterScreenState(
-): ReadLaterScreenState {
+internal fun rememberReadLaterScreenState(): ReadLaterScreenState {
     val state = remember {
         ReadLaterScreenStateImpl(
             deleteAllReadLaterUseCase = context.deleteAllReadLaterUseCase,
@@ -36,7 +35,7 @@ internal fun rememberReadLaterScreenState(
         scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
         lazyPagingItems = rememberPagingItems {
             context.pagingReadLaterFileUseCase(
-                PagingReadLaterFileUseCase.Request(PagingConfig(20))
+                PagingReadLaterFileUseCase.Request(PagingConfig(20)),
             )
         }
         lazyGridState = rememberLazyGridState()

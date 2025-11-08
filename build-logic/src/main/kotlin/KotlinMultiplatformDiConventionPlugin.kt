@@ -9,7 +9,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformDiConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -31,5 +30,6 @@ class KotlinMultiplatformDiConventionPlugin : Plugin<Project> {
     }
 }
 
-private fun Project.metro(configure: Action<dev.zacsweers.metro.gradle.MetroPluginExtension>): Unit =
-    (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("metro", configure)
+private fun Project.metro(
+    configure: Action<dev.zacsweers.metro.gradle.MetroPluginExtension>,
+): Unit = (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("metro", configure)

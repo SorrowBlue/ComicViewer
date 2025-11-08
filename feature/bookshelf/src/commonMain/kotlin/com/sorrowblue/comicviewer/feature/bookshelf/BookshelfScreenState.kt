@@ -23,8 +23,11 @@ interface BookshelfScreenState {
     val lazyPagingItems: LazyPagingItems<BookshelfFolder>
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyGridState: LazyGridState
+
     fun onNavItemReSelected()
+
     fun onFabClick()
+
     fun onEditClick(id: BookshelfId, type: BookshelfType)
 }
 
@@ -40,9 +43,9 @@ internal fun rememberBookshelfScreenState(): BookshelfScreenState {
             context.pagingBookshelfFolderUseCase(
                 PagingBookshelfFolderUseCase.Request(
                     PagingConfig(
-                        20
-                    )
-                )
+                        20,
+                    ),
+                ),
             )
         }
         scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()

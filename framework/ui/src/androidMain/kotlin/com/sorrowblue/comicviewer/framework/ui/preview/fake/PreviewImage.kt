@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.framework.ui.R
 
 internal class PreviewImage(context: Context) : Image {
     private val bitmap =
-        ContextCompat.getDrawable(context, nextSampleAvatar)!!.toBitmap()
+        requireNotNull(ContextCompat.getDrawable(context, nextSampleAvatar)).toBitmap()
 
     override val shareable = false
 
@@ -27,9 +27,9 @@ internal class PreviewImage(context: Context) : Image {
     }
 
     private val nextSampleAvatar
-        get() = avatarList[AvatarIndex++].apply {
-            if (AvatarIndex >= avatarList.size) {
-                AvatarIndex = 0
+        get() = avatarList[avatarIndex++].apply {
+            if (avatarIndex >= avatarList.size) {
+                avatarIndex = 0
             }
         }
 
@@ -57,7 +57,7 @@ internal class PreviewImage(context: Context) : Image {
         }
 }
 
-private var AvatarIndex = 0
+private var avatarIndex = 0
 
 private val avatarList = listOf(
     R.drawable.avatar_1,

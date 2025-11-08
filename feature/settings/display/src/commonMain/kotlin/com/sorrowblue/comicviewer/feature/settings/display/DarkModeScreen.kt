@@ -35,7 +35,7 @@ internal fun DarkModeScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_display_label_appearance)) }
+        title = { Text(text = stringResource(Res.string.settings_display_label_appearance)) },
     ) {
         Column(Modifier.padding(it.copy(start = 0.dp, end = 0.dp))) {
             uiState.list.forEach { darkMode ->
@@ -45,11 +45,11 @@ internal fun DarkModeScreen(
                         .fillMaxWidth()
                         .clickable { onDarkModeChange(darkMode) }
                         .padding(it.copy(top = 0.dp, bottom = 0.dp))
-                        .padding(vertical = 12.dp)
+                        .padding(vertical = 12.dp),
                 ) {
                     RadioButton(
                         selected = darkMode == uiState.darkMode,
-                        onClick = null
+                        onClick = null,
                     )
                     Spacer(modifier = Modifier.size(24.dp))
                     Text(text = stringResource(darkMode.label))

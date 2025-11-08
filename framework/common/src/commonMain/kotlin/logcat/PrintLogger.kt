@@ -6,7 +6,6 @@ package logcat
  * Alternative to [AndroidLogcatLogger] when running on a JVM.
  */
 object PrintLogger : LogcatLogger {
-
     override fun log(priority: LogPriority, tag: String, message: String) {
         println("$tag: $message")
     }

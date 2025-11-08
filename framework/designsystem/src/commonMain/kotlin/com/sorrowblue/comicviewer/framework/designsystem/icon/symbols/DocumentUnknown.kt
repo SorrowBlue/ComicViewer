@@ -1,3 +1,5 @@
+@file:Suppress("detekt.all")
+
 package com.sorrowblue.comicviewer.framework.designsystem.icon.symbols
 
 import androidx.compose.material3.Icon
@@ -26,12 +28,17 @@ val ComicIcons.DocumentUnknown: ImageVector
             defaultWidth = 24.0.dp,
             defaultHeight =
             24.0.dp,
-            viewportWidth = 960.0f, viewportHeight = 960.0f
+            viewportWidth = 960.0f,
+            viewportHeight = 960.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                pathFillType = NonZero
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
             ) {
                 moveTo(200.0f, 160.0f)
                 verticalLineToRelative(640.0f)
@@ -119,8 +126,7 @@ val ComicIcons.DocumentUnknown: ImageVector
                 verticalLineToRelative(14.0f)
                 close()
             }
-        }
-            .build()
+        }.build()
         return _documentUnknown!!
     }
 

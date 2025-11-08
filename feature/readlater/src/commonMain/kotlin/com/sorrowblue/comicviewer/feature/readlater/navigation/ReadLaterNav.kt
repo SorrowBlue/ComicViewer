@@ -39,7 +39,6 @@ val ReadLaterKeySerializersModule = SerializersModule {
 
 @Serializable
 sealed interface ReadLaterKey : NavigationKey {
-
     override val title
         @Composable
         get() = stringResource(Res.string.readlater_title)
@@ -49,24 +48,23 @@ sealed interface ReadLaterKey : NavigationKey {
     data object List : ReadLaterKey
 
     @Serializable
-    data class FileInfo(
-        override val fileKey: File.Key,
-    ) : ReadLaterKey, FileInfoKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        ReadLaterKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
     @Serializable
-    data class FileInfo2(
-        override val fileKey: File.Key,
-    ) : ReadLaterKey, FileInfoKey {
+    data class FileInfo2(override val fileKey: File.Key) :
+        ReadLaterKey,
+        FileInfoKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
     @Serializable
-    data class Folder(
-        override val bookshelfId: BookshelfId,
-        override val path: String,
-    ) : ReadLaterKey, FolderKey {
+    data class Folder(override val bookshelfId: BookshelfId, override val path: String) :
+        ReadLaterKey,
+        FolderKey {
         override val restorePath: String? = null
     }
 }
@@ -86,7 +84,7 @@ fun EntryProviderScope<NavKey>.readLaterEntryGroup(
 
                 is Folder -> {
                     appNavigationState.addToBackStack(
-                        ReadLaterKey.Folder(it.bookshelfId, it.path)
+                        ReadLaterKey.Folder(it.bookshelfId, it.path),
                     )
                 }
             }
@@ -98,7 +96,7 @@ fun EntryProviderScope<NavKey>.readLaterEntryGroup(
     readLaterFileInfoEntry(
         onBackClick = appNavigationState::onBackPressed,
         onCollectionClick = onCollectionClick,
-        onOpenFolderClick = { /* Do noting */ }
+        onOpenFolderClick = { /* Do noting */ },
     )
     folderEntryGroup<ReadLaterKey.Folder, ReadLaterKey.FileInfo2>(
         "ReadLater",
@@ -109,7 +107,7 @@ fun EntryProviderScope<NavKey>.readLaterEntryGroup(
                 is Book -> onBookClick(file)
 
                 is Folder -> appNavigationState.addToBackStack(
-                    ReadLaterKey.Folder(file.bookshelfId, file.path)
+                    ReadLaterKey.Folder(file.bookshelfId, file.path),
                 )
             }
         },
@@ -121,7 +119,7 @@ fun EntryProviderScope<NavKey>.readLaterEntryGroup(
             appNavigationState.addToBackStack(SortTypeSelectKey(sortType, folderScopeOnly))
         },
         onCollectionClick = onCollectionClick,
-        onOpenFolderClick = { /* Do noting */ }
+        onOpenFolderClick = { /* Do noting */ },
     )
 }
 
@@ -132,8 +130,10 @@ private fun EntryProviderScope<NavKey>.readLaterEntry(
     onFileInfoClick: (File) -> Unit,
 ) {
     entryScreen<ReadLaterKey.List, ReadLaterScreenContext>(
-        createContext = { (graph as ReadLaterScreenContext.Factory).createReadLaterScreenContext() },
-        metadata = SupportingPaneSceneStrategy.mainPane("ReadLater")
+        createContext = {
+            (graph as ReadLaterScreenContext.Factory).createReadLaterScreenContext()
+        },
+        metadata = SupportingPaneSceneStrategy.mainPane("ReadLater"),
     ) {
         ReadLaterScreenRoot(
             onSettingsClick = onSettingsClick,
@@ -153,6 +153,6 @@ private fun EntryProviderScope<NavKey>.readLaterFileInfoEntry(
         "ReadLater",
         onBackClick = onBackClick,
         onCollectionClick = onCollectionClick,
-        onOpenFolderClick = onOpenFolderClick
+        onOpenFolderClick = onOpenFolderClick,
     )
 }

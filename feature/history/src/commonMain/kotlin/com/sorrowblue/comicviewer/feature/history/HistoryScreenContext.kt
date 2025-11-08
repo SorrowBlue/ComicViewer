@@ -13,7 +13,6 @@ annotation class HistoryScreenScope
 
 @GraphExtension(HistoryScreenScope::class)
 interface HistoryScreenContext : ScreenContext {
-
     val clearAllHistoryUseCase: ClearAllHistoryUseCase
     val pagingHistoryBookUseCase: PagingHistoryBookUseCase
 

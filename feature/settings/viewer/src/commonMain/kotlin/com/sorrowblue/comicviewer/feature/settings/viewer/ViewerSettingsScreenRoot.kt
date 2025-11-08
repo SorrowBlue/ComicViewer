@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 context(context: ViewerSettingsScreenContext)
-fun ViewerSettingsScreenRoot(
-    onBackClick: () -> Unit,
-) {
+fun ViewerSettingsScreenRoot(onBackClick: () -> Unit) {
     val state = rememberViewerSettingsScreenState()
     ViewerSettingsScreen(
         uiState = state.uiState,

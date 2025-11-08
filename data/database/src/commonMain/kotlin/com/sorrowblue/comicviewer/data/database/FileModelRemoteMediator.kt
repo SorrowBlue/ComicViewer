@@ -41,7 +41,10 @@ internal class FileModelRemoteMediator(
 
     override suspend fun initialize() = InitializeAction.LAUNCH_INITIAL_REFRESH
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, QueryFileWithCountEntity>): MediatorResult {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, QueryFileWithCountEntity>,
+    ): MediatorResult {
         if (loadType != LoadType.REFRESH) {
             return MediatorResult.Success(endOfPaginationReached = true)
         }

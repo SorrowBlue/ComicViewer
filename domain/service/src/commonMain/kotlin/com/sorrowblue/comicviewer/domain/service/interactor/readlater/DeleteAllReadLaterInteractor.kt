@@ -13,14 +13,12 @@ internal class DeleteAllReadLaterInteractor(
     private val readLaterFileLocalDataSource: ReadLaterFileLocalDataSource,
     private val sendFatalErrorInteractor: SendFatalErrorInteractor,
 ) : DeleteAllReadLaterUseCase() {
-
-    override suspend fun run(request: Request): Resource<Unit, Unit> {
-        return readLaterFileLocalDataSource.deleteAll().fold(
+    override suspend fun run(request: Request): Resource<Unit, Unit> =
+        readLaterFileLocalDataSource.deleteAll().fold(
             onSuccess = { Resource.Success(Unit) },
             onError = {
                 sendFatalErrorInteractor(SendFatalErrorUseCase.Request(it.throwable))
                 Resource.Error(Unit)
-            }
+            },
         )
-    }
 }

@@ -30,6 +30,6 @@ internal fun DiscardConfirmDialog(
         },
         text = {
             Text(stringResource(Res.string.bookshelf_edit_discord_title))
-        }
+        },
     )
 }

@@ -13,7 +13,6 @@ import okio.Path.Companion.toOkioPath
 
 @Inject
 internal actual class DataStoreMaker actual constructor(private val context: PlatformContext) {
-
     actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {
         val datastorePath = context.filesDir.resolve("datastore").also {
             it.createDirectories()

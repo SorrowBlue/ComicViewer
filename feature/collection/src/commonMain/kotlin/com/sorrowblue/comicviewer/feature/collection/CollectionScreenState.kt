@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 
 internal interface CollectionScreenState {
-
     val uiState: CollectionScreenUiState
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyPagingItems: LazyPagingItems<File>
@@ -45,7 +44,7 @@ internal fun rememberCollectionScreenState(id: CollectionId): CollectionScreenSt
     }.apply {
         this.lazyPagingItems = rememberPagingItems {
             context.pagingCollectionFileUseCase(
-                PagingCollectionFileUseCase.Request(PagingConfig(20), id)
+                PagingCollectionFileUseCase.Request(PagingConfig(20), id),
             )
         }
         this.scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
@@ -59,14 +58,14 @@ private class CollectionScreenStateImpl(
     scope: CoroutineScope,
     getCollectionUseCase: GetCollectionUseCase,
 ) : CollectionScreenState {
-
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
     override lateinit var lazyGridState: LazyGridState
     override lateinit var lazyPagingItems: LazyPagingItems<File>
     override var uiState by mutableStateOf(CollectionScreenUiState())
 
     init {
-        getCollectionUseCase(GetCollectionUseCase.Request(id)).mapNotNull { it.dataOrNull() }
+        getCollectionUseCase(GetCollectionUseCase.Request(id))
+            .mapNotNull { it.dataOrNull() }
             .onEach {
                 uiState = uiState.copy(appBarUiState = uiState.appBarUiState.copy(title = it.name))
             }.launchIn(scope)

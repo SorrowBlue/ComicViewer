@@ -17,17 +17,22 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 sealed interface Product {
-
     val productId: String
 
     companion object {
-        fun productIdOf(productId: String): Product? =
-            kotlin.runCatching { ConsumableProduct.entries.firstOrNull { it.productId == productId } }
+        fun productIdOf(productId: String): Product? = kotlin
+            .runCatching { ConsumableProduct.entries.firstOrNull { it.productId == productId } }
+            .getOrNull()
+            ?: kotlin
+                .runCatching {
+                    NonConsumableProduct.entries.firstOrNull {
+                        it.productId ==
+                            productId
+                    }
+                }.getOrNull()
+            ?: kotlin
+                .runCatching { TestProduct.entries.firstOrNull { it.productId == productId } }
                 .getOrNull()
-                ?: kotlin.runCatching { NonConsumableProduct.entries.firstOrNull { it.productId == productId } }
-                    .getOrNull()
-                ?: kotlin.runCatching { TestProduct.entries.firstOrNull { it.productId == productId } }
-                    .getOrNull()
 
         val entries: List<Product> = ConsumableProduct.entries + NonConsumableProduct.entries
 
@@ -62,9 +67,7 @@ data class InAppItem(
     val formattedPrice: String,
 )
 
-data class DonationScreenUiState(
-    val items: List<InAppItem> = emptyList(),
-)
+data class DonationScreenUiState(val items: List<InAppItem> = emptyList())
 
 // @Destination<SettingsDetailGraph>(visibility = CodeGenVisibility.INTERNAL)
 @Composable
@@ -108,7 +111,7 @@ private fun DonationScreen(
                         trailingContent = { Text(text = it.formattedPrice) },
                         modifier = Modifier.clickable {
                             onItemClick(it)
-                        }
+                        },
                     )
                 }
                 Spacer(modifier = Modifier.height(ComicTheme.dimension.padding))

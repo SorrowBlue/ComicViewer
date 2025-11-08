@@ -25,9 +25,7 @@ import comicviewer.feature.bookshelf.edit.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
 
-data class BookshelfEditorScreenUiState(
-    val progress: Boolean = true,
-)
+data class BookshelfEditorScreenUiState(val progress: Boolean = true)
 
 @Composable
 internal fun EditorDialog(
@@ -48,18 +46,18 @@ internal fun EditorDialog(
             TextButton(
                 onClick = form::handleSubmit,
                 enabled = !uiState.progress,
-                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current)
+                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
             ) {
                 AnimatedContent(targetState = uiState.progress, label = "progress") {
                     if (it) {
                         CircularProgressIndicator(
                             strokeWidth = 2.dp,
-                            modifier = Modifier.size(ButtonDefaults.IconSize)
+                            modifier = Modifier.size(ButtonDefaults.IconSize),
                         )
                     } else {
                         Text(
                             text = stringResource(Res.string.bookshelf_edit_label_save),
-                            style = dialogTextStyle
+                            style = dialogTextStyle,
                         )
                     }
                 }
@@ -70,7 +68,7 @@ internal fun EditorDialog(
             TextButton(
                 onClick = onDismissRequest,
                 enabled = !uiState.progress,
-                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current)
+                colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
             ) {
                 Text(text = stringResource(Res.string.cancel), style = dialogTextStyle)
             }
@@ -81,6 +79,6 @@ internal fun EditorDialog(
                 content()
                 Spacer(Modifier.padding(bottom = 8.dp))
             }
-        }
+        },
     )
 }

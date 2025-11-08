@@ -16,17 +16,13 @@ enum class FileClientType {
 }
 
 interface FileClient<T : Bookshelf> {
-
     interface Factory<T : Bookshelf> {
         fun create(bookshelf: T): FileClient<T>
     }
 
     val bookshelf: T
 
-    suspend fun listFiles(
-        file: File,
-        resolveImageFolder: Boolean = false,
-    ): List<File>
+    suspend fun listFiles(file: File, resolveImageFolder: Boolean = false): List<File>
 
     suspend fun exists(path: String): Boolean
 

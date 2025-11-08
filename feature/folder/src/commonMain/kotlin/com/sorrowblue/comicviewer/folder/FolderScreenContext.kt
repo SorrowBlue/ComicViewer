@@ -14,7 +14,6 @@ annotation class FolderScreenScope
 
 @GraphExtension(FolderScreenScope::class)
 interface FolderScreenContext : ScreenContext {
-
     val getFileUseCase: GetFileUseCase
     val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase
     val pagingFileUseCase: PagingFileUseCase

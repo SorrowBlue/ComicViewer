@@ -35,18 +35,25 @@ internal fun UsernameField(
             notBlank { notBlankMessage }
         },
         dependsOn = setOf(AuthField),
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
             onValueChange = field::onValueChange,
             label = { Text(text = stringResource(Res.string.bookshelf_edit_hint_username)) },
-            isError = field.hasError || form.watch { meta.fields[AuthField]?.error?.messages?.isNotEmpty() == true },
+            isError =
+            field.hasError ||
+                form.watch {
+                    meta.fields[AuthField]
+                        ?.error
+                        ?.messages
+                        ?.isNotEmpty() == true
+                },
             enabled = field.isEnabled,
             supportingText = field.supportingText(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             singleLine = true,
             modifier = modifier

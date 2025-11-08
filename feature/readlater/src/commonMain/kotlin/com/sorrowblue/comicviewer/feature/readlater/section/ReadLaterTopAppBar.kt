@@ -27,11 +27,13 @@ internal fun ReadLaterTopAppBar(
             IconButton(onClick = onClearAllClick) {
                 Icon(
                     imageVector = ComicIcons.ClearAll,
-                    contentDescription = stringResource(Res.string.readlater_action_clear_read_later)
+                    contentDescription = stringResource(
+                        Res.string.readlater_action_clear_read_later,
+                    ),
                 )
             }
             SettingsIconButton(onClick = onSettingsClick)
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
     )
 }

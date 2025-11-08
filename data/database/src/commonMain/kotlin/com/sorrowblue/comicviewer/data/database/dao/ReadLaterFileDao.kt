@@ -20,7 +20,9 @@ internal interface ReadLaterFileDao {
     @Query("DELETE FROM read_later_file")
     suspend fun deleteAll(): Int
 
-    @Query("SELECT EXISTS(SELECT * FROM read_later_file WHERE bookshelf_id=:bookshelfId AND file_path=:path)")
+    @Query(
+        "SELECT EXISTS(SELECT * FROM read_later_file WHERE bookshelf_id=:bookshelfId AND file_path=:path)",
+    )
     fun exists(bookshelfId: Int, path: String): Flow<Boolean>
 
     @Query(

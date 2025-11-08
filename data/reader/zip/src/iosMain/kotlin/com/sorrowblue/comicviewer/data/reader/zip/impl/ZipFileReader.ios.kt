@@ -26,7 +26,6 @@ internal actual class ZipFileReader(
     @ImageExtension supportedException: Set<String>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
-
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(
@@ -36,22 +35,26 @@ internal actual class ZipFileReader(
     }
 
     val zipFileSystem = FileSystem.SYSTEM.openZip(
-        NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath()
+        NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath(),
     )
     val fileSystem = FileSystem.SYSTEM
 
-    val paths = zipFileSystem.listRecursively("/".toPath())
+    val paths = zipFileSystem
+        .listRecursively("/".toPath())
         .filter { zipFileSystem.metadata(it).isRegularFile }
         .toList()
 
     init {
-        kotlin.runCatching {
-            FileSystem.SYSTEM.openZip(NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath())
-        }.onFailure {
-            logcat { "path=${it.asLog()}" }
-        }.onSuccess {
-            logcat { "path=$it" }
-        }
+        kotlin
+            .runCatching {
+                FileSystem.SYSTEM.openZip(
+                    NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath(),
+                )
+            }.onFailure {
+                logcat { "path=${it.asLog()}" }
+            }.onSuccess {
+                logcat { "path=$it" }
+            }
     }
 
     init {
@@ -63,9 +66,7 @@ internal actual class ZipFileReader(
         fileSystem.close()
     }
 
-    actual override suspend fun pageCount(): Int {
-        return paths.size
-    }
+    actual override suspend fun pageCount(): Int = paths.size
 
     actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
         zipFileSystem.source(paths[pageIndex]).buffer().use { source ->
@@ -73,11 +74,7 @@ internal actual class ZipFileReader(
         }
     }
 
-    actual override suspend fun fileSize(pageIndex: Int): Long {
-        return 0
-    }
+    actual override suspend fun fileSize(pageIndex: Int): Long = 0
 
-    actual override suspend fun fileName(pageIndex: Int): String {
-        return paths[pageIndex].name
-    }
+    actual override suspend fun fileName(pageIndex: Int): String = paths[pageIndex].name
 }

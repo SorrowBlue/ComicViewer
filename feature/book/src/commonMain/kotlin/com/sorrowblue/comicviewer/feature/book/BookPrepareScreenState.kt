@@ -46,28 +46,28 @@ private class BookPrepareScreenStateImpl(
     scope: CoroutineScope,
     getBookUseCase: GetBookUseCase,
 ) : BookPrepareScreenState {
-
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(name))
         private set
 
     init {
-        getBookUseCase(GetBookUseCase.Request(bookshelfId, path)).onEach {
-            uiState = when (it) {
-                is Resource.Success ->
-                    BookScreenUiState.Loaded(
-                        book = it.data,
-                        collectionId = collectionId,
-                        bookSheetUiState = BookSheetUiState(it.data)
-                    )
+        getBookUseCase(GetBookUseCase.Request(bookshelfId, path))
+            .onEach {
+                uiState = when (it) {
+                    is Resource.Success ->
+                        BookScreenUiState.Loaded(
+                            book = it.data,
+                            collectionId = collectionId,
+                            bookSheetUiState = BookSheetUiState(it.data),
+                        )
 
-                is Resource.Error -> when (it.error) {
-                    GetBookUseCase.Error.NotFound ->
-                        BookScreenUiState.Error(name)
+                    is Resource.Error -> when (it.error) {
+                        GetBookUseCase.Error.NotFound ->
+                            BookScreenUiState.Error(name)
 
-                    GetBookUseCase.Error.ReportedSystemError ->
-                        BookScreenUiState.Error(name)
+                        GetBookUseCase.Error.ReportedSystemError ->
+                            BookScreenUiState.Error(name)
+                    }
                 }
-            }
-        }.launchIn(scope)
+            }.launchIn(scope)
     }
 }

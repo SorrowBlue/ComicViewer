@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.onEach
 
 @Stable
 internal interface SearchScreenState {
-
     val uiState: SearchScreenUiState
     val lazyGridState: LazyGridState
     val lazyPagingItems: LazyPagingItems<File>
@@ -35,18 +34,19 @@ internal interface SearchScreenState {
     var isScrollableTop: Boolean
 
     fun onQueryChange(query: String)
+
     fun onRangeClick(range: SearchCondition.Range)
+
     fun onPeriodClick(period: SearchCondition.Period)
+
     fun onSortTypeClick(sortType: SortType)
+
     fun onShowHiddenClick()
 }
 
 @Composable
 context(context: SearchScreenContext)
-internal fun rememberSearchScreenState(
-    bookshelfId: BookshelfId,
-    path: String,
-): SearchScreenState {
+internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): SearchScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember {
         SearchScreenStateImpl(
@@ -61,7 +61,7 @@ internal fun rememberSearchScreenState(
             context.pagingQueryFileUseCase(
                 PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
                     uiState.searchCondition
-                }
+                },
             )
         }
     }
@@ -73,7 +73,6 @@ private class SearchScreenStateImpl(
     var coroutineScope: CoroutineScope,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : SearchScreenState {
-
     override lateinit var lazyGridState: LazyGridState
     override lateinit var lazyPagingItems: LazyPagingItems<File>
 
@@ -83,19 +82,21 @@ private class SearchScreenStateImpl(
     override var isSkipFirstRefresh by mutableStateOf(true)
 
     init {
-        manageFolderDisplaySettingsUseCase.settings.onEach {
-            uiState = uiState.copy(
-                searchContentsUiState = uiState.searchContentsUiState.copy(
-                    fileLazyVerticalGridUiState = uiState.searchContentsUiState.fileLazyVerticalGridUiState.copy(
-                        fileListDisplay = FileListDisplay.List,
-                        showThumbnails = it.showThumbnails,
-                        fontSize = it.fontSize,
-                        imageScale = it.imageScale,
-                        imageFilterQuality = it.imageFilterQuality,
-                    )
+        manageFolderDisplaySettingsUseCase.settings
+            .onEach {
+                uiState = uiState.copy(
+                    searchContentsUiState = uiState.searchContentsUiState.copy(
+                        fileLazyVerticalGridUiState = uiState.searchContentsUiState.fileLazyVerticalGridUiState
+                            .copy(
+                                fileListDisplay = FileListDisplay.List,
+                                showThumbnails = it.showThumbnails,
+                                fontSize = it.fontSize,
+                                imageScale = it.imageScale,
+                                imageFilterQuality = it.imageFilterQuality,
+                            ),
+                    ),
                 )
-            )
-        }.launchIn(coroutineScope)
+            }.launchIn(coroutineScope)
     }
 
     override fun onPeriodClick(period: SearchCondition.Period) {
@@ -106,7 +107,7 @@ private class SearchScreenStateImpl(
     override fun onQueryChange(query: String) {
         uiState = uiState.copy(
             searchCondition = uiState.searchCondition.copy(query = query),
-            searchContentsUiState = uiState.searchContentsUiState.copy(query = query)
+            searchContentsUiState = uiState.searchContentsUiState.copy(query = query),
         )
         update()
     }
@@ -118,7 +119,7 @@ private class SearchScreenStateImpl(
                     SearchCondition.Range.Bookshelf -> SearchCondition.Range.Bookshelf
                     is SearchCondition.Range.InFolder -> SearchCondition.Range.InFolder(path)
                     is SearchCondition.Range.SubFolder -> SearchCondition.Range.SubFolder(path)
-                }
+                },
             )
         }
         update()
@@ -134,10 +135,9 @@ private class SearchScreenStateImpl(
         update()
     }
 
-
-    private fun copySearchCondition(action: (SearchCondition) -> SearchCondition): SearchScreenUiState {
-        return uiState.copy(searchCondition = action(uiState.searchCondition))
-    }
+    private fun copySearchCondition(
+        action: (SearchCondition) -> SearchCondition,
+    ): SearchScreenUiState = uiState.copy(searchCondition = action(uiState.searchCondition))
 
     private fun update() {
         isScrollableTop = true
