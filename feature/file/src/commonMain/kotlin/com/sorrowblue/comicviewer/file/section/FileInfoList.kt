@@ -91,19 +91,21 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
 
 val Long.asFileSize: String
     get() {
-        var a = this / 1024f
-        return if (a < 1024) {
+        var a = this / Byte
+        return if (a < Byte) {
             "${a.format()} KB"
         } else {
-            a /= 1024f
-            if (a < 1024) {
+            a /= Byte
+            if (a < Byte) {
                 "${a.format()} MB"
             } else {
-                a /= 1024f
+                a /= Byte
                 "${a.format()} GB"
             }
         }
     }
+
+private const val Byte = 1024f
 
 private fun Float.format(decimalPlaces: Int = 2): String {
     val multiplier = 10.0.pow(decimalPlaces.toDouble())

@@ -254,9 +254,9 @@ private fun EntryProviderScope<NavKey>.collectionListEntry(
         },
     ) {
         CollectionListScreenRoot(
-            onItemClick = { onItemClick(it.id) },
-            onEditClick = { onEditClick(it) },
-            onDeleteClick = { onDeleteClick(it.id) },
+            onItemClick = { collection -> onItemClick(collection.id) },
+            onEditClick = { collection -> onEditClick(collection) },
+            onDeleteClick = { collection -> onDeleteClick(collection.id) },
             onSettingsClick = onSettingsClick,
             onCreateBasicCollectionClick = onCreateBasicCollectionClick,
             onCreateSmartCollectionClick = onCreateSmartCollectionClick,

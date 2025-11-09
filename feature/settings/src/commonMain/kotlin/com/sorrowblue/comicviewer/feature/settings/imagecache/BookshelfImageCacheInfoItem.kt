@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.ImageCache
 import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory

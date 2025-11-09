@@ -17,9 +17,9 @@ internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) : Seekab
 
     override fun seek(offset: Long, whence: Int): Long {
         when (whence) {
-            SeekableInputStream.SeekSet -> file.seek(offset)
-            SeekableInputStream.SeekCur -> file.seek(file.filePointer + offset)
-            SeekableInputStream.SeekEnd -> file.seek(file.length() + offset)
+            SeekableInputStream.SEEK_SET -> file.seek(offset)
+            SeekableInputStream.SEEK_CUR -> file.seek(file.filePointer + offset)
+            SeekableInputStream.SEEK_END -> file.seek(file.length() + offset)
         }
         return file.filePointer
     }

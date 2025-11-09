@@ -18,7 +18,6 @@ import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderScopeOnly
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
@@ -285,22 +284,6 @@ private class FolderScreenStateImpl(
             if (refresh) {
                 refreshItems()
             }
-        }
-    }
-
-    fun onReSelected() {
-        if (lazyGridState.canScrollBackward) {
-            scope.launch {
-                lazyGridState.animateScrollToItem(0)
-            }
-        }
-    }
-
-    private fun updateFolderDisplaySettings(
-        edit: (FolderDisplaySettings) -> FolderDisplaySettings,
-    ) {
-        scope.launch {
-            folderDisplaySettingsUseCase.edit(edit)
         }
     }
 

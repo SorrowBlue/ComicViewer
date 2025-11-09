@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
 @Composable
 context(context: AuthenticationScreenContext)
-internal fun AuthenticationScreenRoot(
+fun AuthenticationScreenRoot(
     screenType: ScreenType,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,

@@ -44,7 +44,9 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 }
             }
             reportMerge.configureEach {
-                input.from(tasks.withType<Detekt>().map { it.reports.sarif.outputLocation })
+                input.from(
+                    tasks.withType<Detekt>().map { detekt -> detekt.reports.sarif.outputLocation },
+                )
             }
 
             mapOf(

@@ -47,7 +47,7 @@ internal actual fun rememberBookshelfInfoContentsState(
             context.pagingBookshelfBookUseCase(
                 PagingBookshelfBookUseCase.Request(
                     bookshelfFolder.bookshelf.id,
-                    PagingConfig(4),
+                    PagingConfig(PageSize),
                 ),
             )
         }
@@ -122,3 +122,5 @@ private class BookshelfInfoContentsStateImpl(
         }
     }
 }
+
+private const val PageSize = 4

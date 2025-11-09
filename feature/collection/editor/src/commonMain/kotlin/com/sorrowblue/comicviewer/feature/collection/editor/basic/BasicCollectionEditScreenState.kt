@@ -67,11 +67,13 @@ internal fun rememberBasicCollectionEditScreenState(
         this.scope = scope
         this.lazyPagingItems = rememberPagingItems {
             context.pagingCollectionFileUseCase(
-                PagingCollectionFileUseCase.Request(PagingConfig(20), collectionId),
+                PagingCollectionFileUseCase.Request(PagingConfig(PageSize), collectionId),
             )
         }
     }
 }
+
+private const val PageSize = 20
 
 @Stable
 private class BasicCollectionEditScreenStateImpl(

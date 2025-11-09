@@ -61,7 +61,7 @@ internal fun ImageCacheScreen(
     }
 }
 
-val Long.megaByte get() = floor(this / 1024.0 / 1024.0 * 100.0) / 100.0
+val Long.megaByte get() = floor(this / Byte / Byte * 100.0) / 100.0
 
 @Preview
 @Composable
@@ -71,8 +71,8 @@ private fun ImageCacheScreenPreview() {
             imageCacheInfos = listOf(
                 BookshelfImageCacheInfo(
                     fakeInternalStorage(),
-                    ThumbnailImageCache(50 * 1024 * 1024, 100 * 1024 * 1024),
-                    BookPageImageCache(50 * 1024 * 1024, 100 * 1024 * 1024),
+                    ThumbnailImageCache(50 * Byte * Byte, 100 * Byte * Byte),
+                    BookPageImageCache(50 * Byte * Byte, 100 * Byte * Byte),
                 ),
             ),
         ),
@@ -81,3 +81,5 @@ private fun ImageCacheScreenPreview() {
         onClick = { _, _ -> },
     )
 }
+
+private const val Byte = 1024L

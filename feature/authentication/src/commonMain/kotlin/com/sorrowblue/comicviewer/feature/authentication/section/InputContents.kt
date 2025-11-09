@@ -66,7 +66,7 @@ internal fun InputContents(
         AnimatedVisibility(visible = uiState.error != null) {
             if (uiState.error != null) {
                 Text(
-                    text = stringResource(uiState.error!!.resource),
+                    text = stringResource(requireNotNull(uiState.error).resource),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = ComicTheme.dimension.padding),

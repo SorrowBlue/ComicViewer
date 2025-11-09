@@ -7,8 +7,9 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberNotification
 import androidx.compose.ui.window.rememberTrayState
+import com.sorrowblue.comicviewer.Application
 import com.sorrowblue.comicviewer.aggregation.DesktopAppGraph
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.DesktopContext
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import comicviewer.composeapp.generated.resources.Res
@@ -18,9 +19,14 @@ import java.awt.Dimension
 import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
+    val context = DesktopContext.init()
     val appGraph =
-        createGraphFactory<DesktopAppGraph.Factory>().createDesktopAppGraph(LicenseeHelperImpl())
-    PlatformContext.platformGraph = appGraph
+        createGraphFactory<DesktopAppGraph.Factory>().createDesktopAppGraph(
+            context,
+            LicenseeHelperImpl()
+        )
+    context.platformGraph = appGraph
+
     val trayState = rememberTrayState()
     val notification =
         rememberNotification("Notification", "Message from MyApp!", Notification.Type.Info)
@@ -40,8 +46,8 @@ fun main() = application {
         icon = rememberVectorPainter(ComicIcons.Launcher),
     ) {
         window.minimumSize = Dimension(400, 600)
-        with(appGraph) {
-            Application(finishApp = ::exitApplication)
+        with(context) {
+            Application()
         }
     }
 }

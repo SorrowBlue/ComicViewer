@@ -16,12 +16,6 @@ import comicviewer.feature.file.generated.resources.file_info_label_add_collecti
 import comicviewer.feature.file.generated.resources.file_info_label_open_folder
 import org.jetbrains.compose.resources.stringResource
 
-internal data class SheetActionButtonsUiState(
-    val readLaterChecked: Boolean = false,
-    val readLaterLoading: Boolean = false,
-    val isOpenFolderEnabled: Boolean = false,
-)
-
 @Composable
 internal fun SheetActionButtons(
     uiState: SheetActionButtonsUiState,
@@ -64,3 +58,9 @@ internal fun SheetActionButtons(
         }
     }
 }
+
+internal data class SheetActionButtonsUiState(
+    val readLaterChecked: Boolean = false,
+    val readLaterLoading: Boolean = false,
+    val isOpenFolderEnabled: Boolean = false,
+)

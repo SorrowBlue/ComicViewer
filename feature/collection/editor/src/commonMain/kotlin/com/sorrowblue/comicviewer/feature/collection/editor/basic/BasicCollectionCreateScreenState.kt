@@ -19,7 +19,6 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create_add
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import soil.form.compose.Form
@@ -78,7 +77,6 @@ private class BasicCollectionCreateScreenStateImpl(
 
     override fun onSubmit(formData: BasicCollectionForm) {
         scope.launch {
-            delay(300)
             createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
                 .fold(
                     onSuccess = { collection ->

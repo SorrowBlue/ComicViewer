@@ -48,11 +48,11 @@ private class LicenseScreenStateImpl(override val libs: Libs?, val uriHandler: U
             license.url?.also {
                 try {
                     uriHandler.openUri(it)
-                } catch (t: Throwable) {
+                } catch (exception: IllegalArgumentException) {
                     logcat(
                         tag = "LibrariesContainerFixed",
                         priority = LogPriority.ERROR,
-                    ) { t.asLog() }
+                    ) { exception.asLog() }
                 }
             }
         }

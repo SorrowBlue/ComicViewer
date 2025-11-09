@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer
 
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -11,7 +12,7 @@ annotation class ViewerSettingsScreenScope
 
 @GraphExtension(ViewerSettingsScreenScope::class)
 interface ViewerSettingsScreenContext : ScreenContext {
-//    val manageViewerSettingsUseCase: ManageViewerSettingsUseCase
+    val manageViewerSettingsUseCase: ManageViewerSettingsUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

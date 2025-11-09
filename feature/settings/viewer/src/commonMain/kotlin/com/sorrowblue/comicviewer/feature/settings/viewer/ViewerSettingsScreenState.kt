@@ -45,7 +45,7 @@ internal fun rememberViewerSettingsScreenState(): ViewerSettingsScreenState {
     return remember(scope) {
         ViewerSettingsScreenStateImpl(
             scope = scope,
-            manageViewerSettingsUseCase = TODO(), // context.manageViewerSettingsUseCase
+            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
         )
     }
 }

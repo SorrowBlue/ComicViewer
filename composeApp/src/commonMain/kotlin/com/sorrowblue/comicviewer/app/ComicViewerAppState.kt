@@ -87,7 +87,6 @@ internal fun rememberComicViewerAppState(
 }
 
 internal interface ComicViewerAppState : AppState {
-
     fun onNavigationHistoryRestore()
 }
 

@@ -16,19 +16,22 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
+import com.sorrowblue.comicviewer.feature.authentication.ScreenType
+import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenRoot
 import logcat.logcat
 
 private const val TAG = "RootScreenWrapper"
 
 @Composable
-context(context: RootScreenWrapperContext)
-internal fun RootScreenWrapper(
+context(context: PreAppScreenContext)
+internal fun PreAppScreen(
     finishApp: () -> Unit,
     viewModel: MainViewModel = viewModel(),
     content: @Composable () -> Unit,
 ) {
     val isInitialized by viewModel.isInitialized.collectAsState()
-    val state = rememberRootScreenWrapperState()
+    val state = rememberPreAppScreenState()
 
     LaunchedEffect(state.tutorialRequired, state.authStatus, isInitialized) {
         logcat(tag = TAG) {
@@ -36,7 +39,11 @@ internal fun RootScreenWrapper(
         }
     }
     if (state.tutorialRequired) {
-        // TODO TutorialScreenRoot(navigator = state::onTutorialComplete)
+        with(context.tutorialScreenContext.createTutorialScreenContext()) {
+            TutorialScreenRoot(
+                onComplete = state::onTutorialComplete
+            )
+        }
         SideEffect {
             viewModel.shouldKeepSplash.value = false
         }
@@ -57,17 +64,15 @@ internal fun RootScreenWrapper(
                     enter = slideInVertically { it },
                     exit = slideOutVertically { it },
                 ) {
-//                    TODO AuthenticationScreen(
-//                        route = Authentication(ScreenType.Authenticate),
-//                        navigator = remember {
-//                            object : AuthenticationScreenNavigator {
-//                                override fun navigateUp() = finishApp()
-//                                override fun onCompleted() = state.onAuthComplete()
-//                            }
-//                        }
-//                    )
-                    SideEffect {
-                        viewModel.shouldKeepSplash.value = false
+                    with(context.authenticationScreenContext.createAuthenticationScreenContext()) {
+                        AuthenticationScreenRoot(
+                            screenType = ScreenType.Authenticate,
+                            onBackClick = finishApp,
+                            onComplete = state::onAuthComplete
+                        )
+                        SideEffect {
+                            viewModel.shouldKeepSplash.value = false
+                        }
                     }
                 }
             }

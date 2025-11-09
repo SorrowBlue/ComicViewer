@@ -14,11 +14,11 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
 @Serializable
-data class AuthenticationKey(val type: ScreenType) : ScreenKey
+data class AuthenticationNavKey(val type: ScreenType) : ScreenKey
 
 val AuthenticationKeySerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
-        subclass(AuthenticationKey::class, AuthenticationKey.serializer())
+        subclass(AuthenticationNavKey::class, AuthenticationNavKey.serializer())
     }
 }
 
@@ -32,7 +32,7 @@ private fun EntryProviderScope<NavKey>.authenticationEntry(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
-    entryScreen<AuthenticationKey, AuthenticationScreenContext>(
+    entryScreen<AuthenticationNavKey, AuthenticationScreenContext>(
         createContext = {
             (graph as AuthenticationScreenContext.Factory)
                 .createAuthenticationScreenContext()

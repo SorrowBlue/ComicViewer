@@ -26,7 +26,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationKey
+import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationNavKey
 import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationEntryGroup
 import com.sorrowblue.comicviewer.feature.book.navigation.BookKey
 import com.sorrowblue.comicviewer.feature.book.navigation.bookEntryGroup
@@ -75,6 +75,7 @@ fun rememberAdaptiveNavigationSuiteState(
             navigationSuiteType = navigationSuiteType,
         )
     }
+    state.navigationSuiteType = navigationSuiteType
     LaunchedEffect(appNavigationState.currentBackStack.lastOrNull()) {
         when (val screenKey = appNavigationState.currentBackStack.lastOrNull()) {
             is BookshelfKey,
@@ -93,7 +94,7 @@ private class AdaptiveNavigationSuiteStateImpl(
     private val appNavigationState: AppNavigationState,
     override var navigationSuiteType: NavigationSuiteType,
 ) : AdaptiveNavigationSuiteState {
-    override val navItems =
+    override val navItems: List<NavigationKey> =
         listOf(BookshelfKey.List, CollectionKey.List, ReadLaterKey.List, HistoryKey.List)
 
     override var currentNavItem: NavigationKey by mutableStateOf(BookshelfKey.List)
@@ -289,13 +290,13 @@ fun ComicViewerUI(bookData: String?) {
                                         onChangeAuthEnable = {
                                             if (it) {
                                                 appNavigationState.addToBackStack(
-                                                    AuthenticationKey(
+                                                    AuthenticationNavKey(
                                                         ScreenType.Register,
                                                     ),
                                                 )
                                             } else {
                                                 appNavigationState.addToBackStack(
-                                                    AuthenticationKey(
+                                                    AuthenticationNavKey(
                                                         ScreenType.Erase,
                                                     ),
                                                 )
@@ -303,7 +304,7 @@ fun ComicViewerUI(bookData: String?) {
                                         },
                                         onPasswordChangeClick = {
                                             appNavigationState.addToBackStack(
-                                                AuthenticationKey(
+                                                AuthenticationNavKey(
                                                     ScreenType.Change,
                                                 ),
                                             )

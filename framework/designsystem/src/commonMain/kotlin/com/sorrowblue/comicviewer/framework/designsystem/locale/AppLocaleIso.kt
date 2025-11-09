@@ -8,6 +8,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.intl.Locale
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.platformGraph
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.GraphExtension
 
 expect class AppLocaleIso {
     /**
@@ -45,11 +48,13 @@ expect val Locale.displayLanguageName: String
 val ProvideLocalAppLocaleIso: ProvidedValue<*>
     @Composable
     get() {
-        return (LocalPlatformContext.current.platformGraph as LocaleGraph).appLocaleIso provides
+        return (LocalPlatformContext.current.platformGraph as AppLocaleIsoGraph).appLocaleIso provides
             appLanguageTag
     }
 
-interface LocaleGraph {
+@ContributesTo(AppScope::class)
+@GraphExtension
+interface AppLocaleIsoGraph {
     val appLocaleIso: AppLocaleIso
 }
 

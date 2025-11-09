@@ -212,7 +212,6 @@ private fun EntryProviderScope<NavKey>.bookshelfEntry(
             onFabClick = onFabClick,
             onBookshelfClick = onBookshelfClick,
             onBookshelfInfoClick = onBookshelfInfoClick,
-            onNotificationRequest = {},
         )
     }
 }
@@ -241,7 +240,6 @@ private fun EntryProviderScope<NavKey>.bookshelfInfoEntry(
     }
 }
 
-context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.notificationEntry(onBackClick: () -> Unit) {
     entry<BookshelfKey.Notification>(
         metadata = DialogSceneStrategy.dialog(),

@@ -59,7 +59,7 @@ internal fun rememberBasicCollectionAddScreenState(
     this.lazyPagingItems = rememberPagingItems {
         context.pagingCollectionExistUseCase(
             PagingCollectionExistUseCase.Request(
-                pagingConfig = PagingConfig(20),
+                pagingConfig = PagingConfig(PageSize),
                 bookshelfId = bookshelfId,
                 path = path,
                 collectionType = CollectionType.Basic,
@@ -67,6 +67,8 @@ internal fun rememberBasicCollectionAddScreenState(
         )
     }
 }
+
+private const val PageSize = 20
 
 private class BasicCollectionAddScreenStateImpl(
     private val bookshelfId: BookshelfId,

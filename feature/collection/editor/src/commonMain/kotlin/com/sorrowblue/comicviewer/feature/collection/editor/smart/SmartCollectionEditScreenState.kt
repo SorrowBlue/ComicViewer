@@ -23,7 +23,6 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_not_get_bookshelf
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_all_bookshelf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -154,7 +153,6 @@ private class SmartCollectionEditScreenImpl(
     override fun onSubmit(formData: SmartCollectionForm) {
         coroutineScope.launch {
             uiState = uiState.copy(enabledForm = false)
-            delay(1000)
             val collection =
                 getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
                     .first()

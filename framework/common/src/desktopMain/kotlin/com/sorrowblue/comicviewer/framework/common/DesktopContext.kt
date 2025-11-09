@@ -1,9 +1,5 @@
 package com.sorrowblue.comicviewer.framework.common
 
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
@@ -13,15 +9,16 @@ import kotlin.io.path.notExists
 abstract class DesktopContext {
     abstract val filesDir: Path
     abstract val cacheDir: Path
+    lateinit var platformGraph: PlatformGraph
 
     companion object {
-        lateinit var platformGraph: PlatformGraph
+        fun init(): DesktopContext {
+            return DesktopContextImpl()
+        }
     }
 }
 
-@ContributesBinding(AppScope::class, binding = binding<PlatformContext>())
-@Inject
-class DesktopContextImpl : DesktopContext() {
+private class DesktopContextImpl : DesktopContext() {
     private val os by lazy { System.getProperty("os.name").lowercase() }
 
     override val filesDir: Path

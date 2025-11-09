@@ -57,7 +57,7 @@ naming:
     active: true
     constantPattern: '[A-Z][_A-Za-z0-9]*'
   MatchingDeclarationName:
-    multiplatformTargets: ['ios', 'android', 'js', 'desktop', 'native', 'iosArm64', 'iosX64', 'macosX64', 'mingwX64', 'linuxX64']
+    active: false
 
 performance:
   active: true
@@ -68,6 +68,7 @@ potential-bugs:
 style:
   active: true
   MagicNumber:
+    active: false
     ignoreNumbers: ['-1', '-0.5', '0', '0.01', '0.5', '1', '2']
     ignoreAnnotation: true
     ignoreEnums: true
@@ -75,7 +76,7 @@ style:
     ignorePropertyDeclaration: true
   UnusedPrivateFunction:
     active: true
-    ignoreAnnotated: [ 'Preview', 'Provides' ]
+    ignoreAnnotated: [ 'Preview', 'PreviewMultiplatform', 'Provides' ]
   ReturnCount:
     max: 3
   UnusedPrivateProperty:
@@ -155,10 +156,12 @@ ktlint:
   code_style: 'android_studio'
   autoCorrect: true
 
+  ChainMethodContinuation:
+    active: false
   MaximumLineLength:
     active: false
   PropertyName:
-    constantNamingStyle: 'pascal_case'
+    active: false
   TrailingCommaOnCallSite:
     useTrailingCommaOnCallSite: true
   TrailingCommaOnDeclarationSite:

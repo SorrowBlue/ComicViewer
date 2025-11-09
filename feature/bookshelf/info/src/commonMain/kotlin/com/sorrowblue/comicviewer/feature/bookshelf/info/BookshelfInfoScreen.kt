@@ -1,9 +1,12 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
@@ -14,7 +17,9 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun BookshelfErrorContents(modifier: Modifier) {
-    TODO("Not yet implemented")
+    Box(contentAlignment = Alignment.Center, modifier = modifier) {
+        CircularProgressIndicator()
+    }
 }
 
 internal sealed interface BookshelfInfoSheetUiState {

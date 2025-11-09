@@ -29,7 +29,16 @@ fun BookshelfInfoScreenRoot(
         uiState = state.uiState,
         onBackClick = onBackClick,
         onRemoveClick = onRemoveClick,
-        onEditClick = { },
+        onEditClick = {
+            if (state.uiState is BookshelfInfoSheetUiState.Loaded) {
+                onEditClick(
+                    bookshelfId,
+                    requireNotNull(
+                        (state.uiState as BookshelfInfoSheetUiState.Loaded).bookshelfFolder.bookshelf.type,
+                    ),
+                )
+            }
+        },
     ) { contentPadding ->
         when (val uiState = state.uiState) {
             is BookshelfInfoSheetUiState.Loaded -> {

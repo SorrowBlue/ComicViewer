@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -38,6 +37,7 @@ import coil3.Bitmap
 import com.sorrowblue.comicviewer.domain.model.PluginManager
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
@@ -50,22 +50,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
-internal sealed interface BookScreenUiState {
-    data class Loading(val name: String) : BookScreenUiState
-
-    data class Error(val name: String) : BookScreenUiState
-
-    data class Loaded(
-        val book: BookFile,
-        val collectionId: CollectionId,
-        val bookSheetUiState: BookSheetUiState,
-        val isVisibleTooltip: Boolean = true,
-    ) : BookScreenUiState
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 context(context: BookScreenContext)
 fun BookScreen(
@@ -160,6 +145,19 @@ fun BookScreen(
             }
         }
     }
+}
+
+internal sealed interface BookScreenUiState {
+    data class Loading(val name: String) : BookScreenUiState
+
+    data class Error(val name: String) : BookScreenUiState
+
+    data class Loaded(
+        val book: BookFile,
+        val collectionId: CollectionId,
+        val bookSheetUiState: BookSheetUiState,
+        val isVisibleTooltip: Boolean = true,
+    ) : BookScreenUiState
 }
 
 @Composable

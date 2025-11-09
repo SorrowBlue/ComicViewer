@@ -30,7 +30,7 @@ internal actual fun PinDrawable(
             R.drawable.authentication_avd_favorite_circle,
             R.drawable.authentication_avd_moon_circle,
             R.drawable.authentication_avd_play_circle,
-            R.drawable.authentication_avd_hexagon_circle
+            R.drawable.authentication_avd_hexagon_circle,
         ).toImmutableList()
     }
     val image =

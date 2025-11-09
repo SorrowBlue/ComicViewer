@@ -62,6 +62,7 @@ kotlin {
         androidMain.dependencies {
             implementation(projects.framework.notification)
 
+            implementation(libs.androidx.appcompat)
             implementation(libs.androidx.core.splashscreen)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.google.android.play.feature.delivery.ktx)

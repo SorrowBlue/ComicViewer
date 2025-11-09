@@ -12,11 +12,11 @@ internal class DeviceSeekableInputStream(context: Context, uri: Uri) : SeekableI
 
     override fun seek(offset: Long, whence: Int): Long {
         when (whence) {
-            SeekableInputStream.SeekSet -> input.channel.position(offset)
-            SeekableInputStream.SeekCur -> input.channel.position(
+            SeekableInputStream.SEEK_SET -> input.channel.position(offset)
+            SeekableInputStream.SEEK_CUR -> input.channel.position(
                 input.channel.position() + offset,
             )
-            SeekableInputStream.SeekEnd -> input.channel.position(input.channel.size() + offset)
+            SeekableInputStream.SEEK_END -> input.channel.position(input.channel.size() + offset)
         }
         return input.channel.position()
     }

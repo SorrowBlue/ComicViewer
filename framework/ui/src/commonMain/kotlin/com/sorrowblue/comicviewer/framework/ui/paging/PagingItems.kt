@@ -17,7 +17,7 @@ fun <T : Any> rememberPagingItems(
     key: String? = null,
     block: @DisallowComposableCalls () -> Flow<PagingData<T>>,
 ): LazyPagingItems<T> {
-    val viewModel = viewModel<PagingViewModel>()
+    val viewModel = viewModel { PagingViewModel() }
     return rememberRetained(key) {
         block().cachedIn(viewModel.viewModelScope)
     }.collectAsLazyPagingItems()

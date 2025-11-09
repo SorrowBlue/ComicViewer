@@ -40,9 +40,5 @@ internal object OutsideDocumentFileReader {
     }
 
     fun getReader(seekableInputStream: ISeekableInputStream, magic: String): FileReader =
-        getReader!!.invoke(
-            instance,
-            seekableInputStream,
-            magic,
-        ) as FileReader
+        requireNotNull(getReader).invoke(instance, seekableInputStream, magic) as FileReader
 }

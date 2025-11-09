@@ -13,4 +13,9 @@ val LocalPlatformContext: ProvidableCompositionLocal<PlatformContext> =
 
 expect val PlatformContext.platformGraph: PlatformGraph
 
+fun <T : Any> PlatformContext.require(): T {
+    @Suppress("UNCHECKED_CAST")
+    return this.platformGraph as T
+}
+
 interface PlatformGraph

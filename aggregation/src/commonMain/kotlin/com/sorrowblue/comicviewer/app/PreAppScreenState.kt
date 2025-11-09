@@ -8,9 +8,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Scope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -32,24 +29,12 @@ sealed interface AuthStatus {
 @Scope
 annotation class RootScreenWrapperScope
 
-@GraphExtension(RootScreenWrapperScope::class)
-interface RootScreenWrapperContext {
-    val loadSettingsUseCase: LoadSettingsUseCase
-    val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    fun interface Factory {
-        fun createRootScreenWrapperContext(): RootScreenWrapperContext
-    }
-}
-
 @Composable
-context(context: RootScreenWrapperContext)
-internal fun rememberRootScreenWrapperState(): RootScreenWrapperState {
+context(context: PreAppScreenContext)
+internal fun rememberPreAppScreenState(): PreAppScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember {
-        RootScreenWrapperStateImpl(
+        PreAppScreenStateImpl(
             scope = coroutineScope,
             loadSettingsUseCase = context.loadSettingsUseCase,
             manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase,
@@ -57,7 +42,7 @@ internal fun rememberRootScreenWrapperState(): RootScreenWrapperState {
     }
 }
 
-internal interface RootScreenWrapperState {
+internal interface PreAppScreenState {
     val authStatus: AuthStatus
     val tutorialRequired: Boolean
 
@@ -69,11 +54,11 @@ internal interface RootScreenWrapperState {
 }
 
 @Suppress("OPT_IN_USAGE")
-private class RootScreenWrapperStateImpl(
+private class PreAppScreenStateImpl(
     val scope: CoroutineScope,
     private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
-) : RootScreenWrapperState {
+) : PreAppScreenState {
     override var authStatus by mutableStateOf<AuthStatus>(AuthStatus.Unknown)
         private set
 

@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.feature.tutorial.APP_DOWNLOAD_LINK
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenContext
 import com.sorrowblue.comicviewer.feature.tutorial.immatureRectangleProgressBorder
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
@@ -107,9 +108,8 @@ internal fun rememberDocumentSheetState(
     scope: CoroutineScope = LocalCoroutineScope.current,
 ): DocumentSheetState {
     val managePdfPluginSettingsUseCase =
-        (LocalPlatformContext.current as TutorialScreenContext.Factory)
-            .createTutorialScreenContext()
-            .managePdfPluginSettingsUseCase
+        LocalPlatformContext.current.require<TutorialScreenContext.Factory>()
+            .createTutorialScreenContext().managePdfPluginSettingsUseCase
     val state =
         remember { DocumentSheetStateImpl(uriHandler, managePdfPluginSettingsUseCase, scope) }
     val pickerResultLauncher =

@@ -23,6 +23,8 @@ import kotlin.io.path.fileSize
 import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
+import logcat.LogPriority
+import logcat.asLog
 import logcat.logcat
 import okio.BufferedSource
 import okio.FileSystem
@@ -39,20 +41,19 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
 
     actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         logcat { "listFiles(file.path=${file.path}, resolveImageFolder=$resolveImageFolder)" }
-        return kotlin
-            .runCatching {
-                Files
-                    .list(file.path.toPath().toNioPath())
-                    .map { it.toFileModel(resolveImageFolder) }
-                    .toList()
-            }.getOrElse {
-                it.printStackTrace()
-                when (it) {
-                    is SecurityException -> throw FileClientException.InvalidAuth()
-                    is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                    else -> throw it
-                }
+        return kotlin.runCatching {
+            Files
+                .list(file.path.toPath().toNioPath())
+                .map { it.toFileModel(resolveImageFolder) }
+                .toList()
+        }.onFailure {
+            logcat(LogPriority.ERROR) { it.asLog() }
+            throw when (it) {
+                is SecurityException -> FileClientException.InvalidAuth()
+                is IllegalArgumentException -> FileClientException.InvalidPath()
+                else -> it
             }
+        }.getOrThrow()
     }
 
     actual override suspend fun exists(path: String): Boolean {
@@ -73,21 +74,20 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
 
     actual override suspend fun connect(path: String) {
         logcat { "connect(path=$path)" }
-        kotlin
-            .runCatching {
-                path.toPath().toNioPath().exists()
-            }.fold({
-                if (!it) {
-                    throw FileClientException.InvalidPath()
-                }
-            }) {
-                it.printStackTrace()
-                when (it) {
-                    is SecurityException -> throw FileClientException.InvalidAuth()
-                    is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                    else -> throw it
-                }
+        kotlin.runCatching {
+            path.toPath().toNioPath().exists()
+        }.fold({
+            if (!it) {
+                throw FileClientException.InvalidPath()
             }
+        }) {
+            logcat(LogPriority.ERROR) { it.asLog() }
+            throw when (it) {
+                is SecurityException -> FileClientException.InvalidAuth()
+                is IllegalArgumentException -> FileClientException.InvalidPath()
+                else -> it
+            }
+        }
     }
 
     actual override suspend fun attribute(path: String): FileAttribute {

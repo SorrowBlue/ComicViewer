@@ -42,9 +42,7 @@ internal fun rememberBookshelfScreenState(): BookshelfScreenState {
         lazyPagingItems = rememberPagingItems {
             context.pagingBookshelfFolderUseCase(
                 PagingBookshelfFolderUseCase.Request(
-                    PagingConfig(
-                        20,
-                    ),
+                    PagingConfig(PageSize),
                 ),
             )
         }
@@ -76,3 +74,5 @@ private class BookshelfScreenStateImpl : BookshelfScreenState {
         bookshelfEditDialogState.showEditorDialog(id, type)
     }
 }
+
+private const val PageSize = 20

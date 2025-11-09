@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -59,7 +58,6 @@ private class BookshelfDeleteScreenStateImpl(
     override fun onConfirmClick(done: () -> Unit) {
         uiState = uiState.copy(isProcessing = true)
         scope.launch {
-            delay(300)
             when (
                 updateDeletionFlagUseCase(
                     UpdateDeletionFlagUseCase.Request(bookshelfId, true),

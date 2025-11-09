@@ -8,8 +8,8 @@ actual interface SeekableInputStream : AutoCloseable {
     fun position(): Long
 
     companion object {
-        const val SeekSet = 0
-        const val SeekCur = 1
-        const val SeekEnd = 2
+        const val SEEK_SET = 0
+        const val SEEK_CUR = 1
+        const val SEEK_END = 2
     }
 }

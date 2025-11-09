@@ -147,7 +147,7 @@ private class AuthenticationScreenStateImpl(
             }
 
             is AuthenticationScreenUiState.Change.Input -> {
-                if (4 <= uiState.pin.count()) {
+                if (MinPinSize <= uiState.pin.count()) {
                     pinHistory = uiState.pin
                     uiState = AuthenticationScreenUiState.Change.Confirm("")
                 } else {
@@ -179,7 +179,7 @@ private class AuthenticationScreenStateImpl(
     private fun onNextClickRegisterScreen(currentUiState: AuthenticationScreenUiState.Register) {
         when (currentUiState) {
             is AuthenticationScreenUiState.Register.Input -> {
-                if (4 <= uiState.pin.count()) {
+                if (MinPinSize <= uiState.pin.count()) {
                     pinHistory = uiState.pin
                     uiState = AuthenticationScreenUiState.Register.Confirm("")
                 } else {
@@ -209,3 +209,5 @@ private class AuthenticationScreenStateImpl(
         }
     }
 }
+
+private const val MinPinSize = 4

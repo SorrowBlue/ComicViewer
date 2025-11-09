@@ -11,7 +11,8 @@ import comicviewer.feature.book.generated.resources.book_label_scale_inside
 import comicviewer.feature.book.generated.resources.book_label_scale_none
 import org.jetbrains.compose.resources.StringResource
 
-enum class PageScale(override val label: StringResource, val contentScale: ContentScale) : ExposedDropdownMenu {
+enum class PageScale(override val label: StringResource, val contentScale: ContentScale) :
+    ExposedDropdownMenu {
     Fit(Res.string.book_label_scale_fit, ContentScale.Fit),
     FillHeight(Res.string.book_label_scale_fill_height, ContentScale.FillHeight),
     FillWidth(Res.string.book_label_scale_fill_width, ContentScale.FillWidth),

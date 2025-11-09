@@ -278,6 +278,7 @@ private abstract class BookshelfEditScreenStateImpl(
                         ShareContents -> return@launch
                     }
                     initialForm = form
+                    @Suppress("UNCHECKED_CAST")
                     (formState as FormState<BookshelfEditorForm>).reset(form)
                     uiState = uiState.copy(progress = false)
                 },
@@ -298,12 +299,12 @@ private abstract class BookshelfEditScreenStateImpl(
                     is BookshelfEditorType.Edit -> {
                         bookshelf = (getBookshelf(editorType.bookshelfId) as InternalStorage)
                             .copy(displayName = form.displayName)
-                        path = form.path!!
+                        path = requireNotNull(form.path)
                     }
 
                     is BookshelfEditorType.Register -> {
                         bookshelf = InternalStorage(form.displayName)
-                        path = form.path!!
+                        path = requireNotNull(form.path)
                     }
                 }
 
@@ -395,9 +396,9 @@ private abstract class BookshelfEditScreenStateImpl(
         }
     }
 
-    suspend fun getBookshelf(id: BookshelfId): Bookshelf =
+    suspend fun getBookshelf(id: BookshelfId): Bookshelf = requireNotNull(
         getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(id))
             .first()
-            .dataOrNull()!!
-            .bookshelf
+            .dataOrNull(),
+    ).bookshelf
 }

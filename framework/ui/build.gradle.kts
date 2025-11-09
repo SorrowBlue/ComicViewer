@@ -18,6 +18,9 @@ kotlin {
                 // Paging
                 implementation(libs.androidx.paging.common)
                 implementation(libs.androidx.paging.compose)
+
+                val collection_version = "1.5.0"
+                implementation("androidx.collection:collection:$collection_version")
             }
         }
         androidMain {

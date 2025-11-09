@@ -18,6 +18,8 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zwander.kotlin.file.FileUtils
 import dev.zwander.kotlin.file.okio.toOkioSource
 import kotlinx.cinterop.ExperimentalForeignApi
+import logcat.LogPriority
+import logcat.asLog
 import logcat.logcat
 import okio.BufferedSource
 import okio.FileSystem
@@ -83,10 +85,10 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
                     throw FileClientException.InvalidPath()
                 }
             }) {
-                it.printStackTrace()
-                when (it) {
-                    is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                    else -> throw it
+                logcat(priority = LogPriority.ERROR) { it.asLog() }
+                throw when (it) {
+                    is IllegalArgumentException -> FileClientException.InvalidPath()
+                    else -> it
                 }
             }
     }
@@ -96,12 +98,12 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
     }
 
     private fun NSURL.toFileModel(resolveImageFolder: Boolean = false): File {
-        val path = absoluteString.orEmpty().also {
-            logcat { "$it" }
-        }
-        val name = absoluteString?.toPath()?.name?.let(UriUtils::decode).orEmpty().also {
-            logcat { "$it" }
-        }
+        val path = absoluteString.orEmpty()
+        val name = absoluteString
+            ?.toPath()
+            ?.name
+            ?.let(UriUtils::decode)
+            .orEmpty()
         val size = FileSystem.SYSTEM.metadataOrNull(absoluteString?.toPath()!!)?.size ?: 0
         logcat { "$size" }
         val lastModifiedAtMillis =
@@ -116,9 +118,8 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
         val file = FileUtils.fromString(input = path, hasDirectoryPath)
             ?: throw FileClientException.InvalidPath()
         return if (resolveImageFolder && !file
-                .list { dir, name ->
-                    name.extension in SUPPORTED_IMAGE
-                }.isNullOrEmpty()
+                .list { _, name -> name.extension in SUPPORTED_IMAGE }
+                .isNullOrEmpty()
         ) {
             BookFolder(
                 path = path,

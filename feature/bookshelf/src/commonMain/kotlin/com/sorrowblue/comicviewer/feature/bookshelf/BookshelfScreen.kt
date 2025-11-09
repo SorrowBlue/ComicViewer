@@ -7,10 +7,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
@@ -24,7 +20,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -64,17 +59,4 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
             )
         }
     }
-}
-
-@Composable
-private fun rememberLastScrolledForward(
-    lazyGridState: LazyGridState,
-    delay: Long = 300,
-): State<Boolean> {
-    val expanded = remember { mutableStateOf(true) }
-    LaunchedEffect(lazyGridState.lastScrolledForward) {
-        delay(delay)
-        expanded.value = !lazyGridState.lastScrolledForward
-    }
-    return expanded
 }

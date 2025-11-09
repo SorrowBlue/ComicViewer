@@ -214,6 +214,7 @@ private fun FileListPreview(@PreviewParameter(BooleanProvider::class) showThumbn
     }
 }
 
+@Preview
 @PreviewLightDark
 @Composable
 private fun FileListCardPreview(@PreviewParameter(BooleanProvider::class) showThumbnail: Boolean) {

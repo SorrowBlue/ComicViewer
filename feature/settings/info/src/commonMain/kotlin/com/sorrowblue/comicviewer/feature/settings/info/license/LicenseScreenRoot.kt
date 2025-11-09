@@ -12,9 +12,9 @@ fun LicenseScreenRoot(onBackClick: () -> Unit) {
         onLibraryClick = state::onLibraryClick,
     )
 
-    if (state.uiState.openDialog != null) {
+    state.uiState.openDialog?.let { library ->
         LicenseDialog(
-            library = state.uiState.openDialog!!,
+            library = library,
             onDismissRequest = {
                 state.closeDialog()
             },

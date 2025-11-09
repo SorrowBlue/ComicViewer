@@ -44,14 +44,14 @@ internal fun BasicCollectionContent(
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val header = remember { movableContentOf { header() } }
+    val currentHeader = remember { movableContentOf { header() } }
     if (lazyPagingItems.isEmptyData) {
         Column(
             modifier = Modifier,
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            header()
+            currentHeader()
             Image(
                 imageVector = ComicIcons.UndrawNoData,
                 contentDescription = null,
@@ -72,7 +72,7 @@ internal fun BasicCollectionContent(
             contentPadding = contentPadding,
             modifier = Modifier,
         ) {
-            item { header() }
+            item { currentHeader() }
             items(
                 lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { "${it.bookshelfId.value}${it.path}" },
