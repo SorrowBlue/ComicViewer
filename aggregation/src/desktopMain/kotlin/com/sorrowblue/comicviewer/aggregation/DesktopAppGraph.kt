@@ -13,8 +13,9 @@ import dev.zacsweers.metro.Provides
     scope = AppScope::class,
     additionalScopes = [DataScope::class],
 )
-interface DesktopAppGraph : PlatformGraph, ThemeContext {
-
+interface DesktopAppGraph :
+    PlatformGraph,
+    ThemeContext {
     @DependencyGraph.Factory
     fun interface Factory {
         fun createDesktopAppGraph(

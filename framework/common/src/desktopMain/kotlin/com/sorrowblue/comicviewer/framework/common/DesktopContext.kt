@@ -12,9 +12,7 @@ abstract class DesktopContext {
     lateinit var platformGraph: PlatformGraph
 
     companion object {
-        fun init(): DesktopContext {
-            return DesktopContextImpl()
-        }
+        fun init(): DesktopContext = DesktopContextImpl()
     }
 }
 

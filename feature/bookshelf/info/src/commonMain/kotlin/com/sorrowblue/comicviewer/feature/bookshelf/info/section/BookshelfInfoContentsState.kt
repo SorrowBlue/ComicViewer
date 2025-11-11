@@ -25,4 +25,6 @@ internal interface BookshelfInfoContentsState {
 
 @Composable
 context(context: BookshelfInfoScreenContext)
-internal expect fun rememberBookshelfInfoContentsState(bookshelfFolder: BookshelfFolder): BookshelfInfoContentsState
+internal expect fun rememberBookshelfInfoContentsState(
+    bookshelfFolder: BookshelfFolder,
+): BookshelfInfoContentsState

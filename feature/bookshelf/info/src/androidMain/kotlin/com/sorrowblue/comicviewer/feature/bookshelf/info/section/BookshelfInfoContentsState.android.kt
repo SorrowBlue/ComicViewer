@@ -43,7 +43,9 @@ import org.jetbrains.compose.resources.getString
 
 @Composable
 context(context: BookshelfInfoScreenContext)
-internal actual fun rememberBookshelfInfoContentsState(bookshelfFolder: BookshelfFolder): BookshelfInfoContentsState {
+internal actual fun rememberBookshelfInfoContentsState(
+    bookshelfFolder: BookshelfFolder,
+): BookshelfInfoContentsState {
     @SuppressLint("ContextCastToActivity")
     val activity = LocalContext.current as Activity
     val appState = LocalAppState.current

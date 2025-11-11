@@ -26,7 +26,9 @@ import org.jetbrains.compose.resources.getString
 
 @Composable
 context(context: BookshelfInfoScreenContext)
-internal actual fun rememberBookshelfInfoContentsState(bookshelfFolder: BookshelfFolder): BookshelfInfoContentsState {
+internal actual fun rememberBookshelfInfoContentsState(
+    bookshelfFolder: BookshelfFolder,
+): BookshelfInfoContentsState {
     val appState = LocalAppState.current
     return remember(bookshelfFolder) {
         BookshelfInfoContentsStateImpl(

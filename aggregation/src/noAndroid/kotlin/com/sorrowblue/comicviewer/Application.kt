@@ -26,15 +26,14 @@ fun Application(finishApp: () -> Unit) {
         val comicViewerUIState = rememberComicViewerUIState()
         ComicViewerUI(
             state = comicViewerUIState,
-            finishApp = finishApp
+            finishApp = finishApp,
         )
         AnimatedContent(
             shouldKeepSplash,
-            transitionSpec = { enter togetherWith exit }
+            transitionSpec = { enter togetherWith exit },
         ) { shouldKeepSplash ->
             if (shouldKeepSplash) {
                 SplashScreen()
-            } else {
             }
         }
     }

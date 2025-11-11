@@ -2,7 +2,7 @@
   <configuration default="false" name="detekt --no-ios" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
-      <option name="externalProjectPath" value="D:\StudioProjects\ComicViewer\data" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="--no-configuration-cache --no-build-cache" />
       <option name="taskDescriptions">

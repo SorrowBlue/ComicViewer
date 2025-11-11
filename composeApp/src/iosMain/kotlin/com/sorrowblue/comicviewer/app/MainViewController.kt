@@ -8,6 +8,6 @@ import com.sorrowblue.comicviewer.framework.common.IosContextImpl
 fun MainViewController() = ComposeUIViewController {
     val context = IosContextImpl()
     with(context) {
-        Application()
+        Application(finishApp = {})
     }
 }

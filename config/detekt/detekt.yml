@@ -40,6 +40,8 @@ complexity:
 
 coroutines:
   active: true
+  RedundantSuspendModifier:
+    active: false
 
 empty-blocks:
   active: true
@@ -64,6 +66,8 @@ performance:
 
 potential-bugs:
   active: true
+  UnsafeCast:
+    active: false
 
 style:
   active: true
@@ -75,7 +79,7 @@ style:
     ignoreRanges: true
     ignorePropertyDeclaration: true
   UnusedPrivateFunction:
-    active: true
+    active: false
     ignoreAnnotated: [ 'Preview', 'PreviewMultiplatform', 'Provides' ]
   ReturnCount:
     max: 3

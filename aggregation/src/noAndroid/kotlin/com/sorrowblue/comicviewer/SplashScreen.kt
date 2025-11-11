@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 @Composable
 internal fun SplashScreen() {
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Image(

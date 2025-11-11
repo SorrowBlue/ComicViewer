@@ -39,12 +39,11 @@ private class AppStateImpl(
     navigationSuiteType: NavigationSuiteType,
     sharedTransitionScope: SharedTransitionScope,
     override var snackbarHostState: SnackbarHostState,
-) : AppState, SharedTransitionScope by sharedTransitionScope {
-
+) : AppState,
+    SharedTransitionScope by sharedTransitionScope {
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)
     override lateinit var coroutineScope: CoroutineScope
 }
-
 
 context(scope: SharedTransitionScope)
 internal val ProvidesAppState

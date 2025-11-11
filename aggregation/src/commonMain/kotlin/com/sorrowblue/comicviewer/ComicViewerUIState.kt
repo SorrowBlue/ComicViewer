@@ -27,6 +27,7 @@ import logcat.logcat
 interface ComicViewerUIState {
     val navigation3State: Navigation3State
     val adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState
+
     fun onNavigationHistoryRestore()
 }
 
@@ -71,7 +72,12 @@ private class ComicViewerUIStateImpl(
             if (!isNavigationRestored) {
                 coroutineScope.launch {
                     if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
-                        cancelJob(coroutineScope, 3000, ::completeRestoreHistory, ::restoreNavigation)
+                        cancelJob(
+                            coroutineScope,
+                            3000,
+                            ::completeRestoreHistory,
+                            ::restoreNavigation,
+                        )
                     } else {
                         completeRestoreHistory()
                     }
@@ -81,7 +87,6 @@ private class ComicViewerUIStateImpl(
             }
         }
     }
-
 
     override fun onNavigationHistoryRestore() {
         logcat { "onNavigationHistoryRestore" }
@@ -100,8 +105,8 @@ private class ComicViewerUIStateImpl(
                     BookshelfKey.Folder(
                         bookshelfId = bookshelfId,
                         path = folderList.first().path,
-                        restorePath = book.path
-                    )
+                        restorePath = book.path,
+                    ),
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
@@ -111,8 +116,8 @@ private class ComicViewerUIStateImpl(
                     BookshelfKey.Folder(
                         bookshelfId = bookshelfId,
                         path = folderList.first().path,
-                        restorePath = null
-                    )
+                        restorePath = null,
+                    ),
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
@@ -122,8 +127,8 @@ private class ComicViewerUIStateImpl(
                         BookshelfKey.Folder(
                             bookshelfId = bookshelfId,
                             path = folderList.first().path,
-                            restorePath = null
-                        )
+                            restorePath = null,
+                        ),
                     )
                     logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                         "-> folder(${folder.path})"
@@ -133,8 +138,8 @@ private class ComicViewerUIStateImpl(
                     BookshelfKey.Folder(
                         bookshelfId = bookshelfId,
                         path = folderList.last().path,
-                        restorePath = book.path
-                    )
+                        restorePath = book.path,
+                    ),
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
                     "-> folder${folderList.last().path}, ${book.path}"

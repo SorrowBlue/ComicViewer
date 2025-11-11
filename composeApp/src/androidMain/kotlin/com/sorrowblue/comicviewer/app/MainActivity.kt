@@ -12,7 +12,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
@@ -60,7 +59,7 @@ internal class MainActivity : AppCompatActivity() {
         setContent {
             with(rememberComicViewerUIContext()) {
                 val state = rememberComicViewerUIState(
-                    allowNavigationRestored = receivedBookData.isNullOrEmpty()
+                    allowNavigationRestored = receivedBookData.isNullOrEmpty(),
                 )
                 ComicViewerUI(finishApp = ::finish, state = state)
                 LaunchedEffect(receivedBookData.isNullOrEmpty()) {

@@ -23,7 +23,7 @@ fun main() = application {
     val appGraph =
         createGraphFactory<DesktopAppGraph.Factory>().createDesktopAppGraph(
             context,
-            LicenseeHelperImpl()
+            LicenseeHelperImpl(),
         )
     context.platformGraph = appGraph
 

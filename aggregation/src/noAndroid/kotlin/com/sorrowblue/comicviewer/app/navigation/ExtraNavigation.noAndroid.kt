@@ -7,4 +7,5 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 
 context(graph: PlatformGraph, appNavigationState: Navigation3State)
 internal actual fun EntryProviderScope<NavKey>.extraNavigation() {
+    // Do nothing
 }

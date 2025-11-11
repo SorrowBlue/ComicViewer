@@ -14,6 +14,6 @@ fun EntryProviderScope<NavKey>.receiveBookEntry(onCloseClick: () -> Unit) {
             (graph as ReceiveBookScreenContext.Factory).createReceiveBookScreenContext()
         },
     ) {
-        ReceiveBookScreenRoot(it.uri)
+        ReceiveBookScreenRoot(it.uri, onCloseClick)
     }
 }

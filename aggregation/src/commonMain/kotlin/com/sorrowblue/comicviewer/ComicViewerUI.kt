@@ -33,10 +33,7 @@ import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntry
 
 @Composable
 context(context: PlatformContext)
-fun ComicViewerUI(
-    state: ComicViewerUIState,
-    finishApp: () -> Unit,
-) {
+fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
     CompositionLocalProvider(LocalPlatformContext provides context) {
         ComicTheme {
             with(rememberPreAppScreenContext()) {
@@ -72,14 +69,16 @@ private fun ComicViewerUI(
             ) {
                 val platformGraph = LocalPlatformContext.current.platformGraph
                 val supportingPaneSceneStrategy =
-                    rememberSupportingPaneSceneStrategy<NavKey>(backNavigationBehavior = BackNavigationBehavior.PopUntilContentChange)
+                    rememberSupportingPaneSceneStrategy<NavKey>(
+                        backNavigationBehavior = BackNavigationBehavior.PopUntilContentChange,
+                    )
                 val listDetailSceneStrategy = rememberListDetailSceneStrategy<NavKey>()
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
                 val entryProvider = entryProvider {
                     with(platformGraph) {
                         with(navigation3State) {
                             appNavigation(
-                                onBookshelfFolderRestored = onBookshelfFolderRestored
+                                onBookshelfFolderRestored = onBookshelfFolderRestored,
                             )
                         }
                     }

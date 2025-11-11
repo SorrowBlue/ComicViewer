@@ -41,7 +41,7 @@ internal fun PreAppScreen(
     if (state.tutorialRequired) {
         with(context.tutorialScreenContext.createTutorialScreenContext()) {
             TutorialScreenRoot(
-                onComplete = state::onTutorialComplete
+                onComplete = state::onTutorialComplete,
             )
         }
         SideEffect {
@@ -68,7 +68,7 @@ internal fun PreAppScreen(
                         AuthenticationScreenRoot(
                             screenType = ScreenType.Authenticate,
                             onBackClick = finishApp,
-                            onComplete = state::onAuthComplete
+                            onComplete = state::onAuthComplete,
                         )
                         SideEffect {
                             viewModel.shouldKeepSplash.value = false

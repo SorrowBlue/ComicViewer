@@ -203,21 +203,21 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButtonMenu(
             with(LocalNavAnimatedContentScope.current) {
                 ToggleFloatingActionButton(
                     modifier =
-                        Modifier
-                            .semantics {
-                                traversalIndex = -1f
-                                stateDescription =
-                                    if (floatingActionButtonState.menuExpanded) "Expanded" else "Collapsed"
-                                contentDescription = "Toggle menu"
-                            }.animateFloatingActionButton(
-                                visible =
-                                    visible && floatingActionButtonState.targetValue.isVisible ||
-                                        floatingActionButtonState.menuExpanded,
-                                alignment = Alignment.BottomEnd,
-                            ).animateEnterExit(
-                                enter = FloatingActionButtonTransitionEnter,
-                                exit = FloatingActionButtonTransitionExit,
-                            ),
+                    Modifier
+                        .semantics {
+                            traversalIndex = -1f
+                            stateDescription =
+                                if (floatingActionButtonState.menuExpanded) "Expanded" else "Collapsed"
+                            contentDescription = "Toggle menu"
+                        }.animateFloatingActionButton(
+                            visible =
+                            visible && floatingActionButtonState.targetValue.isVisible ||
+                                floatingActionButtonState.menuExpanded,
+                            alignment = Alignment.BottomEnd,
+                        ).animateEnterExit(
+                            enter = FloatingActionButtonTransitionEnter,
+                            exit = FloatingActionButtonTransitionExit,
+                        ),
                     checked = floatingActionButtonState.menuExpanded,
                     containerSize = if (navigationSuiteType.isNavigationRail) {
                         ToggleFloatingActionButtonDefaults
