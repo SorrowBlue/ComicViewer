@@ -15,7 +15,7 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run detekt
-        run: ./gradlew ${{ matrix.task }}
+        run: ./gradlew ${{ matrix.task }} reportMerge --continue
       - name: Upload Detekt SARIF
         uses: github/codeql-action/upload-sarif@v4
         if: ${{ !cancelled() && matrix.task != ':build-logic:detektAll' }}
