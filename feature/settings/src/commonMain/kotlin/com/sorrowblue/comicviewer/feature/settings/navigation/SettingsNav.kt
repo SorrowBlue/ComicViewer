@@ -28,7 +28,7 @@ import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSetti
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsKeySerializersModule
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.viewerSettingsEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -61,7 +61,7 @@ val SettingsKeySerializersModule = SerializersModule {
     include(ViewerSettingsKeySerializersModule)
 }
 
-context(graph: PlatformGraph, appNavigationState: AppNavigationState)
+context(graph: PlatformGraph, appNavigationState: Navigation3State)
 fun EntryProviderScope<NavKey>.settingsEntryGroup(
     onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,

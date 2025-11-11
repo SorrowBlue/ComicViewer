@@ -12,12 +12,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.sorrowblue.comicviewer.ComicViewerUI
+import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookKey
+import com.sorrowblue.comicviewer.rememberComicViewerUIContext
+import com.sorrowblue.comicviewer.rememberComicViewerUIState
 import logcat.logcat
 
 /** Main activity */
@@ -35,7 +39,7 @@ internal class MainActivity : AppCompatActivity() {
             setKeepOnScreenCondition(viewModel.shouldKeepSplash::value)
         }
 
-        val bookData = if (intent.action == Intent.ACTION_VIEW &&
+        val receivedBookData = if (intent.action == Intent.ACTION_VIEW &&
             (
                 intent.categories == null || intent.hasCategory(
                     Intent.CATEGORY_BROWSABLE,
@@ -54,10 +58,18 @@ internal class MainActivity : AppCompatActivity() {
         @OptIn(ExperimentalComposeUiApi::class)
         ComposeUiFlags.isSemanticAutofillEnabled = true
         setContent {
-            LaunchedEffect(Unit) {
-                viewModel.shouldKeepSplash.value = false
+            with(rememberComicViewerUIContext()) {
+                val state = rememberComicViewerUIState(
+                    allowNavigationRestored = receivedBookData.isNullOrEmpty()
+                )
+                ComicViewerUI(finishApp = ::finish, state = state)
+                LaunchedEffect(receivedBookData.isNullOrEmpty()) {
+                    if (!receivedBookData.isNullOrEmpty()) {
+                        state.navigation3State.addToBackStack(ReceiveBookKey(receivedBookData))
+                        state.onNavigationHistoryRestore()
+                    }
+                }
             }
-            ComicViewerUI(bookData)
         }
     }
 }

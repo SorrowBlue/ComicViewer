@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenCon
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -22,7 +22,7 @@ val AuthenticationKeySerializersModule = SerializersModule {
     }
 }
 
-context(graph: PlatformGraph, state: AppNavigationState)
+context(graph: PlatformGraph, state: Navigation3State)
 fun EntryProviderScope<NavKey>.authenticationEntryGroup() {
     authenticationEntry(onBackClick = state::onBackPressed, onComplete = state::onBackPressed)
 }

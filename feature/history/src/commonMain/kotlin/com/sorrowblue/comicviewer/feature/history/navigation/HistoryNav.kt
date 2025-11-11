@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.folder.navigation.FileInfoKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.history.generated.resources.Res
@@ -56,7 +56,7 @@ sealed interface HistoryKey : NavigationKey {
     data object ClearAll : HistoryKey
 }
 
-context(graph: PlatformGraph, state: AppNavigationState)
+context(graph: PlatformGraph, state: Navigation3State)
 fun EntryProviderScope<NavKey>.historyEntryGroup(
     onSettingsClick: () -> Unit,
     onBookClick: (Book) -> Unit,

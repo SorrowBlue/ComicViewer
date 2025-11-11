@@ -76,7 +76,6 @@ internal class FolderThumbnailFetcher(
             FolderThumbnailOrder.valueOf(folderThumbnailOrder.name),
         )
         if (thumbnailCache.isEmpty()) {
-            logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
             return null
         }
         return thumbnailCache.firstNotNullOfOrNull { cacheKey ->

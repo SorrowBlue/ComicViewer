@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.readlater.generated.resources.Res
@@ -69,7 +69,7 @@ sealed interface ReadLaterKey : NavigationKey {
     }
 }
 
-context(graph: PlatformGraph, appNavigationState: AppNavigationState)
+context(graph: PlatformGraph, appNavigationState: Navigation3State)
 fun EntryProviderScope<NavKey>.readLaterEntryGroup(
     onSettingsClick: () -> Unit,
     onSearchClick: (BookshelfId, PathString) -> Unit,

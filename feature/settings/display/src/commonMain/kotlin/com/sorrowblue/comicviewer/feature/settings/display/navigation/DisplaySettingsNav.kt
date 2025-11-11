@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -29,7 +29,7 @@ data object DisplaySettingsKey : ScreenKey
 @Serializable
 private data object DarkModeKey : ScreenKey
 
-context(graph: PlatformGraph, state: AppNavigationState)
+context(graph: PlatformGraph, state: Navigation3State)
 fun EntryProviderScope<NavKey>.displaySettingsEntryGroup() {
     displaySettingsEntry(
         onBackClick = state::onBackPressed,

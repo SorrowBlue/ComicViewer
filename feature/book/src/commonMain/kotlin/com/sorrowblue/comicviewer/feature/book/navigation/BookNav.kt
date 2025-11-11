@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.feature.book.BookScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -41,7 +41,7 @@ data class BookKey(
 @Serializable
 private data object BookMenuKey : ScreenKey
 
-context(graph: PlatformGraph, state: AppNavigationState)
+context(graph: PlatformGraph, state: Navigation3State)
 fun EntryProviderScope<NavKey>.bookEntryGroup(onSettingsClick: () -> Unit) {
     bookEntry(
         onBackClick = state::onBackPressed,
@@ -61,7 +61,6 @@ fun EntryProviderScope<NavKey>.bookEntryGroup(onSettingsClick: () -> Unit) {
         },
     )
     bookMenuEntry(onDismissRequest = state::onBackPressed)
-    receiveBookEntry(onCloseClick = state::onBackPressed)
 }
 
 context(graph: PlatformGraph)
@@ -98,6 +97,3 @@ private fun EntryProviderScope<NavKey>.bookMenuEntry(onDismissRequest: () -> Uni
         )
     }
 }
-
-context(graph: PlatformGraph)
-internal expect fun EntryProviderScope<NavKey>.receiveBookEntry(onCloseClick: () -> Unit)

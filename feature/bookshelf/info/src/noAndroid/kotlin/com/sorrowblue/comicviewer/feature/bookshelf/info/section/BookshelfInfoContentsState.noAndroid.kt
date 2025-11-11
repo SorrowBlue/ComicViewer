@@ -14,31 +14,24 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
+import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.GlobalSnackbarState
-import com.sorrowblue.comicviewer.framework.ui.LocalGlobalSnackbarState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
+import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_file
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
 @Composable
 context(context: BookshelfInfoScreenContext)
-internal actual fun rememberBookshelfInfoContentsState(
-    bookshelfFolder: BookshelfFolder,
-    coroutineScope: CoroutineScope,
-): BookshelfInfoContentsState {
-    val globalSnackbarState = LocalGlobalSnackbarState.current
-    val appCoroutineScope = LocalCoroutineScope.current
+internal actual fun rememberBookshelfInfoContentsState(bookshelfFolder: BookshelfFolder): BookshelfInfoContentsState {
+    val appState = LocalAppState.current
     return remember(bookshelfFolder) {
         BookshelfInfoContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
-            globalSnackbarState = globalSnackbarState,
-            appCoroutineScope = appCoroutineScope,
+            appState = appState,
             regenerateThumbnailsUseCase = context.regenerateThumbnailsUseCase,
             scanBookshelfUseCase = context.scanBookshelfUseCase,
         )
@@ -56,8 +49,7 @@ internal actual fun rememberBookshelfInfoContentsState(
 
 private class BookshelfInfoContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
-    private val globalSnackbarState: GlobalSnackbarState,
-    private val appCoroutineScope: CoroutineScope,
+    private val appState: AppState,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
 ) : BookshelfInfoContentsState {
@@ -87,7 +79,7 @@ private class BookshelfInfoContentsStateImpl(
 
     private fun scanFile() {
         showSnackbar()
-        appCoroutineScope.launch {
+        appState.coroutineScope.launch {
             scanBookshelfUseCase.invoke(
                 ScanBookshelfUseCase.Request(
                     bookshelfId = uiState.bookshelf.id,
@@ -99,7 +91,7 @@ private class BookshelfInfoContentsStateImpl(
 
     private fun scanThumbnail() {
         showSnackbar()
-        appCoroutineScope.launch {
+        appState.coroutineScope.launch {
             regenerateThumbnailsUseCase.invoke(
                 RegenerateThumbnailsUseCase.Request(
                     bookshelfId = uiState.bookshelf.id,
@@ -110,8 +102,8 @@ private class BookshelfInfoContentsStateImpl(
     }
 
     private fun showSnackbar() {
-        appCoroutineScope.launch {
-            globalSnackbarState.showSnackbar(
+        appState.coroutineScope.launch {
+            appState.snackbarHostState.showSnackbar(
                 message = getString(
                     when (currentScanType) {
                         ScanType.File -> Res.string.bookshelf_info_label_scanning_file

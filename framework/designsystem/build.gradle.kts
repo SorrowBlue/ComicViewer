@@ -8,7 +8,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(compose.materialIconsExtended)
+                implementation(libs.androidx.compose.materialIconsExtended)
             }
         }
         androidMain {

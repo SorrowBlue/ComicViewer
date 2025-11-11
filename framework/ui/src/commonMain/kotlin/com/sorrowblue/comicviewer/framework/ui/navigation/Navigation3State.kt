@@ -3,8 +3,9 @@ package com.sorrowblue.comicviewer.framework.ui.navigation
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
-interface AppNavigationState {
-    fun addToBackStack(screenKey: ScreenKey)
+interface Navigation3State {
+
+    fun addToBackStack(screenKey: NavKey)
 
     fun onBackPressed()
 

@@ -47,7 +47,7 @@ fun main() = application {
     ) {
         window.minimumSize = Dimension(400, 600)
         with(context) {
-            Application()
+            Application(finishApp = ::exitApplication)
         }
     }
 }

@@ -24,6 +24,7 @@ androidx-test-rules = "1.7.0"
 androidx-test-runner = "1.7.0"
 androidx-window = "1.5.0"
 androidx-work = "2.11.0"
+androidx-compose-material = "1.7.3"
 buildkonfig = "0.17.1"
 coil-kt = "3.3.0"
 detekt = "2.0.0-alpha.1"
@@ -103,7 +104,8 @@ coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil-kt" }
 coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-kt" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "multiplatform-compose" }
 compose-multiplatform-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "multiplatform-compose" }
-compose-multiplatform-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version.ref = "multiplatform-core" }
+androidx-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version.ref = "multiplatform-core" }
+androidx-compose-materialIconsExtended = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "androidx-compose-material" }
 compose-multiplatform-lifecycleCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "multiplatform-lifecycleCompose" }
 multiplatform-lifecycle-viewmodelNavigation3 = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "multiplatform-lifecycleCompose" }
 compose-multiplatform-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "multiplatform-compose-material3" }

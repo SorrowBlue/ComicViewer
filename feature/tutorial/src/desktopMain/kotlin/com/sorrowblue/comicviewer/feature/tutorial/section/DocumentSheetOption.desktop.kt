@@ -29,7 +29,8 @@ import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
+import com.sorrowblue.comicviewer.framework.ui.AppState
+import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_found_pdf_plugin
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_not_found_pdf_plugin
@@ -38,7 +39,6 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberDirectoryPickerLauncher
 import io.github.vinceglb.filekit.path
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import logcat.logcat
@@ -105,13 +105,13 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
 @Composable
 internal fun rememberDocumentSheetState(
     uriHandler: UriHandler = LocalUriHandler.current,
-    scope: CoroutineScope = LocalCoroutineScope.current,
 ): DocumentSheetState {
+    val appState = LocalAppState.current
     val managePdfPluginSettingsUseCase =
         LocalPlatformContext.current.require<TutorialScreenContext.Factory>()
             .createTutorialScreenContext().managePdfPluginSettingsUseCase
     val state =
-        remember { DocumentSheetStateImpl(uriHandler, managePdfPluginSettingsUseCase, scope) }
+        remember { DocumentSheetStateImpl(uriHandler, managePdfPluginSettingsUseCase, appState) }
     val pickerResultLauncher =
         rememberDirectoryPickerLauncher("ComicViewer PDFプラグインのインストールディレクトリを選択") {
             state.onDirectoryPickerResult(it)
@@ -131,7 +131,7 @@ internal interface DocumentSheetState {
 private class DocumentSheetStateImpl(
     private val uriHandler: UriHandler,
     private val settingsUseCase: ManagePdfPluginSettingsUseCase,
-    private val scope: CoroutineScope,
+    private val appState: AppState,
 ) : DocumentSheetState {
     lateinit var directoryPickerLauncher: PickerResultLauncher
 
@@ -147,7 +147,7 @@ private class DocumentSheetStateImpl(
 
     fun onDirectoryPickerResult(directory: PlatformFile?) {
         uiState = uiState.copy(checking = true)
-        scope.launch {
+        appState.coroutineScope.launch {
             logcat { "path=${directory?.path}" }
             directory
                 ?.file

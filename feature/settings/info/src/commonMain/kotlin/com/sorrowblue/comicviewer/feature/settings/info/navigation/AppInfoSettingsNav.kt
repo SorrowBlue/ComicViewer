@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.feature.settings.info.AppInfoSettingsScreenRoo
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseScreenContext
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -27,7 +27,7 @@ data object AppInfoSettingsKey : ScreenKey
 @Serializable
 private data object LicenseKey : ScreenKey
 
-context(graph: PlatformGraph, state: AppNavigationState)
+context(graph: PlatformGraph, state: Navigation3State)
 fun EntryProviderScope<NavKey>.appInfoSettingsEntryGroup() {
     appInfoSettingsEntry(
         onBackClick = state::onBackPressed,

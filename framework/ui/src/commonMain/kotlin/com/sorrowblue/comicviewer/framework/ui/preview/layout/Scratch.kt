@@ -58,7 +58,6 @@ fun Modifier.scratch(color: Color, strokeWidth: Dp = 1.dp, alpha: Float = 0.25f)
             )
 
             // Draw diagonal line
-            @Suppress("MagicNumber")
             val max = (size.width / 100).roundToInt()
             with(density) {
                 for (i in 0..max) {

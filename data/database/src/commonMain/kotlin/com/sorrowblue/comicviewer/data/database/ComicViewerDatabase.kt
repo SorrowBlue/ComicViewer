@@ -26,7 +26,6 @@ import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEn
 internal const val DatabaseVersion = 8
 internal const val DatabaseName = "comic_viewer_database"
 
-@Suppress("MagicNumber")
 @Database(
     entities = [
         BookshelfEntity::class,

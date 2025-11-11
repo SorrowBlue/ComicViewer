@@ -62,9 +62,7 @@ private class DrawBlinkNode(
 
     override fun ContentDrawScope.draw() {
         drawContent()
-        with(
-            currentValueOf(LocalDensity),
-        ) {
+        with(currentValueOf(LocalDensity)) {
             drawRoundRect(
                 color = Color.Red,
                 size = size,
@@ -86,12 +84,11 @@ private class DrawBlinkNode(
         }
     }
 
-    @Suppress("MagicNumber")
     private fun update() {
         job?.cancel()
         count.intValue = 0
         job = coroutineScope.launch {
-            while (count.intValue < 5) {
+            while (count.intValue < BlinksCount) {
                 delay(500)
                 alpha.animateTo(range.start)
                 delay(500)
@@ -103,3 +100,5 @@ private class DrawBlinkNode(
         }
     }
 }
+
+private const val BlinksCount = 5

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.framework.ui
 
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -54,10 +53,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 
 val LocalAdaptiveNavigationSuiteState = staticCompositionLocalOf<AdaptiveNavigationSuiteState> {
     error("No AdaptiveNavigationSuiteState provided")
-}
-
-val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
-    error("No SharedTransitionScope provided")
 }
 
 interface AdaptiveNavigationSuiteState {
@@ -132,7 +127,7 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
 ) {
     AnimatedNavigationSuiteScaffold(
         visibilityScope = LocalNavAnimatedContentScope.current,
-        transitionScope = LocalSharedTransitionScope.current,
+        transitionScope = LocalAppState.current,
         navigationItems = navigationItems,
         modifier = modifier,
         navigationSuiteType = this.navigationSuiteType,
@@ -208,21 +203,21 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButtonMenu(
             with(LocalNavAnimatedContentScope.current) {
                 ToggleFloatingActionButton(
                     modifier =
-                    Modifier
-                        .semantics {
-                            traversalIndex = -1f
-                            stateDescription =
-                                if (floatingActionButtonState.menuExpanded) "Expanded" else "Collapsed"
-                            contentDescription = "Toggle menu"
-                        }.animateFloatingActionButton(
-                            visible =
-                            visible && floatingActionButtonState.targetValue.isVisible ||
-                                floatingActionButtonState.menuExpanded,
-                            alignment = Alignment.BottomEnd,
-                        ).animateEnterExit(
-                            enter = FloatingActionButtonTransitionEnter,
-                            exit = FloatingActionButtonTransitionExit,
-                        ),
+                        Modifier
+                            .semantics {
+                                traversalIndex = -1f
+                                stateDescription =
+                                    if (floatingActionButtonState.menuExpanded) "Expanded" else "Collapsed"
+                                contentDescription = "Toggle menu"
+                            }.animateFloatingActionButton(
+                                visible =
+                                    visible && floatingActionButtonState.targetValue.isVisible ||
+                                        floatingActionButtonState.menuExpanded,
+                                alignment = Alignment.BottomEnd,
+                            ).animateEnterExit(
+                                enter = FloatingActionButtonTransitionEnter,
+                                exit = FloatingActionButtonTransitionExit,
+                            ),
                     checked = floatingActionButtonState.menuExpanded,
                     containerSize = if (navigationSuiteType.isNavigationRail) {
                         ToggleFloatingActionButtonDefaults

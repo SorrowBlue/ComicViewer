@@ -6,59 +6,28 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationKeySerializersModule
-import com.sorrowblue.comicviewer.feature.book.navigation.BookKeySerializersModule
-import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookKey
+import com.sorrowblue.comicviewer.app.navigation.AppSerializersModule
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfKey
-import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfKeySerializersModule
-import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionKeySerializersModule
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryKeySerializersModule
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterKeySerializersModule
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchKeySerializersModule
-import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsKeySerializersModule
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialKeySerializersModule
-import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
-import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import logcat.logcat
 
 @Composable
-fun rememberAppNavigationState(bookData: String?): AppNavigationState {
+fun rememberNavigation3State(): Navigation3State {
     val configuration = SavedStateConfiguration {
-        this.serializersModule = SerializersModule {
-            polymorphic(NavKey::class) {
-                subclass(SortTypeSelectKey::class, SortTypeSelectKey.serializer())
-
-                include(BookshelfKeySerializersModule)
-                include(CollectionKeySerializersModule)
-                include(ReadLaterKeySerializersModule)
-                include(HistoryKeySerializersModule)
-
-                include(SearchKeySerializersModule)
-                include(SettingsKeySerializersModule)
-                include(BookKeySerializersModule)
-
-                include(AuthenticationKeySerializersModule)
-                include(TutorialKeySerializersModule)
-            }
-        }
+        serializersModule = AppSerializersModule
     }
-    val backStack = bookData?.let {
-        rememberNavBackStack(configuration, BookshelfKey.List, ReceiveBookKey(it))
-    } ?: rememberNavBackStack(configuration, BookshelfKey.List)
+    val backStack = rememberNavBackStack(configuration, BookshelfKey.List)
     return remember {
-        AppNavigationStateImpl()
+        Navigation3StateImpl()
     }.apply {
         this.currentBackStack = backStack
     }
 }
 
-private class AppNavigationStateImpl : AppNavigationState {
+private class Navigation3StateImpl : Navigation3State {
     override lateinit var currentBackStack: NavBackStack<NavKey>
 
-    override fun addToBackStack(screenKey: ScreenKey) {
+    override fun addToBackStack(screenKey: NavKey) {
         currentBackStack.add(screenKey)
         logcat { "currentBackStack=${currentBackStack.joinToString { it.toString() }}" }
     }

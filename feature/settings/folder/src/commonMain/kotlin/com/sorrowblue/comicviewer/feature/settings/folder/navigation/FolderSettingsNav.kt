@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
@@ -61,7 +61,7 @@ private data class ImageScaleKey(val imageScale: ImageScale) : ScreenKey
 @Serializable
 private data class SortTypeKey(val sortType: SortType) : ScreenKey
 
-context(graph: PlatformGraph, state: AppNavigationState)
+context(graph: PlatformGraph, state: Navigation3State)
 fun EntryProviderScope<NavKey>.folderSettingsEntryGroup() {
     folderSettingsEntry(
         onBackClick = state::onBackPressed,

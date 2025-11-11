@@ -192,7 +192,6 @@ private class FixedCenteredContentMeasurePolicy : MeasurePolicy {
 private fun calculateCenteredContentHorizontalPadding(itemsCount: Int, barWidth: Int): Int {
     if (itemsCount > MaxItemCount) return 0
     // Formula to calculate the padding percentage based on the number of items and bar width.
-    @Suppress("MagicNumber")
     val paddingPercentage = ((100 - 10 * (itemsCount + 3)) / 2f) / 100
     return (paddingPercentage * barWidth).roundToInt()
 }

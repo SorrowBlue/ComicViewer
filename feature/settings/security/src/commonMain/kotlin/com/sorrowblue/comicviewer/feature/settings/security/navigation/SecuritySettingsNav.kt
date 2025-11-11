@@ -6,7 +6,7 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.AppNavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -22,7 +22,7 @@ val SecuritySettingsKeySerializersModule = SerializersModule {
 @Serializable
 data object SecuritySettingsKey : ScreenKey
 
-context(graph: PlatformGraph, state: AppNavigationState)
+context(graph: PlatformGraph, state: Navigation3State)
 fun EntryProviderScope<NavKey>.securitySettingsEntryGroup(
     onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,

@@ -11,7 +11,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.filekit.compose)
                 implementation(libs.squareup.okio)
-                implementation(libs.compose.multiplatform.coreUri)
+                implementation(libs.androidx.coreUri)
             }
         }
         androidMain {
