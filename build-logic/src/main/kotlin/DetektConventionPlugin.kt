@@ -50,17 +50,18 @@ internal class DetektConventionPlugin : Plugin<Project> {
             }
 
             mapOf(
-                "detektAndroidAll" to "(?i)^(?!.*metadata).*android.*$".toRegex(),
-                "detektDesktopAll" to "(?i)^(?!.*metadata).*desktop.*$".toRegex(),
-                "detektIosAll" to "(?i)^(?!.*metadata).*ios.*$".toRegex(),
-                "detektMetadataAll" to "(?i)^.*metadata.*$".toRegex(),
+                "detektAndroidAll" to "(?i)^(?!.*(SourceSet|metadata)).*android.*$".toRegex(),
+                "detektDesktopAll" to "(?i)^(?!.*(SourceSet|metadata)).*desktop.*$".toRegex(),
+                "detektIosAll" to "(?i)^(?!.*(SourceSet|metadata)).*ios.*$".toRegex(),
             ).forEach { (taskName, regex) ->
                 tasks.register(taskName) {
                     group = LifecycleBasePlugin.VERIFICATION_GROUP
                     dependsOn(
                         tasks
                             .withType<Detekt>()
-                            .matching { detekt -> detekt.name.contains(regex) },
+                            .matching { detekt -> detekt.name.contains(regex) }.also {
+                                logger.lifecycle("${taskName} ${it.joinToString(",") { it.name }}")
+                            },
                     )
                 }
             }
