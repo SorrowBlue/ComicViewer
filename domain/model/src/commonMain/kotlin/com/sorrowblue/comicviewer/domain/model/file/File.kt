@@ -3,11 +3,13 @@ package com.sorrowblue.comicviewer.domain.model.file
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.serialization.Serializable
 
+typealias PathString = String
+
 sealed interface File {
     val bookshelfId: BookshelfId
     val name: String
     val parent: String
-    val path: String
+    val path: PathString
     val size: Long
     val lastModifier: Long
     val isHidden: Boolean

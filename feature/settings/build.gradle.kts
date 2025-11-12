@@ -14,7 +14,7 @@ kotlin {
                 implementation(projects.feature.settings.viewer)
                 implementation(projects.feature.authentication)
                 implementation(projects.feature.tutorial)
-                implementation(libs.compose.multiplatform.coreUri)
+                implementation(libs.androidx.coreUri)
             }
         }
         androidMain {

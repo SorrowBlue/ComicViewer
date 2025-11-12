@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,15 +25,15 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawBookLover
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.ListItemRadioButton
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_label_direction_ltr
 import comicviewer.feature.tutorial.generated.resources.tutorial_label_direction_rtl
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_direction
 import org.jetbrains.compose.resources.stringResource
 
-internal data class DirectionSheetUiState(
-    val direction: BindingDirection = BindingDirection.RTL,
-)
+internal data class DirectionSheetUiState(val direction: BindingDirection = BindingDirection.RTL)
 
 @Composable
 internal fun DirectionSheet(
@@ -46,7 +47,7 @@ internal fun DirectionSheet(
             .verticalScroll(rememberScrollState())
             .padding(contentPadding)
             .padding(ComicTheme.dimension.margin),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
             imageVector = ComicIcons.UndrawBookLover,
@@ -60,13 +61,17 @@ internal fun DirectionSheet(
 
         Text(
             text = stringResource(Res.string.tutorial_text_direction),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
 
         Spacer(modifier = Modifier.size(16.dp))
 
         ListItemRadioButton(
-            headlineContent = { Text(text = stringResource(Res.string.tutorial_label_direction_rtl)) },
+            headlineContent = {
+                Text(
+                    text = stringResource(Res.string.tutorial_label_direction_rtl),
+                )
+            },
             selected = uiState.direction == BindingDirection.RTL,
             onCheckedChange = {
                 if (it) {
@@ -76,10 +81,14 @@ internal fun DirectionSheet(
             modifier = Modifier
                 .heightIn(max = 48.dp)
                 .widthIn(max = 400.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         )
         ListItemRadioButton(
-            headlineContent = { Text(text = stringResource(Res.string.tutorial_label_direction_ltr)) },
+            headlineContent = {
+                Text(
+                    text = stringResource(Res.string.tutorial_label_direction_ltr),
+                )
+            },
             selected = uiState.direction == BindingDirection.LTR,
             onCheckedChange = {
                 if (it) {
@@ -89,7 +98,21 @@ internal fun DirectionSheet(
             modifier = Modifier
                 .heightIn(max = 48.dp)
                 .widthIn(max = 400.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         )
+    }
+}
+
+@PreviewMultiplatform
+@Composable
+private fun DirectionSheetPreview() {
+    PreviewTheme {
+        Surface {
+            DirectionSheet(
+                uiState = DirectionSheetUiState(),
+                onBindingDirectionChange = {},
+                contentPadding = PaddingValues(),
+            )
+        }
     }
 }

@@ -15,12 +15,14 @@ internal fun DiskCache.Editor.abortQuietly() {
     }
 }
 
+@Suppress("TooGenericExceptionCaught")
 internal fun AutoCloseable.closeQuietly() {
     try {
         close()
     } catch (e: RuntimeException) {
         throw e
-    } catch (_: Exception) {}
+    } catch (_: Exception) {
+    }
 }
 
 expect suspend fun resizeImage(

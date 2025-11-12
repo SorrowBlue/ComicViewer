@@ -19,22 +19,18 @@ data class SmartCollection private constructor(
     val bookshelfId: BookshelfId?,
     val searchCondition: SearchCondition,
 ) : Collection {
-
     fun copy(
         name: String = this.name,
         bookshelfId: BookshelfId? = this.bookshelfId,
         searchCondition: SearchCondition = this.searchCondition,
-    ): SmartCollection {
-        return copy(
-            id = id,
-            name = name,
-            bookshelfId = bookshelfId,
-            searchCondition = searchCondition,
-        )
-    }
+    ): SmartCollection = copy(
+        id = id,
+        name = name,
+        bookshelfId = bookshelfId,
+        searchCondition = searchCondition,
+    )
 
     companion object {
-
         operator fun invoke(
             name: String,
             bookshelfId: BookshelfId?,
@@ -46,7 +42,7 @@ data class SmartCollection private constructor(
             createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
             updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
             bookshelfId = bookshelfId,
-            searchCondition = searchCondition
+            searchCondition = searchCondition,
         )
 
         @InternalDataApi
@@ -65,7 +61,7 @@ data class SmartCollection private constructor(
             createdAt = createdAt,
             updatedAt = updatedAt,
             bookshelfId = bookshelfId,
-            searchCondition = searchCondition
+            searchCondition = searchCondition,
         )
     }
 }

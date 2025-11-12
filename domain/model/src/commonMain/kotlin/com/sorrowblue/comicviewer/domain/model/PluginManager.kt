@@ -1,7 +1,9 @@
 package com.sorrowblue.comicviewer.domain.model
 
-class PluginManager {
+import dev.zacsweers.metro.Inject
 
+@Inject
+class PluginManager {
     interface Callback {
         fun onError(msg: String)
     }

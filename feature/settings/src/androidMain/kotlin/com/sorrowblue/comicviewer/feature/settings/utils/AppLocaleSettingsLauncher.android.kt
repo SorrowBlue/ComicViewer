@@ -9,20 +9,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 
 @Composable
-internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher {
-    return AppLocaleSettingsLauncher(LocalContext.current)
-}
+internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher =
+    AppLocaleSettingsLauncher(LocalContext.current)
 
 internal actual class AppLocaleSettingsLauncher(private val context: Context) {
-
     actual fun launch(fallback: () -> Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             runCatching {
                 context.startActivity(
                     Intent(
                         Settings.ACTION_APP_LOCALE_SETTINGS,
-                        "package:${context.applicationInfo.packageName}".toUri()
-                    )
+                        "package:${context.applicationInfo.packageName}".toUri(),
+                    ),
                 )
             }.onFailure {
                 fallback()

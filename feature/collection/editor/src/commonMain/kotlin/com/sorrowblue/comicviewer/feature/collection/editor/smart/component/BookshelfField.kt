@@ -25,7 +25,7 @@ internal fun Form<SmartCollectionForm>.BookshelfField(
         name = BookshelfField,
         selector = { it.bookshelfId },
         updater = { copy(bookshelfId = it) },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         DropdownMenuField(
             field = field,
@@ -36,7 +36,7 @@ internal fun Form<SmartCollectionForm>.BookshelfField(
                 bookshelf[this] ?: stringResource(Res.string.collection_editor_label_all_bookshelf)
             },
             menus = remember(bookshelf) { bookshelf.map { it.key } },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

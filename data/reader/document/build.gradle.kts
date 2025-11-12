@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 kotlin {
@@ -15,13 +15,11 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.androidx.startup.runtime)
-                implementation(libs.koin.androidxStartup)
             }
         }
         desktopMain {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.pdfbox)
             }
         }
     }

@@ -12,7 +12,6 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -31,7 +30,9 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
             configure<KotlinMultiplatformExtension> {
                 compilerOptions {
                     if (project.path.startsWith(":data")) {
-                        freeCompilerArgs.add("-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi")
+                        freeCompilerArgs.add(
+                            "-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi",
+                        )
                     }
                 }
                 sourceSets.commonMain.dependencies {

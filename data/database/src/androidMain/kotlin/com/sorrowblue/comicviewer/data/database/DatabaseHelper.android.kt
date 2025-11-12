@@ -4,17 +4,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import jakarta.inject.Singleton
+import dev.zacsweers.metro.Inject
 
-@Singleton
+@Inject
 internal actual class DatabaseHelper actual constructor(private val context: PlatformContext) {
-
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {
         val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath(DATABASE_NAME)
-        return Room.databaseBuilder<ComicViewerDatabase>(
-            context = appContext,
-            name = dbFile.absolutePath
-        ).setDriver(BundledSQLiteDriver())
+        val dbFile = appContext.getDatabasePath(DatabaseName)
+        return Room
+            .databaseBuilder<ComicViewerDatabase>(
+                context = appContext,
+                name = dbFile.absolutePath,
+            ).setDriver(BundledSQLiteDriver())
     }
 }

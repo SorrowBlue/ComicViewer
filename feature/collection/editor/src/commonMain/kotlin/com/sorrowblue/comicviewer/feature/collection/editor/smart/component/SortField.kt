@@ -28,7 +28,7 @@ internal fun Form<SmartCollectionForm>.SortTypeField(
         name = SortTypeField,
         selector = { it.searchCondition.sortType },
         updater = { copy(searchCondition = searchCondition.copy(sortType = it)) },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         DropdownMenuField(
             field = field,
@@ -37,7 +37,7 @@ internal fun Form<SmartCollectionForm>.SortTypeField(
             },
             value = { stringResource(displayText) },
             menus = remember { SortType.entries },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

@@ -37,45 +37,52 @@ internal fun SmartCollectionEditorForm(
     Column(modifier = modifier.wrapContentHeight()) {
         form.CollectionNameTextField2(
             enabled = uiState.enabledForm,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = ComicTheme.dimension.minPadding)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = ComicTheme.dimension.minPadding),
         )
 
         form.QueryField(
             enabled = uiState.enabledForm,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = ComicTheme.dimension.minPadding)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = ComicTheme.dimension.minPadding),
         )
 
         form.BookshelfField(
             enabled = uiState.enabledForm,
             bookshelf = bookshelf,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = ComicTheme.dimension.minPadding)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = ComicTheme.dimension.minPadding),
         )
 
         form.RangeField(
             enabled = uiState.enabledForm,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = ComicTheme.dimension.minPadding)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = ComicTheme.dimension.minPadding),
         )
 
         form.PeriodField(
             enabled = uiState.enabledForm,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = ComicTheme.dimension.minPadding)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = ComicTheme.dimension.minPadding),
         )
 
         form.SortTypeField(
             enabled = uiState.enabledForm,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = ComicTheme.dimension.minPadding)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = ComicTheme.dimension.minPadding),
         )
 
         form.ShowHiddenFilesField(
             enabled = uiState.enabledForm,
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = ComicTheme.dimension.minPadding)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = ComicTheme.dimension.minPadding),
         )
     }
 }

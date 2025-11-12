@@ -7,14 +7,11 @@ import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationOpenSettingsURLString
 
 @Composable
-internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher {
-    return remember {
-        AppLocaleSettingsLauncher()
-    }
+internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher = remember {
+    AppLocaleSettingsLauncher()
 }
 
 internal actual class AppLocaleSettingsLauncher {
-
     actual fun launch(fallback: () -> Unit) {
         val url = NSURL.URLWithString(UIApplicationOpenSettingsURLString)
         if (url != null && UIApplication.sharedApplication.canOpenURL(url)) {

@@ -41,11 +41,11 @@ graph LR
 
     KotlinMultiplatformComposeConventionPlugin --> DetektConventionPlugin
 
-    KotlinMultiplatformKoinConventionPlugin
+    KotlinMultiplatformDiConventionPlugin
 
     KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformLibraryConventionPlugin
     KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformComposeConventionPlugin
-    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformKoinConventionPlugin
+    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformDiConventionPlugin
 ```
 
 ## Module configuration

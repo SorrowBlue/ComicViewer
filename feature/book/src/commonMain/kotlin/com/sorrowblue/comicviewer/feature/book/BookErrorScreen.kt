@@ -35,10 +35,7 @@ import comicviewer.feature.book.generated.resources.book_text_could_not_open_nam
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun BookErrorScreen(
-    uiState: BookScreenUiState.Error,
-    onBackClick: () -> Unit,
-) {
+internal fun BookErrorScreen(uiState: BookScreenUiState.Error, onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -49,26 +46,28 @@ internal fun BookErrorScreen(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = ComicIcons.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                        elevation = ElevationTokens.Level2
-                    )
+                        elevation = ElevationTokens.Level2,
+                    ),
                 ),
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                ),
             )
         },
-        contentWindowInsets = WindowInsets.safeDrawing
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             Image(
                 imageVector = ComicIcons.UndrawFaq,
@@ -76,7 +75,7 @@ internal fun BookErrorScreen(
                 modifier = Modifier
                     .sizeIn(maxWidth = 300.dp)
                     .fillMaxWidth(0.5f)
-                    .aspectRatio(1f)
+                    .aspectRatio(1f),
             )
             Spacer(modifier = Modifier.size(8.dp))
             Text(
@@ -85,7 +84,7 @@ internal fun BookErrorScreen(
                 } else {
                     stringResource(Res.string.book_text_could_not_open_name, uiState.name)
                 },
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
             )
         }
     }

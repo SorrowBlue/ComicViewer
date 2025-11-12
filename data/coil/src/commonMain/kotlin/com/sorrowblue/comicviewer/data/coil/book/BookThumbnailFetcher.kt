@@ -19,11 +19,13 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import okio.Buffer
 import okio.BufferedSource
 import okio.use
-import jakarta.inject.Singleton
 
 internal class BookThumbnailFetcher(
     options: Options,
@@ -34,7 +36,6 @@ internal class BookThumbnailFetcher(
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileFetcher<BookThumbnailMetadata>(options, diskCacheLazy) {
-
     override val diskCacheKey
         get() = options.diskCacheKey ?: "book:${data.bookshelfId.value}:${data.path}"
 
@@ -52,19 +53,20 @@ internal class BookThumbnailFetcher(
     }
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
-        val dataSource = bookshelfLocalDataSource.flow(data.bookshelfId).first()
-            ?.let(remoteDataSourceFactory::create)
-            ?: throw CoilRuntimeException("本棚が取得できない")
-        if (!dataSource.exists(data.path)) {
-            throw CoilRuntimeException("ファイルがない(${data.path})")
+        val bookshelf = checkNotNull(bookshelfLocalDataSource.flow(data.bookshelfId).first()) {
+            "Bookshelf not found. id: ${data.bookshelfId}"
+        }
+        val dataSource = remoteDataSourceFactory.create(bookshelf)
+        check(dataSource.exists(data.path)) {
+            "File not found. id: ${data.bookshelfId}, path: ${data.path}"
         }
         val book =
-            fileLocalDataSource.flow(data.bookshelfId, data.path).first() as? Book
-                ?: throw CoilRuntimeException("本が取得できない")
-
+            checkNotNull(fileLocalDataSource.flow(data.bookshelfId, data.path).first() as? Book) {
+                "Book not found. id: ${data.bookshelfId}, path: ${data.path}"
+            }
         return dataSource.fileReader(book)?.use { fileReader ->
-            if (fileReader.pageCount() == 0) {
-                throw CoilRuntimeException("0ページ")
+            check(fileReader.pageCount() != 0) {
+                "Only 0 pages"
             }
             val displaySettings = datastoreDataSource.folderDisplaySettings.first()
             val quality = displaySettings.thumbnailQuality
@@ -75,18 +77,18 @@ internal class BookThumbnailFetcher(
                     fileReader.copyTo(0, buffer)
                     resizeImage(buffer, sink, compressFormat, quality)
                 }
-            }?.let { snapshot ->
+            }?.let { diskSnapshot ->
                 // DISKキャッシュキーとページ数を更新する。
                 fileLocalDataSource.updateAdditionalInfo(
                     data.path,
                     data.bookshelfId,
                     diskCacheKey,
-                    fileReader.pageCount()
+                    fileReader.pageCount(),
                 )
                 SourceFetchResult(
-                    source = snapshot.toImageSource(),
+                    source = diskSnapshot.toImageSource(),
                     mimeType = null,
-                    dataSource = DataSource.NETWORK
+                    dataSource = DataSource.NETWORK,
                 )
             } ?: run {
                 // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
@@ -95,7 +97,7 @@ internal class BookThumbnailFetcher(
                     SourceFetchResult(
                         source = it.toImageSource(),
                         mimeType = null,
-                        dataSource = DataSource.NETWORK
+                        dataSource = DataSource.NETWORK,
                     )
                 }
             }
@@ -103,8 +105,9 @@ internal class BookThumbnailFetcher(
     }
 }
 
-@Singleton
 @com.sorrowblue.comicviewer.data.coil.BookThumbnailFetcher
+@ContributesBinding(DataScope::class)
+@Inject
 internal class BookThumbnailFetcherFactory(
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
@@ -112,20 +115,14 @@ internal class BookThumbnailFetcherFactory(
     private val fileModelLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : Fetcher.Factory<BookThumbnail> {
-
-    override fun create(
-        data: BookThumbnail,
-        options: Options,
-        imageLoader: ImageLoader,
-    ): Fetcher {
-        return BookThumbnailFetcher(
+    override fun create(data: BookThumbnail, options: Options, imageLoader: ImageLoader): Fetcher =
+        BookThumbnailFetcher(
             options = options,
             diskCacheLazy = lazy { coilDiskCacheLazy.value.thumbnailDiskCache(data.bookshelfId) },
             data = data,
             remoteDataSourceFactory = remoteDataSourceFactory,
             bookshelfLocalDataSource = bookshelfLocalDataSource,
             fileLocalDataSource = fileModelLocalDataSource,
-            datastoreDataSource = datastoreDataSource
+            datastoreDataSource = datastoreDataSource,
         )
-    }
 }

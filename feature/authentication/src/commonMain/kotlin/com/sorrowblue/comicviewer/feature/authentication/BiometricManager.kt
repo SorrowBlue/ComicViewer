@@ -11,5 +11,6 @@ internal expect class BiometricManager {
 
 internal sealed interface AuthenticationResult {
     data object Success : AuthenticationResult
+
     data class Error(val message: String) : AuthenticationResult
 }

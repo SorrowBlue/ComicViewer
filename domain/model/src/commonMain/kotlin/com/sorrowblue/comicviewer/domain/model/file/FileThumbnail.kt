@@ -9,7 +9,6 @@ sealed interface FileThumbnail {
     val size: Long
 
     companion object {
-
         fun from(file: File) = when (file) {
             is Book -> BookThumbnail.from(file)
             is Folder -> FolderThumbnail.from(file)

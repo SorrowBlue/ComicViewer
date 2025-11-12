@@ -5,38 +5,22 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.sorrowblue.cmpdestinations.annotation.Destination
+import androidx.compose.ui.tooling.preview.Preview
+import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.ImageCache
 import com.sorrowblue.comicviewer.domain.model.OtherImageCache
+import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_image_cache
 import kotlin.math.floor
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
-
-@Serializable
-data object ImageCache
-
-@Destination<com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCache>
-@Composable
-internal fun ImageCacheScreen(
-    navigator: SettingsDetailNavigator = koinInject(),
-    state: ImageCacheScreenState = rememberImageCacheScreenState(),
-) {
-    ImageCacheScreen(
-        uiState = state.uiState,
-        snackbarHostState = state.snackbarHostState,
-        onBackClick = navigator::navigateBack,
-        onClick = state::onClick,
-    )
-}
 
 internal data class ThumbnailScreenUiState(
     val imageCacheInfos: List<BookshelfImageCacheInfo> = emptyList(),
@@ -64,17 +48,38 @@ internal fun ImageCacheScreen(
                 onBookPageImageCacheClick = {
                     onClick(imageCacheInfo.bookshelf.id, imageCacheInfo.bookPageImageCache)
                 },
-                modifier = Modifier.padding(ComicTheme.dimension.padding)
+                modifier = Modifier.padding(ComicTheme.dimension.padding),
             )
         }
 
         uiState.otherImageCache?.let { otherImageCache ->
             OtherImageCacheItem(
                 imageCache = otherImageCache,
-                onClick = { onClick(BookshelfId(), otherImageCache) }
+                onClick = { onClick(BookshelfId(), otherImageCache) },
             )
         }
     }
 }
 
-val Long.megaByte get() = floor(this / 1024.0 / 1024.0 * 100.0) / 100.0
+val Long.megaByte get() = floor(this / Byte / Byte * 100.0) / 100.0
+
+@Preview
+@Composable
+private fun ImageCacheScreenPreview() {
+    ImageCacheScreen(
+        uiState = ThumbnailScreenUiState(
+            imageCacheInfos = listOf(
+                BookshelfImageCacheInfo(
+                    fakeInternalStorage(),
+                    ThumbnailImageCache(50 * Byte * Byte, 100 * Byte * Byte),
+                    BookPageImageCache(50 * Byte * Byte, 100 * Byte * Byte),
+                ),
+            ),
+        ),
+        snackbarHostState = remember { SnackbarHostState() },
+        onBackClick = {},
+        onClick = { _, _ -> },
+    )
+}
+
+private const val Byte = 1024L

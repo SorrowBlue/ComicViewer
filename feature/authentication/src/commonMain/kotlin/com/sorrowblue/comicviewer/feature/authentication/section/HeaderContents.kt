@@ -16,12 +16,12 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 internal fun HeaderContents(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
             imageVector = ComicIcons.Key,
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp),
         )
         Text(
             text = "ComicViewer authentication",

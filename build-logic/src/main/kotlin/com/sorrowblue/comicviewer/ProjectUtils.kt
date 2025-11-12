@@ -20,11 +20,13 @@ internal fun Project.plugins(block: PluginManager.() -> Unit) = with(pluginManag
 
 internal fun PluginManager.id(provider: Provider<PluginDependency>) = apply(provider.get().pluginId)
 
-internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.android(crossinline block: T.() -> Unit) =
-    configure<T> { block(this) }
+internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.android(
+    crossinline block: T.() -> Unit,
+) = configure<T> { block(this) }
 
-internal inline fun <reified T : KotlinBaseExtension> Project.kotlin(crossinline block: T.() -> Unit) =
-    configure<T> { block(this) }
+internal inline fun <reified T : KotlinBaseExtension> Project.kotlin(
+    crossinline block: T.() -> Unit,
+) = configure<T> { block(this) }
 
 internal fun Project.ksp(block: KspExtension.() -> Unit) = configure<KspExtension>(block)
 

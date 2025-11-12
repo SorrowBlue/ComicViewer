@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationContentsAction
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.saveable.decodeTo
 import com.sorrowblue.comicviewer.framework.ui.saveable.encodeToByteArray
@@ -17,87 +16,86 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.compose.koinInject
 
 internal sealed interface AuthenticationScreenEvent {
-    data object Back : AuthenticationScreenEvent
     data object Complete : AuthenticationScreenEvent
 }
 
 @Composable
-internal fun rememberAuthenticationScreenState(
-    route: Authentication,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    scope: CoroutineScope = rememberCoroutineScope(),
-    biometricManager: BiometricManager = rememberBiometricManager(),
-    securitySettingsUseCase: ManageSecuritySettingsUseCase = koinInject(),
-): AuthenticationScreenState = rememberListSaveable(
-    route,
-    save = { arrayListOf(it.pinHistory, it.uiState.encodeToByteArray()) },
-    restore = {
-        pinHistory = it[0] as String
-        uiState = (it[1] as ByteArray).decodeTo()
+context(context: AuthenticationScreenContext)
+internal fun rememberAuthenticationScreenState(screenType: ScreenType): AuthenticationScreenState {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val biometricManager = rememberBiometricManager()
+    return rememberListSaveable(
+        screenType,
+        save = { arrayListOf(it.pinHistory, it.uiState.encodeToByteArray()) },
+        restore = {
+            pinHistory = it[0] as String
+            uiState = (it[1] as ByteArray).decodeTo()
+        },
+    ) {
+        AuthenticationScreenStateImpl(
+            snackbarHostState = snackbarHostState,
+            screenType = screenType,
+            scope = scope,
+            biometricManager = biometricManager,
+            securitySettings = context.securitySettingsUseCase,
+        )
     }
-) {
-    AuthenticationScreenStateImpl(
-        snackbarHostState = snackbarHostState,
-        route = route,
-        scope = scope,
-        biometricManager = biometricManager,
-        securitySettings = securitySettingsUseCase,
-    )
 }
 
 internal interface AuthenticationScreenState {
     val uiState: AuthenticationScreenUiState
     val events: EventFlow<AuthenticationScreenEvent>
     val snackbarHostState: SnackbarHostState
-    fun onContentsAction(action: AuthenticationContentsAction)
+
+    fun onNextClick()
+
+    fun onPinChange(pin: String)
 }
 
 private class AuthenticationScreenStateImpl(
-    route: Authentication,
+    screenType: ScreenType,
     private val scope: CoroutineScope,
     private val securitySettings: ManageSecuritySettingsUseCase,
     override val snackbarHostState: SnackbarHostState,
     private val biometricManager: BiometricManager,
 ) : AuthenticationScreenState {
-
     override val events = EventFlow<AuthenticationScreenEvent>()
 
     override var uiState by mutableStateOf(
-        when (route.screenType) {
+        when (screenType) {
             ScreenType.Register -> AuthenticationScreenUiState.Register.Input("")
             ScreenType.Change -> AuthenticationScreenUiState.Change.ConfirmOld("")
             ScreenType.Erase -> AuthenticationScreenUiState.Erase("")
             ScreenType.Authenticate -> AuthenticationScreenUiState.Authentication("")
-        }
+        },
     )
 
     var pinHistory by mutableStateOf("")
 
     init {
-        if (route.screenType == ScreenType.Authenticate && runBlocking { securitySettings.settings.first().useBiometrics }) {
+        if (screenType == ScreenType.Authenticate &&
+            runBlocking { securitySettings.settings.first().useBiometrics }
+        ) {
             scope.launch {
                 when (val result = biometricManager.authenticate()) {
                     is AuthenticationResult.Error -> snackbarHostState.showSnackbar(result.message)
-                    AuthenticationResult.Success -> events.tryEmit(AuthenticationScreenEvent.Complete)
+                    AuthenticationResult.Success -> events.tryEmit(
+                        AuthenticationScreenEvent.Complete,
+                    )
                 }
             }
         }
     }
 
-    override fun onContentsAction(action: AuthenticationContentsAction) {
-        when (action) {
-            AuthenticationContentsAction.BackClick -> events.tryEmit(AuthenticationScreenEvent.Back)
-            AuthenticationContentsAction.NextClick -> onNextClick()
-            is AuthenticationContentsAction.PinChange ->
-                uiState =
-                    uiState.copyPin(if (action.pin.all { it.digitToIntOrNull() != null }) action.pin else "")
-        }
+    override fun onPinChange(pin: String) {
+        uiState =
+            uiState.copyPin(if (pin.all { it.digitToIntOrNull() != null }) pin else "")
     }
 
-    private fun onNextClick() {
+    override fun onNextClick() {
         when (val currentUiState = uiState) {
             is AuthenticationScreenUiState.Authentication -> {
                 scope.launch {
@@ -107,7 +105,7 @@ private class AuthenticationScreenStateImpl(
                     } else {
                         uiState = AuthenticationScreenUiState.Authentication(
                             pin = "",
-                            error = ErrorType.IncorrectPin
+                            error = ErrorType.IncorrectPin,
                         )
                     }
                 }
@@ -122,7 +120,7 @@ private class AuthenticationScreenStateImpl(
                     } else {
                         uiState = AuthenticationScreenUiState.Erase(
                             pin = "",
-                            error = ErrorType.IncorrectPin
+                            error = ErrorType.IncorrectPin,
                         )
                     }
                 }
@@ -142,20 +140,20 @@ private class AuthenticationScreenStateImpl(
                     } else {
                         AuthenticationScreenUiState.Change.ConfirmOld(
                             pin = "",
-                            error = ErrorType.IncorrectPin
+                            error = ErrorType.IncorrectPin,
                         )
                     }
                 }
             }
 
             is AuthenticationScreenUiState.Change.Input -> {
-                if (4 <= uiState.pin.count()) {
+                if (MinPinSize <= uiState.pin.count()) {
                     pinHistory = uiState.pin
                     uiState = AuthenticationScreenUiState.Change.Confirm("")
                 } else {
                     uiState = AuthenticationScreenUiState.Change.Input(
                         pin = "",
-                        error = ErrorType.Pin4More
+                        error = ErrorType.Pin4More,
                     )
                 }
             }
@@ -171,7 +169,7 @@ private class AuthenticationScreenStateImpl(
                 } else {
                     uiState = AuthenticationScreenUiState.Change.Input(
                         pin = "",
-                        error = ErrorType.IncorrectPin
+                        error = ErrorType.IncorrectPin,
                     )
                 }
             }
@@ -181,13 +179,13 @@ private class AuthenticationScreenStateImpl(
     private fun onNextClickRegisterScreen(currentUiState: AuthenticationScreenUiState.Register) {
         when (currentUiState) {
             is AuthenticationScreenUiState.Register.Input -> {
-                if (4 <= uiState.pin.count()) {
+                if (MinPinSize <= uiState.pin.count()) {
                     pinHistory = uiState.pin
                     uiState = AuthenticationScreenUiState.Register.Confirm("")
                 } else {
                     uiState = AuthenticationScreenUiState.Register.Input(
                         pin = "",
-                        error = ErrorType.Pin4More
+                        error = ErrorType.Pin4More,
                     )
                 }
             }
@@ -204,10 +202,12 @@ private class AuthenticationScreenStateImpl(
                     pinHistory = ""
                     uiState = AuthenticationScreenUiState.Register.Input(
                         pin = "",
-                        error = ErrorType.PinNotMatch
+                        error = ErrorType.PinNotMatch,
                     )
                 }
             }
         }
     }
 }
+
+private const val MinPinSize = 4

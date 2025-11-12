@@ -1,6 +1,10 @@
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
-import com.sorrowblue.comicviewer.framework.common.DesktopContext
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.Binds
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Inject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.Charset
@@ -10,42 +14,44 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.spec.IvParameterSpec
 import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
-import jakarta.inject.Singleton
-import org.koin.mp.KoinPlatform
 
-private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
+private const val CipherTransformation = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
 
-@Singleton
-internal class DesktopCryptUtil : CryptUtil {
+@ContributesTo(DataScope::class)
+interface DesktopDatabaseBindings {
+    @Binds
+    private val DesktopCryptUtil.bind: CryptUtil get() = this
+}
 
-    @OptIn(ExperimentalEncodingApi::class)
-    override fun decrypt(alias: String, encryptedText: String): String? {
+@Inject
+internal class DesktopCryptUtil(private val context: PlatformContext) : CryptUtil {
+    override fun decrypt(alias: String, encryptedText: String): String {
         val key = loadKeyStore(alias)
         val iv = IvParameterSpec(IV.toByteArray())
-        val decrypter = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val decrypter = Cipher.getInstance(CipherTransformation)
         decrypter.init(Cipher.DECRYPT_MODE, key, iv)
         return String(decrypter.doFinal(Base64.decode(encryptedText)))
     }
 
-    @OptIn(ExperimentalEncodingApi::class)
     override fun encrypt(alias: String, text: String): String {
         val key = this.loadKeyStore(alias)
         val iv = IvParameterSpec(IV.toByteArray())
-        val encrypter = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val encrypter = Cipher.getInstance(CipherTransformation)
         encrypter.init(Cipher.ENCRYPT_MODE, key, iv)
         return Base64.encode(encrypter.doFinal(text.toByteArray()))
     }
 
     private fun loadKeyStore(alias: String): Key? {
-        val context = KoinPlatform.getKoin().get<DesktopContext>()
         val keystoreFile =
-            context.filesDir.resolve("keystore").also { it.createDirectories() }.resolve("pass.dat")
+            context.filesDir
+                .resolve("keystore")
+                .also { it.createDirectories() }
+                .resolve("pass.dat")
         val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
         if (keystoreFile.exists()) {
             keystoreFile.inputStream().use {
@@ -83,14 +89,20 @@ internal class DesktopCryptUtil : CryptUtil {
 
     private fun windowsProductID(): String {
         var productID = ""
-        val process = Runtime.getRuntime()
+        val process = Runtime
+            .getRuntime()
             .exec(arrayOf("cmd", "/C", "chcp 65001 | systeminfo | findstr /i \"Product ID:\""))
         val reader =
             BufferedReader(InputStreamReader(process.inputStream, Charset.forName("UTF-8")))
         var line: String?
         while ((reader.readLine().also { line = it }) != null) {
             productID =
-                Regex("^.+\\s([0-9a-zA-Z\\-]+)").find(line.orEmpty())?.groups?.get(1)?.value.orEmpty()
+                Regex("^.+\\s([0-9a-zA-Z\\-]+)")
+                    .find(line.orEmpty())
+                    ?.groups
+                    ?.get(1)
+                    ?.value
+                    .orEmpty()
         }
         process.waitFor()
         return productID

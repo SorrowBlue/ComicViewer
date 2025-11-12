@@ -6,7 +6,7 @@ import android.util.Log
 import kotlin.math.min
 import logcat.AndroidLogcatLogger.Companion.installOnDebuggableApp
 
-private const val MAX_LOG_LENGTH = 4000
+private const val MaxLogLength = 4000
 
 /**
  * A [logcat] logger that delegates to [android.util.Log] for any log with
@@ -22,18 +22,12 @@ private const val MAX_LOG_LENGTH = 4000
  * The implementation is based on Timber DebugTree.
  */
 class AndroidLogcatLogger(minPriority: LogPriority = LogPriority.DEBUG) : LogcatLogger {
-
     private val minPriorityInt: Int = minPriority.priorityInt
 
-    override fun isLoggable(priority: LogPriority): Boolean =
-        priority.priorityInt >= minPriorityInt
+    override fun isLoggable(priority: LogPriority): Boolean = priority.priorityInt >= minPriorityInt
 
-    override fun log(
-        priority: LogPriority,
-        tag: String,
-        message: String,
-    ) {
-        if (message.length < MAX_LOG_LENGTH) {
+    override fun log(priority: LogPriority, tag: String, message: String) {
+        if (message.length < MaxLogLength) {
             logToLogcat(priority.priorityInt, tag, message)
             return
         }
@@ -45,7 +39,7 @@ class AndroidLogcatLogger(minPriority: LogPriority = LogPriority.DEBUG) : Logcat
             var newline = message.indexOf('\n', i)
             newline = if (newline != -1) newline else length
             do {
-                val end = min(newline, i + MAX_LOG_LENGTH)
+                val end = min(newline, i + MaxLogLength)
                 val part = message.substring(i, end)
                 logToLogcat(priority.priorityInt, tag, part)
                 i = end
@@ -54,11 +48,7 @@ class AndroidLogcatLogger(minPriority: LogPriority = LogPriority.DEBUG) : Logcat
         }
     }
 
-    private fun logToLogcat(
-        priority: Int,
-        tag: String,
-        part: String,
-    ) {
+    private fun logToLogcat(priority: Int, tag: String, part: String) {
         if (priority == Log.ASSERT) {
             Log.wtf(tag, part)
         } else {

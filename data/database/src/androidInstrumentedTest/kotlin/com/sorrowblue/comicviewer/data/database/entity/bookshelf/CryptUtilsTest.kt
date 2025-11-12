@@ -7,7 +7,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 internal class CryptUtilsTest {
-
     @Test
     fun testEncryptDecrypt() {
         val alias = "password"

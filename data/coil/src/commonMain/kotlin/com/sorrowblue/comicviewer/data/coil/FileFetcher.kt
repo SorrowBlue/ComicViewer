@@ -22,7 +22,6 @@ internal abstract class FileFetcher<T : CoilMetadata>(
     val options: Options,
     private val diskCacheLazy: Lazy<DiskCache>,
 ) : Fetcher {
-
     /** Disk cache key */
     abstract val diskCacheKey: String
 
@@ -50,7 +49,7 @@ internal abstract class FileFetcher<T : CoilMetadata>(
 
     override suspend fun fetch(): FetchResult? {
         val snapshot = readFromDiskCache()
-        try {
+        return runCatching {
             if (snapshot != null) {
                 // Always return files with empty metadata as it's likely they've been written
                 // to the disk cache manually.
@@ -58,7 +57,7 @@ internal abstract class FileFetcher<T : CoilMetadata>(
                     return SourceFetchResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
-                        dataSource = DataSource.DISK
+                        dataSource = DataSource.DISK,
                     )
                 }
 
@@ -67,17 +66,17 @@ internal abstract class FileFetcher<T : CoilMetadata>(
                     return SourceFetchResult(
                         source = snapshot.toImageSource(),
                         mimeType = null,
-                        dataSource = DataSource.DISK
+                        dataSource = DataSource.DISK,
                     )
                 }
             }
 
             // Slow path: fetch the image from the network.
-            return innerFetch(snapshot)
-        } catch (e: Exception) {
+            innerFetch(snapshot)
+        }.onFailure {
             snapshot?.closeQuietly()
-            throw e
-        }
+            throw it
+        }.getOrThrow()
     }
 
     protected suspend fun writeToDiskCache(
@@ -99,54 +98,50 @@ internal abstract class FileFetcher<T : CoilMetadata>(
         } ?: return null
 
         // Write the network request metadata and the network response body to disk.
-        try {
+        return runCatching {
             fileSystem.write(editor.metadata) {
                 metaData.writeTo(this)
             }
             fileSystem.write(editor.data) {
                 writeTo(this)
             }
-            return editor.commitAndOpenSnapshot()
-        } catch (e: Exception) {
+            editor.commitAndOpenSnapshot()
+        }.onFailure {
             editor.abortQuietly()
-            throw e
-        }
+            throw it
+        }.getOrThrow()
     }
 
-    protected fun DiskCache.Snapshot.toImageSource() =
-        ImageSource(
-            file = data,
-            fileSystem = fileSystem,
-            diskCacheKey = diskCacheKey,
-            closeable = this
-        )
+    protected fun DiskCache.Snapshot.toImageSource() = ImageSource(
+        file = data,
+        fileSystem = fileSystem,
+        diskCacheKey = diskCacheKey,
+        closeable = this,
+    )
 
     protected fun BufferedSink.toImageSource() =
         ImageSource(source = buffer, fileSystem = options.fileSystem)
 
     private val fileSystem get() = diskCacheLazy.value.fileSystem
 
-    private fun readFromDiskCache(): DiskCache.Snapshot? {
-        return if (options.diskCachePolicy.readEnabled) {
+    private fun readFromDiskCache(): DiskCache.Snapshot? =
+        if (options.diskCachePolicy.readEnabled) {
             diskCacheLazy.value.openSnapshot(diskCacheKey)
         } else {
             null
         }
-    }
 
     /**
      * Snapshotからメタデータを読み取ります
      *
      * @return Snapshotから読み取ったメタデータ
      */
-    private fun DiskCache.Snapshot.readMetadata(): T? {
-        return try {
-            fileSystem.read(metadata) {
-                readMetadata()
-            }
-        } catch (_: Exception) {
-            // If we can't parse the metadata, ignore this entry.
-            null
+    private fun DiskCache.Snapshot.readMetadata(): T? = try {
+        fileSystem.read(metadata) {
+            readMetadata()
         }
+    } catch (_: Exception) {
+        // If we can't parse the metadata, ignore this entry.
+        null
     }
 }

@@ -8,14 +8,14 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        task: [ detektAndroidAll, detektDesktopAll, detektIosAll, detektMetadataAll, ':build-logic:detektAll' ]
+        task: [ detektAndroidAll, detektDesktopAll, detektIosAll, ':build-logic:detektAll' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run detekt
-        run: ./gradlew ${{ matrix.task }}
+        run: ./gradlew ${{ matrix.task }} reportMerge --continue
       - name: Upload Detekt SARIF
         uses: github/codeql-action/upload-sarif@v4
         if: ${{ !cancelled() && matrix.task != ':build-logic:detektAll' }}

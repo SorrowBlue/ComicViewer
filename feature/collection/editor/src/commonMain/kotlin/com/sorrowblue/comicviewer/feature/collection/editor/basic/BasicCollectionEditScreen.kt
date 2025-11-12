@@ -16,20 +16,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.section.BasicCollectionContent
 import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameTextField
-import com.sorrowblue.comicviewer.feature.collection.editor.smart.AdaptiveDestinationStyle
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -44,42 +39,18 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_basic_edit
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import soil.form.compose.Form
 
 @Serializable
-internal data class BasicCollectionEdit(val id: CollectionId)
+internal data class BasicCollectionEditScreenUiState(val isLoading: Boolean = false)
 
-@Destination<BasicCollectionEdit>(style = AdaptiveDestinationStyle::class)
 @Composable
 internal fun BasicCollectionEditScreen(
-    route: BasicCollectionEdit,
-    navController: NavController = koinInject(),
-) {
-    val state = rememberBasicCollectionEditScreenState(route)
-
-    BasicCollectionEditScreen(
-        uiState = state.uiState,
-        form = state.form,
-        lazyPagingItems = state.lazyPagingItems,
-        onBackClick = navController::navigateUp,
-        onDeleteClick = state::onDeleteClick,
-    )
-}
-
-@Serializable
-internal data class BasicCollectionEditScreenUiState(
-    val isLoading: Boolean = false,
-)
-
-@Composable
-private fun BasicCollectionEditScreen(
     uiState: BasicCollectionEditScreenUiState,
     form: Form<BasicCollectionForm>,
     lazyPagingItems: LazyPagingItems<File>,
     onBackClick: () -> Unit,
     onDeleteClick: (File) -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
 ) {
     val title = remember {
         movableContentOf {
@@ -87,6 +58,7 @@ private fun BasicCollectionEditScreen(
         }
     }
     if (isCompactWindowClass()) {
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -94,23 +66,25 @@ private fun BasicCollectionEditScreen(
                     navigationIcon = {
                         BackIconButton(
                             onClick = onBackClick,
-                            enabled = !uiState.isLoading
+                            enabled = !uiState.isLoading,
                         )
                     },
                     actions = {
                         IconButton(
                             onClick = form::handleSubmit,
-                            enabled = form.meta.canSubmit && !uiState.isLoading
+                            enabled = form.meta.canSubmit && !uiState.isLoading,
                         ) {
                             Icon(ComicIcons.Save, null)
                         }
                     },
-                    windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
-                    scrollBehavior = scrollBehavior
+                    windowInsets = WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                    ),
+                    scrollBehavior = scrollBehavior,
                 )
             },
             contentWindowInsets = WindowInsets.safeDrawing,
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { contentPadding ->
             BasicCollectionContent(
                 lazyPagingItems = lazyPagingItems,
@@ -123,14 +97,16 @@ private fun BasicCollectionEditScreen(
                             .padding(horizontal = ComicTheme.dimension.margin),
                     )
                 },
-                contentPadding = contentPadding.only(PaddingValuesSides.Horizontal + PaddingValuesSides.Bottom),
-                onDeleteClick = onDeleteClick
+                contentPadding = contentPadding.only(
+                    PaddingValuesSides.Horizontal + PaddingValuesSides.Bottom,
+                ),
+                onDeleteClick = onDeleteClick,
             )
         }
     } else {
         BasicAlertDialog(
             onDismissRequest = onBackClick,
-            modifier = Modifier.padding(ComicTheme.dimension.margin)
+            modifier = Modifier.padding(ComicTheme.dimension.margin),
         ) {
             val lazyListState = rememberLazyListState()
             AlertDialogContent(
@@ -143,7 +119,7 @@ private fun BasicCollectionEditScreen(
                         Text(text = stringResource(Res.string.collection_editor_label_cancel))
                     }
                 },
-                scrollableState = lazyListState
+                scrollableState = lazyListState,
             ) {
                 BasicCollectionContent(
                     lazyPagingItems = lazyPagingItems,
@@ -151,12 +127,12 @@ private fun BasicCollectionEditScreen(
                         CollectionNameTextField(
                             form = form,
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .fillMaxWidth(),
                         )
                     },
                     contentPadding = AlertDialogDefaults.dialogPaddingHorizonal,
                     state = lazyListState,
-                    onDeleteClick = onDeleteClick
+                    onDeleteClick = onDeleteClick,
                 )
             }
         }

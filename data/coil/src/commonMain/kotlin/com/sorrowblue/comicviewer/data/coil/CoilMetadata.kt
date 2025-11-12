@@ -5,7 +5,6 @@ import okio.BufferedSink
 import okio.BufferedSource
 
 internal interface CoilMetadata {
-
     fun writeTo(bufferedSink: BufferedSink)
 
     companion object {

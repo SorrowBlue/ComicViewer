@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.file.File as FileModel
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -16,21 +17,14 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_no_contents
 import org.jetbrains.compose.resources.stringResource
-import com.sorrowblue.comicviewer.domain.model.file.File as FileModel
-
-internal sealed interface CollectionContentsAction {
-
-    data class File(val file: FileModel) : CollectionContentsAction
-
-    data class FileInfo(val file: FileModel) : CollectionContentsAction
-}
 
 @Composable
 internal fun CollectionContents(
     fileLazyVerticalGridUiState: FileLazyVerticalGridUiState,
     lazyPagingItems: LazyPagingItems<FileModel>,
     lazyGridState: LazyGridState,
-    onAction: (CollectionContentsAction) -> Unit,
+    onItemClick: (FileModel) -> Unit,
+    onItemInfoClick: (FileModel) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     if (lazyPagingItems.isEmptyData) {
@@ -39,7 +33,7 @@ internal fun CollectionContents(
             text = stringResource(Res.string.collection_label_no_contents),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
+                .padding(contentPadding),
         )
     } else {
         FileLazyVerticalGrid(
@@ -48,9 +42,9 @@ internal fun CollectionContents(
             uiState = fileLazyVerticalGridUiState,
             lazyPagingItems = lazyPagingItems,
             contentPadding = contentPadding,
-            onItemClick = { onAction(CollectionContentsAction.File(it)) },
-            onItemInfoClick = { onAction(CollectionContentsAction.FileInfo(it)) },
-            state = lazyGridState
+            onItemClick = onItemClick,
+            onItemInfoClick = onItemInfoClick,
+            state = lazyGridState,
         )
     }
 }

@@ -34,9 +34,11 @@ internal fun BookAppBar(title: String, onBackClick: () -> Unit, onSettingsClick:
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                elevation = ElevationTokens.Level2
-            )
+                elevation = ElevationTokens.Level2,
+            ),
         ),
-        windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+        windowInsets = WindowInsets.safeDrawing.only(
+            WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+        ),
     )
 }

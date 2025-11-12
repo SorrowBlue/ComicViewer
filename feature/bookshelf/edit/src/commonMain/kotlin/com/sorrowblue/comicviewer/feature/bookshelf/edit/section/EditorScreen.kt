@@ -49,7 +49,9 @@ internal fun EditorScreen(
     LaunchedEffect(fields) {
         logcat {
             "canSubmit: ${form.meta.canSubmit} fields: [${
-                fields.map { it.value }.joinToString(",") { "isValidated: ${it.isValidated}, mode:${it.mode}" }
+                fields.map { it.value }.joinToString(
+                    ",",
+                ) { "isValidated: ${it.isValidated}, mode:${it.mode}" }
             }]"
         }
     }
@@ -63,13 +65,13 @@ internal fun EditorScreen(
                 actions = {
                     TextButton(
                         onClick = form::handleSubmit,
-                        enabled = !uiState.progress && form.meta.canSubmit
+                        enabled = !uiState.progress && form.meta.canSubmit,
                     ) {
                         AnimatedContent(targetState = uiState.progress, label = "progress") {
                             if (it) {
                                 CircularProgressIndicator(
                                     strokeWidth = 2.dp,
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    modifier = Modifier.size(ButtonDefaults.IconSize),
                                 )
                             } else {
                                 Text(text = stringResource(Res.string.bookshelf_edit_label_save))
@@ -77,14 +79,16 @@ internal fun EditorScreen(
                         }
                     }
                 },
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
-                scrollBehavior = scrollBehavior
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                ),
+                scrollBehavior = scrollBehavior,
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         Column(
             Modifier
@@ -92,7 +96,7 @@ internal fun EditorScreen(
                 .imePadding()
                 .verticalScroll(scrollState)
                 .padding(contentPadding)
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
         ) {
             content(this)
         }

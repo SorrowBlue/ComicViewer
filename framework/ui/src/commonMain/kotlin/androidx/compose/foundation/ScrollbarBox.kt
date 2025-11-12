@@ -82,17 +82,16 @@ fun ScrollbarBox(
 }
 
 @Composable
-fun AlertDialogDefaults.scrollbarStyle(): ScrollbarStyle {
-    return alertDialogScrollbarStyleCached ?: ScrollbarStyle(
+fun AlertDialogDefaults.scrollbarStyle(): ScrollbarStyle =
+    alertDialogScrollbarStyleCached ?: ScrollbarStyle(
         minimalHeight = 24.dp,
         thickness = 16.dp,
         shape = RoundedCornerShape(8.dp),
         hoverDurationMillis = 300,
         unhoverColor = ComicTheme.colorScheme.contentColorFor(containerColor).copy(alpha = 0.12f),
-        hoverColor = ComicTheme.colorScheme.contentColorFor(containerColor).copy(alpha = 0.50f)
+        hoverColor = ComicTheme.colorScheme.contentColorFor(containerColor).copy(alpha = 0.50f),
     ).also {
         alertDialogScrollbarStyleCached = it
     }
-}
 
 private var alertDialogScrollbarStyleCached: ScrollbarStyle? = null

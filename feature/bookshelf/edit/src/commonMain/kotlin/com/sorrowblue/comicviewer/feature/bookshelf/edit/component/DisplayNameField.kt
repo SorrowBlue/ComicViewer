@@ -33,7 +33,7 @@ internal fun <T : BookshelfEditorForm> DisplayNameField(
         validator = FieldValidator {
             notBlank { notBlankMessage }
         },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
@@ -45,7 +45,7 @@ internal fun <T : BookshelfEditorForm> DisplayNameField(
             keyboardOptions = KeyboardOptions(
                 showKeyboardOnFocus = false,
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             singleLine = true,
             modifier = modifier

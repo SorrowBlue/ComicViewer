@@ -85,18 +85,17 @@ internal val darkScheme = darkColorScheme(
 )
 
 @Stable
-fun ColorScheme.imageBackground(backgroundColor: Color): Color =
-    when (backgroundColor) {
-        surface -> surfaceContainerHigh // OutlineCard
-        surfaceContainerHighest -> surfaceContainerHigh // FilledCard
-        surfaceContainerLow -> surfaceContainerHigh // ElevateCard
-        else -> Color.Red
-    }
+fun ColorScheme.imageBackground(backgroundColor: Color): Color = when (backgroundColor) {
+    surface -> surfaceContainerHigh // OutlineCard
+    surfaceContainerHighest -> surfaceContainerHigh // FilledCard
+    surfaceContainerLow -> surfaceContainerHigh // ElevateCard
+    else -> Color.Red
+}
 
 @Composable
 fun SegmentedButtonDefaults.fixedColors() = ComicTheme.fixedSegmentedButtonColorsCached ?: colors(
     disabledInactiveBorderColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-    disabledInactiveContentColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    disabledInactiveContentColor = ComicTheme.colorScheme.onSurface.copy(alpha = 0.38f),
 ).also {
     ComicTheme.fixedSegmentedButtonColorsCached = it
 }

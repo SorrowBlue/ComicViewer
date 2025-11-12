@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.datastore.qualifier
 
-import org.koin.core.annotation.Qualifier
+import dev.zacsweers.metro.Qualifier
 
 @Qualifier
 annotation class Book
@@ -21,7 +21,7 @@ annotation class Security
 annotation class Collection
 
 @Qualifier
-annotation class Settings
+annotation class GlobalSettings
 
 @Qualifier
 annotation class ViewerOperation

@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.service.FileReader
 import kotlin.coroutines.cancellation.CancellationException
 
 interface RemoteDataSource {
-
     interface Factory {
         fun create(bookshelf: Bookshelf): RemoteDataSource
     }
@@ -30,5 +29,6 @@ interface RemoteDataSource {
     suspend fun file(path: String, resolveImageFolder: Boolean = false): File
 
     suspend fun fileReader(book: Book): FileReader?
+
     suspend fun getAttribute(path: String): FileAttribute?
 }

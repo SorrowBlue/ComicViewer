@@ -56,14 +56,14 @@ internal fun BookPage(
             book = book,
             bookPage = page,
             pageScale = pageScale,
-            onPageLoad = onPageLoad
+            onPageLoad = onPageLoad,
         )
 
         is BookPage.Split -> SplitBookPage(
             book = book,
             bookPage = page,
             pageScale = pageScale,
-            onPageLoad = onPageLoad
+            onPageLoad = onPageLoad,
         )
     }
 }
@@ -78,10 +78,11 @@ private fun DefaultBookPage(
     val context = LocalPlatformContext.current
     val request by remember(bookPage.index) {
         mutableStateOf(
-            ImageRequest.Builder(context)
+            ImageRequest
+                .Builder(context)
                 .data(BookPageImage(book to bookPage.index))
                 // TODO .transformations(WhiteTrimTransformation)
-                .build()
+                .build(),
         )
     }
     val painter = rememberAsyncImagePainter(
@@ -92,13 +93,13 @@ private fun DefaultBookPage(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .then(modifier)
+            .then(modifier),
     ) {
         Image(
             painter = painter,
             contentDescription = null,
             contentScale = pageScale.contentScale,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
         val state by painter.state.collectAsState()
         when (state) {
@@ -106,17 +107,17 @@ private fun DefaultBookPage(
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     Icon(
                         modifier = Modifier.size(96.dp),
                         painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
                     Text(
                         text = stringResource(Res.string.book_msg_page_not_loaded),
-                        style = ComicTheme.typography.bodyLarge
+                        style = ComicTheme.typography.bodyLarge,
                     )
 
                     OutlinedButton(onClick = { painter.restart() }) {
@@ -130,7 +131,7 @@ private fun DefaultBookPage(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .wrapContentSize()
-                        .padding(ComicTheme.dimension.margin)
+                        .padding(ComicTheme.dimension.margin),
                 )
             }
 
@@ -180,7 +181,7 @@ private fun SpreadBookPage(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxHeight()
-                .then(modifier)
+                .then(modifier),
         ) {
             AsyncImage(
                 model = BookPageImage(book to bookPage.nextIndex),
@@ -239,7 +240,6 @@ object SpreadCombineTransformation {
 }
 
 object SpreadSplitTransformation {
-
     fun unrated(change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
         if (state is AsyncImagePainter.State.Success) {
             change(state.result.image.toBitmap())
@@ -255,9 +255,11 @@ object SpreadSplitTransformation {
         if (state is AsyncImagePainter.State.Success) {
             state.copy(
                 painter = BitmapPainter(
-                    state.result.image.toBitmap()
-                        .createSplitBitmap(true).asImageBitmap()
-                )
+                    state.result.image
+                        .toBitmap()
+                        .createSplitBitmap(true)
+                        .asImageBitmap(),
+                ),
             )
         } else {
             state
@@ -268,9 +270,11 @@ object SpreadSplitTransformation {
         if (state is AsyncImagePainter.State.Success) {
             state.copy(
                 painter = BitmapPainter(
-                    state.result.image.toBitmap()
-                        .createSplitBitmap(false).asImageBitmap()
-                )
+                    state.result.image
+                        .toBitmap()
+                        .createSplitBitmap(false)
+                        .asImageBitmap(),
+                ),
             )
         } else {
             state

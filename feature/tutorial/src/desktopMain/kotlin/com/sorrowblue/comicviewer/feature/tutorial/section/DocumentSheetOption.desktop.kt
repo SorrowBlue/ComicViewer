@@ -23,10 +23,14 @@ import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManagePdfPluginSettingsUseCase
 import com.sorrowblue.comicviewer.feature.tutorial.APP_DOWNLOAD_LINK
+import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenContext
 import com.sorrowblue.comicviewer.feature.tutorial.immatureRectangleProgressBorder
+import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCoroutineScope
+import com.sorrowblue.comicviewer.framework.ui.AppState
+import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_found_pdf_plugin
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_not_found_pdf_plugin
@@ -35,13 +39,11 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberDirectoryPickerLauncher
 import io.github.vinceglb.filekit.path
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 data class DocumentSheetUiState(
     val folderPath: String = "",
@@ -80,7 +82,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
             trailingIcon = {
                 if (uiState.checking) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
                     )
                 } else {
                     IconButton(
@@ -90,13 +92,12 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
                     }
                 }
             },
-
             modifier = Modifier
                 .testTag("FolderSelect")
                 .immatureRectangleProgressBorder(
                     color = ComicTheme.colorScheme.secondary,
-                    enable = uiState.checking
-                )
+                    enable = uiState.checking,
+                ),
         )
     }
 }
@@ -104,10 +105,13 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
 @Composable
 internal fun rememberDocumentSheetState(
     uriHandler: UriHandler = LocalUriHandler.current,
-    scope: CoroutineScope = LocalCoroutineScope.current,
 ): DocumentSheetState {
-    val settingsUseCase = koinInject<ManagePdfPluginSettingsUseCase>()
-    val state = remember { DocumentSheetStateImpl(uriHandler, settingsUseCase, scope) }
+    val appState = LocalAppState.current
+    val managePdfPluginSettingsUseCase =
+        LocalPlatformContext.current.require<TutorialScreenContext.Factory>()
+            .createTutorialScreenContext().managePdfPluginSettingsUseCase
+    val state =
+        remember { DocumentSheetStateImpl(uriHandler, managePdfPluginSettingsUseCase, appState) }
     val pickerResultLauncher =
         rememberDirectoryPickerLauncher("ComicViewer PDFプラグインのインストールディレクトリを選択") {
             state.onDirectoryPickerResult(it)
@@ -117,19 +121,18 @@ internal fun rememberDocumentSheetState(
 }
 
 internal interface DocumentSheetState {
-
     val uiState: DocumentSheetUiState
 
     fun onDocumentDownloadClick()
+
     fun onSettingsClick()
 }
 
 private class DocumentSheetStateImpl(
     private val uriHandler: UriHandler,
     private val settingsUseCase: ManagePdfPluginSettingsUseCase,
-    private val scope: CoroutineScope,
+    private val appState: AppState,
 ) : DocumentSheetState {
-
     lateinit var directoryPickerLauncher: PickerResultLauncher
 
     override var uiState by mutableStateOf(DocumentSheetUiState())
@@ -144,28 +147,35 @@ private class DocumentSheetStateImpl(
 
     fun onDirectoryPickerResult(directory: PlatformFile?) {
         uiState = uiState.copy(checking = true)
-        scope.launch {
+        appState.coroutineScope.launch {
             logcat { "path=${directory?.path}" }
-            directory?.file?.resolve("app")?.listFiles {
-                logcat { "path=${it.path}" }
-                it.name.startsWith("pdf-desktop-") && it.extension == "jar"
-            }?.firstOrNull()?.let { jarFile ->
-                // OK
-                settingsUseCase.edit {
-                    it.copy(pluginJarPath = jarFile.absolutePath, pluginRootPath = directory.path)
-                }
-                uiState = uiState.copy(folderPath = directory.path)
-                uiState = uiState.copy(
-                    error = "",
-                    info = getString(Res.string.tutorial_msg_found_pdf_plugin)
-                )
-                delay(500)
-                uiState = uiState.copy(checking = false)
-            } ?: run {
+            directory
+                ?.file
+                ?.resolve("app")
+                ?.listFiles {
+                    logcat { "path=${it.path}" }
+                    it.name.startsWith("pdf-desktop-") && it.extension == "jar"
+                }?.firstOrNull()
+                ?.let { jarFile ->
+                    // OK
+                    settingsUseCase.edit {
+                        it.copy(
+                            pluginJarPath = jarFile.absolutePath,
+                            pluginRootPath = directory.path,
+                        )
+                    }
+                    uiState = uiState.copy(folderPath = directory.path)
+                    uiState = uiState.copy(
+                        error = "",
+                        info = getString(Res.string.tutorial_msg_found_pdf_plugin),
+                    )
+                    delay(500)
+                    uiState = uiState.copy(checking = false)
+                } ?: run {
                 uiState = uiState.copy(checking = false)
                 uiState = uiState.copy(
                     error = getString(Res.string.tutorial_msg_not_found_pdf_plugin),
-                    info = ""
+                    info = "",
                 )
             }
         }

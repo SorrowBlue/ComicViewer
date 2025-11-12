@@ -1,123 +1,54 @@
 package com.sorrowblue.comicviewer.feature.history
 
-import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.SavedStateHandle
-import androidx.paging.PagingData
-import com.sorrowblue.cmpdestinations.result.NavResult
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import androidx.paging.PagingConfig
+import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
-import com.sorrowblue.comicviewer.feature.history.section.HistoryContentsAction
-import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBarAction
-import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.SaveableScreenState
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.rememberSaveableScreenState
+import com.sorrowblue.comicviewer.domain.usecase.file.PagingHistoryBookUseCase
+import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
+import com.sorrowblue.comicviewer.framework.ui.rememberAdaptiveNavigationSuiteScaffoldState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 
-internal sealed interface HistoryScreenEvent {
-    data class Collection(val bookshelfId: BookshelfId, val path: String) : HistoryScreenEvent
-    data class OpenFolder(val file: File) : HistoryScreenEvent
-    data class Book(val book: com.sorrowblue.comicviewer.domain.model.file.Book) :
-        HistoryScreenEvent
+internal interface HistoryScreenState {
+    val lazyPagingItems: LazyPagingItems<Book>
+    val lazyGridState: LazyGridState
+    val scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
-    data object Back : HistoryScreenEvent
-    data object Settings : HistoryScreenEvent
-    data object DeleteAll : HistoryScreenEvent
-}
-
-internal interface HistoryScreenState :
-    SaveableScreenState {
-    val pagingDataFlow: Flow<PagingData<Book>>
-    val events: EventFlow<HistoryScreenEvent>
-    val scaffoldState: CanonicalScaffoldState<File.Key>
-    fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction)
-    fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
-    fun onHistoryContentsAction(action: HistoryContentsAction)
-    fun onNavResult(result: NavResult<Boolean>)
+    fun onNavResult(result: Boolean)
 }
 
 @Composable
-internal fun rememberHistoryScreenState(
-    scaffoldState: CanonicalScaffoldState<File.Key> = rememberCanonicalScaffoldState(),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: HistoryViewModel = koinViewModel(),
-    clearAllHistoryUseCase: ClearAllHistoryUseCase = koinInject(),
-): HistoryScreenState {
-    return rememberSaveableScreenState {
-        HistoryScreenStateImpl(
-            pagingDataFlow = viewModel.pagingDataFlow,
-            savedStateHandle = it,
-            scaffoldState = scaffoldState,
-            scope = scope,
-            clearAllHistoryUseCase = clearAllHistoryUseCase
+context(context: HistoryScreenContext)
+internal fun rememberHistoryScreenState(): HistoryScreenState = remember {
+    HistoryScreenStateImpl(clearAllHistoryUseCase = context.clearAllHistoryUseCase)
+}.apply {
+    this.lazyGridState = rememberLazyGridState()
+    this.scope = rememberCoroutineScope()
+    this.lazyPagingItems = rememberPagingItems {
+        context.pagingHistoryBookUseCase(
+            PagingHistoryBookUseCase.Request(PagingConfig(20)),
         )
     }
+    this.scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
 }
 
-private class HistoryScreenStateImpl(
-    override val savedStateHandle: SavedStateHandle,
-    private val scope: CoroutineScope,
-    override val pagingDataFlow: Flow<PagingData<Book>>,
-    override val scaffoldState: CanonicalScaffoldState<File.Key>,
-    private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
-) : HistoryScreenState {
+private class HistoryScreenStateImpl(private val clearAllHistoryUseCase: ClearAllHistoryUseCase) :
+    HistoryScreenState {
+    override lateinit var lazyGridState: LazyGridState
+    override lateinit var lazyPagingItems: LazyPagingItems<Book>
+    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
+    lateinit var scope: CoroutineScope
 
-    override val events = EventFlow<HistoryScreenEvent>()
-
-    override fun onHistoryTopAppBarAction(action: HistoryTopAppBarAction) {
-        when (action) {
-            HistoryTopAppBarAction.Back -> events.tryEmit(HistoryScreenEvent.Back)
-            HistoryTopAppBarAction.Settings -> events.tryEmit(HistoryScreenEvent.Settings)
-            HistoryTopAppBarAction.DeleteAll -> events.tryEmit(HistoryScreenEvent.DeleteAll)
-        }
-    }
-
-    override fun onNavResult(result: NavResult<Boolean>) {
-        when (result) {
-            NavResult.Canceled -> Unit
-            is NavResult.Value -> {
-                if (result.value) {
-                    clearAll()
-                }
-            }
-        }
-    }
-
-    override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
-        when (action) {
-            FileInfoSheetNavigator.Back -> scope.launch { scaffoldState.navigator.navigateBack() }
-            is FileInfoSheetNavigator.Collection -> scaffoldState.navigator.currentDestination?.contentKey?.let {
-                events.tryEmit(HistoryScreenEvent.Collection(it.bookshelfId, it.path))
-            }
-
-            is FileInfoSheetNavigator.OpenFolder -> events.tryEmit(
-                HistoryScreenEvent.OpenFolder(
-                    action.file
-                )
-            )
-        }
-    }
-
-    override fun onHistoryContentsAction(action: HistoryContentsAction) {
-        when (action) {
-            is HistoryContentsAction.Book -> events.tryEmit(HistoryScreenEvent.Book(action.book))
-            is HistoryContentsAction.FileInfo -> navigateToFileInfo(action.file)
-        }
-    }
-
-    private fun navigateToFileInfo(file: File) {
-        scope.launch {
-            scaffoldState.navigator.navigateTo(SupportingPaneScaffoldRole.Extra, file.key())
+    override fun onNavResult(result: Boolean) {
+        if (result) {
+            clearAll()
         }
     }
 

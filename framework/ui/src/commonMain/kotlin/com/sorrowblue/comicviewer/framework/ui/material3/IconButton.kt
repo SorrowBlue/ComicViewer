@@ -11,25 +11,21 @@ fun SettingsIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(
             imageVector = ComicIcons.Settings,
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }
 
 @Composable
-fun BackIconButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
+fun BackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     IconButton(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Icon(
             imageVector = ComicIcons.ArrowBack,
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }
@@ -39,7 +35,7 @@ fun CloseIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(
             imageVector = ComicIcons.Close,
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

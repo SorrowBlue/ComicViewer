@@ -17,7 +17,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfListItem
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.layout.union
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
-import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumnType
 
 @Composable
 internal fun BookshelfGridList(
@@ -29,22 +28,24 @@ internal fun BookshelfGridList(
 ) {
     ScrollbarBox(
         state = lazyGridState,
-        scrollbarWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
-            union contentPadding.asWindowInsets().only(WindowInsetsSides.Vertical)
+        scrollbarWindowInsets = WindowInsets.safeDrawing.only(
+            WindowInsetsSides.Vertical + WindowInsetsSides.End,
+        )
+            union contentPadding.asWindowInsets().only(WindowInsetsSides.Vertical),
     ) {
         LazyPagingColumn(
             autoPadding = false,
             contentPadding = contentPadding,
             lazyPagingItems = lazyPagingItems,
             state = lazyGridState,
-            type = LazyPagingColumnType.Grid(400),
-            modifier = Modifier.fillMaxSize()
+            type = LazyPagingColumn.Grid(400),
+            modifier = Modifier.fillMaxSize(),
         ) { _, item ->
             BookshelfListItem(
                 bookshelfFolder = item,
                 onClick = { onBookshelfClick(item.bookshelf.id, item.folder.path) },
                 onInfoClick = { onBookshelfInfoClick(item) },
-                modifier = Modifier.animateItem()
+                modifier = Modifier.animateItem(),
             )
         }
     }

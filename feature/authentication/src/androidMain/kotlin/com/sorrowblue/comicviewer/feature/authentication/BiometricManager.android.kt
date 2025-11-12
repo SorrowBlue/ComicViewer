@@ -13,16 +13,16 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
-internal actual class BiometricManager(
-    private val context: Context,
-) {
+internal actual class BiometricManager(private val context: Context) {
     actual suspend fun authenticate(): AuthenticationResult {
         val title = getString(Res.string.authentication_title_fingerprint_auth)
         return suspendCancellableCoroutine { continuation ->
             val biometricPrompt = BiometricPrompt(
                 context as FragmentActivity,
                 object : BiometricPrompt.AuthenticationCallback() {
-                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    override fun onAuthenticationSucceeded(
+                        result: BiometricPrompt.AuthenticationResult,
+                    ) {
                         super.onAuthenticationSucceeded(result)
                         logcat { "onAuthenticationSucceeded result=$result" }
                         continuation.resume(AuthenticationResult.Success) { cause, _, _ -> }
@@ -36,11 +36,14 @@ internal actual class BiometricManager(
                     override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                         logcat { "onAuthenticationError errorCode=$errorCode errString=$errString" }
                         super.onAuthenticationError(errorCode, errString)
-                        continuation.resume(AuthenticationResult.Error(errString.toString())) { cause, _, _ -> }
+                        continuation.resume(
+                            AuthenticationResult.Error(errString.toString()),
+                        ) { cause, _, _ -> }
                     }
-                }
+                },
             )
-            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            val promptInfo = BiometricPrompt.PromptInfo
+                .Builder()
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
                 .setTitle(title)
                 .setNegativeButtonText("Cancel TODO")

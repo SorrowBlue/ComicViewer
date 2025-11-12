@@ -84,7 +84,7 @@ fun Setting(
         modifier = modifier,
         summary = summary?.let { { Text(text = it) } },
         icon = icon?.let { { Icon(imageVector = it, contentDescription = null) } },
-        enabled = enabled
+        enabled = enabled,
     )
 }
 
@@ -103,7 +103,7 @@ fun Setting(
         modifier = modifier,
         summary = summary?.let { stringResource(it) },
         icon = icon,
-        enabled = enabled
+        enabled = enabled,
     )
 }
 
@@ -121,7 +121,7 @@ fun CheckedSetting(
         modifier = modifier,
         summary = summary?.let { { Text(text = it) } },
         icon = icon?.let { { Icon(imageVector = it, contentDescription = null) } },
-        widget = { Icon(imageVector = ComicIcons.Check, contentDescription = null) }
+        widget = { Icon(imageVector = ComicIcons.Check, contentDescription = null) },
     )
 }
 
@@ -144,7 +144,7 @@ fun SwitchSetting(
                 Switch(
                     checked = checked,
                     onCheckedChange = onCheckedChange,
-                    enabled = enabled
+                    enabled = enabled,
                 )
             },
             onClick = {},
@@ -153,7 +153,7 @@ fun SwitchSetting(
         Box(
             Modifier
                 .matchParentSize()
-                .clickable { onCheckedChange(!checked) }
+                .clickable { onCheckedChange(!checked) },
         )
     }
 }
@@ -175,7 +175,7 @@ fun SwitchSetting(
         modifier = modifier,
         summary = summary?.let { { Text(text = it) } },
         icon = icon?.let { { Icon(imageVector = it, contentDescription = null) } },
-        enabled = enabled
+        enabled = enabled,
     )
 }
 
@@ -196,7 +196,7 @@ fun SwitchSetting(
         modifier = modifier,
         summary = summary?.let { stringResource(it) },
         icon = icon,
-        enabled = enabled
+        enabled = enabled,
     )
 }
 
@@ -255,12 +255,12 @@ fun SliderSetting(
                     Label(
                         label = {
                             PlainTooltip(
-                                shape = CircleShape
+                                shape = CircleShape,
                             ) {
                                 Text(
                                     value.toString(),
                                     modifier = Modifier.widthIn(min = 40.dp),
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.Center,
                                 )
                             }
                         },
@@ -310,12 +310,12 @@ fun SliderSetting(
                     Label(
                         label = {
                             PlainTooltip(
-                                shape = CircleShape
+                                shape = CircleShape,
                             ) {
                                 Text(
                                     value.toString(),
                                     modifier = Modifier.widthIn(min = 40.dp),
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.Center,
                                 )
                             }
                         },
@@ -359,7 +359,7 @@ fun SliderSetting(
         steps = steps,
         widget = widget,
         icon = icon,
-        enabled = enabled
+        enabled = enabled,
     )
 }
 
@@ -384,7 +384,7 @@ fun SliderSetting(
         steps = steps,
         widget = widget,
         icon = icon,
-        enabled = enabled
+        enabled = enabled,
     )
 }
 
@@ -400,10 +400,12 @@ fun SettingsCategory(
                 start = ComicTheme.dimension.padding * 2,
                 top = ComicTheme.dimension.padding * 3,
                 end = ComicTheme.dimension.padding * 2,
-                bottom = ComicTheme.dimension.padding
-            )
+                bottom = ComicTheme.dimension.padding,
+            ),
         ) {
-            ProvideTextStyle(MaterialTheme.typography.titleSmall.copy(color = MaterialTheme.colorScheme.primary)) {
+            ProvideTextStyle(
+                MaterialTheme.typography.titleSmall.copy(color = MaterialTheme.colorScheme.primary),
+            ) {
                 title()
             }
         }
@@ -420,6 +422,6 @@ fun SettingsCategory(
     SettingsCategory(
         title = { Text(text = stringResource(title)) },
         modifier = modifier,
-        content = content
+        content = content,
     )
 }

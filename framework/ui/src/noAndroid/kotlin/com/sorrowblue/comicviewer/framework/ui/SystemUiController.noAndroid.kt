@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 @Composable
-actual fun rememberSystemUiController(): SystemUiController {
-    return remember { UnSupportSystemUiController }
+actual fun rememberSystemUiController(): SystemUiController = remember {
+    UnSupportSystemUiController
 }
 
 private object UnSupportSystemUiController : SystemUiController {

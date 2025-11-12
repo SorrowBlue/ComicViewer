@@ -2,19 +2,22 @@ package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.ShareFileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import okio.BufferedSource
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.InjectedParam
 
-@Factory
-@ShareFileClient
-internal actual class ShareFileClient(
-    @InjectedParam actual override val bookshelf: ShareContents,
-) : FileClient<ShareContents> {
+@AssistedInject
+internal actual class ShareFileClient(@Assisted actual override val bookshelf: ShareContents) :
+    FileClient<ShareContents> {
+    @AssistedFactory
+    actual fun interface Factory : FileClient.Factory<ShareContents> {
+        actual override fun create(bookshelf: ShareContents): ShareFileClient
+    }
+
     actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
         TODO("Not yet implemented")
     }

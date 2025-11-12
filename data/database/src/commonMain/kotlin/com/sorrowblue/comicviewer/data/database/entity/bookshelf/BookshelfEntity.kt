@@ -16,14 +16,13 @@ internal data class BookshelfEntity(
     @ColumnInfo("display_name") val displayName: String,
     val type: Type,
     @ColumnInfo(name = "deleted", defaultValue = "false") val deleted: Boolean,
-    /*↓SmbServer↓*/
+    // ↓SmbServer↓
     val host: String,
     val port: Int,
     val domain: String,
     val username: String,
     val password: DecryptedPassword,
 ) {
-
     companion object {
         const val ID = "id"
 
@@ -37,7 +36,7 @@ internal data class BookshelfEntity(
                 port = 0,
                 domain = "",
                 username = "",
-                password = DecryptedPassword("")
+                password = DecryptedPassword(""),
             )
 
             is SmbServer -> BookshelfEntity(
@@ -58,7 +57,7 @@ internal data class BookshelfEntity(
                 password = when (val auth = model.auth) {
                     SmbServer.Auth.Guest -> DecryptedPassword("")
                     is SmbServer.Auth.UsernamePassword -> DecryptedPassword(auth.password)
-                }
+                },
             )
 
             ShareContents -> BookshelfEntity(
@@ -70,7 +69,7 @@ internal data class BookshelfEntity(
                 port = 0,
                 domain = "",
                 username = "",
-                password = DecryptedPassword("")
+                password = DecryptedPassword(""),
             )
         }
     }
@@ -82,7 +81,7 @@ internal data class BookshelfEntity(
             id = id,
             displayName = displayName,
             fileCount = fileCount,
-            isDeleted = deleted
+            isDeleted = deleted,
         )
 
         Type.SMB -> SmbServer(
@@ -96,7 +95,7 @@ internal data class BookshelfEntity(
             } else {
                 SmbServer.Auth.UsernamePassword(domain, username, password.plane)
             },
-            fileCount = fileCount
+            fileCount = fileCount,
         )
 
         Type.SHARE_CONTENTS -> ShareContents

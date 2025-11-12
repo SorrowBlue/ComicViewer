@@ -51,7 +51,7 @@ fun CollectionListCardItem(
         CollectionListItem(
             collection = collection,
             content = content,
-            colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         )
     }
 }
@@ -76,7 +76,7 @@ private fun CollectionListItem(
                         Icon(
                             imageVector = ComicIcons.BrokenImage,
                             contentDescription = null,
-                            modifier = Modifier.wrapContentSize()
+                            modifier = Modifier.wrapContentSize(),
                         )
                     },
                     loading = if (LocalInspectionMode.current) {
@@ -85,7 +85,7 @@ private fun CollectionListItem(
                         {
                             CircularProgressIndicator(
                                 strokeWidth = 2.dp,
-                                modifier = Modifier.wrapContentSize()
+                                modifier = Modifier.wrapContentSize(),
                             )
                         }
                     },
@@ -119,6 +119,6 @@ private fun CollectionListItem(
 //            )
         },
         trailingContent = content,
-        modifier = modifier
+        modifier = modifier,
     )
 }

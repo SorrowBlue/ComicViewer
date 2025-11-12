@@ -38,14 +38,14 @@ internal fun AuthField(
                     onClick = { field.onValueChange(auth) },
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = list.size),
                     enabled = field.isEnabled,
-                    colors = SegmentedButtonDefaults.fixedColors()
+                    colors = SegmentedButtonDefaults.fixedColors(),
                 ) {
                     Text(
                         text = stringResource(
                             when (auth) {
                                 SmbEditorForm.Auth.Guest -> Res.string.bookshelf_edit_label_guest
                                 SmbEditorForm.Auth.UserPass -> Res.string.bookshelf_edit_label_username_password
-                            }
+                            },
                         ),
                     )
                 }
@@ -61,11 +61,10 @@ internal fun AuthField(
 internal const val AuthField: FieldName = "Auth"
 
 @Composable
-private fun Form<SmbEditorForm>.rememberAuthField(enabled: Boolean): FormField<SmbEditorForm.Auth> {
-    return rememberField(
+private fun Form<SmbEditorForm>.rememberAuthField(enabled: Boolean): FormField<SmbEditorForm.Auth> =
+    rememberField(
         name = AuthField,
         selector = { it.auth },
         updater = { copy(auth = it) },
-        enabled = enabled
+        enabled = enabled,
     )
-}

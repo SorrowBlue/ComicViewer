@@ -4,25 +4,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import platform.Foundation.NSLocale
 import platform.Foundation.NSLocaleIdentifier
 import platform.Foundation.NSUserDefaults
 import platform.Foundation.languageIdentifier
 import platform.Foundation.preferredLanguages
 
-actual object LocalAppLocaleIso {
+private const val LangKey = "AppleLanguages"
 
-    private const val LANG_KEY = "AppleLanguages"
-
+@SingleIn(AppScope::class)
+@Inject
+actual class AppLocaleIso {
     private val default = NSLocale.preferredLanguages.first() as String
 
-    private val LocalDefaultLanguage = staticCompositionLocalOf { default }
+    private val localDefaultLanguage = staticCompositionLocalOf { default }
 
     /**
      * 現在の[Locale]。nullの場合はシステムデフォルト。
      */
     actual val current: Locale?
-        @Composable get() = Locale(LocalDefaultLanguage.current)
+        @Composable get() = Locale(localDefaultLanguage.current)
 
     actual val locales: List<Locale>
         get() = NSLocale.preferredLanguages.filterIsInstance<String>().map(::Locale)
@@ -31,11 +35,11 @@ actual object LocalAppLocaleIso {
     actual infix fun provides(languageTag: String?): ProvidedValue<*> {
         val new = languageTag ?: default
         if (languageTag == null) {
-            NSUserDefaults.standardUserDefaults.removeObjectForKey(LANG_KEY)
+            NSUserDefaults.standardUserDefaults.removeObjectForKey(LangKey)
         } else {
-            NSUserDefaults.standardUserDefaults.setObject(arrayListOf(new), LANG_KEY)
+            NSUserDefaults.standardUserDefaults.setObject(arrayListOf(new), LangKey)
         }
-        return LocalDefaultLanguage.provides(new)
+        return localDefaultLanguage.provides(new)
     }
 
     /**
@@ -46,9 +50,9 @@ actual object LocalAppLocaleIso {
     actual fun set(locale: Locale?) {
         val new = locale?.toLanguageTag()
         if (new == null) {
-            NSUserDefaults.standardUserDefaults.removeObjectForKey(LANG_KEY)
+            NSUserDefaults.standardUserDefaults.removeObjectForKey(LangKey)
         } else {
-            NSUserDefaults.standardUserDefaults.setObject(arrayListOf(new), LANG_KEY)
+            NSUserDefaults.standardUserDefaults.setObject(arrayListOf(new), LangKey)
         }
     }
 }
@@ -57,5 +61,6 @@ actual object LocalAppLocaleIso {
  * [Locale]の表示名
  */
 actual val Locale.displayLanguageName: String
-    get() = platformLocale.run { displayNameForKey(NSLocaleIdentifier, languageIdentifier) }
+    get() = platformLocale
+        .run { displayNameForKey(NSLocaleIdentifier, languageIdentifier) }
         .orEmpty()

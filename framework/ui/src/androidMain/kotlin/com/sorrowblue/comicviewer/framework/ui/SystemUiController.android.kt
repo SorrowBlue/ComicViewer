@@ -14,9 +14,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 
 @Composable
-actual fun rememberSystemUiController(): SystemUiController {
-    return rememberSystemUiControllerAndroid()
-}
+actual fun rememberSystemUiController(): SystemUiController = rememberSystemUiControllerAndroid()
 
 /**
  * Remembers a [SystemUiController] for the given [window].
@@ -35,24 +33,20 @@ actual fun rememberSystemUiController(): SystemUiController {
  * won't throw an exception.
  */
 @Composable
-private fun rememberSystemUiControllerAndroid(
-    window: Window? = findWindow(),
-): SystemUiController {
+private fun rememberSystemUiControllerAndroid(window: Window? = findWindow()): SystemUiController {
     val view = LocalView.current
     return remember(view, window) { AndroidSystemUiController(window, view) }
 }
 
 @Composable
-private fun findWindow(): Window? =
-    (LocalView.current.parent as? DialogWindowProvider)?.window
-        ?: LocalView.current.context.findWindow()
+private fun findWindow(): Window? = (LocalView.current.parent as? DialogWindowProvider)?.window
+    ?: LocalView.current.context.findWindow()
 
-private tailrec fun Context.findWindow(): Window? =
-    when (this) {
-        is Activity -> window
-        is ContextWrapper -> baseContext.findWindow()
-        else -> null
-    }
+private tailrec fun Context.findWindow(): Window? = when (this) {
+    is Activity -> window
+    is ContextWrapper -> baseContext.findWindow()
+    else -> null
+}
 
 /**
  * A helper class for setting the navigation and status bar colors for a
@@ -61,10 +55,8 @@ private tailrec fun Context.findWindow(): Window? =
  * Typically you would use [rememberSystemUiController] to remember an
  * instance of this.
  */
-internal class AndroidSystemUiController(
-    window: Window?,
-    private val view: View,
-) : SystemUiController {
+internal class AndroidSystemUiController(window: Window?, private val view: View) :
+    SystemUiController {
     private val windowInsetsController = window?.let {
         WindowCompat.getInsetsController(it, view)
     }
@@ -77,7 +69,8 @@ internal class AndroidSystemUiController(
 
     override var isStatusBarVisible: Boolean
         get() {
-            return ViewCompat.getRootWindowInsets(view)
+            return ViewCompat
+                .getRootWindowInsets(view)
                 ?.isVisible(WindowInsetsCompat.Type.statusBars()) == true
         }
         set(value) {
@@ -90,7 +83,8 @@ internal class AndroidSystemUiController(
 
     override var isNavigationBarVisible: Boolean
         get() {
-            return ViewCompat.getRootWindowInsets(view)
+            return ViewCompat
+                .getRootWindowInsets(view)
                 ?.isVisible(WindowInsetsCompat.Type.navigationBars()) == true
         }
         set(value) {

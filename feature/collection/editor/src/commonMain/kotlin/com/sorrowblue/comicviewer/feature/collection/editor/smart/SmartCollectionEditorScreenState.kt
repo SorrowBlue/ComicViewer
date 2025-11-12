@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import soil.form.compose.Form
 
 internal interface SmartCollectionEditorScreenState {
-
     val uiState: SmartCollectionEditorScreenUiState
     val form: Form<SmartCollectionForm>
 
@@ -15,6 +14,5 @@ internal interface SmartCollectionEditorScreenState {
 }
 
 internal sealed interface SmartCollectionEditorScreenStateEvent {
-
     data object Complete : SmartCollectionEditorScreenStateEvent
 }

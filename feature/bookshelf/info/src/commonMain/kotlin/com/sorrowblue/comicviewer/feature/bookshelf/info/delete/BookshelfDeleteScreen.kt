@@ -13,9 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.sorrowblue.cmpdestinations.DestinationStyle
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.cmpdestinations.result.NavResultSender
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_cancel
@@ -23,7 +20,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_del
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_text
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_text_null
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_title
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
 internal data class BookshelfDeleteScreenUiState(
@@ -31,23 +27,23 @@ internal data class BookshelfDeleteScreenUiState(
     val isProcessing: Boolean = false,
 )
 
-@Serializable
-data class BookshelfDelete(
-    val bookshelfId: BookshelfId,
-)
-
-@Destination<BookshelfDelete>(style = DestinationStyle.Dialog::class)
 @Composable
-internal fun BookshelfDeleteScreen(
-    route: BookshelfDelete,
-    navResultSender: NavResultSender<Boolean>,
-    state: BookshelfDeleteScreenState = rememberBookshelfDeleteScreenState(route.bookshelfId),
+context(context: BookshelfDeleteScreenContext)
+fun BookshelfDeleteScreen(
+    bookshelfId: BookshelfId,
+    onBackClick: () -> Unit,
+    onComplete: () -> Unit,
 ) {
+    val state = rememberBookshelfDeleteScreenState(
+        bookshelfId = bookshelfId,
+        getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
+        updateDeletionFlagUseCase = context.updateDeletionFlagUseCase,
+    )
     BookshelfDeleteScreen(
         uiState = state.uiState,
-        onDismissRequest = navResultSender::navigateBack,
-        onDismissClick = { navResultSender.navigateBack(false) },
-        onConfirmClick = { state.onConfirmClick { navResultSender.navigateBack(true) } }
+        onDismissRequest = onBackClick,
+        onDismissClick = onBackClick,
+        onConfirmClick = { state.onConfirmClick(onComplete) },
     )
 }
 
@@ -73,14 +69,14 @@ internal fun BookshelfDeleteScreen(
             TextButton(
                 onClick = onConfirmClick,
                 enabled = !uiState.isProcessing,
-                contentPadding = if (uiState.isProcessing) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding
+                contentPadding = if (uiState.isProcessing) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding,
             ) {
                 AnimatedVisibility(uiState.isProcessing, label = "progress") {
                     Row {
                         CircularProgressIndicator(
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(ButtonDefaults.IconSize),
-                            color = ButtonDefaults.textButtonColors().disabledContentColor
+                            color = ButtonDefaults.textButtonColors().disabledContentColor,
                         )
                         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
                     }
@@ -91,7 +87,7 @@ internal fun BookshelfDeleteScreen(
         dismissButton = {
             TextButton(
                 onClick = onDismissClick,
-                enabled = !uiState.isProcessing
+                enabled = !uiState.isProcessing,
             ) {
                 Text(stringResource(Res.string.bookshelf_info_delete_btn_cancel))
             }
@@ -100,6 +96,6 @@ internal fun BookshelfDeleteScreen(
             DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false)
         } else {
             DialogProperties()
-        }
+        },
     )
 }

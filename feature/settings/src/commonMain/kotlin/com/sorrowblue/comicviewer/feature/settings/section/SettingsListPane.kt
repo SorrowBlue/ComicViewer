@@ -32,11 +32,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,40 +54,7 @@ import comicviewer.feature.settings.generated.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun SettingsListPane(
-    navigator: ThreePaneScaffoldNavigator<SettingsItem>,
-    onBackClick: () -> Unit,
-    onSettingsClick: (SettingsItem) -> Unit,
-    onSettingsLongClick: (SettingsItem) -> Unit,
-    modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState(),
-) {
-    val settingsList = remember { SettingsItem.entries }
-    if (navigator.scaffoldDirective.maxHorizontalPartitions == 1) {
-        CompactListPane(
-            settingsList = settingsList,
-            onSettingsClick = onSettingsClick,
-            onSettingsLongClick = onSettingsLongClick,
-            onBackClick = onBackClick,
-            modifier = modifier,
-            lazyListState = lazyListState
-        )
-    } else {
-        ListPane(
-            settingsList = settingsList,
-            currentSettings = navigator.currentDestination?.contentKey
-                ?: SettingsItem.DISPLAY,
-            onSettingsClick = onSettingsClick,
-            onSettingsLongClick = onSettingsLongClick,
-            onBackClick = onBackClick,
-            modifier = modifier,
-            lazyListState = lazyListState
-        )
-    }
-}
-
-@Composable
-private fun CompactListPane(
+internal fun CompactListPane(
     settingsList: List<SettingsItem>,
     onSettingsClick: (SettingsItem) -> Unit,
     onSettingsLongClick: (SettingsItem) -> Unit,
@@ -104,16 +69,18 @@ private fun CompactListPane(
                 title = { Text(text = stringResource(Res.string.settings_title)) },
                 navigationIcon = { CloseIconButton(onBackClick) },
                 scrollBehavior = scrollBehavior,
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                ),
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         LazyColumn(
             state = lazyListState,
             contentPadding = contentPadding,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             items(settingsList) { settings ->
                 ListItem(
@@ -121,13 +88,13 @@ private fun CompactListPane(
                     leadingContent = {
                         Icon(
                             imageVector = settings.icon,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     modifier = Modifier.combinedClickable(
                         onClick = { onSettingsClick(settings) },
-                        onLongClick = { onSettingsLongClick(settings) }
-                    )
+                        onLongClick = { onSettingsLongClick(settings) },
+                    ),
                 )
             }
         }
@@ -135,7 +102,7 @@ private fun CompactListPane(
 }
 
 @Composable
-private fun ListPane(
+internal fun ListPane(
     settingsList: List<SettingsItem>,
     currentSettings: SettingsItem?,
     onSettingsClick: (SettingsItem) -> Unit,
@@ -147,21 +114,23 @@ private fun ListPane(
     PermanentDrawerSheet(
         modifier = modifier,
         drawerContainerColor = ComicTheme.colorScheme.surfaceContainerHighest,
-        windowInsets = WindowInsets(0)
+        windowInsets = WindowInsets(0),
     ) {
         LazyColumn(
             state = lazyListState,
-            contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
-                .asPaddingValues()
+            contentPadding = WindowInsets.safeDrawing
+                .only(
+                    WindowInsetsSides.Start + WindowInsetsSides.Vertical,
+                ).asPaddingValues(),
         ) {
             item {
                 TopAppBar(
                     title = { Text(text = stringResource(Res.string.settings_title)) },
                     navigationIcon = { CloseIconButton(onBackClick) },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = ComicTheme.colorScheme.surfaceContainerHighest
+                        containerColor = ComicTheme.colorScheme.surfaceContainerHighest,
                     ),
-                    windowInsets = WindowInsets(0)
+                    windowInsets = WindowInsets(0),
                 )
             }
             items(settingsList) { settings2 ->
@@ -172,7 +141,7 @@ private fun ListPane(
                     onLongClick = { onSettingsLongClick(settings2) },
                     selected = currentSettings == settings2,
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 16.dp),
                 )
             }
         }
@@ -204,17 +173,16 @@ fun NavigationDrawerItem(
                 indication = ripple(
                     bounded = true,
                     radius = Dp.Unspecified,
-                    color = Color.Unspecified
+                    color = Color.Unspecified,
                 ),
-                onClick = { }
-            )
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+                onClick = { },
+            ).combinedClickable(onClick = onClick, onLongClick = onLongClick),
         shape = shape,
         color = colors.containerColor(selected).value,
     ) {
         Row(
             Modifier.padding(start = 16.dp, end = 24.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             if (icon != null) {
                 val iconColor = colors.iconColor(selected).value

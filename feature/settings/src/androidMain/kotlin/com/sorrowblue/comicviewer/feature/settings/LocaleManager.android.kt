@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 
 actual class LocaleManager {
-
-    actual fun currentLocale(): String {
-        return AppCompatDelegate.getApplicationLocales().toLanguageTags()
-    }
+    actual fun currentLocale(): String = AppCompatDelegate.getApplicationLocales().toLanguageTags()
 
     actual fun setSystemDefault() {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())

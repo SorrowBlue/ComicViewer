@@ -20,7 +20,6 @@ import comicviewer.framework.ui.generated.resources.label_settings
 import org.jetbrains.compose.resources.stringResource
 
 interface OverflowMenuScope {
-
     val state: OverflowMenuState
 }
 
@@ -38,7 +37,7 @@ fun OverflowMenuScope.OverflowMenuItem(
             state.collapse()
             onClick()
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -55,9 +54,7 @@ fun OverflowMenuScope.SettingsOverflowMenuItem(
     )
 }
 
-fun AppBarRowScope2.settingsItem(
-    onClick: () -> Unit,
-) {
+fun AppBarRowScope2.settingsItem(onClick: () -> Unit) {
     clickableItem(
         label = { Text(stringResource(Res.string.label_settings)) },
         icon = {
@@ -79,7 +76,7 @@ fun OverflowMenu(
         }
         DropdownMenu(
             expanded = state.expanded,
-            onDismissRequest = state::collapse
+            onDismissRequest = state::collapse,
         ) {
             content.invoke(object : OverflowMenuScope {
                 override val state = state

@@ -7,7 +7,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.file)
-                implementation(libs.compose.multiplatform.coreUri)
+                implementation(libs.androidx.coreUri)
             }
         }
         androidMain {
@@ -15,7 +15,6 @@ kotlin {
                 implementation(projects.framework.notification)
 
                 implementation(libs.androidx.work.runtime)
-                implementation(libs.koin.androidxWorkmanager)
             }
         }
     }

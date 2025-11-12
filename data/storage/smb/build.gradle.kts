@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 kotlin {
@@ -11,7 +11,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.filekit.compose)
                 implementation(libs.squareup.okio)
-                implementation(libs.compose.multiplatform.coreUri)
+                implementation(libs.androidx.coreUri)
             }
         }
         androidMain {

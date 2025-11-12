@@ -7,6 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer.Auth
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
+import com.sorrowblue.comicviewer.framework.common.platformGraph
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -19,34 +20,32 @@ import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-internal class BookshelfInsertReceiver : BroadcastReceiver(), KoinComponent {
-
-    private val registerBookshelfUseCase: RegisterBookshelfUseCase by inject()
-
+internal class BookshelfInsertReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        val factory = context.platformGraph as BookshelfInsertReceiverContext.Factory
+        val registerBookshelfUseCase =
+            factory.createBookshelfInsertReceiverContext().registerBookshelfUseCase
         logcat { "onReceive: ${intent.getStringExtra("json")}" }
         if (!intent.hasExtra("json")) return
         val jsonString = intent.getStringExtra("json") ?: return
         runCatching {
-            Json.Default.decodeFromString<InsertJson>(jsonString)
+            Json.decodeFromString<InsertJson>(jsonString)
         }.onSuccess { insertJson ->
             goAsync {
                 insertJson.bookshelf.forEach {
                     registerBookshelfUseCase(
                         RegisterBookshelfUseCase.Request(
                             it.toModel(),
-                            it.path
-                        )
+                            it.path,
+                        ),
                     ).fold(
                         onSuccess = { bookshelf ->
                             logcat(TAG) { "insert success. $bookshelf" }
                         },
                         onError = { error ->
                             logcat(TAG, LogPriority.ERROR) { "insert error. $error" }
-                        }
+                        },
                     )
                 }
             }
@@ -72,10 +71,10 @@ internal class BookshelfInsertReceiver : BroadcastReceiver(), KoinComponent {
                     coroutineScope { this.block() }
                 } catch (_: CancellationException) {
                     // Regular cancellation, do nothing. The scope will always be cancelled below.
-                } catch (e: Throwable) {
+                } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
                     logcat(
                         TAG,
-                        LogPriority.ERROR
+                        LogPriority.ERROR,
                     ) { "BroadcastReceiver execution failed. ${e.asLog()}" }
                 } finally {
                     // Make sure the parent scope is cancelled in all cases. Nothing can be in the
@@ -92,7 +91,7 @@ internal class BookshelfInsertReceiver : BroadcastReceiver(), KoinComponent {
                     // See b/257513022.
                     logcat(
                         TAG,
-                        LogPriority.ERROR
+                        LogPriority.ERROR,
                     ) { "Error thrown when trying to finish broadcast. ${e.asLog()}" }
                 }
             }
@@ -103,9 +102,7 @@ internal class BookshelfInsertReceiver : BroadcastReceiver(), KoinComponent {
 private val TAG = BookshelfInsertReceiver::class.java.simpleName
 
 @Serializable
-internal data class InsertJson(
-    val bookshelf: List<SmbServerJson>,
-)
+internal data class InsertJson(val bookshelf: List<SmbServerJson>)
 
 @Serializable
 internal data class SmbServerJson(
@@ -117,11 +114,10 @@ internal data class SmbServerJson(
     val password: String,
     val path: String,
 ) {
-
     fun toModel() = SmbServer(
         displayName = displayName,
         host = host,
         port = port,
-        auth = Auth.UsernamePassword(domain, username, password)
+        auth = Auth.UsernamePassword(domain, username, password),
     )
 }

@@ -16,7 +16,6 @@ internal abstract class OkioKSerializer<T>(
     private val serializer: KSerializer<T>,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : OkioSerializer<T> {
-
     abstract val fileName: String
 
     override suspend fun readFrom(source: BufferedSource) = withContext(coroutineDispatcher) {

@@ -39,13 +39,13 @@ internal fun CollectionSortDropdownMenu(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
-        modifier = modifier
+        modifier = modifier,
     ) {
         TextButton(
             onClick = { expanded = true },
             contentPadding = ButtonDefaults.TextButtonWithIconContentPadding,
             modifier = Modifier
-                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true),
         ) {
             Text(stringResource(Res.string.collection_add_label_sort))
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))

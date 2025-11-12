@@ -10,6 +10,8 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import logcat.asLog
+import logcat.logcat
 
 typealias EventFlow<T> = MutableSharedFlow<T>
 
@@ -37,12 +39,12 @@ fun SafeLaunchedEffect(key: Any?, block: suspend CoroutineScope.() -> Unit) {
     val composeEffectErrorHandler = LocalComposeEffectErrorHandler.current
     val currentBlock by rememberUpdatedState(block)
     LaunchedEffect(key) {
-        try {
+        runCatching {
             currentBlock()
-        } catch (e: Exception) {
+        }.onFailure {
             ensureActive()
-            e.printStackTrace()
-            composeEffectErrorHandler.emit(e)
+            logcat { it.asLog() }
+            composeEffectErrorHandler.emit(it)
         }
     }
 }
@@ -51,7 +53,6 @@ interface ComposeEffectErrorHandler {
     suspend fun emit(throwable: Throwable)
 }
 
-@Suppress("CompositionLocalAllowlist")
 val LocalComposeEffectErrorHandler = staticCompositionLocalOf<ComposeEffectErrorHandler> {
     object : ComposeEffectErrorHandler {
         override suspend fun emit(throwable: Throwable) {

@@ -77,13 +77,6 @@
       ]
     },
     {
-      "groupName": "io.insert-koin",
-      "groupSlug": "io.insert-koin",
-      "matchPackageNames": [
-        "io.insert-koin{/,}**"
-      ]
-    },
-    {
       "groupName": "com.sorrowblue.cmpdestinations",
       "groupSlug": "com.sorrowblue.cmpdestinations",
       "matchPackageNames": [

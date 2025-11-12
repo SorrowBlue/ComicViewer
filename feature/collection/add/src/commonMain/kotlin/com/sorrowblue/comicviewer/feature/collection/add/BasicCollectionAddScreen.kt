@@ -29,14 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onLayoutRectChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.cmpdestinations.DestinationStyle
-import com.sorrowblue.cmpdestinations.annotation.Destination
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSortDropdownMenu
@@ -51,45 +48,14 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_add
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
-
-@Serializable
-internal data class BasicCollectionAdd(val bookshelfId: BookshelfId, val path: String)
-
-interface BasicCollectionAddNavigator {
-    fun onCollectionCreateClick(bookshelfId: BookshelfId, path: String)
-}
-
-@Destination<BasicCollectionAdd>(style = DestinationStyle.Dialog::class)
-@Composable
-internal fun BasicCollectionAddScreen(
-    route: BasicCollectionAdd,
-    navController: NavController = koinInject(),
-    navigator: BasicCollectionAddNavigator = koinInject(),
-    state: BasicCollectionAddScreenState = rememberBasicCollectionAddScreenState(route),
-) {
-    BasicCollectionAddScreen(
-        uiState = state.uiState,
-        lazyPagingItems = state.lazyPagingItems,
-        lazyListState = state.lazyListState,
-        onDismissRequest = navController::popBackStack,
-        onClick = state::onCollectionClick,
-        onClickCollectionSort = state::onClickCollectionSort,
-        onCollectionCreateClick = {
-            navigator.onCollectionCreateClick(route.bookshelfId, route.path)
-        }
-    )
-}
 
 internal data class BasicCollectionAddScreenUiState(
     val collectionSort: CollectionSort = CollectionSort.Recent,
 )
 
 @Composable
-private fun BasicCollectionAddScreen(
+internal fun BasicCollectionAddScreen(
     uiState: BasicCollectionAddScreenUiState,
     lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>,
     onDismissRequest: () -> Unit,
@@ -104,7 +70,7 @@ private fun BasicCollectionAddScreen(
         sheetState = sheetState,
         dragHandle = null,
         contentWindowInsets = { WindowInsets(0) },
-        modifier = Modifier.statusBarsPadding()
+        modifier = Modifier.statusBarsPadding(),
     ) {
         var buttonHeight by remember { mutableStateOf(0.dp) }
         val density = LocalDensity.current
@@ -124,7 +90,7 @@ private fun BasicCollectionAddScreen(
                             with(density) {
                                 buttonHeight = it.height.toDp() + FabSpacing
                             }
-                        }
+                        },
                 )
             },
             contentWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
@@ -133,15 +99,19 @@ private fun BasicCollectionAddScreen(
                 BasicCollectionContent(
                     state = lazyListState,
                     lazyPagingItems = lazyPagingItems,
-                    contentPadding = contentPadding
-                        .plus(PaddingValues(top = ButtonDefaults.MinHeight, bottom = buttonHeight)),
-                    onClick = onClick
+                    contentPadding = contentPadding.plus(
+                        PaddingValues(top = ButtonDefaults.MinHeight, bottom = buttonHeight),
+                    ),
+                    onClick = onClick,
                 )
                 CollectionSortDropdownMenu(
                     collectionSort = uiState.collectionSort,
                     onClick = onClickCollectionSort,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                        .padding(contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.End))
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(
+                            contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.End),
+                        ),
                 )
             }
         }
@@ -156,7 +126,8 @@ private fun BasicCollectionAddScreenPreview() {
     PreviewTheme {
         BasicCollectionAddScreen(
             uiState = BasicCollectionAddScreenUiState(),
-            lazyPagingItems = PagingData.flowData { fakeBasicCollection(it) as Collection to true }
+            lazyPagingItems = PagingData
+                .flowData { fakeBasicCollection(it) as Collection to true }
                 .collectAsLazyPagingItems(),
             onDismissRequest = {},
             onClick = { _, _ -> },
@@ -164,8 +135,8 @@ private fun BasicCollectionAddScreenPreview() {
             onCollectionCreateClick = {},
             sheetState = rememberStandardBottomSheetState(
                 initialValue = SheetValue.Expanded,
-                skipHiddenState = true
-            )
+                skipHiddenState = true,
+            ),
         )
     }
 }

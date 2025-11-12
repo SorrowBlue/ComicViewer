@@ -13,5 +13,6 @@
     </plurals>
     <string name="file_desc_open_file_info">Open file information</string>
     <string name="file_action_change_grid_size">Change Grid size</string>
+    <string name="file_action_show_hidden">Show hidden files</string>
 
 </resources>

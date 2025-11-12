@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -27,7 +28,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
 import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_file_count
 import org.jetbrains.compose.resources.pluralStringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick: () -> Unit) {
@@ -36,7 +36,7 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
             Text(
                 text = collection.name,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         },
         supportingContent = {
@@ -44,8 +44,8 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
                 text = pluralStringResource(
                     Res.plurals.collection_add_label_file_count,
                     collection.count,
-                    collection.count
-                )
+                    collection.count,
+                ),
             )
         },
         leadingContent = {
@@ -57,12 +57,15 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
                     Icon(
                         imageVector = ComicIcons.BrokenImage,
                         contentDescription = null,
-                        modifier = Modifier.wrapContentSize()
+                        modifier = Modifier.wrapContentSize(),
                     )
                 },
-                modifier = Modifier.size(56.dp)
+                modifier = Modifier
+                    .size(56.dp)
                     .clip(CardDefaults.shape)
-                    .background(ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor))
+                    .background(
+                        ComicTheme.colorScheme.imageBackground(ListItemDefaults.containerColor),
+                    ),
             )
         },
         trailingContent = {
@@ -70,7 +73,7 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
                 Icon(imageVector = ComicIcons.Check, contentDescription = null)
             }
         },
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = Modifier.clickable(onClick = onClick),
     )
 }
 
@@ -82,13 +85,13 @@ private fun CollectionListItemPreview() {
             CollectionListItem(
                 collection = fakeBasicCollection(),
                 exist = true,
-                onClick = {}
+                onClick = {},
             )
             Spacer(modifier = Modifier.size(8.dp))
             CollectionListItem(
                 collection = fakeBasicCollection(),
                 exist = false,
-                onClick = {}
+                onClick = {},
             )
         }
     }

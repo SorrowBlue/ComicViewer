@@ -23,13 +23,13 @@ import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_info_label_add_read_later
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun ReadlaterButton(
@@ -52,7 +52,7 @@ internal fun ReadlaterButton(
             }
         },
         enabled = !loading,
-        loading = loading
+        loading = loading,
     )
 }
 
@@ -72,9 +72,9 @@ fun RotatingBorderAnimation(
         targetValue = 1f, // 0f から 1f で1周を表す
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart // 繰り返しの種類 (Restart: 最初から)
+            repeatMode = RepeatMode.Restart, // 繰り返しの種類 (Restart: 最初から)
         ),
-        label = "BorderProgress"
+        label = "BorderProgress",
     )
 
     // パス操作のためのオブジェクト (状態として保持し、再利用)
@@ -90,7 +90,7 @@ fun RotatingBorderAnimation(
             left = inset,
             top = inset,
             right = this.size.width - inset,
-            bottom = this.size.height - inset
+            bottom = this.size.height - inset,
         )
 
         // 1. 四角形のパスを作成
@@ -119,7 +119,7 @@ fun RotatingBorderAnimation(
                 startDistance = startDistance,
                 stopDistance = endDistance,
                 destination = segmentPath,
-                startWithMoveTo = true // 新しいパスの開始点をMoveToにする
+                startWithMoveTo = true, // 新しいパスの開始点をMoveToにする
             )
         } else {
             // 線分がパスの終点と始点をまたぐ場合
@@ -136,8 +136,8 @@ fun RotatingBorderAnimation(
             style = Stroke(
                 width = strokeWidthPx,
                 cap = strokeCap, // 線の端の形状
-                join = StrokeJoin.Round // 角の形状 (Miter: 尖る, Round: 丸める, Bevel: 斜めにカット)
-            )
+                join = StrokeJoin.Round, // 角の形状 (Miter: 尖る, Round: 丸める, Bevel: 斜めにカット)
+            ),
         )
     }
 }
@@ -148,14 +148,14 @@ fun RotatingBorderAnimation(
 private fun RotatingBorderAnimationPreview() {
     Box(
         modifier = Modifier.padding(32.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         RotatingBorderAnimation(
             borderWidth = 8.dp,
             borderColor = Color.Magenta,
             segmentLengthRatio = 0.3f,
             durationMillis = 3000,
-            strokeCap = StrokeCap.Round // 端を丸める
+            strokeCap = StrokeCap.Round, // 端を丸める
         )
     }
 }

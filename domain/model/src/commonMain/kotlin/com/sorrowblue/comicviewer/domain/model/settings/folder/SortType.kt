@@ -8,7 +8,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 sealed interface SortType {
-
     /** Indicates whether the sorting is ascending. */
     val isAsc: Boolean
 
@@ -37,7 +36,6 @@ sealed interface SortType {
     data class Size(override val isAsc: Boolean) : SortType
 
     companion object {
-
         /** List of all available sort type entries. */
         val entries
             get() = listOf(
@@ -46,7 +44,7 @@ sealed interface SortType {
                 Date(true),
                 Date(false),
                 Size(true),
-                Size(false)
+                Size(false),
             )
     }
 }

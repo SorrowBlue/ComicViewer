@@ -16,7 +16,6 @@ import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -49,7 +48,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                             val androidSigningDebugStorePassword: String? by project
                             val androidSigningDebugKeyAlias: String? by project
                             val androidSigningDebugKeyPassword: String? by project
-                            storeFile = file(androidSigningDebugStoreFile!!)
+                            storeFile = file(requireNotNull(androidSigningDebugStoreFile))
                             storePassword = androidSigningDebugStorePassword
                             keyAlias = androidSigningDebugKeyAlias
                             keyPassword = androidSigningDebugKeyPassword
@@ -64,7 +63,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                             val androidSigningReleaseStorePassword: String? by project
                             val androidSigningReleaseKeyAlias: String? by project
                             val androidSigningReleaseKeyPassword: String? by project
-                            storeFile = file(androidSigningReleaseStoreFile!!)
+                            storeFile = file(requireNotNull(androidSigningReleaseStoreFile))
                             storePassword = androidSigningReleaseStorePassword
                             keyAlias = androidSigningReleaseKeyAlias
                             keyPassword = androidSigningReleaseKeyPassword

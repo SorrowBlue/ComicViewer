@@ -40,10 +40,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.WindowInsets
 
-object ExtraPaneScaffoldDefaults {
-    val HorizontalPadding = 24.dp
-}
-
 @Composable
 fun ExtraPaneScaffold(
     title: @Composable () -> Unit,
@@ -60,7 +56,7 @@ fun ExtraPaneScaffold(
     }
     val scrollBehavior = if (singlePane) TopAppBarDefaults.pinnedScrollBehavior() else null
     val containerColor by animateColorAsState(
-        if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainerHigh
+        if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainerHigh,
     )
     Scaffold(
         topBar = {
@@ -74,11 +70,13 @@ fun ExtraPaneScaffold(
                         }
                     },
                     windowInsets = if (singlePane) {
-                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
+                        )
                     } else {
                         WindowInsets(0)
                     },
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
                 )
                 if (scrollState != null && scrollBehavior == null) {
                     if (scrollState.canScrollBackward) {
@@ -87,7 +85,13 @@ fun ExtraPaneScaffold(
                 }
             }
         },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = if (singlePane) {
+            WindowInsets.safeDrawing
+        } else {
+            WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Vertical + WindowInsetsSides.End,
+            )
+        },
         containerColor = containerColor,
         modifier = if (scrollBehavior != null) {
             modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -98,9 +102,13 @@ fun ExtraPaneScaffold(
                 }
             }
             modifier
-                .windowInsetsPadding(WindowInsets.safeDrawing.union(marginWindowInsets))
-                .clip(ComicTheme.shapes.large)
-        }
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing
+                        .only(
+                            WindowInsetsSides.Vertical + WindowInsetsSides.End,
+                        ).union(marginWindowInsets),
+                ).clip(ComicTheme.shapes.large)
+        },
     ) {
         Column {
             Column(modifier = Modifier.weight(1f)) {
@@ -111,7 +119,7 @@ fun ExtraPaneScaffold(
                 Spacer(Modifier.height(16.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-                    modifier = Modifier.padding(horizontal = 24.dp)
+                    modifier = Modifier.padding(horizontal = 24.dp),
                 ) {
                     actions()
                 }
@@ -119,4 +127,8 @@ fun ExtraPaneScaffold(
             }
         }
     }
+}
+
+object ExtraPaneScaffoldDefaults {
+    val HorizontalPadding = 24.dp
 }

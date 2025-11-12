@@ -30,7 +30,7 @@ internal object OutsideDocumentFileReader {
                 getReader = singletonClass.getMethod(
                     "getReader",
                     ISeekableInputStream::class.java,
-                    String::class.java
+                    String::class.java,
                 )
             }
             inited = true
@@ -39,14 +39,6 @@ internal object OutsideDocumentFileReader {
         }
     }
 
-    fun getReader(
-        seekableInputStream: ISeekableInputStream,
-        magic: String,
-    ): FileReader {
-        return getReader!!.invoke(
-            instance,
-            seekableInputStream,
-            magic
-        ) as FileReader
-    }
+    fun getReader(seekableInputStream: ISeekableInputStream, magic: String): FileReader =
+        requireNotNull(getReader).invoke(instance, seekableInputStream, magic) as FileReader
 }

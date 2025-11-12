@@ -39,7 +39,7 @@ internal fun <T> DropdownMenuField(
                     Modifier.fillMaxWidth()
                 } else {
                     Modifier
-                }
+                },
             ),
             value = value(field.value),
             isError = field.hasError,

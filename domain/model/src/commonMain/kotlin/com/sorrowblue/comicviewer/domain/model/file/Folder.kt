@@ -15,15 +15,13 @@ data class Folder private constructor(
     override val cacheKey: String,
     override val count: Int,
 ) : IFolder {
-
     fun copy(parent: String = this.parent, sortIndex: Int = this.sortIndex) = copy(
         bookshelfId = bookshelfId,
         parent = parent,
-        sortIndex = sortIndex
+        sortIndex = sortIndex,
     )
 
     companion object {
-
         @InternalDataApi
         operator fun invoke(
             bookshelfId: BookshelfId,
@@ -46,7 +44,7 @@ data class Folder private constructor(
             isHidden = isHidden,
             sortIndex = sortIndex,
             cacheKey = cacheKey,
-            count = count
+            count = count,
         )
     }
 }

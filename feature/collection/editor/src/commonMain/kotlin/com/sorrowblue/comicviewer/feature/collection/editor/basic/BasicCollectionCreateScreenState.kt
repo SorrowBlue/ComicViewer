@@ -19,10 +19,8 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create_add
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.koin.compose.koinInject
 import soil.form.compose.Form
 import soil.form.compose.rememberForm
 import soil.form.compose.rememberFormState
@@ -35,24 +33,25 @@ internal interface BasicCollectionCreateScreenState {
     val uiState: BasicCollectionsCreateScreenUiState
     val form: Form<BasicCollectionForm>
     val event: EventFlow<BasicCollectionCreateScreenStateEvent>
+
     fun onSubmit(formData: BasicCollectionForm)
 }
 
 @Composable
+context(context: BasicCollectionCreateScreenContext)
 internal fun rememberBasicCollectionCreateScreenState(
-    route: BasicCollectionCreate,
-    createCollectionUseCase: CreateCollectionUseCase = koinInject(),
-    addCollectionFileUseCase: AddCollectionFileUseCase = koinInject(),
-    notificationManager: NotificationManager = koinInject(),
-    scope: CoroutineScope = rememberCoroutineScope(),
+    bookshelfId: BookshelfId,
+    path: String,
 ): BasicCollectionCreateScreenState {
+    val scope = rememberCoroutineScope()
     return remember {
         BasicCollectionCreateScreenStateImpl(
-            route = route,
-            createCollectionUseCase = createCollectionUseCase,
-            addCollectionFileUseCase = addCollectionFileUseCase,
-            notificationManager = notificationManager,
-            scope = scope
+            bookshelfId = bookshelfId,
+            path = path,
+            createCollectionUseCase = context.createCollectionUseCase,
+            addCollectionFileUseCase = context.addCollectionFileUseCase,
+            notificationManager = context.notificationManager,
+            scope = scope,
         )
     }.apply {
         val formState =
@@ -64,12 +63,12 @@ internal fun rememberBasicCollectionCreateScreenState(
 
 private class BasicCollectionCreateScreenStateImpl(
     var scope: CoroutineScope,
-    private val route: BasicCollectionCreate,
+    private val bookshelfId: BookshelfId,
+    private val path: String,
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val notificationManager: NotificationManager,
 ) : BasicCollectionCreateScreenState {
-
     override lateinit var form: Form<BasicCollectionForm>
 
     override val event = EventFlow<BasicCollectionCreateScreenStateEvent>()
@@ -78,28 +77,27 @@ private class BasicCollectionCreateScreenStateImpl(
 
     override fun onSubmit(formData: BasicCollectionForm) {
         scope.launch {
-            delay(300)
             createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
                 .fold(
                     onSuccess = { collection ->
-                        if (route.bookshelfId != BookshelfId() && route.path.isNotEmpty()) {
+                        if (bookshelfId != BookshelfId() && path.isNotEmpty()) {
                             addCollectionFile(
                                 collection = collection,
-                                bookshelfId = route.bookshelfId,
-                                path = route.path
+                                bookshelfId = bookshelfId,
+                                path = path,
                             )
                         } else {
                             notificationManager.toast(
                                 getString(
                                     Res.string.collection_editor_msg_success_create,
-                                    collection.name
+                                    collection.name,
                                 ),
-                                NotificationManager.LENGTH_SHORT
+                                NotificationManager.LengthShort,
                             )
                             event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                         }
                     },
-                    onError = {}
+                    onError = {},
                 )
         }
     }
@@ -110,19 +108,19 @@ private class BasicCollectionCreateScreenStateImpl(
         path: String,
     ) {
         addCollectionFileUseCase(
-            AddCollectionFileUseCase.Request(CollectionFile(collection.id, bookshelfId, path))
+            AddCollectionFileUseCase.Request(CollectionFile(collection.id, bookshelfId, path)),
         ).fold(
             onSuccess = {
                 event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                 notificationManager.toast(
                     getString(
                         Res.string.collection_editor_msg_success_create_add,
-                        collection.name
+                        collection.name,
                     ),
-                    NotificationManager.LENGTH_SHORT
+                    NotificationManager.LengthShort,
                 )
             },
-            onError = {}
+            onError = {},
         )
     }
 }

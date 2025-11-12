@@ -32,8 +32,8 @@ fun LinearPullRefreshContainer(
             .pullToRefresh(
                 state = pullRefreshState,
                 isRefreshing = isRefreshing,
-                onRefresh = onRefresh
-            )
+                onRefresh = onRefresh,
+            ),
     ) {
         content()
         if (isRefreshing) {

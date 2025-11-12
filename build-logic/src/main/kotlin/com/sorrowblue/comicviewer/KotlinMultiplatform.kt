@@ -76,5 +76,7 @@ internal fun Project.configureKotlinMultiplatform() {
     }
 }
 
-private fun KotlinMultiplatformExtension.abiValidation(configure: Action<AbiValidationMultiplatformExtension>): Unit =
+private fun KotlinMultiplatformExtension.abiValidation(
+    configure: Action<AbiValidationMultiplatformExtension>,
+): Unit =
     (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("abiValidation", configure)

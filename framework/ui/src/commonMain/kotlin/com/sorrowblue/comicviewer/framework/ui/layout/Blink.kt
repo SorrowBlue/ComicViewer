@@ -48,8 +48,9 @@ private class DrawBlinkNode(
     var color: Color = Color.Red,
     var range: ClosedFloatingPointRange<Float>,
     var shape: Shape,
-) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
-
+) : Modifier.Node(),
+    DrawModifierNode,
+    CompositionLocalConsumerModifierNode {
     private val alpha = Animatable(range.endInclusive)
     private val count = mutableIntStateOf(0)
     private var job: Job? = null
@@ -61,17 +62,15 @@ private class DrawBlinkNode(
 
     override fun ContentDrawScope.draw() {
         drawContent()
-        with(
-            currentValueOf(LocalDensity)
-        ) {
+        with(currentValueOf(LocalDensity)) {
             drawRoundRect(
                 color = Color.Red,
                 size = size,
                 alpha = alpha.value,
                 cornerRadius = CornerRadius(
                     (shape as RoundedCornerShape).topStart.toPx(size, this),
-                    (shape as RoundedCornerShape).topStart.toPx(size, this)
-                )
+                    (shape as RoundedCornerShape).topStart.toPx(size, this),
+                ),
             )
         }
     }
@@ -89,7 +88,7 @@ private class DrawBlinkNode(
         job?.cancel()
         count.intValue = 0
         job = coroutineScope.launch {
-            while (count.intValue < 5) {
+            while (count.intValue < BlinksCount) {
                 delay(500)
                 alpha.animateTo(range.start)
                 delay(500)
@@ -101,3 +100,5 @@ private class DrawBlinkNode(
         }
     }
 }
+
+private const val BlinksCount = 5

@@ -49,22 +49,22 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
                 scope.launch {
                     clipboardManager.setClipEntry(file.path.createClipEntry())
                 }
-            }, onClick = {})
+            }, onClick = {}),
         )
         ListItem(
             overlineContent = { Text(text = "種類") },
             headlineContent = { Text(text = if (file is IFolder) "フォルダ" else file.name.extension) },
-            colors = transparentColor
+            colors = transparentColor,
         )
         ListItem(
             overlineContent = { Text(text = "サイズ") },
             headlineContent = { Text(text = file.size.asFileSize) },
-            colors = transparentColor
+            colors = transparentColor,
         )
         ListItem(
             overlineContent = { Text(text = stringResource(Res.string.file_label_modified_date)) },
             headlineContent = { Text(text = file.lastModifier.asDateTime) },
-            colors = transparentColor
+            colors = transparentColor,
         )
         if (file is Book) {
             ListItem(
@@ -74,16 +74,16 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
                         text = pluralStringResource(
                             Res.plurals.file_text_page_count,
                             file.totalPageCount,
-                            file.totalPageCount
-                        )
+                            file.totalPageCount,
+                        ),
                     )
                 },
-                colors = transparentColor
+                colors = transparentColor,
             )
             ListItem(
                 overlineContent = { Text(text = "最後に読んだ日時") },
                 headlineContent = { Text(text = file.lastReadTime.asDateTime) },
-                colors = transparentColor
+                colors = transparentColor,
             )
         }
     }
@@ -91,19 +91,21 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
 
 val Long.asFileSize: String
     get() {
-        var a = this / 1024f
-        return if (a < 1024) {
+        var a = this / Byte
+        return if (a < Byte) {
             "${a.format()} KB"
         } else {
-            a /= 1024f
-            if (a < 1024) {
+            a /= Byte
+            if (a < Byte) {
                 "${a.format()} MB"
             } else {
-                a /= 1024f
+                a /= Byte
                 "${a.format()} GB"
             }
         }
     }
+
+private const val Byte = 1024f
 
 private fun Float.format(decimalPlaces: Int = 2): String {
     val multiplier = 10.0.pow(decimalPlaces.toDouble())
@@ -112,12 +114,13 @@ private fun Float.format(decimalPlaces: Int = 2): String {
 
 @OptIn(ExperimentalTime::class)
 val Long.asDateTime: String
-    get() = Instant.fromEpochMilliseconds(this)
+    get() = Instant
+        .fromEpochMilliseconds(this)
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .format(
             LocalDateTime.Format {
                 date(LocalDate.Formats.ISO)
                 char(' ')
                 time(LocalTime.Formats.ISO)
-            }
+            },
         )

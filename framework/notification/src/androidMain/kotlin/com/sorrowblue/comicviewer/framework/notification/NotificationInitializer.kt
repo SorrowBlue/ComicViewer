@@ -10,7 +10,6 @@ import logcat.LogPriority
 import logcat.logcat
 
 internal class NotificationInitializer : Initializer<Unit> {
-
     override fun create(context: Context) {
         val notificationManager = context.getSystemService<NotificationManager>() ?: return
         val channels = listOf(
@@ -19,15 +18,15 @@ internal class NotificationInitializer : Initializer<Unit> {
                 ChannelID.SCAN_BOOKSHELF,
                 NotificationManager.IMPORTANCE_LOW,
                 R.string.framework_notification_name_bookshelf_scan,
-                R.string.framework_notification_description_bookshelf_scan
+                R.string.framework_notification_description_bookshelf_scan,
             ),
             createNotificationChannel(
                 context,
                 ChannelID.DOWNLOAD,
                 NotificationManager.IMPORTANCE_LOW,
                 R.string.framework_notification_name_download,
-                R.string.framework_notification_description_download
-            )
+                R.string.framework_notification_description_download,
+            ),
         )
         notificationManager.createNotificationChannels(channels)
         logcat(LogPriority.INFO) { "Initialized notification." }

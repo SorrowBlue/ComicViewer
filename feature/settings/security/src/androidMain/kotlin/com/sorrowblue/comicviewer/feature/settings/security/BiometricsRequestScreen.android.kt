@@ -16,7 +16,7 @@ internal fun BiometricsRequestScreenPreview() {
         if (isShow) {
             BiometricsRequestScreen(
                 onConfirmClick = { isShow = false },
-                onDismissRequest = { isShow = false }
+                onDismissRequest = { isShow = false },
             )
         }
     }

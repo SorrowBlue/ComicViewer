@@ -11,15 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationColumnContents
-import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationContentsAction
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.core.DetectOrientation
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import comicviewer.feature.authentication.generated.resources.Res
@@ -29,51 +24,6 @@ import comicviewer.feature.authentication.generated.resources.authentication_err
 import kotlinx.serialization.Serializable
 import logcat.logcat
 import org.jetbrains.compose.resources.StringResource
-import org.koin.compose.koinInject
-
-interface AuthenticationScreenNavigator {
-    fun navigateUp()
-    fun onCompleted()
-}
-
-@Serializable
-data class Authentication(val screenType: ScreenType)
-
-@Destination<Authentication>
-@Composable
-fun AuthenticationScreen(
-    route: Authentication,
-    navigator: AuthenticationScreenNavigator = koinInject(),
-) {
-    AuthenticationScreen(
-        navigator = navigator,
-        state = rememberAuthenticationScreenState(route = route),
-    )
-}
-
-@Composable
-private fun AuthenticationScreen(
-    navigator: AuthenticationScreenNavigator,
-    state: AuthenticationScreenState,
-) {
-    AuthenticationScreen(
-        uiState = state.uiState,
-        snackbarHostState = state.snackbarHostState,
-        onContentsAction = state::onContentsAction
-    )
-
-    val currentNavigator by rememberUpdatedState(navigator)
-    val keyboardController = LocalSoftwareKeyboardController.current
-    EventEffect(state.events) {
-        when (it) {
-            AuthenticationScreenEvent.Back -> currentNavigator.navigateUp()
-            AuthenticationScreenEvent.Complete -> {
-                keyboardController?.hide()
-                currentNavigator.onCompleted()
-            }
-        }
-    }
-}
 
 @Serializable
 internal sealed interface AuthenticationScreenUiState {
@@ -163,36 +113,44 @@ internal enum class ErrorType(val resource: StringResource) {
 internal fun AuthenticationScreen(
     uiState: AuthenticationScreenUiState,
     snackbarHostState: SnackbarHostState,
-    onContentsAction: (AuthenticationContentsAction) -> Unit,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onPinChange: (String) -> Unit,
 ) {
     val isCompactWindowClass = isCompactWindowClass()
     DetectOrientation(Modifier.fillMaxSize()) { isLandscape ->
         val isCompactLandscape by remember(isCompactWindowClass, isLandscape) {
-            logcat("AuthenticationScreen") { "isCompactWindowClass=$isCompactWindowClass, isLandscape=$isLandscape" }
+            logcat(
+                "AuthenticationScreen",
+            ) { "isCompactWindowClass=$isCompactWindowClass, isLandscape=$isLandscape" }
             mutableStateOf(isCompactWindowClass && isLandscape)
         }
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             containerColor = ComicTheme.colorScheme.surfaceContainer,
-            contentWindowInsets = WindowInsets.safeDrawing
+            contentWindowInsets = WindowInsets.safeDrawing,
         ) { contentPadding ->
             if (isCompactLandscape) {
                 AuthenticationRowContents(
                     uiState = uiState,
-                    onAction = onContentsAction,
+                    onBackClick = onBackClick,
+                    onNextClick = onNextClick,
+                    onPinChange = onPinChange,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(contentPadding)
-                        .padding(ComicTheme.dimension.margin)
+                        .padding(ComicTheme.dimension.margin),
                 )
             } else {
                 AuthenticationColumnContents(
                     uiState = uiState,
-                    onAction = onContentsAction,
+                    onBackClick = onBackClick,
+                    onNextClick = onNextClick,
+                    onPinChange = onPinChange,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(contentPadding)
-                        .padding(ComicTheme.dimension.margin)
+                        .padding(ComicTheme.dimension.margin),
                 )
             }
         }
