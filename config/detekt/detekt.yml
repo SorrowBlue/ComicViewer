@@ -88,6 +88,8 @@ style:
     allowedNames: 'ignored|expected|serialVersionUID|bind'
   MaxLineLength:
     active: false
+  VarCouldBeVal:
+    active: false
 
 Compose:
   ComposableAnnotationNaming:

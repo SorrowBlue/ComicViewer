@@ -22,7 +22,6 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
     private val localAppLocaleIsoInternal =
         staticCompositionLocalOf { JavaLocale.getDefault().toString() }
 
-    @Suppress("VarCouldBeVal")
     private var currentLanguageTag: String? by mutableStateOf(null)
 
     @Suppress("ConstantLocale")
