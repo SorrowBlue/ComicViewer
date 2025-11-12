@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 android {
@@ -22,7 +22,6 @@ kotlin {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.startup.runtime)
                 implementation(libs.google.android.play.feature.delivery.ktx)
-                implementation(libs.koin.androidxStartup)
             }
         }
     }

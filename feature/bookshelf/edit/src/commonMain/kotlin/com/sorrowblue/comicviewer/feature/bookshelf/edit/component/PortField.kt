@@ -32,10 +32,10 @@ internal fun PortField(
         selector = { it.port },
         updater = { copy(port = it) },
         validator = FieldValidator {
-            minimum(0) { rangeErrorMessage }
-            maximum(65535) { rangeErrorMessage }
+            minimum(PortMin) { rangeErrorMessage }
+            maximum(PortMax) { rangeErrorMessage }
         },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = if (field.value < 0) "" else field.value.toString(),
@@ -47,7 +47,7 @@ internal fun PortField(
             keyboardOptions = KeyboardOptions(
                 showKeyboardOnFocus = false,
                 keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             singleLine = true,
             modifier = modifier
@@ -58,3 +58,5 @@ internal fun PortField(
 }
 
 internal const val PortField = "PortField"
+internal const val PortMin = 0
+internal const val PortMax = 65535

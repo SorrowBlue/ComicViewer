@@ -1,9 +1,9 @@
 import com.sorrowblue.comicviewer.id
 import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import io.gitlab.arturbosch.detekt.report.ReportMergeTask
+import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.extensions.DetektExtension
+import dev.detekt.gradle.report.ReportMergeTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -12,7 +12,6 @@ import org.gradle.kotlin.dsl.withType
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 internal class DetektConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -25,9 +24,9 @@ internal class DetektConventionPlugin : Plugin<Project> {
             }
 
             configure<DetektExtension> {
-                buildUponDefaultConfig = true
-                autoCorrect = true
-                basePath = rootProject.projectDir.absolutePath
+                buildUponDefaultConfig.set(true)
+                autoCorrect.set(true)
+                basePath.set(rootProject.projectDir)
                 config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
             }
 
@@ -36,9 +35,8 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 reports {
                     sarif.required.set(true)
                     html.required.set(false)
-                    md.required.set(false)
-                    txt.required.set(false)
-                    xml.required.set(false)
+                    markdown.required.set(false)
+                    checkstyle.required.set(false)
                 }
                 finalizedBy(reportMerge)
                 exclude {
@@ -46,19 +44,21 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 }
             }
             reportMerge.configureEach {
-                input.from(tasks.withType<Detekt>().map(Detekt::sarifReportFile))
+                input.from(
+                    tasks.withType<Detekt>().map { detekt -> detekt.reports.sarif.outputLocation },
+                )
             }
 
             mapOf(
-                "detektAndroidAll" to "(?i)^(?!.*metadata).*android.*$".toRegex(),
-                "detektDesktopAll" to "(?i)^(?!.*metadata).*desktop.*$".toRegex(),
-                "detektIosAll" to "(?i)^(?!.*metadata).*ios.*$".toRegex(),
-                "detektMetadataAll" to "(?i)^.*metadata.*$".toRegex()
+                "detektAndroidAll" to "(?i)^(?!.*(SourceSet|metadata)).*android.*$".toRegex(),
+                "detektDesktopAll" to "(?i)^(?!.*(SourceSet|metadata)).*desktop.*$".toRegex(),
+                "detektIosAll" to "(?i)^(?!.*(SourceSet|metadata)).*ios.*$".toRegex(),
             ).forEach { (taskName, regex) ->
                 tasks.register(taskName) {
                     group = LifecycleBasePlugin.VERIFICATION_GROUP
                     dependsOn(
-                        tasks.withType<Detekt>()
+                        tasks
+                            .withType<Detekt>()
                             .matching { detekt -> detekt.name.contains(regex) }
                     )
                 }

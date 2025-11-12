@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -27,17 +26,18 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import coil3.Bitmap
-import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.domain.model.PluginManager
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
@@ -47,66 +47,28 @@ import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Plugin
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import kotlinx.serialization.Serializable
-import org.koin.compose.koinInject
-import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
-internal sealed interface BookScreenUiState {
-
-    data class Loading(val name: String) : BookScreenUiState
-
-    data class Error(val name: String) : BookScreenUiState
-
-    data class Loaded(
-        val book: BookFile,
-        val collectionId: CollectionId,
-        val bookSheetUiState: BookSheetUiState,
-        val isVisibleTooltip: Boolean = true,
-    ) : BookScreenUiState
-}
-
-interface BookScreenNavigator {
-    fun navigateUp()
-    fun onSettingsClick()
-    fun onNextBookClick(book: BookFile, collectionId: CollectionId)
-    fun onContainerLongClick()
-}
-
-@Serializable
-data class Book(
-    val bookshelfId: BookshelfId,
-    val path: String,
-    val name: String,
-    val collectionId: CollectionId = CollectionId(),
-)
-
-@Destination<Book>
 @Composable
-internal fun BookScreen(route: Book, navigator: BookScreenNavigator = koinInject()) {
-    BookScreen(
-        route = route,
-        onBackClick = navigator::navigateUp,
-        onSettingsClick = navigator::onSettingsClick,
-        onNextBookClick = navigator::onNextBookClick,
-        onContainerLongClick = navigator::onContainerLongClick,
-    )
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-private fun BookScreen(
-    route: Book,
+context(context: BookScreenContext)
+fun BookScreen(
+    bookshelfId: BookshelfId,
+    path: String,
+    name: String,
+    collectionId: CollectionId,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onNextBookClick: (BookFile, CollectionId) -> Unit,
     onContainerLongClick: () -> Unit,
-    loadingState: BookLoadingScreenState = rememberBookLoadingScreenState(route = route),
 ) {
-    val pluginManager: PluginManager = koinInject()
+    val prepareScreenState = rememberBookPrepareScreenState(
+        bookshelfId = bookshelfId,
+        path = path,
+        name = name,
+        collectionId = collectionId,
+    )
     var error by remember { mutableStateOf("") }
     DisposableEffect(Unit) {
         val callback = object : PluginManager.Callback {
@@ -114,9 +76,9 @@ private fun BookScreen(
                 error = msg
             }
         }
-        pluginManager.addCallback(callback)
+        context.pluginManager.addCallback(callback)
         onDispose {
-            pluginManager.removeCallback(callback)
+            context.pluginManager.removeCallback(callback)
         }
     }
 
@@ -124,35 +86,37 @@ private fun BookScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Icon(
                 modifier = Modifier.size(96.dp),
                 painter = rememberVectorPainter(image = ComicIcons.Plugin),
-                contentDescription = null
+                contentDescription = null,
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
             Text(
                 text = error,
-                style = ComicTheme.typography.bodyLarge
+                style = ComicTheme.typography.bodyLarge,
             )
         }
         return
     }
 
     with(LocalAppState.current) {
+        val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
         Surface(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .sharedBounds(
-                    rememberSharedContentState("${route.bookshelfId}:${route.path}"),
-                    LocalAnimatedContentScope.current,
+                    rememberSharedContentState("$bookshelfId:$path"),
+                    LocalNavAnimatedContentScope.current,
                     enter = materialFadeThroughIn(),
                     exit = materialFadeThroughOut(),
-                    boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                    boundsTransform = { _, _ -> boundsTransform },
                     resizeMode = scaleToBounds(ContentScale.Fit, Center),
-                )
+                ),
         ) {
-            when (val uiState = loadingState.uiState) {
+            when (val uiState = prepareScreenState.uiState) {
                 is BookScreenUiState.Loading ->
                     BookLoadingScreen(uiState = uiState, onBackClick = onBackClick)
 
@@ -166,7 +130,7 @@ private fun BookScreen(
                         pagerState = state.pagerState,
                         currentList = state.currentList,
                         onBackClick = onBackClick,
-                        onNextBookClick = { onNextBookClick(it, route.collectionId) },
+                        onNextBookClick = { onNextBookClick(it, collectionId) },
                         onContainerClick = state::toggleTooltip,
                         onContainerLongClick = onContainerLongClick,
                         onPageChange = state::onPageChange,
@@ -181,6 +145,19 @@ private fun BookScreen(
             }
         }
     }
+}
+
+internal sealed interface BookScreenUiState {
+    data class Loading(val name: String) : BookScreenUiState
+
+    data class Error(val name: String) : BookScreenUiState
+
+    data class Loaded(
+        val book: BookFile,
+        val collectionId: CollectionId,
+        val bookSheetUiState: BookSheetUiState,
+        val isVisibleTooltip: Boolean = true,
+    ) : BookScreenUiState
 }
 
 @Composable
@@ -201,12 +178,12 @@ internal fun BookScreen(
             AnimatedVisibility(
                 visible = uiState.isVisibleTooltip,
                 enter = slideInVertically { -it },
-                exit = slideOutVertically { -it }
+                exit = slideOutVertically { -it },
             ) {
                 BookAppBar(
                     title = uiState.book.name,
                     onBackClick = onBackClick,
-                    onSettingsClick = onSettingsClick
+                    onSettingsClick = onSettingsClick,
                 )
             }
         },
@@ -214,16 +191,16 @@ internal fun BookScreen(
             AnimatedVisibility(
                 visible = uiState.isVisibleTooltip,
                 enter = slideInVertically { it },
-                exit = slideOutVertically { it }
+                exit = slideOutVertically { it },
             ) {
                 BookBottomBar(
                     pageRange = 1f..uiState.book.totalPageCount.toFloat(),
                     currentPage = pagerState.currentPage,
-                    onPageChange = onPageChange
+                    onPageChange = onPageChange,
                 )
             }
         },
-        contentWindowInsets = WindowInsets.safeDrawing
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { _ ->
         BookSheet(
             uiState = uiState.bookSheetUiState,
@@ -232,7 +209,7 @@ internal fun BookScreen(
             onClick = onContainerClick,
             onLongClick = onContainerLongClick,
             onNextBookClick = onNextBookClick,
-            onPageLoad = onPageLoad
+            onPageLoad = onPageLoad,
         )
     }
 }

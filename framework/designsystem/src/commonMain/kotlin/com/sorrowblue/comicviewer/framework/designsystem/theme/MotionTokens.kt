@@ -48,7 +48,7 @@ object MotionTokens {
             moveTo(0f, 0f)
             cubicTo(0.05f, 0f, 0.133333f, 0.06f, 0.166666f, 0.4f)
             cubicTo(0.208333f, 0.82f, 0.25f, 1f, 1f, 1f)
-        }
+        },
     )
 
     val EasingEmphasized = CubicBezierEasing(0.2f, 0.0f, 0.0f, 1.0f)

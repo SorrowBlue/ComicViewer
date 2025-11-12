@@ -7,6 +7,5 @@ import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
 
 abstract class PagingReadLaterFileUseCase :
     PagingUseCase<PagingReadLaterFileUseCase.Request, File>() {
-
     class Request(val pagingConfig: PagingConfig) : BaseRequest
 }

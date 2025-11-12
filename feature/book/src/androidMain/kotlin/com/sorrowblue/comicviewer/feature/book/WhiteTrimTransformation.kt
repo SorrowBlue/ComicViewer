@@ -6,11 +6,9 @@ import coil3.size.Size
 import coil3.transform.Transformation
 
 object WhiteTrimTransformation : Transformation() {
-
     override val cacheKey = "${this::class.qualifiedName}"
 
-    override suspend fun transform(input: Bitmap, size: Size) =
-        input.trimBorders(Color.WHITE)
+    override suspend fun transform(input: Bitmap, size: Size) = input.trimBorders(Color.WHITE)
 }
 
 fun Bitmap.trimBorders(color: Int, maxMargin: Int = 0): Bitmap {

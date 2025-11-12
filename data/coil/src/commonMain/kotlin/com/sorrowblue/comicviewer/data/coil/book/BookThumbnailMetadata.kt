@@ -13,12 +13,11 @@ internal data class BookThumbnailMetadata(
     val lastModifier: Long,
     val size: Long,
 ) : CoilMetadata {
-
     constructor(book: BookThumbnail) : this(
         book.path,
         book.bookshelfId.value,
         book.lastModifier,
-        book.size
+        book.size,
     )
 
     override fun writeTo(bufferedSink: BufferedSink) {

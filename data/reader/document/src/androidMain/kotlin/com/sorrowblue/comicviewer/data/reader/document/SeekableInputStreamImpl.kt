@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.plugin.aidl.ISeekableInputStream
 
 internal class SeekableInputStreamImpl(private val seekableInputStream: SeekableInputStream) :
     ISeekableInputStream.Stub() {
-
     override fun read(buf: ByteArray) = seekableInputStream.read(buf)
 
     override fun seek(offset: Long, whence: Int) = seekableInputStream.seek(offset, whence)

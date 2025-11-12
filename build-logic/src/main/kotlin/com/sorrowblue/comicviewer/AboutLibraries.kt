@@ -37,19 +37,21 @@ internal fun Project.configureAboutLibraries() {
                 "PCSDKToS",
                 "Unlicense",
                 "LGPL-2.1",
-                "LGPL-2.1-or-later"
+                "LGPL-2.1-or-later",
             )
             allowedLicensesMap.putAll(
                 mapOf(
                     "Bouncy Castle Licence" to listOf("org.bouncycastle"),
                     "BSD-3-Clause" to listOf("org.hamcrest"),
                     "EPL-1.0" to listOf("junit"),
-                    "GNU Lesser General Public License version 2.1" to listOf("com.sorrowblue.sevenzipjbinding"),
+                    "GNU Lesser General Public License version 2.1" to listOf(
+                        "com.sorrowblue.sevenzipjbinding",
+                    ),
                     "GNU Lesser General Public License, version 2.1" to listOf("org.codelibs"),
                     "unRAR restriction" to listOf("net.sf.sevenzipjbinding"),
                     "LGPL" to listOf("net.sf.sevenzipjbinding"),
                     "Other" to listOf("org.jetbrains.kotlinx", "net.java.dev.jna"),
-                )
+                ),
             )
         }
     }

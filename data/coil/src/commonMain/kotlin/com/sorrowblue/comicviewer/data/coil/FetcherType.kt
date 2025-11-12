@@ -1,15 +1,15 @@
 package com.sorrowblue.comicviewer.data.coil
 
-import org.koin.core.annotation.Named
+import dev.zacsweers.metro.Qualifier
 
-@Named
+@Qualifier
 annotation class BookThumbnailFetcher
 
-@Named
+@Qualifier
 annotation class BookPageImageFetcher
 
-@Named
+@Qualifier
 annotation class FolderThumbnailFetcher
 
-@Named
-annotation class CollectionFetcher
+@Qualifier
+annotation class CollectionThumbnailFetcher

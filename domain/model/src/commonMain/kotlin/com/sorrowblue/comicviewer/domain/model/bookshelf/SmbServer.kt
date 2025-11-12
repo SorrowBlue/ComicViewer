@@ -11,7 +11,6 @@ data class SmbServer private constructor(
     val port: Int,
     val auth: Auth,
 ) : Bookshelf {
-
     override val type = BookshelfType.SMB
 
     fun copy(
@@ -24,11 +23,10 @@ data class SmbServer private constructor(
         displayName = displayName,
         host = host,
         port = port,
-        auth = auth
+        auth = auth,
     )
 
     companion object {
-
         operator fun invoke(displayName: String, host: String, port: Int, auth: Auth) = SmbServer(
             id = BookshelfId(),
             displayName = displayName,
@@ -36,7 +34,7 @@ data class SmbServer private constructor(
             port = port,
             auth = auth,
             fileCount = 0,
-            isDeleted = false
+            isDeleted = false,
         )
 
         @InternalDataApi
@@ -55,12 +53,11 @@ data class SmbServer private constructor(
             port = port,
             auth = auth,
             fileCount = fileCount,
-            isDeleted = isDeleted
+            isDeleted = isDeleted,
         )
     }
 
     sealed interface Auth {
-
         data class UsernamePassword(
             val domain: String,
             val username: String,

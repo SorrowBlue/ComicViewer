@@ -23,23 +23,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sorrowblue.cmpdestinations.animation.LocalAnimatedContentScope
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ExpressiveMotion
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
@@ -70,6 +74,7 @@ fun GridFile(
         Box {
             with(LocalAppState.current) {
                 if (showThumbnail) {
+                    val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                     FileThumbnailAsyncImage(
                         fileThumbnail = FileThumbnail.from(file),
                         alignment = Alignment.TopCenter,
@@ -78,28 +83,28 @@ fun GridFile(
                         modifier = Modifier
                             .sharedBounds(
                                 rememberSharedContentState("${file.bookshelfId}:${file.path}"),
-                                LocalAnimatedContentScope.current,
+                                LocalNavAnimatedContentScope.current,
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
-                                boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                boundsTransform = { _, _ -> boundsTransform },
                                 resizeMode = scaleToBounds(contentScale, Alignment.Center),
-                            )
-                            .fillMaxWidth()
+                            ).fillMaxWidth()
                             .aspectRatio(1f)
-                            .clip(CardDefaults.shape)
+                            .clip(CardDefaults.shape),
                     )
                 } else {
+                    val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                     GridFileIcon(
                         file = file,
                         modifier = Modifier
                             .sharedBounds(
                                 rememberSharedContentState("${file.bookshelfId}:${file.path}"),
-                                LocalAnimatedContentScope.current,
+                                LocalNavAnimatedContentScope.current,
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut(),
-                                boundsTransform = { _, _ -> ExpressiveMotion.Spatial.slow() },
+                                boundsTransform = { _, _ -> boundsTransform },
                                 resizeMode = scaleToBounds(contentScale, Alignment.Center),
-                            )
+                            ),
                     )
                 }
             }
@@ -108,8 +113,8 @@ fun GridFile(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = ComicTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
-                    contentColor = ComicTheme.colorScheme.surfaceVariant
-                )
+                    contentColor = ComicTheme.colorScheme.surfaceVariant,
+                ),
             ) {
                 Icon(
                     imageVector = ComicIcons.MoreVert,
@@ -133,7 +138,7 @@ fun GridFile(
                     minLines = 2,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(ComicTheme.dimension.padding)
+                        .padding(ComicTheme.dimension.padding),
                 )
                 if (file is Book && 0 < file.lastPageRead) {
                     val color = ProgressIndicatorDefaults.linearColor
@@ -146,7 +151,7 @@ fun GridFile(
                                 drawScope = this,
                                 stopSize = 0.dp,
                                 color = color,
-                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
+                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
                             )
                         },
                         modifier = Modifier
@@ -166,7 +171,7 @@ private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .aspectRatio(1f)
             .clip(CardDefaults.shape)
-            .background(ComicTheme.colorScheme.surfaceVariant)
+            .background(ComicTheme.colorScheme.surfaceVariant),
     ) {
         if (file is Book) {
             Icon(
@@ -174,7 +179,7 @@ private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(ComicTheme.dimension.margin)
+                    .padding(ComicTheme.dimension.margin),
             )
         } else {
             Icon(
@@ -182,8 +187,27 @@ private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(ComicTheme.dimension.margin)
+                    .padding(ComicTheme.dimension.margin),
             )
         }
+    }
+}
+
+@Preview(widthDp = 120)
+@Preview(widthDp = 160)
+@Preview(widthDp = 180)
+@Preview(widthDp = 200)
+@Composable
+internal fun PreviewFileGrid() {
+    PreviewTheme {
+        GridFile(
+            file = fakeBookFile(),
+            onClick = {},
+            onInfoClick = {},
+            showThumbnail = true,
+            fontSize = FolderDisplaySettingsDefaults.FontSize,
+            contentScale = ContentScale.Fit,
+            filterQuality = FilterQuality.None,
+        )
     }
 }

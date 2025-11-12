@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.domain.service
 
-import org.koin.core.annotation.Named
+import dev.zacsweers.metro.Qualifier
 
-@Target(AnnotationTarget.PROPERTY, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
+@Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
-@Named
+@Qualifier
 annotation class IoDispatcher

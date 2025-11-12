@@ -7,9 +7,9 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 
-internal class UpdateFileEntityMinimumWithSortIndex(
+internal data class UpdateFileEntityMinimumWithSortIndex(
     val path: String,
-    @ColumnInfo(name = FileEntity.BOOKSHELF_ID) val bookshelfId: BookshelfId,
+    @ColumnInfo(name = FileEntity.BookshelfId) val bookshelfId: BookshelfId,
     val name: String,
     val parent: String,
     val size: Long,
@@ -33,8 +33,9 @@ internal class UpdateFileEntityMinimumWithSortIndex(
                 is BookFolder -> FileEntity.Type.IMAGE_FOLDER
                 is Folder -> FileEntity.Type.FOLDER
             },
-            sortIndex = model.sortIndex
+            sortIndex = model.sortIndex,
         )
+
         fun fromFileEntity(entity: FileEntity) = UpdateFileEntityMinimumWithSortIndex(
             path = entity.path,
             bookshelfId = BookshelfId(entity.bookshelfId),
@@ -44,7 +45,7 @@ internal class UpdateFileEntityMinimumWithSortIndex(
             lastModified = entity.lastModified,
             isHidden = entity.isHidden,
             fileEntityType = entity.fileType,
-            sortIndex = entity.sortIndex
+            sortIndex = entity.sortIndex,
         )
     }
 }

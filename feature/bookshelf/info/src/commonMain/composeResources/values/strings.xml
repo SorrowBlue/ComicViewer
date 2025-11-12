@@ -31,8 +31,8 @@
 
     <!--<editor-fold desc="Notification Request dialog">-->
     <string name="bookshelf_info_notification_title">Confirm with notification</string>
-    <string name="bookshelf_info_notification_text_scan_file">You can check status of file scan in notification.\nIf you select “Not allowed”, file will be scanned without notification.</string>
-    <string name="bookshelf_info_notification_text_scan_thumbnail">You can check status of thumbnail scan in the notification.\nIf you select “Not allowed”, thumbnail will be scanned without notification.</string>
+    <string name="bookshelf_info_notification_text_scan_file">You can check status of file scan in notification.\nThe file scan is running.</string>
+    <string name="bookshelf_info_notification_text_scan_thumbnail">You can check status of thumbnail scan in the notification.\nThe thumbnail scan is running.</string>
     <string name="bookshelf_info_notification_btn_not_allowed">Not allowed</string>
     <string name="bookshelf_info_notification_btn_ok">OK</string>
     <string name="bookshelf_info_notification_btn_cancel">Cancel</string>

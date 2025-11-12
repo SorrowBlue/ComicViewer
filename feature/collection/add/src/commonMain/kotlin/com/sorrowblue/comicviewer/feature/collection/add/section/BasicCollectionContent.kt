@@ -22,17 +22,17 @@ internal fun BasicCollectionContent(
     LazyColumn(
         state = state,
         contentPadding = contentPadding,
-        modifier = modifier
+        modifier = modifier,
     ) {
         items(
             count = lazyPagingItems.itemCount,
-            key = lazyPagingItems.itemKey { it.first.id.value }
+            key = lazyPagingItems.itemKey { it.first.id.value },
         ) { index ->
             lazyPagingItems[index]?.let { item ->
                 CollectionListItem(
                     collection = item.first,
                     exist = item.second,
-                    onClick = { onClick(item.first, item.second) }
+                    onClick = { onClick(item.first, item.second) },
                 )
             }
         }

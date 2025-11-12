@@ -30,10 +30,10 @@ internal fun CreateButton(
                 CircularProgressIndicator(
                     strokeWidth = 2.dp,
                     color = ButtonDefaults.buttonColors().contentColor,
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                    modifier = Modifier.size(ButtonDefaults.IconSize),
                 )
             }
-        }
+        },
     ) {
         Text(text = stringResource(Res.string.collection_editor_label_create))
     }

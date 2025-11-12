@@ -12,7 +12,6 @@ internal data class BookPageImageMetadata(
     val fileName: String = "",
     val fileSize: Long = 0,
 ) : CoilMetadata {
-
     constructor(data: BookPageImage) : this(data.pageIndex, data.book.name, data.book.size)
 
     override fun writeTo(bufferedSink: BufferedSink) {

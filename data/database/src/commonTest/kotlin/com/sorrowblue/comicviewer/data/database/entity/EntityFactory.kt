@@ -11,9 +11,8 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 internal class EntityFactory {
-
-    fun createBookshelfEntity(id: Int = 0, deleted: Boolean = false): BookshelfEntity {
-        return BookshelfEntity(
+    fun createBookshelfEntity(id: Int = 0, deleted: Boolean = false): BookshelfEntity =
+        BookshelfEntity(
             id = BookshelfId(id),
             displayName = "displayName$id",
             type = BookshelfEntity.Type.INTERNAL,
@@ -22,9 +21,8 @@ internal class EntityFactory {
             port = 0,
             domain = "",
             username = "",
-            password = DecryptedPassword("")
+            password = DecryptedPassword(""),
         )
-    }
 
     @OptIn(ExperimentalTime::class)
     fun createFileEntity(
@@ -32,8 +30,8 @@ internal class EntityFactory {
         bookshelfId: BookshelfId = BookshelfId(1),
         parent: String = "parent$index",
         lastReadTime: Long = Clock.System.now().toEpochMilliseconds(),
-    ): FileEntity {
-        return BookFile.Companion(
+    ): FileEntity = BookFile
+        .Companion(
             bookshelfId = bookshelfId,
             name = "name$index",
             parent = parent,
@@ -42,21 +40,18 @@ internal class EntityFactory {
             lastModifier = Clock.System.now().toEpochMilliseconds(),
             isHidden = false,
             lastPageRead = 0,
-            lastReadTime = lastReadTime
+            lastReadTime = lastReadTime,
         ).let {
             FileEntity.Companion.fromModel(it)
         }
-    }
 
-    fun createCollectionEntity(): CollectionEntity {
-        return CollectionEntity(
-            id = CollectionId.Companion(),
-            name = "name",
-            type = CollectionEntity.Type.Basic,
-            bookshelfId = null,
-            searchCondition = null,
-            createdAt = "",
-            updatedAt = ""
-        )
-    }
+    fun createCollectionEntity(): CollectionEntity = CollectionEntity(
+        id = CollectionId.Companion(),
+        name = "name",
+        type = CollectionEntity.Type.Basic,
+        bookshelfId = null,
+        searchCondition = null,
+        createdAt = "",
+        updatedAt = "",
+    )
 }

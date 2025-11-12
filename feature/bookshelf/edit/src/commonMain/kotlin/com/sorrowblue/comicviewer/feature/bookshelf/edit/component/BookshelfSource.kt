@@ -35,7 +35,7 @@ internal fun BookshelfSource(
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Image(
                 imageVector = when (type) {
@@ -43,31 +43,31 @@ internal fun BookshelfSource(
                     BookshelfType.SMB -> ComicIcons.UndrawServer
                 },
                 contentDescription = null,
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier.size(100.dp),
             )
             Column(
                 Modifier
                     .fillMaxHeight()
                     .padding(start = 16.dp),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 Text(
                     text = stringResource(
                         when (type) {
                             BookshelfType.DEVICE -> Res.string.bookshelf_edit_selection_label_device
                             BookshelfType.SMB -> Res.string.bookshelf_edit_selection_label_smb
-                        }
+                        },
                     ),
-                    style = ComicTheme.typography.bodyLarge
+                    style = ComicTheme.typography.bodyLarge,
                 )
                 Text(
                     text = stringResource(
                         when (type) {
                             BookshelfType.DEVICE -> Res.string.bookshelf_edit_selection_label_device_detail
                             BookshelfType.SMB -> Res.string.bookshelf_edit_selection_label_smb_detail
-                        }
+                        },
                     ),
-                    style = ComicTheme.typography.bodyMedium
+                    style = ComicTheme.typography.bodyMedium,
                 )
             }
         }

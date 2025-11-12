@@ -7,9 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @JvmInline
 value class CollectionId @InternalDataApi constructor(val value: Int) {
-
     companion object {
-
         @OptIn(InternalDataApi::class)
         operator fun invoke() = CollectionId(0)
     }

@@ -2,11 +2,7 @@ package com.sorrowblue.comicviewer.feature.settings.security
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
-import com.sorrowblue.cmpdestinations.annotation.Destination
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
-import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailNavigator
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import comicviewer.feature.settings.security.generated.resources.Res
@@ -17,55 +13,7 @@ import comicviewer.feature.settings.security.generated.resources.settings_securi
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_change_password
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_password_lock
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_use_biometric_auth
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
-
-interface SecuritySettingsScreenNavigator : SettingsDetailNavigator {
-    fun navigateToChangeAuth(enabled: Boolean)
-    fun navigateToPasswordChange()
-}
-
-@Serializable
-data object SecuritySettings
-
-@Destination<SecuritySettings>
-@Composable
-internal fun SecuritySettingsScreen(navigator: SecuritySettingsScreenNavigator = koinInject()) {
-    SecuritySettingsScreen(
-        onBackClick = navigator::navigateBack,
-        onChangeAuthEnable = navigator::navigateToChangeAuth,
-        onPasswordChangeClick = navigator::navigateToPasswordChange
-    )
-}
-
-@Composable
-private fun SecuritySettingsScreen(
-    onBackClick: () -> Unit,
-    onChangeAuthEnable: (Boolean) -> Unit,
-    onPasswordChangeClick: () -> Unit,
-    state: SecuritySettingsScreenState = rememberSecuritySettingsScreenState(),
-) {
-    val uiState = state.uiState
-
-    SecuritySettingsScreen(
-        uiState = uiState,
-        onBackClick = onBackClick,
-        onChangeAuthEnable = onChangeAuthEnable,
-        onPasswordChangeClick = onPasswordChangeClick,
-        onChangeBiometricEnable = state::onChangeBiometricEnabled,
-        onChangeBackgroundLockEnable = state::onChangeBackgroundLockEnabled,
-    )
-
-    if (uiState.isBiometricsDialogShow) {
-        BiometricsRequestScreen(
-            onConfirmClick = state::onBiometricsDialogClick,
-            onDismissRequest = state::onBiometricsDialogDismissRequest
-        )
-    }
-
-    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME, onEvent = state::onResume)
-}
 
 internal data class SecuritySettingsScreenUiState(
     val isAuthEnabled: Boolean = false,
@@ -76,7 +24,7 @@ internal data class SecuritySettingsScreenUiState(
 )
 
 @Composable
-private fun SecuritySettingsScreen(
+internal fun SecuritySettingsScreen(
     uiState: SecuritySettingsScreenUiState,
     onBackClick: () -> Unit,
     onChangeAuthEnable: (Boolean) -> Unit,
@@ -97,7 +45,7 @@ private fun SecuritySettingsScreen(
         Setting(
             title = Res.string.settings_security_title_change_password,
             onClick = onPasswordChangeClick,
-            enabled = uiState.isAuthEnabled
+            enabled = uiState.isAuthEnabled,
         )
         if (uiState.isBiometricCanBeUsed) {
             SwitchSetting(

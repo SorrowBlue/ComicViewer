@@ -23,7 +23,7 @@ internal fun SelectionList(
         state = state,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
+        modifier = modifier,
     ) {
         items(items = items) {
             BookshelfSource(type = it, onClick = { onSourceClick(it) })

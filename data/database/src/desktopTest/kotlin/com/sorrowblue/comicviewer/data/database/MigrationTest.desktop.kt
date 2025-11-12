@@ -3,9 +3,10 @@ package com.sorrowblue.comicviewer.data.database
 import androidx.room.migration.Migration
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.sorrowblue.comicviewer.framework.common.DesktopContext
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
-import org.koin.mp.KoinPlatform
+import kotlin.io.path.deleteRecursively
 
 internal actual val AutoMigration_2_3_Impl: Migration =
     ComicViewerDatabase_AutoMigration_2_3_Impl()
@@ -22,12 +23,14 @@ internal actual val AutoMigration_5_6_Impl: Migration =
 internal actual val AutoMigration_6_7_Impl: Migration =
     ComicViewerDatabase_AutoMigration_6_7_Impl()
 
-internal actual fun getMigrationTestHelper(): MigrationTestHelper {
-    val dbPath = KoinPlatform.getKoin().get<DesktopContext>().filesDir.resolve("database")
+@OptIn(ExperimentalPathApi::class)
+internal actual fun getMigrationTestHelper(platformContext: PlatformContext): MigrationTestHelper {
+    val dbPath = platformContext.cacheDir.resolve("database")
+    dbPath.deleteRecursively()
     return MigrationTestHelper(
         schemaDirectoryPath = Path("schemas"),
-        databasePath = dbPath.resolve(TEST_DB_NAME),
+        databasePath = dbPath.resolve(TestDatabaseName),
         driver = BundledSQLiteDriver(),
-        databaseClass = ComicViewerDatabase::class
+        databaseClass = ComicViewerDatabase::class,
     )
 }

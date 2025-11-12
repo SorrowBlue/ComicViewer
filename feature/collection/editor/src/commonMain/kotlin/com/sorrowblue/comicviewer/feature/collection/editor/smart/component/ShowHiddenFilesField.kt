@@ -24,21 +24,25 @@ internal fun Form<SmartCollectionForm>.ShowHiddenFilesField(
         name = ShowHiddenFilesField,
         selector = { it.searchCondition.showHidden },
         updater = { copy(searchCondition = searchCondition.copy(showHidden = it)) },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         SwitchWithText(
-            text = { Text(text = stringResource(Res.string.collection_editor_label_show_hidden_files)) },
+            text = {
+                Text(
+                    text = stringResource(Res.string.collection_editor_label_show_hidden_files),
+                )
+            },
             checked = field.value,
             onCheckedChange = field::onValueChange,
             thumbContent = {
                 Icon(
                     imageVector = ComicIcons.Check,
                     contentDescription = null,
-                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                    modifier = Modifier.size(SwitchDefaults.IconSize),
                 )
             },
             enabled = field.isEnabled,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

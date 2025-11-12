@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface FileDao {
-
     @Upsert
     suspend fun upsert(fileEntity: FileEntity): Long
 
@@ -55,7 +54,7 @@ internal interface FileDao {
         val deleteFileData = findByNotPaths(
             entity.bookshelfId,
             entity.path,
-            entityList.map { it.path }
+            entityList.map { it.path },
         )
         // DBから削除
         deleteAll(deleteFileData)
@@ -71,7 +70,9 @@ internal interface FileDao {
 
         // DBにファイルを更新
         // ファイルサイズ、更新日時、タイプ ソート、インデックス
-        updateSimple(existsFiles.map(UpdateFileEntityMinimumWithSortIndex.Companion::fromFileEntity))
+        updateSimple(
+            existsFiles.map(UpdateFileEntityMinimumWithSortIndex.Companion::fromFileEntity),
+        )
     }
 
     @Delete
@@ -83,7 +84,9 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE bookshelf_id= :bookshelfId AND path = :path")
     fun flow(bookshelfId: Int, path: String): Flow<FileEntity?>
 
-    @Query("SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)")
+    @Query(
+        "SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)",
+    )
     suspend fun findByNotPaths(id: Int, parent: String, paths: List<String>): List<FileEntity>
 
     @RawQuery(observedEntities = [FileEntity::class])
@@ -96,7 +99,7 @@ internal interface FileDao {
     suspend fun bookshelfIdCacheKey(query: RoomRawQuery): List<BookshelfIdCacheKey>
 
     @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit"
+        """SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY parent, sort_index LIMIT :limit""",
     )
     suspend fun findCacheKeyOrderSortIndex(
         bookshelfId: Int,
@@ -105,7 +108,7 @@ internal interface FileDao {
     ): List<String>
 
     @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit"
+        """SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_modified DESC LIMIT :limit""",
     )
     suspend fun findCacheKeyOrderLastModified(
         bookshelfId: Int,
@@ -114,7 +117,7 @@ internal interface FileDao {
     ): List<String>
 
     @Query(
-        "SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit"
+        """SELECT cache_key FROM file WHERE bookshelf_id = :bookshelfId AND parent LIKE :parent AND file_type != 'FOLDER' AND cache_key != '' ORDER BY last_read DESC LIMIT :limit""",
     )
     suspend fun findCacheKeysOrderLastRead(
         bookshelfId: Int,
@@ -131,7 +134,9 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND parent = ''")
     suspend fun findRootFile(bookshelfId: Int): FileEntity?
 
-    @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC")
+    @Query(
+        "SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC",
+    )
     fun pagingSourceHistory(): PagingSource<Int, FileEntity>
 
     /**
@@ -144,13 +149,17 @@ internal interface FileDao {
     @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND file_type != 'FOLDER'")
     fun pagingSourceFileOnBookshelf(bookshelfId: Int): PagingSource<Int, FileEntity>
 
-    @Query("SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC LIMIT 1")
+    @Query(
+        "SELECT * FROM file WHERE file_type != 'FOLDER' AND last_read != 0 ORDER BY last_read DESC LIMIT 1",
+    )
     fun lastHistory(): Flow<FileEntity?>
 
     @Query("UPDATE file SET cache_key = '' WHERE cache_key != ''")
     suspend fun deleteAllCacheKey()
 
-    @Query("UPDATE file set last_read = 0, last_read_page = 0  WHERE bookshelf_id = :bookshelfId AND path IN (:list)")
+    @Query(
+        "UPDATE file set last_read = 0, last_read_page = 0  WHERE bookshelf_id = :bookshelfId AND path IN (:list)",
+    )
     suspend fun deleteHistory(bookshelfId: Int, list: Array<String>)
 
     @Query("DELETE FROM file WHERE bookshelf_id = :id")
@@ -160,7 +169,7 @@ internal interface FileDao {
     suspend fun cacheKeyList(id: Int): List<String>
 
     @Query(
-        "SELECT * FROM file WHERE bookshelf_id = :id AND file_type = 'FILE' ORDER BY path LIMIT :limit OFFSET :offset"
+        "SELECT * FROM file WHERE bookshelf_id = :id AND file_type = 'FILE' ORDER BY path LIMIT :limit OFFSET :offset",
     )
     fun fileList(id: Int, limit: Int, offset: Long): Flow<List<FileEntity>>
 
@@ -210,9 +219,17 @@ internal fun FileDao.pagingSourceFileSearch(
         }
         when (searchCondition.period) {
             SearchCondition.Period.None -> Unit
-            SearchCondition.Period.Hour24 -> add("last_modified > strftime('%s000', datetime('now', '-24 hours'))")
-            SearchCondition.Period.Week1 -> add("last_modified > strftime('%s000', datetime('now', '-7 days'))")
-            SearchCondition.Period.Month1 -> add("last_modified > strftime('%s000', datetime('now', '-1 months'))")
+            SearchCondition.Period.Hour24 -> add(
+                "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
+            )
+
+            SearchCondition.Period.Week1 -> add(
+                "last_modified > strftime('%s000', datetime('now', '-7 days'))",
+            )
+
+            SearchCondition.Period.Month1 -> add(
+                "last_modified > strftime('%s000', datetime('now', '-1 months'))",
+            )
         }
     }
     val sortStr = if (searchCondition.sortType.isAsc) "ASC" else "DESC"
@@ -223,19 +240,19 @@ internal fun FileDao.pagingSourceFileSearch(
     }
     val query = RoomRawQuery(
         """
-                SELECT
-                  *,
-                  CASE
-                    WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
-                    else 0
-                  END count
-                FROM
-                  file
-                WHERE
-                  ${selectionStr.joinToString(" AND ")}
-                ORDER BY
-                  $orderBy
-        """.trimIndent()
+        SELECT
+          *,
+          CASE
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+            else 0
+          END count
+        FROM
+          file
+        WHERE
+          ${selectionStr.joinToString(" AND ")}
+        ORDER BY
+          $orderBy
+        """.trimIndent(),
     ) {
         bindArgs.forEachIndexed { index, any ->
             when (any) {
@@ -290,9 +307,17 @@ internal suspend fun FileDao.bookshelfIdCacheKey(
         }
         when (searchCondition.period) {
             SearchCondition.Period.None -> Unit
-            SearchCondition.Period.Hour24 -> add("last_modified > strftime('%s000', datetime('now', '-24 hours'))")
-            SearchCondition.Period.Week1 -> add("last_modified > strftime('%s000', datetime('now', '-7 days'))")
-            SearchCondition.Period.Month1 -> add("last_modified > strftime('%s000', datetime('now', '-1 months'))")
+            SearchCondition.Period.Hour24 -> add(
+                "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
+            )
+
+            SearchCondition.Period.Week1 -> add(
+                "last_modified > strftime('%s000', datetime('now', '-7 days'))",
+            )
+
+            SearchCondition.Period.Month1 -> add(
+                "last_modified > strftime('%s000', datetime('now', '-1 months'))",
+            )
         }
     }
     val sortStr = if (searchCondition.sortType.isAsc) "ASC" else "DESC"
@@ -304,20 +329,20 @@ internal suspend fun FileDao.bookshelfIdCacheKey(
     bindArgs += limit
     val query = RoomRawQuery(
         """
-                SELECT
-                  *,
-                  CASE
-                    WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
-                    else 0
-                  END count
-                FROM
-                  file
-                WHERE
-                  ${selectionStr.joinToString(" AND ")}
-                ORDER BY
-                  $orderBy
-                LIMIT :limit
-        """.trimIndent()
+        SELECT
+          *,
+          CASE
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+            else 0
+          END count
+        FROM
+          file
+        WHERE
+          ${selectionStr.joinToString(" AND ")}
+        ORDER BY
+          $orderBy
+        LIMIT :limit
+        """.trimIndent(),
     ) {
         bindArgs.forEachIndexed { index, any ->
             when (any) {

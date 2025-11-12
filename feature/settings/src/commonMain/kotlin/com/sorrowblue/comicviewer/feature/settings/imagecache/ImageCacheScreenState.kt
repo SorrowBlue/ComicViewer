@@ -19,27 +19,26 @@ import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 @Composable
-internal fun rememberImageCacheScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    getBookshelfImageCacheInfoUseCase: GetBookshelfImageCacheInfoUseCase = koinInject(),
-    getOtherImageCacheInfoUseCase: GetOtherImageCacheInfoUseCase = koinInject(),
-    clearImageCacheUseCase: ClearImageCacheUseCase = koinInject(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-): ImageCacheScreenState = remember {
-    ImageCacheScreenStateImpl(
-        scope = scope,
-        snackbarHostState = snackbarHostState,
-        getBookshelfImageCacheInfoUseCase = getBookshelfImageCacheInfoUseCase,
-        getOtherImageCacheInfoUseCase = getOtherImageCacheInfoUseCase,
-        clearImageCacheUseCase = clearImageCacheUseCase
-    )
+context(context: ImageCacheScreenContext)
+internal fun rememberImageCacheScreenState(): ImageCacheScreenState {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    return remember(scope, snackbarHostState) {
+        ImageCacheScreenStateImpl(
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            getBookshelfImageCacheInfoUseCase = context.getBookshelfImageCacheInfoUseCase,
+            getOtherImageCacheInfoUseCase = context.getOtherImageCacheInfoUseCase,
+            clearImageCacheUseCase = context.clearImageCacheUseCase,
+        )
+    }
 }
 
 internal interface ImageCacheScreenState {
     fun onClick(bookshelfId: BookshelfId, imageCache: ImageCache)
+
     val snackbarHostState: SnackbarHostState
     val uiState: ThumbnailScreenUiState
 }
@@ -77,7 +76,8 @@ private class ImageCacheScreenStateImpl(
 
     private fun fetch() {
         scope.launch {
-            getBookshelfImageCacheInfoUseCase(GetBookshelfImageCacheInfoUseCase.Request).first()
+            getBookshelfImageCacheInfoUseCase(GetBookshelfImageCacheInfoUseCase.Request)
+                .first()
                 .onSuccess {
                     uiState = uiState.copy(imageCacheInfos = it)
                 }

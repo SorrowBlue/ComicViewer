@@ -7,14 +7,12 @@ import androidx.compose.ui.focus.onFocusChanged
 import soil.form.compose.FormField
 import soil.form.compose.hasError
 
-internal fun FormField<*>.supportingText(): (@Composable () -> Unit)? {
-    return if (hasError) {
-        { Text(text = error.messages.first()) }
-    } else {
-        null
-    }
+internal fun FormField<*>.supportingText(): (@Composable () -> Unit)? = if (hasError) {
+    { Text(text = error.messages.first()) }
+} else {
+    null
 }
 
-fun Modifier.handleFocusChanged(formField: FormField<*>): Modifier {
-    return onFocusChanged { state -> formField.handleFocus(state.isFocused || state.hasFocus) }
+fun Modifier.handleFocusChanged(formField: FormField<*>): Modifier = onFocusChanged { state ->
+    formField.handleFocus(state.isFocused || state.hasFocus)
 }

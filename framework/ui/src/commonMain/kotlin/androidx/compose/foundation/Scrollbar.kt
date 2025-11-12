@@ -75,7 +75,7 @@ fun defaultScrollbarStyle() = ScrollbarStyle(
     shape = RoundedCornerShape(4.dp),
     hoverDurationMillis = 300,
     unhoverColor = Color.Black.copy(alpha = 0.12f),
-    hoverColor = Color.Black.copy(alpha = 0.50f)
+    hoverColor = Color.Black.copy(alpha = 0.50f),
 )
 
 /**
@@ -122,7 +122,7 @@ fun VerticalScrollbar(
     style = style,
     interactionSource = interactionSource,
     isVertical = true,
-    modifier = modifier
+    modifier = modifier,
 )
 
 /**
@@ -165,11 +165,17 @@ fun HorizontalScrollbar(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) = NewScrollbar(
     newAdapter = adapter,
-    reverseLayout = if (LocalLayoutDirection.current == LayoutDirection.Rtl) !reverseLayout else reverseLayout,
+    reverseLayout = if (LocalLayoutDirection.current ==
+        LayoutDirection.Rtl
+    ) {
+        !reverseLayout
+    } else {
+        reverseLayout
+    },
     style = style,
     interactionSource = interactionSource,
     isVertical = false,
-    modifier = modifier
+    modifier = modifier,
 )
 
 @Composable
@@ -187,7 +193,7 @@ private fun NewScrollbar(
     style = style,
     interactionSource = interactionSource,
     isVertical = isVertical,
-    modifier = modifier
+    modifier = modifier,
 )
 
 private typealias NewScrollbarAdapterFactory<T> = (
@@ -245,9 +251,16 @@ internal fun <T> OldOrNewScrollbar(
         minimalHeight,
         reverseLayout,
         isVertical,
-        coroutineScope
+        coroutineScope,
     ) {
-        SliderAdapter(adapter, containerSize, minimalHeight, reverseLayout, isVertical, coroutineScope)
+        SliderAdapter(
+            adapter,
+            containerSize,
+            minimalHeight,
+            reverseLayout,
+            isVertical,
+            coroutineScope,
+        )
     }
 
     val scrollThickness = style.thickness.roundToPx()
@@ -263,7 +276,7 @@ internal fun <T> OldOrNewScrollbar(
 
     val color by animateColorAsState(
         if (isHighlighted) style.hoverColor else style.unhoverColor,
-        animationSpec = TweenSpec(durationMillis = style.hoverDurationMillis)
+        animationSpec = TweenSpec(durationMillis = style.hoverDurationMillis),
     )
 
     val isVisible = sliderAdapter.thumbSize < containerSize
@@ -277,13 +290,13 @@ internal fun <T> OldOrNewScrollbar(
                         interactionSource = interactionSource,
                         draggedInteraction = dragInteraction,
                         sliderAdapter = sliderAdapter,
-                    )
+                    ),
             )
         },
         modifier
             .hoverable(interactionSource = interactionSource)
             .scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter),
-        measurePolicy
+        measurePolicy,
     )
 }
 
@@ -343,9 +356,8 @@ fun rememberScrollbarAdapter(
  *     }
  */
 @JvmName("ScrollbarAdapter2")
-fun ScrollbarAdapter(
-    scrollState: ScrollState,
-): androidx.compose.foundation.v2.ScrollbarAdapter = ScrollableScrollbarAdapter(scrollState)
+fun ScrollbarAdapter(scrollState: ScrollState): androidx.compose.foundation.v2.ScrollbarAdapter =
+    ScrollableScrollbarAdapter(scrollState)
 
 /**
  * ScrollbarAdapter for lazy lists.
@@ -367,9 +379,8 @@ fun ScrollbarAdapter(
  *     }
  */
 @JvmName("ScrollbarAdapter2")
-fun ScrollbarAdapter(
-    scrollState: LazyListState,
-): androidx.compose.foundation.v2.ScrollbarAdapter = LazyListScrollbarAdapter(scrollState)
+fun ScrollbarAdapter(scrollState: LazyListState): androidx.compose.foundation.v2.ScrollbarAdapter =
+    LazyListScrollbarAdapter(scrollState)
 
 /**
  * ScrollbarAdapter for lazy grids.
@@ -391,9 +402,8 @@ fun ScrollbarAdapter(
  *     }
  */
 @JvmName("ScrollbarAdapter2")
-fun ScrollbarAdapter(
-    scrollState: LazyGridState,
-): androidx.compose.foundation.v2.ScrollbarAdapter = LazyGridScrollbarAdapter(scrollState)
+fun ScrollbarAdapter(scrollState: LazyGridState): androidx.compose.foundation.v2.ScrollbarAdapter =
+    LazyGridScrollbarAdapter(scrollState)
 
 private val SliderAdapter.thumbPixelRange: IntRange
     get() {
@@ -415,8 +425,8 @@ private fun verticalMeasurePolicy(
     val placeable = measurables.first().measure(
         Constraints.fixed(
             constraints.constrainWidth(scrollThickness),
-            pixelRange.size
-        )
+            pixelRange.size,
+        ),
     )
     layout(placeable.width, constraints.minHeight) {
         placeable.place(0, pixelRange.first)
@@ -433,8 +443,8 @@ private fun horizontalMeasurePolicy(
     val placeable = measurables.first().measure(
         Constraints.fixed(
             pixelRange.size,
-            constraints.constrainHeight(scrollThickness)
-        )
+            constraints.constrainHeight(scrollThickness),
+        ),
     )
     layout(constraints.maxWidth, placeable.height) {
         placeable.place(pixelRange.first, 0)
@@ -449,7 +459,6 @@ internal class TrackPressScroller(
     private val sliderAdapter: SliderAdapter,
     private val reverseLayout: Boolean,
 ) {
-
     /**
      * The current direction of scroll (1: down/right, -1: up/left, 0: not scrolling)
      */

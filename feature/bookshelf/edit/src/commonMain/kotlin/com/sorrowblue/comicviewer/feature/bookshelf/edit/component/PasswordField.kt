@@ -53,7 +53,14 @@ internal fun PasswordField(
             value = field.value,
             onValueChange = field::onValueChange,
             label = { Text(text = stringResource(Res.string.bookshelf_edit_hint_password)) },
-            isError = field.hasError || form.watch { meta.fields[AuthField]?.error?.messages?.isNotEmpty() == true },
+            isError =
+            field.hasError ||
+                form.watch {
+                    meta.fields[AuthField]
+                        ?.error
+                        ?.messages
+                        ?.isNotEmpty() == true
+                },
             enabled = field.isEnabled,
             supportingText = field.supportingText(),
             visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
@@ -62,21 +69,21 @@ internal fun PasswordField(
                     IconButton(onClick = { showPassword = false }) {
                         Icon(
                             imageVector = ComicIcons.Visibility,
-                            contentDescription = "hide_password"
+                            contentDescription = "hide_password",
                         )
                     }
                 } else {
                     IconButton(onClick = { showPassword = true }) {
                         Icon(
                             imageVector = ComicIcons.VisibilityOff,
-                            contentDescription = "hide_password"
+                            contentDescription = "hide_password",
                         )
                     }
                 }
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
             ),
             keyboardActions = KeyboardActions(onDone = {
                 field.trigger(FieldValidationMode.Blur)
@@ -85,7 +92,7 @@ internal fun PasswordField(
             singleLine = true,
             modifier = modifier
                 .handleFocusChanged(field)
-                .testTag(PasswordField)
+                .testTag(PasswordField),
         )
     }
 }

@@ -8,6 +8,7 @@ expect class PdfPluginSettings {
 
     companion object {
         fun kSerializer(): KSerializer<PdfPluginSettings>
+
         fun default(): PdfPluginSettings
     }
 }

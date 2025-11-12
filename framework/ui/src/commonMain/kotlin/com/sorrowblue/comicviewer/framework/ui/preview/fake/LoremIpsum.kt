@@ -20,11 +20,11 @@ val LoremIpsum = listOf(
     "Suspendisse",
     "Vivamus pretium dui",
     "Suspendisse eu ante",
-    "Nam ac nisl ac tellus pellentesque"
+    "Nam ac nisl ac tellus pellentesque",
 )
 
-fun nextLoremIpsum() = LoremIpsum[LoremIpsumIndex++].also {
-    if (LoremIpsumIndex >= LoremIpsum.size) LoremIpsumIndex = 0
+fun nextLoremIpsum() = LoremIpsum[loremIpsumIndex++].also {
+    if (loremIpsumIndex >= LoremIpsum.size) loremIpsumIndex = 0
 }
 
-private var LoremIpsumIndex = 0
+private var loremIpsumIndex = 0

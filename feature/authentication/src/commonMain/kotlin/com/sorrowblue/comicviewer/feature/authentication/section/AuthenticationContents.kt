@@ -21,20 +21,16 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
-internal sealed interface AuthenticationContentsAction {
-    data object BackClick : AuthenticationContentsAction
-    data class PinChange(val pin: String) : AuthenticationContentsAction
-    data object NextClick : AuthenticationContentsAction
-}
-
 @Composable
 internal fun AuthenticationRowContents(
     uiState: AuthenticationScreenUiState,
-    onAction: (AuthenticationContentsAction) -> Unit,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        IconButton(onClick = { onAction(AuthenticationContentsAction.BackClick) }) {
+        IconButton(onClick = onBackClick) {
             if (uiState is AuthenticationScreenUiState.Authentication) {
                 Icon(imageVector = ComicIcons.Close, contentDescription = null)
             } else {
@@ -45,12 +41,12 @@ internal fun AuthenticationRowContents(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(1f).fillMaxHeight()
+                modifier = Modifier.weight(1f).fillMaxHeight(),
             ) {
                 Image(
                     imageVector = ComicIcons.Launcher,
                     contentDescription = null,
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(80.dp),
                 )
                 Spacer(Modifier.size(ComicTheme.dimension.padding))
                 Text(
@@ -67,11 +63,11 @@ internal fun AuthenticationRowContents(
             }
             InputContents(
                 uiState = uiState,
-                onPinChange = { onAction(AuthenticationContentsAction.PinChange(it)) },
-                onNextClick = { onAction(AuthenticationContentsAction.NextClick) },
+                onPinChange = onPinChange,
+                onNextClick = onNextClick,
                 modifier = Modifier
                     .weight(1f)
-                    .align(Alignment.CenterVertically)
+                    .align(Alignment.CenterVertically),
             )
         }
     }
@@ -80,16 +76,18 @@ internal fun AuthenticationRowContents(
 @Composable
 internal fun AuthenticationColumnContents(
     uiState: AuthenticationScreenUiState,
-    onAction: (AuthenticationContentsAction) -> Unit,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         IconButton(
-            onClick = { onAction(AuthenticationContentsAction.BackClick) },
-            modifier = Modifier.align(Alignment.Start)
+            onClick = onBackClick,
+            modifier = Modifier.align(Alignment.Start),
         ) {
             if (uiState is AuthenticationScreenUiState.Authentication) {
                 Icon(imageVector = ComicIcons.Close, contentDescription = null)
@@ -99,13 +97,13 @@ internal fun AuthenticationColumnContents(
         }
         Column(
             modifier = Modifier.weight(1f).fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 imageVector = ComicIcons.Launcher,
                 contentDescription = null,
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.size(80.dp),
             )
             Spacer(Modifier.size(ComicTheme.dimension.padding))
             Text(
@@ -123,12 +121,12 @@ internal fun AuthenticationColumnContents(
         }
         Column(
             modifier = Modifier.weight(1f).fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             InputContents(
                 uiState = uiState,
-                onPinChange = { onAction(AuthenticationContentsAction.PinChange(it)) },
-                onNextClick = { onAction(AuthenticationContentsAction.NextClick) },
+                onPinChange = onPinChange,
+                onNextClick = onNextClick,
             )
         }
     }

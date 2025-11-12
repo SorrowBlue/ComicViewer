@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -28,7 +29,6 @@ android {
 dependencies {
     debugImplementation(libs.kotlinx.serialization.json)
     debugImplementation(libs.androidx.appcompat)
-    debugImplementation(libs.koin.core)
     // Suppressing highlights in @Serializable
     debugImplementation(libs.androidx.annotation.experimental)
 }

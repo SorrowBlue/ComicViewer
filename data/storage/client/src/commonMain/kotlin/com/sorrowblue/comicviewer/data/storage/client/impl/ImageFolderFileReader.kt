@@ -16,16 +16,14 @@ internal class ImageFolderFileReader(
     private val fileClient: FileClient<*>,
     private val file: File,
 ) : FileReader {
-
     private var list: List<File>? = null
 
-    private suspend fun list(): List<File> {
-        return withContext(dispatcher) {
-            list ?: fileClient.listFiles(file, false)
-                .filter { it is BookFile && it.extension in SUPPORTED_IMAGE }
-                .sortedWith(SortUtil.compareFile)
-                .also { list = it }
-        }
+    private suspend fun list(): List<File> = withContext(dispatcher) {
+        list ?: fileClient
+            .listFiles(file, false)
+            .filter { it is BookFile && it.extension in SUPPORTED_IMAGE }
+            .sortedWith(SortUtil.compareFile)
+            .also { list = it }
     }
 
     override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
@@ -36,22 +34,16 @@ internal class ImageFolderFileReader(
         }
     }
 
-    override suspend fun fileName(pageIndex: Int): String {
-        return withContext(dispatcher) {
-            list()[pageIndex].path
-        }
+    override suspend fun fileName(pageIndex: Int): String = withContext(dispatcher) {
+        list()[pageIndex].path
     }
 
-    override suspend fun fileSize(pageIndex: Int): Long {
-        return withContext(dispatcher) {
-            list()[pageIndex].size
-        }
+    override suspend fun fileSize(pageIndex: Int): Long = withContext(dispatcher) {
+        list()[pageIndex].size
     }
 
-    override suspend fun pageCount(): Int {
-        return withContext(dispatcher) {
-            list().size
-        }
+    override suspend fun pageCount(): Int = withContext(dispatcher) {
+        list().size
     }
 
     override fun close() {

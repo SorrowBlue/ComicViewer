@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.AndroidUiModes
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
@@ -35,6 +38,9 @@ import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_device
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_smb
@@ -73,7 +79,7 @@ private fun BookshelfColumnItem(
                 .fillMaxWidth()
                 .aspectRatio(16f / 9f)
                 .clip(CardDefaults.shape)
-                .background(ComicTheme.colorScheme.imageBackground(colors.containerColor))
+                .background(ComicTheme.colorScheme.imageBackground(colors.containerColor)),
         )
         ListItem(
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
@@ -82,25 +88,30 @@ private fun BookshelfColumnItem(
             },
             supportingContent = {
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.targetSpacing),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        ComicTheme.dimension.targetSpacing,
+                    ),
                 ) {
                     AssistChip(
                         onClick = {},
                         leadingIcon = {
                             Icon(
                                 if (bookshelfFolder.bookshelf is SmbServer) ComicIcons.Dns else ComicIcons.SdStorage,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         },
                         label = {
                             Text(
                                 text = when (bookshelfFolder.bookshelf) {
-                                    is InternalStorage -> stringResource(Res.string.bookshelf_label_device)
+                                    is InternalStorage -> stringResource(
+                                        Res.string.bookshelf_label_device,
+                                    )
+
                                     is SmbServer -> stringResource(Res.string.bookshelf_label_smb)
                                     ShareContents -> ""
-                                }
+                                },
                             )
-                        }
+                        },
                     )
                     AssistChip(
                         onClick = {},
@@ -109,7 +120,7 @@ private fun BookshelfColumnItem(
                         },
                         label = {
                             Text(text = bookshelfFolder.bookshelf.fileCount.toString())
-                        }
+                        },
                     )
                     Spacer(Modifier.weight(1f))
                     OutlinedIconButton(
@@ -118,7 +129,7 @@ private fun BookshelfColumnItem(
                         Icon(ComicIcons.MoreVert, null)
                     }
                 }
-            }
+            },
         )
     }
 }
@@ -130,7 +141,9 @@ private fun BookshelfRowItem(
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = CardDefaults.cardColors(containerColor = ComicTheme.colorScheme.surfaceContainerHighest)
+    val colors = CardDefaults.cardColors(
+        containerColor = ComicTheme.colorScheme.surfaceContainerHighest,
+    )
     Card(onClick = onClick, colors = colors, modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             FileThumbnailAsyncImage(
@@ -151,25 +164,31 @@ private fun BookshelfRowItem(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalArrangement = Arrangement.spacedBy(0.dp),
                         itemVerticalAlignment = Alignment.Top,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         AssistChip(
                             onClick = {},
                             leadingIcon = {
                                 Icon(
                                     if (bookshelfFolder.bookshelf is SmbServer) ComicIcons.Dns else ComicIcons.SdStorage,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             },
                             label = {
                                 Text(
                                     text = when (bookshelfFolder.bookshelf) {
-                                        is InternalStorage -> stringResource(Res.string.bookshelf_label_device)
-                                        is SmbServer -> stringResource(Res.string.bookshelf_label_smb)
+                                        is InternalStorage -> stringResource(
+                                            Res.string.bookshelf_label_device,
+                                        )
+
+                                        is SmbServer -> stringResource(
+                                            Res.string.bookshelf_label_smb,
+                                        )
+
                                         ShareContents -> ""
-                                    }
+                                    },
                                 )
-                            }
+                            },
                         )
                         AssistChip(
                             onClick = {},
@@ -178,7 +197,7 @@ private fun BookshelfRowItem(
                             },
                             label = {
                                 Text(text = bookshelfFolder.bookshelf.fileCount.toString())
-                            }
+                            },
                         )
                     }
                 },
@@ -186,7 +205,7 @@ private fun BookshelfRowItem(
                     IconButton(onClick = onInfoClick) {
                         Icon(ComicIcons.MoreVert, null)
                     }
-                }
+                },
             )
         }
     }
@@ -198,3 +217,29 @@ private val BookshelfFolder.displayName
         is SmbServer -> bookshelf.displayName.ifEmpty { bookshelf.host }
         ShareContents -> bookshelf.displayName.ifEmpty { bookshelf.displayName }
     }
+
+@Preview(widthDp = 360, apiLevel = 35, device = Devices.PIXEL_7)
+@Preview(widthDp = 400, apiLevel = 35, device = Devices.PIXEL_7)
+@Preview(
+    widthDp = 360,
+    uiMode = AndroidUiModes.UI_MODE_NIGHT_YES or AndroidUiModes.UI_MODE_TYPE_NORMAL,
+    apiLevel = 35,
+    device = Devices.PIXEL_7,
+)
+@Preview(
+    widthDp = 400,
+    uiMode = AndroidUiModes.UI_MODE_NIGHT_YES or AndroidUiModes.UI_MODE_TYPE_NORMAL,
+    apiLevel = 35,
+    device = Devices.PIXEL_7,
+)
+@Composable
+private fun BookshelfCardPreview() {
+    PreviewTheme {
+        val bookshelfFolder = BookshelfFolder(fakeSmbServer(), fakeFolder())
+        BookshelfListItem(
+            bookshelfFolder = bookshelfFolder,
+            onClick = {},
+            onInfoClick = {},
+        )
+    }
+}

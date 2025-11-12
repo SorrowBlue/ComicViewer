@@ -15,19 +15,18 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.animateMainContentPaddingValues
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
-sealed class LazyPagingColumnType {
-
+sealed class LazyPagingColumn {
     abstract val columns: GridCells
 
-    data object List : LazyPagingColumnType() {
+    data object List : LazyPagingColumn() {
         override val columns = GridCells.Fixed(1)
     }
 
-    data object ListMedium : LazyPagingColumnType() {
+    data object ListMedium : LazyPagingColumn() {
         override val columns = GridCells.Adaptive(500.dp)
     }
 
-    data class Grid(val minSize: Int) : LazyPagingColumnType() {
+    data class Grid(val minSize: Int) : LazyPagingColumn() {
         override val columns = GridCells.Adaptive(minSize.dp)
     }
 }
@@ -35,33 +34,39 @@ sealed class LazyPagingColumnType {
 @Composable
 fun <T : Any> LazyPagingColumn(
     lazyPagingItems: LazyPagingItems<T>,
-    type: LazyPagingColumnType,
+    type: LazyPagingColumn,
     modifier: Modifier = Modifier,
     autoPadding: Boolean = true,
     state: LazyGridState = rememberLazyGridState(),
     contentPadding: PaddingValues = PaddingValues(),
-    fillWidth: Boolean = type is LazyPagingColumnType.List,
+    fillWidth: Boolean = type is LazyPagingColumn.List,
     key: ((index: Int) -> Any)? = null,
     contentType: (index: Int) -> Any? = { type },
     itemContent: @Composable (LazyGridItemScope.(index: Int, item: T) -> Unit),
 ) {
     val padding = if (autoPadding) {
-        animateMainContentPaddingValues(type == LazyPagingColumnType.List).value
+        animateMainContentPaddingValues(type == LazyPagingColumn.List).value
     } else {
         PaddingValues()
     }
     LazyVerticalGrid(
         columns = type.columns,
         state = state,
-        contentPadding = contentPadding + padding,
-        verticalArrangement = if (fillWidth) Arrangement.Top else Arrangement.spacedBy(ComicTheme.dimension.padding),
+        contentPadding = contentPadding.plus(padding),
+        verticalArrangement = if (fillWidth) {
+            Arrangement.Top
+        } else {
+            Arrangement.spacedBy(
+                ComicTheme.dimension.padding,
+            )
+        },
         horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding),
-        modifier = modifier
+        modifier = modifier,
     ) {
         items(
             count = lazyPagingItems.itemCount,
             key = key,
-            contentType = contentType
+            contentType = contentType,
         ) { index ->
             lazyPagingItems[index]?.let {
                 itemContent(index, it)

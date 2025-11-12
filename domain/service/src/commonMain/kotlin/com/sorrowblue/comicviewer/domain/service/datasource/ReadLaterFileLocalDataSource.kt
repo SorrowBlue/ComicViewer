@@ -8,10 +8,13 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import kotlinx.coroutines.flow.Flow
 
 interface ReadLaterFileLocalDataSource {
-
     suspend fun updateOrAdd(file: ReadLaterFile): Resource<ReadLaterFile, Resource.SystemError>
+
     suspend fun delete(file: ReadLaterFile): Resource<Unit, Resource.SystemError>
+
     suspend fun deleteAll(): Resource<Unit, Resource.SystemError>
+
     fun exists(file: ReadLaterFile): Resource<Flow<Boolean>, Resource.SystemError>
+
     fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>>
 }

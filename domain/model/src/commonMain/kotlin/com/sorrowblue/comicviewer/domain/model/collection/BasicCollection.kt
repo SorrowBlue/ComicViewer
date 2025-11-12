@@ -15,20 +15,18 @@ data class BasicCollection private constructor(
     override val createdAt: LocalDateTime,
     override val updatedAt: LocalDateTime,
 ) : Collection {
-
     fun copy(name: String = this.name) = copy(
         id = id,
         name = name,
     )
 
     companion object {
-
         operator fun invoke(name: String) = BasicCollection(
             id = CollectionId(),
             name = name,
             count = 0,
             createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         )
 
         @InternalDataApi

@@ -37,15 +37,23 @@ internal fun PathField(
         validator = FieldValidator {
             notBlank { notBlankMessage }
         },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
             onValueChange = field::onValueChange,
             label = { Text(text = stringResource(Res.string.bookshelf_edit_smb_input_label_path)) },
             isError = field.hasError,
-            prefix = { Text(text = stringResource(Res.string.bookshelf_edit_smb_input_prefix_path)) },
-            suffix = { Text(text = stringResource(Res.string.bookshelf_edit_smb_input_suffix_path)) },
+            prefix = {
+                Text(
+                    text = stringResource(Res.string.bookshelf_edit_smb_input_prefix_path),
+                )
+            },
+            suffix = {
+                Text(
+                    text = stringResource(Res.string.bookshelf_edit_smb_input_suffix_path),
+                )
+            },
             enabled = field.isEnabled,
             supportingText = field.supportingText(),
             keyboardOptions = KeyboardOptions(
@@ -55,7 +63,7 @@ internal fun PathField(
                     ImeAction.Done
                 } else {
                     ImeAction.Next
-                }
+                },
             ),
             keyboardActions = KeyboardActions(onDone = {
                 // When focus doesn't move to the next field, you need to manually trigger validation

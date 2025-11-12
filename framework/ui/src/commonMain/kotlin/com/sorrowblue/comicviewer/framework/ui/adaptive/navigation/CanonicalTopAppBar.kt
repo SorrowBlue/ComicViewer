@@ -16,6 +16,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 
 @Composable
 fun CanonicalTopAppBar(
@@ -36,13 +39,15 @@ fun CanonicalTopAppBar(
     scrollableState: ScrollableState? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    val colors = if (LocalNavigationState.current is NavigationState.NavigationBar) {
+    val navigationSuiteType =
+        NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
+    val colors = if (navigationSuiteType.isNavigationBar) {
         TopAppBarDefaults.topAppBarColors()
     } else {
         TopAppBarDefaults.topAppBarColors().run {
             TopAppBarDefaults.topAppBarColors(
                 containerColor = containerColor,
-                scrolledContainerColor = containerColor
+                scrolledContainerColor = containerColor,
             )
         }
     }
@@ -56,7 +61,7 @@ fun CanonicalTopAppBar(
     val appBarContainerColor = animateColorAsState(
         targetColor,
         animationSpec = spring(dampingRatio = 1.0f, stiffness = 1600.0f),
-        label = "appBarContainerColor"
+        label = "appBarContainerColor",
     )
     Column(
         modifier = modifier.drawBehind {
@@ -64,7 +69,7 @@ fun CanonicalTopAppBar(
             if (color != Color.Unspecified) {
                 drawRect(color = color)
             }
-        }
+        },
     ) {
         TopAppBar(
             title = title,
@@ -72,10 +77,12 @@ fun CanonicalTopAppBar(
             actions = actions,
             colors = colors,
             scrollBehavior = scrollBehavior,
-            windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+            windowInsets = WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+            ),
         )
         bottomComponent()
-        if (scrollableState != null && LocalNavigationState.current !is NavigationState.NavigationBar) {
+        if (scrollableState != null && !navigationSuiteType.isNavigationBar) {
             if (scrollableState.canScrollBackward) {
                 HorizontalDivider()
             }
@@ -84,10 +91,8 @@ fun CanonicalTopAppBar(
 }
 
 @Stable
-private fun TopAppBarColors.containerColor(colorTransitionFraction: Float): Color {
-    return lerp(
-        containerColor,
-        scrolledContainerColor,
-        FastOutLinearInEasing.transform(colorTransitionFraction)
-    )
-}
+private fun TopAppBarColors.containerColor(colorTransitionFraction: Float): Color = lerp(
+    containerColor,
+    scrolledContainerColor,
+    FastOutLinearInEasing.transform(colorTransitionFraction),
+)

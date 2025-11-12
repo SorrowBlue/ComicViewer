@@ -25,10 +25,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.tokens.ElevationTokens
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 
 @Composable
-internal fun BookLoadingScreen(
-    uiState: BookScreenUiState.Loading,
-    onBackClick: () -> Unit,
-) {
+internal fun BookLoadingScreen(uiState: BookScreenUiState.Loading, onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -39,7 +36,7 @@ internal fun BookLoadingScreen(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = ComicIcons.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
@@ -48,19 +45,21 @@ internal fun BookLoadingScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                        elevation = ElevationTokens.Level2
-                    )
+                        elevation = ElevationTokens.Level2,
+                    ),
                 ),
-                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                ),
             )
         },
-        contentWindowInsets = WindowInsets.safeDrawing
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { innerPadding ->
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             CircularProgressIndicator()
         }

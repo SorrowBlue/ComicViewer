@@ -13,14 +13,16 @@ import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
-import jakarta.inject.Singleton
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 
-@Singleton
+@ContributesBinding(DataScope::class)
+@Inject
 internal class ImageCacheDataSourceImpl(
     private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
     private val imageCacheDiskCache: Lazy<DiskCache>,
 ) : ImageCacheDataSource {
-
     override suspend fun deleteThumbnails(list: List<String>) {
         val diskCache = imageCacheDiskCache.value
         if (list.isEmpty()) {
@@ -32,8 +34,10 @@ internal class ImageCacheDataSourceImpl(
         }
     }
 
-    override fun getBookshelfImageCacheInfo(bookshelf: Bookshelf): Resource<BookshelfImageCacheInfo, Resource.SystemError> {
-        return kotlin.runCatching {
+    override fun getBookshelfImageCacheInfo(
+        bookshelf: Bookshelf,
+    ): Resource<BookshelfImageCacheInfo, Resource.SystemError> = kotlin
+        .runCatching {
             val thumbnailImageCache = lazyCoilDiskCache.value.thumbnailDiskCache(bookshelf.id).let {
                 ThumbnailImageCache(it.size, it.maxSize)
             }
@@ -47,36 +51,35 @@ internal class ImageCacheDataSourceImpl(
             },
             onFailure = {
                 Resource.Error(Resource.SystemError(it))
-            }
+            },
         )
-    }
 
-    override fun getOtherImageCache(): Resource<OtherImageCache, Resource.SystemError> {
-        return kotlin.runCatching {
+    override fun getOtherImageCache(): Resource<OtherImageCache, Resource.SystemError> = kotlin
+        .runCatching {
             val diskCache = imageCacheDiskCache.value
             OtherImageCache(diskCache.size, diskCache.maxSize)
         }.fold(
             onSuccess = { Resource.Success(it) },
-            onFailure = { Resource.Error(Resource.SystemError(it)) }
+            onFailure = { Resource.Error(Resource.SystemError(it)) },
         )
-    }
 
     override suspend fun clearImageCache(
         bookshelfId: BookshelfId,
         imageCache: ImageCache,
-    ): Resource<Unit, Resource.SystemError> {
-        return kotlin.runCatching {
+    ): Resource<Unit, Resource.SystemError> = kotlin
+        .runCatching {
             when (imageCache) {
                 is BookPageImageCache -> lazyCoilDiskCache.value.pageDiskCache(bookshelfId).clear()
                 is OtherImageCache -> imageCacheDiskCache.value.clear()
-                is ThumbnailImageCache -> lazyCoilDiskCache.value.thumbnailDiskCache(bookshelfId)
-                    .clear()
+                is ThumbnailImageCache ->
+                    lazyCoilDiskCache.value
+                        .thumbnailDiskCache(bookshelfId)
+                        .clear()
             }
         }.fold(
             onSuccess = { Resource.Success(Unit) },
-            onFailure = { Resource.Error(Resource.SystemError(it)) }
+            onFailure = { Resource.Error(Resource.SystemError(it)) },
         )
-    }
 
     override suspend fun clearImageCache() {
         imageCacheDiskCache.value.clear()

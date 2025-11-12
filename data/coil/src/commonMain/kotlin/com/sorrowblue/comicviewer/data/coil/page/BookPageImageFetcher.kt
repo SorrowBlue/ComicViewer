@@ -9,16 +9,18 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.CoilMetadata
-import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
-import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.pageDiskCache
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -26,7 +28,6 @@ import logcat.asLog
 import logcat.logcat
 import okio.Buffer
 import okio.BufferedSource
-import jakarta.inject.Singleton
 
 private var fileReader: FileReader? = null
 private var book: Book? = null
@@ -40,7 +41,6 @@ internal class BookPageImageFetcher(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : FileFetcher<BookPageImageMetadata>(options, diskCacheLazy) {
-
     override val diskCacheKey
         get() = options.diskCacheKey
             ?: "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}"
@@ -50,34 +50,34 @@ internal class BookPageImageFetcher(
     override fun BufferedSource.readMetadata() = CoilMetadata.from<BookPageImageMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
-        val dataSource = bookshelfLocalDataSource.flow(data.book.bookshelfId).first()
-            ?.let(remoteDataSourceFactory::create)
-            ?: remoteDataSourceFactory.create(ShareContents)
-        if (!dataSource.exists(data.book.path)) {
-            throw CoilRuntimeException("ファイルがない(${data.book.path})")
-        }
-        val fileReader = mutex.withLock {
-            if (fileReader != null && book?.bookshelfId == data.book.bookshelfId && book?.path == data.book.path && book?.totalPageCount == data.book.totalPageCount && book?.lastModifier == data.book.lastModifier) {
-                logcat { "同じFileReaderを使う。 ${data.book.name}, ${data.pageIndex}" }
-                fileReader!!
-            } else {
-                logcat { "新しいFileReaderを使う。 ${data.book.name}, ${data.pageIndex}" }
-                fileReader?.closeQuietly()
-                dataSource.fileReader(data.book)?.also {
-                    book = data.book
-                    fileReader = it
-                } ?: throw CoilRuntimeException("FileReaderが取得できない")
+        val bookshelf = if (data.book.bookshelfId == BookshelfId()) {
+            ShareContents
+        } else {
+            checkNotNull(bookshelfLocalDataSource.flow(data.book.bookshelfId).first()) {
+                "Bookshelf not found. id: ${data.book.bookshelfId}"
             }
         }
-        try {
+        val dataSource = remoteDataSourceFactory.create(bookshelf)
+        check(dataSource.exists(data.book.path)) {
+            "File not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
+        }
+        val fileReader = findFileReader() ?: checkNotNull(
+            dataSource.fileReader(data.book)?.also {
+                book = data.book
+                fileReader = it
+            },
+        ) {
+            "FileReader not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
+        }
+        return runCatching {
             // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-            return writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
+            writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
                 fileReader.copyTo(data.pageIndex, sink)
             }?.let { snapshot1 ->
                 SourceFetchResult(
                     source = snapshot1.toImageSource(),
                     mimeType = null,
-                    dataSource = DataSource.NETWORK
+                    dataSource = DataSource.NETWORK,
                 )
             } ?: run {
                 // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
@@ -86,31 +86,36 @@ internal class BookPageImageFetcher(
                     SourceFetchResult(
                         source = it.toImageSource(),
                         mimeType = null,
-                        dataSource = DataSource.NETWORK
+                        dataSource = DataSource.NETWORK,
                     )
                 }
             }
-        } catch (e: Exception) {
-            logcat { e.asLog() }
-            throw e
+        }.onFailure {
+            logcat { it.asLog() }
+        }.getOrThrow()
+    }
+
+    private suspend fun findFileReader(): FileReader? = mutex.withLock {
+        fileReader?.takeIf { book == data.book }?.also {
+            logcat { "同じFileReaderを使う。${data.book.bookshelfId} ${data.book.path}" }
         }
     }
 }
 
-@Singleton
 @com.sorrowblue.comicviewer.data.coil.BookPageImageFetcher
+@ContributesBinding(DataScope::class)
+@Inject
 internal class BookPageImageFetcherFactory(
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : Fetcher.Factory<BookPageImage> {
-
     override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
         BookPageImageFetcher(
             options,
             lazy { coilDiskCacheLazy.value.pageDiskCache(data.book.bookshelfId) },
             data,
             remoteDataSourceFactory,
-            bookshelfLocalDataSource
+            bookshelfLocalDataSource,
         )
 }

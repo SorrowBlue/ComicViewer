@@ -11,7 +11,6 @@ import androidx.compose.runtime.Stable
  */
 @Stable
 interface SystemUiController {
-
     /**
      * Control for the behavior of the system bars. This value should
      * be one of the [WindowInsetsControllerCompat] behavior constants:

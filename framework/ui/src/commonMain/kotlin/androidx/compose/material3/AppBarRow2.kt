@@ -59,17 +59,16 @@ fun AppBarRow2(
                     overflowIndicator(menuState)
                     DropdownMenu(
                         expanded = menuState.isExpanded,
-                        onDismissRequest = { menuState.dismiss() }
+                        onDismissRequest = { menuState.dismiss() },
                     ) {
                         scope.items
                             .subList(
                                 overflowState.visibleItemCount,
-                                overflowState.totalItemCount
-                            )
-                            .fastForEach { item -> item.MenuContent(menuState) }
+                                overflowState.totalItemCount,
+                            ).fastForEach { item -> item.MenuContent(menuState) }
                     }
                 }
-            }
+            },
         ),
         modifier = modifier,
         measurePolicy = measurePolicy,
@@ -80,10 +79,11 @@ fun AppBarRow2(
 interface AppBarRowScope2 : AppBarScope2
 
 private class AppBarRowScope2Impl(val impl: AppBarScope2Impl) :
-    AppBarRowScope2, AppBarScope2 by impl, AppBarItemProvider2 by impl
+    AppBarRowScope2,
+    AppBarScope2 by impl,
+    AppBarItemProvider2 by impl
 
 sealed interface AppBarScope2 {
-
     /**
      * Adds a clickable item to the [AppBarRow] or [AppBarColumn].
      *
@@ -140,7 +140,6 @@ internal interface AppBarItemProvider2 {
 }
 
 internal interface AppBarItem2 {
-
     /** Composable function to render the item in the app bar. */
     @Composable
     fun AppbarContent()
@@ -154,8 +153,9 @@ internal interface AppBarItem2 {
     fun MenuContent(state: AppBarMenuState2)
 }
 
-internal class AppBarScope2Impl : AppBarScope2, AppBarItemProvider2 {
-
+internal class AppBarScope2Impl :
+    AppBarScope2,
+    AppBarItemProvider2 {
     override val items = mutableListOf<AppBarItem2>()
 
     override val itemsCount: Int
@@ -176,8 +176,8 @@ internal class AppBarScope2Impl : AppBarScope2, AppBarItemProvider2 {
                 enabled = enabled,
                 visible = visible,
                 autoDismiss = autoDismiss,
-                label = label
-            )
+                label = label,
+            ),
         )
     }
 
@@ -198,8 +198,8 @@ internal class AppBarScope2Impl : AppBarScope2, AppBarItemProvider2 {
                 enabled = enabled,
                 visible = visible,
                 autoDismiss = autoDismiss,
-                label = label
-            )
+                label = label,
+            ),
         )
     }
 
@@ -219,7 +219,6 @@ internal class ClickableAppBarItem2(
     private val autoDismiss: Boolean,
     private val label: @Composable () -> Unit,
 ) : AppBarItem2 {
-
     @Composable
     override fun AppbarContent() {
         IconButton(
@@ -241,7 +240,7 @@ internal class ClickableAppBarItem2(
                     if (autoDismiss) {
                         state.dismiss()
                     }
-                }
+                },
             )
         }
     }
@@ -256,7 +255,6 @@ internal class ToggleableAppBarItem2(
     private val autoDismiss: Boolean,
     private val label: @Composable () -> Unit,
 ) : AppBarItem2 {
-
     @Composable
     override fun AppbarContent() {
         IconToggleButton(
@@ -276,7 +274,7 @@ internal class ToggleableAppBarItem2(
                     Checkbox(
                         checked = checked,
                         onCheckedChange = onCheckedChange,
-                        enabled = enabled
+                        enabled = enabled,
                     )
                 },
                 enabled = enabled,
@@ -286,7 +284,7 @@ internal class ToggleableAppBarItem2(
                     if (autoDismiss) {
                         state.dismiss()
                     }
-                }
+                },
             )
         }
     }
@@ -309,7 +307,6 @@ internal class CustomAppBarItem2(
 
 /** State class for the overflow menu in [AppBarRow] and [AppBarColumn]. */
 class AppBarMenuState2 {
-
     /** Indicates whether the overflow menu is currently expanded. */
     var isExpanded by mutableStateOf(false)
         private set
@@ -326,16 +323,16 @@ class AppBarMenuState2 {
 }
 
 internal interface AppBarOverflowState2 {
-
     var totalItemCount: Int
 
     var visibleItemCount: Int
 }
 
 @Composable
-internal fun rememberAppBarOverflowState2(): AppBarOverflowState2 {
-    return rememberSaveable(saver = AppBarOverflowState2Impl.Saver) { AppBarOverflowState2Impl() }
-}
+internal fun rememberAppBarOverflowState2(): AppBarOverflowState2 =
+    rememberSaveable(saver = AppBarOverflowState2Impl.Saver) {
+        AppBarOverflowState2Impl()
+    }
 
 private class AppBarOverflowState2Impl : AppBarOverflowState2 {
     override var totalItemCount: Int by mutableIntStateOf(0)
@@ -350,7 +347,7 @@ private class AppBarOverflowState2Impl : AppBarOverflowState2 {
                         totalItemCount = it[0]
                         visibleItemCount = it[1]
                     }
-                }
+                },
             )
     }
 }

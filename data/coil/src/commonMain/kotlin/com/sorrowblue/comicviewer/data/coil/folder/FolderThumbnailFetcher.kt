@@ -18,11 +18,11 @@ import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
-import logcat.LogPriority
-import logcat.logcat
 import okio.BufferedSource
-import jakarta.inject.Singleton
 
 internal class FolderThumbnailFetcher(
     options: Options,
@@ -31,7 +31,6 @@ internal class FolderThumbnailFetcher(
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileFetcher<FolderThumbnailMetadata>(options, diskCache) {
-
     override val diskCacheKey
         get() = options.diskCacheKey ?: "folder:${data.bookshelfId.value}:${data.path}"
 
@@ -44,7 +43,7 @@ internal class FolderThumbnailFetcher(
             data.path,
             data.bookshelfId.value,
             data.lastModifier,
-            thumbnailCache?.first
+            thumbnailCache?.first,
         )
     }
 
@@ -60,20 +59,21 @@ internal class FolderThumbnailFetcher(
             return SourceFetchResult(
                 source = thumbnailCache.second.toImageSource(),
                 mimeType = null,
-                dataSource = DataSource.DISK
+                dataSource = DataSource.DISK,
             )
         }
     }
 
-    private suspend fun getThumbnailCache(folderThumbnailOrder: FolderThumbnailOrder): CacheKeySnapshot? {
+    private suspend fun getThumbnailCache(
+        folderThumbnailOrder: FolderThumbnailOrder,
+    ): CacheKeySnapshot? {
         val thumbnailCache = fileLocalDataSource.getCacheKeys(
             data.bookshelfId,
             data.path,
-            10,
-            FolderThumbnailOrder.valueOf(folderThumbnailOrder.name)
+            CachesFetchCount,
+            FolderThumbnailOrder.valueOf(folderThumbnailOrder.name),
         )
         if (thumbnailCache.isEmpty()) {
-            logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
             return null
         }
         return thumbnailCache.firstNotNullOfOrNull { cacheKey ->
@@ -87,25 +87,25 @@ internal class FolderThumbnailFetcher(
     }
 }
 
-@Singleton
+private const val CachesFetchCount = 4
+
 @com.sorrowblue.comicviewer.data.coil.FolderThumbnailFetcher
-class FolderThumbnailFetcherFactory(
+@ContributesBinding(DataScope::class)
+@Inject
+internal class FolderThumbnailFetcherFactory(
     private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
     private val fileModelLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : Fetcher.Factory<FolderThumbnail> {
-
     override fun create(
         data: FolderThumbnail,
         options: Options,
         imageLoader: ImageLoader,
-    ): Fetcher {
-        return FolderThumbnailFetcher(
-            options,
-            lazy { lazyCoilDiskCache.value.thumbnailDiskCache(data.bookshelfId) },
-            data,
-            fileModelLocalDataSource,
-            datastoreDataSource
-        )
-    }
+    ): Fetcher = FolderThumbnailFetcher(
+        options,
+        lazy { lazyCoilDiskCache.value.thumbnailDiskCache(data.bookshelfId) },
+        data,
+        fileModelLocalDataSource,
+        datastoreDataSource,
+    )
 }

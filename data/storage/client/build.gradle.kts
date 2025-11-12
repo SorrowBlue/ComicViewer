@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
 }
 
 kotlin {
@@ -14,7 +14,6 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.androidx.startup.runtime)
-                implementation(libs.koin.androidxStartup)
             }
         }
     }

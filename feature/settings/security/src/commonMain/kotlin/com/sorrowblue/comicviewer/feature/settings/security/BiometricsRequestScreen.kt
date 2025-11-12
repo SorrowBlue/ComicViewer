@@ -9,18 +9,19 @@ import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_to_settings
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_dialog_desc
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_device_settings_required
+import comicviewer.framework.ui.generated.resources.Res as UiRes
 import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
-import comicviewer.framework.ui.generated.resources.Res as UiRes
 
 @Composable
-internal fun BiometricsRequestScreen(
-    onConfirmClick: () -> Unit,
-    onDismissRequest: () -> Unit,
-) {
+internal fun BiometricsRequestScreen(onConfirmClick: () -> Unit, onDismissRequest: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_security_title_device_settings_required)) },
+        title = {
+            Text(
+                text = stringResource(Res.string.settings_security_title_device_settings_required),
+            )
+        },
         text = { Text(text = stringResource(Res.string.settings_security_text_dialog_desc)) },
         confirmButton = {
             FilledTonalButton(onClick = onConfirmClick) {
@@ -31,6 +32,6 @@ internal fun BiometricsRequestScreen(
             TextButton(onClick = onDismissRequest) {
                 Text(text = stringResource(UiRes.string.cancel))
             }
-        }
+        },
     )
 }

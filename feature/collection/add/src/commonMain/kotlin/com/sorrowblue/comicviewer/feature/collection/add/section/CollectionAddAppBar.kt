@@ -11,16 +11,13 @@ import comicviewer.feature.collection.add.generated.resources.collection_add_tit
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun CollectionAddAppBar(
-    onCloseClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+internal fun CollectionAddAppBar(onCloseClick: () -> Unit, modifier: Modifier = Modifier) {
     TopAppBar(
         title = { Text(text = stringResource(Res.string.collection_add_title)) },
         actions = {
             CloseIconButton(onClick = onCloseClick)
         },
         windowInsets = WindowInsets(0),
-        modifier = modifier
+        modifier = modifier,
     )
 }

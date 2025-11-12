@@ -10,7 +10,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
 
 interface CollectionFileLocalDataSource {
-
     fun pagingDataFlow(
         id: CollectionId,
         pagingConfig: PagingConfig,
@@ -18,6 +17,7 @@ interface CollectionFileLocalDataSource {
     ): Flow<PagingData<File>>
 
     suspend fun add(file: CollectionFile)
+
     suspend fun remove(file: CollectionFile)
 
     fun flowNextCollectionFile(file: CollectionFile, sortType: SortType): Flow<File?>

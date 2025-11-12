@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal actual fun PinDrawable(
@@ -23,14 +25,16 @@ internal actual fun PinDrawable(
     animate: Boolean,
     enabled: Boolean,
 ) {
-    val resource = when (index % 4) {
-        0 -> R.drawable.authentication_avd_favorite_circle
-        1 -> R.drawable.authentication_avd_moon_circle
-        2 -> R.drawable.authentication_avd_play_circle
-        else -> R.drawable.authentication_avd_hexagon_circle
+    val icons = remember {
+        persistentListOf(
+            R.drawable.authentication_avd_favorite_circle,
+            R.drawable.authentication_avd_moon_circle,
+            R.drawable.authentication_avd_play_circle,
+            R.drawable.authentication_avd_hexagon_circle,
+        ).toImmutableList()
     }
     val image =
-        AnimatedImageVector.animatedVectorResource(resource)
+        AnimatedImageVector.animatedVectorResource(icons[index % icons.size])
     var atEnd by remember { mutableStateOf(!animate) }
     Image(
         painter = rememberAnimatedVectorPainter(image, atEnd),
@@ -42,10 +46,10 @@ internal actual fun PinDrawable(
                 ComicTheme.colorScheme.onSurfaceVariant
             } else {
                 ComicTheme.colorScheme.onSurface.copy(
-                    alpha = 0.38f
+                    alpha = 0.38f,
                 )
-            }
-        )
+            },
+        ),
     )
     LaunchedEffect(Unit) {
         atEnd = true

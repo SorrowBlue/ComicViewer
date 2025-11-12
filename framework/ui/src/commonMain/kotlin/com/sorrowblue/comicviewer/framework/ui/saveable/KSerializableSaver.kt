@@ -9,14 +9,10 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 
 @OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T : Any> T.encodeToByteArray(): ByteArray {
-    return Cbor.encodeToByteArray<T>(this)
-}
+inline fun <reified T : Any> T.encodeToByteArray(): ByteArray = Cbor.encodeToByteArray<T>(this)
 
 @OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T : Any> ByteArray.decodeTo(): T {
-    return Cbor.decodeFromByteArray<T>(this)
-}
+inline fun <reified T : Any> ByteArray.decodeTo(): T = Cbor.decodeFromByteArray<T>(this)
 
 @Composable
 fun <T : Any> rememberListSaveable(
@@ -24,22 +20,20 @@ fun <T : Any> rememberListSaveable(
     save: (T) -> List<Any?>,
     restore: T.(List<Any?>) -> Unit,
     init: () -> T,
-): T {
-    return rememberSaveable(
-        inputs = inputs,
-        saver = Saver(
-            save = {
-                val list = save(it)
-                for (index in list.indices) {
-                    val item = list[index]
-                    if (item != null) {
-                        require(canBeSaved(item)) { "item can't be saved" }
-                    }
+): T = rememberSaveable(
+    inputs = inputs,
+    saver = Saver(
+        save = {
+            val list = save(it)
+            for (index in list.indices) {
+                val item = list[index]
+                if (item != null) {
+                    require(canBeSaved(item)) { "item can't be saved" }
                 }
-                if (list.isNotEmpty()) ArrayList(list) else null
-            },
-            restore = { init().apply { restore(it.toList()) } }
-        ),
-        init = init
-    )
-}
+            }
+            if (list.isNotEmpty()) ArrayList(list) else null
+        },
+        restore = { init().apply { restore(it.toList()) } },
+    ),
+    init = init,
+)

@@ -38,7 +38,7 @@ internal fun TutorialSheet(
             Image(
                 imageVector = image,
                 contentDescription = contentDescription,
-                modifier = Modifier.size(160.dp)
+                modifier = Modifier.size(160.dp),
             )
             Spacer(modifier = Modifier.size(ComicTheme.dimension.margin))
             CompositionLocalProvider(LocalTextStyle provides ComicTheme.typography.titleLarge) {
@@ -61,13 +61,13 @@ internal fun TutorialSheet(
                     .verticalScroll(rememberScrollState())
                     .padding(contentPadding)
                     .padding(ComicTheme.dimension.margin),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     icon()
                 }
@@ -89,7 +89,7 @@ internal fun TutorialSheet(
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     icon()
                 }

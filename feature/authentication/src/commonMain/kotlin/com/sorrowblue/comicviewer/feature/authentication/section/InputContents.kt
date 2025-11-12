@@ -32,7 +32,7 @@ internal fun InputContents(
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(
@@ -44,9 +44,9 @@ internal fun InputContents(
                     is AuthenticationScreenUiState.Change.Input -> Res.string.authentication_text_enter_new_pin
                     is AuthenticationScreenUiState.Change.Confirm -> Res.string.authentication_text_reenter_pin
                     is AuthenticationScreenUiState.Erase -> Res.string.authentication_text_enter_pin
-                }
+                },
             ),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
 
         val enabled by remember(uiState) { derivedStateOf { !uiState.loading } }
@@ -58,7 +58,7 @@ internal fun InputContents(
             modifier = Modifier
                 .padding(top = ComicTheme.dimension.padding)
                 .width(48.dp * 5)
-                .height(48.dp)
+                .height(48.dp),
         )
         if (uiState is AuthenticationScreenUiState.Authentication && uiState.loading) {
             LinearProgressIndicator()
@@ -66,10 +66,10 @@ internal fun InputContents(
         AnimatedVisibility(visible = uiState.error != null) {
             if (uiState.error != null) {
                 Text(
-                    text = stringResource(uiState.error!!.resource),
+                    text = stringResource(requireNotNull(uiState.error).resource),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = ComicTheme.dimension.padding)
+                    modifier = Modifier.padding(top = ComicTheme.dimension.padding),
                 )
             }
         }

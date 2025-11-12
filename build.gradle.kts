@@ -1,3 +1,4 @@
+import dev.detekt.gradle.report.ReportMergeTask
 import dev.iurysouza.modulegraph.ModuleType.Custom
 import dev.iurysouza.modulegraph.Theme
 
@@ -19,6 +20,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.aboutlibraries) apply false
+    alias(libs.plugins.metro) apply false
 }
 
 dependencies {
@@ -57,7 +59,7 @@ dependencies {
     dokka(projects.framework.ui)
 }
 
-tasks.register("reportMerge", io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+tasks.register("reportMerge", ReportMergeTask::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }

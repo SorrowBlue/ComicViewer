@@ -2,198 +2,72 @@ package com.sorrowblue.comicviewer.feature.collection
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
-import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarAction
-import com.sorrowblue.comicviewer.feature.collection.section.CollectionContentsAction
-import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
+import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionFileUseCase
+import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
+import com.sorrowblue.comicviewer.framework.ui.rememberAdaptiveNavigationSuiteScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
-import com.sorrowblue.comicviewer.domain.model.collection.Collection as CollectionModel
-
-internal sealed interface CollectionScreenEvent {
-    data class CollectionAddClick(val bookshelfId: BookshelfId, val path: String) :
-        CollectionScreenEvent
-
-    data class FileClick(val file: File) : CollectionScreenEvent
-    data class OpenFolderClick(val file: File) : CollectionScreenEvent
-    data class EditClick(val collection: CollectionModel) : CollectionScreenEvent
-    data object Back : CollectionScreenEvent
-    data object SettingsClick : CollectionScreenEvent
-}
 
 internal interface CollectionScreenState {
-    val scaffoldState: CanonicalScaffoldState<File.Key>
-    val uiState: SmartCollectionScreenUiState
-    val events: EventFlow<CollectionScreenEvent>
+    val uiState: CollectionScreenUiState
+    val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
-    fun onNavClick()
-    fun onAppBarAction(action: CollectionAppBarAction)
-    fun onSheetAction(action: FileInfoSheetNavigator)
-    fun onContentsAction(action: CollectionContentsAction)
 }
 
 @Composable
-internal fun rememberCollectionScreenState(
-    route: Collection,
-    lazyGridState: LazyGridState = rememberLazyGridState(),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    getCollectionUseCase: GetCollectionUseCase = koinInject(),
-    displaySettingsUseCase: ManageFolderDisplaySettingsUseCase = koinInject(),
-    deleteCollectionUseCase: DeleteCollectionUseCase = koinInject(),
-    viewModel: CollectionViewModel = koinViewModel { parametersOf(route) },
-): CollectionScreenState {
-    val state = remember {
+context(context: CollectionScreenContext)
+internal fun rememberCollectionScreenState(id: CollectionId): CollectionScreenState {
+    val lazyGridState: LazyGridState = rememberLazyGridState()
+    val scope = rememberCoroutineScope()
+    val state = remember(id, scope) {
         CollectionScreenStateImpl(
-            getCollectionUseCase = getCollectionUseCase,
-            route = route,
+            id = id,
             scope = scope,
-            displaySettingsUseCase = displaySettingsUseCase,
-            deleteCollectionUseCase = deleteCollectionUseCase
+            getCollectionUseCase = context.getCollectionUseCase,
         )
     }.apply {
-        this.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-        this.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
-            onReSelect = ::onReSelected
-        )
-        this.scope = scope
+        this.lazyPagingItems = rememberPagingItems {
+            context.pagingCollectionFileUseCase(
+                PagingCollectionFileUseCase.Request(PagingConfig(20), id),
+            )
+        }
+        this.scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
         this.lazyGridState = lazyGridState
     }
     return state
 }
 
 private class CollectionScreenStateImpl(
+    id: CollectionId,
+    scope: CoroutineScope,
     getCollectionUseCase: GetCollectionUseCase,
-    private val route: Collection,
-    var scope: CoroutineScope,
-    private val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : CollectionScreenState {
-
-    override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
-    override val events = EventFlow<CollectionScreenEvent>()
+    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
     override lateinit var lazyGridState: LazyGridState
-
     override lateinit var lazyPagingItems: LazyPagingItems<File>
-    override var uiState by mutableStateOf(SmartCollectionScreenUiState())
-    lateinit var collection: CollectionModel
+    override var uiState by mutableStateOf(CollectionScreenUiState())
 
     init {
-        getCollectionUseCase(GetCollectionUseCase.Request(route.id)).mapNotNull { it.dataOrNull() }
+        getCollectionUseCase(GetCollectionUseCase.Request(id))
+            .mapNotNull { it.dataOrNull() }
             .onEach {
-                collection = it
                 uiState = uiState.copy(appBarUiState = uiState.appBarUiState.copy(title = it.name))
             }.launchIn(scope)
-    }
-
-    override fun onNavClick() {
-        if (lazyGridState.canScrollBackward) {
-            scope.launch {
-                lazyGridState.scrollToItem(0)
-            }
-        }
-    }
-
-    override fun onAppBarAction(action: CollectionAppBarAction) {
-        when (action) {
-            CollectionAppBarAction.Back -> events.tryEmit(CollectionScreenEvent.Back)
-            CollectionAppBarAction.Delete -> delete()
-            CollectionAppBarAction.Edit -> events.tryEmit(CollectionScreenEvent.EditClick(collection))
-            CollectionAppBarAction.FileListDisplay -> updateFolderDisplaySettings {
-                it.copy(
-                    fileListDisplay = when (uiState.appBarUiState.fileListDisplay) {
-                        FileListDisplay.Grid -> FileListDisplay.List
-                        FileListDisplay.List -> FileListDisplay.Grid
-                    }
-                )
-            }
-
-            CollectionAppBarAction.GridSize ->
-                if (uiState.appBarUiState.fileListDisplay == FileListDisplay.Grid) {
-                    updateFolderDisplaySettings {
-                        it.copy(
-                            gridColumnSize = when (it.gridColumnSize) {
-                                GridColumnSize.Medium -> GridColumnSize.Large
-                                GridColumnSize.Large -> GridColumnSize.Medium
-                            }
-                        )
-                    }
-                }
-
-            CollectionAppBarAction.Settings -> events.tryEmit(CollectionScreenEvent.SettingsClick)
-        }
-    }
-
-    override fun onSheetAction(action: FileInfoSheetNavigator) {
-        when (action) {
-            FileInfoSheetNavigator.Back -> scope.launch { scaffoldState.navigator.navigateBack() }
-            is FileInfoSheetNavigator.Collection -> scaffoldState.navigator.currentDestination?.contentKey?.let {
-                events.tryEmit(CollectionScreenEvent.CollectionAddClick(it.bookshelfId, it.path))
-            }
-
-            is FileInfoSheetNavigator.OpenFolder ->
-                events.tryEmit(CollectionScreenEvent.OpenFolderClick(action.file))
-        }
-    }
-
-    override fun onContentsAction(action: CollectionContentsAction) {
-        when (action) {
-            is CollectionContentsAction.File ->
-                events.tryEmit(CollectionScreenEvent.FileClick(action.file))
-
-            is CollectionContentsAction.FileInfo -> scope.launch {
-                scaffoldState.navigator.navigateTo(
-                    SupportingPaneScaffoldRole.Extra,
-                    action.file.key()
-                )
-            }
-        }
-    }
-
-    private fun updateFolderDisplaySettings(edit: (FolderDisplaySettings) -> FolderDisplaySettings) {
-        scope.launch {
-            displaySettingsUseCase.edit(edit)
-        }
-    }
-
-    private fun delete() {
-        scope.launch {
-            deleteCollectionUseCase(DeleteCollectionUseCase.Request(route.id))
-            events.emit(CollectionScreenEvent.Back)
-        }
-    }
-
-    fun onReSelected() {
-        if (lazyGridState.canScrollBackward) {
-            scope.launch {
-                lazyGridState.animateScrollToItem(0)
-            }
-        }
     }
 }

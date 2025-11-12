@@ -5,9 +5,7 @@ import platform.Foundation.currentLocale
 import platform.Foundation.localeIdentifier
 
 actual class LocaleManager actual constructor() {
-    actual fun currentLocale(): String {
-        return NSLocale.currentLocale.localeIdentifier
-    }
+    actual fun currentLocale(): String = NSLocale.currentLocale.localeIdentifier
 
     actual fun setSystemDefault() {
         // TODO

@@ -75,11 +75,7 @@ inline fun Any.logcat(
  *
  * @see logcat above
  */
-inline fun logcat(
-    tag: String,
-    priority: LogPriority = DEBUG,
-    message: () -> String,
-) {
+inline fun logcat(tag: String, priority: LogPriority = DEBUG, message: () -> String) {
     with(LogcatLogger.logger) {
         if (isLoggable(priority)) {
             log(priority, tag, message())

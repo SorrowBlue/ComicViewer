@@ -12,4 +12,5 @@
     </plurals>
     <string name="file_desc_open_file_info">ファイル情報を見る</string>
     <string name="file_action_change_grid_size">グリッドサイズ</string>
+    <string name="file_action_show_hidden">隠しファイルを表示</string>
 </resources>

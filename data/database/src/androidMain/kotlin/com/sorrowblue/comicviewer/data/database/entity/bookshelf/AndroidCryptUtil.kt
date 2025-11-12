@@ -3,26 +3,34 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.Binds
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Inject
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import javax.crypto.Cipher
-import jakarta.inject.Singleton
 
 private const val PROVIDER = "AndroidKeyStore"
 
-private const val CIPHER_TRANSFORMATION =
+private const val CiperTransformation =
     "${KeyProperties.KEY_ALGORITHM_RSA}/${KeyProperties.BLOCK_MODE_ECB}/${KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1}"
 
-@Singleton
-internal class AndroidCryptUtil : CryptUtil {
+@ContributesTo(DataScope::class)
+interface AndroidDatabaseBindings {
+    @Binds
+    private val AndroidCryptUtil.bind: CryptUtil get() = this
+}
 
+@Inject
+internal class AndroidCryptUtil : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String? {
         val keyStore = KeyStore.getInstance(PROVIDER)
         keyStore.load(null)
         if (!keyStore.containsAlias(alias)) {
             return null
         }
-        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val cipher = Cipher.getInstance(CiperTransformation)
         cipher.init(Cipher.DECRYPT_MODE, keyStore.getKey(alias, null))
         val bytes = Base64.decode(encryptedText, Base64.URL_SAFE)
         val b = cipher.doFinal(bytes)
@@ -38,18 +46,16 @@ internal class AndroidCryptUtil : CryptUtil {
             keyPairGenerator.initialize(createKeyPairGeneratorSpec(alias))
             keyPairGenerator.generateKeyPair()
         }
-        val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
+        val cipher = Cipher.getInstance(CiperTransformation)
         cipher.init(Cipher.ENCRYPT_MODE, keyStore.getCertificate(alias).publicKey)
         val bytes = cipher.doFinal(text.toByteArray(Charsets.UTF_8))
         return Base64.encodeToString(bytes, Base64.URL_SAFE)
     }
 
-    private fun createKeyPairGeneratorSpec(alias: String): KeyGenParameterSpec {
-        return KeyGenParameterSpec.Builder(
+    private fun createKeyPairGeneratorSpec(alias: String): KeyGenParameterSpec = KeyGenParameterSpec
+        .Builder(
             alias,
-            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-        )
-            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
-            .build()
-    }
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT,
+        ).setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
+        .build()
 }

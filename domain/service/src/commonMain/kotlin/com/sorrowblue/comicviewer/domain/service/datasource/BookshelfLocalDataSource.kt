@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.coroutines.flow.Flow
 
 interface BookshelfLocalDataSource {
-
     suspend fun updateOrCreate(
         bookshelf: Bookshelf,
         transaction: suspend (Bookshelf) -> Unit,
@@ -22,5 +21,6 @@ interface BookshelfLocalDataSource {
     fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>>
 
     fun allBookshelf(): Resource<Flow<List<Bookshelf>>, Resource.SystemError>
+
     suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean)
 }

@@ -5,19 +5,23 @@ import coil3.SingletonImageLoader
 import coil3.request.ImageRequest
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Deferred
-import jakarta.inject.Singleton
 
-@Singleton
-internal class ThumbnailDataSourceImpl(
-    private val context: PlatformContext,
-) : ThumbnailDataSource {
-
+@ContributesBinding(DataScope::class)
+@Inject
+internal class ThumbnailDataSourceImpl(private val context: PlatformContext) :
+    ThumbnailDataSource {
     override fun load(fileThumbnail: FileThumbnail): Deferred<Any> {
-        val request = ImageRequest.Builder(context)
+        val request = ImageRequest
+            .Builder(context)
             .data(fileThumbnail)
-            .size(300)
+            .size(ImageSize)
             .build()
         return SingletonImageLoader.get(context).enqueue(request).job
     }
 }
+
+private const val ImageSize = 300

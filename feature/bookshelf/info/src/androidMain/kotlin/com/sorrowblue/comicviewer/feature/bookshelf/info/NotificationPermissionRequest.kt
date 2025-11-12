@@ -21,6 +21,7 @@ interface NotificationPermissionRequest {
 
         ActivityCompat.shouldShowRequestPermissionRationale(activity, POST_NOTIFICATIONS) -> {
             logcat { "Need to show UI that shows rationale for permission" }
+            action()
             showInContextUI()
         }
 
@@ -34,7 +35,7 @@ interface NotificationPermissionRequest {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
                 activity,
-                POST_NOTIFICATIONS
+                POST_NOTIFICATIONS,
             ) == PERMISSION_GRANTED
         } else {
             return true

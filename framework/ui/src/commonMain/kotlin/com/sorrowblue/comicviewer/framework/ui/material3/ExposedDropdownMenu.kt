@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-interface Menu3 {
+interface ExposedDropdownMenu {
     val label: StringResource
 }
 
 @Composable
-fun <T : Menu3> ExposedDropdownMenu(
+fun <T : ExposedDropdownMenu> ExposedDropdownMenu(
     label: String,
     value: String,
     onChangeValue: (T) -> Unit,
@@ -34,7 +34,7 @@ fun <T : Menu3> ExposedDropdownMenu(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
-        modifier = modifier
+        modifier = modifier,
     ) {
         OutlinedTextField(
             modifier = Modifier

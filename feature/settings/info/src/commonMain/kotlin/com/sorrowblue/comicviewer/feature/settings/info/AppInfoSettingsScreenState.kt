@@ -19,38 +19,41 @@ import kotlinx.datetime.toLocalDateTime
 import om.sorrowblue.comicviewer.feature.settings.BuildKonfig
 
 internal interface AppInfoSettingsScreenState {
-    fun launchReview()
     var uiState: SettingsAppInfoScreenUiState
+
+    fun launchReview()
 }
 
 @Composable
-internal fun rememberAppInfoSettingsScreenState(
-    urlHandler: UriHandler = LocalUriHandler.current,
-): AppInfoSettingsScreenState = remember {
-    AppInfoSettingsScreenStateImpl(urlHandler = urlHandler)
+internal fun rememberAppInfoSettingsScreenState(): AppInfoSettingsScreenState {
+    val urlHandler = LocalUriHandler.current
+    return remember(urlHandler) {
+        AppInfoSettingsScreenStateImpl(urlHandler = urlHandler)
+    }
 }
 
-private class AppInfoSettingsScreenStateImpl(
-    private val urlHandler: UriHandler,
-) : AppInfoSettingsScreenState {
-
+private class AppInfoSettingsScreenStateImpl(private val urlHandler: UriHandler) :
+    AppInfoSettingsScreenState {
     @OptIn(ExperimentalTime::class)
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
             versionName = BuildKonfig.VERSION_NAME,
-            buildAt = Instant.fromEpochMilliseconds(BuildKonfig.TIMESTAMP)
+            buildAt = Instant
+                .fromEpochMilliseconds(BuildKonfig.TIMESTAMP)
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .format(
                     LocalDateTime.Format {
                         date(LocalDate.Formats.ISO)
                         char(' ')
                         time(LocalTime.Formats.ISO)
-                    }
-                )
-        )
+                    },
+                ),
+        ),
     )
 
     override fun launchReview() {
-        urlHandler.openUri("http://play.google.com/store/apps/details?id=com.sorrowblue.comicviewer")
+        urlHandler.openUri(
+            "http://play.google.com/store/apps/details?id=com.sorrowblue.comicviewer",
+        )
     }
 }

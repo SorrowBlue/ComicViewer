@@ -25,14 +25,14 @@ internal fun Form<SmartCollectionForm>.RangeField(
         name = RangeField,
         selector = { it.searchCondition.range },
         updater = { copy(searchCondition = searchCondition.copy(range = it)) },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         DropdownMenuField(
             field = field,
             label = { Text(stringResource(Res.string.collection_editor_label_range)) },
             value = { stringResource(displayText) },
             menus = remember { SearchCondition.Range.entries },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

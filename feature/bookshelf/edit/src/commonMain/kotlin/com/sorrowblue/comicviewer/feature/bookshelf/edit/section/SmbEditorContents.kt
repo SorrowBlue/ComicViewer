@@ -52,7 +52,7 @@ internal fun SmbEditorContents(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimension.targetSpacing)
-                    .semantics { contentDataType = ContentDataType.Text }
+                    .semantics { contentDataType = ContentDataType.Text },
             )
             HostField(
                 form = form,
@@ -60,7 +60,7 @@ internal fun SmbEditorContents(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimension.targetSpacing)
-                    .semantics { contentDataType = ContentDataType.None }
+                    .semantics { contentDataType = ContentDataType.None },
             )
             PortField(
                 form = form,
@@ -68,7 +68,7 @@ internal fun SmbEditorContents(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimension.targetSpacing)
-                    .semantics { contentDataType = ContentDataType.None }
+                    .semantics { contentDataType = ContentDataType.None },
             )
             PathField(
                 form = form,
@@ -76,13 +76,13 @@ internal fun SmbEditorContents(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimension.targetSpacing)
-                    .semantics { contentDataType = ContentDataType.None }
+                    .semantics { contentDataType = ContentDataType.None },
             )
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimension.targetSpacing * 2)
-                    .semantics { contentDataType = ContentDataType.None }
+                    .semantics { contentDataType = ContentDataType.None },
             )
             AuthField(
                 form = form,
@@ -90,7 +90,7 @@ internal fun SmbEditorContents(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimension.targetSpacing)
-                    .semantics { contentDataType = ContentDataType.None }
+                    .semantics { contentDataType = ContentDataType.None },
             )
             AnimatedVisibility(
                 visible = form.value.auth == Auth.UserPass,
@@ -104,7 +104,7 @@ internal fun SmbEditorContents(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
-                            .semantics { contentDataType = ContentDataType.None }
+                            .semantics { contentDataType = ContentDataType.None },
                     )
 
                     UsernameField(
@@ -113,7 +113,7 @@ internal fun SmbEditorContents(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
-                            .semantics { contentType = ContentType.Username }
+                            .semantics { contentType = ContentType.Username },
                     )
 
                     PasswordField(
@@ -122,7 +122,7 @@ internal fun SmbEditorContents(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = dimension.targetSpacing)
-                            .semantics { contentType = ContentType.Password }
+                            .semantics { contentType = ContentType.Password },
                     )
                 }
             }

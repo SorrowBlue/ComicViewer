@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
@@ -21,51 +20,46 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 
 @Composable
-fun EmptyContent(
-    imageVector: ImageVector,
-    text: String,
-    modifier: Modifier = Modifier,
-) {
+fun EmptyContent(imageVector: ImageVector, text: String, modifier: Modifier = Modifier) {
     val isCompact = isCompactWindowClass()
     if (isCompact) {
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 imageVector = imageVector,
                 contentDescription = text,
                 modifier = Modifier
                     .sizeIn(maxWidth = 300.dp, maxHeight = 300.dp)
-                    .fillMaxSize(0.5f)
+                    .fillMaxSize(0.5f),
             )
             Spacer(modifier = Modifier.padding(ComicTheme.dimension.padding))
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
             )
         }
     } else {
         Surface(
             modifier = modifier,
             color = ComicTheme.colorScheme.surface,
-            shape = ComicTheme.shapes.large
+            shape = ComicTheme.shapes.large,
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     imageVector = imageVector,
                     contentDescription = null,
                     modifier = Modifier
-                        .sizeIn(maxWidth = 180.dp, maxHeight = 180.dp)
-                        .fillMaxWidth(0.8f)
+                        .sizeIn(maxWidth = 180.dp, maxHeight = 180.dp),
                 )
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
                 )
             }
         }

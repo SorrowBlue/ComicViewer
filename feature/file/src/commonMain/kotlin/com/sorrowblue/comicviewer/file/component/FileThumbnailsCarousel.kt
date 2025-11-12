@@ -14,6 +14,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
@@ -30,8 +32,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.framework.common.isTouchable
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalNavigationState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.NavigationState
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 import kotlin.math.max
 import kotlinx.coroutines.launch
 
@@ -52,15 +53,15 @@ fun FileThumbnailsCarousel(
                     ComicIcons.BrokenImage,
                     null,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-
+                        .align(Alignment.CenterHorizontally),
                 )
                 Spacer(Modifier.weight(1f))
             }
         }
     } else {
         Box(modifier = modifier) {
-            val navigationState = LocalNavigationState.current
+            val navigationSuiteType =
+                NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
             HorizontalMultiBrowseCarousel(
                 state = carouselState,
                 preferredItemWidth = ItemWidth,
@@ -76,12 +77,12 @@ fun FileThumbnailsCarousel(
                             .height(186.dp)
                             .maskClip(MaterialTheme.shapes.medium)
                             .background(
-                                if (navigationState is NavigationState.NavigationBar) {
+                                if (navigationSuiteType.isNavigationBar) {
                                     ComicTheme.colorScheme.surfaceVariant
                                 } else {
                                     ComicTheme.colorScheme.surfaceContainerHigh
-                                }
-                            )
+                                },
+                            ),
                     )
                 }
             }
@@ -95,7 +96,7 @@ fun FileThumbnailsCarousel(
                     modifier = Modifier.align(Alignment.CenterStart),
                     colors = IconButtonDefaults.filledTonalIconButtonColors().run {
                         copy(containerColor = containerColor.copy(alpha = 0.5f))
-                    }
+                    },
                 ) {
                     Icon(ComicIcons.ArrowLeft, null)
                 }
@@ -104,7 +105,7 @@ fun FileThumbnailsCarousel(
                     modifier = Modifier.align(Alignment.CenterEnd),
                     colors = IconButtonDefaults.filledTonalIconButtonColors().run {
                         copy(containerColor = containerColor.copy(alpha = 0.5f))
-                    }
+                    },
                 ) {
                     Icon(ComicIcons.ArrowRight, null)
                 }

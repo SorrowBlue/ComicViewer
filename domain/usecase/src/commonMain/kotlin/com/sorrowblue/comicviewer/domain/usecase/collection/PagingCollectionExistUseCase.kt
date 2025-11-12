@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
 
 abstract class PagingCollectionExistUseCase :
     PagingUseCase<PagingCollectionExistUseCase.Request, Pair<Collection, Boolean>>() {
-
     data class Request(
         val pagingConfig: PagingConfig,
         val bookshelfId: BookshelfId,

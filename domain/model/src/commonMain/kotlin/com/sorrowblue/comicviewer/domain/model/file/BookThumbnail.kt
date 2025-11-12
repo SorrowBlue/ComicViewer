@@ -9,9 +9,7 @@ data class BookThumbnail private constructor(
     override val size: Long,
     val totalPageCount: Int,
 ) : FileThumbnail {
-
     companion object {
-
         fun temporary(bookshelfId: BookshelfId, path: String) =
             BookThumbnail(bookshelfId, path, 0, 0, 0)
 
@@ -21,7 +19,7 @@ data class BookThumbnail private constructor(
                 path = book.path,
                 lastModifier = book.lastModifier,
                 size = book.size,
-                totalPageCount = book.totalPageCount
+                totalPageCount = book.totalPageCount,
             )
 
             is BookFolder -> BookThumbnail(
@@ -29,7 +27,7 @@ data class BookThumbnail private constructor(
                 path = book.path,
                 lastModifier = book.lastModifier,
                 size = book.size,
-                totalPageCount = book.totalPageCount
+                totalPageCount = book.totalPageCount,
             )
         }
     }

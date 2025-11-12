@@ -27,18 +27,18 @@ data class FolderDisplaySettings(
     val gridColumnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
     val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
     val folderScopeOnlyList: List<FolderScopeOnly> = emptyList(),
-    val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.isDisplayHiddenFile,
-    val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.isDisplayFileExtension,
-    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.isDisplayThumbnail,
-    val isSavedThumbnail: Boolean = FolderDisplaySettingsDefaults.isSavedThumbnail,
-    val fontSize: Int = FolderDisplaySettingsDefaults.fontSize,
-    val thumbnailQuality: Int = FolderDisplaySettingsDefaults.thumbnailQuality,
+    val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.DisplayHiddenFile,
+    val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.DisplayFileExtension,
+    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.DisplayThumbnail,
+    val isSavedThumbnail: Boolean = FolderDisplaySettingsDefaults.SavedThumbnail,
+    val fontSize: Int = FolderDisplaySettingsDefaults.FontSize,
+    val thumbnailQuality: Int = FolderDisplaySettingsDefaults.ThumbnailQuality,
     val imageFormat: ImageFormat = FolderDisplaySettingsDefaults.imageFormat,
     val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
     val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
-    val folderThumbnailOrder: FolderThumbnailOrder = FolderDisplaySettingsDefaults.folderThumbnailOrder,
+    val folderThumbnailOrder: FolderThumbnailOrder =
+        FolderDisplaySettingsDefaults.folderThumbnailOrder,
 ) {
-
     /**
      * Returns the current sort type for the specified bookshelf and path.
      *
@@ -47,15 +47,15 @@ data class FolderDisplaySettings(
      * @return The sort type for the folder, or the default sort type if not
      *    set.
      */
-    fun currentSortType(bookshelfId: BookshelfId, path: String): SortType {
-        return folderScopeOnlyList.find { it.bookshelfId == bookshelfId && it.path == path }?.sortType
-            ?: sortType
-    }
+    fun currentSortType(bookshelfId: BookshelfId, path: String): SortType = folderScopeOnlyList
+        .find {
+            it.bookshelfId == bookshelfId && it.path == path
+        }?.sortType
+        ?: sortType
 }
 
 /** Default values for [FolderDisplaySettings]. */
 object FolderDisplaySettingsDefaults {
-
     /** Default sort type. */
     val sortType = SortType.Name(true)
 
@@ -66,25 +66,25 @@ object FolderDisplaySettingsDefaults {
     val gridColumnSize = GridColumnSize.Medium
 
     /** Default font size. */
-    const val fontSize = 16
+    const val FontSize = 16
 
     /** Whether to display file extensions by default. */
-    const val isDisplayFileExtension = true
+    const val DisplayFileExtension = true
 
     /** Whether to display hidden files by default. */
-    const val isDisplayHiddenFile = false
+    const val DisplayHiddenFile = false
 
     /** Whether to display thumbnails by default. */
-    const val isDisplayThumbnail = true
+    const val DisplayThumbnail = true
 
     /** Whether to save thumbnails by default. */
-    const val isSavedThumbnail = true
+    const val SavedThumbnail = true
 
     /** Default image format. */
     val imageFormat = ImageFormat.WEBP
 
     /** Default thumbnail quality. */
-    const val thumbnailQuality = 75
+    const val ThumbnailQuality = 75
 
     /** Default image scale type. */
     val imageScale = ImageScale.Fit
@@ -104,8 +104,4 @@ object FolderDisplaySettingsDefaults {
  * @property sortType The sort type for the folder.
  */
 @Serializable
-data class FolderScopeOnly(
-    val bookshelfId: BookshelfId,
-    val path: String,
-    val sortType: SortType,
-)
+data class FolderScopeOnly(val bookshelfId: BookshelfId, val path: String, val sortType: SortType)

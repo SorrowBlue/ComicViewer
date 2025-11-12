@@ -34,19 +34,18 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
+context(context: BookScreenContext)
 internal fun rememberBookScreenState(
     uiState: BookScreenUiState.Loaded,
     currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() },
     pagerState: PagerState = rememberPagerState(
         initialPage = uiState.book.lastPageRead + 1,
-        pageCount = { currentList.size }
+        pageCount = { currentList.size },
     ),
     scope: CoroutineScope = rememberCoroutineScope(),
     systemUiController: SystemUiController = rememberSystemUiController(),
-    viewModel: BookViewModel = koinViewModel(),
 ): BookScreenState {
     val isCompactWindowClass = isCompactWindowClass()
     return remember(isCompactWindowClass) {
@@ -57,23 +56,26 @@ internal fun rememberBookScreenState(
             pagerState = pagerState,
             scope = scope,
             systemUiController = systemUiController,
-            getNextBookUseCase = viewModel.getNextBookUseCase,
-            manageBookSettingsUseCase = viewModel.manageBookSettingsUseCase,
-            updateLastReadPageUseCase = viewModel.updateLastReadPageUseCase
+            getNextBookUseCase = context.getNextBookUseCase,
+            manageBookSettingsUseCase = context.manageBookSettingsUseCase,
+            updateLastReadPageUseCase = context.updateLastReadPageUseCase,
         )
     }
 }
 
 internal interface BookScreenState {
-
     val currentList: SnapshotStateList<PageItem>
     val pagerState: PagerState
     val uiState: BookScreenUiState.Loaded
 
     fun toggleTooltip()
+
     fun onScreenDispose()
+
     fun onPageChange(page: Int)
+
     fun onStop()
+
     fun onPageLoad(unratedPage: UnratedPage, bitmap: Bitmap)
 }
 
@@ -88,7 +90,6 @@ private class BookScreenStateImpl(
     manageBookSettingsUseCase: ManageBookSettingsUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
 ) : BookScreenState {
-
     override var uiState by mutableStateOf(uiState)
         private set
 
@@ -100,8 +101,8 @@ private class BookScreenStateImpl(
                     uiState.book.bookshelfId,
                     uiState.book.path,
                     GetNextBookUseCase.Location.Collection(uiState.collectionId),
-                    isNext
-                )
+                    isNext,
+                ),
             ).dataOrNull()?.let {
                 nextBookList.add(NextBook.Collection(it))
             }
@@ -111,8 +112,8 @@ private class BookScreenStateImpl(
                 uiState.book.bookshelfId,
                 uiState.book.path,
                 GetNextBookUseCase.Location.Folder,
-                isNext
-            )
+                isNext,
+            ),
         ).dataOrNull()?.let {
             nextBookList.add(NextBook.Folder(it))
         }
@@ -120,25 +121,29 @@ private class BookScreenStateImpl(
     }
 
     init {
-        manageBookSettingsUseCase.settings.map { it.pageFormat }.distinctUntilChanged()
+        manageBookSettingsUseCase.settings
+            .map { it.pageFormat }
+            .distinctUntilChanged()
             .onEach { pageFormat ->
                 currentList.addAll(
                     buildList {
                         add(getNextBookUseCase.execute(false))
                         addAll(
                             when (pageFormat) {
-                                BookSettings.PageFormat.Default -> (1..uiState.book.totalPageCount).map {
-                                    BookPage.Default(it - 1)
-                                }
+                                BookSettings.PageFormat.Default -> (1..uiState.book.totalPageCount)
+                                    .map {
+                                        BookPage.Default(it - 1)
+                                    }
 
                                 BookSettings.PageFormat.Spread ->
                                     (1..uiState.book.totalPageCount).map {
                                         BookPage.Spread.Unrated(it - 1)
                                     }
 
-                                BookSettings.PageFormat.Split -> (1..uiState.book.totalPageCount).map {
-                                    BookPage.Split.Unrated(it - 1)
-                                }
+                                BookSettings.PageFormat.Split -> (1..uiState.book.totalPageCount)
+                                    .map {
+                                        BookPage.Split.Unrated(it - 1)
+                                    }
 
                                 BookSettings.PageFormat.Auto ->
                                     if (isCompactWindowClass) {
@@ -150,30 +155,31 @@ private class BookScreenStateImpl(
                                             BookPage.Spread.Unrated(it - 1)
                                         }
                                     }
-                            }
+                            },
                         )
                         add(getNextBookUseCase.execute(true))
-                    }
+                    },
                 )
             }.launchIn(scope)
-        manageBookSettingsUseCase.settings.onEach {
-            this.uiState = this.uiState.copy(
-                bookSheetUiState = this.uiState.bookSheetUiState.copy(
-                    pageScale = when (it.pageScale) {
-                        BookSettings.PageScale.Fit -> PageScale.Fit
-                        BookSettings.PageScale.FillWidth -> PageScale.FillWidth
-                        BookSettings.PageScale.FillHeight -> PageScale.FillHeight
-                        BookSettings.PageScale.Inside -> PageScale.Inside
-                        BookSettings.PageScale.None -> PageScale.None
-                        BookSettings.PageScale.FillBounds -> PageScale.FillBounds
-                    }
+        manageBookSettingsUseCase.settings
+            .onEach {
+                this.uiState = this.uiState.copy(
+                    bookSheetUiState = this.uiState.bookSheetUiState.copy(
+                        pageScale = when (it.pageScale) {
+                            BookSettings.PageScale.Fit -> PageScale.Fit
+                            BookSettings.PageScale.FillWidth -> PageScale.FillWidth
+                            BookSettings.PageScale.FillHeight -> PageScale.FillHeight
+                            BookSettings.PageScale.Inside -> PageScale.Inside
+                            BookSettings.PageScale.None -> PageScale.None
+                            BookSettings.PageScale.FillBounds -> PageScale.FillBounds
+                        },
+                    ),
                 )
-            )
-        }.launchIn(scope)
+            }.launchIn(scope)
         val request = UpdateLastReadPageUseCase.Request(
             uiState.book.bookshelfId,
             uiState.book.path,
-            pagerState.currentPage - 1
+            pagerState.currentPage - 1,
         )
         scope.launch {
             updateLastReadPageUseCase(request)
@@ -193,7 +199,7 @@ private class BookScreenStateImpl(
         val request = UpdateLastReadPageUseCase.Request(
             uiState.book.bookshelfId,
             uiState.book.path,
-            pagerState.currentPage - 1
+            pagerState.currentPage - 1,
         )
         scope.launch {
             updateLastReadPageUseCase(request)

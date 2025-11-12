@@ -12,9 +12,8 @@ ComicViewerは、Android、iOS、Desktopをサポートするマルチプラッ�
 - **Kotlin Multiplatform**: メインプログラミング言語
 - **Jetpack Compose**: UI フレームワーク（Android、Desktop、iOS）
 - **モジュラーアーキテクチャ**: feature/domain/data レイヤー構成
-- **Koin**: 依存性注入フレームワーク
+- **Metro**: 依存性注入フレームワーク
 - **Room**: データベース（Android）
-- **Ktor**: ネットワーク通信
 
 ## 2. コーディング規約・スタイル
 

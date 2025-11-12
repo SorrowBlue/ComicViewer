@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.runtime.Composable
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfSelectionDialog
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DiscardConfirmDialog
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,25 +24,22 @@ internal data class BookshelfEditDialogUiState(
 )
 
 @Composable
-internal fun BookshelfEditDialog(state: InternalBookshelfEditDialogState) {
+context(context: BookshelfEditScreenContext)
+fun BookshelfEditDialog(state: BookshelfEditDialogState) {
+    require(state is InternalBookshelfEditDialogState)
     when (val type = state.uiState.type) {
         is BookshelfEditDialogType.Editor ->
-            BookshelfEditorScreen(
+            BookshelfEditorDialog(
                 type = type.editorType,
-                onNavigateUp = {
-                    if (it) {
-                        state.showDiscard()
-                    } else {
-                        state.hideDialog()
-                    }
-                },
-                onEditComplete = state::hideDialog
+                onBackClick = state::hideDialog,
+                discardConfirm = state::showDiscard,
+                onEditComplete = state::hideDialog,
             )
 
         BookshelfEditDialogType.Selection ->
-            BookshelfSelectionScreen(
-                onNavigateUp = state::hideDialog,
-                onTypeClick = state::showRegisterDialog
+            BookshelfSelectionDialog(
+                onBackClick = state::hideDialog,
+                onTypeClick = state::showRegisterDialog,
             )
 
         BookshelfEditDialogType.Hide -> Unit
@@ -48,7 +47,7 @@ internal fun BookshelfEditDialog(state: InternalBookshelfEditDialogState) {
 
     if (state.uiState.discard) {
         DiscardConfirmDialog(
-            onDismissRequest = state::hideDiscard,
+            onBackClick = state::hideDiscard,
             onKeep = state::hideDiscard,
             onDiscard = state::hideDialog,
         )

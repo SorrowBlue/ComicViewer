@@ -19,7 +19,11 @@ fun AsyncImage3(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     error: @Composable (SubcomposeAsyncImageScope.(State.Error) -> Unit)? = null,
-    loading: @Composable (SubcomposeAsyncImageScope.(State.Loading) -> Unit)? = AsyncImage3Default.loading,
+    loading: @Composable (
+        SubcomposeAsyncImageScope.(
+            State.Loading,
+        ) -> Unit
+    )? = AsyncImage3Default.loading,
     onError: ((State.Error) -> Unit)? = null,
     onSuccess: ((State.Success) -> Unit)? = null,
     filterQuality: FilterQuality = FilterQuality.None,
@@ -36,7 +40,7 @@ fun AsyncImage3(
         loading = if (LocalInspectionMode.current) null else loading,
         modifier = modifier,
         onError = onError,
-        onSuccess = onSuccess
+        onSuccess = onSuccess,
     )
 }
 
@@ -44,7 +48,7 @@ internal object AsyncImage3Default {
     val loading: @Composable SubcomposeAsyncImageScope.(State.Loading) -> Unit = {
         CircularProgressIndicator(
             strokeWidth = 2.dp,
-            modifier = Modifier.wrapContentSize()
+            modifier = Modifier.wrapContentSize(),
         )
     }
 }

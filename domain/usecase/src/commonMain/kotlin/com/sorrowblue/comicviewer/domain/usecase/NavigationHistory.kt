@@ -11,7 +11,7 @@ value class NavigationHistory(val value: Pair<List<Folder>, Book>) {
     constructor(folderList: List<Folder>, book: Book) : this(
         Pair(
             folderList,
-            book
-        )
+            book,
+        ),
     )
 }

@@ -9,6 +9,4 @@ package logcat
  * - No silent swallowing of UnknownHostException.
  * - The buffer size is 256 bytes instead of the default 16 bytes.
  */
-fun Throwable.asLog(): String {
-    return stackTraceToString()
-}
+fun Throwable.asLog(): String = stackTraceToString()

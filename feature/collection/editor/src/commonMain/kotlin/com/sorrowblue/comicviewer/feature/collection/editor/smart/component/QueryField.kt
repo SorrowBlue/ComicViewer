@@ -32,7 +32,7 @@ internal fun Form<SmartCollectionForm>.QueryField(
         selector = { it.searchCondition.query },
         updater = { copy(searchCondition = searchCondition.copy(query = it)) },
         validator = FieldValidator { notBlank { errorMessage } },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
@@ -44,10 +44,11 @@ internal fun Form<SmartCollectionForm>.QueryField(
             supportingText = field.supportingText(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
-            modifier = modifier.onFocusChanged { field.handleFocus(it.hasFocus) }
-                .testTag(QueryField)
+            modifier = modifier
+                .onFocusChanged { field.handleFocus(it.hasFocus) }
+                .testTag(QueryField),
         )
     }
 }

@@ -31,7 +31,7 @@ internal fun ActionButton(
             modifier = Modifier.height(80.dp).fillMaxWidth(),
             enabled = enabled,
             shape = ComicTheme.shapes.small,
-            onClick = onClick
+            onClick = onClick,
         ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 icon()
@@ -42,7 +42,7 @@ internal fun ActionButton(
                         borderColor = ComicTheme.colorScheme.primary,
                         segmentLengthRatio = 0.4f,
                         durationMillis = 2000,
-                        strokeCap = StrokeCap.Round
+                        strokeCap = StrokeCap.Round,
                     )
                 }
             }

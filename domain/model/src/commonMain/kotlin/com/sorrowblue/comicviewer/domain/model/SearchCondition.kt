@@ -20,7 +20,6 @@ data class SearchCondition(
     val sortType: SortType = SortType.Name(true),
     val showHidden: Boolean = false,
 ) {
-
     sealed interface Range {
         data object Bookshelf : Range
 
@@ -34,6 +33,9 @@ data class SearchCondition(
     }
 
     enum class Period {
-        None, Hour24, Week1, Month1
+        None,
+        Hour24,
+        Week1,
+        Month1,
     }
 }

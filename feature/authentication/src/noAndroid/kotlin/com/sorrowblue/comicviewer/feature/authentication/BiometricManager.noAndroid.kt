@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 @Composable
-internal actual fun rememberBiometricManager(): BiometricManager {
-    return remember { BiometricManager() }
-}
+internal actual fun rememberBiometricManager(): BiometricManager = remember { BiometricManager() }
 
 internal actual class BiometricManager {
     actual suspend fun authenticate(): AuthenticationResult {

@@ -48,7 +48,7 @@ fun AlertDialog(
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismissRequest,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Surface(
             shape = AlertDialogDefaults.shape,
@@ -62,10 +62,12 @@ fun AlertDialog(
                             start = 24.dp,
                             top = 24.dp,
                             end = 24.dp,
-                            bottom = 16.dp
-                        )
+                            bottom = 16.dp,
+                        ),
                     ) {
-                        CompositionLocalProvider(LocalTextStyle provides ComicTheme.typography.headlineSmall) {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides ComicTheme.typography.headlineSmall,
+                        ) {
                             title()
                         }
                     }
@@ -158,9 +160,10 @@ private fun AlertDialogContent(
             icon?.let {
                 CompositionLocalProvider(LocalContentColor provides iconContentColor) {
                     Box(
-                        Modifier.padding(DialogPaddingHorizonal)
+                        Modifier
+                            .padding(DialogPaddingHorizonal)
                             .padding(IconPadding)
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.CenterHorizontally),
                     ) {
                         icon()
                     }
@@ -173,15 +176,16 @@ private fun AlertDialogContent(
                 ) {
                     Box(
                         // Align the title to the center when an icon is present.
-                        Modifier.padding(DialogPaddingHorizonal)
+                        Modifier
+                            .padding(DialogPaddingHorizonal)
                             .padding(TitlePadding)
                             .align(
                                 if (icon == null) {
                                     Alignment.Start
                                 } else {
                                     Alignment.CenterHorizontally
-                                }
-                            )
+                                },
+                            ),
                     ) {
                         title()
                     }
@@ -201,10 +205,12 @@ private fun AlertDialogContent(
                     Box(
                         Modifier
                             .weight(weight = 1f, fill = false)
-                            .align(Alignment.Start)
+                            .align(Alignment.Start),
                     ) {
                         scrollableState?.let {
-                            CompositionLocalProvider(LocalScrollbarStyle provides AlertDialogDefaults.scrollbarStyle()) {
+                            CompositionLocalProvider(
+                                LocalScrollbarStyle provides AlertDialogDefaults.scrollbarStyle(),
+                            ) {
                                 when (scrollableState) {
                                     is LazyListState -> {
                                         ScrollbarBox(state = scrollableState) {
@@ -223,7 +229,7 @@ private fun AlertDialogContent(
                                             Column(
                                                 Modifier
                                                     .padding(DialogPaddingHorizonal)
-                                                    .verticalScroll(scrollableState)
+                                                    .verticalScroll(scrollableState),
                                             ) {
                                                 content()
                                             }
@@ -305,8 +311,7 @@ internal fun AlertDialogFlowRow(
     }
 }
 
-private fun LayoutDirection.flip(): LayoutDirection =
-    when (this) {
-        LayoutDirection.Ltr -> LayoutDirection.Rtl
-        LayoutDirection.Rtl -> LayoutDirection.Ltr
-    }
+private fun LayoutDirection.flip(): LayoutDirection = when (this) {
+    LayoutDirection.Ltr -> LayoutDirection.Rtl
+    LayoutDirection.Rtl -> LayoutDirection.Ltr
+}

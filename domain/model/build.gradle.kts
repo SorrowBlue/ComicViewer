@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
     alias(libs.plugins.kotlin.serialization)
 }
 

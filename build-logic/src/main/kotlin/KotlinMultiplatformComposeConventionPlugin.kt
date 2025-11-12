@@ -12,7 +12,6 @@ import org.jetbrains.compose.ComposePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             plugins {
@@ -26,7 +25,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                 sourceSets.commonMain.dependencies {
                     val compose = extensions.getByType<ComposePlugin.Dependencies>()
                     implementation(compose.components.resources)
-                    implementation(compose.components.uiToolingPreview)
+                    implementation(compose.preview)
                     implementation(libs.androidx.window.core)
                     implementation(libs.compose.multiplatform.material3)
                     implementation(libs.compose.multiplatform.material3AdaptiveNavigationSuite)
@@ -34,19 +33,25 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                     implementation(libs.compose.multiplatform.material3.adaptiveLayout)
                     implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
                     // Navigation
-                    implementation(libs.cmpdestinations)
                     implementation(libs.compose.multiplatform.lifecycleCompose)
-                    implementation(libs.compose.multiplatform.navigationCompose)
+                    implementation(libs.multiplatform.lifecycle.viewmodelNavigation3)
                     implementation(libs.kotlinx.serialization.core)
+
+                    implementation(libs.multiplatform.navigation3.ui)
+                    implementation(libs.androidx.navigation3.runtime)
+                    implementation(libs.multiplatform.navigationevent.compose)
+                    implementation(libs.navigation3.resultstate)
 
                     implementation(libs.androidx.paging.compose)
 
                     implementation(libs.compose.multiplatform.backhandler)
                     implementation(libs.rin)
+                    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
                 }
 
                 sourceSets.androidMain.dependencies {
                     implementation(libs.androidx.compose.ui.toolingPreview)
+                    implementation(libs.androidx.compose.material3.adaptive.navigation3)
                 }
 
                 compilerOptions {
@@ -69,17 +74,6 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             dependencies {
                 val compose = extensions.getByType<ComposePlugin.Dependencies>()
                 add("debugImplementation", compose.uiTooling)
-
-                add("kspAndroid", libs.cmpdestinations.ksp)
-                add("kspAndroidTest", libs.cmpdestinations.ksp)
-                add("kspIosX64", libs.cmpdestinations.ksp)
-                add("kspIosX64Test", libs.cmpdestinations.ksp)
-                add("kspIosArm64", libs.cmpdestinations.ksp)
-                add("kspIosArm64Test", libs.cmpdestinations.ksp)
-                add("kspIosSimulatorArm64", libs.cmpdestinations.ksp)
-                add("kspIosSimulatorArm64Test", libs.cmpdestinations.ksp)
-                add("kspDesktop", libs.cmpdestinations.ksp)
-                add("kspDesktopTest", libs.cmpdestinations.ksp)
             }
         }
     }

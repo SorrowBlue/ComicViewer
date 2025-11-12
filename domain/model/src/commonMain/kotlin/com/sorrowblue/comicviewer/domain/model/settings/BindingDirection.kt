@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class BindingDirection {
-    LTR, RTL
+    LTR,
+    RTL,
 }

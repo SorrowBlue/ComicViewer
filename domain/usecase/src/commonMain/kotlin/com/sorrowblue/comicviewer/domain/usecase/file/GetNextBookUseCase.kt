@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class GetNextBookUseCase :
     OneShotUseCase<GetNextBookUseCase.Request, Book, GetNextBookUseCase.Error>() {
-
     class Request(
         val bookshelfId: BookshelfId,
         val path: String,
@@ -18,6 +17,7 @@ abstract class GetNextBookUseCase :
 
     sealed interface Location {
         data object Folder : Location
+
         data class Collection(val collectionId: CollectionId) : Location
     }
 

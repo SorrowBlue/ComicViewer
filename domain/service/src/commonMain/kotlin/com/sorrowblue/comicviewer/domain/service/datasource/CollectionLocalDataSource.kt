@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import kotlinx.coroutines.flow.Flow
 
 interface CollectionLocalDataSource {
-
     fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Collection>>
 
     fun pagingDataFlow(

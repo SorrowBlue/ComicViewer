@@ -32,7 +32,7 @@ internal fun Form<SmartCollectionForm>.CollectionNameTextField2(
         selector = { it.name },
         updater = { copy(name = it) },
         validator = FieldValidator { notBlank { notBlankError } },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
@@ -44,9 +44,9 @@ internal fun Form<SmartCollectionForm>.CollectionNameTextField2(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
-            modifier = modifier.onFocusChanged { field.handleFocus(it.hasFocus) }
+            modifier = modifier.onFocusChanged { field.handleFocus(it.hasFocus) },
         )
     }
 }
@@ -63,7 +63,7 @@ internal fun CollectionNameTextField(
         selector = { it.name },
         updater = { copy(name = it) },
         validator = FieldValidator { notBlank { notBlankError } },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
@@ -74,11 +74,12 @@ internal fun CollectionNameTextField(
             supportingText = field.supportingText(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             singleLine = true,
-            modifier = modifier.handleFocusChanged(field)
-                .testTag(CollectionNameField)
+            modifier = modifier
+                .handleFocusChanged(field)
+                .testTag(CollectionNameField),
         )
     }
 }

@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.koin)
+    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
     alias(libs.plugins.androidx.room)
 }
 
@@ -51,16 +51,9 @@ kotlin {
             dependencies {
                 implementation(projects.framework.test)
                 implementation(libs.kotlin.test)
-                implementation(libs.koin.test)
                 implementation(libs.androidx.paging.testing)
                 implementation(libs.androidx.room.testing)
                 implementation(libs.kotlinx.coroutines.test)
-            }
-        }
-
-        desktopMain {
-            dependencies {
-                implementation(libs.credential.secure.storage)
             }
         }
 

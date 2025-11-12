@@ -10,9 +10,9 @@ actual data class PdfPluginSettings(
     val pluginRootPath: String = "",
     val pluginJarPath: String = "",
 ) {
-
     actual companion object {
         actual fun kSerializer(): KSerializer<PdfPluginSettings> = serializer()
+
         actual fun default() = PdfPluginSettings()
     }
 }

@@ -20,18 +20,24 @@ fun AppBarRowScope2.fileListDisplayItem(fileListDisplay: FileListDisplay, onClic
                     stringResource(Res.string.file_list_label_switch_list_view)
                 } else {
                     stringResource(
-                        Res.string.file_list_label_switch_grid_view
+                        Res.string.file_list_label_switch_grid_view,
                     )
-                }
+                },
             )
         },
         icon = {
             Icon(
-                if (fileListDisplay == FileListDisplay.Grid) ComicIcons.ViewList else ComicIcons.GridView,
-                null
+                if (fileListDisplay ==
+                    FileListDisplay.Grid
+                ) {
+                    ComicIcons.ViewList
+                } else {
+                    ComicIcons.GridView
+                },
+                null,
             )
         },
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
@@ -41,6 +47,6 @@ fun AppBarRowScope2.gridSizeItem(fileListDisplay: FileListDisplay, onClick: () -
         autoDismiss = false,
         label = { Text(stringResource(Res.string.file_action_change_grid_size)) },
         icon = { Icon(ComicIcons.Grid4x4, null) },
-        onClick = onClick
+        onClick = onClick,
     )
 }

@@ -44,9 +44,8 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
         }
     }
 
-    private fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean {
-        return hasPlugin(provider.get().pluginId)
-    }
+    private fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean =
+        hasPlugin(provider.get().pluginId)
 
     private fun Lint.configure(project: Project) {
         val isCI = System.getenv("CI").toBoolean()
@@ -56,15 +55,27 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
             "InvalidPackage",
             "NewerVersionAvailable",
             "GradleDependency",
-            "AppLinksAutoVerify"
+            "AppLinksAutoVerify",
         )
         baseline = project.file("lint-baseline.xml")
         htmlReport = !isCI
         htmlOutput =
-            if (htmlReport) project.file("${project.rootDir}/build/reports/lint/lint-result.html") else null
+            if (htmlReport) {
+                project.file(
+                    "${project.rootDir}/build/reports/lint/lint-result.html",
+                )
+            } else {
+                null
+            }
         sarifReport = isCI
         sarifOutput =
-            if (sarifReport) project.file("${project.rootDir}/build/reports/lint/lint-result.sarif") else null
+            if (sarifReport) {
+                project.file(
+                    "${project.rootDir}/build/reports/lint/lint-result.sarif",
+                )
+            } else {
+                null
+            }
         textReport = false
         xmlReport = false
     }

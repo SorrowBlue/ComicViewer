@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
@@ -28,6 +29,7 @@ import comicviewer.feature.settings.security.generated.resources.settings_securi
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_bio_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_disable_bio_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_bio_auth
+import comicviewer.framework.ui.generated.resources.Res as UiRes
 import comicviewer.framework.ui.generated.resources.cancel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
@@ -36,13 +38,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-import comicviewer.framework.ui.generated.resources.Res as UiRes
 
 @Composable
-internal actual fun rememberSecuritySettingsScreenState(
-    scope: CoroutineScope,
-    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
-): SecuritySettingsScreenState {
+context(context: SecuritySettingsScreenContext)
+internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScreenState {
+    val scope = rememberCoroutineScope()
+    val manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val state = remember {
@@ -50,12 +51,12 @@ internal actual fun rememberSecuritySettingsScreenState(
             context = context,
             scope = scope,
             manageSecuritySettingsUseCase = manageSecuritySettingsUseCase,
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
         )
     }
     state.resultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { state.activityResult() }
+        onResult = { state.activityResult() },
     )
     return state
 }
@@ -66,7 +67,6 @@ private class SecuritySettingsScreenStateImpl(
     private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     override val snackbarHostState: SnackbarHostState,
 ) : SecuritySettingsScreenState {
-
     private val biometricManager = BiometricManager.from(context)
 
     lateinit var resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
@@ -74,18 +74,21 @@ private class SecuritySettingsScreenStateImpl(
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
     init {
-        manageSecuritySettingsUseCase.settings.onEach {
-            uiState = uiState.copy(
-                isAuthEnabled = it.password != null,
-                isBackgroundLockEnabled = it.lockOnBackground,
-                isBiometricEnabled = it.useBiometrics
+        manageSecuritySettingsUseCase.settings
+            .onEach {
+                uiState = uiState.copy(
+                    isAuthEnabled = it.password != null,
+                    isBackgroundLockEnabled = it.lockOnBackground,
+                    isBiometricEnabled = it.useBiometrics,
+                )
+            }.launchIn(scope)
+        val state = BiometricManager
+            .from(
+                context,
+            ).canAuthenticate(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                    BiometricManager.Authenticators.BIOMETRIC_WEAK,
             )
-        }.launchIn(scope)
-        val state = BiometricManager.from(
-            context
-        ).canAuthenticate(
-            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK
-        )
         val isEnabled = state == BiometricManager.BIOMETRIC_SUCCESS || // OK
             state == BiometricManager.BIOMETRIC_STATUS_UNKNOWN || // 判断不可
             state == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED // 未登録
@@ -97,7 +100,7 @@ private class SecuritySettingsScreenStateImpl(
         val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
             putExtra(
                 Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
-                BiometricManager.Authenticators.BIOMETRIC_WEAK
+                BiometricManager.Authenticators.BIOMETRIC_WEAK,
             )
         }
         resultLauncher.launch(enrollIntent)
@@ -113,7 +116,9 @@ private class SecuritySettingsScreenStateImpl(
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 logcat { "認証 Not 有効化 リトライ" }
                 scope.launch {
-                    snackbarHostState.showSnackbar(getString(Res.string.settings_security_msg_desabled_bio_auth))
+                    snackbarHostState.showSnackbar(
+                        getString(Res.string.settings_security_msg_desabled_bio_auth),
+                    )
                 }
             }
 
@@ -126,7 +131,9 @@ private class SecuritySettingsScreenStateImpl(
             -> {
                 logcat { "生体認証 利用不可" }
                 scope.launch {
-                    snackbarHostState.showSnackbar(getString(Res.string.settings_security_not_available_bio_auth))
+                    snackbarHostState.showSnackbar(
+                        getString(Res.string.settings_security_not_available_bio_auth),
+                    )
                 }
             }
         }
@@ -136,15 +143,14 @@ private class SecuritySettingsScreenStateImpl(
         val biometricPrompt = BiometricPrompt(
             context as FragmentActivity,
             object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(
-                    errorCode: Int,
-                    errString: CharSequence,
-                ) {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
                     logcat { "Authentication error: $errString" }
                 }
 
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult,
+                ) {
                     super.onAuthenticationSucceeded(result)
                     logcat { "Authentication succeeded!" }
                     logcat { "整体認証を有効にする" }
@@ -154,13 +160,16 @@ private class SecuritySettingsScreenStateImpl(
                         }
                     }
                     scope.launch {
-                        snackbarHostState.showSnackbar(getString(Res.string.settings_security_msg_enabled_bio_auth))
+                        snackbarHostState.showSnackbar(
+                            getString(Res.string.settings_security_msg_enabled_bio_auth),
+                        )
                     }
                 }
-            }
+            },
         )
         scope.launch {
-            val info = BiometricPrompt.PromptInfo.Builder()
+            val info = BiometricPrompt.PromptInfo
+                .Builder()
                 .setTitle(getString(Res.string.settings_security_title_bio_auth))
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
                 .setSubtitle(getString(Res.string.settings_security_text_bio_auth))
@@ -181,7 +190,11 @@ private class SecuritySettingsScreenStateImpl(
     @SuppressLint("RestrictedApi")
     override fun onChangeBiometricEnabled(value: Boolean) {
         if (value) {
-            when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
+            when (
+                biometricManager.canAuthenticate(
+                    BiometricManager.Authenticators.BIOMETRIC_WEAK,
+                )
+            ) {
                 BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
                     // 生体認証が有効なため、認証する
                     startBiometric()
@@ -196,7 +209,9 @@ private class SecuritySettingsScreenStateImpl(
                     // 生体認証が一時的に利用不可のため、エラーメッセージ表示
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            getString(Res.string.settings_security_msg_temporarily_unavailable_bio_auth)
+                            getString(
+                                Res.string.settings_security_msg_temporarily_unavailable_bio_auth,
+                            ),
                         )
                     }
                 }
@@ -207,7 +222,9 @@ private class SecuritySettingsScreenStateImpl(
                 -> {
                     // 生体認証が利用不可のため、エラーメッセージ表示
                     scope.launch {
-                        snackbarHostState.showSnackbar(getString(Res.string.settings_security_not_available_bio_auth))
+                        snackbarHostState.showSnackbar(
+                            getString(Res.string.settings_security_not_available_bio_auth),
+                        )
                     }
                 }
             }
@@ -221,7 +238,9 @@ private class SecuritySettingsScreenStateImpl(
                         logcat { "Authentication error: $errString" }
                     }
 
-                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    override fun onAuthenticationSucceeded(
+                        result: BiometricPrompt.AuthenticationResult,
+                    ) {
                         super.onAuthenticationSucceeded(result)
                         logcat { "Authentication succeeded!" }
                         logcat { "整体認証を無効にする" }
@@ -232,14 +251,15 @@ private class SecuritySettingsScreenStateImpl(
                         }
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                getString(Res.string.settings_security_msg_disabled_bio_auth)
+                                getString(Res.string.settings_security_msg_disabled_bio_auth),
                             )
                         }
                     }
-                }
+                },
             )
             scope.launch {
-                val info = BiometricPrompt.PromptInfo.Builder()
+                val info = BiometricPrompt.PromptInfo
+                    .Builder()
                     .setTitle(getString(Res.string.settings_security_title_bio_auth))
                     .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
                     .setSubtitle(getString(Res.string.settings_security_text_disable_bio_auth))
@@ -254,7 +274,11 @@ private class SecuritySettingsScreenStateImpl(
     override fun onResume() {
         scope.launch {
             if (manageSecuritySettingsUseCase.settings.first().useBiometrics) {
-                when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
+                when (
+                    biometricManager.canAuthenticate(
+                        BiometricManager.Authenticators.BIOMETRIC_WEAK,
+                    )
+                ) {
                     BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED,
                     BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
                     BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,

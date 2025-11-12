@@ -33,7 +33,7 @@ internal fun HostField(
         validator = FieldValidator {
             notBlank { notBlankMessage }
         },
-        enabled = enabled
+        enabled = enabled,
     ) { field ->
         OutlinedTextField(
             value = field.value,
@@ -45,7 +45,7 @@ internal fun HostField(
             keyboardOptions = KeyboardOptions(
                 showKeyboardOnFocus = false,
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
             ),
             singleLine = true,
             modifier = modifier

@@ -24,9 +24,8 @@ private data class ScrollbarDragElement(
     private val draggedInteraction: MutableState<DragInteraction.Start?>,
     private val sliderAdapter: SliderAdapter,
 ) : ModifierNodeElement<ScrollbarDragNode>() {
-    override fun create(): ScrollbarDragNode {
-        return ScrollbarDragNode(interactionSource, draggedInteraction, sliderAdapter)
-    }
+    override fun create(): ScrollbarDragNode =
+        ScrollbarDragNode(interactionSource, draggedInteraction, sliderAdapter)
 
     override fun update(node: ScrollbarDragNode) {
         node.interactionSource = interactionSource
@@ -39,8 +38,8 @@ private class ScrollbarDragNode(
     var interactionSource: MutableInteractionSource,
     var draggedInteraction: MutableState<DragInteraction.Start?>,
     var sliderAdapter: SliderAdapter,
-) : Modifier.Node(), PointerInputModifierNode {
-
+) : Modifier.Node(),
+    PointerInputModifierNode {
     var buttonPressed = false
     var interaction: DragInteraction? = null
 

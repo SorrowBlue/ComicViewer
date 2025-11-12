@@ -37,13 +37,12 @@ import soil.form.rule.notNull
 expect fun localUriToDisplayPath(path: String): String
 
 @Composable
-internal fun FolderSelectField(
-    state: FolderSelectFieldState,
-    modifier: Modifier = Modifier,
-) {
+internal fun FolderSelectField(state: FolderSelectFieldState, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
-        value = state.formField.value?.let { localUriToDisplayPath(it) }.orEmpty(),
+        value = state.formField.value
+            ?.let { localUriToDisplayPath(it) }
+            .orEmpty(),
         onValueChange = {},
         label = { Text(text = stringResource(Res.string.bookshelf_edit_label_select_folder)) },
         isError = state.formField.hasError,
@@ -53,14 +52,16 @@ internal fun FolderSelectField(
             IconButton(onClick = { state.pickerResultLauncher.launch() }) {
                 Icon(
                     imageVector = ComicIcons.Folder,
-                    contentDescription = stringResource(Res.string.bookshelf_edit_label_select_folder)
+                    contentDescription = stringResource(
+                        Res.string.bookshelf_edit_label_select_folder,
+                    ),
                 )
             }
         },
         readOnly = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         ),
         singleLine = true,
         modifier = modifier
@@ -85,24 +86,25 @@ internal fun rememberFolderSelectFieldState(
     onOpenDocumentTreeCancel: () -> Unit,
     formField: FormField<String?> = form.rememberFolderSelectField(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    pickerResultLauncher: PickerResultLauncher = rememberDirectoryPickerLauncher { platformDirectory ->
-        logcat(
-            "FolderSelectFieldState"
-        ) { "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.path}" }
-        platformDirectory?.let {
-            scope.launch {
-                // Take a persistable URI permission for the selected directory
-                platformDirectory.bookmarkData()
-                formField.onValueChange(it.path)
+    pickerResultLauncher: PickerResultLauncher =
+        rememberDirectoryPickerLauncher { platformDirectory ->
+            logcat(
+                "FolderSelectFieldState",
+            ) {
+                "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.path}"
             }
-        } ?: run {
-            onOpenDocumentTreeCancel()
-        }
-    },
-): FolderSelectFieldState {
-    return remember {
-        FolderSelectFieldStateImpl(formField, pickerResultLauncher)
-    }
+            platformDirectory?.let {
+                scope.launch {
+                    // Take a persistable URI permission for the selected directory
+                    platformDirectory.bookmarkData()
+                    formField.onValueChange(it.path)
+                }
+            } ?: run {
+                onOpenDocumentTreeCancel()
+            }
+        },
+): FolderSelectFieldState = remember {
+    FolderSelectFieldStateImpl(formField, pickerResultLauncher)
 }
 
 private class FolderSelectFieldStateImpl(

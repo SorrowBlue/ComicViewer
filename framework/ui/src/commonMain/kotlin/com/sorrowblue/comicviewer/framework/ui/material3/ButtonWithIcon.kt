@@ -31,7 +31,7 @@ fun ButtonWithIcon(
     content: @Composable RowScope.() -> Unit,
 ) {
     val contentPadding by animatePaddingValues(
-        if (iconEnabled) ButtonDefaults.ButtonWithIconContentPadding else ButtonDefaults.ContentPadding
+        if (iconEnabled) ButtonDefaults.ButtonWithIconContentPadding else ButtonDefaults.ContentPadding,
     )
     Button(
         onClick = onClick,
@@ -41,7 +41,7 @@ fun ButtonWithIcon(
         colors = colors,
         elevation = elevation,
         border = border,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
         AnimatedVisibility(visible = iconEnabled, label = "ButtonWithIcon") {
             Row {
@@ -67,7 +67,7 @@ fun TextButtonWithIcon(
     content: @Composable RowScope.() -> Unit,
 ) {
     val contentPadding by animatePaddingValues(
-        if (iconEnabled) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding
+        if (iconEnabled) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding,
     )
     TextButton(
         onClick = onClick,
@@ -77,7 +77,7 @@ fun TextButtonWithIcon(
         colors = colors,
         elevation = elevation,
         border = border,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
         AnimatedVisibility(visible = iconEnabled, label = "TextButtonWithIcon") {
             Row {

@@ -73,23 +73,19 @@ operator fun PaddingValues.plus(other: PaddingValues): PaddingValues =
 @Immutable
 private class AddedPaddingValues(val first: PaddingValues, val second: PaddingValues) :
     PaddingValues {
-    override fun calculateLeftPadding(layoutDirection: LayoutDirection): Dp {
-        return first.calculateLeftPadding(layoutDirection) +
+    override fun calculateLeftPadding(layoutDirection: LayoutDirection): Dp =
+        first.calculateLeftPadding(layoutDirection) +
             second.calculateLeftPadding(layoutDirection)
-    }
 
-    override fun calculateTopPadding(): Dp {
-        return first.calculateTopPadding() + second.calculateTopPadding()
-    }
+    override fun calculateTopPadding(): Dp =
+        first.calculateTopPadding() + second.calculateTopPadding()
 
-    override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp {
-        return first.calculateRightPadding(layoutDirection) +
+    override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp =
+        first.calculateRightPadding(layoutDirection) +
             second.calculateRightPadding(layoutDirection)
-    }
 
-    override fun calculateBottomPadding(): Dp {
-        return first.calculateBottomPadding() + second.calculateBottomPadding()
-    }
+    override fun calculateBottomPadding(): Dp =
+        first.calculateBottomPadding() + second.calculateBottomPadding()
 
     override fun equals(other: Any?): Boolean {
         if (other !is AddedPaddingValues) return false
@@ -112,7 +108,7 @@ fun PaddingValues.asWindowInsets(layoutDirection: LayoutDirection = LocalLayoutD
         left = calculateLeftPadding(layoutDirection),
         top = calculateTopPadding(),
         right = calculateRightPadding(layoutDirection),
-        bottom = calculateBottomPadding()
+        bottom = calculateBottomPadding(),
     )
 
 @Composable
@@ -137,12 +133,12 @@ fun animateMainContentPaddingValues(
             start = if (ignore || !bound.start) 0.dp else ComicTheme.dimension.margin,
             top = if (ignore || !bound.top) 0.dp else ComicTheme.dimension.margin,
             end = if (ignore || !bound.end) 0.dp else ComicTheme.dimension.margin,
-            bottom = if (ignore || !bound.bottom) 0.dp else ComicTheme.dimension.margin
+            bottom = if (ignore || !bound.bottom) 0.dp else ComicTheme.dimension.margin,
         ),
         typeConverter = paddingValuesToVector(layoutDirection),
         animationSpec = animationSpec,
         label = "PaddingValuesAnimation",
-        finishedListener = finishedListener
+        finishedListener = finishedListener,
     )
 }
 
@@ -152,35 +148,34 @@ fun animatePaddingValues(
     layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     animationSpec: AnimationSpec<PaddingValues> = paddingValuesDefaultSpring,
     finishedListener: ((PaddingValues) -> Unit)? = null,
-): State<PaddingValues> {
-    return animateValueAsState(
-        targetValue = value.copy(),
-        typeConverter = paddingValuesToVector(layoutDirection),
-        animationSpec = animationSpec,
-        label = "PaddingValuesAnimation",
-        finishedListener = finishedListener
-    )
-}
+): State<PaddingValues> = animateValueAsState(
+    targetValue = value.copy(),
+    typeConverter = paddingValuesToVector(layoutDirection),
+    animationSpec = animationSpec,
+    label = "PaddingValuesAnimation",
+    finishedListener = finishedListener,
+)
 
-fun paddingValuesToVector(layoutDirection: LayoutDirection): TwoWayConverter<PaddingValues, AnimationVector4D> =
-    TwoWayConverter(
-        convertToVector = {
-            AnimationVector4D(
-                it.calculateStartPadding(layoutDirection).value,
-                it.calculateTopPadding().value,
-                it.calculateEndPadding(layoutDirection).value,
-                it.calculateBottomPadding().value
-            )
-        },
-        convertFromVector = {
-            PaddingValues(
-                max(it.v1, 0f).dp,
-                max(it.v2, 0f).dp,
-                max(it.v3, 0f).dp,
-                max(it.v4, 0f).dp
-            )
-        }
-    )
+fun paddingValuesToVector(
+    layoutDirection: LayoutDirection,
+): TwoWayConverter<PaddingValues, AnimationVector4D> = TwoWayConverter(
+    convertToVector = {
+        AnimationVector4D(
+            it.calculateStartPadding(layoutDirection).value,
+            it.calculateTopPadding().value,
+            it.calculateEndPadding(layoutDirection).value,
+            it.calculateBottomPadding().value,
+        )
+    },
+    convertFromVector = {
+        PaddingValues(
+            max(it.v1, 0f).dp,
+            max(it.v2, 0f).dp,
+            max(it.v3, 0f).dp,
+            max(it.v4, 0f).dp,
+        )
+    },
+)
 
 private val ZeroDP = 0.dp
 
@@ -214,7 +209,6 @@ value class PaddingValuesSides private constructor(private val value: Int) {
     }
 
     companion object {
-
         internal val AllowLeftInLtr = PaddingValuesSides(1 shl 3)
         internal val AllowRightInLtr = PaddingValuesSides(1 shl 2)
         internal val AllowLeftInRtl = PaddingValuesSides(1 shl 1)
@@ -258,8 +252,13 @@ private class LimitPaddingValues(val paddingValues: PaddingValues, val sides: Pa
         }
     }
 
-    override fun calculateTopPadding(): Dp {
-        return if (sides.hasAny(PaddingValuesSides.Top)) paddingValues.calculateTopPadding() else 0.dp
+    override fun calculateTopPadding(): Dp = if (sides.hasAny(
+            PaddingValuesSides.Top,
+        )
+    ) {
+        paddingValues.calculateTopPadding()
+    } else {
+        0.dp
     }
 
     override fun calculateRightPadding(layoutDirection: LayoutDirection): Dp {
@@ -277,8 +276,13 @@ private class LimitPaddingValues(val paddingValues: PaddingValues, val sides: Pa
         }
     }
 
-    override fun calculateBottomPadding(): Dp {
-        return if (sides.hasAny(PaddingValuesSides.Bottom)) paddingValues.calculateBottomPadding() else 0.dp
+    override fun calculateBottomPadding(): Dp = if (sides.hasAny(
+            PaddingValuesSides.Bottom,
+        )
+    ) {
+        paddingValues.calculateBottomPadding()
+    } else {
+        0.dp
     }
 
     override fun equals(other: Any?): Boolean {

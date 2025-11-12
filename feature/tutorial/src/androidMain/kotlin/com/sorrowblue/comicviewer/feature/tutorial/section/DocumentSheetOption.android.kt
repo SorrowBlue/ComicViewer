@@ -39,7 +39,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
                 OutlinedButton(
                     onClick = state::onOpenLinkClick,
                     enabled = false,
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 ) {
                     Icon(ComicIcons.OpenInBrowser, null)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
@@ -52,7 +52,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
             PdfPluginState.OldVersion -> {
                 OutlinedButton(
                     onClick = state::onOpenLinkClick,
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 ) {
                     Icon(ComicIcons.OpenInBrowser, null)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
@@ -65,7 +65,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
             PdfPluginState.NotInstalled -> {
                 OutlinedButton(
                     onClick = state::onOpenLinkClick,
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 ) {
                     Icon(ComicIcons.OpenInBrowser, null)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
@@ -112,7 +112,6 @@ private class DocumentSheetOptionStateImpl(
     private val uriHandler: UriHandler,
     private val context: Context,
 ) : DocumentSheetOptionState {
-
     override var uiState by mutableStateOf(DocumentSheetOptionUiState())
 
     init {

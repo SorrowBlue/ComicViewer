@@ -2,124 +2,59 @@ package com.sorrowblue.comicviewer.feature.readlater
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUseCase
-import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBarAction
-import com.sorrowblue.comicviewer.file.FileInfoSheetNavigator
-import com.sorrowblue.comicviewer.framework.ui.CanonicalScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.rememberCanonicalScaffoldState
+import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
+import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
+import com.sorrowblue.comicviewer.framework.ui.rememberAdaptiveNavigationSuiteScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
-
-internal sealed interface ReadLaterScreenEvent {
-
-    data class Collection(val bookshelfId: BookshelfId, val path: String) : ReadLaterScreenEvent
-
-    data class File(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        ReadLaterScreenEvent
-
-    data class OpenFolder(val file: com.sorrowblue.comicviewer.domain.model.file.File) :
-        ReadLaterScreenEvent
-
-    data object Settings : ReadLaterScreenEvent
-}
 
 internal interface ReadLaterScreenState {
+    val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
-    val events: EventFlow<ReadLaterScreenEvent>
 
-    val scaffoldState: CanonicalScaffoldState<File.Key>
-
-    fun onTopAppBarAction(action: ReadLaterTopAppBarAction)
-    fun onFileInfoSheetAction(action: FileInfoSheetNavigator)
-    fun onContentsAction(action: ReadLaterContentsAction)
+    fun onClearAllClick()
 }
 
 @Composable
-internal fun rememberReadLaterScreenState(
-    lazyGridState: LazyGridState = rememberLazyGridState(),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: ReadLaterViewModel = koinViewModel(),
-): ReadLaterScreenState {
+context(context: ReadLaterScreenContext)
+internal fun rememberReadLaterScreenState(): ReadLaterScreenState {
     val state = remember {
         ReadLaterScreenStateImpl(
-            lazyGridState = lazyGridState,
-            scope = scope,
-            deleteAllReadLaterUseCase = viewModel.deleteAllReadLaterUseCase,
+            deleteAllReadLaterUseCase = context.deleteAllReadLaterUseCase,
         )
+    }.apply {
+        scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+        lazyPagingItems = rememberPagingItems {
+            context.pagingReadLaterFileUseCase(
+                PagingReadLaterFileUseCase.Request(PagingConfig(20)),
+            )
+        }
+        lazyGridState = rememberLazyGridState()
+        coroutineScope = rememberCoroutineScope()
     }
-
-    state.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    state.scaffoldState = rememberCanonicalScaffoldState<File.Key>(
-        onReSelect = state::onReSelected
-    )
     return state
 }
 
 private class ReadLaterScreenStateImpl(
-    override val lazyGridState: LazyGridState,
-    private val scope: CoroutineScope,
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
 ) : ReadLaterScreenState {
-
-    override lateinit var scaffoldState: CanonicalScaffoldState<File.Key>
-    override val events = EventFlow<ReadLaterScreenEvent>()
-
+    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
     override lateinit var lazyPagingItems: LazyPagingItems<File>
+    override lateinit var lazyGridState: LazyGridState
+    lateinit var coroutineScope: CoroutineScope
 
-    override fun onTopAppBarAction(action: ReadLaterTopAppBarAction) {
-        when (action) {
-            ReadLaterTopAppBarAction.ClearAll -> scope.launch {
-                deleteAllReadLaterUseCase(DeleteAllReadLaterUseCase.Request)
-            }
-
-            ReadLaterTopAppBarAction.Settings -> events.tryEmit(ReadLaterScreenEvent.Settings)
-        }
-    }
-
-    override fun onFileInfoSheetAction(action: FileInfoSheetNavigator) {
-        when (action) {
-            FileInfoSheetNavigator.Back -> scope.launch {
-                scaffoldState.navigator.navigateBack()
-            }
-
-            is FileInfoSheetNavigator.Collection -> scaffoldState.navigator.currentDestination?.contentKey?.let {
-                events.tryEmit(ReadLaterScreenEvent.Collection(it.bookshelfId, it.path))
-            }
-
-            is FileInfoSheetNavigator.OpenFolder -> {
-                events.tryEmit(ReadLaterScreenEvent.OpenFolder(action.file))
-            }
-        }
-    }
-
-    override fun onContentsAction(action: ReadLaterContentsAction) {
-        when (action) {
-            is ReadLaterContentsAction.File -> events.tryEmit(ReadLaterScreenEvent.File(action.file))
-            is ReadLaterContentsAction.FileInfo -> scope.launch {
-                scaffoldState.navigator.navigateTo(
-                    SupportingPaneScaffoldRole.Extra,
-                    action.file.key()
-                )
-            }
-        }
-    }
-
-    fun onReSelected() {
-        if (lazyGridState.canScrollBackward) {
-            scope.launch {
-                lazyGridState.animateScrollToItem(0)
-            }
+    override fun onClearAllClick() {
+        coroutineScope.launch {
+            deleteAllReadLaterUseCase(DeleteAllReadLaterUseCase.Request)
         }
     }
 }

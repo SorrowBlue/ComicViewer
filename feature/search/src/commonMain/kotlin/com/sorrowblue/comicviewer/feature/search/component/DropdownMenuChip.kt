@@ -33,13 +33,13 @@ fun <T> DropdownMenuChip(
             trailingIcon = {
                 Icon(
                     imageVector = ComicIcons.ArrowDropDown,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             },
         )
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
             menus.forEach {
                 DropdownMenuItem(
@@ -47,7 +47,7 @@ fun <T> DropdownMenuChip(
                     onClick = {
                         onChangeSelect(it)
                         expanded = false
-                    }
+                    },
                 )
             }
         }

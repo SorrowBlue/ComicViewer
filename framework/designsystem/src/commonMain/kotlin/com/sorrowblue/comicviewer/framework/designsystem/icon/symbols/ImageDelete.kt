@@ -1,3 +1,5 @@
+@file:Suppress("detekt.all")
+
 package com.sorrowblue.comicviewer.framework.designsystem.icon.symbols
 
 import androidx.compose.material.icons.materialIcon
@@ -5,8 +7,8 @@ import androidx.compose.material.icons.materialPath
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Suppress("UnusedReceiverParameter")
 val ComicIcons.ImageDelete: ImageVector

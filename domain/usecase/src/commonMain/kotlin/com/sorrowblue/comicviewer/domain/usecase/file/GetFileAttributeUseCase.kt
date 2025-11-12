@@ -7,9 +7,9 @@ import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
 abstract class GetFileAttributeUseCase :
     UseCase<GetFileAttributeUseCase.Request, FileAttribute, GetFileAttributeUseCase.Error>() {
-
     sealed interface Error : Resource.AppError {
         data object NotFound : Error
+
         data object System : Error
     }
 

@@ -9,9 +9,8 @@ Always reference these instructions first and fallback to search or bash command
 - **Kotlin Multiplatform**: Primary programming language
 - **Jetpack Compose**: UI framework for Android, Desktop, and iOS
 - **Modular Architecture**: feature/domain/data layer structure
-- **Koin**: Dependency injection framework
+- **Metro**: Dependency injection framework
 - **Room**: Database (Android)
-- **Ktor**: Network communication
 
 ## Working Effectively
 

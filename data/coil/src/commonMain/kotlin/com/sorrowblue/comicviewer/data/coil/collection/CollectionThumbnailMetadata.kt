@@ -11,7 +11,6 @@ internal data class CollectionThumbnailMetadata(
     val collectionId: CollectionId,
     val thumbnails: String?,
 ) : CoilMetadata {
-
     override fun writeTo(bufferedSink: BufferedSink) {
         bufferedSink.writeUtf8(Json.encodeToString(this))
     }

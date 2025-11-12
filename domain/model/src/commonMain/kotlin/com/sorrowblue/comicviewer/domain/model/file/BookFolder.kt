@@ -17,8 +17,8 @@ data class BookFolder private constructor(
     override val lastReadTime: Long,
     override val sortIndex: Int,
     override val count: Int,
-) : Book, IFolder {
-
+) : Book,
+    IFolder {
     fun copy(
         parent: String = this.parent,
         sortIndex: Int = this.sortIndex,
@@ -27,11 +27,10 @@ data class BookFolder private constructor(
         bookshelfId = bookshelfId,
         parent = parent,
         totalPageCount = totalPageCount,
-        sortIndex = sortIndex
+        sortIndex = sortIndex,
     )
 
     companion object {
-
         @InternalDataApi
         operator fun invoke(
             bookshelfId: BookshelfId,
@@ -60,7 +59,7 @@ data class BookFolder private constructor(
             totalPageCount = totalPageCount,
             lastReadTime = lastReadTime,
             sortIndex = sortIndex,
-            count = count
+            count = count,
         )
     }
 }

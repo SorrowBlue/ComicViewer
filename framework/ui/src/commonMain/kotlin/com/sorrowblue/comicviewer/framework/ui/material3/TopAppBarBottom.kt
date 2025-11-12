@@ -38,24 +38,23 @@ fun TopAppBarBottom(
         }
     }
     val appBarContainerColor by animateColorAsState(
-        targetValue = TopAppBarDefaults.topAppBarColors()
+        targetValue = TopAppBarDefaults
+            .topAppBarColors()
             .containerColor(colorTransitionFraction),
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-        label = "TopAppBarBottomAnimationColor"
+        label = "TopAppBarBottomAnimationColor",
     )
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .then(modifier),
         color = appBarContainerColor,
-        content = content
+        content = content,
     )
 }
 
-private fun TopAppBarColors.containerColor(colorTransitionFraction: Float): Color {
-    return lerp(
-        containerColor,
-        scrolledContainerColor,
-        FastOutLinearInEasing.transform(colorTransitionFraction)
-    )
-}
+private fun TopAppBarColors.containerColor(colorTransitionFraction: Float): Color = lerp(
+    containerColor,
+    scrolledContainerColor,
+    FastOutLinearInEasing.transform(colorTransitionFraction),
+)

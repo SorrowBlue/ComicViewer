@@ -2,11 +2,14 @@ package com.sorrowblue.comicviewer.data.reader.zip.impl
 
 import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.ZipFileReader
 import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
@@ -16,17 +19,21 @@ import kotlinx.coroutines.withContext
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import okio.BufferedSink
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.InjectedParam
-import org.koin.core.annotation.Qualifier
 
-@ZipFileReader
-@Factory
-internal actual class ZipFileReader actual constructor(
-    @InjectedParam private val seekableInputStream: SeekableInputStream,
-    @Qualifier(value = ImageExtension::class) supportedException: Set<String>,
-    @Qualifier(value = IoDispatcher::class) private val dispatcher: CoroutineDispatcher,
+@AssistedInject
+internal actual class ZipFileReader(
+    @Assisted mimeType: String,
+    @Assisted private val seekableInputStream: SeekableInputStream,
+    @ImageExtension supportedException: Set<String>,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
+    @AssistedFactory
+    actual fun interface Factory : FileReaderFactory {
+        actual override fun create(
+            mimeType: String,
+            seekableInputStream: SeekableInputStream,
+        ): ZipFileReader
+    }
 
     private val zipFile = SevenZip.openInArchive(null, IInStreamImpl(seekableInputStream))
 
@@ -39,7 +46,8 @@ internal actual class ZipFileReader actual constructor(
         }
 
     private val entries =
-        archive.archiveItems.filter { !it.isFolder && it.path.extension() in supportedException }
+        archive.archiveItems
+            .filter { !it.isFolder && it.path.extension() in supportedException }
             .sortedWith(Comparator.comparing(ISimpleInArchiveItem::getPath, collator::compare))
 
     private val mutex = Mutex()
@@ -57,9 +65,7 @@ internal actual class ZipFileReader actual constructor(
         }
     }
 
-    actual override suspend fun pageCount(): Int {
-        return entries.size
-    }
+    actual override suspend fun pageCount(): Int = entries.size
 
     actual override fun close() {
         runBlocking {
