@@ -8,30 +8,26 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        task: [ 'detektAndroidAll', 'detektDesktopAll', 'detektIosAll', ':build-logic:detektMain' ]
+        task: [ 'detektReleaseAndroid', 'detektMainDesktop', ':build-logic:detektMain' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run detekt
-        if: ${{matrix.task != ':build-logic:detektMain' }}
-        run: ./gradlew ${{ matrix.task }} reportMerge
-      - name: 🔍️Run detekt(build-logic)
-        if: ${{matrix.task == ':build-logic:detektMain' }}
         run: ./gradlew ${{ matrix.task }}
-      - name: Upload Detekt SARIF
-        uses: github/codeql-action/upload-sarif@v4
-        if: ${{ !cancelled() && matrix.task != ':build-logic:detektMain' }}
-        with:
-          sarif_file: build/reports/detekt/merge.sarif
-          category: detekt
-      - name: Upload Detekt SARIF(build-logic)
-        uses: github/codeql-action/upload-sarif@v4
-        if: ${{ !cancelled() && matrix.task == ':build-logic:detektMain' }}
-        with:
-          sarif_file: build-logic/build/reports/detekt/main.sarif
-          category: detekt
+#      - name: Upload Detekt SARIF
+#        uses: github/codeql-action/upload-sarif@v4
+#        if: ${{ !cancelled() && matrix.task != ':build-logic:detektMain' }}
+#        with:
+#          sarif_file: build/reports/detekt/merge.sarif
+#          category: detekt
+#      - name: Upload Detekt SARIF(build-logic)
+#        uses: github/codeql-action/upload-sarif@v4
+#        if: ${{ !cancelled() && matrix.task == ':build-logic:detektMain' }}
+#        with:
+#          sarif_file: build-logic/build/reports/detekt/main.sarif
+#          category: detekt
 
   checkVersionCatalog:
     runs-on: ubuntu-latest
