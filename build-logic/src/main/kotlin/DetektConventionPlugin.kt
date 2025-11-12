@@ -59,9 +59,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
                     dependsOn(
                         tasks
                             .withType<Detekt>()
-                            .matching { detekt -> detekt.name.contains(regex) }.also {
-                                logger.lifecycle("${taskName} ${it.joinToString(",") { it.name }}")
-                            },
+                            .matching { detekt -> detekt.name.contains(regex) }
                     )
                 }
             }
