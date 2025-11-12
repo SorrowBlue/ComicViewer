@@ -59,9 +59,16 @@ dependencies {
     dokka(projects.framework.ui)
 }
 
-tasks.register("reportMerge", ReportMergeTask::class) {
+val reportMerge = tasks.register("reportMerge", ReportMergeTask::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
+}
+subprojects {
+    reportMerge {
+        input.from(
+            tasks.withType<dev.detekt.gradle.Detekt>()
+                .map { it.reports.checkstyle.outputLocation })
+    }
 }
 
 afterEvaluate {
