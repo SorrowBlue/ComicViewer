@@ -3,7 +3,6 @@ import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import dev.detekt.gradle.Detekt
 import dev.detekt.gradle.extensions.DetektExtension
-import dev.detekt.gradle.report.ReportMergeTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -30,7 +29,6 @@ internal class DetektConventionPlugin : Plugin<Project> {
                 config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
             }
 
-            val reportMerge = rootProject.tasks.withType(ReportMergeTask::class)
             tasks.withType<Detekt>().configureEach {
                 reports {
                     sarif.required.set(true)
@@ -38,15 +36,9 @@ internal class DetektConventionPlugin : Plugin<Project> {
                     markdown.required.set(false)
                     checkstyle.required.set(false)
                 }
-                finalizedBy(reportMerge)
                 exclude {
                     it.file.path.run { contains("generated") || contains("buildkonfig") }
                 }
-            }
-            reportMerge.configureEach {
-                input.from(
-                    tasks.withType<Detekt>().map { detekt -> detekt.reports.sarif.outputLocation },
-                )
             }
 
             mapOf(
@@ -59,7 +51,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
                     dependsOn(
                         tasks
                             .withType<Detekt>()
-                            .matching { detekt -> detekt.name.contains(regex) }
+                            .matching { detekt -> detekt.name.contains(regex) },
                     )
                 }
             }

@@ -53,11 +53,6 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
-tasks.register("detektAll") {
-    group = "verification"
-    dependsOn(tasks.withType<Detekt>())
-}
-
 gradlePlugin {
     plugins {
         register(libs.plugins.comicviewer.android.lint) {
