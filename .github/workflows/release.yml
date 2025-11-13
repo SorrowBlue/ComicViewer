@@ -87,7 +87,7 @@ jobs:
       - name: Build Desktop Release
         run: ./gradlew packageDistributionForCurrentOS
       - name: Upload Desktop artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: desktop-release-${{ runner.os }}
           path: composeApp/build/compose/binaries/main/
@@ -98,7 +98,7 @@ jobs:
     needs: [build-android-release, build-desktop-release]
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: ./artifacts
       - name: Display structure of downloaded files
