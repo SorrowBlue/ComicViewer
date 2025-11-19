@@ -62,7 +62,7 @@ sevenzipjbinding = "16.02-2.01"
 sevenzipjbinding-android = "16.02-2.4"
 slf4j-android = "2.0.17-0"
 soil = "1.0.0-alpha15"
-squareup-okio = "3.16.3"
+squareup-okio = "3.16.4"
 targetSdk = "36"
 versionCatalogLinter = "1.1.0"
 
