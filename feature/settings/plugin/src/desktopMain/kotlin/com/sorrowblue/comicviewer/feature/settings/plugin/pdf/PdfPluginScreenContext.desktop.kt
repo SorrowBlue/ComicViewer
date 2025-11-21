@@ -1,0 +1,19 @@
+package com.sorrowblue.comicviewer.feature.settings.plugin.pdf
+
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManagePdfPluginSettingsUseCase
+import com.sorrowblue.comicviewer.framework.ui.ScreenContext
+import com.sorrowblue.scomicviewer.domain.usecase.RegisterPdfPluginUseCase
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.GraphExtension
+
+@GraphExtension(scope = PdfPluginScreenScope::class)
+actual interface PdfPluginScreenContext : ScreenContext {
+    val registerPdfPluginUseCase: RegisterPdfPluginUseCase
+    val managePdfPluginSettingsUseCase: ManagePdfPluginSettingsUseCase
+
+    @ContributesTo(scope = dev.zacsweers.metro.AppScope::class)
+    @GraphExtension.Factory
+    actual fun interface Factory {
+        actual fun createPdfPluginScreenContext(): PdfPluginScreenContext
+    }
+}

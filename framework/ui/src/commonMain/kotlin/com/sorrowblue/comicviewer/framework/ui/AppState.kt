@@ -11,6 +11,10 @@ val LocalAppState = staticCompositionLocalOf<AppState> {
     error("No AppState provided")
 }
 
+val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
+    error("No SharedTransitionScope provided")
+}
+
 @OptIn(ExperimentalSharedTransitionApi::class)
 interface AppState : SharedTransitionScope {
     var navigationSuiteType: NavigationSuiteType

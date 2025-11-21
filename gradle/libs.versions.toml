@@ -1,41 +1,40 @@
 [versions]
 aboutlibraries = "13.1.0"
 android-gradle = "8.13.1"
-androidx-activity = "1.11.0"
+androidx-activity = "1.12.0"
 androidx-annotation-experimental = "1.5.1"
 androidx-appcompat = "1.7.1"
 androidx-biometric = "1.4.0-alpha04"
 androidx-browser = "1.9.0"
-androidx-compose-animation = "1.9.4"
+androidx-compose-animation = "1.9.5"
 androidx-compose-material = "1.7.3"
-androidx-compose-material3-adaptive-navigation3 = "1.3.0-alpha03"
-androidx-compose-runtime = "1.10.0-beta02"
-androidx-compose-ui = "1.10.0-beta02"
+androidx-compose-runtime = "1.10.0-rc01"
+androidx-compose-ui = "1.10.0-rc01"
 androidx-core = "1.17.0"
 androidx-core-splashscreen = "1.2.0"
-androidx-datastore = "1.1.7"
+androidx-datastore = "1.2.0"
 androidx-documentfile = "1.1.0"
-androidx-navigation3 = "1.0.0-rc01"
+androidx-navigation3 = "1.0.0"
 androidx-paging = "3.4.0-alpha04"
-androidx-room = "2.8.3"
-androidx-sqlite = "2.6.1"
+androidx-room = "2.8.4"
+androidx-sqlite = "2.6.2"
 androidx-startup = "1.2.0"
 androidx-test-core = "1.7.0"
 androidx-test-ext-junit = "1.3.0"
 androidx-test-ext-truth = "1.7.0"
 androidx-test-rules = "1.7.0"
 androidx-test-runner = "1.7.0"
-androidx-window = "1.5.0"
+androidx-window = "1.5.1"
 androidx-work = "2.11.0"
 buildkonfig = "0.17.1"
 coil-kt = "3.3.0"
+composeHotReload = "1.0.0-rc03"
 detekt = "2.0.0-alpha.1"
 detekt-compose = "0.4.27"
 dokka = "2.1.0"
 edge2edgePreview = "0.7.1"
 filekit = "0.12.0"
 google-ksp = "2.3.2"
-google-play-feature-delivery = "2.1.0"
 java = "21"
 jcifs = "3.0.0"
 kmpfile = "0.8.0"
@@ -45,7 +44,7 @@ kotlinx-datetime = "0.7.1"
 kotlinx-kover = "0.9.3"
 kotlinx-serialization = "1.9.0"
 licensee = "1.14.1"
-metro = "0.7.5"
+metro = "0.7.7"
 modulegraph = "0.13.0"
 multiplatform-compose = "1.10.0-beta01"
 multiplatform-compose-material3 = "1.10.0-alpha04"
@@ -76,7 +75,6 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "androidx-biometric" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
 androidx-compose-animation-graphics = { group = "androidx.compose.animation", name = "animation-graphics", version.ref = "androidx-compose-animation" }
-androidx-compose-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "androidx-compose-material3-adaptive-navigation3" }
 androidx-compose-materialIconsExtended = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "androidx-compose-material" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "androidx-compose-runtime" }
 androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "androidx-compose-ui" }
@@ -108,18 +106,22 @@ coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil-kt" }
 coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-kt" }
 compose-gradlePlugin = { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "multiplatform-compose" }
 compose-multiplatform-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "multiplatform-compose" }
+compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "multiplatform-compose" }
+compose-components-animatedimage = { group = "org.jetbrains.compose.components", name = "components-animatedimage", version.ref = "multiplatform-compose" }
+compose-uiTooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling", version.ref = "multiplatform-compose" }
+compose-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "multiplatform-compose" }
 compose-multiplatform-lifecycleCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "multiplatform-lifecycleCompose" }
 compose-multiplatform-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "multiplatform-compose-material3" }
 compose-multiplatform-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version.ref = "multiplatform-compose-material3Adaptive" }
 compose-multiplatform-material3-adaptiveLayout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version.ref = "multiplatform-compose-material3Adaptive" }
 compose-multiplatform-material3-adaptiveNavigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "multiplatform-compose-material3Adaptive" }
+compose-multiplatform-material3-adaptiveNavigation3 = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "multiplatform-compose-material3Adaptive" }
 compose-multiplatform-material3AdaptiveNavigationSuite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "multiplatform-compose-material3" }
 detekt-gradlePlugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 drick-compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version.ref = "edge2edgePreview" }
 filekit = { group = "io.github.vinceglb", name = "filekit-dialogs", version.ref = "filekit" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
-google-android-play-feature-delivery-ktx = { group = "com.google.android.play", name = "feature-delivery-ktx", version.ref = "google-play-feature-delivery" }
 google-ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "google-ksp" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
 kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
@@ -183,3 +185,4 @@ licensee = { id = "app.cash.licensee", version.ref = "licensee" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }
+composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload"}

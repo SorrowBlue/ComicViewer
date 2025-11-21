@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
     alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.composeHotReload)
 }
 
 kotlin {
@@ -24,65 +25,22 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.domain.service)
-            implementation(projects.data.coil)
-            implementation(projects.data.database)
-            implementation(projects.data.datastore)
-            implementation(projects.data.storage.client)
+            implementation(projects.aggregation)
+            implementation(projects.feature.settings.info)
             implementation(projects.framework.designsystem)
             implementation(projects.framework.ui)
-            implementation(projects.aggregation)
-            implementation(projects.domain.usecase)
-            implementation(projects.feature.authentication)
-            implementation(projects.feature.bookshelf)
-            implementation(projects.feature.bookshelf.info)
-            implementation(projects.feature.bookshelf.edit)
-            implementation(projects.feature.book)
-            implementation(projects.feature.readlater)
-            implementation(projects.feature.collection)
-            implementation(projects.feature.search)
-            implementation(projects.feature.tutorial)
-            implementation(projects.feature.folder)
-            implementation(projects.feature.settings)
-            implementation(projects.feature.settings.info)
-            implementation(projects.feature.history)
-
-
-            implementation(libs.kotlinx.serialization.json)
-        }
-
-
-        commonTest {
-            dependencies {
-                implementation(projects.framework.test)
-                implementation(libs.kotlin.test)
-            }
         }
 
         androidMain.dependencies {
-            implementation(projects.framework.notification)
-
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.core.splashscreen)
-            implementation(libs.kotlinx.coroutines.android)
-            implementation(libs.google.android.play.feature.delivery.ktx)
+            implementation(projects.feature.book)
+//            implementation(libs.kotlinx.coroutines.android)
         }
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-        }
-
-        androidUnitTest {
-            dependencies {
-                implementation(projects.data.storage.client)
-            }
-        }
-
-        desktopTest {
-            dependencies {
-                implementation(projects.data.storage.client)
-            }
         }
     }
 }

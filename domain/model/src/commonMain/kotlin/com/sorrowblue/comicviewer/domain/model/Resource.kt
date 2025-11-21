@@ -31,7 +31,7 @@ inline fun <D, E> Resource<D, E>.onError(onError: (E) -> Unit): Resource<D, E> {
     return this
 }
 
-inline fun <D> Resource<D, Unit>.onSuccess(onSuccess: (D) -> Unit): Resource<D, Unit> {
+inline fun <D, E> Resource<D, E>.onSuccess(onSuccess: (D) -> Unit): Resource<D, E> {
     if (this is Resource.Success) {
         onSuccess(data)
     }

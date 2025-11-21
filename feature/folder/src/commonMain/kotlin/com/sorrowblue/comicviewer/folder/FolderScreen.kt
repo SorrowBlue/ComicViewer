@@ -44,6 +44,8 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
     onSortClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
     AdaptiveNavigationSuiteScaffold {
         Scaffold(
@@ -53,7 +55,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
                     onBackClick = onBackClick,
                     onSearchClick = onSearchClick,
                     onSortClick = onSortClick,
-                    onSettingsClick = {},
+                    onSettingsClick = onSettingsClick,
                 )
             },
         ) { contentPadding ->
@@ -62,7 +64,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
                 lazyPagingItems = lazyPagingItems,
                 lazyGridState = lazyGridState,
                 contentPadding = contentPadding,
-                onRefresh = {},
+                onRefresh = onRefresh,
                 onFileClick = onFileClick,
                 onFileInfoClick = onFileInfoClick,
             )

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_plugin_title">Plugin</string>
+    <string name="settings_plugin_title_pdf">PDF plugin</string>
+    <string name="settings_plugin_label_enable">Enable</string>
+    <string name="settings_plugin_label_disable">Disable</string>
+    <string name="settings_plugin_error_not_found">PDF plugin not found. Please specify the installation directory</string>
+    <string name="settings_plugin_error_not_supported_version">Unsupported PDF plugin</string>
+</resources>

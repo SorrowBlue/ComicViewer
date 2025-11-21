@@ -23,15 +23,15 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
 
             kotlin<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
-                    val compose = extensions.getByType<ComposePlugin.Dependencies>()
-                    implementation(compose.components.resources)
-                    implementation(compose.preview)
+                    implementation(libs.compose.components.resources)
+                    implementation(libs.compose.preview)
                     implementation(libs.androidx.window.core)
                     implementation(libs.compose.multiplatform.material3)
                     implementation(libs.compose.multiplatform.material3AdaptiveNavigationSuite)
                     implementation(libs.compose.multiplatform.material3.adaptive)
                     implementation(libs.compose.multiplatform.material3.adaptiveLayout)
                     implementation(libs.compose.multiplatform.material3.adaptiveNavigation)
+                    implementation(libs.compose.multiplatform.material3.adaptiveNavigation3)
                     // Navigation
                     implementation(libs.compose.multiplatform.lifecycleCompose)
                     implementation(libs.multiplatform.lifecycle.viewmodelNavigation3)
@@ -51,7 +51,10 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
 
                 sourceSets.androidMain.dependencies {
                     implementation(libs.androidx.compose.ui.toolingPreview)
-                    implementation(libs.androidx.compose.material3.adaptive.navigation3)
+                }
+
+                sourceSets.desktopMain.dependencies {
+                    implementation(libs.compose.components.animatedimage)
                 }
 
                 compilerOptions {
@@ -73,7 +76,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
 
             dependencies {
                 val compose = extensions.getByType<ComposePlugin.Dependencies>()
-                add("debugImplementation", compose.uiTooling)
+                add("debugImplementation", libs.compose.uiTooling)
             }
         }
     }

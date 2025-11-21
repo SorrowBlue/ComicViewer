@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.folder.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
@@ -61,32 +61,32 @@ private data class ImageScaleKey(val imageScale: ImageScale) : ScreenKey
 @Serializable
 private data class SortTypeKey(val sortType: SortType) : ScreenKey
 
-context(graph: PlatformGraph, state: Navigation3State)
-fun EntryProviderScope<NavKey>.folderSettingsEntryGroup() {
+context(graph: PlatformGraph)
+fun EntryProviderScope<NavKey>.folderSettingsEntryGroup(navigator: Navigator) {
     folderSettingsEntry(
-        onBackClick = state::onBackPressed,
+        onBackClick = navigator::goBack,
         onSortTypeClick = {
-            state.addToBackStack(SortTypeKey(it))
+            navigator.navigate(SortTypeKey(it))
         },
         onFolderThumbnailOrderClick = {
-            state.addToBackStack(FolderThumbnailOrderKey(it))
+            navigator.navigate(FolderThumbnailOrderKey(it))
         },
         onImageFormatClick = {
-            state.addToBackStack(ImageFormatKey(it))
+            navigator.navigate(ImageFormatKey(it))
         },
         onImageScaleClick = {
-            state.addToBackStack(ImageScaleKey(it))
+            navigator.navigate(ImageScaleKey(it))
         },
         onImageFilterQualityClick = {
-            state.addToBackStack(ImageFilterQualityKey(it))
+            navigator.navigate(ImageFilterQualityKey(it))
         },
     )
 
-    folderThumbnailOrderEntry(onDismissRequest = state::onBackPressed)
-    imageFilterQualityEntry(onDismissRequest = state::onBackPressed)
-    imageFormatEntry(onDismissRequest = state::onBackPressed)
-    imageScaleEntry(onDismissRequest = state::onBackPressed)
-    sortTypeEntry(onDismissRequest = state::onBackPressed)
+    folderThumbnailOrderEntry(onDismissRequest = navigator::goBack)
+    imageFilterQualityEntry(onDismissRequest = navigator::goBack)
+    imageFormatEntry(onDismissRequest = navigator::goBack)
+    imageScaleEntry(onDismissRequest = navigator::goBack)
+    sortTypeEntry(onDismissRequest = navigator::goBack)
 }
 
 context(graph: PlatformGraph)

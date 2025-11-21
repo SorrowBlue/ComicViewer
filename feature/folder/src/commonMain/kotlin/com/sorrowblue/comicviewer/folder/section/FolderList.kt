@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.folder.section
 
-import androidx.compose.foundation.ScrollbarBox
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -71,21 +70,16 @@ internal fun FolderList(
                 text = stringResource(Res.string.folder_text_nothing_in_folder, uiState.title),
             )
         } else {
-            ScrollbarBox(
+            FileLazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                uiState = uiState.fileLazyVerticalGridUiState,
+                lazyPagingItems = lazyPagingItems,
+                contentPadding = contentPadding,
+                onItemClick = onFileClick,
+                onItemInfoClick = onFileInfoClick,
                 state = lazyGridState,
-                scrollbarWindowInsets = scrollbarWindowInsets(contentPadding),
-            ) {
-                FileLazyVerticalGrid(
-                    modifier = Modifier.fillMaxSize(),
-                    uiState = uiState.fileLazyVerticalGridUiState,
-                    lazyPagingItems = lazyPagingItems,
-                    contentPadding = contentPadding,
-                    onItemClick = onFileClick,
-                    onItemInfoClick = onFileInfoClick,
-                    state = lazyGridState,
-                    emphasisPath = uiState.emphasisPath,
-                )
-            }
+                emphasisPath = uiState.emphasisPath,
+            )
         }
     }
 }
@@ -93,7 +87,7 @@ internal fun FolderList(
 @Composable
 private fun scrollbarWindowInsets(contentPadding: PaddingValues): WindowInsets =
     WindowInsets.safeDrawing.only(
-        WindowInsetsSides.Companion.Vertical + WindowInsetsSides.Companion.End,
+        WindowInsetsSides.Vertical + WindowInsetsSides.End,
     ) union contentPadding
         .asWindowInsets()
-        .only(WindowInsetsSides.Companion.Vertical)
+        .only(WindowInsetsSides.Vertical)

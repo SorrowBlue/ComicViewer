@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_label_open_play_store">Open on PlayStore</string>
+    <string name="tutorial_label_already_installed">Plugin is already installed</string>
+    <string name="tutorial_label_not_installed">Plugin app is not installed</string>
+    <string name="tutorial_label_old_version">The version of the installed plug-in app is old.\nPlease update to the latest version.</string>
+</resources>

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.tutorial
 
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManagePdfPluginSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
@@ -14,7 +13,6 @@ annotation class TutorialScreenScope
 @GraphExtension(TutorialScreenScope::class)
 interface TutorialScreenContext : ScreenContext {
     val manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase
-    val managePdfPluginSettingsUseCase: ManagePdfPluginSettingsUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

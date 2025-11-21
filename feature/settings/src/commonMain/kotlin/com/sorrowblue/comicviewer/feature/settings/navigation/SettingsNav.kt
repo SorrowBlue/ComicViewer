@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.settings.InAppLanguagePickerScreenContext
@@ -20,7 +20,9 @@ import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCacheScreenRo
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoKeySerializersModule
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.AppInfoSettingsKey
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.appInfoSettingsEntryGroup
-import com.sorrowblue.comicviewer.feature.settings.plugin.PluginScreenRoot
+import com.sorrowblue.comicviewer.feature.settings.plugin.navigation.PluginSettingsKey
+import com.sorrowblue.comicviewer.feature.settings.plugin.navigation.PluginSettingsKeySerializersModule
+import com.sorrowblue.comicviewer.feature.settings.plugin.navigation.pluginSettingsEntryGroup
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecuritySettingsKey
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecuritySettingsKeySerializersModule
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.securitySettingsEntryGroup
@@ -28,7 +30,7 @@ import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSetti
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsKeySerializersModule
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.viewerSettingsEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -39,9 +41,6 @@ import kotlinx.serialization.modules.polymorphic
 data object SettingsKey : ScreenKey
 
 @Serializable
-private data object PluginSettingsKey : ScreenKey
-
-@Serializable
 private data object ImageCacheSettingsKey : ScreenKey
 
 @Serializable
@@ -50,7 +49,6 @@ private data object InAppLanguagePickerKey : ScreenKey
 val SettingsKeySerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(SettingsKey::class, SettingsKey.serializer())
-        subclass(PluginSettingsKey::class, PluginSettingsKey.serializer())
         subclass(ImageCacheSettingsKey::class, ImageCacheSettingsKey.serializer())
         subclass(InAppLanguagePickerKey::class, InAppLanguagePickerKey.serializer())
     }
@@ -59,29 +57,29 @@ val SettingsKeySerializersModule = SerializersModule {
     include(AppInfoKeySerializersModule)
     include(SecuritySettingsKeySerializersModule)
     include(ViewerSettingsKeySerializersModule)
+    include(PluginSettingsKeySerializersModule)
 }
 
-context(graph: PlatformGraph, appNavigationState: Navigation3State)
+context(graph: PlatformGraph)
 fun EntryProviderScope<NavKey>.settingsEntryGroup(
+    navigator: Navigator,
     onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
     onTutorialClick: () -> Unit,
 ) {
     settingsMainEntry(
-        onBackClick = {
-            appNavigationState.onBackPressed()
-        },
+        onBackClick = navigator::goBack,
         onSettingsClick = {
             when (it) {
-                SettingsItem.DISPLAY -> appNavigationState.addToBackStack(DisplaySettingsKey)
-                SettingsItem.FOLDER -> appNavigationState.addToBackStack(FolderSettingsKey)
-                SettingsItem.VIEWER -> appNavigationState.addToBackStack(ViewerSettingsKey)
-                SettingsItem.SECURITY -> appNavigationState.addToBackStack(SecuritySettingsKey)
-                SettingsItem.APP -> appNavigationState.addToBackStack(AppInfoSettingsKey)
+                SettingsItem.DISPLAY -> navigator.navigate(DisplaySettingsKey)
+                SettingsItem.FOLDER -> navigator.navigate(FolderSettingsKey)
+                SettingsItem.VIEWER -> navigator.navigate(ViewerSettingsKey)
+                SettingsItem.SECURITY -> navigator.navigate(SecuritySettingsKey)
+                SettingsItem.APP -> navigator.navigate(AppInfoSettingsKey)
                 SettingsItem.TUTORIAL -> onTutorialClick()
-                SettingsItem.Thumbnail -> appNavigationState.addToBackStack(ImageCacheSettingsKey)
-                SettingsItem.Plugin -> appNavigationState.addToBackStack(PluginSettingsKey)
-                SettingsItem.LANGUAGE -> appNavigationState.addToBackStack(InAppLanguagePickerKey)
+                SettingsItem.Thumbnail -> navigator.navigate(ImageCacheSettingsKey)
+                SettingsItem.Plugin -> navigator.navigate(PluginSettingsKey)
+                SettingsItem.LANGUAGE -> navigator.navigate(InAppLanguagePickerKey)
             }
         },
         onSettingsLongClick = {
@@ -96,22 +94,23 @@ fun EntryProviderScope<NavKey>.settingsEntryGroup(
                 SettingsItem.Plugin,
                 -> Unit
 
-                SettingsItem.LANGUAGE -> appNavigationState.addToBackStack(InAppLanguagePickerKey)
+                SettingsItem.LANGUAGE -> navigator.navigate(InAppLanguagePickerKey)
             }
         },
     )
-    pluginSettingsEntry(onBackClick = appNavigationState::onBackPressed)
-    imageCacheSettingsEntry(onBackClick = appNavigationState::onBackPressed)
-    inAppLanguagePickerEntry(onBackClick = appNavigationState::onBackPressed)
+    imageCacheSettingsEntry(onBackClick = navigator::goBack)
+    inAppLanguagePickerEntry(onBackClick = navigator::goBack)
 
-    displaySettingsEntryGroup()
-    folderSettingsEntryGroup()
-    appInfoSettingsEntryGroup()
+    displaySettingsEntryGroup(navigator = navigator)
+    folderSettingsEntryGroup(navigator = navigator)
+    appInfoSettingsEntryGroup(navigator = navigator)
     securitySettingsEntryGroup(
+        navigator = navigator,
         onChangeAuthEnable = onChangeAuthEnable,
         onPasswordChangeClick = onPasswordChangeClick,
     )
-    viewerSettingsEntryGroup()
+    viewerSettingsEntryGroup(navigator = navigator)
+    pluginSettingsEntryGroup(navigator = navigator)
 }
 
 context(graph: PlatformGraph)
@@ -136,17 +135,6 @@ private fun EntryProviderScope<NavKey>.settingsMainEntry(
             onBackClick = onBackClick,
             onSettingsClick = onSettingsClick,
             onSettingsLongClick = onSettingsLongClick,
-        )
-    }
-}
-
-context(graph: PlatformGraph)
-private fun EntryProviderScope<NavKey>.pluginSettingsEntry(onBackClick: () -> Unit) {
-    entry<PluginSettingsKey>(
-        metadata = ListDetailSceneStrategy.detailPane("Settings"),
-    ) {
-        PluginScreenRoot(
-            onBackClick = onBackClick,
         )
     }
 }

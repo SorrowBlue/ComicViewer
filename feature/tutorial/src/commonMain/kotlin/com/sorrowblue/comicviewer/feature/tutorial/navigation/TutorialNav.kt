@@ -5,7 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenContext
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -21,9 +21,9 @@ val TutorialKeySerializersModule = SerializersModule {
 @Serializable
 data object TutorialKey : ScreenKey
 
-context(graph: PlatformGraph, state: Navigation3State)
-fun EntryProviderScope<NavKey>.tutorialEntryGroup() {
-    tutorialEntry(onComplete = state::onBackPressed)
+context(graph: PlatformGraph)
+fun EntryProviderScope<NavKey>.tutorialEntryGroup(navigator: Navigator) {
+    tutorialEntry(onComplete = navigator::goBack)
 }
 
 context(graph: PlatformGraph)

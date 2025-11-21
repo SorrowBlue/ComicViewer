@@ -20,17 +20,21 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialKey
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialEntryGroup
 import com.sorrowblue.comicviewer.folder.navigation.sortTypeSelectEntry
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 
-context(graph: PlatformGraph, appNavigationState: Navigation3State)
-internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored: () -> Unit) {
+context(graph: PlatformGraph)
+internal fun EntryProviderScope<NavKey>.appNavigation(
+    navigator: Navigator,
+    onBookshelfFolderRestored: () -> Unit,
+) {
     val onSettingsClick = {
-        appNavigationState.addToBackStack(SettingsKey)
+        navigator.navigate(SettingsKey)
     }
     bookshelfEntryGroup(
+        navigator = navigator,
         onSettingsClick = onSettingsClick,
         onSearchClick = { id, path ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 SearchKey.List(
                     id,
                     path,
@@ -38,7 +42,7 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             )
         },
         onBookClick = { book ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -52,9 +56,10 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
         },
     )
     historyEntryGroup(
+        navigator = navigator,
         onSettingsClick = onSettingsClick,
         onBookClick = { book ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -65,9 +70,10 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
         onCollectionClick = {},
     )
     collectionEntryGroup(
+        navigator = navigator,
         onSettingsClick = onSettingsClick,
         onSearchClick = { id, path ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 SearchKey.List(
                     id,
                     path,
@@ -75,7 +81,7 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             )
         },
         onCollectionBookClick = { book, collectionId ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -85,7 +91,7 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             )
         },
         onBookClick = { book ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -95,9 +101,10 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
         },
     )
     readLaterEntryGroup(
+        navigator = navigator,
         onSettingsClick = onSettingsClick,
         onSearchClick = { id, path ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 SearchKey.List(
                     id,
                     path,
@@ -105,7 +112,7 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             )
         },
         onBookClick = { book ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -114,7 +121,7 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             )
         },
         onCollectionClick = { book ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -125,14 +132,15 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
     )
 
     searchEntryGroup(
+        navigator = navigator,
         onSettingsClick = onSettingsClick,
         onSearchClick = { id, path ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 SearchKey.List(id, path),
             )
         },
         onBookClick = { book ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -141,7 +149,7 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             )
         },
         onCollectionClick = { book ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -150,21 +158,22 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             )
         },
         onSmartCollectionClick = { id, searchCondition ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 CollectionKey.CreateSmart(id, searchCondition),
             )
         },
     )
     settingsEntryGroup(
+        navigator = navigator,
         onChangeAuthEnable = {
             if (it) {
-                appNavigationState.addToBackStack(
+                navigator.navigate(
                     AuthenticationNavKey(
                         ScreenType.Register,
                     ),
                 )
             } else {
-                appNavigationState.addToBackStack(
+                navigator.navigate(
                     AuthenticationNavKey(
                         ScreenType.Erase,
                     ),
@@ -172,25 +181,21 @@ internal fun EntryProviderScope<NavKey>.appNavigation(onBookshelfFolderRestored:
             }
         },
         onPasswordChangeClick = {
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 AuthenticationNavKey(
                     ScreenType.Change,
                 ),
             )
         },
         onTutorialClick = {
-            appNavigationState.addToBackStack(TutorialKey)
+            navigator.navigate(TutorialKey)
         },
     )
-    tutorialEntryGroup()
-    authenticationEntryGroup()
+    tutorialEntryGroup(navigator = navigator)
+    authenticationEntryGroup(navigator = navigator)
 
-    sortTypeSelectEntry(
-        onBackClick = {
-            appNavigationState.onBackPressed()
-        },
-    )
+    sortTypeSelectEntry(onBackClick = navigator::goBack)
 
-    bookEntryGroup(onSettingsClick = onSettingsClick)
-    extraNavigation()
+    bookEntryGroup(navigator = navigator, onSettingsClick = onSettingsClick)
+    extraNavigation(navigator = navigator)
 }

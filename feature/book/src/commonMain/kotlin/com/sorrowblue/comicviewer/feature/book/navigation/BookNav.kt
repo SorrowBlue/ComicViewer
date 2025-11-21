@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.feature.book.BookScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -41,13 +41,13 @@ data class BookKey(
 @Serializable
 private data object BookMenuKey : ScreenKey
 
-context(graph: PlatformGraph, state: Navigation3State)
-fun EntryProviderScope<NavKey>.bookEntryGroup(onSettingsClick: () -> Unit) {
+context(graph: PlatformGraph)
+fun EntryProviderScope<NavKey>.bookEntryGroup(navigator: Navigator, onSettingsClick: () -> Unit) {
     bookEntry(
-        onBackClick = state::onBackPressed,
+        onBackClick = navigator::goBack,
         onSettingsClick = onSettingsClick,
         onNextBookClick = { book, collectionId ->
-            state.addToBackStack(
+            navigator.navigate(
                 BookKey(
                     bookshelfId = book.bookshelfId,
                     path = book.path,
@@ -57,10 +57,10 @@ fun EntryProviderScope<NavKey>.bookEntryGroup(onSettingsClick: () -> Unit) {
             )
         },
         onContainerLongClick = {
-            state.addToBackStack(BookMenuKey)
+            navigator.navigate(BookMenuKey)
         },
     )
-    bookMenuEntry(onDismissRequest = state::onBackPressed)
+    bookMenuEntry(onDismissRequest = navigator::goBack)
 }
 
 context(graph: PlatformGraph)

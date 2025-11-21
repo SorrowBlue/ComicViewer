@@ -64,7 +64,7 @@ internal class MainActivity : AppCompatActivity() {
                 ComicViewerUI(finishApp = ::finish, state = state)
                 LaunchedEffect(receivedBookData.isNullOrEmpty()) {
                     if (!receivedBookData.isNullOrEmpty()) {
-                        state.navigation3State.addToBackStack(ReceiveBookKey(receivedBookData))
+                        state.navigator.navigate(ReceiveBookKey(receivedBookData))
                         state.onNavigationHistoryRestore()
                     }
                 }

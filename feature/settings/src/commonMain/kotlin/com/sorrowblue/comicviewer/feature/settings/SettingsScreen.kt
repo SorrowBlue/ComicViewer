@@ -27,7 +27,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.settings.section.NavigationDrawerItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Plugin
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.settings.generated.resources.Res
@@ -152,6 +151,6 @@ enum class SettingsItem(val title: StringResource, val icon: ImageVector) {
     TUTORIAL(Res.string.settings_label_tutorial, ComicIcons.Start),
 
     Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage),
-    Plugin(Res.string.settings_label_plugin, ComicIcons.Plugin),
+    Plugin(Res.string.settings_label_plugin, ComicIcons.Extension),
     LANGUAGE(Res.string.settings_label_language, ComicIcons.Language),
 }

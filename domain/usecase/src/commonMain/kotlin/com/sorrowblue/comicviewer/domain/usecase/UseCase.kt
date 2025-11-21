@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
+import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.Resource
 import kotlinx.coroutines.flow.Flow
 import logcat.logcat
@@ -14,6 +15,9 @@ abstract class UseCase<in R : UseCase.Request, out D, out E> {
 
     protected abstract fun run(request: R): Flow<Resource<D, E>>
 }
+
+operator fun <D, E> UseCase<EmptyRequest, D, E>.invoke(): Flow<Resource<D, E>> =
+    invoke(EmptyRequest)
 
 abstract class OneShotUseCase<in R : OneShotUseCase.Request, out D, out E> {
     interface Request
