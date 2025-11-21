@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.readlater.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.SupportingPaneSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -18,8 +18,8 @@ import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_title
@@ -69,8 +69,9 @@ sealed interface ReadLaterKey : NavigationKey {
     }
 }
 
-context(graph: PlatformGraph, appNavigationState: Navigation3State)
+context(graph: PlatformGraph)
 fun EntryProviderScope<NavKey>.readLaterEntryGroup(
+    navigator: Navigator,
     onSettingsClick: () -> Unit,
     onSearchClick: (BookshelfId, PathString) -> Unit,
     onBookClick: (Book) -> Unit,
@@ -83,41 +84,42 @@ fun EntryProviderScope<NavKey>.readLaterEntryGroup(
                 is Book -> onBookClick(it)
 
                 is Folder -> {
-                    appNavigationState.addToBackStack(
+                    navigator.navigate(
                         ReadLaterKey.Folder(it.bookshelfId, it.path),
                     )
                 }
             }
         },
         onFileInfoClick = {
-            appNavigationState.addToBackStack(ReadLaterKey.FileInfo(it.key()))
+            navigator.navigate(ReadLaterKey.FileInfo(it.key()))
         },
     )
     readLaterFileInfoEntry(
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = { /* Do noting */ },
     )
     folderEntryGroup<ReadLaterKey.Folder, ReadLaterKey.FileInfo2>(
         "ReadLater",
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onSearchClick = onSearchClick,
         onFileClick = { file ->
             when (file) {
                 is Book -> onBookClick(file)
 
-                is Folder -> appNavigationState.addToBackStack(
+                is Folder -> navigator.navigate(
                     ReadLaterKey.Folder(file.bookshelfId, file.path),
                 )
             }
         },
         onFileInfoClick = {
-            appNavigationState.addToBackStack(ReadLaterKey.FileInfo2(it.key()))
+            navigator.navigate(ReadLaterKey.FileInfo2(it.key()))
         },
         onRestored = { /* Do noting */ },
         onSortClick = { sortType, folderScopeOnly ->
-            appNavigationState.addToBackStack(SortTypeSelectKey(sortType, folderScopeOnly))
+            navigator.navigate(SortTypeSelectKey(sortType, folderScopeOnly))
         },
+        onSettingsClick = onSettingsClick,
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = { /* Do noting */ },
     )

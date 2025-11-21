@@ -30,6 +30,7 @@ import androidx.compose.material.icons.rounded.DisplaySettings
 import androidx.compose.material.icons.rounded.Dns
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ErrorOutline
+import androidx.compose.material.icons.rounded.Extension
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.FirstPage
@@ -66,6 +67,7 @@ import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.WatchLater
 
 object ComicIcons {
+    val Extension = Icons.Rounded.Extension
     val ScreenRotationAlt = Icons.Rounded.ScreenRotationAlt
     val AccountCircle = Icons.Rounded.AccountCircle
     val Visibility = Icons.Rounded.Visibility

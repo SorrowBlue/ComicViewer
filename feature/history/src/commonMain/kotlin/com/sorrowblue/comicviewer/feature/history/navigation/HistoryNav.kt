@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.history.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.SupportingPaneSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -15,8 +15,8 @@ import com.sorrowblue.comicviewer.folder.navigation.FileInfoKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_title
@@ -56,23 +56,24 @@ sealed interface HistoryKey : NavigationKey {
     data object ClearAll : HistoryKey
 }
 
-context(graph: PlatformGraph, state: Navigation3State)
+context(graph: PlatformGraph)
 fun EntryProviderScope<NavKey>.historyEntryGroup(
+    navigator: Navigator,
     onSettingsClick: () -> Unit,
     onBookClick: (Book) -> Unit,
     onCollectionClick: (File) -> Unit,
 ) {
     historyEntry(
         onSettingsClick = onSettingsClick,
-        onDeleteAllClick = { state.addToBackStack(HistoryKey.ClearAll) },
+        onDeleteAllClick = { navigator.navigate(HistoryKey.ClearAll) },
         onBookClick = onBookClick,
-        onBookInfoClick = { state.addToBackStack(HistoryKey.FileInfo(it.key())) },
+        onBookInfoClick = { navigator.navigate(HistoryKey.FileInfo(it.key())) },
     )
     historyClearAllEntry(
-        onClose = state::onBackPressed,
+        onClose = navigator::goBack,
     )
     historyFileInfoEntry(
-        onBackClick = state::onBackPressed,
+        onBackClick = navigator::goBack,
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = {},
     )

@@ -7,6 +7,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberNotification
 import androidx.compose.ui.window.rememberTrayState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.Application
 import com.sorrowblue.comicviewer.aggregation.DesktopAppGraph
 import com.sorrowblue.comicviewer.framework.common.DesktopContext
@@ -46,8 +47,10 @@ fun main() = application {
         icon = rememberVectorPainter(ComicIcons.Launcher),
     ) {
         window.minimumSize = Dimension(400, 600)
+        val viewModel = viewModel { MainViewModel() }
         with(context) {
             Application(finishApp = ::exitApplication)
         }
+        SplashScreen(keepOnScreenCondition = viewModel.shouldKeepSplash::value)
     }
 }

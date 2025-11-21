@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.display.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -29,15 +29,15 @@ data object DisplaySettingsKey : ScreenKey
 @Serializable
 private data object DarkModeKey : ScreenKey
 
-context(graph: PlatformGraph, state: Navigation3State)
-fun EntryProviderScope<NavKey>.displaySettingsEntryGroup() {
+context(graph: PlatformGraph)
+fun EntryProviderScope<NavKey>.displaySettingsEntryGroup(navigator: Navigator) {
     displaySettingsEntry(
-        onBackClick = state::onBackPressed,
-        onDarkModeClick = { state.addToBackStack(DarkModeKey) },
+        onBackClick = navigator::goBack,
+        onDarkModeClick = { navigator.navigate(DarkModeKey) },
     )
     darkModeEntry(
-        onDismissRequest = state::onBackPressed,
-        onComplete = state::onBackPressed,
+        onDismissRequest = navigator::goBack,
+        onComplete = navigator::goBack,
     )
 }
 

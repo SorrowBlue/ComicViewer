@@ -4,11 +4,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.view.WindowManager
+import androidx.core.content.getSystemService
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.data.reader.document.PdfPluginPackage
 import com.sorrowblue.comicviewer.data.reader.document.PdfPluginService
 import com.sorrowblue.comicviewer.data.reader.document.di.ReaderDocumentContext
-import com.sorrowblue.comicviewer.domain.model.SupportExtension
+import com.sorrowblue.comicviewer.domain.model.SupportExtension.Document
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.platformGraph
@@ -48,22 +50,14 @@ internal class DocumentInitializer : Initializer<Unit> {
             if (SupportMajorVersion <= targetMajor) {
                 // Supported
                 datastoreDataSource.updateFolderSettings { settings ->
-                    settings.copy(
-                        supportExtension = settings.supportExtension
-                            .toMutableSet()
-                            .apply { addAll(SupportExtension.Document.entries) }
-                            .toList(),
-                    )
+                    settings.copy(supportExtension = settings.supportExtension.plus(Document.entries))
                 }
             } else {
                 // Not supported
                 logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
                 datastoreDataSource.updateFolderSettings { settings ->
                     settings.copy(
-                        supportExtension = settings.supportExtension.filterNot {
-                            it in
-                                SupportExtension.Document.entries
-                        },
+                        supportExtension = settings.supportExtension.minus(Document.entries),
                     )
                 }
             }
@@ -73,7 +67,7 @@ internal class DocumentInitializer : Initializer<Unit> {
                 settings.copy(
                     supportExtension = settings.supportExtension.filterNot {
                         it in
-                            SupportExtension.Document.entries
+                            Document.entries
                     },
                 )
             }

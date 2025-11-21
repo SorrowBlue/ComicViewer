@@ -32,7 +32,7 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
             null
         } else {
             Locale(
-                languageTag = currentLanguageTag!!,
+                languageTag = requireNotNull(currentLanguageTag),
             )
         }
 
@@ -61,7 +61,7 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
                 Locale(languageTag = systemDefault.toLanguageTag())
             } else {
                 // 保存したLocaleあり
-                Locale(languageTag = currentLanguageTag!!)
+                Locale(languageTag = requireNotNull(currentLanguageTag))
             }
         } else {
             // 引数のlanguageTagを使う

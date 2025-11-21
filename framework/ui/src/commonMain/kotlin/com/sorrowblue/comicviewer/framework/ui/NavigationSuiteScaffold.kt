@@ -18,17 +18,12 @@ import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.WideNavigationRailDefaults
-import androidx.compose.material3.WideNavigationRailState
 import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.ext.AnimatedNavigationSuiteScaffold
-import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.animateFloatingActionButton
-import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -45,78 +40,28 @@ import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
-import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.canonical.isVisible
-import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationState
 
 val LocalAdaptiveNavigationSuiteState = staticCompositionLocalOf<AdaptiveNavigationSuiteState> {
     error("No AdaptiveNavigationSuiteState provided")
 }
 
-interface AdaptiveNavigationSuiteState {
-    val navItems: List<NavigationKey>
-    val currentNavItem: NavigationKey
-    var navigationSuiteType: NavigationSuiteType
-
-    fun onNavItemClick(navItem: NavigationKey)
-}
-
-interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
-    val navigationSuiteType: NavigationSuiteType
-    val wideNavigationRailState: WideNavigationRailState
-    val navItems: List<NavigationKey>
-    val currentNavItem: NavigationKey
-
-    fun onNavItemClick(navItem: NavigationKey)
-
-    val floatingActionButtonState: FloatingActionButtonState
-}
-
-@Composable
-fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaffoldState {
-    val adaptiveNavigationSuiteState = LocalAdaptiveNavigationSuiteState.current
-    val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
-    return remember {
-        AdaptiveNavigationSuiteScaffoldStateImpl(
-            adaptiveNavigationSuiteState = adaptiveNavigationSuiteState,
-            navigationSuiteScaffoldState = navigationSuiteScaffoldState,
-        )
-    }.apply {
-        wideNavigationRailState = rememberWideNavigationRailState()
-        floatingActionButtonState = rememberFloatingActionButtonState()
-    }
-}
-
-private class AdaptiveNavigationSuiteScaffoldStateImpl(
-    navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
-    private val adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState,
-) : AdaptiveNavigationSuiteScaffoldState,
-    NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
-    override lateinit var wideNavigationRailState: WideNavigationRailState
-
-    override val navItems: List<NavigationKey> get() = adaptiveNavigationSuiteState.navItems
-    override val currentNavItem: NavigationKey get() = adaptiveNavigationSuiteState.currentNavItem
-
-    override val navigationSuiteType: NavigationSuiteType get() = adaptiveNavigationSuiteState.navigationSuiteType
-
-    override lateinit var floatingActionButtonState: FloatingActionButtonState
-
-    override fun onNavItemClick(navItem: NavigationKey) {
-        adaptiveNavigationSuiteState.onNavItemClick(navItem)
-    }
+val LocalNavigationState = staticCompositionLocalOf<NavigationState> {
+    error("No AdaptiveNavigationSuiteState provided")
 }
 
 @Composable
 fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
     navigationItems: @Composable () -> Unit = {
-        navItems.forEach { navItem ->
+        navigationKeys.forEach { key ->
+            val isSelected = key == navigationState.topLevelRoute
             NavigationSuiteItem(
-                selected = navItem == currentNavItem,
-                label = { Text(navItem.title) },
-                icon = { Icon(navItem.icon, null) },
-                onClick = { this.onNavItemClick(navItem) },
+                selected = isSelected,
+                label = { Text(key.title) },
+                icon = { Icon(key.icon, null) },
+                onClick = { this.onNavigationClick(key) },
             )
         }
     },
@@ -127,7 +72,7 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
 ) {
     AnimatedNavigationSuiteScaffold(
         visibilityScope = LocalNavAnimatedContentScope.current,
-        transitionScope = LocalAppState.current,
+        transitionScope = LocalSharedTransitionScope.current,
         navigationItems = navigationItems,
         modifier = modifier,
         navigationSuiteType = this.navigationSuiteType,

@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.search.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.SupportingPaneSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -60,8 +60,9 @@ sealed interface SearchKey : ScreenKey {
     }
 }
 
-context(graph: PlatformGraph, appNavigationState: Navigation3State)
+context(graph: PlatformGraph)
 fun EntryProviderScope<NavKey>.searchEntryGroup(
+    navigator: Navigator,
     onSettingsClick: () -> Unit,
     onSearchClick: (BookshelfId, PathString) -> Unit,
     onBookClick: (Book) -> Unit,
@@ -69,27 +70,27 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
     onSmartCollectionClick: (BookshelfId, SearchCondition) -> Unit,
 ) {
     searchEntry(
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onSettingsClick = onSettingsClick,
         onSmartCollectionClick = onSmartCollectionClick,
         onFileClick = {
             when (it) {
                 is Book -> onBookClick(it)
-                is Folder -> appNavigationState.addToBackStack(
+                is Folder -> navigator.navigate(
                     SearchKey.Folder(it.bookshelfId, it.path),
                 )
             }
         },
         onFileInfoClick = {
-            appNavigationState.addToBackStack(SearchKey.FileInfo(it.key()))
+            navigator.navigate(SearchKey.FileInfo(it.key()))
         },
     )
 
     searchFileInfoEntry(
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = {
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 SearchKey.Folder(it.bookshelfId, it.parent),
             )
         },
@@ -97,26 +98,27 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
 
     folderEntryGroup<SearchKey.Folder, SearchKey.FileInfo2>(
         "Search",
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onSearchClick = onSearchClick,
         onFileClick = { file ->
             when (file) {
                 is Book -> onBookClick(file)
-                is Folder -> appNavigationState.addToBackStack(
+                is Folder -> navigator.navigate(
                     SearchKey.Folder(file.bookshelfId, file.path),
                 )
             }
         },
         onFileInfoClick = {
-            appNavigationState.addToBackStack(SearchKey.FileInfo2(it.key()))
+            navigator.navigate(SearchKey.FileInfo2(it.key()))
         },
         onRestored = { /* Do noting */ },
         onSortClick = { sortType, folderScopeOnly ->
-            appNavigationState.addToBackStack(SortTypeSelectKey(sortType, folderScopeOnly))
+            navigator.navigate(SortTypeSelectKey(sortType, folderScopeOnly))
         },
         onCollectionClick = onCollectionClick,
+        onSettingsClick = onSettingsClick,
         onOpenFolderClick = {
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 SearchKey.Folder(it.bookshelfId, it.parent),
             )
         },

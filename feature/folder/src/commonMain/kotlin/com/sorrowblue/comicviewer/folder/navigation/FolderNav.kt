@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.folder.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.SupportingPaneSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -43,6 +43,7 @@ inline fun <reified T : FolderKey, reified V : FileInfoKey> EntryProviderScope<N
     noinline onFileClick: (File) -> Unit,
     noinline onFileInfoClick: (File) -> Unit,
     noinline onSortClick: (SortType, Boolean) -> Unit,
+    noinline onSettingsClick: () -> Unit,
     noinline onRestored: () -> Unit,
     noinline onCollectionClick: (File) -> Unit,
     noinline onOpenFolderClick: (File) -> Unit,
@@ -54,6 +55,7 @@ inline fun <reified T : FolderKey, reified V : FileInfoKey> EntryProviderScope<N
         onFileClick = onFileClick,
         onFileInfoClick = onFileInfoClick,
         onSortClick = onSortClick,
+        onSettingsClick = onSettingsClick,
         onRestored = onRestored,
     )
     fileInfoEntry<V>(
@@ -93,6 +95,7 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
     noinline onFileClick: (File) -> Unit,
     noinline onFileInfoClick: (File) -> Unit,
     noinline onSortClick: (SortType, Boolean) -> Unit,
+    noinline onSettingsClick: () -> Unit,
     noinline onRestored: () -> Unit,
 ) {
     entryScreen<T, FolderScreenContext>(
@@ -110,12 +113,12 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
             onFileClick = onFileClick,
             onFileInfoClick = onFileInfoClick,
             onSortClick = onSortClick,
+            onSettingsClick = onSettingsClick,
             onRestored = onRestored,
         )
     }
 }
 
-context(graph: PlatformGraph)
 fun EntryProviderScope<NavKey>.sortTypeSelectEntry(onBackClick: () -> Unit) {
     entry<SortTypeSelectKey>(metadata = DialogSceneStrategy.dialog()) {
         SortTypeSelectScreenRoot(it.sortType, it.folderScopeOnly, onDismissRequest = onBackClick)

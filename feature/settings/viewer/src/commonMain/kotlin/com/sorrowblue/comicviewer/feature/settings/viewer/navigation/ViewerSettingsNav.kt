@@ -1,12 +1,12 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import kotlinx.serialization.Serializable
@@ -22,9 +22,9 @@ val ViewerSettingsKeySerializersModule = SerializersModule {
 @Serializable
 data object ViewerSettingsKey : ScreenKey
 
-context(graph: PlatformGraph, state: Navigation3State)
-fun EntryProviderScope<NavKey>.viewerSettingsEntryGroup() {
-    viewerSettingsEntry(onBackClick = state::onBackPressed)
+context(graph: PlatformGraph)
+fun EntryProviderScope<NavKey>.viewerSettingsEntryGroup(navigator: Navigator) {
+    viewerSettingsEntry(onBackClick = navigator::goBack)
 }
 
 context(graph: PlatformGraph)

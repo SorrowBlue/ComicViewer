@@ -1,7 +1,5 @@
 package com.sorrowblue.comicviewer.feature.tutorial.section
 
-import android.content.Context
-import android.content.pm.PackageManager.NameNotFoundException
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -10,137 +8,67 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.sorrowblue.comicviewer.domain.usecase.PdfPluginState
+import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import logcat.LogPriority
-import logcat.logcat
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import comicviewer.feature.tutorial.generated.resources.Res
+import comicviewer.feature.tutorial.generated.resources.tutorial_label_already_installed
+import comicviewer.feature.tutorial.generated.resources.tutorial_label_not_installed
+import comicviewer.feature.tutorial.generated.resources.tutorial_label_old_version
+import comicviewer.feature.tutorial.generated.resources.tutorial_label_open_play_store
+import io.github.takahirom.rin.rememberRetained
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
-private const val Pkg = "com.sorrowblue.comicviewer.plugin.pdf"
-private const val SupportMajorVersion = 0
-
-private const val TAG = "DocumentSheetOption"
-
-@Composable
-internal actual fun DocumentSheetOption(modifier: Modifier) {
-    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        val state = rememberDocumentSheetOptionState()
-        when (state.uiState.pluginState) {
-            PdfPluginState.Enable -> {
-                OutlinedButton(
-                    onClick = state::onOpenLinkClick,
-                    enabled = false,
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                ) {
-                    Icon(ComicIcons.OpenInBrowser, null)
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("PlayStoreを開く")
-                }
-                Spacer(Modifier.size(8.dp))
-                Text("インストール済み")
-            }
-
-            PdfPluginState.OldVersion -> {
-                OutlinedButton(
-                    onClick = state::onOpenLinkClick,
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                ) {
-                    Icon(ComicIcons.OpenInBrowser, null)
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("PlayStoreを開く")
-                }
-                Spacer(Modifier.size(8.dp))
-                Text("インストールされているPDFプラグインのバージョンが古いです\n最新Verにアップデートしてください")
-            }
-
-            PdfPluginState.NotInstalled -> {
-                OutlinedButton(
-                    onClick = state::onOpenLinkClick,
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                ) {
-                    Icon(ComicIcons.OpenInBrowser, null)
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("PlayStoreを開く")
-                }
-                Spacer(Modifier.size(8.dp))
-                Text("プラグインがインストールされていません")
-            }
-        }
-    }
-}
-
-private data class DocumentSheetOptionUiState(
+internal data class DocumentSheetOptionUiState(
     val pluginState: PdfPluginState = PdfPluginState.NotInstalled,
 )
 
-private enum class PdfPluginState {
-    Enable,
-    OldVersion,
-    NotInstalled,
+@Composable
+internal actual fun DocumentSheetOption(modifier: Modifier) {
+    val context = LocalPlatformContext.current
+    val state =
+        with(rememberRetained { context.require<DocumentSheetOptionContext.Factory>().create() }) {
+            rememberDocumentSheetOptionState()
+        }
+    DocumentSheetOption(
+        uiState = state.uiState,
+        onOpenLinkClick = state::onOpenLinkClick,
+        modifier = modifier
+    )
 }
 
 @Composable
-private fun rememberDocumentSheetOptionState(
-    uriHandler: UriHandler = LocalUriHandler.current,
-    context: Context = LocalContext.current,
-): DocumentSheetOptionState {
-    val state =
-        remember { DocumentSheetOptionStateImpl(uriHandler = uriHandler, context = context) }
-    LifecycleResumeEffect(Unit) {
-        state.onResume()
-        onPauseOrDispose { }
-    }
-    return state
-}
-
-private interface DocumentSheetOptionState {
-    fun onOpenLinkClick()
-
-    val uiState: DocumentSheetOptionUiState
-}
-
-private class DocumentSheetOptionStateImpl(
-    private val uriHandler: UriHandler,
-    private val context: Context,
-) : DocumentSheetOptionState {
-    override var uiState by mutableStateOf(DocumentSheetOptionUiState())
-
-    init {
-        extracted()
-    }
-
-    private fun extracted() {
-        val versionName = try {
-            context.packageManager.getPackageInfo(Pkg, 0)?.versionName
-        } catch (_: NameNotFoundException) {
-            logcat(TAG, LogPriority.INFO) { "Plugin '$Pkg' is not installed" }
-            uiState = uiState.copy(pluginState = PdfPluginState.NotInstalled)
-            null
-        }
-        versionName?.let {
-            val majorVersion = versionName.split(".")[0].toInt()
-            uiState = if (SupportMajorVersion <= majorVersion) {
-                uiState.copy(pluginState = PdfPluginState.Enable)
-            } else {
-                uiState.copy(pluginState = PdfPluginState.OldVersion)
-            }
+private fun DocumentSheetOption(
+    uiState: DocumentSheetOptionUiState,
+    onOpenLinkClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = stringResource(uiState.pluginState.statusLabelResource),
+            style = ComicTheme.typography.bodyMedium
+        )
+        Spacer(Modifier.size(8.dp))
+        OutlinedButton(
+            onClick = onOpenLinkClick,
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+        ) {
+            Icon(ComicIcons.OpenInBrowser, null)
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            Text(text = stringResource(Res.string.tutorial_label_open_play_store))
         }
     }
-
-    override fun onOpenLinkClick() {
-        uriHandler.openUri("https://play.google.com/store/apps/details?id=$Pkg")
-    }
-
-    fun onResume() {
-        extracted()
-    }
 }
+
+private val PdfPluginState.statusLabelResource: StringResource
+    get() = when (this) {
+        PdfPluginState.Enable -> Res.string.tutorial_label_already_installed
+        PdfPluginState.OldVersion -> Res.string.tutorial_label_old_version
+        PdfPluginState.NotInstalled -> Res.string.tutorial_label_not_installed
+    }

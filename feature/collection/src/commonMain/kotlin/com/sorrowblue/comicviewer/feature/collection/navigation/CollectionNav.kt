@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.collection.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.SupportingPaneSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.EntryProviderScope
@@ -37,8 +37,8 @@ import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
@@ -118,8 +118,9 @@ sealed interface CollectionKey : NavigationKey {
     }
 }
 
-context(graph: PlatformGraph, state: Navigation3State)
+context(graph: PlatformGraph)
 fun EntryProviderScope<NavKey>.collectionEntryGroup(
+    navigator: Navigator,
     onSettingsClick: () -> Unit,
     onSearchClick: (BookshelfId, PathString) -> Unit,
     onCollectionBookClick: (Book, CollectionId) -> Unit,
@@ -127,47 +128,47 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
 ) {
     collectionListEntry(
         onItemClick = {
-            state.addToBackStack(CollectionKey.Detail(it))
+            navigator.navigate(CollectionKey.Detail(it))
         },
         onEditClick = {
             val collection = when (it) {
                 is BasicCollection -> CollectionKey.EditBasic(it.id)
                 is SmartCollection -> CollectionKey.EditSmart(it.id)
             }
-            state.addToBackStack(collection)
+            navigator.navigate(collection)
         },
         onDeleteClick = { id ->
-            state.addToBackStack(CollectionKey.Delete(id))
+            navigator.navigate(CollectionKey.Delete(id))
         },
         onSettingsClick = onSettingsClick,
         onCreateBasicCollectionClick = {
-            state.addToBackStack(CollectionKey.CreateBasic())
+            navigator.navigate(CollectionKey.CreateBasic())
         },
         onCreateSmartCollectionClick = {
-            state.addToBackStack(CollectionKey.CreateSmart())
+            navigator.navigate(CollectionKey.CreateSmart())
         },
     )
 
     collectionCreateBasicEntry(
-        onBackClick = state::onBackPressed,
-        onComplete = state::onBackPressed,
+        onBackClick = navigator::goBack,
+        onComplete = navigator::goBack,
     )
     collectionEditBasicEntry(
-        onBackClick = state::onBackPressed,
-        onComplete = state::onBackPressed,
+        onBackClick = navigator::goBack,
+        onComplete = navigator::goBack,
     )
 
     collectionCreateSmartEntry(
-        onCancelClick = state::onBackPressed,
-        onComplete = state::onBackPressed,
+        onCancelClick = navigator::goBack,
+        onComplete = navigator::goBack,
     )
     collectionEditSmartEntry(
-        onCancelClick = state::onBackPressed,
-        onComplete = state::onBackPressed,
+        onCancelClick = navigator::goBack,
+        onComplete = navigator::goBack,
     )
 
     collectionDetailEntry(
-        onBackClick = state::onBackPressed,
+        onBackClick = navigator::goBack,
         onFileClick = { file, collectionId ->
             when (file) {
                 is Book -> {
@@ -175,32 +176,32 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
                 }
 
                 is Folder -> {
-                    state.addToBackStack(
+                    navigator.navigate(
                         CollectionKey.Folder(file.bookshelfId, file.path),
                     )
                 }
             }
         },
         onFileInfoClick = {
-            state.addToBackStack(CollectionKey.FileInfo2(it.key()))
+            navigator.navigate(CollectionKey.FileInfo2(it.key()))
         },
         onEditClick = { id ->
             // TODO
         },
         onDeleteClick = { id ->
-            state.addToBackStack(CollectionKey.Delete(id))
+            navigator.navigate(CollectionKey.Delete(id))
         },
         onSettingsClick = onSettingsClick,
     )
 
     collectionDeleteEntry(
-        onBackClick = state::onBackPressed,
-        onComplete = state::onBackPressed,
+        onBackClick = navigator::goBack,
+        onComplete = navigator::goBack,
     )
 
     folderEntryGroup<CollectionKey.Folder, CollectionKey.FileInfo>(
         sceneKey = "Collection",
-        onBackClick = state::onBackPressed,
+        onBackClick = navigator::goBack,
         onSearchClick = onSearchClick,
         onFileClick = { file ->
             when (file) {
@@ -209,31 +210,32 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
                 }
 
                 is Folder -> {
-                    state.addToBackStack(
+                    navigator.navigate(
                         CollectionKey.Folder(file.bookshelfId, file.path),
                     )
                 }
             }
         },
         onFileInfoClick = {
-            state.addToBackStack(CollectionKey.FileInfo(it.key()))
+            navigator.navigate(CollectionKey.FileInfo(it.key()))
         },
         onRestored = { /* Do noting */ },
         onCollectionClick = {},
         onSortClick = { sortType, folderScopeOnly ->
-            state.addToBackStack(SortTypeSelectKey(sortType, folderScopeOnly))
+            navigator.navigate(SortTypeSelectKey(sortType, folderScopeOnly))
         },
+        onSettingsClick = onSettingsClick,
         onOpenFolderClick = {
-            state.addToBackStack(CollectionKey.Folder(it.bookshelfId, it.path))
+            navigator.navigate(CollectionKey.Folder(it.bookshelfId, it.path))
         },
     )
 
     fileInfoEntry<CollectionKey.FileInfo2>(
         "Collection",
-        onBackClick = state::onBackPressed,
+        onBackClick = navigator::goBack,
         onCollectionClick = {},
         onOpenFolderClick = {
-            state.addToBackStack(CollectionKey.Folder(it.bookshelfId, it.path))
+            navigator.navigate(CollectionKey.Folder(it.bookshelfId, it.path))
         },
     )
 }

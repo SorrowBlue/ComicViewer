@@ -82,7 +82,7 @@ style:
     active: false
     ignoreAnnotated: [ 'Preview', 'PreviewMultiplatform', 'Provides' ]
   ReturnCount:
-    max: 3
+    active: false
   UnusedPrivateProperty:
     active: false # TODO バグ？
     allowedNames: 'ignored|expected|serialVersionUID|bind'

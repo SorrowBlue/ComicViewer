@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_plugin_title">プラグイン</string>
+    <string name="settings_plugin_title_pdf">PDFプラグイン</string>
+    <string name="settings_plugin_label_enable">有効</string>
+    <string name="settings_plugin_label_disable">無効</string>
+    <string name="settings_plugin_error_not_found">PDFプラグインが見つかりません。インストールディレクトリを指定してください</string>
+    <string name="settings_plugin_error_not_supported_version">サポートされていないPDFプラグインです</string>
+
+</resources>

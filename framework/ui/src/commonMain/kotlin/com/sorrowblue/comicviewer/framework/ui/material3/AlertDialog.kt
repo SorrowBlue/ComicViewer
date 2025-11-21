@@ -1,10 +1,7 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.ScrollbarBox
-import androidx.compose.foundation.VerticalScrollbarBox
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.scrollbarStyle
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
@@ -208,32 +204,22 @@ private fun AlertDialogContent(
                             .align(Alignment.Start),
                     ) {
                         scrollableState?.let {
-                            CompositionLocalProvider(
-                                LocalScrollbarStyle provides AlertDialogDefaults.scrollbarStyle(),
-                            ) {
-                                when (scrollableState) {
-                                    is LazyListState -> {
-                                        ScrollbarBox(state = scrollableState) {
-                                            content()
-                                        }
-                                    }
+                            when (scrollableState) {
+                                is LazyListState -> {
+                                    content()
+                                }
 
-                                    is LazyGridState -> {
-                                        ScrollbarBox(state = scrollableState) {
-                                            content()
-                                        }
-                                    }
+                                is LazyGridState -> {
+                                    content()
+                                }
 
-                                    is ScrollState -> {
-                                        VerticalScrollbarBox(state = scrollableState) {
-                                            Column(
-                                                Modifier
-                                                    .padding(DialogPaddingHorizonal)
-                                                    .verticalScroll(scrollableState),
-                                            ) {
-                                                content()
-                                            }
-                                        }
+                                is ScrollState -> {
+                                    Column(
+                                        Modifier
+                                            .padding(DialogPaddingHorizonal)
+                                            .verticalScroll(scrollableState),
+                                    ) {
+                                        content()
                                     }
                                 }
                             }

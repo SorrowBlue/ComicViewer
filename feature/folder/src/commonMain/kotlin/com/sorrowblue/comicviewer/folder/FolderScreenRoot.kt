@@ -19,6 +19,7 @@ fun FolderScreenRoot(
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
     onSortClick: (SortType, Boolean) -> Unit,
+    onSettingsClick: () -> Unit,
     onRestored: () -> Unit,
 ) {
     val state =
@@ -32,6 +33,8 @@ fun FolderScreenRoot(
         onFileClick = onFileClick,
         onFileInfoClick = onFileInfoClick,
         onSortClick = { onSortClick(state.uiState.sortType, state.uiState.folderScopeOnly) },
+        onSettingsClick = onSettingsClick,
+        onRefresh = state::onRefresh,
     )
 
     NavigationResultEffect(SortTypeSelectScreenResultKey, state::onSortTypeSelectScreenResult)

@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
-import androidx.compose.material3.adaptive.navigation3.kmp.SupportingPaneSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.EntryProviderScope
@@ -31,8 +31,8 @@ import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigation3State
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
@@ -96,8 +96,9 @@ sealed interface BookshelfKey : NavigationKey {
     }
 }
 
-context(graph: PlatformGraph, appNavigationState: Navigation3State)
+context(graph: PlatformGraph)
 fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
+    navigator: Navigator,
     onSettingsClick: () -> Unit,
     onSearchClick: (BookshelfId, PathString) -> Unit,
     onBookClick: (Book) -> Unit,
@@ -107,10 +108,10 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
     bookshelfEntry(
         onSettingsClick = onSettingsClick,
         onFabClick = {
-            appNavigationState.addToBackStack(BookshelfKey.Selection)
+            navigator.navigate(BookshelfKey.Selection)
         },
         onBookshelfClick = { id, path ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookshelfKey.Folder(
                     id,
                     path,
@@ -119,16 +120,16 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
             )
         },
         onBookshelfInfoClick = {
-            appNavigationState.addToBackStack(BookshelfKey.Info(it.bookshelf.id))
+            navigator.navigate(BookshelfKey.Info(it.bookshelf.id))
         },
     )
     notificationEntry(
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
     )
     bookshelfSelectionEntry(
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onTypeClick = { type ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookshelfKey.Edit(
                     BookshelfEditorType.Register(type),
                 ),
@@ -136,43 +137,43 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
         },
     )
     bookshelfEditEntry(
-        onBackClick = appNavigationState::onBackPressed,
-        discardConfirm = appNavigationState::onBackPressed,
-        onEditComplete = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
+        discardConfirm = navigator::goBack,
+        onEditComplete = navigator::goBack,
     )
     bookshelfInfoEntry(
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onRemoveClick = { id ->
-            appNavigationState.addToBackStack(BookshelfKey.Delete(id))
+            navigator.navigate(BookshelfKey.Delete(id))
         },
         onEditClick = { id, type ->
-            appNavigationState.addToBackStack(
+            navigator.navigate(
                 BookshelfKey.Edit(
                     BookshelfEditorType.Edit(id, type),
                 ),
             )
         },
         showNotificationPermissionRationale = {
-            appNavigationState.addToBackStack(BookshelfKey.Notification(it))
+            navigator.navigate(BookshelfKey.Notification(it))
         },
     )
     bookshelfDeleteEntry(
-        onBackClick = appNavigationState::onBackPressed,
-        onComplete = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
+        onComplete = navigator::goBack,
     )
     folderEntryGroup<BookshelfKey.Folder, BookshelfKey.FileInfo>(
         sceneKey = "BookshelfFolder",
-        onBackClick = appNavigationState::onBackPressed,
+        onBackClick = navigator::goBack,
         onSearchClick = onSearchClick,
         onFileClick = { file ->
             when (file) {
                 is Book -> onBookClick(file)
 
                 is Folder -> {
-                    if (appNavigationState.currentBackStack.lastOrNull() is BookshelfKey.FileInfo) {
-                        appNavigationState.currentBackStack.removeLastOrNull()
+                    if (navigator.state.stacksInUse.lastOrNull() is BookshelfKey.FileInfo) {
+                        navigator.goBack()
                     }
-                    appNavigationState.addToBackStack(
+                    navigator.navigate(
                         BookshelfKey.Folder(
                             file.bookshelfId,
                             file.path,
@@ -183,11 +184,12 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
             }
         },
         onFileInfoClick = {
-            appNavigationState.addToBackStack(BookshelfKey.FileInfo(it.key()))
+            navigator.navigate(BookshelfKey.FileInfo(it.key()))
         },
         onSortClick = { sortType, folderScopeOnly ->
-            appNavigationState.addToBackStack(SortTypeSelectKey(sortType, folderScopeOnly))
+            navigator.navigate(SortTypeSelectKey(sortType, folderScopeOnly))
         },
+        onSettingsClick = onSettingsClick,
         onRestored = onRestored,
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = { /* Do noting */ },

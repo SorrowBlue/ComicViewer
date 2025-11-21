@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -57,18 +58,8 @@ fun SettingsDetailPane(
 ) {
     Scaffold(
         topBar = {
-            if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
-                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
-                )
-            ) {
-                LargeTopAppBar(
-                    title = title,
-                    actions = actions,
-                    windowInsets = WindowInsets.safeDrawing
-                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-                    scrollBehavior = scrollBehavior,
-                )
-            } else {
+            val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+            if (paneScaffoldDirective.maxHorizontalPartitions == 1) {
                 TopAppBar(
                     title = title,
                     navigationIcon = {
@@ -84,6 +75,14 @@ fun SettingsDetailPane(
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                     scrollBehavior = scrollBehavior,
                 )
+            } else {
+                LargeTopAppBar(
+                    title = title,
+                    actions = actions,
+                    windowInsets = WindowInsets.safeDrawing
+                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                    scrollBehavior = scrollBehavior,
+                )
             }
         },
         snackbarHost = snackbarHost,
@@ -93,7 +92,6 @@ fun SettingsDetailPane(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                // TODO .drawVerticalScrollbar(scrollState)
                 .verticalScroll(scrollState)
                 .padding(innerPadding),
             content = content,

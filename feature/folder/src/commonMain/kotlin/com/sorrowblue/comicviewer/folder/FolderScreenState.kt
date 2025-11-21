@@ -53,6 +53,8 @@ internal interface FolderScreenState {
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
 
     fun onSortTypeSelectScreenResult(result: SortTypeSelectScreenResult)
+
+    fun onRefresh()
 }
 
 @Composable
@@ -177,10 +179,6 @@ private class FolderScreenStateImpl(
             }.launchIn(scope)
     }
 
-    private fun refreshItems() {
-        lazyPagingItems.refresh()
-    }
-
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
         logcat {
             "isRestored: $isRestored, restorePath: $restorePath, itemCount: ${lazyPagingItems.itemCount}"
@@ -285,6 +283,14 @@ private class FolderScreenStateImpl(
                 refreshItems()
             }
         }
+    }
+
+    override fun onRefresh() {
+        lazyPagingItems.refresh()
+    }
+
+    private fun refreshItems() {
+        lazyPagingItems.refresh()
     }
 
     companion object {
