@@ -46,7 +46,7 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
 
                     implementation(libs.compose.multiplatform.backhandler)
                     implementation(libs.rin)
-                    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
+                    implementation(libs.kotlinx.collections.immutable)
                 }
 
                 sourceSets.androidMain.dependencies {
