@@ -165,6 +165,8 @@ squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "squ
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-dynamicFeature = { id = "com.android.dynamic-feature", version.ref = "android-gradle" }
+android-kotlin-multiplatform = { id = "com.android.kotlin.multiplatform", version.ref = "android-gradle" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }

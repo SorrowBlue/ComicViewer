@@ -1,7 +1,7 @@
-import com.android.build.api.dsl.ApplicationExtension
+// import com.android.build.api.dsl.ApplicationExtension
 import com.sorrowblue.comicviewer.ComicBuildType
 import com.sorrowblue.comicviewer.configureAboutLibraries
-import com.sorrowblue.comicviewer.configureAndroid
+// import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.configureKotlinMultiplatform
 import com.sorrowblue.comicviewer.configureLicensee
@@ -11,8 +11,8 @@ import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.provideDelegate
+// import org.gradle.kotlin.dsl.configure
+// import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
@@ -20,7 +20,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             plugins {
                 id(libs.plugins.kotlin.multiplatform)
-                id(libs.plugins.android.application)
+                apply("com.android.kotlin.multiplatform")
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.comicviewer.dokka)
@@ -29,8 +29,9 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
             }
 
             configureKotlin<KotlinMultiplatformExtension>()
-            configureKotlinMultiplatform()
-            configure<ApplicationExtension> { configureAndroid(this) }
+            configureKotlinMultiplatform(configureAndroidTarget = false)
+            // TODO: AGP 9.0 - Need to find alternative way to configure Android application settings
+            // configure<ApplicationExtension> { configureAndroid(this) }
             configureLicensee()
             configureAboutLibraries()
 
@@ -40,45 +41,12 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                 }
             }
 
-            configure<ApplicationExtension> {
-                signingConfigs {
-                    val androidSigningDebugStoreFile: String? by project
-                    if (!androidSigningDebugStoreFile.isNullOrEmpty()) {
-                        named(ComicBuildType.DEBUG.display) {
-                            val androidSigningDebugStorePassword: String? by project
-                            val androidSigningDebugKeyAlias: String? by project
-                            val androidSigningDebugKeyPassword: String? by project
-                            storeFile = file(requireNotNull(androidSigningDebugStoreFile))
-                            storePassword = androidSigningDebugStorePassword
-                            keyAlias = androidSigningDebugKeyAlias
-                            keyPassword = androidSigningDebugKeyPassword
-                        }
-                    } else {
-                        logger.warn("androidSigningDebugStoreFile not found")
-                    }
-
-                    val androidSigningReleaseStoreFile: String? by project
-                    if (!androidSigningReleaseStoreFile.isNullOrEmpty()) {
-                        val release = create(ComicBuildType.RELEASE.display) {
-                            val androidSigningReleaseStorePassword: String? by project
-                            val androidSigningReleaseKeyAlias: String? by project
-                            val androidSigningReleaseKeyPassword: String? by project
-                            storeFile = file(requireNotNull(androidSigningReleaseStoreFile))
-                            storePassword = androidSigningReleaseStorePassword
-                            keyAlias = androidSigningReleaseKeyAlias
-                            keyPassword = androidSigningReleaseKeyPassword
-                        }
-                        create(ComicBuildType.PRERELEASE.display) {
-                            initWith(release)
-                        }
-                        create(ComicBuildType.INTERNAL.display) {
-                            initWith(release)
-                        }
-                    } else {
-                        logger.warn("androidSigningReleaseStoreFile not found")
-                    }
-                }
-            }
+            // TODO: AGP 9.0 - Need to find alternative way to configure signing configs
+            // configure<ApplicationExtension> {
+            //     signingConfigs {
+            //         ...
+            //     }
+            // }
         }
     }
 }

@@ -72,9 +72,8 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
                 }
             }
 
-            dependencies {
-                add("debugImplementation", libs.compose.uiTooling)
-            }
+            // Note: debugImplementation is not available with com.android.kotlin.multiplatform.library plugin
+            // The compose.uiTooling dependency will need to be added differently if needed
         }
     }
 }

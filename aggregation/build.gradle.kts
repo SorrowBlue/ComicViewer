@@ -23,8 +23,8 @@ kotlin {
             }
         }
     }
-}
 
-android {
-    namespace = "com.sorrowblue.comicviewer.aggregation"
+    android {
+        namespace = "com.sorrowblue.comicviewer.aggregation"
+    }
 }

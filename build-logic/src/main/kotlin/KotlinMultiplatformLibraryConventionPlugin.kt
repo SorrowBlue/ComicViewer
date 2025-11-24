@@ -16,7 +16,7 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             plugins {
                 id(libs.plugins.kotlin.multiplatform)
-                id(libs.plugins.android.library)
+                apply("com.android.kotlin.multiplatform.library")
                 id(libs.plugins.comicviewer.android.lint)
                 id(libs.plugins.comicviewer.detekt)
                 id(libs.plugins.comicviewer.dokka)
@@ -24,8 +24,7 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
             }
 
             configureKotlin<KotlinMultiplatformExtension>()
-            configureKotlinMultiplatform()
-            configure<LibraryExtension> { configureAndroid(this) }
+            configureKotlinMultiplatform(configureAndroidTarget = false)
 
             configure<KotlinMultiplatformExtension> {
                 compilerOptions {

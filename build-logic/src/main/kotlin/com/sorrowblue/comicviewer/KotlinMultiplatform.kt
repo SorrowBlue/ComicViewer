@@ -25,9 +25,11 @@ import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
  *       └ iosSimulatorArm64
  * ```
  */
-internal fun Project.configureKotlinMultiplatform() {
+internal fun Project.configureKotlinMultiplatform(configureAndroidTarget: Boolean = true) {
     kotlin<KotlinMultiplatformExtension> {
-        androidTarget {
+        if (configureAndroidTarget) {
+            androidTarget {
+            }
         }
 
         jvm("desktop")
