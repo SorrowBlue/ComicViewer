@@ -31,7 +31,7 @@ jobs:
       upload-url: ${{ steps.upload.outputs.internalSharingDownloadUrl }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Decode android keystore file
@@ -81,7 +81,7 @@ jobs:
     needs: [lint, static-code-analysis, test]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Build Desktop Release
