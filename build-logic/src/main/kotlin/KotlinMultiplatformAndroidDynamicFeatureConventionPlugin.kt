@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project> {
@@ -27,7 +28,7 @@ class KotlinMultiplatformAndroidDynamicFeatureConventionPlugin : Plugin<Project>
 
             configureKotlin<KotlinMultiplatformExtension>()
             configureKotlinMultiplatform()
-            configureAndroid<DynamicFeatureExtension>()
+            configure<DynamicFeatureExtension> { configureAndroid(this) }
             configureLicensee()
             configureAboutLibraries()
 

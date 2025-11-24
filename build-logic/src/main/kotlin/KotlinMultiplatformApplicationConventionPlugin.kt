@@ -1,6 +1,5 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.sorrowblue.comicviewer.ComicBuildType
-import com.sorrowblue.comicviewer.android
 import com.sorrowblue.comicviewer.configureAboutLibraries
 import com.sorrowblue.comicviewer.configureAndroid
 import com.sorrowblue.comicviewer.configureKotlin
@@ -12,6 +11,7 @@ import com.sorrowblue.comicviewer.libs
 import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
@@ -30,7 +30,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
 
             configureKotlin<KotlinMultiplatformExtension>()
             configureKotlinMultiplatform()
-            configureAndroid<ApplicationExtension>()
+            configure<ApplicationExtension> { configureAndroid(this) }
             configureLicensee()
             configureAboutLibraries()
 
@@ -40,7 +40,7 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
                 }
             }
 
-            android<ApplicationExtension> {
+            configure<ApplicationExtension> {
                 signingConfigs {
                     val androidSigningDebugStoreFile: String? by project
                     if (!androidSigningDebugStoreFile.isNullOrEmpty()) {

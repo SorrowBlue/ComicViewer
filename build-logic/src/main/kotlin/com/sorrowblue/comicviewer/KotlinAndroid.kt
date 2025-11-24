@@ -1,25 +1,19 @@
 package com.sorrowblue.comicviewer
 
-import com.android.build.api.dsl.ApplicationDefaultConfig
-import com.android.build.api.dsl.CommonExtension
-import com.android.build.api.dsl.DynamicFeatureDefaultConfig
-import com.android.build.api.dsl.LibraryDefaultConfig
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.DynamicFeatureExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
-internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.configureAndroid() =
-    configure<T> {
+internal fun Project.configureAndroid(extension: ApplicationExtension) {
+    extension.apply {
         defaultConfig {
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-            if (this is LibraryDefaultConfig) {
-                consumerProguardFiles("consumer-rules.pro")
-            } else if (this is ApplicationDefaultConfig || this is DynamicFeatureDefaultConfig) {
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro",
-                )
-            }
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
 
         testOptions {
@@ -37,3 +31,55 @@ internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.conf
             }
         }
     }
+}
+
+internal fun Project.configureAndroid(extension: LibraryExtension) {
+    extension.apply {
+        defaultConfig {
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            consumerProguardFiles("consumer-rules.pro")
+        }
+
+        testOptions {
+            unitTests {
+                isIncludeAndroidResources = true
+            }
+        }
+
+        buildTypes {
+            create(ComicBuildType.PRERELEASE.display) {
+                initWith(getByName(ComicBuildType.RELEASE.display))
+            }
+            create(ComicBuildType.INTERNAL.display) {
+                initWith(getByName(ComicBuildType.RELEASE.display))
+            }
+        }
+    }
+}
+
+internal fun Project.configureAndroid(extension: DynamicFeatureExtension) {
+    extension.apply {
+        defaultConfig {
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
+
+        testOptions {
+            unitTests {
+                isIncludeAndroidResources = true
+            }
+        }
+
+        buildTypes {
+            create(ComicBuildType.PRERELEASE.display) {
+                initWith(getByName(ComicBuildType.RELEASE.display))
+            }
+            create(ComicBuildType.INTERNAL.display) {
+                initWith(getByName(ComicBuildType.RELEASE.display))
+            }
+        }
+    }
+}

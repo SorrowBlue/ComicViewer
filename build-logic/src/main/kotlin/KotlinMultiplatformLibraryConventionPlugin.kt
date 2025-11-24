@@ -25,7 +25,7 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
 
             configureKotlin<KotlinMultiplatformExtension>()
             configureKotlinMultiplatform()
-            configureAndroid<LibraryExtension>()
+            configure<LibraryExtension> { configureAndroid(this) }
 
             configure<KotlinMultiplatformExtension> {
                 compilerOptions {
