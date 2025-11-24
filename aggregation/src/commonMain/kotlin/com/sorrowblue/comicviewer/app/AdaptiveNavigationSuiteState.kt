@@ -20,10 +20,10 @@ fun rememberAdaptiveNavigationSuiteState(navigator: Navigator): AdaptiveNavigati
 
 private class AdaptiveNavigationSuiteStateImpl(private val navigator: Navigator) :
     AdaptiveNavigationSuiteState {
-    override val navigationKeys =
+    override val navigationKeys: List<NavigationKey> =
         listOf(BookshelfKey.List, CollectionKey.List, ReadLaterKey.List, HistoryKey.List)
 
     override fun onNavigationClick(key: NavigationKey) {
-        navigator.navigate(key)
+        navigator.addTopLevel(key)
     }
 }

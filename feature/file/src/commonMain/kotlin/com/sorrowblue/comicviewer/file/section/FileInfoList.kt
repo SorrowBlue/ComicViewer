@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.file.section
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_label_modified_date
 import comicviewer.feature.file.generated.resources.file_text_page_count
@@ -38,36 +40,32 @@ expect fun String.createClipEntry(): ClipEntry
 @Composable
 internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        val transparentColor = ListItemDefaults.colors(containerColor = Color.Transparent)
+        ListItemDefaults.colors(containerColor = Color.Transparent)
         val clipboardManager = LocalClipboard.current
         val scope = rememberCoroutineScope()
-        ListItem(
+        FileInfoListItem(
             overlineContent = { Text(text = "パス") },
             headlineContent = { Text(text = file.path) },
-            colors = transparentColor,
             modifier = Modifier.combinedClickable(onLongClick = {
                 scope.launch {
                     clipboardManager.setClipEntry(file.path.createClipEntry())
                 }
             }, onClick = {}),
         )
-        ListItem(
+        FileInfoListItem(
             overlineContent = { Text(text = "種類") },
             headlineContent = { Text(text = if (file is IFolder) "フォルダ" else file.name.extension) },
-            colors = transparentColor,
         )
-        ListItem(
+        FileInfoListItem(
             overlineContent = { Text(text = "サイズ") },
             headlineContent = { Text(text = file.size.asFileSize) },
-            colors = transparentColor,
         )
-        ListItem(
+        FileInfoListItem(
             overlineContent = { Text(text = stringResource(Res.string.file_label_modified_date)) },
             headlineContent = { Text(text = file.lastModifier.asDateTime) },
-            colors = transparentColor,
         )
         if (file is Book) {
-            ListItem(
+            FileInfoListItem(
                 overlineContent = { Text(text = "ページ数") },
                 headlineContent = {
                     Text(
@@ -78,12 +76,10 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
                         ),
                     )
                 },
-                colors = transparentColor,
             )
-            ListItem(
+            FileInfoListItem(
                 overlineContent = { Text(text = "最後に読んだ日時") },
                 headlineContent = { Text(text = file.lastReadTime.asDateTime) },
-                colors = transparentColor,
             )
         }
     }
@@ -104,6 +100,22 @@ val Long.asFileSize: String
             }
         }
     }
+
+@Composable
+private fun FileInfoListItem(
+    overlineContent: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val transparentColor = ListItemDefaults.colors(containerColor = Color.Transparent)
+    ListItem(
+        colors = transparentColor,
+        overlineContent = overlineContent,
+        headlineContent = headlineContent,
+        modifier = modifier
+            .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+    )
+}
 
 private const val Byte = 1024f
 

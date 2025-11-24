@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.file
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -58,59 +57,57 @@ internal fun FileInfoScreen(
         onCloseClick = onBackClick,
         modifier = modifier,
     ) { contentPadding ->
-        Box {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(top = contentPadding.calculateTopPadding()),
-            ) {
-                FileInfoThumbnail(
-                    file = file,
-                    lazyPagingItems = lazyPagingItems,
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(top = contentPadding.calculateTopPadding()),
+        ) {
+            FileInfoThumbnail(
+                file = file,
+                lazyPagingItems = lazyPagingItems,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+            )
+            SheetActionButtons(
+                uiState = uiState.sheetActionButtonsUiState,
+                onReadLaterClick = onReadLaterClick,
+                onCollectionClick = onCollectionClick,
+                onOpenFolderClick = onOpenFolderClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        layoutDirection = LocalLayoutDirection.current,
+                        horizontal = contentPadding,
+                    ).padding(top = ComicTheme.dimension.padding * 2)
+                    .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+            )
+            FileInfoList(
+                file = file,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        layoutDirection = LocalLayoutDirection.current,
+                        horizontal = contentPadding,
+                    ).padding(top = ComicTheme.dimension.padding * 2)
+                    .padding(horizontal = 8.dp),
+            )
+            uiState.attribute?.let {
+                FileAttributeChips(
+                    it,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                )
-                SheetActionButtons(
-                    uiState = uiState.sheetActionButtonsUiState,
-                    onReadLaterClick = onReadLaterClick,
-                    onCollectionClick = onCollectionClick,
-                    onOpenFolderClick = onOpenFolderClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
                         .padding(
                             layoutDirection = LocalLayoutDirection.current,
                             horizontal = contentPadding,
-                        ).padding(top = ComicTheme.dimension.padding * 2)
-                        .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
-                )
-                FileInfoList(
-                    file = file,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            layoutDirection = LocalLayoutDirection.current,
-                            horizontal = contentPadding,
-                        ).padding(top = ComicTheme.dimension.padding * 2)
-                        .padding(horizontal = 8.dp),
-                )
-                uiState.attribute?.let {
-                    FileAttributeChips(
-                        it,
-                        modifier = Modifier
-                            .padding(
-                                layoutDirection = LocalLayoutDirection.current,
-                                horizontal = contentPadding,
-                            ).padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
-                    )
-                }
-                Spacer(
-                    modifier = Modifier.height(
-                        contentPadding.calculateBottomPadding() +
-                            ExtraPaneScaffoldDefaults.HorizontalPadding,
-                    ),
+                        ).padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
                 )
             }
+            Spacer(
+                modifier = Modifier.height(
+                    contentPadding.calculateBottomPadding() +
+                        ExtraPaneScaffoldDefaults.HorizontalPadding,
+                ),
+            )
         }
     }
 }

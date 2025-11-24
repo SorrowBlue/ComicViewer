@@ -180,9 +180,6 @@ private class FolderScreenStateImpl(
     }
 
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
-        logcat {
-            "isRestored: $isRestored, restorePath: $restorePath, itemCount: ${lazyPagingItems.itemCount}"
-        }
         if (!isRestored && restorePath != null && 0 < lazyPagingItems.itemCount) {
             val index = lazyPagingItems.indexOf { it?.path == restorePath }
             if (0 <= index) {

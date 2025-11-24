@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
@@ -13,9 +14,12 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.PrimaryActionButton
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
@@ -49,13 +53,25 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
                     actions = { SettingsIconButton(onClick = onSettingsClick) },
                 )
             },
-        ) {
+        ) { contentPadding ->
+            val additionalPaddings = if (navigationSuiteType.isNavigationRail) {
+                PaddingValues(
+                    end = ComicTheme.dimension.margin,
+                    bottom = ComicTheme.dimension.margin,
+                )
+            } else {
+                PaddingValues(
+                    start = ComicTheme.dimension.margin,
+                    end = ComicTheme.dimension.margin,
+                    bottom = ComicTheme.dimension.margin,
+                )
+            }
             BookshelfSheet(
                 lazyPagingItems = lazyPagingItems,
                 lazyGridState = lazyGridState,
                 onBookshelfClick = onBookshelfClick,
                 onBookshelfInfoClick = onBookshelfInfoClick,
-                contentPadding = it,
+                contentPadding = contentPadding + additionalPaddings,
             )
         }
     }

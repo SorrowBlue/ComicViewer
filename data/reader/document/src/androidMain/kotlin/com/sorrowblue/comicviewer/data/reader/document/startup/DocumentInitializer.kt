@@ -4,8 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.view.WindowManager
-import androidx.core.content.getSystemService
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.data.reader.document.PdfPluginPackage
 import com.sorrowblue.comicviewer.data.reader.document.PdfPluginService
@@ -50,7 +48,9 @@ internal class DocumentInitializer : Initializer<Unit> {
             if (SupportMajorVersion <= targetMajor) {
                 // Supported
                 datastoreDataSource.updateFolderSettings { settings ->
-                    settings.copy(supportExtension = settings.supportExtension.plus(Document.entries))
+                    settings.copy(
+                        supportExtension = settings.supportExtension.plus(Document.entries),
+                    )
                 }
             } else {
                 // Not supported

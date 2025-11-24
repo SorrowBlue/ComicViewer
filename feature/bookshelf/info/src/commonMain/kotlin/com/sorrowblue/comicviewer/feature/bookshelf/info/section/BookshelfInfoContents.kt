@@ -70,7 +70,8 @@ internal fun BookshelfInfoContents(
             contentPadding = contentPadding
                 .only(
                     PaddingValuesSides.Horizontal + PaddingValuesSides.Top,
-                ).plus(
+                )
+                .plus(
                     PaddingValues(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
                 ),
             modifier = Modifier.fillMaxWidth(),
@@ -91,7 +92,9 @@ internal fun BookshelfInfoContents(
             folder = uiState.folder,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(contentPadding.only(PaddingValuesSides.Horizontal)),
+                .padding(
+                    contentPadding.only(PaddingValuesSides.Horizontal + PaddingValuesSides.Bottom),
+                ),
         )
     }
 }

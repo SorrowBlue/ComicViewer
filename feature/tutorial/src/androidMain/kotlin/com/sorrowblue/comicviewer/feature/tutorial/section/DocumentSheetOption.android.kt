@@ -39,7 +39,7 @@ internal actual fun DocumentSheetOption(modifier: Modifier) {
     DocumentSheetOption(
         uiState = state.uiState,
         onOpenLinkClick = state::onOpenLinkClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -52,7 +52,7 @@ private fun DocumentSheetOption(
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(uiState.pluginState.statusLabelResource),
-            style = ComicTheme.typography.bodyMedium
+            style = ComicTheme.typography.bodyMedium,
         )
         Spacer(Modifier.size(8.dp))
         OutlinedButton(

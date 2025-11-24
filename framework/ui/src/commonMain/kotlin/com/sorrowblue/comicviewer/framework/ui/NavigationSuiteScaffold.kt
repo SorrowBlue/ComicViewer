@@ -42,13 +42,13 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalContainerColor
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.canonical.isVisible
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 
 val LocalAdaptiveNavigationSuiteState = staticCompositionLocalOf<AdaptiveNavigationSuiteState> {
     error("No AdaptiveNavigationSuiteState provided")
 }
 
-val LocalNavigationState = staticCompositionLocalOf<NavigationState> {
+val LocalNavigator = staticCompositionLocalOf<Navigator> {
     error("No AdaptiveNavigationSuiteState provided")
 }
 
@@ -56,7 +56,7 @@ val LocalNavigationState = staticCompositionLocalOf<NavigationState> {
 fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
     navigationItems: @Composable () -> Unit = {
         navigationKeys.forEach { key ->
-            val isSelected = key == navigationState.topLevelRoute
+            val isSelected = key in navigator.backStack
             NavigationSuiteItem(
                 selected = isSelected,
                 label = { Text(key.title) },

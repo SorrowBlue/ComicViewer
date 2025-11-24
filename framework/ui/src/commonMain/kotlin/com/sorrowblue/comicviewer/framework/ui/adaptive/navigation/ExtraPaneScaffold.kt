@@ -2,18 +2,11 @@ package com.sorrowblue.comicviewer.framework.ui.adaptive.navigation
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -30,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,11 +37,11 @@ fun ExtraPaneScaffold(
     title: @Composable () -> Unit,
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
-    actions: @Composable (RowScope.() -> Unit)? = null,
+    actions: @Composable () -> Unit = {},
     scaffoldDirective: PaneScaffoldDirective =
         calculatePaneScaffoldDirective(currentWindowAdaptiveInfo()),
     scrollState: ScrollState? = null,
-    content: @Composable ColumnScope.(PaddingValues) -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     val singlePane by remember(scaffoldDirective.maxHorizontalPartitions) {
         mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
@@ -109,23 +101,18 @@ fun ExtraPaneScaffold(
                         ).union(marginWindowInsets),
                 ).clip(ComicTheme.shapes.large)
         },
+        bottomBar = actions,
     ) {
-        Column {
-            Column(modifier = Modifier.weight(1f)) {
-                content(it)
-            }
-            if (actions != null) {
-                HorizontalDivider()
-                Spacer(Modifier.height(16.dp))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                ) {
-                    actions()
-                }
-                Spacer(Modifier.height(24.dp))
-            }
-        }
+//            Column(modifier = Modifier.weight(1f)) {
+        content(it)
+//            }
+//            if (actions != null) {
+//                HorizontalDivider()
+//                Spacer(Modifier.height(16.dp))
+//                Spacer(Modifier.height(24.dp)
+//                    .padding(it.only(PaddingValuesSides.Bottom))
+//                )
+//            }
     }
 }
 

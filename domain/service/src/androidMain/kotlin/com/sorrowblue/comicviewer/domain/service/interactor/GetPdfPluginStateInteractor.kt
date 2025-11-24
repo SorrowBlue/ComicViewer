@@ -17,7 +17,6 @@ import logcat.logcat
 @Inject
 internal class GetPdfPluginStateInteractor(private val context: Context) :
     GetPdfPluginStateUseCase() {
-
     override fun run(request: EmptyRequest): Flow<Resource<PdfPluginState, Resource.SystemError>> {
         return flow<Resource<PdfPluginState, Resource.SystemError>> {
             val versionName = try {
