@@ -6,9 +6,7 @@ import com.sorrowblue.comicviewer.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.provideDelegate
-import org.jetbrains.compose.ComposePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
@@ -75,7 +73,6 @@ class KotlinMultiplatformComposeConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                val compose = extensions.getByType<ComposePlugin.Dependencies>()
                 add("debugImplementation", libs.compose.uiTooling)
             }
         }
