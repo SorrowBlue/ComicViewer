@@ -34,6 +34,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
+import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
 import kotlinx.serialization.Serializable
@@ -170,7 +171,7 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
                 is Book -> onBookClick(file)
 
                 is Folder -> {
-                    if (navigator.state.stacksInUse.lastOrNull() is BookshelfKey.FileInfo) {
+                    if (navigator.backStack.lastOrNull() is BookshelfKey.FileInfo) {
                         navigator.goBack()
                     }
                     navigator.navigate(
@@ -207,7 +208,7 @@ private fun EntryProviderScope<NavKey>.bookshelfEntry(
         createContext = {
             (graph as BookshelfScreenContext.Factory).createBookshelfScreenContext()
         },
-        metadata = SupportingPaneSceneStrategy.mainPane("Bookshelf"),
+        metadata = SupportingPaneSceneStrategy.mainPane<BookshelfKey.Info>("Bookshelf"),
     ) {
         BookshelfScreenRoot(
             onSettingsClick = onSettingsClick,

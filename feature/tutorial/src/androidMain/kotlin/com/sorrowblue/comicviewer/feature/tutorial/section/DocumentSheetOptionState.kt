@@ -27,7 +27,6 @@ annotation class DocumentSheetOptionScope
 
 @GraphExtension(DocumentSheetOptionScope::class)
 interface DocumentSheetOptionContext {
-
     val getPdfPluginStateUseCase: GetPdfPluginStateUseCase
 
     @ContributesTo(AppScope::class)
@@ -46,7 +45,7 @@ internal fun rememberDocumentSheetOptionState(): DocumentSheetOptionState {
         DocumentSheetOptionStateImpl(
             uriHandler = uriHandler,
             getPdfPluginStateUseCase = context.getPdfPluginStateUseCase,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }.apply {
         this.coroutineScope = coroutineScope
@@ -69,8 +68,6 @@ private class DocumentSheetOptionStateImpl(
     private val getPdfPluginStateUseCase: GetPdfPluginStateUseCase,
     var coroutineScope: CoroutineScope,
 ) : DocumentSheetOptionState {
-
-
     override var uiState by mutableStateOf(DocumentSheetOptionUiState())
 
     init {

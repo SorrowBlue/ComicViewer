@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ListItem
@@ -9,13 +8,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.core.uri.UriUtils
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_Id_password
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_auth_method
@@ -32,35 +31,26 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun BookshelfInfo(bookshelf: Bookshelf, folder: Folder, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        val colors = ListItemDefaults.colors(containerColor = Color.Transparent)
-        ListItem(
-            colors = colors,
+        ListItemDefaults.colors(containerColor = Color.Transparent)
+        BookshelfInfoListItem(
             overlineContent = {
                 Text(
                     text = stringResource(Res.string.bookshelf_info_label_bookshelf_type),
                 )
             },
             headlineContent = { Text(text = bookshelf.source()) },
-            modifier = Modifier
-                .combinedClickable(onLongClick = {}) { }
-                .padding(horizontal = 12.dp),
         )
-        ListItem(
-            colors = colors,
+        BookshelfInfoListItem(
             overlineContent = {
                 Text(
                     text = stringResource(Res.string.bookshelf_info_label_display_name),
                 )
             },
             headlineContent = { Text(text = bookshelf.displayName) },
-            modifier = Modifier
-                .combinedClickable(onLongClick = {}) { }
-                .padding(horizontal = 12.dp),
         )
         when (bookshelf) {
             is InternalStorage -> {
-                ListItem(
-                    colors = colors,
+                BookshelfInfoListItem(
                     overlineContent = {
                         Text(
                             text = stringResource(Res.string.bookshelf_info_label_path),
@@ -77,53 +67,37 @@ internal fun BookshelfInfo(bookshelf: Bookshelf, folder: Folder, modifier: Modif
                                 .orEmpty(),
                         )
                     },
-                    modifier = Modifier
-                        .combinedClickable(onLongClick = {}) { }
-                        .padding(horizontal = 12.dp),
                 )
             }
 
             is SmbServer -> {
-                ListItem(
-                    colors = colors,
+                BookshelfInfoListItem(
                     overlineContent = {
                         Text(
                             text = stringResource(Res.string.bookshelf_info_label_host),
                         )
                     },
                     headlineContent = { Text(text = bookshelf.host) },
-                    modifier = Modifier
-                        .combinedClickable(onLongClick = {}) { }
-                        .padding(horizontal = 12.dp),
                 )
-                ListItem(
-                    colors = colors,
+                BookshelfInfoListItem(
                     overlineContent = {
                         Text(
                             text = stringResource(Res.string.bookshelf_info_label_port),
                         )
                     },
                     headlineContent = { Text(text = bookshelf.port.toString()) },
-                    modifier = Modifier
-                        .combinedClickable(onLongClick = {}) { }
-                        .padding(horizontal = 12.dp),
                 )
-                ListItem(
-                    colors = colors,
+                BookshelfInfoListItem(
                     overlineContent = {
                         Text(
                             text = stringResource(Res.string.bookshelf_info_label_path),
                         )
                     },
                     headlineContent = { Text(text = folder.path) },
-                    modifier = Modifier
-                        .combinedClickable(onLongClick = {}) { }
-                        .padding(horizontal = 12.dp),
                 )
                 when (bookshelf.auth) {
                     SmbServer.Auth.Guest -> {
-                        ListItem(
-                            colors = colors,
+                        BookshelfInfoListItem(
                             overlineContent = {
                                 Text(
                                     text = stringResource(
@@ -136,15 +110,11 @@ internal fun BookshelfInfo(bookshelf: Bookshelf, folder: Folder, modifier: Modif
                                     text = stringResource(Res.string.bookshelf_info_label_guest),
                                 )
                             },
-                            modifier = Modifier
-                                .combinedClickable(onLongClick = {}) { }
-                                .padding(horizontal = 12.dp),
                         )
                     }
 
                     is SmbServer.Auth.UsernamePassword -> {
-                        ListItem(
-                            colors = colors,
+                        BookshelfInfoListItem(
                             overlineContent = {
                                 Text(
                                     text = stringResource(
@@ -159,9 +129,6 @@ internal fun BookshelfInfo(bookshelf: Bookshelf, folder: Folder, modifier: Modif
                                     ),
                                 )
                             },
-                            modifier = Modifier
-                                .combinedClickable(onLongClick = {}) { }
-                                .padding(horizontal = 12.dp),
                         )
                     }
                 }
@@ -171,6 +138,22 @@ internal fun BookshelfInfo(bookshelf: Bookshelf, folder: Folder, modifier: Modif
             }
         }
     }
+}
+
+@Composable
+private fun BookshelfInfoListItem(
+    overlineContent: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+    ListItem(
+        colors = colors,
+        overlineContent = overlineContent,
+        headlineContent = headlineContent,
+        modifier = modifier
+            .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+    )
 }
 
 @Composable

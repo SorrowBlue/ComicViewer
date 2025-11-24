@@ -15,7 +15,7 @@ import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationState
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 
 interface AdaptiveNavigationSuiteState {
     val navigationKeys: List<NavigationKey>
@@ -24,7 +24,7 @@ interface AdaptiveNavigationSuiteState {
 }
 
 interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
-    val navigationState: NavigationState
+    val navigator: Navigator
 
     val navigationKeys: List<NavigationKey>
 
@@ -38,13 +38,13 @@ interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
 @Composable
 fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaffoldState {
     val adaptiveNavigationSuiteState = LocalAdaptiveNavigationSuiteState.current
-    val navigationState = LocalNavigationState.current
+    val navigator = LocalNavigator.current
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
     val navigationSuiteType =
         NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
     return remember {
         AdaptiveNavigationSuiteScaffoldStateImpl(
-            navigationState = navigationState,
+            navigator = navigator,
             adaptiveNavigationSuiteState = adaptiveNavigationSuiteState,
             navigationSuiteScaffoldState = navigationSuiteScaffoldState,
         )
@@ -56,7 +56,7 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaff
 }
 
 private class AdaptiveNavigationSuiteScaffoldStateImpl(
-    override val navigationState: NavigationState,
+    override val navigator: Navigator,
     private val adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState,
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
 ) : AdaptiveNavigationSuiteScaffoldState,

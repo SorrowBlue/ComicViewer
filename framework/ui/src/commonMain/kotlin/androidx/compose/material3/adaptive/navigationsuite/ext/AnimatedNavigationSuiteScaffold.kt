@@ -30,7 +30,6 @@ import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSui
 import androidx.compose.material3.ext.FixedDefaultShortNavigationBarOverride
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +41,6 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailTransitio
 import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailTransitionExit
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
-import logcat.logcat
 
 /**
  * @see androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
@@ -110,11 +108,6 @@ private fun Modifier.navigationSuiteScaffoldSharedElement(
     transitionScope: SharedTransitionScope,
 ): Modifier = with(transitionScope) {
     with(visibilityScope) {
-        LaunchedEffect(navigationSuiteType.isNavigationRail) {
-            logcat {
-                "navigationSuiteType.isNavigationRail=${navigationSuiteType.isNavigationRail}"
-            }
-        }
         if (navigationSuiteType.isNavigationBar) {
             Modifier
                 .animateEnterExit(
