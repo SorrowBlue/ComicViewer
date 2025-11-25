@@ -21,7 +21,7 @@ pluginManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.3"
-    id("com.android.settings") version "8.13.1"
+    id("com.android.settings") version "9.0.0-beta02"
 }
 
 android {
@@ -80,9 +80,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "comicviewer"
 
+include(":app:android")
+include(":app:desktop")
+include(":app:ios")
+
 include(":aggregation")
 
-include(":composeApp")
+//include(":composeApp")
 
 include(":framework:common")
 include(":framework:notification")
@@ -99,6 +103,7 @@ include(":data:database")
 include(":data:datastore")
 include(":data:reader:zip")
 include(":data:reader:document")
+include(":data:reader:document:android")
 include(":data:storage:client")
 include(":data:storage:smb")
 include(":data:storage:")

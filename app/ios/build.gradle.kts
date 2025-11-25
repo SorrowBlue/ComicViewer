@@ -1,0 +1,96 @@
+import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
+import com.sorrowblue.comicviewer.configureAboutLibraries
+import com.sorrowblue.comicviewer.configureKotlin
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+
+plugins {
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.comicviewer.multiplatformCompose)
+    alias(libs.plugins.comicviewer.di)
+    alias(libs.plugins.licensee)
+    alias(libs.plugins.aboutlibraries)
+}
+
+configureAboutLibraries()
+configure<AboutLibrariesExtension> {
+    export {
+        outputFile.set(file("src/iosMain/composeResources/files/aboutlibraries.json"))
+    }
+}
+configureKotlin<KotlinMultiplatformExtension>()
+
+kotlin {
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+            binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
+        }
+    }
+    applyDefaultHierarchyTemplate()
+    sourceSets {
+        iosMain.dependencies {
+            implementation(projects.aggregation)
+//            implementation(projects.feature.settings.info)
+            implementation(projects.framework.common)
+//            implementation(projects.framework.designsystem)
+//            implementation(projects.framework.ui)
+//
+//            implementation(compose.desktop.currentOs)
+//
+//            implementation(libs.compose.componentsAnimatedimage)
+//            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0-alpha05")
+//            implementation(libs.androidx.lifecycleViewmodelNavigation3)
+//            implementation(libs.androidx.lifecycleCommon)
+//            implementation(libs.androidx.lifecycleCompose)
+//            implementation(libs.compose.ui)
+//            implementation(libs.androidx.navigation3UI)
+//            implementation(libs.kotlinx.coroutines.swing)
+        }
+    }
+}
+
+val gitTagProvider = providers.of(GitTagValueSource::class) {}
+
+/**
+ * Extract package version from git tag.
+ * Converts git tags (e.g., "v1.2.3" or "1.2.3-beta.1") to package version format.
+ * Format: MAJOR.MINOR.BUILD
+ * - v1.2.3 → 1.2.3
+ * - v1.2.3-beta.1 → 1.2.3
+ * - 1.2.3-beta.1-1-gf13fe → 1.2.3
+ * Falls back to "1.0.0" for invalid versions.
+ */
+fun extractPackageVersion(versionName: String): String {
+    return try {
+        // Remove 'v' prefix if present
+        val withoutPrefix = if (versionName.startsWith("v")) {
+            versionName.substring(1)
+        } else {
+            versionName
+        }
+
+        // Split version and suffix (e.g., "1.2.3-beta.1" -> ["1.2.3", "beta.1"])
+        val versionParts = withoutPrefix.split("-", limit = 2)
+        val baseVersion = versionParts[0]
+
+        // Parse semantic version parts and validate format
+        val parts = baseVersion.split(".")
+        if (parts.size >= 3) {
+            val major = parts[0].toIntOrNull()?.coerceAtLeast(1) ?: 1
+            val minor = parts[1].toIntOrNull() ?: 0
+            val build = parts[2].toIntOrNull() ?: 0
+            "$major.$minor.$build"
+        } else {
+            logger.warn("Invalid version format: $versionName, using packageVersion 1.0.0")
+            "1.0.0"
+        }
+    } catch (e: Exception) {
+        logger.warn("Error parsing version $versionName: ${e.message}, using packageVersion 1.0.0")
+        "1.0.0"
+    }
+}

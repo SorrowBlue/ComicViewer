@@ -5,7 +5,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.provideDelegate
 
-internal fun Project.configureAboutLibraries() {
+fun Project.configureAboutLibraries() {
     configure<AboutLibrariesExtension> {
         collect {
             includePlatform.set(true)
@@ -14,20 +14,6 @@ internal fun Project.configureAboutLibraries() {
             gitHubApiToken.set(githubApiToken)
         }
 
-        exports {
-            create("desktop") {
-                exportVariant.set("desktop")
-                outputFile.set(file("src/androidMain/composeResources/files/aboutlibraries.json"))
-            }
-            create("android") {
-                exportVariant.set("release")
-                outputFile.set(file("src/desktopMain/composeResources/files/aboutlibraries.json"))
-            }
-            create("ios") {
-                exportVariant.set("metadataIosMain")
-                outputFile.set(file("src/iosMain/composeResources/files/aboutlibraries.json"))
-            }
-        }
         license {
             strictMode.set(com.mikepenz.aboutlibraries.plugin.StrictMode.FAIL)
             allowedLicenses.addAll(
@@ -50,7 +36,11 @@ internal fun Project.configureAboutLibraries() {
                     "GNU Lesser General Public License, version 2.1" to listOf("org.codelibs"),
                     "unRAR restriction" to listOf("net.sf.sevenzipjbinding"),
                     "LGPL" to listOf("net.sf.sevenzipjbinding"),
-                    "Other" to listOf("org.jetbrains.kotlinx", "net.java.dev.jna"),
+                    "Other" to listOf(
+                        "org.jetbrains.kotlinx",
+                        "net.java.dev.jna",
+                        "io.github.irgaly.navigation3.resultstate"
+                    ),
                 ),
             )
         }

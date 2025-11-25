@@ -1,9 +1,15 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.di)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.reader.zip"
+        packaging {
+            jniLibs.useLegacyPackaging = false
+        }
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -13,7 +19,7 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation(libs.androidx.startup.runtime)
+                implementation(libs.androidx.startupRuntime)
                 implementation(libs.sevenzipjbinding.android)
             }
         }
@@ -23,12 +29,5 @@ kotlin {
                 implementation(libs.sevenzipjbinding.allPlatforms)
             }
         }
-    }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.data.reader.zip"
-    packaging {
-        jniLibs.useLegacyPackaging = false
     }
 }

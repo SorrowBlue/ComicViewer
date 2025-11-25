@@ -1,36 +1,31 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
-    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.di)
+    alias(libs.plugins.androidxRoom)
+    alias(libs.plugins.ksp)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.data.database"
-
-    sourceSets {
-        getByName("test") {
-            assets.srcDir(file("$projectDir/schemas"))
+kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.database"
+        withHostTest {
+            isIncludeAndroidResources = true
         }
-    }
-
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        managedDevices {
-            localDevices {
-                create("pixel9api35") {
-                    // Use device profiles you typically see in Android Studio.
-                    device = "Pixel 9"
-                    // Use only API levels 27 and higher.
-                    apiLevel = 35
-                    // To include Google services, use "google".
-                    systemImageSource = "aosp-atd"
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            execution = "ANDROIDX_TEST_ORCHESTRATOR"
+            managedDevices {
+                localDevices {
+                    create("pixel9api35") {
+                        device = "Pixel 9"
+                        apiLevel = 35
+                        systemImageSource = "aosp-atd"
+                    }
                 }
             }
         }
     }
-}
 
-kotlin {
     compilerOptions {
         freeCompilerArgs.add("-opt-in=androidx.paging.ExperimentalPagingApi")
     }
@@ -43,7 +38,7 @@ kotlin {
                 implementation(libs.androidx.room.paging)
                 implementation(libs.androidx.sqlite.bundled)
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.serializationJson)
             }
         }
 
@@ -51,13 +46,13 @@ kotlin {
             dependencies {
                 implementation(projects.framework.test)
                 implementation(libs.kotlin.test)
-                implementation(libs.androidx.paging.testing)
+                implementation(libs.androidx.pagingTesting)
                 implementation(libs.androidx.room.testing)
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
 
-        androidUnitTest {
+        getByName("androidHostTest") {
             dependencies {
                 implementation(libs.androidx.test.coreKtx)
                 implementation(libs.androidx.test.runner)
@@ -67,7 +62,7 @@ kotlin {
             }
         }
 
-        androidInstrumentedTest {
+        getByName("androidDeviceTest") {
             dependencies {
                 implementation(libs.androidx.test.coreKtx)
                 implementation(libs.androidx.test.runner)
@@ -83,7 +78,8 @@ kotlin {
 
 dependencies {
     kspAndroid(libs.androidx.room.compiler)
-    kspAndroidTest(libs.androidx.room.compiler)
+    add("kspAndroidHostTest", libs.androidx.room.compiler)
+    add("kspAndroidDeviceTest", libs.androidx.room.compiler)
     kspDesktop(libs.androidx.room.compiler)
     kspDesktopTest(libs.androidx.room.compiler)
     kspIosArm64(libs.androidx.room.compiler)

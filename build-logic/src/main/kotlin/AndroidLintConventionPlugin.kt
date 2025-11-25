@@ -1,5 +1,5 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.api.dsl.DynamicFeatureExtension
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.dsl.Lint
 import com.sorrowblue.comicviewer.libs
@@ -11,31 +11,34 @@ import org.gradle.api.tasks.testing.AbstractTestTask
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugin.use.PluginDependency
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal class AndroidLintConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             when {
-                pluginManager.hasPlugin(libs.plugins.android.application) ->
+                pluginManager.hasPlugin(libs.plugins.androidApplication) -> {
                     configure<ApplicationExtension> {
                         lint { configure(target) }
                     }
+                }
 
-                pluginManager.hasPlugin(libs.plugins.android.library) ->
+                pluginManager.hasPlugin(libs.plugins.androidLibrary) -> {
                     configure<LibraryExtension> {
                         lint { configure(target) }
                     }
+                }
 
-                pluginManager.hasPlugin(libs.plugins.android.dynamicFeature) ->
-                    configure<DynamicFeatureExtension> {
-                        lint { configure(target) }
+                pluginManager.hasPlugin(libs.plugins.androidMultiplatform) -> {
+                    configure<KotlinMultiplatformExtension> {
+                        configure<KotlinMultiplatformAndroidLibraryTarget> {
+                            lint { configure(target) }
+                        }
                     }
+                }
 
                 else -> {
-                    pluginManager.apply("com.android.lint")
-                    configure<Lint> {
-                        configure(target)
-                    }
+                    error("AndroidLintConventionPlugin applied to a project without Android plugin")
                 }
             }
             tasks.withType<AbstractTestTask>().configureEach {
@@ -61,18 +64,14 @@ internal class AndroidLintConventionPlugin : Plugin<Project> {
         htmlReport = !isCI
         htmlOutput =
             if (htmlReport) {
-                project.file(
-                    "${project.rootDir}/build/reports/lint/lint-result.html",
-                )
+                project.file("${project.rootDir}/build/reports/lint/lint-result.html")
             } else {
                 null
             }
         sarifReport = isCI
         sarifOutput =
             if (sarifReport) {
-                project.file(
-                    "${project.rootDir}/build/reports/lint/lint-result.sarif",
-                )
+                project.file("${project.rootDir}/build/reports/lint/lint-result.sarif")
             } else {
                 null
             }

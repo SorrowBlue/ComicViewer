@@ -1,11 +1,15 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.feature)
+    alias(libs.plugins.comicviewer.multiplatformFeature)
     alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.settings.info"
+        // resourcePrefix("settings_info")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -22,12 +26,7 @@ kotlin {
     }
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.settings.info"
-    resourcePrefix("settings_info")
-}
-
-val gitTagProvider: Provider<String> = providers.of(GitTagValueSource::class) {}
+val gitTagProvider = providers.of(GitTagValueSource::class) {}
 
 buildkonfig {
     packageName = "om.sorrowblue.comicviewer.feature.settings"

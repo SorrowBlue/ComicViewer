@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_label_bookshelf">本棚</string>
-    <string name="app_label_collection">コレクション</string>
-    <string name="app_label_read_later">あとで読む</string>
-    <string name="app_label_history">履歴</string>
-    <string name="app_label_exit">終了</string>
-</resources>

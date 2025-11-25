@@ -2,20 +2,18 @@ package com.sorrowblue.comicviewer
 
 import desktopMain
 import desktopTest
-import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.getValue
+import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationMultiplatformExtension
-import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 /**
  * Configure base Kotlin multiplatform options
  *
  * ```
  * common
- * ├ androidTarget
  * ├ jvm(desktop)
  * └ native
  *   └ apple
@@ -25,10 +23,8 @@ import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
  *       └ iosSimulatorArm64
  * ```
  */
-internal fun Project.configureKotlinMultiplatform() {
-    kotlin<KotlinMultiplatformExtension> {
-        androidTarget {
-        }
+fun Project.configureKotlinMultiplatformSourceSets() {
+    configure<KotlinMultiplatformExtension> {
 
         jvm("desktop")
 
@@ -38,45 +34,25 @@ internal fun Project.configureKotlinMultiplatform() {
 
         applyDefaultHierarchyTemplate()
 
-        val noAndroid by sourceSets.creating {
-            dependsOn(sourceSets.commonMain.get())
-        }
-
-        sourceSets.iosMain {
-            dependsOn(noAndroid)
-        }
-
-        sourceSets.desktopMain {
-            dependsOn(noAndroid)
-        }
-
-        val noAndroidTest by sourceSets.creating {
-            dependsOn(sourceSets.commonTest.get())
-        }
-
-        sourceSets.iosTest {
-            dependsOn(noAndroidTest)
-        }
-
-        sourceSets.desktopTest {
-            dependsOn(noAndroidTest)
-        }
-
-        compilerOptions {
-            freeCompilerArgs.add("-Xexpect-actual-classes")
-            freeCompilerArgs.add("-Xcontext-parameters")
-            freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
-        }
-        abiValidation {
-            @OptIn(ExperimentalAbiValidation::class)
-            klib {
-                keepUnsupportedTargets.set(false)
+        sourceSets {
+            val noAndroid by creating {
+                dependsOn(sourceSets.commonMain.get())
+            }
+            val noAndroidTest by creating {
+                dependsOn(sourceSets.commonTest.get())
+            }
+            desktopMain {
+                dependsOn(noAndroid)
+            }
+            desktopTest {
+                dependsOn(noAndroidTest)
+            }
+            iosMain {
+                dependsOn(noAndroid)
+            }
+            iosTest {
+                dependsOn(noAndroidTest)
             }
         }
     }
 }
-
-private fun KotlinMultiplatformExtension.abiValidation(
-    configure: Action<AbiValidationMultiplatformExtension>,
-): Unit =
-    (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("abiValidation", configure)

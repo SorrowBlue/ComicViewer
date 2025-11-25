@@ -18,16 +18,9 @@ fun <T : Any> PlatformContext.require(): T {
     return this.platformGraph as T
 }
 
-fun <T : Any> PlatformContext.withGraph(): T {
-    @Suppress("UNCHECKED_CAST")
-    return this.platformGraph as T
-}
-
 fun <T : Any, V : Any> PlatformContext.withGraph(create: T.() -> V, block: V.() -> Unit) {
     @Suppress("UNCHECKED_CAST")
     with(create(this.platformGraph as T)) {
         block()
     }
 }
-
-interface PlatformGraph
