@@ -21,7 +21,7 @@ kotlin {
                     if (hasSource) {
                         implementation(it)
                     } else {
-                        logger.lifecycle("Skipping empty or non-source module: ${it.name}")
+                        logger.lifecycle("Skipping empty or non-source module: ${it.path}")
                     }
                 }
                 // Required for metro dependency resolution
@@ -29,7 +29,6 @@ kotlin {
                 implementation(projects.data.reader.zip)
             }
         }
-
         androidMain.dependencies {
             implementation(projects.data.reader.document.android)
         }

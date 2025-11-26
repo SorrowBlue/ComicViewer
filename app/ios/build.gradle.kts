@@ -31,7 +31,6 @@ kotlin {
             binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
         }
     }
-    applyDefaultHierarchyTemplate()
     sourceSets {
         iosMain.dependencies {
             implementation(projects.aggregation)
