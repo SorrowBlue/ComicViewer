@@ -1,5 +1,4 @@
 import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
-import com.sorrowblue.comicviewer.configureAboutLibraries
 import com.sorrowblue.comicviewer.configureKotlin
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -9,11 +8,10 @@ plugins {
     alias(libs.plugins.comicviewer.multiplatformCompose)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.comicviewer.di)
-    alias(libs.plugins.licensee)
-    alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.comicviewer.primitive.licensee)
+    alias(libs.plugins.comicviewer.primitive.aboutlibraries)
 }
 
-configureAboutLibraries()
 configure<AboutLibrariesExtension> {
     export {
         outputFile.set(file("src/jvmMain/composeResources/files/aboutlibraries.json"))

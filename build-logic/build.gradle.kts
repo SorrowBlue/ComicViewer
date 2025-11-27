@@ -53,39 +53,6 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
-gradlePlugin {
-    plugins {
-        register(libs.plugins.comicviewer.androidApplication) {
-            implementationClass = "AndroidApplicationConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.androidLibrary) {
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.di) {
-            implementationClass = "DiConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.multiplatformCompose) {
-            implementationClass = "MultiplatformComposeConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.multiplatformFeature) {
-            implementationClass = "MultiplatformFeatureConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.multiplatformLibrary) {
-            implementationClass = "MultiplatformLibraryConventionPlugin"
-        }
-
-        register(libs.plugins.comicviewer.androidLint) {
-            implementationClass = "AndroidLintConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.detekt) {
-            implementationClass = "DetektConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.dokka) {
-            implementationClass = "DokkaConventionPlugin"
-        }
-    }
-}
-
 // Temporarily set to PushMode only
 private val currentLibs get() = libs
 

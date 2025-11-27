@@ -163,15 +163,17 @@ androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidMultiplatform = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 androidxRoom = { id = "androidx.room", version.ref = "androidx-room" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
-comicviewer-androidApplication = { id = "comicviewer.android.application" }
-comicviewer-androidLibrary = { id = "comicviewer.android.library" }
-comicviewer-androidLint = { id = "comicviewer.android.lint" }
-comicviewer-detekt = { id = "comicviewer.detekt" }
-comicviewer-di = { id = "comicviewer.di" }
-comicviewer-dokka = { id = "comicviewer.dokka" }
-comicviewer-multiplatformCompose = { id = "comicviewer.multiplatform.compose" }
-comicviewer-multiplatformFeature = { id = "comicviewer.multiplatform.feature" }
-comicviewer-multiplatformLibrary = { id = "comicviewer.multiplatform.library" }
+comicviewer-androidApplication = { id = "comicviewer.convention.android-application" }
+comicviewer-androidLibrary = { id = "comicviewer.convention.android-library" }
+comicviewer-androidLint = { id = "comicviewer.primitive.lint" }
+comicviewer-detekt = { id = "comicviewer.primitive.detekt" }
+comicviewer-di = { id = "comicviewer.primitive.metro" }
+comicviewer-dokka = { id = "comicviewer.primitive.dokka" }
+comicviewer-multiplatformCompose = { id = "comicviewer.convention.multiplatform-compose" }
+comicviewer-multiplatformFeature = { id = "comicviewer.convention.multiplatform-feature" }
+comicviewer-multiplatformLibrary = { id = "comicviewer.convention.multiplatform-library" }
+comicviewer-primitive-aboutlibraries = { id = "comicviewer.primitive.aboutlibraries" }
+comicviewer-primitive-licensee = { id = "comicviewer.primitive.licensee" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

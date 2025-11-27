@@ -20,26 +20,26 @@ android {
             applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             isShrinkResources = false
-            signingConfig = signingConfigs.findByName(name)
+            signingConfig = signingConfigs.findByName("debug")
         }
         val release by getting {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.findByName(name)
+            signingConfig = signingConfigs.findByName("release")
         }
         create("prerelease") {
             initWith(release)
             applicationIdSuffix = ".prerelease"
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.findByName(name)
+            signingConfig = signingConfigs.findByName("release")
             matchingFallbacks += listOf("release")
         }
         create("internal") {
             initWith(release)
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.findByName(name)
+            signingConfig = signingConfigs.findByName("release")
             matchingFallbacks += listOf("release")
         }
     }
