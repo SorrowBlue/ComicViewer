@@ -24,7 +24,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditorScreenUiState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_auth
@@ -33,9 +32,6 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_err
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_path
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_port
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_msg_cancelled_folder_selection
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Scope
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.CoroutineScope
@@ -83,21 +79,6 @@ internal interface InternalStorageEditorScreenState : BookshelfEditorScreenState
     val folderSelectFieldState: FolderSelectFieldState
     override val formState: FormState<InternalStorageEditorForm>
     override val form: Form<InternalStorageEditorForm>
-}
-
-@Scope
-annotation class BookshelfEditScreenScope
-
-@GraphExtension(BookshelfEditScreenScope::class)
-interface BookshelfEditScreenContext : ScreenContext {
-    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
-    val registerBookshelfUseCase: RegisterBookshelfUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    fun interface Factory {
-        fun createBookshelfEditScreenContext(): BookshelfEditScreenContext
-    }
 }
 
 @Composable

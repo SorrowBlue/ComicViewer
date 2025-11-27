@@ -12,13 +12,14 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchKeySerializers
 import com.sorrowblue.comicviewer.feature.settings.navigation.SettingsKeySerializersModule
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialKeySerializersModule
 import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
+import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
 import kotlinx.serialization.modules.polymorphic
 
 internal val AppSerializersModule
     get() = SerializersModule {
-        contextual(SnapshotStateListSerializer<NavKey>())
+        contextual(SnapshotStateListSerializer(PolymorphicSerializer(NavKey::class)))
         polymorphic(NavKey::class) {
             subclass(SortTypeSelectKey::class, SortTypeSelectKey.serializer())
 

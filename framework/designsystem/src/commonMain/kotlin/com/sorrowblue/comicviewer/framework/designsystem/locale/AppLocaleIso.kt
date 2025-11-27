@@ -48,13 +48,15 @@ expect val Locale.displayLanguageName: String
 val ProvideLocalAppLocaleIso: ProvidedValue<*>
     @Composable
     get() {
-        return (LocalPlatformContext.current.platformGraph as AppLocaleIsoGraph).appLocaleIso provides
+        return (LocalPlatformContext.current.platformGraph as IAppLocaleIsoGraph).appLocaleIso provides
             appLanguageTag
     }
 
 @ContributesTo(AppScope::class)
 @GraphExtension
-interface AppLocaleIsoGraph {
+interface AppLocaleIsoGraph : IAppLocaleIsoGraph
+
+interface IAppLocaleIsoGraph {
     val appLocaleIso: AppLocaleIso
 }
 
