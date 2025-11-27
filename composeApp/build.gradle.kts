@@ -1,49 +1,50 @@
 import com.android.build.api.variant.VariantOutput
-import com.sorrowblue.comicviewer.ComicBuildType
+//import com.sorrowblue.comicviewer.ComicBuildType
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.application)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
-    alias(libs.plugins.kotlin.serialization)
+//    alias(libs.plugins.comicviewer.kotlinMultiplatform.application)
+//    alias(libs.plugins.comicviewer.multiplatformCompose)
+//    alias(libs.plugins.comicviewer.di)
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.composeHotReload)
 }
 
-kotlin {
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-            binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
-        }
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.aggregation)
-            implementation(projects.feature.settings.info)
-            implementation(projects.framework.designsystem)
-            implementation(projects.framework.ui)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.androidx.appcompat)
-            implementation(libs.androidx.core.splashscreen)
-            implementation(projects.feature.book)
+//kotlin {
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+//            isStatic = true
+//            binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
+//        }
+//    }
+//
+//    sourceSets {
+//        commonMain.dependencies {
+//            implementation(projects.aggregation)
+//            implementation(projects.feature.settings.info)
+//            implementation(projects.framework.designsystem)
+//            implementation(projects.framework.ui)
+//        }
+//
+//        androidMain.dependencies {
+//            implementation(libs.androidx.appcompat)
+//            implementation(libs.androidx.core.splashscreen)
+//            implementation(projects.feature.book)
 //            implementation(libs.kotlinx.coroutines.android)
-        }
-
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-        }
-    }
-}
+//        }
+//
+//        desktopMain.dependencies {
+//            implementation(compose.desktop.currentOs)
+//            implementation(libs.kotlinx.coroutines.swing)
+//        }
+//    }
+//}
 
 android {
     namespace = "com.sorrowblue.comicviewer.app"
@@ -57,34 +58,34 @@ android {
         generateLocaleConfig = true
     }
 
-    buildTypes {
-        val release by getting {
-            applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
-            isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
-            isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
-            signingConfig = signingConfigs.findByName(name)
-        }
-        prerelease {
-            initWith(release)
-            applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
-            isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
-            isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
-            signingConfig = signingConfigs.findByName(name)
-        }
-        internal {
-            initWith(release)
-            applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
-            isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
-            isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
-            signingConfig = signingConfigs.findByName(name)
-        }
-        debug {
-            applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix
-            isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
-            isShrinkResources = ComicBuildType.DEBUG.isShrinkResources
-            signingConfig = signingConfigs.findByName(name)
-        }
-    }
+//    buildTypes {
+//        val release by getting {
+//            applicationIdSuffix = ComicBuildType.RELEASE.applicationIdSuffix
+//            isMinifyEnabled = ComicBuildType.RELEASE.isMinifyEnabled
+//            isShrinkResources = ComicBuildType.RELEASE.isShrinkResources
+//            signingConfig = signingConfigs.findByName(name)
+//        }
+//        prerelease {
+//            initWith(release)
+//            applicationIdSuffix = ComicBuildType.PRERELEASE.applicationIdSuffix
+//            isMinifyEnabled = ComicBuildType.PRERELEASE.isMinifyEnabled
+//            isShrinkResources = ComicBuildType.PRERELEASE.isShrinkResources
+//            signingConfig = signingConfigs.findByName(name)
+//        }
+//        internal {
+//            initWith(release)
+//            applicationIdSuffix = ComicBuildType.INTERNAL.applicationIdSuffix
+//            isMinifyEnabled = ComicBuildType.INTERNAL.isMinifyEnabled
+//            isShrinkResources = ComicBuildType.INTERNAL.isShrinkResources
+//            signingConfig = signingConfigs.findByName(name)
+//        }
+//        debug {
+//            applicationIdSuffix = ComicBuildType.DEBUG.applicationIdSuffix
+//            isMinifyEnabled = ComicBuildType.DEBUG.isMinifyEnabled
+//            isShrinkResources = ComicBuildType.DEBUG.isShrinkResources
+//            signingConfig = signingConfigs.findByName(name)
+//        }
+//    }
 
     buildFeatures.buildConfig = true
 
@@ -103,19 +104,19 @@ android {
     }
 }
 
-val gitTagProvider = providers.of(GitTagValueSource::class) {}
-
-compose.desktop {
-    application {
-        mainClass = "com.sorrowblue.comicviewer.app.MainKt"
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.sorrowblue.comicviewer.app"
-            packageVersion = extractPackageVersion(gitTagProvider.orElse("1.0.0").get())
-        }
-        jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
-    }
-}
+//val gitTagProvider = providers.of(GitTagValueSource::class) {}
+//
+//compose.desktop {
+//    application {
+//        mainClass = "com.sorrowblue.comicviewer.app.MainKt"
+//        nativeDistributions {
+//            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+//            packageName = "com.sorrowblue.comicviewer.app"
+//            packageVersion = extractPackageVersion(gitTagProvider.orElse("1.0.0").get())
+//        }
+//        jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
+//    }
+//}
 
 /**
  * Extract package version from git tag.
@@ -156,19 +157,19 @@ fun extractPackageVersion(versionName: String): String {
     }
 }
 
-androidComponents {
-    onVariants(selector().all()) { variant ->
-        variant.outputs.forEach { output: VariantOutput ->
-            val vn = gitTagProvider.orElse("0.0.0").get()
-            val versionCode = calculateVersionCode(vn)
-            
-            output.versionName.set(vn)
-            output.versionCode.set(versionCode)
-            
-            logger.lifecycle("${variant.name} versionName=$vn, versionCode=$versionCode")
-        }
-    }
-}
+//androidComponents {
+//    onVariants(selector().all()) { variant ->
+//        variant.outputs.forEach { output: VariantOutput ->
+//            val vn = gitTagProvider.orElse("0.0.0").get()
+//            val versionCode = calculateVersionCode(vn)
+//
+//            output.versionName.set(vn)
+//            output.versionCode.set(versionCode)
+//
+//            logger.lifecycle("${variant.name} versionName=$vn, versionCode=$versionCode")
+//        }
+//    }
+//}
 
 /**
  * Calculate versionCode from versionName.

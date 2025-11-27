@@ -1,9 +1,12 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.di)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.storage"
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -13,12 +16,8 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation(libs.androidx.startup.runtime)
+                implementation(libs.androidx.startupRuntime)
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.data.storage"
 }

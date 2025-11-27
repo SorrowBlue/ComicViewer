@@ -13,14 +13,14 @@ import org.gradle.plugin.use.PluginDependency
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 
-internal val Project.libs: LibrariesForLibs
+val Project.libs: LibrariesForLibs
     get() = the<LibrariesForLibs>()
 
 internal fun Project.plugins(block: PluginManager.() -> Unit) = with(pluginManager, block)
 
 internal fun PluginManager.id(provider: Provider<PluginDependency>) = apply(provider.get().pluginId)
 
-internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.android(
+internal inline fun <reified T : CommonExtension> Project.android(
     crossinline block: T.() -> Unit,
 ) = configure<T> { block(this) }
 

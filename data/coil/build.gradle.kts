@@ -1,26 +1,25 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.di)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.coil"
+    }
     sourceSets {
         commonMain {
             dependencies {
                 implementation(projects.domain.service)
                 implementation(libs.coil3)
-                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.serializationJson)
             }
         }
         androidMain {
             dependencies {
-                implementation(libs.androidx.startup.runtime)
+                implementation(libs.androidx.startupRuntime)
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.data.coil"
 }

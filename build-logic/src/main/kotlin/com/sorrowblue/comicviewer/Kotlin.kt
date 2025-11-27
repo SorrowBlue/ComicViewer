@@ -10,17 +10,20 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /** Configure base Kotlin options */
-internal inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configure<T> {
+inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configure<T> {
     jvmToolchain {
         vendor.set(JvmVendorSpec.ADOPTIUM)
         languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
     }
-    val warningsAsErrors: String? by project
-    when (this) {
-        is KotlinAndroidProjectExtension -> compilerOptions
-        is KotlinMultiplatformExtension -> compilerOptions
-        else -> throw UnsupportedOperationException(
-            "Unsupported project extension $this ${T::class}",
-        )
-    }.allWarningsAsErrors.set(warningsAsErrors.toBoolean())
+    require(this is KotlinAndroidProjectExtension || this is KotlinMultiplatformExtension) {
+        "Unsupported project extension $this ${T::class}"
+    }
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xcontext-parameters")
+        freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
+
+        val warningsAsErrors: String? by project
+        allWarningsAsErrors.set(warningsAsErrors.toBoolean())
+    }
 }
