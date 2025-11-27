@@ -33,12 +33,14 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             signingConfig = signingConfigs.findByName(name)
+            matchingFallbacks += listOf("release")
         }
         create("internal") {
             initWith(release)
             isMinifyEnabled = true
             isShrinkResources = true
             signingConfig = signingConfigs.findByName(name)
+            matchingFallbacks += listOf("release")
         }
     }
 
