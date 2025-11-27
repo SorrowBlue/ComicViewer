@@ -1,8 +1,10 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.feature)
+    alias(libs.plugins.comicviewer.multiplatformFeature)
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.collection.add"
-    resourcePrefix("collection_add")
+kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.collection.add"
+        // resourcePrefix("collection_add")
+    }
 }

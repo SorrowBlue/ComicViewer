@@ -55,7 +55,26 @@ tasks.withType<Detekt>().configureEach {
 
 gradlePlugin {
     plugins {
-        register(libs.plugins.comicviewer.android.lint) {
+        register(libs.plugins.comicviewer.androidApplication) {
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.androidLibrary) {
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.di) {
+            implementationClass = "DiConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.multiplatformCompose) {
+            implementationClass = "MultiplatformComposeConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.multiplatformFeature) {
+            implementationClass = "MultiplatformFeatureConventionPlugin"
+        }
+        register(libs.plugins.comicviewer.multiplatformLibrary) {
+            implementationClass = "MultiplatformLibraryConventionPlugin"
+        }
+
+        register(libs.plugins.comicviewer.androidLint) {
             implementationClass = "AndroidLintConventionPlugin"
         }
         register(libs.plugins.comicviewer.detekt) {
@@ -63,24 +82,6 @@ gradlePlugin {
         }
         register(libs.plugins.comicviewer.dokka) {
             implementationClass = "DokkaConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.application) {
-            implementationClass = "KotlinMultiplatformApplicationConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.library) {
-            implementationClass = "KotlinMultiplatformLibraryConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.compose) {
-            implementationClass = "KotlinMultiplatformComposeConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.di) {
-            implementationClass = "KotlinMultiplatformDiConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.dynamicfeature) {
-            implementationClass = "KotlinMultiplatformAndroidDynamicFeatureConventionPlugin"
-        }
-        register(libs.plugins.comicviewer.kotlinMultiplatform.feature) {
-            implementationClass = "KotlinMultiplatformFeatureConventionPlugin"
         }
     }
 }

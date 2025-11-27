@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        task: [ 'detektReleaseAndroid', 'detektMainDesktop', ':build-logic:detektMain' ]
+        task: [ 'detektMainAndroid', 'detektMainDesktop', ':build-logic:detektMain' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v6

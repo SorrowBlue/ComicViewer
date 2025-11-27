@@ -1,34 +1,36 @@
 import dev.detekt.gradle.report.ReportMergeTask
-import dev.iurysouza.modulegraph.ModuleType.Custom
-import dev.iurysouza.modulegraph.Theme
+
+//import dev.iurysouza.modulegraph.ModuleType.Custom
+//import dev.iurysouza.modulegraph.Theme
 
 plugins {
-    alias(libs.plugins.detekt)
-    alias(libs.plugins.licensee) apply false
-    alias(libs.plugins.dokka)
-    alias(libs.plugins.modulegraph)
-    alias(libs.plugins.versionCatalogLinter)
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.dynamicFeature) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.google.ksp) apply false
-    alias(libs.plugins.kotlin.multiplatform) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.kotlin.parcelize) apply false
-    alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.compose) apply false
-    alias(libs.plugins.aboutlibraries) apply false
-    alias(libs.plugins.metro) apply false
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.androidMultiplatform) apply false
+    alias(libs.plugins.androidxRoom) apply false
+    alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.composeHotReload) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlinSerialization) apply false
+    alias(libs.plugins.aboutlibraries) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.licensee) apply false
+    alias(libs.plugins.metro) apply false
+    alias(libs.plugins.versionCatalogLinter)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.detekt)
+//    alias(libs.plugins.modulegraph)
 }
 
 dependencies {
+    dokka(projects.app.android)
+    dokka(projects.app.desktop)
     dokka(projects.data.coil)
     dokka(projects.data.database)
     dokka(projects.data.datastore)
     dokka(projects.aggregation)
+    dokka(projects.data.reader.document.android)
     dokka(projects.data.reader.document)
     dokka(projects.data.reader.zip)
     dokka(projects.data.storage.client)
@@ -73,42 +75,42 @@ subprojects {
     }
 }
 
-afterEvaluate {
-    val task = tasks.named("createModuleGraph")
-    task.configure {
-        doNotTrackState("Failed to create MD5 hash for file content.")
-    }
-}
-moduleGraphConfig {
-    readmePath.set(layout.projectDirectory.file("README2.md").asFile.path)
-    rootModulesRegex.set("^(:composeApp).*")
-    nestingEnabled.set(true)
-    setStyleByModuleType.set(true)
-    excludedModulesRegex.set(".*(framework|aggregate|di|data|domain|folder|settings:|file).*")
-    theme.set(
-        Theme.BASE(
-            moduleTypes = listOf(
-                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
-                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
-                Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
-            )
-        )
-    )
-    graph(layout.projectDirectory.file("README2.md").asFile.path, "## Data") {
-        rootModulesRegex = "^:data(?!:di\$).+"
-        nestingEnabled = true
-        setStyleByModuleType = true
-        strictMode = true
-        excludedModulesRegex = ".*(framework|feature|aggregate|composeApp|di).*"
-        theme = Theme.BASE(
-            moduleTypes = listOf(
-                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
-                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
-                Custom(id = "comicviewer.kotlinMultiplatform.library", color = "#00C853"),
-            )
-        )
-    }
-}
+//afterEvaluate {
+//    val task = tasks.named("createModuleGraph")
+//    task.configure {
+//        doNotTrackState("Failed to create MD5 hash for file content.")
+//    }
+//}
+//moduleGraphConfig {
+//    readmePath.set(layout.projectDirectory.file("README2.md").asFile.path)
+//    rootModulesRegex.set("^(:composeApp).*")
+//    nestingEnabled.set(true)
+//    setStyleByModuleType.set(true)
+//    excludedModulesRegex.set(".*(framework|aggregate|di|data|domain|folder|settings:|file).*")
+//    theme.set(
+//        Theme.BASE(
+//            moduleTypes = listOf(
+//                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+//                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+//                Custom(id = "comicviewer.multiplatformLibrary", color = "#00C853"),
+//            )
+//        )
+//    )
+//    graph(layout.projectDirectory.file("README2.md").asFile.path, "## Data") {
+//        rootModulesRegex = "^:data(?!:di\$).+"
+//        nestingEnabled = true
+//        setStyleByModuleType = true
+//        strictMode = true
+//        excludedModulesRegex = ".*(framework|feature|aggregate|composeApp|di|app).*"
+//        theme = Theme.BASE(
+//            moduleTypes = listOf(
+//                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
+//                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
+//                Custom(id = "comicviewer.multiplatformLibrary", color = "#00C853"),
+//            )
+//        )
+//    }
+//}
 
 tasks.updateDaemonJvm {
     languageVersion = JavaLanguageVersion.of(libs.versions.java.get())

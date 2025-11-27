@@ -1,9 +1,12 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.di)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.domain.service"
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -11,13 +14,9 @@ kotlin {
                 implementation(projects.domain.usecase)
 
                 api(libs.squareup.okio)
-                implementation(libs.androidx.paging.common)
+                implementation(libs.androidx.pagingCommon)
                 implementation(libs.kotlinx.datetime)
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.domain.service"
 }

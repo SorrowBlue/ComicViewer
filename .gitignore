@@ -138,3 +138,4 @@ aboutlibraries.json
 !/composeApp/src/iosMain/composeResources/files/aboutlibraries.json
 !/composeApp/src/androidMain/composeResources/files/aboutlibraries.json
 !/composeApp/src/desktopMain/composeResources/files/aboutlibraries.json
+/iosApp/iosApp.xcodeproj/xcuserdata/

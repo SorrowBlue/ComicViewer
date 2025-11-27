@@ -28,6 +28,6 @@ interface ComicViewerUIContext {
 
 @Composable
 context(context: PlatformContext)
-fun rememberComicViewerUIContext() = rememberRetained {
+fun rememberComicViewerUIContext(): ComicViewerUIContext = rememberRetained {
     context.require<ComicViewerUIContext.Factory>().createComicViewerUIContext()
 }

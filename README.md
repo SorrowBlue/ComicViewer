@@ -33,19 +33,16 @@ graph LR
     KotlinMultiplatformApplicationConventionPlugin --> AndroidLintConventionPlugin
     KotlinMultiplatformApplicationConventionPlugin --> DetektConventionPlugin
 
-    KotlinMultiplatformAndroidDynamicFeatureConventionPlugin --> AndroidLintConventionPlugin
-    KotlinMultiplatformAndroidDynamicFeatureConventionPlugin --> DetektConventionPlugin
+    MultiplatformLibraryConventionPlugin --> AndroidLintConventionPlugin
+    MultiplatformLibraryConventionPlugin --> DetektConventionPlugin
 
-    KotlinMultiplatformLibraryConventionPlugin --> AndroidLintConventionPlugin
-    KotlinMultiplatformLibraryConventionPlugin --> DetektConventionPlugin
+    MultiplatformComposeConventionPlugin --> DetektConventionPlugin
 
-    KotlinMultiplatformComposeConventionPlugin --> DetektConventionPlugin
+    DiConventionPlugin
 
-    KotlinMultiplatformDiConventionPlugin
-
-    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformLibraryConventionPlugin
-    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformComposeConventionPlugin
-    KotlinMultiplatformFeatureConventionPlugin --> KotlinMultiplatformDiConventionPlugin
+    KotlinMultiplatformFeatureConventionPlugin --> MultiplatformLibraryConventionPlugin
+    KotlinMultiplatformFeatureConventionPlugin --> MultiplatformComposeConventionPlugin
+    KotlinMultiplatformFeatureConventionPlugin --> DiConventionPlugin
 ```
 
 ## Module configuration

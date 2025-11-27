@@ -1,9 +1,12 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.di)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.data.reader.document"
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -12,9 +15,10 @@ kotlin {
         }
         androidMain {
             dependencies {
+                implementation(projects.data.reader.document.android)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.androidx.core.ktx)
-                implementation(libs.androidx.startup.runtime)
+                implementation(libs.androidx.startupRuntime)
             }
         }
         desktopMain {
@@ -22,12 +26,5 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
             }
         }
-    }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.data.reader.document"
-    buildFeatures {
-        aidl = true
     }
 }

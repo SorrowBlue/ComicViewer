@@ -1,10 +1,14 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.compose)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.multiplatformCompose)
+    alias(libs.plugins.comicviewer.di)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.framework.ui"
+        androidResources.enable = true
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -12,19 +16,18 @@ kotlin {
                 implementation(projects.domain.model)
 
                 // Navigation + Serialization
-                implementation(libs.kotlinx.serialization.cbor)
+                implementation(libs.kotlinx.serializationCbor)
                 // Image
                 implementation(libs.coil3.compose)
                 // Paging
-                implementation(libs.androidx.paging.common)
-                implementation(libs.androidx.paging.compose)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
                 implementation(libs.composables.core)
                 implementation(libs.androidx.collection)
             }
         }
         androidMain {
             dependencies {
-                implementation(libs.androidx.activity.compose)
                 implementation(libs.drick.compose.edgeToEdgePreview)
             }
         }
@@ -35,8 +38,4 @@ compose {
     resources {
         publicResClass = true
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.framework.ui"
 }

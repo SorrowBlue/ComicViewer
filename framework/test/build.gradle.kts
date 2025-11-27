@@ -1,8 +1,11 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.framework.test"
+    }
     sourceSets {
         androidMain{
             dependencies {
@@ -10,8 +13,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.framework.test"
 }

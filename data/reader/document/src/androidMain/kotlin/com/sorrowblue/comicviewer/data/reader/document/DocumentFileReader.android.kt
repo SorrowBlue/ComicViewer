@@ -3,29 +3,15 @@ package com.sorrowblue.comicviewer.data.reader.document
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.os.IBinder
-import androidx.core.net.toUri
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.PluginManager
 import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.IoDispatcher
-import com.sorrowblue.comicviewer.plugin.aidl.FileReader as PluginFileReader
-import com.sorrowblue.comicviewer.plugin.pdf.aidl.IRemotePdfService
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
-import logcat.LogPriority
-import logcat.asLog
-import logcat.logcat
 import okio.BufferedSink
 
 internal const val PdfPluginPackage = "com.sorrowblue.comicviewer.plugin.pdf"
@@ -38,8 +24,8 @@ internal actual class DocumentFileReader(
     private val context: Context,
     private val pluginManager: PluginManager,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : FileReader,
-    ServiceConnection {
+) : AndroidDocumentFileReader(mimeType, seekableInputStream, context, pluginManager, dispatcher),
+    FileReader {
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(
@@ -48,11 +34,6 @@ internal actual class DocumentFileReader(
         ): DocumentFileReader
     }
 
-    private val mutex = Mutex(true)
-    private var pdfService: IRemotePdfService? = null
-    private var reader: PluginFileReader? = null
-    private val job = CoroutineScope(dispatcher)
-
     init {
         val intent = Intent().apply {
             component = ComponentName(PdfPluginPackage, PdfPluginService)
@@ -60,64 +41,17 @@ internal actual class DocumentFileReader(
         context.bindService(intent, this@DocumentFileReader, Context.BIND_AUTO_CREATE)
     }
 
-    actual override suspend fun pageCount(): Int = mutex.withLock {
-        withContext(dispatcher) {
-            requireNotNull(reader).pageCount()
-        }
-    }
+    actual override suspend fun pageCount(): Int = pageCount2()
 
     actual override suspend fun fileName(pageIndex: Int): String = ""
 
     actual override suspend fun fileSize(pageIndex: Int): Long = 0
 
     actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
-        mutex.withLock {
-            withContext(dispatcher) {
-                requireNotNull(reader).loadPage(pageIndex, bufferedSink)
-            }
-        }
+        copyTo2(pageIndex, bufferedSink)
     }
 
     actual override fun close() {
-        runBlocking {
-            withContext(dispatcher) {
-                seekableInputStream.close()
-                context.unbindService(this@DocumentFileReader)
-            }
-        }
-    }
-
-    override fun onServiceConnected(name: ComponentName, service: IBinder) {
-        try {
-            val pdfService = IRemotePdfService.Stub.asInterface(service).also {
-                this.pdfService = it
-            }
-            logcat { "pdfService!!.version=${pdfService.version}" }
-            job.launch {
-                reader = pdfService.getFIleReader(
-                    SeekableInputStreamImpl(seekableInputStream),
-                    mimeType,
-                )
-                mutex.unlock()
-            }
-        } catch (e: SecurityException) {
-            logcat(LogPriority.ERROR, "DocumentFileReader") { e.asLog() }
-            pluginManager.onError("PDFプラグインの読み込みに失敗しました。\nPDFプラグインを最新Verに更新してください。")
-        }
-    }
-
-    override fun onServiceDisconnected(name: ComponentName?) {
-        pdfService = null
-    }
-
-    private fun PluginFileReader.loadPage(pageIndex: Int, bufferedSink: BufferedSink) {
-        loadPage(pageIndex)
-            .toUri()
-            .let(context.contentResolver::openInputStream)
-            ?.use { inputStream ->
-                bufferedSink.outputStream().use {
-                    inputStream.copyTo(it)
-                }
-            }
+        close2()
     }
 }

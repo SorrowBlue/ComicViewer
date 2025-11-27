@@ -1,34 +1,34 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.library)
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.di)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
+    alias(libs.plugins.comicviewer.di)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.domain.usecase"
+        this.compilations
+//        sourceSets {
+//            debug {
+//                manifest.srcFile("src/androidDebug/AndroidManifest.xml")
+//            }
+//        }
+    }
     sourceSets {
         commonMain {
             dependencies {
                 api(projects.domain.model)
 
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.androidx.paging.common)
+                implementation(libs.androidx.pagingCommon)
             }
         }
     }
 }
 
-android {
-    namespace = "com.sorrowblue.comicviewer.domain.usecase"
-    sourceSets {
-        debug {
-            manifest.srcFile("src/androidDebug/AndroidManifest.xml")
-        }
-    }
-}
-
 dependencies {
-    debugImplementation(libs.kotlinx.serialization.json)
-    debugImplementation(libs.androidx.appcompat)
+    androidRuntimeClasspath(libs.kotlinx.serializationJson)
+    androidRuntimeClasspath(libs.androidx.appcompat)
     // Suppressing highlights in @Serializable
-    debugImplementation(libs.androidx.annotation.experimental)
+    androidRuntimeClasspath(libs.androidx.annotation.experimental)
 }

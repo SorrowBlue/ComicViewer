@@ -1,8 +1,12 @@
 plugins {
-    alias(libs.plugins.comicviewer.kotlinMultiplatform.feature)
+    alias(libs.plugins.comicviewer.multiplatformFeature)
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "com.sorrowblue.comicviewer.feature.search"
+        // resourcePrefix("search")
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -12,9 +16,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.sorrowblue.comicviewer.feature.search"
-    resourcePrefix("search")
 }
