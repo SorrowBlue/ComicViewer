@@ -126,7 +126,7 @@ interface ServiceProviders {
     private val ScanBookshelfInteractor.bind: ScanBookshelfUseCase get() = this
 
     @Binds
-    private fun UpdateDeletionFlagInteractor.bind(): UpdateDeletionFlagUseCase = this
+    private val UpdateDeletionFlagInteractor.bind: UpdateDeletionFlagUseCase get() = this
 
     // Collection
     @Binds
@@ -182,8 +182,7 @@ interface ServiceProviders {
     private val PagingFileInteractor.bind: PagingFileUseCase get() = this
 
     @Binds
-    private val PagingFolderBookThumbnailsInteractor.bind: PagingFolderBookThumbnailsUseCase
-        get() = this
+    private val PagingFolderBookThumbnailsInteractor.bind: PagingFolderBookThumbnailsUseCase get() = this
 
     @Binds
     private val PagingHistoryBookInteractor.bind: PagingHistoryBookUseCase get() = this

@@ -11,7 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_action_show_hidden
@@ -43,9 +43,11 @@ fun HiddenFilesToggleableItemState.hiddenFilesToggleableItem() {
 
 @Composable
 fun rememberHiddenFilesToggleableItemState(): HiddenFilesToggleableItemState {
-    val factory =
-        LocalPlatformContext.current.platformGraph as HiddenFilesToggleableItemGraph.Factory
-    val graph = rememberRetained { factory.createHiddenFilesToggleableItemGraph() }
+    val context = LocalPlatformContext.current
+    val graph = rememberRetained {
+        context.require<HiddenFilesToggleableItemGraph.Factory>()
+            .createHiddenFilesToggleableItemGraph()
+    }
     val coroutineScope = rememberCoroutineScope()
     return remember {
         HiddenFilesToggleableItemStateImpl(

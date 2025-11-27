@@ -14,5 +14,5 @@ interface ReaderZipProviders {
     @Binds
     @IntoMap
     @FileReaderKey(FileReaderType.Zip)
-    private fun ZipFileReader.Factory.bind(): FileReaderFactory = this
+    private val ZipFileReader.Factory.bind: FileReaderFactory get() = this
 }

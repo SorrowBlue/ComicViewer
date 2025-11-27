@@ -71,6 +71,9 @@ dependencies {
     implementation(libs.androidx.navigation3UI)
     implementation(libs.compose.ui)
 
+    debugImplementation(projects.domain.usecase)
+    debugImplementation(projects.feature.bookshelf.edit)
+    debugImplementation(libs.kotlinx.serializationJson)
 }
 
 val gitTagProvider = providers.of(GitTagValueSource::class) {}

@@ -13,7 +13,7 @@ kotlin {
                 api(projects.domain.model)
                 implementation(projects.domain.usecase)
 
-                api(libs.squareup.okio)
+                api(libs.okio)
                 implementation(libs.androidx.pagingCommon)
                 implementation(libs.kotlinx.datetime)
             }

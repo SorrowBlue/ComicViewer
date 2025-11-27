@@ -14,5 +14,5 @@ interface StorageSmbProviders {
     @Binds
     @IntoMap
     @FileClientKey(FileClientType.Smb)
-    private fun SmbFileClient.Factory.bind(): FileClient.Factory<*> = this
+    private val SmbFileClient.Factory.bind: FileClient.Factory<*> get() = this
 }

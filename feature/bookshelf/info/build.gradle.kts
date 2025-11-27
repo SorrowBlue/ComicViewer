@@ -18,7 +18,7 @@ kotlin {
             dependencies {
                 implementation(projects.framework.notification)
 
-                implementation(libs.androidx.work.runtime)
+                implementation(libs.androidx.workRuntime)
             }
         }
     }

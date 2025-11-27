@@ -15,10 +15,10 @@ interface StorageDeviceProviders {
     @Binds
     @IntoMap
     @FileClientKey(FileClientType.Device)
-    private fun DeviceFileClient.Factory.bind(): FileClient.Factory<*> = this
+    private val DeviceFileClient.Factory.bind: FileClient.Factory<*> get() = this
 
     @Binds
     @IntoMap
     @FileClientKey(FileClientType.Share)
-    private fun ShareFileClient.Factory.bind(): FileClient.Factory<*> = this
+    private val ShareFileClient.Factory.bind: FileClient.Factory<*> get() = this
 }

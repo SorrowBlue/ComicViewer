@@ -11,9 +11,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.data.storage.client)
-                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutinesCore)
                 implementation(libs.filekit.compose)
-                implementation(libs.squareup.okio)
+                implementation(libs.okio)
                 implementation(libs.androidx.coreUri)
             }
         }

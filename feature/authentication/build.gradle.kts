@@ -12,7 +12,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.androidx.biometric)
-                implementation(libs.androidx.compose.animation.graphics)
+                implementation(libs.compose.animationGraphics)
             }
         }
     }

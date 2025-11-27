@@ -38,7 +38,7 @@ class MultiplatformLibraryConventionPlugin : Plugin<Project> {
                 compilerOptions {
                     if (project.path.startsWith(":data")) {
                         freeCompilerArgs.add(
-                            "-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi"
+                            "-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi",
                         )
                     }
                 }
@@ -47,6 +47,7 @@ class MultiplatformLibraryConventionPlugin : Plugin<Project> {
                         if (project.path != ":framework:common") {
                             implementation(project(":framework:common"))
                         }
+                        implementation(libs.kotlinx.coroutinesCore)
                     }
                 }
             }

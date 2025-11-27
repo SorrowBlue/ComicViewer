@@ -7,12 +7,6 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.domain.usecase"
-        this.compilations
-//        sourceSets {
-//            debug {
-//                manifest.srcFile("src/androidDebug/AndroidManifest.xml")
-//            }
-//        }
     }
     sourceSets {
         commonMain {
@@ -24,11 +18,4 @@ kotlin {
             }
         }
     }
-}
-
-dependencies {
-    androidRuntimeClasspath(libs.kotlinx.serializationJson)
-    androidRuntimeClasspath(libs.androidx.appcompat)
-    // Suppressing highlights in @Serializable
-    androidRuntimeClasspath(libs.androidx.annotation.experimental)
 }

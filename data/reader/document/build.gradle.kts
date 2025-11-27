@@ -16,14 +16,14 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(projects.data.reader.document.android)
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.androidx.core.ktx)
+                implementation(libs.kotlinx.coroutinesCore)
+                implementation(libs.androidx.coreKtx)
                 implementation(libs.androidx.startupRuntime)
             }
         }
         desktopMain {
             dependencies {
-                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutinesCore)
             }
         }
     }

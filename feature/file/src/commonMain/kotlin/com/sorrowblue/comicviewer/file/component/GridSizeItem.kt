@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_action_change_grid_size
@@ -43,7 +43,7 @@ fun GridSizeItemState.gridSizeItem() {
 
 @Composable
 fun rememberGridSizeItemState(): GridSizeItemState {
-    val factory = LocalPlatformContext.current.platformGraph as GridSizeItemGraph.Factory
+    val factory = LocalPlatformContext.current.require<GridSizeItemGraph.Factory>()
     val graph = rememberRetained { factory.createGridSizeItemGraph() }
     val coroutineScope = rememberCoroutineScope()
     return remember {

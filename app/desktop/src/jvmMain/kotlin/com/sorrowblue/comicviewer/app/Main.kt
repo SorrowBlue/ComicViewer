@@ -20,7 +20,7 @@ import java.awt.Dimension
 import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
-    val context = DesktopContext.init()
+    val context = DesktopContext.invoke()
     val appGraph =
         createGraphFactory<DesktopAppGraph.Factory>().createDesktopAppGraph(
             context,

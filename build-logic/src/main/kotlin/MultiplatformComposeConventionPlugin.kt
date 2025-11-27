@@ -25,10 +25,11 @@ class MultiplatformComposeConventionPlugin : Plugin<Project> {
             configure<KotlinMultiplatformExtension> {
                 sourceSets {
                     commonMain.dependencies {
-                        implementation(libs.compose.components.resources)
+                        implementation(libs.compose.componentsResources)
                         implementation(libs.compose.preview)
                         implementation(libs.compose.uiBackhandler)
                         implementation(libs.kotlinx.collectionsImmutable)
+                        implementation(libs.androidx.lifecycleCommon)
                         implementation(libs.rin)
 
                         // Adaptive

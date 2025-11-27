@@ -10,11 +10,11 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 
 @ContributesTo(DataScope::class)
-interface DataStorageClientModule {
+interface DataStorageClientProviders {
     @Provides
     @ImageExtension
     fun bindSupportedImage(): Set<String> = SUPPORTED_IMAGE
 
     @Binds
-    private fun RemoteDataSourceImpl.Factory.bind(): RemoteDataSource.Factory = this
+    private val RemoteDataSourceImpl.Factory.bind: RemoteDataSource.Factory get() = this
 }

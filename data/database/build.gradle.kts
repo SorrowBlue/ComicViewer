@@ -34,9 +34,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.domain.service)
-                implementation(libs.androidx.room.runtime)
-                implementation(libs.androidx.room.paging)
-                implementation(libs.androidx.sqlite.bundled)
+                implementation(libs.androidx.roomRuntime)
+                implementation(libs.androidx.roomPaging)
+                implementation(libs.androidx.sqliteBundled)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serializationJson)
             }
@@ -47,47 +47,47 @@ kotlin {
                 implementation(projects.framework.test)
                 implementation(libs.kotlin.test)
                 implementation(libs.androidx.pagingTesting)
-                implementation(libs.androidx.room.testing)
-                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.androidx.roomTesting)
+                implementation(libs.kotlinx.coroutinesTest)
             }
         }
 
         getByName("androidHostTest") {
             dependencies {
-                implementation(libs.androidx.test.coreKtx)
-                implementation(libs.androidx.test.runner)
-                implementation(libs.androidx.test.rules)
-                implementation(libs.androidx.test.ext.junitKtx)
+                implementation(libs.androidx.testCoreKtx)
+                implementation(libs.androidx.testRunner)
+                implementation(libs.androidx.testRules)
+                implementation(libs.androidx.testExtJunitKtx)
                 implementation(libs.robolectric)
             }
         }
 
         getByName("androidDeviceTest") {
             dependencies {
-                implementation(libs.androidx.test.coreKtx)
-                implementation(libs.androidx.test.runner)
-                implementation(libs.androidx.test.rules)
-                implementation(libs.androidx.test.ext.junitKtx)
-                implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.androidx.room.testing)
-                implementation(libs.androidx.sqlite.bundled)
+                implementation(libs.androidx.testCoreKtx)
+                implementation(libs.androidx.testRunner)
+                implementation(libs.androidx.testRules)
+                implementation(libs.androidx.testExtJunitKtx)
+                implementation(libs.kotlinx.coroutinesTest)
+                implementation(libs.androidx.roomTesting)
+                implementation(libs.androidx.sqliteBundled)
             }
         }
     }
 }
 
 dependencies {
-    kspAndroid(libs.androidx.room.compiler)
-    add("kspAndroidHostTest", libs.androidx.room.compiler)
-    add("kspAndroidDeviceTest", libs.androidx.room.compiler)
-    kspDesktop(libs.androidx.room.compiler)
-    kspDesktopTest(libs.androidx.room.compiler)
-    kspIosArm64(libs.androidx.room.compiler)
-    kspIosArm64Test(libs.androidx.room.compiler)
-    kspIosSimulatorArm64(libs.androidx.room.compiler)
-    kspIosSimulatorArm64Test(libs.androidx.room.compiler)
-    kspIosX64(libs.androidx.room.compiler)
-    kspIosX64Test(libs.androidx.room.compiler)
+    kspAndroid(libs.androidx.roomCompiler)
+    add("kspAndroidHostTest", libs.androidx.roomCompiler)
+    add("kspAndroidDeviceTest", libs.androidx.roomCompiler)
+    kspDesktop(libs.androidx.roomCompiler)
+    kspDesktopTest(libs.androidx.roomCompiler)
+    kspIosArm64(libs.androidx.roomCompiler)
+    kspIosArm64Test(libs.androidx.roomCompiler)
+    kspIosSimulatorArm64(libs.androidx.roomCompiler)
+    kspIosSimulatorArm64Test(libs.androidx.roomCompiler)
+    kspIosX64(libs.androidx.roomCompiler)
+    kspIosX64Test(libs.androidx.roomCompiler)
 }
 
 room {

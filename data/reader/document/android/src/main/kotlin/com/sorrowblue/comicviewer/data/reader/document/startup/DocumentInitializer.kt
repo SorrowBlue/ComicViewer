@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.data.reader.document.ReaderDocumentContext
 import com.sorrowblue.comicviewer.domain.model.SupportExtension.Document
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.framework.common.require
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
@@ -24,7 +24,7 @@ internal class DocumentInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         runBlocking {
             runCatching {
-                with(context.platformGraph as ReaderDocumentContext) {
+                with(context.require<ReaderDocumentContext.Factory>().createReaderDocumentContext()) {
                     updatePdfPluginSupport(context)
                 }
             }.onFailure {

@@ -11,5 +11,5 @@ import dev.zacsweers.metro.IntoSet
 interface DesktopReaderZipProviders {
     @Binds
     @IntoSet
-    private fun SevenZipInitializer.bind(): Initializer<*> = this
+    private val SevenZipInitializer.bind: Initializer<*> get() = this
 }
