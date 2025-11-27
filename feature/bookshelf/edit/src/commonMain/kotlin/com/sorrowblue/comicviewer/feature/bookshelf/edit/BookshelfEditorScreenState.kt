@@ -32,7 +32,6 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_err
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_path
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_port
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_msg_cancelled_folder_selection
-import dev.zacsweers.metro.Scope
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

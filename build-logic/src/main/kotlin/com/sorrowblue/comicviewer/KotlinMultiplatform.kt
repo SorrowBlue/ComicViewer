@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
  */
 fun Project.configureKotlinMultiplatformSourceSets() {
     configure<KotlinMultiplatformExtension> {
-
         jvm("desktop")
 
         iosX64() // iPhone Simulator on 64-bit MacOS

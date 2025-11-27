@@ -56,7 +56,7 @@ val LocalNavigator = staticCompositionLocalOf<Navigator> {
 fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
     navigationItems: @Composable () -> Unit = {
         navigationKeys.forEach { key ->
-            val isSelected = key in navigator.backStack
+            val isSelected = key == navigator.topLevelKey
             NavigationSuiteItem(
                 selected = isSelected,
                 label = { Text(key.title) },

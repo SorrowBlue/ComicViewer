@@ -37,7 +37,9 @@ class MultiplatformLibraryConventionPlugin : Plugin<Project> {
                 }
                 compilerOptions {
                     if (project.path.startsWith(":data")) {
-                        freeCompilerArgs.add("-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi")
+                        freeCompilerArgs.add(
+                            "-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi"
+                        )
                     }
                 }
                 sourceSets {

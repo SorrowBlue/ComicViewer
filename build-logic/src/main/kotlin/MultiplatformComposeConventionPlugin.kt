@@ -71,13 +71,13 @@ class MultiplatformComposeConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                if(pluginManager.hasPlugin(libs.plugins.androidMultiplatform)) {
+                if (pluginManager.hasPlugin(libs.plugins.androidMultiplatform)) {
                     add("androidRuntimeClasspath", libs.compose.uiTooling)
                 }
             }
         }
     }
 }
+
 private fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean =
     hasPlugin(provider.get().pluginId)
-

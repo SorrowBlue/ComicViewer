@@ -39,7 +39,7 @@ fun Project.configureAboutLibraries() {
                     "Other" to listOf(
                         "org.jetbrains.kotlinx",
                         "net.java.dev.jna",
-                        "io.github.irgaly.navigation3.resultstate"
+                        "io.github.irgaly.navigation3.resultstate",
                     ),
                 ),
             )
