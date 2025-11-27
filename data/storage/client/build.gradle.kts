@@ -11,7 +11,7 @@ kotlin {
         commonMain {
             dependencies {
                 api(projects.domain.service)
-                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutinesCore)
             }
         }
         androidMain {

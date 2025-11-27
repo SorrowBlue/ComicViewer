@@ -14,7 +14,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.data.storage.client)
-                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutinesCore)
             }
         }
         androidMain {

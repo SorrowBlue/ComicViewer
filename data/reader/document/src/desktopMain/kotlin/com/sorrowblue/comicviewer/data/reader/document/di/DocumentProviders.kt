@@ -13,12 +13,12 @@ import dev.zacsweers.metro.SingleIn
 
 @ContributesTo(DataScope::class)
 interface DocumentProviders {
-    @Binds
-    @IntoSet
-    private val DocumentInitializer.bind: Initializer<*> get() = this
-
     @SingleIn(DataScope::class)
     @Provides
     private fun provideDocumentReaderDataSource(): DocumentReaderDataSource =
         DocumentReaderDataSourceImpl()
+
+    @Binds
+    @IntoSet
+    private val DocumentInitializer.bind: Initializer<*> get() = this
 }

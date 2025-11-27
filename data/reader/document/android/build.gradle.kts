@@ -26,7 +26,11 @@ kotlin {
 dependencies {
     implementation(projects.data.storage.client)
     implementation(projects.framework.common)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.core.ktx)
+//    implementation(libs.kotlinx.coroutinesCore)
+//    implementation(libs.kotlinx.coroutinesAndroid)
+//    implementation(libs.androidx.lifecycleCommon)
+//    implementation(libs.androidx.lifecycleCompose)
+//    implementation(libs.androidx.lifecycleViewmodelNavigation3)
+    implementation(libs.androidx.coreKtx)
     implementation(libs.androidx.startupRuntime)
 }

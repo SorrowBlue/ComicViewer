@@ -7,7 +7,8 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer.Auth
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenContext
+import com.sorrowblue.comicviewer.framework.common.require
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -23,9 +24,9 @@ import logcat.logcat
 
 internal class BookshelfInsertReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val factory = context.platformGraph as BookshelfInsertReceiverContext.Factory
+        val factory = context.require<BookshelfEditScreenContext.Factory>()
         val registerBookshelfUseCase =
-            factory.createBookshelfInsertReceiverContext().registerBookshelfUseCase
+            factory.createBookshelfEditScreenContext().registerBookshelfUseCase
         logcat { "onReceive: ${intent.getStringExtra("json")}" }
         if (!intent.hasExtra("json")) return
         val jsonString = intent.getStringExtra("json") ?: return

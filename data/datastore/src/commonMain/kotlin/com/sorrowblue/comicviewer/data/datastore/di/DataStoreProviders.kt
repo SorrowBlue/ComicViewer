@@ -38,9 +38,7 @@ import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Binds
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Provides
-import dev.zacsweers.metro.Scope
 import dev.zacsweers.metro.SingleIn
 
 @ContributesTo(DataScope::class)
@@ -114,19 +112,5 @@ interface DataStoreProviders {
     ): DataStore<PdfPluginSettings> = dataStoreMaker.createDataStore(PdfPluginSettingsSerializer)
 
     @Binds
-    private fun DatastoreDataSourceImpl.bind(): DatastoreDataSource = this
-}
-
-@Scope
-annotation class DataStoreScope
-
-@GraphExtension(DataStoreScope::class)
-interface DataStoreGraph {
-    val datastoreDataSource: DatastoreDataSource
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    interface Factory {
-        fun createDataStoreGraph(): DataStoreGraph
-    }
+    private val DatastoreDataSourceImpl.bind: DatastoreDataSource get() = this
 }

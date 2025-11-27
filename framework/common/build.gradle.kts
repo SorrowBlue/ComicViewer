@@ -9,7 +9,7 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.androidx.compose.runtime)
+            implementation(libs.compose.runtime)
         }
         androidMain.dependencies {
             implementation(libs.androidx.startupRuntime)

@@ -35,13 +35,6 @@ kotlin {
             implementation(compose.desktop.currentOs)
 
             implementation(libs.compose.componentsAnimatedimage)
-//            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0-alpha05")
-//            implementation(libs.androidx.lifecycleViewmodelNavigation3)
-//            implementation(libs.androidx.lifecycleCommon)
-//            implementation(libs.androidx.lifecycleCompose)
-//            implementation(libs.compose.ui)
-//            implementation(libs.androidx.navigation3UI)
-//            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }

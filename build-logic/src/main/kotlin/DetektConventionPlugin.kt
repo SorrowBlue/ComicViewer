@@ -18,8 +18,8 @@ internal class DetektConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                detektPlugins(libs.nlopez.compose.rules.detekt)
-                detektPlugins(libs.arturbosch.detektFormatting)
+                detektPlugins(libs.detekt.compose)
+                detektPlugins(libs.detekt.ktlintWrapper)
             }
 
             configure<DetektExtension> {
@@ -44,7 +44,7 @@ internal class DetektConventionPlugin : Plugin<Project> {
             mapOf(
                 "detektAndroidAll" to "(?i)^(?!.*(SourceSet|metadata)).*android.*$".toRegex(),
                 "detektDesktopAll" to "(?i)^(?!.*(SourceSet|metadata)).*desktop.*$".toRegex(),
-                "detektIosAll" to "(?i)^(?!.*(SourceSet|metadata)).*ios.*$".toRegex(),
+                "detektIosAll" to "(?i)^(?!.*(metadata)).*ios.*$".toRegex(),
             ).forEach { (taskName, regex) ->
                 tasks.register(taskName) {
                     group = LifecycleBasePlugin.VERIFICATION_GROUP

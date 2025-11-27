@@ -14,5 +14,5 @@ interface ReaderDocumentProviders {
     @Binds
     @IntoMap
     @FileReaderKey(FileReaderType.Document)
-    private fun DocumentFileReader.Factory.bind(): FileReaderFactory = this
+    private val DocumentFileReader.Factory.bind: FileReaderFactory get() = this
 }

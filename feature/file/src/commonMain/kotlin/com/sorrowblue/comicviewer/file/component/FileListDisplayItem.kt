@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_list_label_switch_grid_view
@@ -61,8 +61,10 @@ fun FileListDisplayItemState.fileListDisplayItem() {
 
 @Composable
 fun rememberFileListDisplayItemState(): FileListDisplayItemState {
-    val factory = LocalPlatformContext.current.platformGraph as FileListDisplayItemGraph.Factory
-    val graph = rememberRetained { factory.createFileListDisplayItemGraph() }
+    val context = LocalPlatformContext.current
+    val graph = rememberRetained {
+        context.require<FileListDisplayItemGraph.Factory>().createFileListDisplayItemGraph()
+    }
     val coroutineScope = rememberCoroutineScope()
     return remember {
         FileListDisplayItemStateImpl(

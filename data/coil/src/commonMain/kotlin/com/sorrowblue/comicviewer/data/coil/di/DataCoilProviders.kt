@@ -36,29 +36,28 @@ interface DataCoilProviders {
         DiskCache.Builder().directory(coilDiskCache.resolve("image_cache")).build()
 
     @Provides
-    private fun provideCoilDiskCache(context: PlatformContext): CoilDiskCache = CoilDiskCache(
-        context,
-    )
+    private fun provideCoilDiskCache(context: PlatformContext): CoilDiskCache =
+        CoilDiskCache(context)
 
     @Binds
-    private fun ImageCacheDataSourceImpl.bind(): ImageCacheDataSource = this
+    private val ImageCacheDataSourceImpl.bind: ImageCacheDataSource get() = this
 
     @Binds
-    private fun ThumbnailDataSourceImpl.bind(): ThumbnailDataSource = this
+    private val ThumbnailDataSourceImpl.bind: ThumbnailDataSource get() = this
 
     @Binds
     @BookThumbnailFetcher
-    private fun BookThumbnailFetcherFactory.bind(): Fetcher.Factory<BookThumbnail> = this
+    private val BookThumbnailFetcherFactory.bind: Fetcher.Factory<BookThumbnail> get() = this
 
     @Binds
     @BookPageImageFetcher
-    private fun BookPageImageFetcherFactory.bind(): Fetcher.Factory<BookPageImage> = this
+    private val BookPageImageFetcherFactory.bind: Fetcher.Factory<BookPageImage> get() = this
 
     @Binds
     @FolderThumbnailFetcher
-    private fun FolderThumbnailFetcherFactory.bind(): Fetcher.Factory<FolderThumbnail> = this
+    private val FolderThumbnailFetcherFactory.bind: Fetcher.Factory<FolderThumbnail> get() = this
 
     @Binds
     @CollectionThumbnailFetcher
-    private fun CollectionThumbnailFetcherFactory.bind(): Fetcher.Factory<Collection> = this
+    private val CollectionThumbnailFetcherFactory.bind: Fetcher.Factory<Collection> get() = this
 }

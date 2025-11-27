@@ -24,35 +24,16 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
-import dev.zacsweers.metro.Scope
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-
-@Scope
-annotation class ScanFileWorkerScope
-
-@GraphExtension(ScanFileWorkerScope::class)
-interface ScanFileWorkerContext {
-    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
-    val scanBookshelfUseCase: ScanBookshelfUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    fun interface Factory {
-        fun createScanFileWorkerContext(): ScanFileWorkerContext
-    }
-}
 
 internal class ScanFileWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
@@ -63,8 +44,8 @@ internal class ScanFileWorker(appContext: Context, workerParams: WorkerParameter
     private val scanBookshelfUseCase: ScanBookshelfUseCase
 
     init {
-        val context = (appContext.platformGraph as ScanFileWorkerContext.Factory)
-            .createScanFileWorkerContext()
+        val context =
+            appContext.require<ScanFileWorkerContext.Factory>().createScanFileWorkerContext()
         getBookshelfInfoUseCase = context.getBookshelfInfoUseCase
         scanBookshelfUseCase = context.scanBookshelfUseCase
     }

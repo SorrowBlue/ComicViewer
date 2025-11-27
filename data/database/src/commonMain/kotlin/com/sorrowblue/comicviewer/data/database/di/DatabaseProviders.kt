@@ -79,20 +79,20 @@ interface DatabaseProviders {
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Binds
-    private fun BookshelfLocalDataSourceImpl.bind(): BookshelfLocalDataSource = this
+    private val BookshelfLocalDataSourceImpl.bind: BookshelfLocalDataSource get() = this
 
     @Binds
-    private fun CollectionFileLocalDataSourceImpl.bind(): CollectionFileLocalDataSource = this
+    private val CollectionFileLocalDataSourceImpl.bind: CollectionFileLocalDataSource get() = this
 
     @Binds
-    private fun CollectionLocalDataSourceImpl.bind(): CollectionLocalDataSource = this
+    private val CollectionLocalDataSourceImpl.bind: CollectionLocalDataSource get() = this
 
     @Binds
-    private fun FileLocalDataSourceImpl.bind(): FileLocalDataSource = this
+    private val FileLocalDataSourceImpl.bind: FileLocalDataSource get() = this
 
     @Binds
-    private fun FileRemoteDataSourceImpl.bind(): FileRemoteDataSource = this
+    private val FileRemoteDataSourceImpl.bind: FileRemoteDataSource get() = this
 
     @Binds
-    private fun ReadLaterFileLocalDataSourceImpl.bind(): ReadLaterFileLocalDataSource = this
+    private val ReadLaterFileLocalDataSourceImpl.bind: ReadLaterFileLocalDataSource get() = this
 }

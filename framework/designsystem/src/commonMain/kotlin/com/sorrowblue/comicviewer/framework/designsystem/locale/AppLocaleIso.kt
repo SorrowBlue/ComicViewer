@@ -7,10 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.intl.Locale
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.framework.common.require
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
+import dev.zacsweers.metro.Scope
+import io.github.takahirom.rin.rememberRetained
 
 expect class AppLocaleIso {
     /**
@@ -48,16 +50,26 @@ expect val Locale.displayLanguageName: String
 val ProvideLocalAppLocaleIso: ProvidedValue<*>
     @Composable
     get() {
-        return (LocalPlatformContext.current.platformGraph as IAppLocaleIsoGraph).appLocaleIso provides
-            appLanguageTag
+        val context = LocalPlatformContext.current
+        val graph = rememberRetained {
+            context.require<AppLocaleIsoGraph.Factory>().createAppLocaleIsoGraph()
+        }
+        return graph.appLocaleIso provides appLanguageTag
     }
 
-@ContributesTo(AppScope::class)
-@GraphExtension
-interface AppLocaleIsoGraph : IAppLocaleIsoGraph
+@Scope
+annotation class AppLocaleIsoScope
 
-interface IAppLocaleIsoGraph {
+@ContributesTo(AppLocaleIsoScope::class)
+@GraphExtension
+interface AppLocaleIsoGraph {
     val appLocaleIso: AppLocaleIso
+
+    @ContributesTo(AppScope::class)
+    @GraphExtension.Factory
+    fun interface Factory {
+        fun createAppLocaleIsoGraph(): AppLocaleIsoGraph
+    }
 }
 
 /**

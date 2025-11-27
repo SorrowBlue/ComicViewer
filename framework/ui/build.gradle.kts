@@ -28,7 +28,7 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation(libs.drick.compose.edgeToEdgePreview)
+                implementation(libs.compose.edgeToEdgePreview)
             }
         }
     }

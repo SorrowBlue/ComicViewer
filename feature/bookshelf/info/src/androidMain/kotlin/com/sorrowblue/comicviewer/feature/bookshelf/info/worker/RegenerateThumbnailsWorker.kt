@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
-import com.sorrowblue.comicviewer.framework.common.platformGraph
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.notification.ChannelID
 import com.sorrowblue.comicviewer.framework.notification.R
 import comicviewer.feature.bookshelf.info.generated.resources.Res
@@ -63,7 +63,7 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase
 
     init {
-        (appContext.platformGraph as RegenerateThumbnailsWorkerContext.Factory)
+        appContext.require<RegenerateThumbnailsWorkerContext.Factory>()
             .createRegenerateThumbnailsWorkerContext()
             .apply {
                 this@RegenerateThumbnailsWorker.getBookshelfInfoUseCase = getBookshelfInfoUseCase

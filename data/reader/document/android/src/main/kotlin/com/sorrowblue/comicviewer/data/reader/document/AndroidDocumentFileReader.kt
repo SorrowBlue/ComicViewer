@@ -8,11 +8,7 @@ import android.os.IBinder
 import androidx.core.net.toUri
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.PluginManager
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.plugin.pdf.aidl.IRemotePdfService
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -105,10 +101,4 @@ open class AndroidDocumentFileReader(
                 }
             }
     }
-}
-
-@ContributesTo(AppScope::class)
-@GraphExtension
-interface ReaderDocumentContext {
-    val datastoreDataSource: DatastoreDataSource
 }
