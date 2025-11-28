@@ -24,7 +24,7 @@ kotlin {
     applyDefaultHierarchyTemplate()
     sourceSets {
         jvmMain.dependencies {
-            implementation(projects.aggregation)
+            implementation(projects.app.share)
             implementation(projects.feature.settings.info)
             implementation(projects.framework.common)
             implementation(projects.framework.designsystem)

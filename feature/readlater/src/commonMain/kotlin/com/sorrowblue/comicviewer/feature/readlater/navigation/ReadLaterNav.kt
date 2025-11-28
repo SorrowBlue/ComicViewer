@@ -16,7 +16,8 @@ import com.sorrowblue.comicviewer.folder.navigation.FolderKey
 import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
@@ -69,7 +70,7 @@ sealed interface ReadLaterKey : NavigationKey {
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.readLaterEntryGroup(
     navigator: Navigator,
     onSettingsClick: () -> Unit,
@@ -125,7 +126,7 @@ fun EntryProviderScope<NavKey>.readLaterEntryGroup(
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.readLaterEntry(
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,
@@ -133,7 +134,7 @@ private fun EntryProviderScope<NavKey>.readLaterEntry(
 ) {
     entryScreen<ReadLaterKey.List, ReadLaterScreenContext>(
         createContext = {
-            (graph as ReadLaterScreenContext.Factory).createReadLaterScreenContext()
+            context.require<ReadLaterScreenContext.Factory>().createReadLaterScreenContext()
         },
         metadata = SupportingPaneSceneStrategy.mainPane("ReadLater"),
     ) {
@@ -145,7 +146,7 @@ private fun EntryProviderScope<NavKey>.readLaterEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.readLaterFileInfoEntry(
     onBackClick: () -> Unit,
     onCollectionClick: (File) -> Unit,

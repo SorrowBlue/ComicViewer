@@ -14,7 +14,8 @@ import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenRoot
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
@@ -35,7 +36,7 @@ interface FileInfoKey : ScreenKey {
 @Serializable
 data class SortTypeSelectKey(val sortType: SortType, val folderScopeOnly: Boolean) : ScreenKey
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 inline fun <reified T : FolderKey, reified V : FileInfoKey> EntryProviderScope<NavKey>.folderEntryGroup(
     sceneKey: String,
     noinline onBackClick: () -> Unit,
@@ -66,7 +67,7 @@ inline fun <reified T : FolderKey, reified V : FileInfoKey> EntryProviderScope<N
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 inline fun <reified T : FileInfoKey> EntryProviderScope<NavKey>.fileInfoEntry(
     sceneKey: String,
     noinline onBackClick: () -> Unit,
@@ -74,7 +75,9 @@ inline fun <reified T : FileInfoKey> EntryProviderScope<NavKey>.fileInfoEntry(
     noinline onOpenFolderClick: (File) -> Unit,
 ) {
     entryScreen<T, FileInfoScreenContext>(
-        createContext = { (graph as FileInfoScreenContext.Factory).createFileInfoScreenContext() },
+        createContext = {
+            context.require<FileInfoScreenContext.Factory>().createFileInfoScreenContext()
+        },
         metadata = SupportingPaneSceneStrategy.extraPane(sceneKey),
     ) {
         FileInfoScreenRoot(
@@ -87,7 +90,7 @@ inline fun <reified T : FileInfoKey> EntryProviderScope<NavKey>.fileInfoEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
     sceneKey: String,
     noinline onBackClick: () -> Unit,
@@ -100,7 +103,9 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
 ) {
     entryScreen<T, FolderScreenContext>(
         clazzContentKey = { it.toString() },
-        createContext = { (graph as FolderScreenContext.Factory).createFolderScreenContext() },
+        createContext = {
+            context.require<FolderScreenContext.Factory>().createFolderScreenContext()
+        },
         metadata = SupportingPaneSceneStrategy.mainPane(sceneKey) +
             NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey),
     ) {

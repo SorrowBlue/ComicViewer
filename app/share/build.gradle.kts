@@ -7,7 +7,7 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "com.sorrowblue.comicviewer.aggregation"
+        namespace = "com.sorrowblue.comicviewer.app.share"
     }
     sourceSets {
         commonMain {

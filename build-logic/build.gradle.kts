@@ -22,20 +22,9 @@ tasks {
 }
 
 dependencies {
-    compileOnly(libs.android.gradlePlugin)
-    compileOnly(libs.metro.gradlePlugin)
-    compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly(libs.kotlin.composeCompilerGradlePlugin)
-    compileOnly(libs.kover.gradlePlugin)
-    compileOnly(libs.ksp.gradlePlugin)
-    compileOnly(libs.detekt.gradlePlugin)
-    compileOnly(libs.dokka.gradlePlugin)
-    compileOnly(libs.compose.gradlePlugin)
-    compileOnly(libs.licensee.gradlePlugin)
-    compileOnly(libs.aboutlibraries.gradlePlugin)
+    compileOnly(libs.bundles.plugins)
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
-    detektPlugins(libs.detekt.compose)
-    detektPlugins(libs.detekt.ktlintWrapper)
+    detektPlugins(libs.bundles.dokka)
 }
 
 detekt {

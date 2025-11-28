@@ -21,7 +21,8 @@ import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleScreenResult
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenRoot
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -61,7 +62,7 @@ private data class ImageScaleKey(val imageScale: ImageScale) : ScreenKey
 @Serializable
 private data class SortTypeKey(val sortType: SortType) : ScreenKey
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.folderSettingsEntryGroup(navigator: Navigator) {
     folderSettingsEntry(
         onBackClick = navigator::goBack,
@@ -89,7 +90,7 @@ fun EntryProviderScope<NavKey>.folderSettingsEntryGroup(navigator: Navigator) {
     sortTypeEntry(onDismissRequest = navigator::goBack)
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.folderSettingsEntry(
     onBackClick: () -> Unit,
     onSortTypeClick: (SortType) -> Unit,
@@ -100,7 +101,7 @@ private fun EntryProviderScope<NavKey>.folderSettingsEntry(
 ) {
     entryScreen<FolderSettingsKey, FolderSettingsScreenContext>(
         createContext = {
-            (graph as FolderSettingsScreenContext.Factory)
+            context.require<FolderSettingsScreenContext.Factory>()
                 .createFolderSettingsScreenContext()
         },
         metadata = ListDetailSceneStrategy.detailPane("Settings") +
@@ -123,7 +124,6 @@ private fun EntryProviderScope<NavKey>.folderSettingsEntry(
     }
 }
 
-context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.folderThumbnailOrderEntry(onDismissRequest: () -> Unit) {
     entry<FolderThumbnailOrderKey>(
         metadata = DialogSceneStrategy.dialog(),
@@ -135,7 +135,6 @@ private fun EntryProviderScope<NavKey>.folderThumbnailOrderEntry(onDismissReques
     }
 }
 
-context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.imageFilterQualityEntry(onDismissRequest: () -> Unit) {
     entry<ImageFilterQualityKey>(metadata = DialogSceneStrategy.dialog()) {
         ImageFilterQualityScreenRoot(
@@ -145,7 +144,6 @@ private fun EntryProviderScope<NavKey>.imageFilterQualityEntry(onDismissRequest:
     }
 }
 
-context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.imageFormatEntry(onDismissRequest: () -> Unit) {
     entry<ImageFormatKey>(metadata = DialogSceneStrategy.dialog()) {
         ImageFormatScreenRoot(
@@ -155,7 +153,6 @@ private fun EntryProviderScope<NavKey>.imageFormatEntry(onDismissRequest: () -> 
     }
 }
 
-context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.imageScaleEntry(onDismissRequest: () -> Unit) {
     entry<ImageScaleKey>(metadata = DialogSceneStrategy.dialog()) {
         ImageScaleScreenRoot(
@@ -165,7 +162,6 @@ private fun EntryProviderScope<NavKey>.imageScaleEntry(onDismissRequest: () -> U
     }
 }
 
-context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.sortTypeEntry(onDismissRequest: () -> Unit) {
     entry<SortTypeKey>(metadata = DialogSceneStrategy.dialog()) {
         SortTypeScreenRoot(

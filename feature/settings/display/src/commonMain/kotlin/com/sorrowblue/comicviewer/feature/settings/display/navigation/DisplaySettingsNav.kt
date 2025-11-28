@@ -8,7 +8,8 @@ import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -29,7 +30,7 @@ data object DisplaySettingsKey : ScreenKey
 @Serializable
 private data object DarkModeKey : ScreenKey
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.displaySettingsEntryGroup(navigator: Navigator) {
     displaySettingsEntry(
         onBackClick = navigator::goBack,
@@ -41,14 +42,14 @@ fun EntryProviderScope<NavKey>.displaySettingsEntryGroup(navigator: Navigator) {
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.displaySettingsEntry(
     onBackClick: () -> Unit,
     onDarkModeClick: () -> Unit,
 ) {
     entryScreen<DisplaySettingsKey, DisplaySettingsScreenContext>(
         createContext = {
-            (graph as DisplaySettingsScreenContext.Factory)
+            context.require<DisplaySettingsScreenContext.Factory>()
                 .createDisplaySettingsScreenContext()
         },
         metadata = ListDetailSceneStrategy.detailPane("Settings"),
@@ -60,13 +61,15 @@ private fun EntryProviderScope<NavKey>.displaySettingsEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.darkModeEntry(
     onDismissRequest: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<DarkModeKey, DarkModeScreenContext>(
-        createContext = { (graph as DarkModeScreenContext.Factory).createDarkModeScreenContext() },
+        createContext = {
+            context.require<DarkModeScreenContext.Factory>().createDarkModeScreenContext()
+        },
         metadata = DialogSceneStrategy.dialog(),
     ) {
         DarkModeScreenRoot(

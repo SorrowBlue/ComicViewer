@@ -7,6 +7,7 @@ plugins {
     `kotlin-multiplatform`
     org.jetbrains.compose
     `kotlin-composecompiler`
+    this.id("org.jetbrains.kotlin.plugin.serialization")
 //    kotlin("plugin.serialization")
 }
 

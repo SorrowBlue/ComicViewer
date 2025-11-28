@@ -16,7 +16,8 @@ import com.sorrowblue.comicviewer.folder.navigation.FolderKey
 import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -60,7 +61,7 @@ sealed interface SearchKey : ScreenKey {
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.searchEntryGroup(
     navigator: Navigator,
     onSettingsClick: () -> Unit,
@@ -125,7 +126,7 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.searchEntry(
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -134,7 +135,9 @@ private fun EntryProviderScope<NavKey>.searchEntry(
     onFileInfoClick: (File) -> Unit,
 ) {
     entryScreen<SearchKey.List, SearchScreenContext>(
-        createContext = { (graph as SearchScreenContext.Factory).createSearchScreenContext() },
+        createContext = {
+            context.require<SearchScreenContext.Factory>().createSearchScreenContext()
+        },
         metadata = SupportingPaneSceneStrategy.mainPane("Search"),
     ) {
         SearchScreenRoot(
@@ -149,7 +152,7 @@ private fun EntryProviderScope<NavKey>.searchEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.searchFileInfoEntry(
     onBackClick: () -> Unit,
     onCollectionClick: (File) -> Unit,

@@ -26,10 +26,11 @@ plugins {
 dependencies {
     dokka(projects.app.android)
     dokka(projects.app.desktop)
+    dokka(projects.app.ios)
+    dokka(projects.app.share)
     dokka(projects.data.coil)
     dokka(projects.data.database)
     dokka(projects.data.datastore)
-    dokka(projects.aggregation)
     dokka(projects.data.reader.document.android)
     dokka(projects.data.reader.document)
     dokka(projects.data.reader.zip)

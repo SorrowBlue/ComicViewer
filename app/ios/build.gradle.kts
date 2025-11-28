@@ -31,7 +31,7 @@ kotlin {
     }
     sourceSets {
         iosMain.dependencies {
-            implementation(projects.aggregation)
+            implementation(projects.app.share)
             implementation(projects.framework.common)
         }
     }

@@ -8,10 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.intl.Locale
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
-import dev.zacsweers.metro.Scope
 import io.github.takahirom.rin.rememberRetained
 
 expect class AppLocaleIso {
@@ -56,21 +52,6 @@ val ProvideLocalAppLocaleIso: ProvidedValue<*>
         }
         return graph.appLocaleIso provides appLanguageTag
     }
-
-@Scope
-annotation class AppLocaleIsoScope
-
-@ContributesTo(AppLocaleIsoScope::class)
-@GraphExtension
-interface AppLocaleIsoGraph {
-    val appLocaleIso: AppLocaleIso
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    fun interface Factory {
-        fun createAppLocaleIsoGraph(): AppLocaleIsoGraph
-    }
-}
 
 /**
  * アプリの現在のETF BCP47準拠の言語タグ。nullの場合はシステムデフォルト。
