@@ -25,7 +25,6 @@ import com.sorrowblue.comicviewer.app.navigation.appNavigation
 import com.sorrowblue.comicviewer.app.rememberPreAppScreenContext
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.platformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteState
 import com.sorrowblue.comicviewer.framework.ui.LocalAdaptiveNavigationSuiteState
@@ -74,7 +73,6 @@ private fun ComicViewerUI(
                     SnackbarHost(LocalAppState.current.snackbarHostState)
                 },
             ) {
-                val platformGraph = LocalPlatformContext.current.platformGraph
                 val directive = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
                 val supportingPaneSceneStrategy =
                     rememberSupportingPaneSceneStrategy<NavKey>(
@@ -87,7 +85,7 @@ private fun ComicViewerUI(
                 val customNavEntryDecorator =
                     rememberCustomNavEntryDecorator<NavKey>(directive = directive)
                 val entryProvider = entryProvider {
-                    with(platformGraph) {
+                    with(LocalPlatformContext.current) {
                         appNavigation(
                             navigator = navigator,
                             onBookshelfFolderRestored = onBookshelfFolderRestored,

@@ -8,7 +8,8 @@ import com.sorrowblue.comicviewer.feature.settings.plugin.PluginScreenContext
 import com.sorrowblue.comicviewer.feature.settings.plugin.PluginScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.plugin.pdf.PdfPluginScreenContext
 import com.sorrowblue.comicviewer.feature.settings.plugin.pdf.PdfPluginScreenRoot
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -29,7 +30,7 @@ data object PluginSettingsKey : ScreenKey
 @Serializable
 private data object PdfPluginKey : ScreenKey
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.pluginSettingsEntryGroup(navigator: Navigator) {
     pluginSettingsEntry(
         onBackClick = navigator::goBack,
@@ -38,13 +39,15 @@ fun EntryProviderScope<NavKey>.pluginSettingsEntryGroup(navigator: Navigator) {
     pdfPluginEntry(onBackClick = navigator::goBack)
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.pluginSettingsEntry(
     onBackClick: () -> Unit,
     onPdfPluginClick: () -> Unit,
 ) {
     entryScreen<PluginSettingsKey, PluginScreenContext>(
-        createContext = { (graph as PluginScreenContext.Factory).createPluginScreenContext() },
+        createContext = {
+            context.require<PluginScreenContext.Factory>().createPluginScreenContext()
+        },
         metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         PluginScreenRoot(
@@ -54,11 +57,11 @@ private fun EntryProviderScope<NavKey>.pluginSettingsEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.pdfPluginEntry(onBackClick: () -> Unit) {
     entryScreen<PdfPluginKey, PdfPluginScreenContext>(
         createContext = {
-            (graph as PdfPluginScreenContext.Factory).createPdfPluginScreenContext()
+            context.require<PdfPluginScreenContext.Factory>().createPdfPluginScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(),
     ) {

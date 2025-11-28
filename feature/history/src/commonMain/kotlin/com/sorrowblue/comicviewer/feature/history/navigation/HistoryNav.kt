@@ -13,7 +13,8 @@ import com.sorrowblue.comicviewer.feature.history.HistoryScreenContext
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenRoot
 import com.sorrowblue.comicviewer.folder.navigation.FileInfoKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
@@ -56,7 +57,7 @@ sealed interface HistoryKey : NavigationKey {
     data object ClearAll : HistoryKey
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.historyEntryGroup(
     navigator: Navigator,
     onSettingsClick: () -> Unit,
@@ -79,7 +80,7 @@ fun EntryProviderScope<NavKey>.historyEntryGroup(
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.historyEntry(
     onSettingsClick: () -> Unit,
     onDeleteAllClick: () -> Unit,
@@ -87,7 +88,9 @@ private fun EntryProviderScope<NavKey>.historyEntry(
     onBookInfoClick: (Book) -> Unit,
 ) {
     entryScreen<HistoryKey.List, HistoryScreenContext>(
-        createContext = { (graph as HistoryScreenContext.Factory).createHistoryScreenContext() },
+        createContext = {
+            context.require<HistoryScreenContext.Factory>().createHistoryScreenContext()
+        },
         metadata = SupportingPaneSceneStrategy.mainPane("History") +
             NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey),
     ) {
@@ -100,16 +103,13 @@ private fun EntryProviderScope<NavKey>.historyEntry(
     }
 }
 
-context(graph: PlatformGraph)
 private fun EntryProviderScope<NavKey>.historyClearAllEntry(onClose: () -> Unit) {
-    entry<HistoryKey.ClearAll>(
-        metadata = DialogSceneStrategy.dialog(),
-    ) {
+    entry<HistoryKey.ClearAll>(metadata = DialogSceneStrategy.dialog()) {
         ClearAllHistoryScreenRoot(onClose)
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.historyFileInfoEntry(
     onBackClick: () -> Unit,
     onCollectionClick: (File) -> Unit,

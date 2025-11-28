@@ -5,7 +5,8 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenRoot
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -22,7 +23,7 @@ val SecuritySettingsKeySerializersModule = SerializersModule {
 @Serializable
 data object SecuritySettingsKey : ScreenKey
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.securitySettingsEntryGroup(
     navigator: Navigator,
     onChangeAuthEnable: (Boolean) -> Unit,
@@ -35,7 +36,7 @@ fun EntryProviderScope<NavKey>.securitySettingsEntryGroup(
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.securitySettingsEntry(
     onBackClick: () -> Unit,
     onChangeAuthEnable: (Boolean) -> Unit,
@@ -43,7 +44,7 @@ private fun EntryProviderScope<NavKey>.securitySettingsEntry(
 ) {
     entryScreen<SecuritySettingsKey, SecuritySettingsScreenContext>(
         createContext = {
-            (graph as SecuritySettingsScreenContext.Factory)
+            context.require<SecuritySettingsScreenContext.Factory>()
                 .createSecuritySettingsScreenContext()
         },
         metadata = ListDetailSceneStrategy.detailPane("Settings"),

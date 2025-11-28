@@ -11,7 +11,8 @@ import com.sorrowblue.comicviewer.feature.book.BookScreen
 import com.sorrowblue.comicviewer.feature.book.BookScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenRoot
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -41,7 +42,7 @@ data class BookKey(
 @Serializable
 private data object BookMenuKey : ScreenKey
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.bookEntryGroup(navigator: Navigator, onSettingsClick: () -> Unit) {
     bookEntry(
         onBackClick = navigator::goBack,
@@ -63,7 +64,7 @@ fun EntryProviderScope<NavKey>.bookEntryGroup(navigator: Navigator, onSettingsCl
     bookMenuEntry(onDismissRequest = navigator::goBack)
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.bookEntry(
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -71,7 +72,7 @@ private fun EntryProviderScope<NavKey>.bookEntry(
     onContainerLongClick: () -> Unit,
 ) {
     entryScreen<BookKey, BookScreenContext>(
-        createContext = { (graph as BookScreenContext.Factory).createBookScreenContext() },
+        createContext = { context.require<BookScreenContext.Factory>().createBookScreenContext() },
     ) {
         BookScreen(
             bookshelfId = it.bookshelfId,
@@ -86,10 +87,12 @@ private fun EntryProviderScope<NavKey>.bookEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.bookMenuEntry(onDismissRequest: () -> Unit) {
     entryScreen<BookMenuKey, BookMenuScreenContext>(
-        createContext = { (graph as BookMenuScreenContext.Factory).createBookMenuScreenContext() },
+        createContext = {
+            context.require<BookMenuScreenContext.Factory>().createBookMenuScreenContext()
+        },
         metadata = DialogSceneStrategy.dialog(),
     ) {
         BookMenuScreenRoot(

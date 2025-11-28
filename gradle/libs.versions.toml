@@ -53,7 +53,6 @@ metro = "0.7.7"
 modulegraph = "0.13.0"
 multiplatform-core = "1.1.0-alpha03"
 multiplatform-navigation3 = "1.0.0-alpha05"
-multiplatform-navigationCompose = "2.9.1"
 navigation3-resultstate = "1.1.6"
 rin = "0.4.0"
 robolectric = "4.16"
@@ -136,6 +135,7 @@ kotlinx-collectionsImmutable = { group = "org.jetbrains.kotlinx", name = "kotlin
 kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlin-serializationGradlePlugin = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serializationCbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
@@ -187,3 +187,20 @@ licensee = { id = "app.cash.licensee", version.ref = "licensee" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }
+
+[bundles]
+dokka = ["detekt-compose", "detekt-ktlintWrapper"]
+plugins = [
+    "android-gradlePlugin",
+    "metro-gradlePlugin",
+    "kotlin-gradlePlugin",
+    "kotlin-composeCompilerGradlePlugin",
+    "kover-gradlePlugin",
+    "ksp-gradlePlugin",
+    "detekt-gradlePlugin",
+    "dokka-gradlePlugin",
+    "compose-gradlePlugin",
+    "aboutlibraries-gradlePlugin",
+    "licensee-gradlePlugin",
+    "kotlin-serializationGradlePlugin",
+]

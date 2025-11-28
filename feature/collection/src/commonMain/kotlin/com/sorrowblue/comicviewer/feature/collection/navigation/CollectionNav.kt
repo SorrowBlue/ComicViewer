@@ -35,7 +35,8 @@ import com.sorrowblue.comicviewer.folder.navigation.FolderKey
 import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
@@ -118,7 +119,7 @@ sealed interface CollectionKey : NavigationKey {
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.collectionEntryGroup(
     navigator: Navigator,
     onSettingsClick: () -> Unit,
@@ -240,7 +241,7 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.collectionListEntry(
     onItemClick: (CollectionId) -> Unit,
     onEditClick: (Collection) -> Unit,
@@ -251,7 +252,7 @@ private fun EntryProviderScope<NavKey>.collectionListEntry(
 ) {
     entryScreen<CollectionKey.List, CollectionListScreenContext>(
         createContext = {
-            (graph as CollectionListScreenContext.Factory)
+            context.require<CollectionListScreenContext.Factory>()
                 .createCollectionListScreenContext()
         },
     ) {
@@ -266,14 +267,14 @@ private fun EntryProviderScope<NavKey>.collectionListEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.collectionCreateBasicEntry(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.CreateBasic, BasicCollectionCreateScreenContext>(
         createContext = {
-            (graph as BasicCollectionCreateScreenContext.Factory)
+            context.require<BasicCollectionCreateScreenContext.Factory>()
                 .createBasicCollectionCreateScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
@@ -287,14 +288,14 @@ private fun EntryProviderScope<NavKey>.collectionCreateBasicEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.collectionEditBasicEntry(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.EditBasic, BasicCollectionEditScreenContext>(
         createContext = {
-            (graph as BasicCollectionEditScreenContext.Factory)
+            context.require<BasicCollectionEditScreenContext.Factory>()
                 .createBasicCollectionEditScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
@@ -307,14 +308,14 @@ private fun EntryProviderScope<NavKey>.collectionEditBasicEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.collectionCreateSmartEntry(
     onCancelClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.CreateSmart, SmartCollectionCreateScreenContext>(
         createContext = {
-            (graph as SmartCollectionCreateScreenContext.Factory)
+            context.require<SmartCollectionCreateScreenContext.Factory>()
                 .createSmartCollectionCreateScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
@@ -328,14 +329,14 @@ private fun EntryProviderScope<NavKey>.collectionCreateSmartEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.collectionEditSmartEntry(
     onCancelClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.EditSmart, SmartCollectionEditScreenContext>(
         createContext = {
-            (graph as SmartCollectionEditScreenContext.Factory)
+            context.require<SmartCollectionEditScreenContext.Factory>()
                 .createSmartCollectionEditScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
@@ -348,7 +349,7 @@ private fun EntryProviderScope<NavKey>.collectionEditSmartEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.collectionDetailEntry(
     onBackClick: () -> Unit,
     onFileClick: (File, CollectionId) -> Unit,
@@ -359,7 +360,7 @@ private fun EntryProviderScope<NavKey>.collectionDetailEntry(
 ) {
     entryScreen<CollectionKey.Detail, CollectionScreenContext>(
         createContext = {
-            (graph as CollectionScreenContext.Factory).createCollectionScreenContext()
+            context.require<CollectionScreenContext.Factory>().createCollectionScreenContext()
         },
         metadata = SupportingPaneSceneStrategy.mainPane("Collection"),
     ) { detail ->
@@ -375,14 +376,14 @@ private fun EntryProviderScope<NavKey>.collectionDetailEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.collectionDeleteEntry(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<CollectionKey.Delete, DeleteCollectionScreenContext>(
         createContext = {
-            (graph as DeleteCollectionScreenContext.Factory)
+            context.require<DeleteCollectionScreenContext.Factory>()
                 .createDeleteCollectionScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(),

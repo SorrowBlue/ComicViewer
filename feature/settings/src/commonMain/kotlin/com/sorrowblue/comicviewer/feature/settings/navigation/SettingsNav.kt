@@ -29,7 +29,8 @@ import com.sorrowblue.comicviewer.feature.settings.security.navigation.securityS
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsKeySerializersModule
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.viewerSettingsEntryGroup
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -60,7 +61,7 @@ val SettingsKeySerializersModule = SerializersModule {
     include(PluginSettingsKeySerializersModule)
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.settingsEntryGroup(
     navigator: Navigator,
     onChangeAuthEnable: (Boolean) -> Unit,
@@ -113,7 +114,7 @@ fun EntryProviderScope<NavKey>.settingsEntryGroup(
     pluginSettingsEntryGroup(navigator = navigator)
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.settingsMainEntry(
     onBackClick: () -> Unit,
     onSettingsClick: (SettingsItem) -> Unit,
@@ -122,7 +123,8 @@ private fun EntryProviderScope<NavKey>.settingsMainEntry(
     entry<SettingsKey>(
         metadata = ListDetailSceneStrategy.listPane("Settings", detailPlaceholder = {
             with(
-                (graph as DisplaySettingsScreenContext.Factory).createDisplaySettingsScreenContext(),
+                context.require<DisplaySettingsScreenContext.Factory>()
+                    .createDisplaySettingsScreenContext()
             ) {
                 DisplaySettingsScreenRoot(
                     onBackClick = onBackClick,
@@ -139,11 +141,11 @@ private fun EntryProviderScope<NavKey>.settingsMainEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.imageCacheSettingsEntry(onBackClick: () -> Unit) {
     entryScreen<ImageCacheSettingsKey, ImageCacheScreenContext>(
         createContext = {
-            (graph as ImageCacheScreenContext.Factory).createImageCacheScreenContext()
+            context.require<ImageCacheScreenContext.Factory>().createImageCacheScreenContext()
         },
         metadata = ListDetailSceneStrategy.detailPane("Settings"),
     ) {
@@ -151,11 +153,11 @@ private fun EntryProviderScope<NavKey>.imageCacheSettingsEntry(onBackClick: () -
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.inAppLanguagePickerEntry(onBackClick: () -> Unit) {
     entryScreen<InAppLanguagePickerKey, InAppLanguagePickerScreenContext>(
         createContext = {
-            (graph as InAppLanguagePickerScreenContext.Factory)
+            context.require<InAppLanguagePickerScreenContext.Factory>()
                 .createInAppLanguagePickerScreenContext()
         },
         metadata = ListDetailSceneStrategy.detailPane("Settings"),

@@ -83,10 +83,7 @@ rootProject.name = "comicviewer"
 include(":app:android")
 include(":app:desktop")
 include(":app:ios")
-
-include(":aggregation")
-
-//include(":composeApp")
+include(":app:share")
 
 include(":framework:common")
 include(":framework:notification")

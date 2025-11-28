@@ -5,7 +5,8 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenContext
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -22,19 +23,19 @@ val AuthenticationKeySerializersModule = SerializersModule {
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.authenticationEntryGroup(navigator: Navigator) {
     authenticationEntry(onBackClick = navigator::goBack, onComplete = navigator::goBack)
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.authenticationEntry(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<AuthenticationNavKey, AuthenticationScreenContext>(
         createContext = {
-            (graph as AuthenticationScreenContext.Factory)
+            context.require<AuthenticationScreenContext.Factory>()
                 .createAuthenticationScreenContext()
         },
     ) {

@@ -29,7 +29,8 @@ import com.sorrowblue.comicviewer.folder.navigation.FileInfoKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderKey
 import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
@@ -97,7 +98,7 @@ sealed interface BookshelfKey : NavigationKey {
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
     navigator: Navigator,
     onSettingsClick: () -> Unit,
@@ -197,7 +198,7 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
     )
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.bookshelfEntry(
     onSettingsClick: () -> Unit,
     onFabClick: () -> Unit,
@@ -206,7 +207,7 @@ private fun EntryProviderScope<NavKey>.bookshelfEntry(
 ) {
     entryScreen<BookshelfKey.List, BookshelfScreenContext>(
         createContext = {
-            (graph as BookshelfScreenContext.Factory).createBookshelfScreenContext()
+            context.require<BookshelfScreenContext.Factory>().createBookshelfScreenContext()
         },
         metadata = SupportingPaneSceneStrategy.mainPane<BookshelfKey.Info>("Bookshelf"),
     ) {
@@ -219,7 +220,7 @@ private fun EntryProviderScope<NavKey>.bookshelfEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.bookshelfInfoEntry(
     onBackClick: () -> Unit,
     onRemoveClick: (BookshelfId) -> Unit,
@@ -228,8 +229,7 @@ private fun EntryProviderScope<NavKey>.bookshelfInfoEntry(
 ) {
     entryScreen<BookshelfKey.Info, BookshelfInfoScreenContext>(
         createContext = {
-            (graph as BookshelfInfoScreenContext.Factory)
-                .createBookshelfInfoScreenContext()
+            context.require<BookshelfInfoScreenContext.Factory>().createBookshelfInfoScreenContext()
         },
         metadata = SupportingPaneSceneStrategy.extraPane("Bookshelf"),
     ) {
@@ -272,7 +272,7 @@ private fun EntryProviderScope<NavKey>.bookshelfSelectionEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.bookshelfEditEntry(
     onBackClick: () -> Unit,
     discardConfirm: () -> Unit,
@@ -280,8 +280,7 @@ private fun EntryProviderScope<NavKey>.bookshelfEditEntry(
 ) {
     entryScreen<BookshelfKey.Edit, BookshelfEditScreenContext>(
         createContext = {
-            (graph as BookshelfEditScreenContext.Factory)
-                .createBookshelfEditScreenContext()
+            context.require<BookshelfEditScreenContext.Factory>().createBookshelfEditScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(),
     ) {
@@ -294,14 +293,15 @@ private fun EntryProviderScope<NavKey>.bookshelfEditEntry(
     }
 }
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 private fun EntryProviderScope<NavKey>.bookshelfDeleteEntry(
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
     entryScreen<BookshelfKey.Delete, BookshelfDeleteScreenContext>(
         createContext = {
-            (graph as BookshelfDeleteScreenContext.Factory).createBookshelfDeleteScreenContext()
+            context.require<BookshelfDeleteScreenContext.Factory>()
+                .createBookshelfDeleteScreenContext()
         },
         metadata = DialogSceneStrategy.dialog(),
     ) {

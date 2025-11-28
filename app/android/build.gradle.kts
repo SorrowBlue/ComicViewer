@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.aggregation)
+    implementation(projects.app.share)
     implementation(projects.feature.book)
     implementation(projects.feature.settings.info)
     implementation(projects.framework.ui)

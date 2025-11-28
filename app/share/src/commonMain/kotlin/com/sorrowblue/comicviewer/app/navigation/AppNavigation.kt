@@ -19,10 +19,10 @@ import com.sorrowblue.comicviewer.feature.settings.navigation.settingsEntryGroup
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialKey
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.tutorialEntryGroup
 import com.sorrowblue.comicviewer.folder.navigation.sortTypeSelectEntry
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 
-context(graph: PlatformGraph)
+context(context: PlatformContext)
 internal fun EntryProviderScope<NavKey>.appNavigation(
     navigator: Navigator,
     onBookshelfFolderRestored: () -> Unit,
