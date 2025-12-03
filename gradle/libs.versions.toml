@@ -130,12 +130,12 @@ kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref
 kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
 kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-serializationGradlePlugin = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-collectionsImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collectionsImmutable" }
 kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
-kotlin-serializationGradlePlugin = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serializationCbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
@@ -155,6 +155,26 @@ sevenzipjbinding-allPlatforms = { group = "com.github.shayartzi.sevenzipjbinding
 sevenzipjbinding-android = { group = "com.sorrowblue.sevenzipjbinding", name = "7-Zip-JBinding-4Android", version.ref = "sevenzipjbinding-android" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version.ref = "slf4j-android" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version.ref = "soil" }
+
+[bundles]
+dokka = [
+    "detekt-compose",
+    "detekt-ktlintWrapper"
+]
+plugins = [
+    "aboutlibraries-gradlePlugin",
+    "android-gradlePlugin",
+    "compose-gradlePlugin",
+    "detekt-gradlePlugin",
+    "dokka-gradlePlugin",
+    "kotlin-composeCompilerGradlePlugin",
+    "kotlin-gradlePlugin",
+    "kotlin-serializationGradlePlugin",
+    "kover-gradlePlugin",
+    "ksp-gradlePlugin",
+    "licensee-gradlePlugin",
+    "metro-gradlePlugin"
+]
 
 [plugins]
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
@@ -187,20 +207,3 @@ licensee = { id = "app.cash.licensee", version.ref = "licensee" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }
-
-[bundles]
-dokka = ["detekt-compose", "detekt-ktlintWrapper"]
-plugins = [
-    "android-gradlePlugin",
-    "metro-gradlePlugin",
-    "kotlin-gradlePlugin",
-    "kotlin-composeCompilerGradlePlugin",
-    "kover-gradlePlugin",
-    "ksp-gradlePlugin",
-    "detekt-gradlePlugin",
-    "dokka-gradlePlugin",
-    "compose-gradlePlugin",
-    "aboutlibraries-gradlePlugin",
-    "licensee-gradlePlugin",
-    "kotlin-serializationGradlePlugin",
-]
