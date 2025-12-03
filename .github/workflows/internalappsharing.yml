@@ -47,10 +47,10 @@ jobs:
         with:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           packageName: com.sorrowblue.comicviewer
-          releaseFiles: composeApp/build/outputs/bundle/internal/composeApp-internal.aab
+          releaseFiles: app/android/build/outputs/bundle/internal/android-internal.aab
           track: internalsharing
-          mappingFile: composeApp/build/outputs/mapping/internal/mapping.txt
-          debugSymbols: composeApp/build/intermediates/merged_native_libs/internal/mergeInternalNativeLibs/out/lib
+          mappingFile: app/android/build/outputs/mapping/internal/mapping.txt
+          debugSymbols: app/android/build/intermediates/merged_native_libs/internal/mergeInternalNativeLibs/out/lib
 
       - uses: sarisia/actions-status-discord@v1
         with:

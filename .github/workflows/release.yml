@@ -65,12 +65,12 @@ jobs:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           packageName: com.sorrowblue.comicviewer
           releaseFiles: >-
-            composeApp/build/outputs/bundle/release/composeApp-release.aab
+            app/android/build/outputs/bundle/release/android-release.aab
           track: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
           status: draft
-          mappingFile: composeApp/build/outputs/mapping/release/mapping.txt
+          mappingFile: app/android/build/outputs/mapping/release/mapping.txt
           debugSymbols: >-
-            composeApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+            app/android/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
 
   # Step 3: Build desktop releases for all platforms
   build-desktop-release:
@@ -90,7 +90,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: desktop-release-${{ runner.os }}
-          path: composeApp/build/compose/binaries/main/
+          path: app/desktop/build/compose/binaries/main/
 
   # Step 4: Upload artifacts to GitHub Release and notify Discord
   upload-release-assets:
