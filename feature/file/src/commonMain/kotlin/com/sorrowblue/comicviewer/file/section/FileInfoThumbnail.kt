@@ -27,7 +27,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData

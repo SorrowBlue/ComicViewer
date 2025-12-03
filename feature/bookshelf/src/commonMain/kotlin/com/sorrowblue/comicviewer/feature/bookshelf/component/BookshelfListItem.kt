@@ -142,7 +142,7 @@ private fun BookshelfRowItem(
     modifier: Modifier = Modifier,
 ) {
     val colors = CardDefaults.cardColors(
-        containerColor = ComicTheme.colorScheme.surfaceContainerHighest,
+        containerColor = ComicTheme.colorScheme.surfaceContainer,
     )
     Card(onClick = onClick, colors = colors, modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -151,8 +151,7 @@ private fun BookshelfRowItem(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(108.dp)
-                    .clip(CardDefaults.shape)
-                    .background(ComicTheme.colorScheme.imageBackground(colors.containerColor)),
+                    .clip(CardDefaults.shape),
             )
             ListItem(
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),

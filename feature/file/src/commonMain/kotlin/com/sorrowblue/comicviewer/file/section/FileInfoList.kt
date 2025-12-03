@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffoldDefaults
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_label_modified_date
 import comicviewer.feature.file.generated.resources.file_text_page_count

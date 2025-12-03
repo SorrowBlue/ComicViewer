@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfKey
 import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionKey
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryKey
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterKey
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 

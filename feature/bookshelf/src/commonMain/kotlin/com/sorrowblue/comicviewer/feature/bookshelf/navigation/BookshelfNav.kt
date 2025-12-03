@@ -6,6 +6,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
@@ -32,6 +33,8 @@ import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -164,7 +167,7 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
         onComplete = navigator::goBack,
     )
     folderEntryGroup<BookshelfKey.Folder, BookshelfKey.FileInfo>(
-        sceneKey = "BookshelfFolder",
+        sceneKey = "Bookshelf",
         onBackClick = navigator::goBack,
         onSearchClick = onSearchClick,
         onFileClick = { file ->
@@ -209,7 +212,8 @@ private fun EntryProviderScope<NavKey>.bookshelfEntry(
         createContext = {
             context.require<BookshelfScreenContext.Factory>().createBookshelfScreenContext()
         },
-        metadata = SupportingPaneSceneStrategy.mainPane<BookshelfKey.Info>("Bookshelf"),
+        metadata = SupportingPaneSceneStrategy.mainPane<BookshelfKey.Info>("Bookshelf") +
+            NavDisplay.transitionMaterialFadeThrough(),
     ) {
         BookshelfScreenRoot(
             onSettingsClick = onSettingsClick,
@@ -231,7 +235,8 @@ private fun EntryProviderScope<NavKey>.bookshelfInfoEntry(
         createContext = {
             context.require<BookshelfInfoScreenContext.Factory>().createBookshelfInfoScreenContext()
         },
-        metadata = SupportingPaneSceneStrategy.extraPane("Bookshelf"),
+        metadata = SupportingPaneSceneStrategy.extraPane("Bookshelf") +
+            NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         BookshelfInfoScreenRoot(
             bookshelfId = it.id,

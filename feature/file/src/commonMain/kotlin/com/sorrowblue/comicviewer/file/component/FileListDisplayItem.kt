@@ -1,27 +1,29 @@
 package com.sorrowblue.comicviewer.file.component
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AppBarRowScope2
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.TonalToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_list_label_switch_grid_view
 import comicviewer.feature.file.generated.resources.file_list_label_switch_list_view
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
-import dev.zacsweers.metro.Scope
-import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -61,18 +63,50 @@ fun FileListDisplayItemState.fileListDisplayItem() {
 
 @Composable
 fun rememberFileListDisplayItemState(): FileListDisplayItemState {
-    val context = LocalPlatformContext.current
-    val graph = rememberRetained {
-        context.require<FileListDisplayItemGraph.Factory>().createFileListDisplayItemGraph()
-    }
+    val useCase = rememberManageFolderDisplaySettingsUseCase()
     val coroutineScope = rememberCoroutineScope()
     return remember {
         FileListDisplayItemStateImpl(
-            manageFolderDisplaySettingsUseCase = graph.manageFolderDisplaySettingsUseCase,
+            manageFolderDisplaySettingsUseCase = useCase,
             coroutineScope = coroutineScope,
         )
     }.apply {
         this.coroutineScope = coroutineScope
+    }
+}
+
+@Composable
+fun FileListDisplayItem() {
+    val state = rememberFileListDisplayItemState()
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+    ) {
+        FileListDisplay.entries.forEachIndexed { index, option ->
+            TonalToggleButton(
+                colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+                checked = option == state.fileListDisplay,
+                onCheckedChange = {
+                    if (it) {
+                        state.onClick()
+                    }
+                },
+                modifier = Modifier.semantics { role = Role.RadioButton },
+                shapes =
+                when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    FileListDisplay.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                },
+            ) {
+                Icon(
+                    imageVector = when (option) {
+                        FileListDisplay.Grid -> ComicIcons.GridView
+                        FileListDisplay.List -> ComicIcons.ViewList
+                    },
+                    contentDescription = null,
+                )
+            }
+        }
     }
 }
 
@@ -108,19 +142,5 @@ private class FileListDisplayItemStateImpl(
                 )
             }
         }
-    }
-}
-
-@Scope
-annotation class FileListDisplayItemScope
-
-@GraphExtension(FileListDisplayItemScope::class)
-interface FileListDisplayItemGraph {
-    val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    interface Factory {
-        fun createFileListDisplayItemGraph(): FileListDisplayItemGraph
     }
 }

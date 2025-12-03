@@ -15,9 +15,9 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionFileUseCase
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
-import com.sorrowblue.comicviewer.framework.ui.rememberAdaptiveNavigationSuiteScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull

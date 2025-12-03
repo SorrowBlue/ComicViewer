@@ -1,11 +1,10 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.component
 
-import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
@@ -14,11 +13,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun BookshelfAppBar(
     onSettingsClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
-    scrollableState: ScrollableState,
+    scrollBehavior: TopAppBarScrollBehavior?,
     modifier: Modifier = Modifier,
 ) {
-    CanonicalTopAppBar(
+    AdaptiveAppBar(
         title = {
             Text(text = stringResource(Res.string.bookshelf_label_bookshelf))
         },
@@ -26,7 +24,6 @@ internal fun BookshelfAppBar(
             SettingsIconButton(onClick = onSettingsClick)
         },
         scrollBehavior = scrollBehavior,
-        scrollableState = scrollableState,
         modifier = modifier,
     )
 }

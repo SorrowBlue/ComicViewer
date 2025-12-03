@@ -143,7 +143,7 @@ private fun SortTypeSelectScreen(
     }
 }
 
-private fun SortType.displayText() = when (this) {
+fun SortType.displayText() = when (this) {
     is SortType.Date -> if (isAsc) Res.string.folder_sorttype_label_date_asc else Res.string.folder_sorttype_label_date_desc
     is SortType.Name -> if (isAsc) Res.string.folder_sorttype_label_name_asc else Res.string.folder_sorttype_label_name_desc
     is SortType.Size -> if (isAsc) Res.string.folder_sorttype_label_size_asc else Res.string.folder_sorttype_label_size_desc

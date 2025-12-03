@@ -5,15 +5,15 @@ import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionList
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.PrimaryActionButtonMenu
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButtonMenu
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_collection
@@ -35,7 +35,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
     AdaptiveNavigationSuiteScaffold {
         Scaffold(
             topBar = {
-                TopAppBar(
+                AdaptiveAppBar(
                     title = {
                         Text(text = stringResource(Res.string.collection_title))
                     },

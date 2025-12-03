@@ -13,10 +13,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
-import com.sorrowblue.comicviewer.framework.ui.LocalNavigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import kotlin.reflect.KClass
 
 class SupportingPaneExt<T : NavKey>(val clazz: KClass<T>)
+
+const val TransitionName = "com.sorrowblue.comicviewer.framework.ui.navigation3.transitionName"
+
+fun transitionName(key: String) = mapOf(TransitionName to key)
 
 inline fun <reified T : NavKey> SupportingPaneSceneStrategy.Companion.mainPane(sceneKey: String) =
     SupportingPaneSceneStrategy.mainPane(sceneKey) +

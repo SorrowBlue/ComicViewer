@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.search.navigation
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -18,6 +19,7 @@ import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -138,7 +140,9 @@ private fun EntryProviderScope<NavKey>.searchEntry(
         createContext = {
             context.require<SearchScreenContext.Factory>().createSearchScreenContext()
         },
-        metadata = SupportingPaneSceneStrategy.mainPane("Search"),
+        metadata = SupportingPaneSceneStrategy.mainPane(
+            "Search",
+        ) + NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         SearchScreenRoot(
             bookshelfId = it.bookshelfId,

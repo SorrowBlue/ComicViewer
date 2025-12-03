@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfKey
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteState
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.rememberNavigator
 import kotlinx.coroutines.CoroutineScope

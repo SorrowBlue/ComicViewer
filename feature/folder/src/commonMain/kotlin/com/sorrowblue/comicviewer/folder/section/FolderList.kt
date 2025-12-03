@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -22,8 +24,11 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.layout.union
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
@@ -70,11 +75,22 @@ internal fun FolderList(
                 text = stringResource(Res.string.folder_text_nothing_in_folder, uiState.title),
             )
         } else {
+            val navigationSuiteType =
+                NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
+            val additionalPaddings = if (navigationSuiteType.isNavigationRail) {
+                PaddingValues(ComicTheme.dimension.margin)
+            } else {
+                PaddingValues(
+                    start = ComicTheme.dimension.margin,
+                    end = ComicTheme.dimension.margin,
+                    bottom = ComicTheme.dimension.margin,
+                )
+            }
             FileLazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 uiState = uiState.fileLazyVerticalGridUiState,
                 lazyPagingItems = lazyPagingItems,
-                contentPadding = contentPadding,
+                contentPadding = contentPadding + additionalPaddings,
                 onItemClick = onFileClick,
                 onItemInfoClick = onFileInfoClick,
                 state = lazyGridState,

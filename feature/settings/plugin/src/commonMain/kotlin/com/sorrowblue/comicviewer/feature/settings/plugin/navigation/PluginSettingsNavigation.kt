@@ -4,12 +4,14 @@ import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.settings.plugin.PluginScreenContext
 import com.sorrowblue.comicviewer.feature.settings.plugin.PluginScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.plugin.pdf.PdfPluginScreenContext
 import com.sorrowblue.comicviewer.feature.settings.plugin.pdf.PdfPluginScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -48,7 +50,9 @@ private fun EntryProviderScope<NavKey>.pluginSettingsEntry(
         createContext = {
             context.require<PluginScreenContext.Factory>().createPluginScreenContext()
         },
-        metadata = ListDetailSceneStrategy.detailPane("Settings"),
+        metadata = ListDetailSceneStrategy.detailPane(
+            "Settings",
+        ) + NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         PluginScreenRoot(
             onBackClick = onBackClick,

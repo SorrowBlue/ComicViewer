@@ -11,25 +11,25 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(
     name = "1 Phone - Portrait",
     group = "Phone",
-    device = Devices.PIXEL_9,
+    device = Devices.PHONE,
     showBackground = true,
 )
 @Preview(
     name = "2 Phone - Landscape",
     group = "Phone",
-    device = "spec:parent=pixel_9,orientation=landscape",
+    device = "${Devices.PHONE},orientation=landscape",
     showBackground = true,
 )
 @Preview(
     name = "3 Tablet - Landscape",
     group = "Tablet",
-    device = Devices.PIXEL_TABLET,
+    device = Devices.TABLET,
     showBackground = true,
 )
 @Preview(
     name = "3 Tablet - Portrait",
     group = "Tablet",
-    device = "spec:parent=pixel_tablet,orientation=portrait",
+    device = "${Devices.TABLET},orientation=portrait",
     showBackground = true,
 )
 annotation class PreviewMultiplatform

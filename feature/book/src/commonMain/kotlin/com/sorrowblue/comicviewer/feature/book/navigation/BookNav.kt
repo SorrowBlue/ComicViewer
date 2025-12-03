@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.book.navigation
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -13,6 +14,7 @@ import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -73,6 +75,7 @@ private fun EntryProviderScope<NavKey>.bookEntry(
 ) {
     entryScreen<BookKey, BookScreenContext>(
         createContext = { context.require<BookScreenContext.Factory>().createBookScreenContext() },
+        metadata = NavDisplay.transitionMaterialSharedAxisZ(),
     ) {
         BookScreen(
             bookshelfId = it.bookshelfId,

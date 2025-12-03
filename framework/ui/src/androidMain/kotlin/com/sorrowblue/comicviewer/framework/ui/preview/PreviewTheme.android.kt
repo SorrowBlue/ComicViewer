@@ -23,6 +23,10 @@ import coil3.compose.LocalAsyncImagePreviewHandler
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalAdaptiveNavigationSuiteState
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.PreviewImage
 import kotlinx.coroutines.CoroutineScope
 
@@ -30,24 +34,36 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 actual fun PreviewTheme(content: @Composable () -> Unit) {
     SharedTransitionLayout {
-        AnimatedContent(true) {
-            if (it) {
-                CompositionLocalProvider(
-                    ProvidesAppState,
-                    LocalNavAnimatedContentScope provides this,
-                ) {
-                    ComicTheme {
-                        val context = LocalContext.current
-                        val previewHandler = AsyncImagePreviewHandler { PreviewImage(context) }
-                        CompositionLocalProvider(
-                            LocalAsyncImagePreviewHandler provides previewHandler,
-                            content,
-                        )
+        CompositionLocalProvider(
+            LocalSharedTransitionScope provides this,
+            LocalAdaptiveNavigationSuiteState provides
+                remember { PreviewAdaptiveNavigationSuiteState() },
+        ) {
+            AnimatedContent(true) {
+                if (it) {
+                    CompositionLocalProvider(
+                        ProvidesAppState,
+                        LocalNavAnimatedContentScope provides this,
+                    ) {
+                        ComicTheme {
+                            val context = LocalContext.current
+                            val previewHandler = AsyncImagePreviewHandler { PreviewImage(context) }
+                            CompositionLocalProvider(
+                                LocalAsyncImagePreviewHandler provides previewHandler,
+                                content,
+                            )
+                        }
                     }
                 }
             }
         }
     }
+}
+
+class PreviewAdaptiveNavigationSuiteState : AdaptiveNavigationSuiteState {
+    override val navigationKeys: List<NavigationKey> = emptyList()
+
+    override fun onNavigationClick(key: NavigationKey) = Unit
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)

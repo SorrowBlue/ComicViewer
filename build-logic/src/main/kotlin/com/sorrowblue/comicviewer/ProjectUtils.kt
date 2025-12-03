@@ -30,8 +30,9 @@ internal inline fun <reified T : KotlinBaseExtension> Project.kotlin(
     crossinline block: T.() -> Unit,
 ) = configure<T> { block(this) }
 
-internal fun KotlinMultiplatformExtension.androidLibrary(block: KotlinMultiplatformAndroidLibraryTarget.() -> Unit) =
-    configure<KotlinMultiplatformAndroidLibraryTarget> { block(this) }
+internal fun KotlinMultiplatformExtension.androidLibrary(
+    block: KotlinMultiplatformAndroidLibraryTarget.() -> Unit,
+) = configure<KotlinMultiplatformAndroidLibraryTarget> { block(this) }
 
 internal fun Project.ksp(block: KspExtension.() -> Unit) = configure<KspExtension>(block)
 
