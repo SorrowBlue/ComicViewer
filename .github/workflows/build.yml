@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: android
-          path: composeApp/build/outputs/
+          path: app/android/build/outputs/
 
   build-desktop:
     strategy:
@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: desktop-${{ runner.os }}
-          path: composeApp/build/compose/binaries/main/
+          path: app/desktop/build/compose/binaries/main/
 
   build:
     name: All Build Passed
