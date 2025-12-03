@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContentsUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.ExtraPaneScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer

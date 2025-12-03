@@ -4,6 +4,7 @@ import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrate
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.PathString
@@ -16,6 +17,8 @@ import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenRoot
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
@@ -78,7 +81,8 @@ inline fun <reified T : FileInfoKey> EntryProviderScope<NavKey>.fileInfoEntry(
         createContext = {
             context.require<FileInfoScreenContext.Factory>().createFileInfoScreenContext()
         },
-        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey),
+        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey) +
+            NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         FileInfoScreenRoot(
             fileKey = it.fileKey,
@@ -107,7 +111,8 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
             context.require<FolderScreenContext.Factory>().createFolderScreenContext()
         },
         metadata = SupportingPaneSceneStrategy.mainPane(sceneKey) +
-            NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey),
+            NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey) +
+            NavDisplay.transitionMaterialSharedAxisZ(),
     ) {
         FolderScreenRoot(
             bookshelfId = it.bookshelfId,

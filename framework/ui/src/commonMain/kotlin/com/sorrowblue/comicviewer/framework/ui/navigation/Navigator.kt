@@ -8,12 +8,17 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import logcat.logcat
+
+val LocalNavigator = staticCompositionLocalOf<Navigator> {
+    error("No AdaptiveNavigationSuiteState provided")
+}
 
 class Navigator private constructor(
     initialTopLevelKey: NavKey,

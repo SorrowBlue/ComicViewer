@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 /** Represents the display type for file and folder lists. */
 @Serializable
 enum class FileListDisplay {
-    /** Display items in a grid layout. */
-    Grid,
-
     /** Display items in a list layout. */
     List,
+
+    /** Display items in a grid layout. */
+    Grid,
 }

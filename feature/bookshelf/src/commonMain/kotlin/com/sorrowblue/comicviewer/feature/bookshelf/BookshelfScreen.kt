@@ -6,24 +6,24 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfAppBar
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.PrimaryActionButton
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButton
 import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
-import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -46,19 +46,19 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
             )
         },
     ) {
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(text = stringResource(Res.string.bookshelf_label_bookshelf)) },
-                    actions = { SettingsIconButton(onClick = onSettingsClick) },
+                BookshelfAppBar(
+                    onSettingsClick = onSettingsClick,
+                    scrollBehavior = scrollBehavior,
                 )
             },
+            containerColor = ComicTheme.colorScheme.surface,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { contentPadding ->
             val additionalPaddings = if (navigationSuiteType.isNavigationRail) {
-                PaddingValues(
-                    end = ComicTheme.dimension.margin,
-                    bottom = ComicTheme.dimension.margin,
-                )
+                PaddingValues(ComicTheme.dimension.margin)
             } else {
                 PaddingValues(
                     start = ComicTheme.dimension.margin,

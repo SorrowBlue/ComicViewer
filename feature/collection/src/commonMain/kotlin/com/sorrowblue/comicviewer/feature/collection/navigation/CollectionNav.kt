@@ -6,6 +6,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
@@ -38,11 +39,14 @@ import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
+import kotlin.collections.plus
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -255,6 +259,7 @@ private fun EntryProviderScope<NavKey>.collectionListEntry(
             context.require<CollectionListScreenContext.Factory>()
                 .createCollectionListScreenContext()
         },
+        metadata = NavDisplay.transitionMaterialFadeThrough(),
     ) {
         CollectionListScreenRoot(
             onItemClick = { collection -> onItemClick(collection.id) },
@@ -362,7 +367,8 @@ private fun EntryProviderScope<NavKey>.collectionDetailEntry(
         createContext = {
             context.require<CollectionScreenContext.Factory>().createCollectionScreenContext()
         },
-        metadata = SupportingPaneSceneStrategy.mainPane("Collection"),
+        metadata = SupportingPaneSceneStrategy.mainPane("CollectionDetail") +
+            NavDisplay.transitionMaterialSharedAxisZ(),
     ) { detail ->
         CollectionScreenRoot(
             id = detail.id,

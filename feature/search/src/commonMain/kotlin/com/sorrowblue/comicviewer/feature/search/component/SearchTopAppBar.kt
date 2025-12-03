@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.search.component
 
-import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -32,7 +31,7 @@ import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.CanonicalTopAppBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.folder.generated.resources.Res as FolderRes
@@ -58,7 +57,6 @@ import org.jetbrains.compose.resources.stringResource
 internal fun SearchTopAppBar(
     searchCondition: SearchCondition,
     scrollBehavior: TopAppBarScrollBehavior,
-    scrollableState: ScrollableState,
     onBackClick: () -> Unit,
     onSmartCollectionClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -68,7 +66,7 @@ internal fun SearchTopAppBar(
     onSortTypeClick: (SortType) -> Unit,
     onShowHiddenClick: () -> Unit,
 ) {
-    CanonicalTopAppBar(
+    AdaptiveAppBar(
         title = {
             val skc = LocalSoftwareKeyboardController.current
             TextField(
@@ -150,7 +148,6 @@ internal fun SearchTopAppBar(
             }
         },
         scrollBehavior = scrollBehavior,
-        scrollableState = scrollableState,
     )
 }
 

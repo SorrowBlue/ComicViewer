@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.adaptive.navigation
+package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ScrollState

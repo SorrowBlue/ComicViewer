@@ -9,8 +9,8 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiState
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 
 internal data class CollectionScreenUiState(
     val appBarUiState: CollectionAppBarUiState = CollectionAppBarUiState(),

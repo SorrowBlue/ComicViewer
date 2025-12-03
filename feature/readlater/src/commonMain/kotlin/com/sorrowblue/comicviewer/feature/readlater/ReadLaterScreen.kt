@@ -17,9 +17,9 @@ import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_label_nothing_to_read_later

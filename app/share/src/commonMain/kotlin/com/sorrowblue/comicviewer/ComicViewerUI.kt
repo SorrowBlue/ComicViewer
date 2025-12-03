@@ -26,11 +26,12 @@ import com.sorrowblue.comicviewer.app.rememberPreAppScreenContext
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteState
-import com.sorrowblue.comicviewer.framework.ui.LocalAdaptiveNavigationSuiteState
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
-import com.sorrowblue.comicviewer.framework.ui.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalAdaptiveNavigationSuiteState
+import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
+import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberCustomNavEntryDecorator
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
@@ -92,6 +93,8 @@ private fun ComicViewerUI(
                         )
                     }
                 }
+                Transitions.InitSlideDistance()
+                Transitions.motionScheme = ComicTheme.motionScheme
                 NavDisplay(
                     backStack = navigator.backStack,
                     entryDecorators = listOf(

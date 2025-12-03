@@ -14,6 +14,6 @@ dokka {
     dokkaGeneratorIsolation.set(
         ProcessIsolation {
             maxHeapSize.set("6g")
-        }
+        },
     )
 }

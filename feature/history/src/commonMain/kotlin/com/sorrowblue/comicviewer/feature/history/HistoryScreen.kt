@@ -10,8 +10,8 @@ import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.history.section.HistoryBookList
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.HistoryScreen(

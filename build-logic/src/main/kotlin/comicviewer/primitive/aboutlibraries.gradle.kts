@@ -29,14 +29,16 @@ aboutLibraries {
                 "Bouncy Castle Licence" to listOf("org.bouncycastle"),
                 "BSD-3-Clause" to listOf("org.hamcrest"),
                 "EPL-1.0" to listOf("junit"),
-                "GNU Lesser General Public License version 2.1" to listOf("com.sorrowblue.sevenzipjbinding"),
+                "GNU Lesser General Public License version 2.1" to listOf(
+                    "com.sorrowblue.sevenzipjbinding",
+                ),
                 "GNU Lesser General Public License, version 2.1" to listOf("org.codelibs"),
                 "unRAR restriction" to listOf("net.sf.sevenzipjbinding"),
                 "LGPL" to listOf("net.sf.sevenzipjbinding"),
                 "Other" to listOf(
                     "io.github.irgaly.navigation3.resultstate",
                     "net.java.dev.jna",
-                    "org.jetbrains.kotlinx"
+                    "org.jetbrains.kotlinx",
                 ),
             ),
         )

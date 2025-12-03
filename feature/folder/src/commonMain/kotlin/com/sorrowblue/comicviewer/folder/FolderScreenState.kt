@@ -19,16 +19,17 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderScopeOnly
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResult
-import com.sorrowblue.comicviewer.framework.ui.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
-import com.sorrowblue.comicviewer.framework.ui.rememberAdaptiveNavigationSuiteScaffoldState
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -53,6 +54,10 @@ internal interface FolderScreenState {
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
 
     fun onSortTypeSelectScreenResult(result: SortTypeSelectScreenResult)
+
+    fun onSortClick(sortType: SortType)
+
+    fun onFolderScopeOnlyClick()
 
     fun onRefresh()
 }
@@ -135,9 +140,15 @@ private class FolderScreenStateImpl(
             .onEach {
                 uiState = uiState.copy(
                     folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                        fileListDisplay = it.fileListDisplay,
-                        gridColumnSize = it.gridColumnSize,
-                        showHiddenFile = it.showHiddenFiles,
+                        folderScopeOnly = it.folderScopeOnlyList.any { scopeOnly ->
+                            scopeOnly.bookshelfId == bookshelfId && scopeOnly.path == path
+                        },
+                        sortType = it.folderScopeOnlyList
+                            .find { scopeOnly ->
+                                scopeOnly.bookshelfId == bookshelfId &&
+                                    scopeOnly.path == path
+                            }?.sortType
+                            ?: it.sortType,
                     ),
                     folderListUiState = uiState.folderListUiState.copy(
                         fileLazyVerticalGridUiState = uiState.folderListUiState.fileLazyVerticalGridUiState
@@ -150,18 +161,6 @@ private class FolderScreenStateImpl(
                                 showThumbnails = it.showThumbnails,
                             ),
                     ),
-                    folderScopeOnly = it.folderScopeOnlyList.any { scopeOnly ->
-                        scopeOnly.bookshelfId ==
-                            bookshelfId &&
-                            scopeOnly.path == path
-                    },
-                    sortType =
-                    it.folderScopeOnlyList
-                        .find { scopeOnly ->
-                            scopeOnly.bookshelfId == bookshelfId &&
-                                scopeOnly.path == path
-                        }?.sortType
-                        ?: it.sortType,
                 )
             }.launchIn(scope)
         getFileUseCase(GetFileUseCase.Request(bookshelfId, path))
@@ -217,6 +216,88 @@ private class FolderScreenStateImpl(
 //                        )
 //                    }
 //                }
+            }
+        }
+    }
+
+    override fun onSortClick(sortType: SortType) {
+        scope.launch {
+            var refresh = false
+            folderDisplaySettingsUseCase.edit { settings ->
+                val beforeFolderScopeOnly =
+                    settings.folderScopeOnlyList.find {
+                        it.bookshelfId == bookshelfId &&
+                            it.path == path
+                    }
+                when {
+                    uiState.folderAppBarUiState.folderScopeOnly -> {
+                        if (beforeFolderScopeOnly == null) {
+                            refresh = true
+                            settings.copy(
+                                folderScopeOnlyList =
+                                settings.folderScopeOnlyList + FolderScopeOnly(
+                                    bookshelfId,
+                                    path,
+                                    sortType,
+                                ),
+                            )
+                        } else if (beforeFolderScopeOnly.sortType != sortType) {
+                            refresh = true
+                            val new = FolderScopeOnly(
+                                bookshelfId,
+                                path,
+                                sortType,
+                            )
+                            settings.copy(
+                                folderScopeOnlyList =
+                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
+                            )
+                        } else {
+                            settings
+                        }
+                    }
+
+                    !uiState.folderAppBarUiState.folderScopeOnly && beforeFolderScopeOnly != null -> {
+                        refresh = true
+                        settings.copy(
+                            folderScopeOnlyList =
+                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
+                        )
+                    }
+
+                    settings.sortType != sortType -> {
+                        refresh = true
+                        settings.copy(sortType = sortType)
+                    }
+
+                    else -> {
+                        settings
+                    }
+                }
+            }
+            if (refresh) {
+                refreshItems()
+            }
+        }
+    }
+
+    override fun onFolderScopeOnlyClick() {
+        scope.launch {
+            folderDisplaySettingsUseCase.edit { settings ->
+                val beforeFolderScopeOnly =
+                    settings.folderScopeOnlyList.find {
+                        it.bookshelfId == bookshelfId && it.path == path
+                    }
+                val folderScopeOnlyList = if (beforeFolderScopeOnly == null) {
+                    settings.folderScopeOnlyList + FolderScopeOnly(
+                        bookshelfId,
+                        path,
+                        settings.sortType,
+                    )
+                } else {
+                    settings.folderScopeOnlyList - beforeFolderScopeOnly
+                }
+                settings.copy(folderScopeOnlyList = folderScopeOnlyList)
             }
         }
     }

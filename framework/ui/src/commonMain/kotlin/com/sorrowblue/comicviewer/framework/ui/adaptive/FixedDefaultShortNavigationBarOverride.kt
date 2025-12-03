@@ -1,4 +1,4 @@
-package androidx.compose.material3.ext
+package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -24,6 +24,8 @@ import androidx.compose.ui.util.fastMap
 import kotlin.math.roundToInt
 
 /**
+ * Fixed [ androidx.compose.material3.EqualWeightContentMeasurePolicy] and [ androidx.compose.material3.CenteredContentMeasurePolicy]
+ *
  * @see androidx.compose.material3.DefaultShortNavigationBarOverride
  */
 @ExperimentalMaterial3ComponentOverrideApi
@@ -58,6 +60,8 @@ object FixedDefaultShortNavigationBarOverride : ShortNavigationBarOverride {
 }
 
 /**
+ * Correct 0 in minWidth because it doesn't animation correctly in SharedElement
+ *
  * @see androidx.compose.material3.EqualWeightContentMeasurePolicy
  */
 private class FixedEqualWeightContentMeasurePolicy : MeasurePolicy {
@@ -116,6 +120,8 @@ private class FixedEqualWeightContentMeasurePolicy : MeasurePolicy {
 }
 
 /**
+ * Correct 0 in minWidth because it doesn't animation correctly in SharedElement
+ *
  * @see androidx.compose.material3.CenteredContentMeasurePolicy
  */
 private class FixedCenteredContentMeasurePolicy : MeasurePolicy {

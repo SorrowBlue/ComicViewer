@@ -3,10 +3,10 @@ package com.sorrowblue.comicviewer.feature.history.section
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_title
@@ -18,7 +18,7 @@ internal fun HistoryTopAppBar(
     onSettingsClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
-    TopAppBar(
+    AdaptiveAppBar(
         title = { Text(stringResource(Res.string.history_title)) },
         actions = {
             IconButton(onClick = onDeleteAllClick) {

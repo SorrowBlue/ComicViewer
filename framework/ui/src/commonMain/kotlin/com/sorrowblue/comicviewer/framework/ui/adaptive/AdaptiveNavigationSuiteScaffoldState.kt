@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui
+package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.material3.WideNavigationRailState
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -12,10 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+
+val LocalAdaptiveNavigationSuiteState = staticCompositionLocalOf<AdaptiveNavigationSuiteState> {
+    error("No AdaptiveNavigationSuiteState provided")
+}
 
 interface AdaptiveNavigationSuiteState {
     val navigationKeys: List<NavigationKey>
@@ -24,8 +28,6 @@ interface AdaptiveNavigationSuiteState {
 }
 
 interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
-    val navigator: Navigator
-
     val navigationKeys: List<NavigationKey>
 
     fun onNavigationClick(key: NavigationKey)
@@ -38,13 +40,11 @@ interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
 @Composable
 fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaffoldState {
     val adaptiveNavigationSuiteState = LocalAdaptiveNavigationSuiteState.current
-    val navigator = LocalNavigator.current
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
     val navigationSuiteType =
         NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
     return remember {
         AdaptiveNavigationSuiteScaffoldStateImpl(
-            navigator = navigator,
             adaptiveNavigationSuiteState = adaptiveNavigationSuiteState,
             navigationSuiteScaffoldState = navigationSuiteScaffoldState,
         )
@@ -56,7 +56,6 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaff
 }
 
 private class AdaptiveNavigationSuiteScaffoldStateImpl(
-    override val navigator: Navigator,
     private val adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState,
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
 ) : AdaptiveNavigationSuiteScaffoldState,

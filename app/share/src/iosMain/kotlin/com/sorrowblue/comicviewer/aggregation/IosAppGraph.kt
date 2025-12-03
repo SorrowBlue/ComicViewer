@@ -75,7 +75,6 @@ interface IosAppGraph :
     ThemeContext.Factory,
     AppLocaleIsoGraph.Factory,
     CoilGraph.Factory,
-    FileListDisplayItemGraph.Factory,
     GridSizeItemGraph.Factory,
     HiddenFilesToggleableItemGraph.Factory,
     AuthenticationScreenContext.Factory,

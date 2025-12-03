@@ -32,7 +32,8 @@ fun FolderScreenRoot(
         onSearchClick = onSearchClick,
         onFileClick = onFileClick,
         onFileInfoClick = onFileInfoClick,
-        onSortClick = { onSortClick(state.uiState.sortType, state.uiState.folderScopeOnly) },
+        onSortClick = { state.onSortClick(it) },
+        onFolderScopeOnlyClick = { state.onFolderScopeOnlyClick() },
         onSettingsClick = onSettingsClick,
         onRefresh = state::onRefresh,
     )

@@ -1,4 +1,6 @@
 -keep class net.sf.sevenzipjbinding.** {
     *;
 }
--keep class org.bouncycastle.jcajce.**
+-keep class org.bouncycastle.jcajce.** {
+    *;
+}

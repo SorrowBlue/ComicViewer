@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.history.ClearAllHistoryScreenResultKey
@@ -16,6 +17,7 @@ import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -92,7 +94,8 @@ private fun EntryProviderScope<NavKey>.historyEntry(
             context.require<HistoryScreenContext.Factory>().createHistoryScreenContext()
         },
         metadata = SupportingPaneSceneStrategy.mainPane("History") +
-            NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey),
+            NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey) +
+            NavDisplay.transitionMaterialFadeThrough(),
     ) {
         HistoryScreenRoot(
             onSettingsClick = onSettingsClick,

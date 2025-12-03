@@ -10,8 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_action_show_hidden
@@ -19,7 +17,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Scope
-import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -43,15 +40,11 @@ fun HiddenFilesToggleableItemState.hiddenFilesToggleableItem() {
 
 @Composable
 fun rememberHiddenFilesToggleableItemState(): HiddenFilesToggleableItemState {
-    val context = LocalPlatformContext.current
-    val graph = rememberRetained {
-        context.require<HiddenFilesToggleableItemGraph.Factory>()
-            .createHiddenFilesToggleableItemGraph()
-    }
+    val useCase = rememberManageFolderDisplaySettingsUseCase()
     val coroutineScope = rememberCoroutineScope()
     return remember {
         HiddenFilesToggleableItemStateImpl(
-            manageFolderDisplaySettingsUseCase = graph.manageFolderDisplaySettingsUseCase,
+            manageFolderDisplaySettingsUseCase = useCase,
             coroutineScope = coroutineScope,
         )
     }.apply {

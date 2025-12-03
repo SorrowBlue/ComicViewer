@@ -27,7 +27,6 @@ import com.composables.core.ScrollArea
 import com.composables.core.Thumb
 import com.composables.core.VerticalScrollbar
 import com.composables.core.rememberScrollAreaState
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.animateMainContentPaddingValues
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
@@ -74,11 +73,9 @@ fun <T : Any> LazyPagingColumn(
             verticalArrangement = if (fillWidth) {
                 Arrangement.Top
             } else {
-                Arrangement.spacedBy(
-                    ComicTheme.dimension.padding,
-                )
+                Arrangement.spacedBy(16.dp)
             },
-            horizontalArrangement = Arrangement.spacedBy(ComicTheme.dimension.padding),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(
                 count = lazyPagingItems.itemCount,

@@ -18,6 +18,7 @@ plugins {
 kotlin {
     androidLibrary {
         optimization {
+            consumerKeepRules.publish = true
             consumerKeepRules.file("consumer-rules.pro")
         }
     }

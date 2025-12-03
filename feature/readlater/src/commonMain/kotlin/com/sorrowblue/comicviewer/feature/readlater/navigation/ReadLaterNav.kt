@@ -4,6 +4,7 @@ import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrate
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -19,6 +20,7 @@ import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
@@ -136,7 +138,9 @@ private fun EntryProviderScope<NavKey>.readLaterEntry(
         createContext = {
             context.require<ReadLaterScreenContext.Factory>().createReadLaterScreenContext()
         },
-        metadata = SupportingPaneSceneStrategy.mainPane("ReadLater"),
+        metadata = SupportingPaneSceneStrategy.mainPane(
+            "ReadLater",
+        ) + NavDisplay.transitionMaterialFadeThrough(),
     ) {
         ReadLaterScreenRoot(
             onSettingsClick = onSettingsClick,
