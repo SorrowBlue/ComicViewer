@@ -46,7 +46,6 @@ inline fun <reified T : FolderKey, reified V : FileInfoKey> EntryProviderScope<N
     noinline onSearchClick: (BookshelfId, PathString) -> Unit,
     noinline onFileClick: (File) -> Unit,
     noinline onFileInfoClick: (File) -> Unit,
-    noinline onSortClick: (SortType, Boolean) -> Unit,
     noinline onSettingsClick: () -> Unit,
     noinline onRestored: () -> Unit,
     noinline onCollectionClick: (File) -> Unit,
@@ -58,7 +57,6 @@ inline fun <reified T : FolderKey, reified V : FileInfoKey> EntryProviderScope<N
         onSearchClick = onSearchClick,
         onFileClick = onFileClick,
         onFileInfoClick = onFileInfoClick,
-        onSortClick = onSortClick,
         onSettingsClick = onSettingsClick,
         onRestored = onRestored,
     )
@@ -101,7 +99,6 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
     noinline onSearchClick: (BookshelfId, PathString) -> Unit,
     noinline onFileClick: (File) -> Unit,
     noinline onFileInfoClick: (File) -> Unit,
-    noinline onSortClick: (SortType, Boolean) -> Unit,
     noinline onSettingsClick: () -> Unit,
     noinline onRestored: () -> Unit,
 ) {
@@ -122,9 +119,8 @@ inline fun <reified T : FolderKey> EntryProviderScope<NavKey>.folderEntry(
             onSearchClick = { onSearchClick(it.bookshelfId, it.path) },
             onFileClick = onFileClick,
             onFileInfoClick = onFileInfoClick,
-            onSortClick = onSortClick,
             onSettingsClick = onSettingsClick,
-            onRestored = onRestored,
+            onRestoreComplete = onRestored,
         )
     }
 }

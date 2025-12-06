@@ -100,6 +100,18 @@ Compose:
     active: true
   CompositionLocalAllowlist:
     active: true
+    allowedCompositionLocals: [
+      'LocalPlatformContext',
+      'LocalDimension',
+      'LocalContainerColor',
+      'LocalCanonicalScaffoldBound',
+      'LocalNavigator',
+      'LocalAdaptiveNavigationSuiteState',
+      'LocalAppState',
+      'LocalSharedTransitionScope',
+      'LocalComposeEffectErrorHandler',
+      'LocalAppLocaleIsoInternal',
+    ]
   CompositionLocalNaming:
     active: true
   ContentEmitterReturningValues:

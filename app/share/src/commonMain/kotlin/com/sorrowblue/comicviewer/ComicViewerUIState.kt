@@ -36,9 +36,10 @@ interface ComicViewerUIState {
 
 @Composable
 context(context: ComicViewerUIContext)
-fun rememberComicViewerUIState(allowNavigationRestored: Boolean = true): ComicViewerUIState {
-    val mainViewModel = viewModel { MainViewModel() }
-
+fun rememberComicViewerUIState(
+    allowNavigationRestored: Boolean = true,
+    mainViewModel: MainViewModel = viewModel { MainViewModel() },
+): ComicViewerUIState {
     val navigator = rememberNavigator(
         startKey = BookshelfKey.List,
         serializersModule = AppSerializersModule,

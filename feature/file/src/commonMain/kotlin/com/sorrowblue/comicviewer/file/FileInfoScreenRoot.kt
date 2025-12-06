@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 context(context: FileInfoScreenContext)
 fun FileInfoScreenRoot(
     fileKey: File.Key,
-    isOpenFolderEnabled: Boolean = false,
+    isOpenFolderEnabled: Boolean,
     onBackClick: () -> Unit,
     onCollectionClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,

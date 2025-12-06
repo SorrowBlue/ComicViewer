@@ -33,7 +33,6 @@ import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenCo
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenRoot
 import com.sorrowblue.comicviewer.folder.navigation.FileInfoKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderKey
-import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
@@ -46,7 +45,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.entryScreen
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
-import kotlin.collections.plus
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -226,9 +224,6 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
         },
         onRestored = { /* Do noting */ },
         onCollectionClick = {},
-        onSortClick = { sortType, folderScopeOnly ->
-            navigator.navigate(SortTypeSelectKey(sortType, folderScopeOnly))
-        },
         onSettingsClick = onSettingsClick,
         onOpenFolderClick = {
             navigator.navigate(CollectionKey.Folder(it.bookshelfId, it.path))

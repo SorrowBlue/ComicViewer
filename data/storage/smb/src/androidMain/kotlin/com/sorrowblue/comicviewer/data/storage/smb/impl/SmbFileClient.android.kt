@@ -304,10 +304,10 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
 
     private fun cifsContext(): CIFSContext {
         val prop = Properties().apply {
-            setProperty("jcifs.smb.client.minVersion", DialectVersion.SMB202.name)
-            setProperty("jcifs.smb.client.maxVersion", DialectVersion.SMB311.name)
-            setProperty("jcifs.smb.client.dfs.disabled", "true")
-            setProperty("jcifs.smb.client.connTimeout", "5000")
+            setProperty("jcifs.client.minVersion", DialectVersion.SMB202.name)
+            setProperty("jcifs.client.maxVersion", DialectVersion.SMB311.name)
+            setProperty("jcifs.client.dfs.disabled", "true")
+            setProperty("jcifs.client.connTimeout", "5000")
         }
         val context = BaseContext(PropertyConfiguration(prop))
         return when (val auth = this.bookshelf.auth) {

@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 
 @Composable
 fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
+    modifier: Modifier = Modifier,
     navigationItems: @Composable () -> Unit = {
         val navigator = LocalNavigator.current
         navigationKeys.forEach { key ->
@@ -29,7 +30,6 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
             )
         }
     },
-    modifier: Modifier = Modifier,
     primaryActionContent: @Composable () -> Unit = {},
     primaryActionContentHorizontalAlignment: Alignment.Horizontal = NavigationSuiteScaffoldDefaults.primaryActionContentAlignment,
     content: @Composable () -> Unit,

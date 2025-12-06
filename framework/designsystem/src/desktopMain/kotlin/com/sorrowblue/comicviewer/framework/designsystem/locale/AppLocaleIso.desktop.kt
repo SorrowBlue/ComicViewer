@@ -19,7 +19,8 @@ import org.jetbrains.compose.resources.getString
 @SingleIn(AppScope::class)
 @Inject
 actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
-    private val localAppLocaleIsoInternal =
+    @Suppress("VariableNaming", "PrivatePropertyName")
+    private val LocalAppLocaleIsoInternal =
         staticCompositionLocalOf { JavaLocale.getDefault().toString() }
 
     private var currentLanguageTag: String? by mutableStateOf(null)
@@ -70,7 +71,7 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
         }
 
         JavaLocale.setDefault(locale.platformLocale)
-        return localAppLocaleIsoInternal.provides(locale.toLanguageTag())
+        return LocalAppLocaleIsoInternal.provides(locale.toLanguageTag())
     }
 }
 

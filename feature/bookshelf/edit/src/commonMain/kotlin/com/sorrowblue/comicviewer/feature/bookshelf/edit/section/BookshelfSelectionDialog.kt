@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -25,7 +26,11 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_tit
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun BookshelfSelectionDialog(onBackClick: () -> Unit, onTypeClick: (BookshelfType) -> Unit) {
+fun BookshelfSelectionDialog(
+    onBackClick: () -> Unit,
+    onTypeClick: (BookshelfType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val isFullScreenDialog = isCompactWindowClass()
     val items = remember { BookshelfType.entries.toList() }
     val listState = rememberLazyListState()
@@ -47,6 +52,7 @@ fun BookshelfSelectionDialog(onBackClick: () -> Unit, onTypeClick: (BookshelfTyp
     BasicAlertDialog(
         onDismissRequest = onBackClick,
         properties = DialogProperties(usePlatformDefaultWidth = !isFullScreenDialog),
+        modifier = modifier,
     ) {
         if (isFullScreenDialog) {
             Scaffold(

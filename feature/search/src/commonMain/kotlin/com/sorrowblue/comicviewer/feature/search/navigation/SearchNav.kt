@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.feature.search.SearchScreenContext
 import com.sorrowblue.comicviewer.feature.search.SearchScreenRoot
 import com.sorrowblue.comicviewer.folder.navigation.FileInfoKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderKey
-import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
@@ -115,9 +114,6 @@ fun EntryProviderScope<NavKey>.searchEntryGroup(
             navigator.navigate(SearchKey.FileInfo2(it.key()))
         },
         onRestored = { /* Do noting */ },
-        onSortClick = { sortType, folderScopeOnly ->
-            navigator.navigate(SortTypeSelectKey(sortType, folderScopeOnly))
-        },
         onCollectionClick = onCollectionClick,
         onSettingsClick = onSettingsClick,
         onOpenFolderClick = {

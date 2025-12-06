@@ -99,7 +99,7 @@ internal fun SettingsScreen(
             }
         } else {
             PermanentDrawerSheet(
-                modifier = modifier,
+                modifier = Modifier,
                 drawerContainerColor = ComicTheme.colorScheme.surfaceContainerHighest,
                 windowInsets = WindowInsets(0),
             ) {

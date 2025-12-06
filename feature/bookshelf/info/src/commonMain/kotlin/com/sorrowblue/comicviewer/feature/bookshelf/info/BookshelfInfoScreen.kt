@@ -25,7 +25,7 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_tit
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun BookshelfErrorContents(modifier: Modifier) {
+internal fun BookshelfErrorContents(modifier: Modifier = Modifier) {
     Box(contentAlignment = Alignment.Center, modifier = modifier) {
         CircularProgressIndicator()
     }
@@ -45,6 +45,7 @@ internal fun BookshelfInfoScreen(
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
     onRemoveClick: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     ExtraPaneScaffold(
@@ -57,6 +58,7 @@ internal fun BookshelfInfoScreen(
                 enabled = uiState is BookshelfInfoSheetUiState.Loaded,
             )
         },
+        modifier = modifier,
         content = content,
     )
 }

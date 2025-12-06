@@ -28,7 +28,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.Notificati
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.folder.navigation.FileInfoKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderKey
-import com.sorrowblue.comicviewer.folder.navigation.SortTypeSelectKey
 import com.sorrowblue.comicviewer.folder.navigation.folderEntryGroup
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
@@ -190,9 +189,6 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
         },
         onFileInfoClick = {
             navigator.navigate(BookshelfKey.FileInfo(it.key()))
-        },
-        onSortClick = { sortType, folderScopeOnly ->
-            navigator.navigate(SortTypeSelectKey(sortType, folderScopeOnly))
         },
         onSettingsClick = onSettingsClick,
         onRestored = onRestored,
