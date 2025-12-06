@@ -76,10 +76,11 @@ fun rememberFileListDisplayItemState(): FileListDisplayItemState {
 }
 
 @Composable
-fun FileListDisplayItem() {
+fun FileListDisplayItem(modifier: Modifier = Modifier) {
     val state = rememberFileListDisplayItemState()
     Row(
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+        modifier = modifier,
     ) {
         FileListDisplay.entries.forEachIndexed { index, option ->
             TonalToggleButton(

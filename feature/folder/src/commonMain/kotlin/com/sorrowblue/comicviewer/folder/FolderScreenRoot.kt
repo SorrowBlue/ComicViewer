@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.folder
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
@@ -18,9 +17,8 @@ fun FolderScreenRoot(
     onSearchClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
-    onSortClick: (SortType, Boolean) -> Unit,
     onSettingsClick: () -> Unit,
-    onRestored: () -> Unit,
+    onRestoreComplete: () -> Unit,
 ) {
     val state =
         rememberFolderScreenState(bookshelfId = bookshelfId, path = path, restorePath = restorePath)
@@ -42,7 +40,7 @@ fun FolderScreenRoot(
 
     EventEffect(state.events) {
         when (it) {
-            FolderScreenEvent.Restore -> onRestored()
+            FolderScreenEvent.Restore -> onRestoreComplete()
         }
     }
 }

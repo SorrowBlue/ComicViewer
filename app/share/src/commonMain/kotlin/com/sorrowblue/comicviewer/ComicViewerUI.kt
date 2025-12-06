@@ -48,7 +48,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
                     ComicViewerUI(
                         adaptiveNavigationSuiteState = state.adaptiveNavigationSuiteState,
                         navigator = state.navigator,
-                        onBookshelfFolderRestored = state::onNavigationHistoryRestore,
+                        onBookshelfFolderRestoreComplete = state::onNavigationHistoryRestore,
                     )
                 }
             }
@@ -60,7 +60,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
 private fun ComicViewerUI(
     adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState,
     navigator: Navigator,
-    onBookshelfFolderRestored: () -> Unit,
+    onBookshelfFolderRestoreComplete: () -> Unit,
 ) {
     SharedTransitionLayout(modifier = Modifier.background(ComicTheme.colorScheme.background)) {
         CompositionLocalProvider(
@@ -89,7 +89,7 @@ private fun ComicViewerUI(
                     with(LocalPlatformContext.current) {
                         appNavigation(
                             navigator = navigator,
-                            onBookshelfFolderRestored = onBookshelfFolderRestored,
+                            onBookshelfFolderRestored = onBookshelfFolderRestoreComplete,
                         )
                     }
                 }

@@ -53,7 +53,7 @@ import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
 
 @Composable
 context(context: BookScreenContext)
-fun BookScreen(
+internal fun BookScreen(
     bookshelfId: BookshelfId,
     path: String,
     name: String,

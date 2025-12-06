@@ -21,6 +21,7 @@ fun BookshelfInfoScreenRoot(
     onRemoveClick: () -> Unit,
     showNotificationPermissionRationale: (ScanType) -> Unit,
     onEditClick: (BookshelfId, BookshelfType) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val state = rememberBookshelfInfoScreenState(bookshelfId = bookshelfId)
 
@@ -39,6 +40,7 @@ fun BookshelfInfoScreenRoot(
                 )
             }
         },
+        modifier = modifier,
     ) { contentPadding ->
         when (val uiState = state.uiState) {
             is BookshelfInfoSheetUiState.Loaded -> {

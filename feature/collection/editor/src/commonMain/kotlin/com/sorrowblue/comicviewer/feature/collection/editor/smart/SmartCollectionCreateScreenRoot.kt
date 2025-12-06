@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
@@ -16,6 +17,7 @@ fun SmartCollectionCreateScreenRoot(
     searchCondition: SearchCondition,
     onCancelClick: () -> Unit,
     onComplete: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val state = rememberSmartCollectionCreateScreenState(bookshelfId, searchCondition)
     SmartCollectionEditorScreen(
@@ -23,6 +25,7 @@ fun SmartCollectionCreateScreenRoot(
         uiState = state.uiState,
         title = { Text(text = stringResource(Res.string.collection_editor_title_smart_create)) },
         onCancel = onCancelClick,
+        modifier = modifier,
     )
     EventEffect(state.event) {
         when (it) {
