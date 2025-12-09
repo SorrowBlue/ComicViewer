@@ -59,13 +59,14 @@ internal fun PinTextField(
     Box(
         modifier = modifier
             .onPreviewKeyEvent {
-                if (it.type == KeyEventType.KeyUp && it.key == Key.Enter) {
-                    onNextClick()
-                    false
-                } else if (it.type == KeyEventType.KeyDown && it.key == Key.Enter) {
-                    true
-                } else {
-                    false
+                when (it.type) {
+                    KeyEventType.KeyUp if it.key == Key.Enter -> {
+                        onNextClick()
+                        false
+                    }
+
+                    KeyEventType.KeyDown if it.key == Key.Enter -> true
+                    else -> false
                 }
             },
         contentAlignment = Alignment.Center,

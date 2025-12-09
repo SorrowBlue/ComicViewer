@@ -4,6 +4,7 @@ import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUse
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
+import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
@@ -13,7 +14,7 @@ import dev.zacsweers.metro.Scope
 annotation class BasicCollectionAddScreenScope
 
 @GraphExtension(BasicCollectionAddScreenScope::class)
-interface BasicCollectionAddScreenContext {
+interface BasicCollectionAddScreenContext : ScreenContext {
     val removeCollectionFileUseCase: RemoveCollectionFileUseCase
     val addCollectionFileUseCase: AddCollectionFileUseCase
     val collectionSettingsUseCase: CollectionSettingsUseCase

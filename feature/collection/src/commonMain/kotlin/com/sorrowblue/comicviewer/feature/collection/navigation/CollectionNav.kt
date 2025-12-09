@@ -19,6 +19,8 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.feature.collection.CollectionScreenContext
 import com.sorrowblue.comicviewer.feature.collection.CollectionScreenRoot
+import com.sorrowblue.comicviewer.feature.collection.add.BasicCollectionAddScreenContext
+import com.sorrowblue.comicviewer.feature.collection.add.BasicCollectionAddScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.delete.DeleteCollectionScreenContext
 import com.sorrowblue.comicviewer.feature.collection.delete.DeleteCollectionScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionCreateScreenContext
@@ -88,6 +90,10 @@ sealed interface CollectionKey : NavigationKey {
     data class EditBasic(val collectionId: CollectionId) : CollectionKey
 
     @Serializable
+    data class AddBasic(val bookshelfId: BookshelfId = BookshelfId(), val path: PathString = "") :
+        CollectionKey
+
+    @Serializable
     data class CreateSmart(
         val bookshelfId: BookshelfId? = null,
         val searchCondition: SearchCondition = SearchCondition(),
@@ -155,6 +161,17 @@ fun EntryProviderScope<NavKey>.collectionEntryGroup(
     collectionCreateBasicEntry(
         onBackClick = navigator::goBack,
         onComplete = navigator::goBack,
+    )
+    collectionAddBasicEntry(
+        onBackClick = navigator::goBack,
+        onCollectionCreateClick = { bookshelfId, path ->
+            navigator.navigate(
+                CollectionKey.CreateBasic(
+                    bookshelfId = bookshelfId,
+                    path = path,
+                ),
+            )
+        },
     )
     collectionEditBasicEntry(
         onBackClick = navigator::goBack,
@@ -284,6 +301,27 @@ private fun EntryProviderScope<NavKey>.collectionCreateBasicEntry(
             path = it.path,
             onBackClick = onBackClick,
             onComplete = onComplete,
+        )
+    }
+}
+
+context(context: PlatformContext)
+private fun EntryProviderScope<NavKey>.collectionAddBasicEntry(
+    onBackClick: () -> Unit,
+    onCollectionCreateClick: (BookshelfId, PathString) -> Unit,
+) {
+    entryScreen<CollectionKey.AddBasic, BasicCollectionAddScreenContext>(
+        createContext = {
+            context.require<BasicCollectionAddScreenContext.Factory>()
+                .createBasicCollectionAddScreenContext()
+        },
+        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
+    ) {
+        BasicCollectionAddScreenRoot(
+            bookshelfId = it.bookshelfId,
+            path = it.path,
+            onBackClick = onBackClick,
+            onCollectionCreateClick = onCollectionCreateClick,
         )
     }
 }

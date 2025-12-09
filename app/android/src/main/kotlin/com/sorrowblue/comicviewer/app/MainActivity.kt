@@ -18,7 +18,9 @@ import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookKey
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
 
-/** Main activity */
+/**
+ * Main activity
+ */
 internal class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 

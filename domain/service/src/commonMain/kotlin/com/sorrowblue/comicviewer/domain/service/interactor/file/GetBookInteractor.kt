@@ -48,9 +48,9 @@ internal class GetBookInteractor(
         }
         return localFile.fold(
             onSuccess = {
-                when (val data = it) {
-                    is BookFile -> updateTotalPageCount(remoteDataSource, data)
-                    is BookFolder -> updateTotalPageCount(remoteDataSource, data)
+                when (it) {
+                    is BookFile -> updateTotalPageCount(remoteDataSource, it)
+                    is BookFolder -> updateTotalPageCount(remoteDataSource, it)
                     is Folder -> return Resource.Error(Error.NotFound)
                 }
             },

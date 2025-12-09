@@ -6,8 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import com.sorrowblue.comicviewer.domain.model.onError
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManagePdfPluginSettingsUseCase
@@ -34,13 +32,11 @@ internal interface PdfPluginScreenState {
 @Composable
 context(context: PdfPluginScreenContext)
 internal fun rememberPdfPluginScreenState(): PdfPluginScreenState {
-    val uriHandler = LocalUriHandler.current
     val coroutineScope = rememberCoroutineScope()
     return remember {
         PdfPluginScreenStateImpl(
-            uriHandler = uriHandler,
-            registerPdfPluginUseCase = context.registerPdfPluginUseCase,
             managePdfPluginSettingsUseCase = context.managePdfPluginSettingsUseCase,
+            registerPdfPluginUseCase = context.registerPdfPluginUseCase,
             coroutineScope = coroutineScope,
         )
     }.apply {
@@ -52,9 +48,8 @@ internal fun rememberPdfPluginScreenState(): PdfPluginScreenState {
 }
 
 private class PdfPluginScreenStateImpl(
-    private val uriHandler: UriHandler,
+    managePdfPluginSettingsUseCase: ManagePdfPluginSettingsUseCase,
     private val registerPdfPluginUseCase: RegisterPdfPluginUseCase,
-    private val managePdfPluginSettingsUseCase: ManagePdfPluginSettingsUseCase,
     private val coroutineScope: CoroutineScope,
 ) : PdfPluginScreenState {
     lateinit var directoryPickerLauncher: PickerResultLauncher

@@ -103,7 +103,6 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
     }
 }
 
-@Suppress("KotlinNoActualForExpect")
 internal expect object ComicViewerDatabaseConstructor :
     RoomDatabaseConstructor<ComicViewerDatabase> {
     override fun initialize(): ComicViewerDatabase

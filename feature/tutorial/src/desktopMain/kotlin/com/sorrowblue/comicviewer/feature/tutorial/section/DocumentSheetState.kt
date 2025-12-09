@@ -33,9 +33,9 @@ internal fun rememberDocumentSheetState(
     val coroutineScope = rememberCoroutineScope()
     return remember {
         DocumentSheetStateImpl(
+            managePdfPluginSettingsUseCase = context.managePdfPluginSettingsUseCase,
             uriHandler = uriHandler,
             registerPdfPluginUseCase = context.registerPdfPluginUseCase,
-            managePdfPluginSettingsUseCase = context.managePdfPluginSettingsUseCase,
             coroutineScope = coroutineScope,
         )
     }.apply {
@@ -55,9 +55,9 @@ internal interface DocumentSheetState {
 }
 
 private class DocumentSheetStateImpl(
+    managePdfPluginSettingsUseCase: ManagePdfPluginSettingsUseCase,
     private val uriHandler: UriHandler,
     private val registerPdfPluginUseCase: RegisterPdfPluginUseCase,
-    private val managePdfPluginSettingsUseCase: ManagePdfPluginSettingsUseCase,
     private val coroutineScope: CoroutineScope,
 ) : DocumentSheetState {
     lateinit var directoryPickerLauncher: PickerResultLauncher
@@ -98,6 +98,7 @@ private class DocumentSheetStateImpl(
                         RegisterPdfPluginUseCase.Error.NotFound -> getString(
                             Res.string.tutorial_msg_not_found_pdf_plugin,
                         )
+
                         RegisterPdfPluginUseCase.Error.NotSupportVersion -> "古いバージョンです"
                     }
                     uiState = uiState.copy(checking = false, info = "", error = errorMsg)

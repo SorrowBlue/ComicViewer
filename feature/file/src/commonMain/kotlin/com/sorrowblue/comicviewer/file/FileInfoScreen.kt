@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.file.component.FileAttributeChips
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
@@ -175,9 +174,9 @@ private fun AdaptiveNavigationSuiteScaffoldPreview() {
                         bottom = ComicTheme.dimension.margin,
                     )
                 }
-                FileLazyVerticalGrid<BookFile>(
+                FileLazyVerticalGrid(
                     uiState = FileLazyVerticalGridUiState(),
-                    lazyPagingItems = PagingData.flowData<BookFile> { fakeBookFile() }
+                    lazyPagingItems = PagingData.flowData { fakeBookFile() }
                         .collectAsLazyPagingItems(),
                     onItemClick = {},
                     onItemInfoClick = {},

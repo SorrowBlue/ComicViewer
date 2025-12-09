@@ -23,7 +23,7 @@ fun BookshelfEditorDialog(
             if (state.initialForm == state.form.value) {
                 onBackClick()
             } else {
-                discardConfirm
+                discardConfirm()
             }
         },
         properties = DialogProperties(usePlatformDefaultWidth = !isFullScreenDialog),
@@ -35,7 +35,7 @@ fun BookshelfEditorDialog(
                     if (state.initialForm == state.form.value) {
                         onBackClick()
                     } else {
-                        discardConfirm
+                        discardConfirm()
                     }
                 },
             )
@@ -46,7 +46,7 @@ fun BookshelfEditorDialog(
                     if (state.initialForm == state.form.value) {
                         onBackClick()
                     } else {
-                        discardConfirm
+                        discardConfirm()
                     }
                 },
             )

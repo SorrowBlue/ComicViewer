@@ -1,26 +1,22 @@
 package com.sorrowblue.comicviewer.framework.ui.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import logcat.logcat
+
+typealias Navigator = Navigator2
 
 val LocalNavigator = staticCompositionLocalOf<Navigator> {
     error("No AdaptiveNavigationSuiteState provided")
 }
 
-class Navigator private constructor(
+class Navigator3 private constructor(
     initialTopLevelKey: NavKey,
     initialTopLevelStacks: LinkedHashMap<NavKey, SnapshotStateList<NavKey>>,
 ) {
@@ -100,6 +96,7 @@ class Navigator private constructor(
         updateBackStack()
     }
 
+/*
     companion object {
         @Serializable
         private data class SaveableState(
@@ -142,10 +139,11 @@ class Navigator private constructor(
             },
         )
     }
+*/
 }
 
-@Composable
-fun rememberNavigator(startKey: NavKey, serializersModule: SerializersModule): Navigator =
-    rememberSaveable(startKey, saver = Navigator.Saver(serializersModule)) {
-        Navigator(startKey)
-    }
+// @Composable
+// fun rememberNavigator(startKey: NavKey, serializersModule: SerializersModule): Navigator =
+//    rememberSaveable(startKey, saver = Navigator.Saver(serializersModule)) {
+//        Navigator(startKey)
+//    }

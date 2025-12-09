@@ -33,6 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalAdaptiveNavigationS
 import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toEntries
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberCustomNavEntryDecorator
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
 
@@ -96,23 +97,23 @@ private fun ComicViewerUI(
                 Transitions.InitSlideDistance()
                 Transitions.motionScheme = ComicTheme.motionScheme
                 NavDisplay(
-                    backStack = navigator.backStack,
-                    entryDecorators = listOf(
-                        rememberSaveableStateHolderNavEntryDecorator(),
-                        rememberNavigationResultNavEntryDecorator(
-                            backStack = navigator.backStack,
-                            entryProvider = entryProvider,
+                    entries = navigator.toEntries(
+                        entryDecorators = listOf(
+                            rememberSaveableStateHolderNavEntryDecorator(),
+                            rememberNavigationResultNavEntryDecorator(
+                                backStack = navigator.backStack,
+                                entryProvider = entryProvider,
+                            ),
+                            rememberViewModelStoreNavEntryDecorator(),
+                            customNavEntryDecorator,
                         ),
-                        rememberViewModelStoreNavEntryDecorator(),
-                        customNavEntryDecorator,
+                        entryProvider,
                     ),
                     onBack = { navigator.goBack() },
                     sceneStrategy = supportingPaneSceneStrategy
                         .then(listDetailSceneStrategy)
                         .then(dialogSceneStrategy),
-                ) { key ->
-                    entryProvider(key)
-                }
+                )
             }
         }
     }

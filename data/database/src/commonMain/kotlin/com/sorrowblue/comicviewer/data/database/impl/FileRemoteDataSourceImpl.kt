@@ -49,7 +49,7 @@ internal class FileRemoteDataSourceImpl(
             dao.pagingSourceFileSearch(bookshelf.id, searchCondition())
         }.flow.map { pagingData ->
             pagingData.map {
-                BookThumbnail.Companion.from(it.toModel() as Book)
+                BookThumbnail.from(it.toModel() as Book)
             }
         }
     }
