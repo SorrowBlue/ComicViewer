@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.folder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat

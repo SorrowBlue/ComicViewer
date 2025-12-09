@@ -8,4 +8,6 @@ data object ShareContents : Bookshelf {
     override val fileCount = 0
 
     override val isDeleted = false
+
+    override val type: BookshelfType? = null
 }

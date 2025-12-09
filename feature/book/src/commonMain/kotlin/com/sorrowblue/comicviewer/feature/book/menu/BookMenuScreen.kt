@@ -14,11 +14,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.ExposedDropdownMenu
 import comicviewer.feature.book.generated.resources.Res
 import comicviewer.feature.book.generated.resources.book_label_display_format
 import comicviewer.feature.book.generated.resources.book_label_scale
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-
-@Serializable
-data object BookMenu
 
 internal data class BookMenuScreenUiState(
     val pageFormat2: PageFormat2 = PageFormat2.Default,

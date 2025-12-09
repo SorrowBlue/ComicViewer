@@ -17,7 +17,8 @@ private const val CiperTransformation =
     "${KeyProperties.KEY_ALGORITHM_RSA}/${KeyProperties.BLOCK_MODE_ECB}/${KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1}"
 
 @ContributesTo(DataScope::class)
-interface AndroidDatabaseBindings {
+interface
+AndroidDatabaseBindings {
     @Binds
     private val AndroidCryptUtil.bind: CryptUtil get() = this
 }

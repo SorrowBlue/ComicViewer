@@ -19,10 +19,10 @@ internal const val PdfPluginService = "com.sorrowblue.comicviewer.plugin.pdf.Pdf
 
 @AssistedInject
 internal actual class DocumentFileReader(
+    context: Context,
+    pluginManager: PluginManager,
     @Assisted private val mimeType: String,
     @Assisted private val seekableInputStream: SeekableInputStream,
-    private val context: Context,
-    private val pluginManager: PluginManager,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : AndroidDocumentFileReader(mimeType, seekableInputStream, context, pluginManager, dispatcher),
     FileReader {

@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorrowblue.comicviewer.app.MainViewModel
 import com.sorrowblue.comicviewer.app.navigation.AppSerializersModule
 import com.sorrowblue.comicviewer.app.rememberAdaptiveNavigationSuiteState
@@ -15,6 +16,9 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfKey
+import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionKey
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryKey
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterKey
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteState
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.rememberNavigator
@@ -42,7 +46,15 @@ fun rememberComicViewerUIState(
 ): ComicViewerUIState {
     val navigator = rememberNavigator(
         startKey = BookshelfKey.List,
-        serializersModule = AppSerializersModule,
+        topLevelRoutes = setOf(
+            BookshelfKey.List,
+            CollectionKey.List,
+            ReadLaterKey.List,
+            HistoryKey.List,
+        ),
+        savedStateConfiguration = SavedStateConfiguration {
+            serializersModule = AppSerializersModule
+        },
     )
     val adaptiveNavigationSuiteState = rememberAdaptiveNavigationSuiteState(navigator)
     val coroutineScope = rememberCoroutineScope()

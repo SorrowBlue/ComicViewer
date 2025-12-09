@@ -19,6 +19,7 @@ kotlin {
         }
         androidMain {
             dependencies {
+                implementation(libs.androidx.coreKtx)
                 implementation(libs.androidx.documentfile)
             }
         }

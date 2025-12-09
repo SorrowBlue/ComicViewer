@@ -1,8 +1,8 @@
 package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import android.content.Context
-import android.net.Uri
 import android.os.ParcelFileDescriptor
+import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
@@ -130,10 +130,10 @@ internal actual class ShareFileClient(
         lastReadTime = 0,
     )
 
-    private val File.uri get() = Uri.parse(path)
+    private val File.uri get() = path.toUri()
 
     private fun documentFile(path: String): DocumentFile =
-        requireNotNull(DocumentFile.fromSingleUri(context, Uri.parse(path)))
+        requireNotNull(DocumentFile.fromSingleUri(context, path.toUri()))
 
     private val File.documentFile: DocumentFile
         get() = requireNotNull(DocumentFile.fromSingleUri(context, uri))

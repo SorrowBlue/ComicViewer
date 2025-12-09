@@ -98,7 +98,7 @@ private class BasicCollectionAddScreenStateImpl(
     override fun onClickCollectionSort(sort: CollectionSort) {
         coroutineScope.launch {
             collectionSettingsUseCase.edit {
-                it.copy(sort == CollectionSort.Recent)
+                it.copy(recent = sort == CollectionSort.Recent)
             }
             lazyPagingItems.refresh()
         }

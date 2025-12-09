@@ -44,9 +44,11 @@ internal class RemoteDataSourceImpl(
         is InternalStorage -> fileClientFactory.getValue(
             FileClientType.Device,
         ) as FileClient.Factory<Bookshelf>
+
         is SmbServer -> fileClientFactory.getValue(
             FileClientType.Smb,
         ) as FileClient.Factory<Bookshelf>
+
         ShareContents -> fileClientFactory.getValue(
             FileClientType.Share,
         ) as FileClient.Factory<Bookshelf>
@@ -162,21 +164,20 @@ internal class RemoteDataSourceImpl(
             }
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute? = kotlin
-        .runCatching {
-            withContext(dispatcher) {
-                fileClient.attribute(path = path)
-            }
-        }.getOrElse {
-            throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                }
-
-                else -> RemoteException.Unknown()
-            }
+    override suspend fun getAttribute(path: String): FileAttribute = kotlin.runCatching {
+        withContext(dispatcher) {
+            fileClient.attribute(path = path)
         }
+    }.getOrElse {
+        throw when (it) {
+            is FileClientException -> when (it) {
+                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                is FileClientException.InvalidPath -> RemoteException.NotFound()
+                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
+            }
+
+            else -> RemoteException.Unknown()
+        }
+    }
 }

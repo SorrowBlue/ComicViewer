@@ -52,7 +52,7 @@ internal fun EntryProviderScope<NavKey>.appNavigation(
         },
         onRestored = onBookshelfFolderRestored,
         onCollectionClick = { file ->
-            // TODO
+            navigator.navigate(CollectionKey.AddBasic(file.bookshelfId, file.path))
         },
     )
     historyEntryGroup(

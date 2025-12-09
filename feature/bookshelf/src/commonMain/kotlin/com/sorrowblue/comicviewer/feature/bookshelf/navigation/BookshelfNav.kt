@@ -143,7 +143,9 @@ fun EntryProviderScope<NavKey>.bookshelfEntryGroup(
     bookshelfEditEntry(
         onBackClick = navigator::goBack,
         discardConfirm = navigator::goBack,
-        onEditComplete = navigator::goBack,
+        onEditComplete = {
+//            navigator.
+        },
     )
     bookshelfInfoEntry(
         onBackClick = navigator::goBack,
