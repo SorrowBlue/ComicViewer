@@ -27,6 +27,12 @@ jobs:
           fetch-depth: 0
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
+      - name: Decode android keystore file
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.2.4
+        with:
+          fileName: 'android_keystore.jks'
+          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
       - name: Run bundleInternal
         run: ./gradlew bundleInternal
         env:
