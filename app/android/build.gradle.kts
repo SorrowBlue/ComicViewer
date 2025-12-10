@@ -107,7 +107,7 @@ fun calculateVersionCode(versionName: String): Int {
         }
 
         // Split version and suffix (e.g., "1.2.3-beta.1" -> ["1.2.3", "beta.1"])
-        val versionParts = withoutPrefix.split("-", limit = 2)
+        val versionParts = withoutPrefix.split("-")
         val baseVersion = versionParts[0]
         val suffix = if (versionParts.size > 1) versionParts[1] else null
 
