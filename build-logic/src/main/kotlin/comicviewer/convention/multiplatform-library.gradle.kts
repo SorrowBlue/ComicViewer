@@ -1,6 +1,5 @@
 package comicviewer.convention
 
-import com.sorrowblue.comicviewer.androidLibrary
 import com.sorrowblue.comicviewer.libs
 import desktopMain
 import desktopTest
