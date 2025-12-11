@@ -1,6 +1,5 @@
 package comicviewer.convention
 
-import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.libs
 
 plugins {

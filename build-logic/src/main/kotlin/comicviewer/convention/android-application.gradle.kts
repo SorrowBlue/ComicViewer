@@ -1,8 +1,6 @@
 package comicviewer.convention
 
-import com.sorrowblue.comicviewer.implementation
 import com.sorrowblue.comicviewer.libs
-import gradle.kotlin.dsl.accessors._3ec5d6a45b88616d7e3b15a061543e2e.aboutLibraries
 
 plugins {
     android
