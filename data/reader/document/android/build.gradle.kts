@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.androidLibrary)
+    id("kotlin-android")
     alias(libs.plugins.metro)
 }
 

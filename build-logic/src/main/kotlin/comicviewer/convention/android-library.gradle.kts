@@ -4,6 +4,7 @@ import com.sorrowblue.comicviewer.libs
 
 plugins {
     `android-library`
+    `kotlin-android`
     id("comicviewer.primitive.lint")
     id("comicviewer.primitive.detekt")
     id("comicviewer.primitive.dokka")
