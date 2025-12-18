@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
 
 @Composable
 context(context: ReceiveBookScreenContext)
-internal fun ReceiveBookScreenRoot(uri: String, onBackClick: () -> Unit) {
+fun ReceiveBookScreenRoot(uri: String, onBackClick: () -> Unit) {
     val state: ReceiveBookScreenState = rememberReceiveBookScreenState(uri = uri)
     if (state.uiState is BookScreenUiState.Loaded) {
         val uiState = state.uiState as BookScreenUiState.Loaded

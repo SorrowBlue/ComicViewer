@@ -24,9 +24,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalAdaptiveNavigationSuiteState
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.PreviewImage
 import kotlinx.coroutines.CoroutineScope
 
@@ -34,11 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 actual fun PreviewTheme(content: @Composable () -> Unit) {
     SharedTransitionLayout {
-        CompositionLocalProvider(
-            LocalSharedTransitionScope provides this,
-            LocalAdaptiveNavigationSuiteState provides
-                remember { PreviewAdaptiveNavigationSuiteState() },
-        ) {
+        CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             AnimatedContent(true) {
                 if (it) {
                     CompositionLocalProvider(
@@ -58,12 +51,6 @@ actual fun PreviewTheme(content: @Composable () -> Unit) {
             }
         }
     }
-}
-
-class PreviewAdaptiveNavigationSuiteState : AdaptiveNavigationSuiteState {
-    override val navigationKeys: List<NavigationKey> = emptyList()
-
-    override fun onNavigationClick(key: NavigationKey) = Unit
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)

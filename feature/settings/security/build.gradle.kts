@@ -5,12 +5,12 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.settings.security"
-        // resourcePrefix("settings_security")
     }
     sourceSets {
         commonMain {
             dependencies {
                 implementation(projects.feature.settings.common)
+                implementation(projects.feature.authentication)
             }
         }
         androidMain {

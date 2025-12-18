@@ -9,12 +9,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.sorrowblue.comicviewer.ComicViewerUI
-import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookKey
+import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
 
@@ -52,18 +51,19 @@ internal class MainActivity : AppCompatActivity() {
         }
 
         @OptIn(ExperimentalComposeUiApi::class)
-        ComposeUiFlags.isSemanticAutofillEnabled = true
         setContent {
-            with(rememberComicViewerUIContext()) {
-                val state = rememberComicViewerUIState(
+            val state = with(rememberComicViewerUIContext()) {
+                rememberComicViewerUIState(
                     allowNavigationRestored = receivedBookData.isNullOrEmpty(),
                 )
+            }
+            with((application as MainApplication).platformGraph) {
                 ComicViewerUI(finishApp = ::finish, state = state)
-                LaunchedEffect(receivedBookData.isNullOrEmpty()) {
-                    if (!receivedBookData.isNullOrEmpty()) {
-                        state.navigator.navigate(ReceiveBookKey(receivedBookData))
-                        state.onNavigationHistoryRestore()
-                    }
+            }
+            LaunchedEffect(receivedBookData.isNullOrEmpty()) {
+                if (!receivedBookData.isNullOrEmpty()) {
+                    state.navigator.navigate(ReceiveBookNavKey(receivedBookData))
+                    state.onNavigationHistoryRestore()
                 }
             }
         }

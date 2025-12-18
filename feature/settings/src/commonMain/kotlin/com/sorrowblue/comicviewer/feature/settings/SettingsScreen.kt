@@ -100,7 +100,7 @@ internal fun SettingsScreen(
         } else {
             PermanentDrawerSheet(
                 modifier = Modifier,
-                drawerContainerColor = ComicTheme.colorScheme.surfaceContainerHighest,
+//                drawerContainerColor = ComicTheme.colorScheme.surfaceContainerHighest,
                 windowInsets = WindowInsets(0),
             ) {
                 LazyColumn(
@@ -114,9 +114,9 @@ internal fun SettingsScreen(
                         TopAppBar(
                             title = { Text(text = stringResource(Res.string.settings_title)) },
                             navigationIcon = { CloseIconButton(onBackClick) },
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = ComicTheme.colorScheme.surfaceContainerHighest,
-                            ),
+//                            colors = TopAppBarDefaults.topAppBarColors(
+//                                containerColor = ComicTheme.colorScheme.surfaceContainerHighest,
+//                            ),
                             windowInsets = WindowInsets(0),
                         )
                     }

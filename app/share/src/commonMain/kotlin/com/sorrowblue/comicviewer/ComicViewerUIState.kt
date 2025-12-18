@@ -7,19 +7,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.NavKey
+import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorrowblue.comicviewer.app.MainViewModel
-import com.sorrowblue.comicviewer.app.navigation.AppSerializersModule
-import com.sorrowblue.comicviewer.app.rememberAdaptiveNavigationSuiteState
 import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfKey
-import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionKey
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryKey
-import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterKey
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteState
+import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.rememberNavigator
 import kotlinx.coroutines.CoroutineScope
@@ -27,12 +23,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.serialization.PolymorphicSerializer
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
+import kotlinx.serialization.modules.polymorphic
 import logcat.LogPriority
 import logcat.logcat
 
 interface ComicViewerUIState {
-    val adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState
-
     val navigator: Navigator
 
     fun onNavigationHistoryRestore()
@@ -45,18 +43,19 @@ fun rememberComicViewerUIState(
     mainViewModel: MainViewModel = viewModel { MainViewModel() },
 ): ComicViewerUIState {
     val navigator = rememberNavigator(
-        startKey = BookshelfKey.List,
-        topLevelRoutes = setOf(
-            BookshelfKey.List,
-            CollectionKey.List,
-            ReadLaterKey.List,
-            HistoryKey.List,
-        ),
-        savedStateConfiguration = SavedStateConfiguration {
-            serializersModule = AppSerializersModule
+        startKey = BookshelfNavKey.Main,
+        topLevelRoutes = context.navigationKeys,
+        configuration = SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                contextual(SnapshotStateListSerializer(PolymorphicSerializer(NavKey::class)))
+                polymorphic(NavKey::class) {
+                    context.navKeySubclassMap.forEach {
+                        subclass(it.first, it.second)
+                    }
+                }
+            }
         },
     )
-    val adaptiveNavigationSuiteState = rememberAdaptiveNavigationSuiteState(navigator)
     val coroutineScope = rememberCoroutineScope()
     return remember {
         ComicViewerUIStateImpl(
@@ -70,9 +69,7 @@ fun rememberComicViewerUIState(
             },
         )
     }.apply {
-//        this.navigationState = navigationState
         this.navigator = navigator
-        this.adaptiveNavigationSuiteState = adaptiveNavigationSuiteState
     }
 }
 
@@ -84,8 +81,6 @@ private class ComicViewerUIStateImpl(
     private val completeInit: () -> Unit,
 ) : ComicViewerUIState {
     override lateinit var navigator: Navigator
-    override lateinit var adaptiveNavigationSuiteState: AdaptiveNavigationSuiteState
-
     var isNavigationRestored by mutableStateOf(false)
 
     init {
@@ -123,7 +118,7 @@ private class ComicViewerUIStateImpl(
             val bookshelfId = folderList.first().bookshelfId
             if (folderList.size == 1) {
                 navigator.navigate(
-                    BookshelfKey.Folder(
+                    BookshelfNavKey.Folder(
                         bookshelfId = bookshelfId,
                         path = folderList.first().path,
                         restorePath = book.path,
@@ -134,7 +129,7 @@ private class ComicViewerUIStateImpl(
                 }
             } else {
                 navigator.navigate(
-                    BookshelfKey.Folder(
+                    BookshelfNavKey.Folder(
                         bookshelfId = bookshelfId,
                         path = folderList.first().path,
                         restorePath = null,
@@ -145,7 +140,7 @@ private class ComicViewerUIStateImpl(
                 }
                 folderList.drop(1).dropLast(1).forEach { folder ->
                     navigator.navigate(
-                        BookshelfKey.Folder(
+                        BookshelfNavKey.Folder(
                             bookshelfId = bookshelfId,
                             path = folderList.first().path,
                             restorePath = null,
@@ -156,7 +151,7 @@ private class ComicViewerUIStateImpl(
                     }
                 }
                 navigator.navigate(
-                    BookshelfKey.Folder(
+                    BookshelfNavKey.Folder(
                         bookshelfId = bookshelfId,
                         path = folderList.last().path,
                         restorePath = book.path,
