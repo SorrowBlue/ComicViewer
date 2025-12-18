@@ -41,13 +41,8 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
     CompositionLocalProvider(LocalPlatformContext provides context) {
         ComicTheme {
             with(rememberPreAppScreenContext()) {
-                PreAppScreen(
-                    finishApp = finishApp,
-                ) {
-                    ComicViewerUI(
-                        navigator = state.navigator,
-                        onBookshelfFolderRestoreComplete = state::onNavigationHistoryRestore,
-                    )
+                PreAppScreen(finishApp = finishApp) {
+                    ComicViewerUI(navigator = state.navigator)
                 }
             }
         }
@@ -56,10 +51,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
 
 @Composable
 context(appGraph: AppGraph)
-private fun ComicViewerUI(
-    navigator: Navigator,
-    onBookshelfFolderRestoreComplete: () -> Unit,
-) {
+private fun ComicViewerUI(navigator: Navigator) {
     SharedTransitionLayout(modifier = Modifier.background(ComicTheme.colorScheme.background)) {
         CompositionLocalProvider(
             ProvidesAppState,

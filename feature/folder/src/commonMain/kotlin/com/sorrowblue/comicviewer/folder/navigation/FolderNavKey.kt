@@ -24,6 +24,7 @@ interface FolderNavKey : ScreenKey {
     val path: String
     val restorePath: String?
     val showSearch: Boolean get() = false
+    val onRestoreComplete: (() -> Unit)? get() = null
 }
 
 context(factory: FolderScreenContext.Factory)
@@ -34,7 +35,6 @@ inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
     noinline onFileClick: (File) -> Unit,
     noinline onFileInfoClick: (File) -> Unit,
     noinline onSettingsClick: () -> Unit,
-    noinline onRestored: () -> Unit,
 ) {
     entry<T>(
         clazzContentKey = { it.toString() },
@@ -53,7 +53,9 @@ inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
                 onFileClick = onFileClick,
                 onFileInfoClick = onFileInfoClick,
                 onSettingsClick = onSettingsClick,
-                onRestoreComplete = onRestored,
+                onRestoreComplete = {
+                    it.onRestoreComplete?.invoke()
+                },
             )
         }
     }
@@ -68,7 +70,6 @@ inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> EntryProviderS
     noinline onFileInfoClick: (File) -> Unit,
     noinline onSettingsClick: () -> Unit,
     noinline onCollectionClick: (File) -> Unit,
-    noinline onRestored: () -> Unit = {},
     noinline onOpenFolderClick: (File) -> Unit = {},
 ) {
     folderEntry<T>(
@@ -78,7 +79,6 @@ inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> EntryProviderS
         onFileClick = onFileClick,
         onFileInfoClick = onFileInfoClick,
         onSettingsClick = onSettingsClick,
-        onRestored = onRestored,
     )
     fileInfoEntry<V>(
         "${sceneKeyPrefix}Folder",

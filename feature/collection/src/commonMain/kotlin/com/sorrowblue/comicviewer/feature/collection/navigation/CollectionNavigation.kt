@@ -20,7 +20,6 @@ import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectio
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionEditScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionEditScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionCreateScreenContext
-import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionCreateScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenContext
@@ -35,6 +34,7 @@ import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeT
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -46,27 +46,25 @@ import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface CollectionNavigation {
-
     @Provides
     @IntoSet
     private fun provideNavigationKey(): NavigationKey = CollectionNavKey.Main
 
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (CollectionNavKey.Main::class as KClass<NavKey>) to (CollectionNavKey.Main.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.Detail::class as KClass<NavKey>) to (CollectionNavKey.Detail.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.FileInfo::class as KClass<NavKey>) to (CollectionNavKey.FileInfo.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.Folder::class as KClass<NavKey>) to (CollectionNavKey.Folder.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.FolderFileInfo::class as KClass<NavKey>) to (CollectionNavKey.FolderFileInfo.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.BasicCreate::class as KClass<NavKey>) to (CollectionNavKey.BasicCreate.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.BasicEdit::class as KClass<NavKey>) to (CollectionNavKey.BasicEdit.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.SmartCreate::class as KClass<NavKey>) to (CollectionNavKey.SmartCreate.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.SmartEdit::class as KClass<NavKey>) to (CollectionNavKey.SmartEdit.serializer() as KSerializer<NavKey>),
-            (CollectionNavKey.Delete::class as KClass<NavKey>) to (CollectionNavKey.Delete.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(CollectionNavKey.Main.serializer()),
+            toPair(CollectionNavKey.Detail.serializer()),
+            toPair(CollectionNavKey.FileInfo.serializer()),
+            toPair(CollectionNavKey.Folder.serializer()),
+            toPair(CollectionNavKey.FolderFileInfo.serializer()),
+            toPair(CollectionNavKey.BasicCreate.serializer()),
+            toPair(CollectionNavKey.BasicEdit.serializer()),
+            toPair(CollectionNavKey.SmartCreate.serializer()),
+            toPair(CollectionNavKey.SmartEdit.serializer()),
+            toPair(CollectionNavKey.Delete.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -80,8 +78,16 @@ interface CollectionNavigation {
                     onEditClick = { },
                     onDeleteClick = { },
                     onSettingsClick = { navigator.navigate(SettingsNavKey) },
-                    onCreateBasicCollectionClick = { navigator.navigate(CollectionNavKey.BasicCreate()) },
-                    onCreateSmartCollectionClick = { navigator.navigate(CollectionNavKey.SmartCreate()) },
+                    onCreateBasicCollectionClick = {
+                        navigator.navigate(
+                            CollectionNavKey.BasicCreate(),
+                        )
+                    },
+                    onCreateSmartCollectionClick = {
+                        navigator.navigate(
+                            CollectionNavKey.SmartCreate(),
+                        )
+                    },
                 )
             }
         }
@@ -93,8 +99,8 @@ interface CollectionNavigation {
         factory: CollectionScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<CollectionNavKey.Detail>(
-            metadata = SupportingPaneSceneStrategy.mainPane("Collection")
-                + NavDisplay.transitionMaterialSharedAxisZ(),
+            metadata = SupportingPaneSceneStrategy.mainPane("Collection") +
+                NavDisplay.transitionMaterialSharedAxisZ(),
         ) { detail ->
             with(rememberRetained { factory.createCollectionScreenContext() }) {
                 CollectionScreenRoot(
@@ -108,8 +114,8 @@ interface CollectionNavigation {
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
                                         name = file.name,
-                                        collectionId = detail.id
-                                    )
+                                        collectionId = detail.id,
+                                    ),
                                 )
                             }
 
@@ -117,8 +123,8 @@ interface CollectionNavigation {
                                 navigator.navigate(
                                     CollectionNavKey.Folder(
                                         bookshelfId = file.bookshelfId,
-                                        path = file.path
-                                    )
+                                        path = file.path,
+                                    ),
                                 )
                             }
                         }
@@ -148,7 +154,7 @@ interface CollectionNavigation {
                 },
                 onOpenFolderClick = {
                     navigator.navigate(CollectionNavKey.Folder(it.bookshelfId, it.parent, it.path))
-                }
+                },
             )
         }
     }
@@ -171,8 +177,8 @@ interface CollectionNavigation {
                                     BookNavKey(
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
-                                        name = file.name
-                                    )
+                                        name = file.name,
+                                    ),
                                 )
                             }
 
@@ -184,8 +190,8 @@ interface CollectionNavigation {
                                     CollectionNavKey.Folder(
                                         file.bookshelfId,
                                         file.path,
-                                        null
-                                    )
+                                        null,
+                                    ),
                                 )
                             }
                         }
@@ -208,7 +214,9 @@ interface CollectionNavigation {
         factory: BasicCollectionCreateScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<CollectionNavKey.BasicCreate>(
-            metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+            metadata = DialogSceneStrategy.dialog(
+                DialogProperties(usePlatformDefaultWidth = false),
+            ),
         ) {
             with(rememberRetained { factory.createBasicCollectionCreateScreenContext() }) {
                 BasicCollectionCreateScreenRoot(
@@ -227,7 +235,9 @@ interface CollectionNavigation {
         factory: BasicCollectionEditScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<CollectionNavKey.BasicEdit>(
-            metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+            metadata = DialogSceneStrategy.dialog(
+                DialogProperties(usePlatformDefaultWidth = false),
+            ),
         ) {
             with(rememberRetained { factory.createBasicCollectionEditScreenContext() }) {
                 BasicCollectionEditScreenRoot(
@@ -255,7 +265,9 @@ interface CollectionNavigation {
         factory: SmartCollectionEditScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<CollectionNavKey.SmartEdit>(
-            metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+            metadata = DialogSceneStrategy.dialog(
+                DialogProperties(usePlatformDefaultWidth = false),
+            ),
         ) {
             with(rememberRetained { factory.createSmartCollectionEditScreenContext() }) {
                 SmartCollectionEditScreenRoot(
@@ -279,7 +291,7 @@ interface CollectionNavigation {
                     onBackClick = navigator::goBack,
                     onComplete = {
                         navigator.pop<CollectionNavKey.Main>(false)
-                    }
+                    },
                 )
             }
         }
@@ -293,9 +305,9 @@ interface CollectionNavigation {
         entry<BasicCollectionAddNavKey>(
             metadata = DialogSceneStrategy.dialog(
                 DialogProperties(
-                    usePlatformDefaultWidth = false
-                )
-            )
+                    usePlatformDefaultWidth = false,
+                ),
+            ),
         ) {
             with(rememberRetained { factory.createBasicCollectionAddScreenContext() }) {
                 BasicCollectionAddScreenRoot(

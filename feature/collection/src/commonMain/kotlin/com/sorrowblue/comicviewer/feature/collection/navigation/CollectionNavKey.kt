@@ -10,7 +10,6 @@ import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
 import kotlinx.serialization.Serializable
@@ -42,7 +41,8 @@ sealed interface CollectionNavKey : NavigationKey {
         override val bookshelfId: BookshelfId,
         override val path: String,
         override val restorePath: String? = null,
-    ) : CollectionNavKey, FolderNavKey
+    ) : CollectionNavKey,
+        FolderNavKey
 
     @Serializable
     data class FolderFileInfo(override val fileKey: File.Key) :
@@ -51,7 +51,6 @@ sealed interface CollectionNavKey : NavigationKey {
         override val isOpenFolderEnabled: Boolean = false
     }
 
-
     @Serializable
     data class BasicCreate(
         val bookshelfId: BookshelfId = BookshelfId.Companion(),
@@ -59,8 +58,7 @@ sealed interface CollectionNavKey : NavigationKey {
     ) : CollectionNavKey
 
     @Serializable
-    data class BasicEdit(val collectionId: CollectionId) :
-        CollectionNavKey
+    data class BasicEdit(val collectionId: CollectionId) : CollectionNavKey
 
     @Serializable
     data class SmartCreate(

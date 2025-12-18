@@ -23,7 +23,9 @@ internal sealed interface ReadLaterNavKey : NavigationKey {
     data object Main : ReadLaterNavKey
 
     @Serializable
-    data class FileInfo(override val fileKey: File.Key) : ReadLaterNavKey, FileInfoNavKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        ReadLaterNavKey,
+        FileInfoNavKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
@@ -32,10 +34,13 @@ internal sealed interface ReadLaterNavKey : NavigationKey {
         override val bookshelfId: BookshelfId,
         override val path: String,
         override val restorePath: String? = null,
-    ) : ReadLaterNavKey, FolderNavKey
+    ) : ReadLaterNavKey,
+        FolderNavKey
 
     @Serializable
-    data class FolderFileInfo(override val fileKey: File.Key) : ReadLaterNavKey, FileInfoNavKey {
+    data class FolderFileInfo(override val fileKey: File.Key) :
+        ReadLaterNavKey,
+        FileInfoNavKey {
         override val isOpenFolderEnabled: Boolean = false
     }
 }

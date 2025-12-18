@@ -11,9 +11,9 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import io.github.takahirom.rin.rememberRetained
 
 context(factory: SmartCollectionCreateScreenContext.Factory)
-fun EntryProviderScope<NavKey>.smartCollectionCreateEntry(navigator: Navigator) = {
+fun EntryProviderScope<NavKey>.smartCollectionCreateEntry(navigator: Navigator) {
     entry<CollectionNavKey.SmartCreate>(
-        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
         with(rememberRetained { factory.createSmartCollectionCreateScreenContext() }) {
             SmartCollectionCreateScreenRoot(
@@ -25,7 +25,7 @@ fun EntryProviderScope<NavKey>.smartCollectionCreateEntry(navigator: Navigator) 
         }
     }
     entry<SmartCollectionCreateNavKey>(
-        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false))
+        metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
         with(rememberRetained { factory.createSmartCollectionCreateScreenContext() }) {
             SmartCollectionCreateScreenRoot(

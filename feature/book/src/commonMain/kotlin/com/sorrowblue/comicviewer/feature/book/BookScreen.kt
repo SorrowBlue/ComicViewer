@@ -37,6 +37,7 @@ import coil3.Bitmap
 import com.sorrowblue.comicviewer.domain.model.PluginManager
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
@@ -49,11 +50,10 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
 @Composable
 context(context: BookScreenContext)
-fun BookScreen(
+internal fun BookScreenRoot(
     bookshelfId: BookshelfId,
     path: String,
     name: String,
