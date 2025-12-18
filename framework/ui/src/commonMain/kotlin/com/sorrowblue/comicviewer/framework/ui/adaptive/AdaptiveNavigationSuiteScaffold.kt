@@ -20,13 +20,13 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
     modifier: Modifier = Modifier,
     navigationItems: @Composable () -> Unit = {
         val navigator = LocalNavigator.current
-        navigationKeys.forEach { key ->
+        navigator.topLevelRoutes.forEach { key ->
             val isSelected = key == navigator.topLevelKey
             NavigationSuiteItem(
                 selected = isSelected,
                 label = { Text(key.title) },
                 icon = { Icon(key.icon, null) },
-                onClick = { this.onNavigationClick(key) },
+                onClick = { navigator.navigate(key) },
             )
         }
     },

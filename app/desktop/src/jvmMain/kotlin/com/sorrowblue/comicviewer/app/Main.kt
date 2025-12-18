@@ -9,7 +9,6 @@ import androidx.compose.ui.window.rememberNotification
 import androidx.compose.ui.window.rememberTrayState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.Application
-import com.sorrowblue.comicviewer.aggregation.DesktopAppGraph
 import com.sorrowblue.comicviewer.framework.common.DesktopContext
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
@@ -22,10 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 fun main() = application {
     val context = DesktopContext.invoke()
     val appGraph =
-        createGraphFactory<DesktopAppGraph.Factory>().createDesktopAppGraph(
-            context,
-            LicenseeHelperImpl(),
-        )
+        createGraphFactory<AppGraph.Factory>().createAppGraph(context, LicenseeHelperImpl())
     context.platformGraph = appGraph
 
     val trayState = rememberTrayState()
@@ -49,7 +45,9 @@ fun main() = application {
         window.minimumSize = Dimension(400, 600)
         val viewModel = viewModel { MainViewModel() }
         with(context) {
-            Application(finishApp = ::exitApplication)
+            with(appGraph) {
+                Application(finishApp = ::exitApplication)
+            }
         }
         SplashScreen(keepOnScreenCondition = viewModel.shouldKeepSplash::value)
     }

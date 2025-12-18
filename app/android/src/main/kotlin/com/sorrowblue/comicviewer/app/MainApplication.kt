@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
 import android.app.Application
-import com.sorrowblue.comicviewer.aggregation.AndroidAppGraph
 import com.sorrowblue.comicviewer.framework.common.PlatformApplication
 import dev.zacsweers.metro.createGraphFactory
 import logcat.LogPriority
@@ -16,7 +15,7 @@ internal class MainApplication :
     }
 
     override val platformGraph by lazy {
-        createGraphFactory<AndroidAppGraph.Factory>().createAndroidAppGraph(
+        createGraphFactory<AppGraph.Factory>().createAppGraph(
             this,
             LicenseeHelperImpl(this),
         )

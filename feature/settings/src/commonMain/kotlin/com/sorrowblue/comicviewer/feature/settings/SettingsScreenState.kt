@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.feature.settings.utils.AppLocaleSettingsLauncher
 import com.sorrowblue.comicviewer.feature.settings.utils.rememberAppLocaleSettingsLauncher
 
@@ -26,7 +27,8 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
 private class SettingsScreenStateImpl(
     private val appLocaleSettingsLauncher: AppLocaleSettingsLauncher,
 ) : SettingsScreenState {
-    override val uiState by mutableStateOf(SettingsScreenUiState())
+
+    override var uiState by mutableStateOf(SettingsScreenUiState())
 
     override fun onSettingsClick(item: SettingsItem, onSettingsClick: (SettingsItem) -> Unit) {
         when (item) {

@@ -14,6 +14,7 @@ kotlin {
                 implementation(projects.feature.settings.display)
                 implementation(projects.feature.settings.folder)
                 implementation(projects.feature.settings.info)
+                implementation(projects.feature.settings.nav)
                 implementation(projects.feature.settings.security)
                 implementation(projects.feature.settings.plugin)
                 implementation(projects.feature.settings.viewer)

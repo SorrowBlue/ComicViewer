@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 context(context: PluginScreenContext)
-internal fun PluginScreenRoot(onBackClick: () -> Unit, onPdfPluginClick: () -> Unit) {
+fun PluginScreenRoot(onBackClick: () -> Unit, onPdfPluginClick: () -> Unit) {
     val state = rememberPluginScreenState()
     PluginScreen(
         uiState = state.uiState,

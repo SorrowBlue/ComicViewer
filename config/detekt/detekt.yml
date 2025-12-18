@@ -106,7 +106,6 @@ Compose:
       'LocalContainerColor',
       'LocalCanonicalScaffoldBound',
       'LocalNavigator',
-      'LocalAdaptiveNavigationSuiteState',
       'LocalAppState',
       'LocalSharedTransitionScope',
       'LocalComposeEffectErrorHandler',

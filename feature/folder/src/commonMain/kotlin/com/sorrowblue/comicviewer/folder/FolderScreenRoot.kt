@@ -13,6 +13,7 @@ fun FolderScreenRoot(
     bookshelfId: BookshelfId,
     path: String,
     restorePath: String?,
+    showSearch: Boolean,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     onFileClick: (File) -> Unit,
@@ -21,7 +22,7 @@ fun FolderScreenRoot(
     onRestoreComplete: () -> Unit,
 ) {
     val state =
-        rememberFolderScreenState(bookshelfId = bookshelfId, path = path, restorePath = restorePath)
+        rememberFolderScreenState(bookshelfId = bookshelfId, path = path, restorePath = restorePath, showSearch = showSearch)
     state.scaffoldState.FolderScreen(
         uiState = state.uiState,
         lazyPagingItems = state.lazyPagingItems,

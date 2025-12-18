@@ -5,6 +5,13 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.book"
-        // resourcePrefix("book")
+    }
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.feature.book.nav)
+                implementation(projects.feature.settings.nav)
+            }
+        }
     }
 }

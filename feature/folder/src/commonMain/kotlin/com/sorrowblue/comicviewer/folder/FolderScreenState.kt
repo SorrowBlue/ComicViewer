@@ -23,6 +23,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResult
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
@@ -68,6 +69,7 @@ internal fun rememberFolderScreenState(
     bookshelfId: BookshelfId,
     path: String,
     restorePath: String?,
+    showSearch: Boolean,
 ): FolderScreenState {
     val coroutineScope = rememberCoroutineScope()
     val state = rememberSaveable(
@@ -75,6 +77,7 @@ internal fun rememberFolderScreenState(
             bookshelfId = bookshelfId,
             path = path,
             restorePath = restorePath,
+            showSearch = showSearch,
             folderDisplaySettingsUseCase = context.displaySettingsUseCase,
             getFileUseCase = context.getFileUseCase,
             scope = coroutineScope,
@@ -84,6 +87,7 @@ internal fun rememberFolderScreenState(
             bookshelfId = bookshelfId,
             path = path,
             restorePath = restorePath,
+            showSearch = showSearch,
             folderDisplaySettingsUseCase = context.displaySettingsUseCase,
             getFileUseCase = context.getFileUseCase,
             scope = coroutineScope,
@@ -114,6 +118,7 @@ private class FolderScreenStateImpl(
     private val bookshelfId: BookshelfId,
     private val path: String,
     private val restorePath: String?,
+    showSearch: Boolean,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     var scope: CoroutineScope,
     getFileUseCase: GetFileUseCase,
@@ -123,7 +128,11 @@ private class FolderScreenStateImpl(
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
     override val events = EventFlow<FolderScreenEvent>()
-    override var uiState by mutableStateOf(FolderScreenUiState())
+    override var uiState by mutableStateOf(
+        FolderScreenUiState(
+            folderAppBarUiState = FolderAppBarUiState(showSearch = showSearch)
+        )
+    )
         private set
 
     var isRestored by mutableStateOf(false)
@@ -235,11 +244,11 @@ private class FolderScreenStateImpl(
                             refresh = true
                             settings.copy(
                                 folderScopeOnlyList =
-                                settings.folderScopeOnlyList + FolderScopeOnly(
-                                    bookshelfId,
-                                    path,
-                                    sortType,
-                                ),
+                                    settings.folderScopeOnlyList + FolderScopeOnly(
+                                        bookshelfId,
+                                        path,
+                                        sortType,
+                                    ),
                             )
                         } else if (beforeFolderScopeOnly.sortType != sortType) {
                             refresh = true
@@ -250,7 +259,7 @@ private class FolderScreenStateImpl(
                             )
                             settings.copy(
                                 folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
+                                    settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
                             )
                         } else {
                             settings
@@ -261,7 +270,7 @@ private class FolderScreenStateImpl(
                         refresh = true
                         settings.copy(
                             folderScopeOnlyList =
-                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
+                                settings.folderScopeOnlyList - beforeFolderScopeOnly,
                         )
                     }
 
@@ -317,11 +326,11 @@ private class FolderScreenStateImpl(
                             refresh = true
                             settings.copy(
                                 folderScopeOnlyList =
-                                settings.folderScopeOnlyList + FolderScopeOnly(
-                                    bookshelfId,
-                                    path,
-                                    result.sortType,
-                                ),
+                                    settings.folderScopeOnlyList + FolderScopeOnly(
+                                        bookshelfId,
+                                        path,
+                                        result.sortType,
+                                    ),
                             )
                         } else if (beforeFolderScopeOnly.sortType != result.sortType) {
                             refresh = true
@@ -332,7 +341,7 @@ private class FolderScreenStateImpl(
                             )
                             settings.copy(
                                 folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
+                                    settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
                             )
                         } else {
                             settings
@@ -343,7 +352,7 @@ private class FolderScreenStateImpl(
                         refresh = true
                         settings.copy(
                             folderScopeOnlyList =
-                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
+                                settings.folderScopeOnlyList - beforeFolderScopeOnly,
                         )
                     }
 
@@ -376,6 +385,7 @@ private class FolderScreenStateImpl(
             bookshelfId: BookshelfId,
             path: String,
             restorePath: String?,
+            showSearch: Boolean,
             scope: CoroutineScope,
             folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
             getFileUseCase: GetFileUseCase,
@@ -387,6 +397,7 @@ private class FolderScreenStateImpl(
                 FolderScreenStateImpl(
                     bookshelfId = bookshelfId,
                     path = path,
+                    showSearch = showSearch,
                     restorePath = restorePath,
                     scope = scope,
                     folderDisplaySettingsUseCase = folderDisplaySettingsUseCase,

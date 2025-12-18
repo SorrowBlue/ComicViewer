@@ -4,4 +4,4 @@ import androidx.compose.runtime.Composable
 
 @Composable
 context(context: PdfPluginScreenContext)
-internal expect fun PdfPluginScreenRoot(onBackClick: () -> Unit)
+expect fun PdfPluginScreenRoot(onBackClick: () -> Unit)
