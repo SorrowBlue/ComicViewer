@@ -28,8 +28,8 @@ internal fun EntryProviderScope<NavKey>.darkModeNavEntry(navigator: Navigator) {
 context(factory: DisplaySettingsScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.displaySettingsNavEntry(navigator: Navigator) {
     entry<DisplaySettingsNavKey>(
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
-            + NavDisplay.transitionMaterialSharedAxisX(),
+        metadata = ListDetailSceneStrategy.detailPane("Settings") +
+            NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         with(rememberRetained { factory.createDisplaySettingsScreenContext() }) {
             DisplaySettingsScreenRoot(

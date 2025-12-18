@@ -19,6 +19,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenResultKe
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -34,16 +35,15 @@ import kotlinx.serialization.KSerializer
 interface FolderSettingsNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (FolderSettingsNavKey::class as KClass<NavKey>) to (FolderSettingsNavKey.serializer() as KSerializer<NavKey>),
-            (SortTypeNavKey::class as KClass<NavKey>) to (SortTypeNavKey.serializer() as KSerializer<NavKey>),
-            (ImageScaleNavKey::class as KClass<NavKey>) to (ImageScaleNavKey.serializer() as KSerializer<NavKey>),
-            (ImageFilterQualityNavKey::class as KClass<NavKey>) to (ImageFilterQualityNavKey.serializer() as KSerializer<NavKey>),
-            (ImageFormatNavKey::class as KClass<NavKey>) to (ImageFormatNavKey.serializer() as KSerializer<NavKey>),
-            (FolderThumbnailOrderNavKey::class as KClass<NavKey>) to (FolderThumbnailOrderNavKey.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(FolderSettingsNavKey.serializer()),
+            toPair(SortTypeNavKey.serializer()),
+            toPair(ImageScaleNavKey.serializer()),
+            toPair(ImageFilterQualityNavKey.serializer()),
+            toPair(ImageFormatNavKey.serializer()),
+            toPair(FolderThumbnailOrderNavKey.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -64,10 +64,18 @@ interface FolderSettingsNavigation {
                 FolderSettingsScreenRoot(
                     onBackClick = navigator::goBack,
                     onSortTypeClick = { navigator.navigate(SortTypeNavKey(it)) },
-                    onFolderThumbnailOrderClick = { navigator.navigate(FolderThumbnailOrderNavKey(it)) },
+                    onFolderThumbnailOrderClick = {
+                        navigator.navigate(
+                            FolderThumbnailOrderNavKey(it),
+                        )
+                    },
                     onImageFormatClick = { navigator.navigate(ImageFormatNavKey(it)) },
                     onImageScaleClick = { navigator.navigate(ImageScaleNavKey(it)) },
-                    onImageFilterQualityClick = { navigator.navigate(ImageFilterQualityNavKey(it)) },
+                    onImageFilterQualityClick = {
+                        navigator.navigate(
+                            ImageFilterQualityNavKey(it),
+                        )
+                    },
                 )
             }
         }
@@ -99,7 +107,6 @@ interface FolderSettingsNavigation {
             }
         }
 
-
     @Provides
     @IntoSet
     private fun provideImageFormatEntry(): EntryProviderScope<NavKey>.(Navigator) -> Unit =
@@ -119,7 +126,7 @@ interface FolderSettingsNavigation {
             entry<ImageScaleNavKey>(metadata = DialogSceneStrategy.dialog()) {
                 ImageScaleScreenRoot(
                     imageScale = it.imageScale,
-                    onDismissRequest = navigator::goBack
+                    onDismissRequest = navigator::goBack,
                 )
             }
         }
@@ -131,7 +138,7 @@ interface FolderSettingsNavigation {
             entry<SortTypeNavKey>(metadata = DialogSceneStrategy.dialog()) {
                 SortTypeScreenRoot(
                     sortType = it.sortType,
-                    onDismissRequest = navigator::goBack
+                    onDismissRequest = navigator::goBack,
                 )
             }
         }

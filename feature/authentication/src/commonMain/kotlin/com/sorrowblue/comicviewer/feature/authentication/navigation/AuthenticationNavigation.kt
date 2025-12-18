@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -21,14 +22,10 @@ import kotlinx.serialization.Serializable
 
 @ContributesTo(AppScope::class)
 interface AuthenticationNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (AuthenticationNavKey::class as KClass<NavKey>) to (AuthenticationNavKey.serializer() as KSerializer<NavKey>),
-        )
-    }
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(toPair(AuthenticationNavKey.serializer()))
 
     @Provides
     @IntoSet

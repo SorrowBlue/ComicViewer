@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScre
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -23,11 +24,8 @@ import kotlinx.serialization.KSerializer
 interface SecuritySettingsNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (SecuritySettingsNavKey::class as KClass<NavKey>) to (SecuritySettingsNavKey.serializer() as KSerializer<NavKey>),
-        )
-    }
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(toPair(SecuritySettingsNavKey.serializer()))
 
     @Provides
     @IntoSet
@@ -35,8 +33,8 @@ interface SecuritySettingsNavigation {
         factory: SecuritySettingsScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<SecuritySettingsNavKey>(
-            metadata = ListDetailSceneStrategy.detailPane("Settings")
-                + NavDisplay.transitionMaterialSharedAxisX()
+            metadata = ListDetailSceneStrategy.detailPane("Settings") +
+                NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createSecuritySettingsScreenContext() }) {
                 SecuritySettingsScreenRoot(

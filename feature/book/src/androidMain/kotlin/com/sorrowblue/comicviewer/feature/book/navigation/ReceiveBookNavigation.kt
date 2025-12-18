@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.feature.book.receive.ReceiveBookScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -20,14 +21,10 @@ import kotlinx.serialization.Serializable
 
 @ContributesTo(AppScope::class)
 interface ReceiveBookNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (ReceiveBookNavKey::class as KClass<NavKey>) to (ReceiveBookNavKey.serializer() as KSerializer<NavKey>),
-        )
-    }
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(toPair(ReceiveBookNavKey.serializer()))
 
     @Provides
     @IntoSet
@@ -38,7 +35,7 @@ interface ReceiveBookNavigation {
             with(rememberRetained { factory.createReceiveBookScreenContext() }) {
                 ReceiveBookScreenRoot(
                     uri = it.uri,
-                    onBackClick = navigator::goBack
+                    onBackClick = navigator::goBack,
                 )
             }
         }

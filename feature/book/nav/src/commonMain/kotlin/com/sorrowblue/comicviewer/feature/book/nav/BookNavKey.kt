@@ -5,6 +5,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -23,12 +24,8 @@ data class BookNavKey(
 
 @ContributesTo(AppScope::class)
 interface BookNav {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (BookNavKey::class as KClass<NavKey>) to (BookNavKey.serializer() as KSerializer<NavKey>),
-        )
-    }
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(toPair(BookNavKey.serializer()))
 }

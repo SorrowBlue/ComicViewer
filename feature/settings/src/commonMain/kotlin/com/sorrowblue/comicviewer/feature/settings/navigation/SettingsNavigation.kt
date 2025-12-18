@@ -23,6 +23,7 @@ import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -34,16 +35,14 @@ import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface SettingsNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (SettingsNavKey::class as KClass<NavKey>) to (SettingsNavKey.serializer() as KSerializer<NavKey>),
-            (ImageCacheNavKey::class as KClass<NavKey>) to (ImageCacheNavKey.serializer() as KSerializer<NavKey>),
-            (InAppLanguagePickerNavKey::class as KClass<NavKey>) to (InAppLanguagePickerNavKey.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(SettingsNavKey.serializer()),
+            toPair(ImageCacheNavKey.serializer()),
+            toPair(InAppLanguagePickerNavKey.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -65,8 +64,8 @@ interface SettingsNavigation {
         ) {
             SettingsScreenRoot(
                 onBackClick = navigator::goBack,
-                onSettingsClick = {
-                    when (it) {
+                onSettingsClick = { item ->
+                    when (item) {
                         SettingsItem.DISPLAY -> navigator.navigate(DisplaySettingsNavKey)
                         SettingsItem.FOLDER -> navigator.navigate(FolderSettingsNavKey)
                         SettingsItem.VIEWER -> navigator.navigate(ViewerSettingsNavKey)
@@ -81,8 +80,8 @@ interface SettingsNavigation {
                         SettingsItem.LANGUAGE -> navigator.navigate(InAppLanguagePickerNavKey)
                     }
                 },
-                onSettingsLongClick = {
-                    when (it) {
+                onSettingsLongClick = { item ->
+                    when (item) {
                         SettingsItem.DISPLAY,
                         SettingsItem.FOLDER,
                         SettingsItem.VIEWER,
@@ -95,7 +94,7 @@ interface SettingsNavigation {
 
                         SettingsItem.LANGUAGE -> navigator.navigate(InAppLanguagePickerNavKey)
                     }
-                }
+                },
             )
         }
     }
@@ -106,8 +105,8 @@ interface SettingsNavigation {
         factory: ImageCacheScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<ImageCacheNavKey>(
-            metadata = ListDetailSceneStrategy.detailPane("Settings")
-                + NavDisplay.transitionMaterialSharedAxisX()
+            metadata = ListDetailSceneStrategy.detailPane("Settings") +
+                NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createImageCacheScreenContext() }) {
                 ImageCacheScreenRoot(onBackClick = navigator::goBack)
@@ -121,8 +120,8 @@ interface SettingsNavigation {
         factory: InAppLanguagePickerScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<InAppLanguagePickerNavKey>(
-            metadata = ListDetailSceneStrategy.detailPane("Settings")
-                + NavDisplay.transitionMaterialSharedAxisX()
+            metadata = ListDetailSceneStrategy.detailPane("Settings") +
+                NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createInAppLanguagePickerScreenContext() }) {
                 InAppLanguagePickerScreenRoot(onBackClick = navigator::goBack)

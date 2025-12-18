@@ -27,6 +27,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_title
@@ -45,7 +46,6 @@ import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 sealed interface HistoryNavKey : NavigationKey {
-
     override val title
         @Composable
         get() = stringResource(Res.string.history_title)
@@ -56,7 +56,9 @@ sealed interface HistoryNavKey : NavigationKey {
     data object Main : HistoryNavKey
 
     @Serializable
-    data class FileInfo(override val fileKey: File.Key) : HistoryNavKey, FileInfoNavKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        HistoryNavKey,
+        FileInfoNavKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
@@ -68,30 +70,29 @@ sealed interface HistoryNavKey : NavigationKey {
         override val bookshelfId: BookshelfId,
         override val path: String,
         override val restorePath: String? = null,
-    ) : HistoryNavKey, FolderNavKey
+    ) : HistoryNavKey,
+        FolderNavKey
 
     @Serializable
-    data class FolderFileInfo(
-        override val fileKey: File.Key,
-    ) : HistoryNavKey, FileInfoNavKey {
+    data class FolderFileInfo(override val fileKey: File.Key) :
+        HistoryNavKey,
+        FileInfoNavKey {
         override val isOpenFolderEnabled: Boolean = false
     }
 }
 
 @ContributesTo(AppScope::class)
 interface HistoryNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (HistoryNavKey.Main::class as KClass<NavKey>) to (HistoryNavKey.Main.serializer() as KSerializer<NavKey>),
-            (HistoryNavKey.FileInfo::class as KClass<NavKey>) to (HistoryNavKey.FileInfo.serializer() as KSerializer<NavKey>),
-            (HistoryNavKey.FolderFileInfo::class as KClass<NavKey>) to (HistoryNavKey.FolderFileInfo.serializer() as KSerializer<NavKey>),
-            (HistoryNavKey.ClearAll::class as KClass<NavKey>) to (HistoryNavKey.ClearAll.serializer() as KSerializer<NavKey>),
-            (HistoryNavKey.Folder::class as KClass<NavKey>) to (HistoryNavKey.Folder.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(HistoryNavKey.Main.serializer()),
+            toPair(HistoryNavKey.FileInfo.serializer()),
+            toPair(HistoryNavKey.FolderFileInfo.serializer()),
+            toPair(HistoryNavKey.ClearAll.serializer()),
+            toPair(HistoryNavKey.Folder.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -118,13 +119,13 @@ interface HistoryNavigation {
                             BookNavKey(
                                 bookshelfId = book.bookshelfId,
                                 path = book.path,
-                                name = book.name
-                            )
+                                name = book.name,
+                            ),
                         )
                     },
                     onBookInfoClick = {
                         navigator.navigate(HistoryNavKey.FileInfo(it.key()))
-                    }
+                    },
                 )
             }
         }
@@ -153,7 +154,7 @@ interface HistoryNavigation {
                 },
                 onOpenFolderClick = {
                     navigator.navigate(HistoryNavKey.Folder(it.bookshelfId, it.parent, it.path))
-                }
+                },
             )
         }
     }
@@ -176,8 +177,8 @@ interface HistoryNavigation {
                                     BookNavKey(
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
-                                        name = file.name
-                                    )
+                                        name = file.name,
+                                    ),
                                 )
                             }
 
@@ -186,7 +187,7 @@ interface HistoryNavigation {
                                     navigator.goBack()
                                 }
                                 navigator.navigate(
-                                    HistoryNavKey.Folder(file.bookshelfId, file.path)
+                                    HistoryNavKey.Folder(file.bookshelfId, file.path),
                                 )
                             }
                         }

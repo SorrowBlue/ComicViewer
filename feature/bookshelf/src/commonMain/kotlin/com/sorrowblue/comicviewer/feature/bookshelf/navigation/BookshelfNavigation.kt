@@ -29,6 +29,7 @@ import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeT
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -43,18 +44,17 @@ import kotlinx.serialization.KSerializer
 interface BookshelfNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (BookshelfNavKey.Main::class as KClass<NavKey>) to (BookshelfNavKey.Main.serializer() as KSerializer<NavKey>),
-            (BookshelfNavKey.Info::class as KClass<NavKey>) to (BookshelfNavKey.Info.serializer() as KSerializer<NavKey>),
-            (BookshelfNavKey.Folder::class as KClass<NavKey>) to (BookshelfNavKey.Folder.serializer() as KSerializer<NavKey>),
-            (BookshelfNavKey.FolderFileInfo::class as KClass<NavKey>) to (BookshelfNavKey.FolderFileInfo.serializer() as KSerializer<NavKey>),
-            (BookshelfNavKey.Selection::class as KClass<NavKey>) to (BookshelfNavKey.Selection.serializer() as KSerializer<NavKey>),
-            (BookshelfNavKey.Edit::class as KClass<NavKey>) to (BookshelfNavKey.Edit.serializer() as KSerializer<NavKey>),
-            (BookshelfNavKey.Delete::class as KClass<NavKey>) to (BookshelfNavKey.Delete.serializer() as KSerializer<NavKey>),
-            (BookshelfNavKey.Notification::class as KClass<NavKey>) to (BookshelfNavKey.Notification.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(BookshelfNavKey.Main.serializer()),
+            toPair(BookshelfNavKey.Info.serializer()),
+            toPair(BookshelfNavKey.Folder.serializer()),
+            toPair(BookshelfNavKey.FolderFileInfo.serializer()),
+            toPair(BookshelfNavKey.Selection.serializer()),
+            toPair(BookshelfNavKey.Edit.serializer()),
+            toPair(BookshelfNavKey.Delete.serializer()),
+            toPair(BookshelfNavKey.Notification.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -66,8 +66,8 @@ interface BookshelfNavigation {
         factory: BookshelfScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<BookshelfNavKey.Main>(
-            metadata = SupportingPaneSceneStrategy.mainPane<BookshelfNavKey.Info>("Bookshelf")
-                + NavDisplay.transitionMaterialFadeThrough(),
+            metadata = SupportingPaneSceneStrategy.mainPane<BookshelfNavKey.Info>("Bookshelf") +
+                NavDisplay.transitionMaterialFadeThrough(),
         ) {
             with(rememberRetained { factory.createBookshelfScreenContext() }) {
                 BookshelfScreenRoot(
@@ -84,15 +84,14 @@ interface BookshelfNavigation {
         }
     }
 
-
     @Provides
     @IntoSet
     private fun provideBookshelfInfoEntry(
         factory: BookshelfInfoScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<BookshelfNavKey.Info>(
-            metadata = SupportingPaneSceneStrategy.extraPane("Bookshelf")
-                + NavDisplay.transitionMaterialSharedAxisX(),
+            metadata = SupportingPaneSceneStrategy.extraPane("Bookshelf") +
+                NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createBookshelfInfoScreenContext() }) {
                 BookshelfInfoScreenRoot(
@@ -102,13 +101,13 @@ interface BookshelfNavigation {
                     showNotificationPermissionRationale = {
                         navigator.navigate(
                             BookshelfNavKey.Notification(
-                                it
-                            )
+                                it,
+                            ),
                         )
                     },
                     onEditClick = { id, type ->
                         navigator.navigate(
-                            BookshelfNavKey.Edit(BookshelfEditorType.Edit(id, type))
+                            BookshelfNavKey.Edit(BookshelfEditorType.Edit(id, type)),
                         )
                     },
                 )
@@ -118,7 +117,9 @@ interface BookshelfNavigation {
 
     @Provides
     @IntoSet
-    private fun provideBookshelfNotificationEntry(): EntryProviderScope<NavKey>.(Navigator) -> Unit =
+    private fun provideBookshelfNotificationEntry(): EntryProviderScope<NavKey>.(
+        Navigator,
+    ) -> Unit =
         { navigator ->
             entry<BookshelfNavKey.Notification>(metadata = DialogSceneStrategy.dialog()) {
                 NotificationRequestScreenRoot(
@@ -134,16 +135,16 @@ interface BookshelfNavigation {
         { navigator ->
             entry<BookshelfNavKey.Selection>(
                 metadata = DialogSceneStrategy.dialog(
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
-                )
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false),
+                ),
             ) {
                 BookshelfSelectionDialog(
                     onBackClick = navigator::goBack,
-                    onTypeClick = {
+                    onTypeClick = { type ->
                         navigator.navigate(
-                            BookshelfNavKey.Edit(BookshelfEditorType.Register(it))
+                            BookshelfNavKey.Edit(BookshelfEditorType.Register(type)),
                         )
-                    }
+                    },
                 )
             }
         }
@@ -201,8 +202,8 @@ interface BookshelfNavigation {
                                     BookNavKey(
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
-                                        name = file.name
-                                    )
+                                        name = file.name,
+                                    ),
                                 )
                             }
 
@@ -211,7 +212,7 @@ interface BookshelfNavigation {
                                     navigator.goBack()
                                 }
                                 navigator.navigate(
-                                    BookshelfNavKey.Folder(file.bookshelfId, file.path)
+                                    BookshelfNavKey.Folder(file.bookshelfId, file.path),
                                 )
                             }
                         }
@@ -222,7 +223,7 @@ interface BookshelfNavigation {
                     onSettingsClick = { navigator.navigate(SettingsNavKey) },
                     onCollectionClick = {
                         navigator.navigate(BasicCollectionAddNavKey(it.bookshelfId, it.path))
-                    }
+                    },
                 )
             }
         }

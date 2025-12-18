@@ -5,6 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.book.BookScreenContext
 import com.sorrowblue.comicviewer.feature.book.menu.BookMenuScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -15,14 +16,10 @@ import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface BookNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (BookMenuNavKey::class as KClass<NavKey>) to (BookMenuNavKey.serializer() as KSerializer<NavKey>),
-        )
-    }
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(toPair(BookMenuNavKey.serializer()))
 
     @Provides
     @IntoSet

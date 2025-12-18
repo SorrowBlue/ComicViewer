@@ -28,7 +28,6 @@ fun rememberNavigator(
  * Handles navigation events (forward and back) by updating the navigation state.
  */
 class Navigator(val state: NavigationState) {
-
     val topLevelKey: NavKey get() = state.topLevelRoute
     val topLevelRoutes get() = state.topLevelRoutes
 
@@ -56,9 +55,7 @@ class Navigator(val state: NavigationState) {
         }
     }
 
-    inline fun <reified T : NavKey> pop(
-        inclusive: Boolean,
-    ) {
+    inline fun <reified T : NavKey> pop(inclusive: Boolean) {
         val currentStack = state.backStacks[state.topLevelRoute]
             ?: error("Stack for ${state.topLevelRoute} not found")
         val index = currentStack.indexOfLast { it is T }
@@ -67,6 +64,5 @@ class Navigator(val state: NavigationState) {
                 currentStack.removeLastOrNull()
             }
         }
-
     }
 }

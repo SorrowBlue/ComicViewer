@@ -6,6 +6,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -19,11 +20,8 @@ import kotlinx.serialization.KSerializer
 interface ViewerSettingsNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (ViewerSettingsNavKey::class as KClass<NavKey>) to (ViewerSettingsNavKey.serializer() as KSerializer<NavKey>),
-        )
-    }
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(toPair(ViewerSettingsNavKey.serializer()))
 
     @Provides
     @IntoSet
@@ -31,8 +29,8 @@ interface ViewerSettingsNavigation {
         factory: ViewerSettingsScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<ViewerSettingsNavKey>(
-            metadata = ListDetailSceneStrategy.detailPane("Settings")
-                + NavDisplay.transitionMaterialSharedAxisX()
+            metadata = ListDetailSceneStrategy.detailPane("Settings") +
+                NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createViewerSettingsScreenContext() }) {
                 ViewerSettingsScreenRoot(onBackClick = navigator::goBack)

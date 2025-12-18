@@ -22,7 +22,12 @@ fun FolderScreenRoot(
     onRestoreComplete: () -> Unit,
 ) {
     val state =
-        rememberFolderScreenState(bookshelfId = bookshelfId, path = path, restorePath = restorePath, showSearch = showSearch)
+        rememberFolderScreenState(
+            bookshelfId = bookshelfId,
+            path = path,
+            restorePath = restorePath,
+            showSearch = showSearch,
+        )
     state.scaffoldState.FolderScreen(
         uiState = state.uiState,
         lazyPagingItems = state.lazyPagingItems,
