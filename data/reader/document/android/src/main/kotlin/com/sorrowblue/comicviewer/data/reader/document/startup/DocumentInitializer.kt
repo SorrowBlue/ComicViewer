@@ -40,7 +40,7 @@ internal class DocumentInitializer : Initializer<Unit> {
             val versionName =
                 platformContext.packageManager.getPackageInfo(PdfPluginPackage, 0).versionName
             val targetMajor = requireNotNull(versionName).split(".")[0].toInt()
-            logcat(
+            this.logcat(
                 LogPriority.INFO,
             ) {
                 "PdfPlugin versionName=$versionName, supportMajor=$SupportMajorVersion, targetMajor=$targetMajor"
@@ -54,7 +54,7 @@ internal class DocumentInitializer : Initializer<Unit> {
                 }
             } else {
                 // Not supported
-                logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
+                this.logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
                 datastoreDataSource.updateFolderSettings { settings ->
                     settings.copy(
                         supportExtension = settings.supportExtension.minus(Document.entries),
@@ -62,7 +62,7 @@ internal class DocumentInitializer : Initializer<Unit> {
                 }
             }
         } else {
-            logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
+            this.logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
             datastoreDataSource.updateFolderSettings { settings ->
                 settings.copy(
                     supportExtension = settings.supportExtension.filterNot {
@@ -72,7 +72,7 @@ internal class DocumentInitializer : Initializer<Unit> {
                 )
             }
         }
-        logcat(
+        this.logcat(
             LogPriority.INFO,
         ) { "Initialized document. ${datastoreDataSource.folderSettings.first().supportExtension}" }
     }
