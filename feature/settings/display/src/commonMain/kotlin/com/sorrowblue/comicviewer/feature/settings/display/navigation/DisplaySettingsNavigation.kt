@@ -5,6 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -15,15 +16,13 @@ import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface DisplaySettingsNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (DisplaySettingsNavKey::class as KClass<NavKey>) to (DisplaySettingsNavKey.serializer() as KSerializer<NavKey>),
-            (DarkModeNavKey::class as KClass<NavKey>) to (DarkModeNavKey.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(DisplaySettingsNavKey.serializer()),
+            toPair(DarkModeNavKey.serializer()),
         )
-    }
 
     @Provides
     @IntoSet

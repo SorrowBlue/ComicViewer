@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -29,17 +30,15 @@ import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface ReadLaterNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (ReadLaterNavKey.Main::class as KClass<NavKey>) to (ReadLaterNavKey.Main.serializer() as KSerializer<NavKey>),
-            (ReadLaterNavKey.FileInfo::class as KClass<NavKey>) to (ReadLaterNavKey.FileInfo.serializer() as KSerializer<NavKey>),
-            (ReadLaterNavKey.Folder::class as KClass<NavKey>) to (ReadLaterNavKey.Folder.serializer() as KSerializer<NavKey>),
-            (ReadLaterNavKey.FolderFileInfo::class as KClass<NavKey>) to (ReadLaterNavKey.FolderFileInfo.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(ReadLaterNavKey.Main.serializer()),
+            toPair(ReadLaterNavKey.FileInfo.serializer()),
+            toPair(ReadLaterNavKey.Folder.serializer()),
+            toPair(ReadLaterNavKey.FolderFileInfo.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -51,8 +50,8 @@ interface ReadLaterNavigation {
         factory: ReadLaterScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<ReadLaterNavKey.Main>(
-            metadata = SupportingPaneSceneStrategy.mainPane("ReadLater")
-                + NavDisplay.transitionMaterialFadeThrough()
+            metadata = SupportingPaneSceneStrategy.mainPane("ReadLater") +
+                NavDisplay.transitionMaterialFadeThrough(),
         ) {
             with(rememberRetained { factory.createReadLaterScreenContext() }) {
                 ReadLaterScreenRoot(
@@ -64,8 +63,8 @@ interface ReadLaterNavigation {
                                     BookNavKey(
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
-                                        name = file.name
-                                    )
+                                        name = file.name,
+                                    ),
                                 )
                             }
 
@@ -74,7 +73,7 @@ interface ReadLaterNavigation {
                                     ReadLaterNavKey.Folder(
                                         file.bookshelfId,
                                         file.path,
-                                    )
+                                    ),
                                 )
                             }
                         }
@@ -101,7 +100,7 @@ interface ReadLaterNavigation {
                 },
                 onOpenFolderClick = {
                     navigator.navigate(ReadLaterNavKey.Folder(it.bookshelfId, it.parent, it.path))
-                }
+                },
             )
         }
     }
@@ -124,8 +123,8 @@ interface ReadLaterNavigation {
                                     BookNavKey(
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
-                                        name = file.name
-                                    )
+                                        name = file.name,
+                                    ),
                                 )
                             }
 
@@ -134,7 +133,7 @@ interface ReadLaterNavigation {
                                     navigator.goBack()
                                 }
                                 navigator.navigate(
-                                    ReadLaterNavKey.Folder(file.bookshelfId, file.path)
+                                    ReadLaterNavKey.Folder(file.bookshelfId, file.path),
                                 )
                             }
                         }

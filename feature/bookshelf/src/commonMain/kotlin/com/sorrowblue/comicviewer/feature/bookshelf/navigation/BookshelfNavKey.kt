@@ -16,7 +16,6 @@ import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 sealed interface BookshelfNavKey : NavigationKey {
-
     override val title
         @Composable
         get() = stringResource(Res.string.bookshelf_label_bookshelf)
@@ -46,6 +45,7 @@ sealed interface BookshelfNavKey : NavigationKey {
         override val bookshelfId: BookshelfId,
         override val path: String,
         override val restorePath: String? = null,
+        override val onRestoreComplete: (() -> Unit)? = null,
     ) : BookshelfNavKey,
         FolderNavKey {
         override val showSearch = true

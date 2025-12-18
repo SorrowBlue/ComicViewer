@@ -130,8 +130,8 @@ private class FolderScreenStateImpl(
     override val events = EventFlow<FolderScreenEvent>()
     override var uiState by mutableStateOf(
         FolderScreenUiState(
-            folderAppBarUiState = FolderAppBarUiState(showSearch = showSearch)
-        )
+            folderAppBarUiState = FolderAppBarUiState(showSearch = showSearch),
+        ),
     )
         private set
 
@@ -244,11 +244,11 @@ private class FolderScreenStateImpl(
                             refresh = true
                             settings.copy(
                                 folderScopeOnlyList =
-                                    settings.folderScopeOnlyList + FolderScopeOnly(
-                                        bookshelfId,
-                                        path,
-                                        sortType,
-                                    ),
+                                settings.folderScopeOnlyList + FolderScopeOnly(
+                                    bookshelfId,
+                                    path,
+                                    sortType,
+                                ),
                             )
                         } else if (beforeFolderScopeOnly.sortType != sortType) {
                             refresh = true
@@ -259,7 +259,7 @@ private class FolderScreenStateImpl(
                             )
                             settings.copy(
                                 folderScopeOnlyList =
-                                    settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
+                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
                             )
                         } else {
                             settings
@@ -270,7 +270,7 @@ private class FolderScreenStateImpl(
                         refresh = true
                         settings.copy(
                             folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly,
+                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
                         )
                     }
 
@@ -326,11 +326,11 @@ private class FolderScreenStateImpl(
                             refresh = true
                             settings.copy(
                                 folderScopeOnlyList =
-                                    settings.folderScopeOnlyList + FolderScopeOnly(
-                                        bookshelfId,
-                                        path,
-                                        result.sortType,
-                                    ),
+                                settings.folderScopeOnlyList + FolderScopeOnly(
+                                    bookshelfId,
+                                    path,
+                                    result.sortType,
+                                ),
                             )
                         } else if (beforeFolderScopeOnly.sortType != result.sortType) {
                             refresh = true
@@ -341,7 +341,7 @@ private class FolderScreenStateImpl(
                             )
                             settings.copy(
                                 folderScopeOnlyList =
-                                    settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
+                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
                             )
                         } else {
                             settings
@@ -352,7 +352,7 @@ private class FolderScreenStateImpl(
                         refresh = true
                         settings.copy(
                             folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly,
+                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
                         )
                     }
 

@@ -24,6 +24,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import comicviewer.feature.search.generated.resources.Res
 import comicviewer.feature.search.generated.resources.search_label_search
 import dev.zacsweers.metro.AppScope
@@ -39,17 +40,15 @@ import org.jetbrains.compose.resources.stringResource
 
 @ContributesTo(AppScope::class)
 interface SearchNavigation {
-
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (SearchNavKey.Main::class as KClass<NavKey>) to (SearchNavKey.Main.serializer() as KSerializer<NavKey>),
-            (SearchNavKey.FileInfo::class as KClass<NavKey>) to (SearchNavKey.FileInfo.serializer() as KSerializer<NavKey>),
-            (SearchNavKey.FolderFileInfo::class as KClass<NavKey>) to (SearchNavKey.FolderFileInfo.serializer() as KSerializer<NavKey>),
-            (SearchNavKey.Folder::class as KClass<NavKey>) to (SearchNavKey.Folder.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(SearchNavKey.Main.serializer()),
+            toPair(SearchNavKey.FileInfo.serializer()),
+            toPair(SearchNavKey.FolderFileInfo.serializer()),
+            toPair(SearchNavKey.Folder.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -57,8 +56,8 @@ interface SearchNavigation {
         factory: com.sorrowblue.comicviewer.feature.search.SearchScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<SearchNavKey.Main>(
-            metadata = SupportingPaneSceneStrategy.mainPane("Search")
-                + NavDisplay.transitionMaterialSharedAxisX(),
+            metadata = SupportingPaneSceneStrategy.mainPane("Search") +
+                NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createSearchScreenContext() }) {
                 _root_ide_package_.com.sorrowblue.comicviewer.feature.search.SearchScreenRoot(
@@ -76,21 +75,21 @@ interface SearchNavigation {
                                     BookNavKey(
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
-                                        name = file.name
-                                    )
+                                        name = file.name,
+                                    ),
                                 )
                             }
 
                             is Folder -> {
                                 navigator.navigate(
-                                    SearchNavKey.Folder(file.bookshelfId, file.path)
+                                    SearchNavKey.Folder(file.bookshelfId, file.path),
                                 )
                             }
                         }
                     },
                     onFileInfoClick = {
                         navigator.navigate(
-                            SearchNavKey.Folder(it.bookshelfId, it.path)
+                            SearchNavKey.Folder(it.bookshelfId, it.path),
                         )
                     },
                 )
@@ -112,7 +111,7 @@ interface SearchNavigation {
                 },
                 onOpenFolderClick = {
                     navigator.navigate(
-                        SearchNavKey.Folder(it.bookshelfId, it.parent, it.path)
+                        SearchNavKey.Folder(it.bookshelfId, it.parent, it.path),
                     )
                 },
             )
@@ -137,8 +136,8 @@ interface SearchNavigation {
                                     BookNavKey(
                                         bookshelfId = file.bookshelfId,
                                         path = file.path,
-                                        name = file.name
-                                    )
+                                        name = file.name,
+                                    ),
                                 )
                             }
 
@@ -147,7 +146,7 @@ interface SearchNavigation {
                                     navigator.goBack()
                                 }
                                 navigator.navigate(
-                                    SearchNavKey.Folder(file.bookshelfId, file.path)
+                                    SearchNavKey.Folder(file.bookshelfId, file.path),
                                 )
                             }
                         }
@@ -167,7 +166,6 @@ interface SearchNavigation {
 
 @Serializable
 sealed interface SearchNavKey : NavigationKey {
-
     override val title
         @Composable
         get() = stringResource(Res.string.search_label_search)
@@ -178,7 +176,9 @@ sealed interface SearchNavKey : NavigationKey {
     data class Main(val bookshelfId: BookshelfId, val path: PathString) : SearchNavKey
 
     @Serializable
-    data class FileInfo(override val fileKey: File.Key) : SearchNavKey, FileInfoNavKey {
+    data class FileInfo(override val fileKey: File.Key) :
+        SearchNavKey,
+        FileInfoNavKey {
         override val isOpenFolderEnabled: Boolean = true
     }
 
@@ -187,12 +187,13 @@ sealed interface SearchNavKey : NavigationKey {
         override val bookshelfId: BookshelfId,
         override val path: String,
         override val restorePath: String? = null,
-    ) : SearchNavKey, FolderNavKey
+    ) : SearchNavKey,
+        FolderNavKey
 
     @Serializable
-    data class FolderFileInfo(
-        override val fileKey: File.Key,
-    ) : SearchNavKey, FileInfoNavKey {
+    data class FolderFileInfo(override val fileKey: File.Key) :
+        SearchNavKey,
+        FileInfoNavKey {
         override val isOpenFolderEnabled: Boolean = false
     }
 }

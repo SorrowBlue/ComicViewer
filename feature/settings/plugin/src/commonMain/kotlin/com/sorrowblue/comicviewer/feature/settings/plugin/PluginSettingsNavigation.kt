@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.feature.settings.plugin.pdf.PdfPluginScreenCon
 import com.sorrowblue.comicviewer.feature.settings.plugin.pdf.PdfPluginScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -22,12 +23,11 @@ import kotlinx.serialization.KSerializer
 interface PluginSettingsNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (PluginSettingsNavKey::class as KClass<NavKey>) to (PluginSettingsNavKey.serializer() as KSerializer<NavKey>),
-            (PdfPluginNavKey::class as KClass<NavKey>) to (PdfPluginNavKey.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(PluginSettingsNavKey.serializer()),
+            toPair(PdfPluginNavKey.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
@@ -35,13 +35,13 @@ interface PluginSettingsNavigation {
         factory: PluginScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<PluginSettingsNavKey>(
-            metadata = ListDetailSceneStrategy.detailPane("Settings")
-                + NavDisplay.transitionMaterialSharedAxisX(),
+            metadata = ListDetailSceneStrategy.detailPane("Settings") +
+                NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createPluginScreenContext() }) {
                 PluginScreenRoot(
                     onBackClick = navigator::goBack,
-                    onPdfPluginClick = { navigator.navigate(PdfPluginNavKey) }
+                    onPdfPluginClick = { navigator.navigate(PdfPluginNavKey) },
                 )
             }
         }

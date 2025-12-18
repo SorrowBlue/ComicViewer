@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseScreenCon
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -22,24 +23,23 @@ import kotlinx.serialization.KSerializer
 interface InfoSettingsNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (InfoSettingsNavKey::class as KClass<NavKey>) to (InfoSettingsNavKey.serializer() as KSerializer<NavKey>),
-            (LicenseNavKey::class as KClass<NavKey>) to (LicenseNavKey.serializer() as KSerializer<NavKey>),
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(
+            toPair(InfoSettingsNavKey.serializer()),
+            toPair(LicenseNavKey.serializer()),
         )
-    }
 
     @Provides
     @IntoSet
     private fun provideInfoSettingsEntry(): EntryProviderScope<NavKey>.(Navigator) -> Unit =
         { navigator ->
             entry<InfoSettingsNavKey>(
-                metadata = ListDetailSceneStrategy.detailPane("Settings")
-                    + NavDisplay.transitionMaterialSharedAxisX()
+                metadata = ListDetailSceneStrategy.detailPane("Settings") +
+                    NavDisplay.transitionMaterialSharedAxisX(),
             ) {
                 AppInfoSettingsScreenRoot(
                     onBackClick = navigator::goBack,
-                    onLicenceClick = { navigator.navigate(LicenseNavKey) }
+                    onLicenceClick = { navigator.navigate(LicenseNavKey) },
                 )
             }
         }

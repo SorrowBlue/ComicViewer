@@ -7,6 +7,8 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import io.github.takahirom.rin.rememberRetained
 import kotlin.jvm.JvmSuppressWildcards
+import kotlin.reflect.KClass
+import kotlinx.serialization.KSerializer
 
 interface ScreenKey : NavKey
 
@@ -17,6 +19,12 @@ interface NavigationKey : ScreenKey {
 
     val icon: ImageVector
 }
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified T : NavKey> toPair(
+    serializer: KSerializer<T>,
+): Pair<KClass<NavKey>, KSerializer<NavKey>> =
+    (T::class as KClass<NavKey>) to (serializer as KSerializer<NavKey>)
 
 inline fun <reified T : NavKey, V : ScreenContext> EntryProviderScope<NavKey>.entryScreen(
     noinline createContext: () -> V,

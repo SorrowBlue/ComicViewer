@@ -27,7 +27,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.settings.section.NavigationDrawerItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_app

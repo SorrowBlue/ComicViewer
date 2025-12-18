@@ -47,7 +47,7 @@ fun rememberNavigationState(
             startRoute = startRoute,
             topLevelRoute = topLevelRoute,
             topLevelRoutes = topLevelRoutes,
-            backStacks = backStacks
+            backStacks = backStacks,
         )
     }
 }
@@ -86,16 +86,15 @@ fun NavigationState.toEntries(
     entryDecorators: List<NavEntryDecorator<NavKey>> = listOf(),
     entryProvider: (NavKey) -> NavEntry<NavKey>,
 ): SnapshotStateList<NavEntry<NavKey>> {
-
     val decoratedEntries = backStacks.mapValues { (_, stack) ->
         rememberDecoratedNavEntries(
             backStack = stack,
             entryDecorators = entryDecorators,
-            entryProvider = entryProvider
+            entryProvider = entryProvider,
         )
     }
 
     return stacksInUse
-        .flatMap { decoratedEntries[it] ?: emptyList() }
+        .flatMap { decoratedEntries[it].orEmpty() }
         .toMutableStateList()
 }

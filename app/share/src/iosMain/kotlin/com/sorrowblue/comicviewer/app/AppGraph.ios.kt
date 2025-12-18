@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.data.coil.di.CoilGraph
 import com.sorrowblue.comicviewer.data.coil.di.DataCoilProviders
 import com.sorrowblue.comicviewer.data.coil.startup.CoilProviders
@@ -49,6 +51,7 @@ import com.sorrowblue.comicviewer.framework.common.di.FrameworkCommonProviders
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import com.sorrowblue.comicviewer.framework.designsystem.locale.AppLocaleIsoGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ThemeContext
+import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
@@ -57,7 +60,8 @@ import dev.zacsweers.metro.Provides
     scope = AppScope::class,
     additionalScopes = [DataScope::class],
 )
-actual interface AppGraph : PlatformGraph,
+actual interface AppGraph :
+    PlatformGraph,
     DataStoreProviders,
     IosDatabaseProviders,
     DataCoilProviders,
@@ -103,6 +107,7 @@ actual interface AppGraph : PlatformGraph,
     SmartCollectionEditScreenContext.Factory,
     TutorialScreenContext.Factory,
     ViewerSettingsScreenContext.Factory {
+        actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
 
     @DependencyGraph.Factory
     actual fun interface Factory {

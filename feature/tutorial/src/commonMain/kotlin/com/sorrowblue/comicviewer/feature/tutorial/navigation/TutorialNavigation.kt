@@ -8,6 +8,7 @@ import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
+import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -22,11 +23,8 @@ import kotlinx.serialization.Serializable
 interface TutorialNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> {
-        return listOf(
-            (TutorialNavKey::class as KClass<NavKey>) to (TutorialNavKey.serializer() as KSerializer<NavKey>),
-        )
-    }
+    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        listOf(toPair(TutorialNavKey.serializer()))
 
     @Provides
     @IntoSet

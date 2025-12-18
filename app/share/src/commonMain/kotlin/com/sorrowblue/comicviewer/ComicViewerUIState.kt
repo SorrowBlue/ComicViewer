@@ -122,6 +122,9 @@ private class ComicViewerUIStateImpl(
                         bookshelfId = bookshelfId,
                         path = folderList.first().path,
                         restorePath = book.path,
+                        onRestoreComplete = {
+                            onNavigationHistoryRestore()
+                        },
                     ),
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -155,6 +158,9 @@ private class ComicViewerUIStateImpl(
                         bookshelfId = bookshelfId,
                         path = folderList.last().path,
                         restorePath = book.path,
+                        onRestoreComplete = {
+                            onNavigationHistoryRestore()
+                        },
                     ),
                 )
                 logcat("RESTORE_NAVIGATION", LogPriority.INFO) {

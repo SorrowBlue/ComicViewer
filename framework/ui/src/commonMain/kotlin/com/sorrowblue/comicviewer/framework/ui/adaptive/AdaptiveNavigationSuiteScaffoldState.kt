@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonSta
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 
 interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
-
     val navigationSuiteType: NavigationSuiteType
     val wideNavigationRailState: WideNavigationRailState
     val floatingActionButtonState: FloatingActionButtonState
@@ -42,7 +41,6 @@ private class AdaptiveNavigationSuiteScaffoldStateImpl(
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
 ) : AdaptiveNavigationSuiteScaffoldState,
     NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
-
     override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
     override lateinit var wideNavigationRailState: WideNavigationRailState
     override lateinit var floatingActionButtonState: FloatingActionButtonState

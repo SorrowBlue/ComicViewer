@@ -27,7 +27,6 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
 private class SettingsScreenStateImpl(
     private val appLocaleSettingsLauncher: AppLocaleSettingsLauncher,
 ) : SettingsScreenState {
-
     override var uiState by mutableStateOf(SettingsScreenUiState())
 
     override fun onSettingsClick(item: SettingsItem, onSettingsClick: (SettingsItem) -> Unit) {
