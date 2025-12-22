@@ -40,14 +40,12 @@ kotlin {
             dependsOn(noAndroid)
         }
         desktopTest {
-            dependsOn(commonTest.get())
             dependsOn(noAndroidTest)
         }
         iosMain {
             dependsOn(noAndroid)
         }
         iosTest {
-            dependsOn(commonTest.get())
             dependsOn(noAndroidTest)
         }
     }
