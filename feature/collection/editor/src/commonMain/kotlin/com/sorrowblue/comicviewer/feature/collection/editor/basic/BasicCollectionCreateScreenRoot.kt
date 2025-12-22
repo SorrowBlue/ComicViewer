@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.basic
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
@@ -17,6 +19,7 @@ fun BasicCollectionCreateScreenRoot(
         uiState = state.uiState,
         form = state.form,
         onDismissRequest = onBackClick,
+        modifier = Modifier.testTag("BasicCollectionCreateScreenRoot")
     )
 
     EventEffect(state.event) {

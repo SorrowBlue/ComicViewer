@@ -5,6 +5,8 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -23,6 +25,7 @@ internal fun DeleteCollectionScreen(
     uiState: DeleteCollectionScreenUiState,
     onBackClick: () -> Unit,
     onConfirm: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onBackClick,
@@ -33,15 +36,22 @@ internal fun DeleteCollectionScreen(
             Text(stringResource(Res.string.collection_label_delete_confirm, uiState.name))
         },
         confirmButton = {
-            FilledTonalButton(onClick = onConfirm) {
+            FilledTonalButton(
+                onClick = onConfirm,
+                modifier = Modifier.testTag("ConfirmButton")
+            ) {
                 Text(stringResource(Res.string.collection_label_delete))
             }
         },
         dismissButton = {
-            TextButton(onClick = onBackClick) {
+            TextButton(
+                onClick = onBackClick,
+                modifier = Modifier.testTag("DismissButton")
+            ) {
                 Text(stringResource(FrameworkResString.cancel))
             }
         },
+        modifier = modifier
     )
 }
 

@@ -1,9 +1,11 @@
 package com.sorrowblue.comicviewer.feature.settings
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 
 @Composable
-fun SettingsScreenRoot(
+internal fun SettingsScreenRoot(
     onBackClick: () -> Unit,
     onSettingsClick: (SettingsItem) -> Unit,
     onSettingsLongClick: (SettingsItem) -> Unit,
@@ -16,5 +18,6 @@ fun SettingsScreenRoot(
             state.onSettingsClick(it, onSettingsClick)
         },
         onSettingsLongClick = onSettingsLongClick,
+        modifier = Modifier.testTag("SettingsScreenRoot")
     )
 }

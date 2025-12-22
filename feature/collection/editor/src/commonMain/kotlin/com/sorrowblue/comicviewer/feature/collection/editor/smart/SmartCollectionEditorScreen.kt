@@ -20,6 +20,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
@@ -70,8 +71,8 @@ internal fun SmartCollectionEditorScreen(
                             },
                             iconEnabled = !uiState.enabledForm,
                             enabled = uiState.enabledForm && form.meta.canSubmit,
+                            modifier = Modifier.testTag("CreateButton")
                         ) {
-                            // TODO
                             Text(text = "Save")
                         }
                     },

@@ -23,6 +23,8 @@ sealed interface CollectionNavKey : NavigationKey {
 
     override val icon get() = ComicIcons.CollectionsBookmark
 
+    override val order get() = 2
+
     @Serializable
     data object Main : CollectionNavKey
 

@@ -22,6 +22,8 @@ sealed interface BookshelfNavKey : NavigationKey {
 
     override val icon get() = ComicIcons.LibraryBooks
 
+    override val order get() = 1
+
     @Serializable
     data object Main : BookshelfNavKey
 

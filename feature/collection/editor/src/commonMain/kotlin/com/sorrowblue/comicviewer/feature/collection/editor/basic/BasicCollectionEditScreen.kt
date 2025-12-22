@@ -33,6 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
+import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.dialogPaddingHorizonal
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
@@ -51,6 +52,7 @@ internal fun BasicCollectionEditScreen(
     lazyPagingItems: LazyPagingItems<File>,
     onBackClick: () -> Unit,
     onDeleteClick: (File) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val title = remember {
         movableContentOf {
@@ -64,7 +66,7 @@ internal fun BasicCollectionEditScreen(
                 TopAppBar(
                     title = title,
                     navigationIcon = {
-                        BackIconButton(
+                        CloseIconButton(
                             onClick = onBackClick,
                             enabled = !uiState.isLoading,
                         )
@@ -84,7 +86,7 @@ internal fun BasicCollectionEditScreen(
                 )
             },
             contentWindowInsets = WindowInsets.safeDrawing,
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { contentPadding ->
             BasicCollectionContent(
                 lazyPagingItems = lazyPagingItems,
@@ -106,7 +108,7 @@ internal fun BasicCollectionEditScreen(
     } else {
         BasicAlertDialog(
             onDismissRequest = onBackClick,
-            modifier = Modifier.padding(ComicTheme.dimension.margin),
+            modifier = modifier.padding(ComicTheme.dimension.margin),
         ) {
             val lazyListState = rememberLazyListState()
             AlertDialogContent(

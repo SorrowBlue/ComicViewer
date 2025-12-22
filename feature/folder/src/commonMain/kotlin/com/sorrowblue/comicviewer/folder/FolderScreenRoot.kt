@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
@@ -40,6 +42,7 @@ fun FolderScreenRoot(
         onFolderScopeOnlyClick = { state.onFolderScopeOnlyClick() },
         onSettingsClick = onSettingsClick,
         onRefresh = state::onRefresh,
+        modifier = Modifier.testTag("FolderScreenRoot"),
     )
 
     NavigationResultEffect(SortTypeSelectScreenResultKey, state::onSortTypeSelectScreenResult)

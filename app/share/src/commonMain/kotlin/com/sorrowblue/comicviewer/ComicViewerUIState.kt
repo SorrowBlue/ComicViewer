@@ -44,7 +44,7 @@ fun rememberComicViewerUIState(
 ): ComicViewerUIState {
     val navigator = rememberNavigator(
         startKey = BookshelfNavKey.Main,
-        topLevelRoutes = context.navigationKeys,
+        topLevelRoutes = context.navigationKeys.sortedBy { it.order }.toSet(),
         configuration = SavedStateConfiguration {
             serializersModule = SerializersModule {
                 contextual(SnapshotStateListSerializer(PolymorphicSerializer(NavKey::class)))

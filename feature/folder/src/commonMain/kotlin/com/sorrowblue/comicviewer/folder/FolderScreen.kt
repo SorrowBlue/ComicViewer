@@ -34,8 +34,11 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     onFolderScopeOnlyClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold {
+    AdaptiveNavigationSuiteScaffold(
+        modifier = modifier
+    ) {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
         Scaffold(
             topBar = {

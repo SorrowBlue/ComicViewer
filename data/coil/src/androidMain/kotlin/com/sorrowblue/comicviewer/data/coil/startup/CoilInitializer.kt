@@ -12,7 +12,9 @@ import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 internal class CoilInitializer :
     BaseCoilInitializer(),
     Initializer<Unit> {
-    override fun create(context: Context) = initialize(context)
+    override fun create(context: Context) {
+        initialize(context)
+    }
 
     override fun ImageLoader.Builder.setup() {
         allowRgb565(true)

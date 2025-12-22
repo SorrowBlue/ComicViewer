@@ -21,6 +21,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDeleteS
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDeleteScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.NotificationRequestScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionAddNavKey
+import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.file.FileInfoScreenContext
 import com.sorrowblue.comicviewer.folder.FolderScreenContext
@@ -195,6 +196,9 @@ interface BookshelfNavigation {
                 folderFileInfoNavEntry<BookshelfNavKey.Folder, BookshelfNavKey.FolderFileInfo>(
                     sceneKeyPrefix = "Bookshelf",
                     onBackClick = navigator::goBack,
+                    onSearchClick = { id, path ->
+                        navigator.navigate(SearchNavKey.Main(id, path))
+                    },
                     onFileClick = { file ->
                         when (file) {
                             is Book -> {

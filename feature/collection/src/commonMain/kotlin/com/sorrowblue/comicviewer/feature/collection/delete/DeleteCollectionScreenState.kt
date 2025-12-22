@@ -12,8 +12,8 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 internal interface DeleteCollectionScreenState {
@@ -44,18 +44,20 @@ private class DeleteCollectionScreenStateImpl(
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : DeleteCollectionScreenState {
     init {
-        getCollectionUseCase(GetCollectionUseCase.Request(id))
-            .onEach {
-                when (it) {
-                    is Resource.Success<Collection> -> {
-                        uiState = uiState.copy(name = it.data.name)
-                    }
+        coroutineScope.launch {
+            getCollectionUseCase(GetCollectionUseCase.Request(id))
+                .first().let {
+                    when (it) {
+                        is Resource.Success<Collection> -> {
+                            uiState = uiState.copy(name = it.data.name)
+                        }
 
-                    is Resource.Error<GetCollectionUseCase.Error> -> {
-                        // TODO()
+                        is Resource.Error<GetCollectionUseCase.Error> -> {
+                            // TODO()
+                        }
                     }
                 }
-            }.launchIn(coroutineScope)
+        }
     }
 
     override var uiState by mutableStateOf(DeleteCollectionScreenUiState())

@@ -6,6 +6,8 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
+import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
+import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
@@ -75,18 +77,28 @@ interface CollectionNavigation {
             with(rememberRetained { factory.createCollectionListScreenContext() }) {
                 CollectionListScreenRoot(
                     onItemClick = { navigator.navigate(CollectionNavKey.Detail(it.id)) },
-                    onEditClick = { },
-                    onDeleteClick = { },
-                    onSettingsClick = { navigator.navigate(SettingsNavKey) },
-                    onCreateBasicCollectionClick = {
+                    onEditClick = {
                         navigator.navigate(
-                            CollectionNavKey.BasicCreate(),
+                            when (it) {
+                                is BasicCollection ->
+                                    CollectionNavKey.BasicEdit(it.id)
+
+                                is SmartCollection ->
+                                    CollectionNavKey.SmartEdit(it.id)
+                            }
                         )
                     },
+                    onDeleteClick = {
+                        navigator.navigate(CollectionNavKey.Delete(it.id))
+                    },
+                    onSettingsClick = {
+                        navigator.navigate(SettingsNavKey)
+                    },
+                    onCreateBasicCollectionClick = {
+                        navigator.navigate(CollectionNavKey.BasicCreate())
+                    },
                     onCreateSmartCollectionClick = {
-                        navigator.navigate(
-                            CollectionNavKey.SmartCreate(),
-                        )
+                        navigator.navigate(CollectionNavKey.SmartCreate())
                     },
                 )
             }
@@ -132,7 +144,14 @@ interface CollectionNavigation {
                     onFileInfoClick = {
                         navigator.navigate(CollectionNavKey.FileInfo(it.key()))
                     },
-                    onEditClick = { navigator.navigate(CollectionNavKey.BasicEdit(it)) },
+                    onEditClick = {
+                        navigator.navigate(
+                            when (it) {
+                                is BasicCollection -> CollectionNavKey.BasicEdit(it.id)
+                                is SmartCollection -> CollectionNavKey.SmartEdit(it.id)
+                            }
+                        )
+                    },
                     onDeleteClick = { navigator.navigate(CollectionNavKey.Delete(it)) },
                     onSettingsClick = { navigator.navigate(SettingsNavKey) },
                 )
@@ -284,7 +303,10 @@ interface CollectionNavigation {
     private fun provideCollectionDeleteEntry(
         factory: DeleteCollectionScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
-        entry<CollectionNavKey.Delete>(metadata = NavDisplay.transitionMaterialFadeThrough()) {
+        entry<CollectionNavKey.Delete>(
+            metadata = DialogSceneStrategy.dialog()
+                + NavDisplay.transitionMaterialFadeThrough()
+        ) {
             with(rememberRetained { factory.createDeleteCollectionScreenContext() }) {
                 DeleteCollectionScreenRoot(
                     id = it.id,

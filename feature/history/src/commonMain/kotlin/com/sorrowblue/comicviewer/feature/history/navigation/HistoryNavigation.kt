@@ -52,6 +52,8 @@ sealed interface HistoryNavKey : NavigationKey {
 
     override val icon get() = ComicIcons.History
 
+    override val order get() = 4
+
     @Serializable
     data object Main : HistoryNavKey
 

@@ -8,12 +8,13 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.data.database"
+        androidResources.enable = true
         withHostTest {
             isIncludeAndroidResources = true
         }
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-            execution = "ANDROIDX_TEST_ORCHESTRATOR"
+//            execution = "ANDROIDX_TEST_ORCHESTRATOR"
             managedDevices {
                 localDevices {
                     create("pixel9api35") {
@@ -88,8 +89,21 @@ dependencies {
     kspIosSimulatorArm64Test(libs.androidx.roomCompiler)
     kspIosX64(libs.androidx.roomCompiler)
     kspIosX64Test(libs.androidx.roomCompiler)
+    androidTestUtil(libs.androidx.testOrchestrator)
 }
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+afterEvaluate {
+    tasks.getByName("lintAnalyzeAndroidHostTest") {
+        dependsOn(tasks.getByName("kspAndroidHostTest"))
+    }
+    tasks.getByName("generateAndroidHostTestLintModel") {
+        dependsOn(tasks.getByName("kspAndroidHostTest"))
+    }
+}
+tasks.withType<AbstractTestTask>().configureEach {
+    failOnNoDiscoveredTests = false
 }

@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.settings.folder
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
@@ -65,10 +66,12 @@ internal fun FolderSettingsScreen(
     onFontSizeChange: (Int) -> Unit,
     onImageFormatClick: () -> Unit,
     onThumbnailQualityChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_folder_title)) },
         onBackClick = onBackClick,
+        modifier = modifier
     ) {
         SwitchSetting(
             title = Res.string.settings_folder_label_show_hidden_files,

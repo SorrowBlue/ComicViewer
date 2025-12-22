@@ -13,4 +13,4 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run Unit Tests
-        run: echo "Run Test..."
+        run: ./gradlew allTests

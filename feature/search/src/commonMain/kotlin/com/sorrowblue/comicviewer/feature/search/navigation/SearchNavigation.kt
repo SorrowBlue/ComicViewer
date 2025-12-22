@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.search.navigation
 
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
-import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
@@ -20,13 +19,10 @@ import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
-import comicviewer.feature.search.generated.resources.Res
-import comicviewer.feature.search.generated.resources.search_label_search
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -36,7 +32,6 @@ import io.github.takahirom.rin.rememberRetained
 import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.stringResource
 
 @ContributesTo(AppScope::class)
 interface SearchNavigation {
@@ -165,12 +160,7 @@ interface SearchNavigation {
 }
 
 @Serializable
-sealed interface SearchNavKey : NavigationKey {
-    override val title
-        @Composable
-        get() = stringResource(Res.string.search_label_search)
-
-    override val icon get() = ComicIcons.Search
+sealed interface SearchNavKey : ScreenKey {
 
     @Serializable
     data class Main(val bookshelfId: BookshelfId, val path: PathString) : SearchNavKey

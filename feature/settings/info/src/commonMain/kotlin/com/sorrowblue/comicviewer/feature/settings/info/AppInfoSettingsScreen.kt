@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.settings.info
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -22,10 +23,12 @@ internal fun AppInfoSettingsScreen(
     onBackClick: () -> Unit,
     onLicenceClick: () -> Unit,
     onRateAppClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_info_title)) },
         onBackClick = onBackClick,
+        modifier = modifier,
     ) {
         Setting(
             title = stringResource(Res.string.settings_info_label_version),

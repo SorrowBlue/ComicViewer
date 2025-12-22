@@ -22,6 +22,8 @@ internal sealed interface ReadLaterNavKey : NavigationKey {
     @Serializable
     data object Main : ReadLaterNavKey
 
+    override val order get() = 3
+
     @Serializable
     data class FileInfo(override val fileKey: File.Key) :
         ReadLaterNavKey,

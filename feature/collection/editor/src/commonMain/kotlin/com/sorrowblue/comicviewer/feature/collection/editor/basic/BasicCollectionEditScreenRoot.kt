@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.basic
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
@@ -18,6 +20,7 @@ fun BasicCollectionEditScreenRoot(
         lazyPagingItems = state.lazyPagingItems,
         onBackClick = onBackClick,
         onDeleteClick = state::onDeleteClick,
+        modifier = Modifier.testTag("BasicCollectionEditScreenRoot")
     )
     EventEffect(state.events) {
         when (it) {

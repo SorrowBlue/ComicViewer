@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.feature.collection.list
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 
 @Composable
@@ -23,5 +25,6 @@ fun CollectionListScreenRoot(
         onSettingsClick = onSettingsClick,
         onCreateBasicCollectionClick = onCreateBasicCollectionClick,
         onCreateSmartCollectionClick = onCreateSmartCollectionClick,
+        modifier = Modifier.testTag("CollectionListScreenRoot")
     )
 }

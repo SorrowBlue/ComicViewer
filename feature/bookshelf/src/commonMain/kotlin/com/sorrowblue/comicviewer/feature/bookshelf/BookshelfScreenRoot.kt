@@ -1,13 +1,15 @@
 package com.sorrowblue.comicviewer.feature.bookshelf
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 
 @Composable
 context(context: BookshelfScreenContext)
-fun BookshelfScreenRoot(
+internal fun BookshelfScreenRoot(
     onSettingsClick: () -> Unit,
     onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, PathString) -> Unit,
@@ -21,5 +23,6 @@ fun BookshelfScreenRoot(
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
         onBookshelfInfoClick = onBookshelfInfoClick,
+        modifier = Modifier.testTag("BookshelfScreenRoot")
     )
 }

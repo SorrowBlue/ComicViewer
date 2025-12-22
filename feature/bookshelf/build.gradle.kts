@@ -15,6 +15,7 @@ kotlin {
                 implementation(projects.feature.collection.nav)
                 implementation(projects.feature.file)
                 implementation(projects.feature.folder)
+                implementation(projects.feature.search)
                 implementation(projects.feature.settings.nav)
             }
         }

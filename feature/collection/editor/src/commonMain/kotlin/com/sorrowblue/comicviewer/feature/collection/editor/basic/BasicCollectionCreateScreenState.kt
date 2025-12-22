@@ -19,7 +19,9 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create_add
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import soil.form.compose.Form
 import soil.form.compose.rememberForm
@@ -87,13 +89,15 @@ private class BasicCollectionCreateScreenStateImpl(
                                 path = path,
                             )
                         } else {
-                            notificationManager.toast(
-                                getString(
-                                    Res.string.collection_editor_msg_success_create,
-                                    collection.name,
-                                ),
-                                NotificationManager.LengthShort,
-                            )
+                            withContext(Dispatchers.Main) {
+                                notificationManager.toast(
+                                    getString(
+                                        Res.string.collection_editor_msg_success_create,
+                                        collection.name,
+                                    ),
+                                    NotificationManager.LengthShort,
+                                )
+                            }
                             event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                         }
                     },
@@ -112,13 +116,15 @@ private class BasicCollectionCreateScreenStateImpl(
         ).fold(
             onSuccess = {
                 event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                notificationManager.toast(
-                    getString(
-                        Res.string.collection_editor_msg_success_create_add,
-                        collection.name,
-                    ),
-                    NotificationManager.LengthShort,
-                )
+                withContext(Dispatchers.Main) {
+                    notificationManager.toast(
+                        getString(
+                            Res.string.collection_editor_msg_success_create_add,
+                            collection.name,
+                        ),
+                        NotificationManager.LengthShort,
+                    )
+                }
             },
             onError = {},
         )

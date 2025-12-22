@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.settings.security
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
@@ -31,10 +32,12 @@ internal fun SecuritySettingsScreen(
     onPasswordChangeClick: () -> Unit,
     onChangeBiometricEnable: (Boolean) -> Unit,
     onChangeBackgroundLockEnable: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_security_title)) },
         onBackClick = onBackClick,
+        modifier = modifier,
     ) {
         SwitchSetting(
             title = Res.string.settings_security_title_password_lock,

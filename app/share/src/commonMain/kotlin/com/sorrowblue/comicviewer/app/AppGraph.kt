@@ -15,7 +15,9 @@ import dev.zacsweers.metro.Provides
     additionalScopes = [DataScope::class],
 )
 expect interface AppGraph {
+
     val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
+    val context: PlatformContext
 
     @DependencyGraph.Factory
     fun interface Factory {

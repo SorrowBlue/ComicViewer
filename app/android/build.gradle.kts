@@ -11,6 +11,7 @@ android {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
         // versionCode calculated from versionName in androidComponents block
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     androidResources {
         generateLocaleConfig = true
@@ -70,10 +71,17 @@ dependencies {
     implementation(libs.androidx.lifecycleCommon)
     implementation(libs.androidx.navigation3UI)
     implementation(libs.compose.ui)
+    implementation(libs.metro.android)
 
     debugImplementation(projects.domain.usecase)
     debugImplementation(projects.feature.bookshelf.edit)
     debugImplementation(libs.kotlinx.serializationJson)
+
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("androidx.compose.ui:ui-test:${libs.versions.compose.ui.get()}")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${libs.versions.compose.ui.get()}")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:${libs.versions.compose.ui.get()}")
+    debugImplementation("androidx.compose.ui:ui-tooling:${libs.versions.compose.ui.get()}")
 }
 
 val gitTagProvider = providers.of(GitTagValueSource::class) {}

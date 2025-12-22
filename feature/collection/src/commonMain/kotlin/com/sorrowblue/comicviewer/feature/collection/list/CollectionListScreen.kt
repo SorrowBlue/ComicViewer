@@ -6,6 +6,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionList
@@ -31,8 +33,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
     onSettingsClick: () -> Unit,
     onCreateBasicCollectionClick: () -> Unit,
     onCreateSmartCollectionClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold {
+    AdaptiveNavigationSuiteScaffold(modifier = modifier) {
         Scaffold(
             topBar = {
                 AdaptiveAppBar(
@@ -45,7 +48,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                 )
             },
             floatingActionButton = {
-                PrimaryActionButtonMenu {
+                PrimaryActionButtonMenu(
+                    modifier = Modifier.testTag("FloatingActionButton")
+                ) {
                     FloatingActionButtonMenuItem(
                         onClick = {
                             floatingActionButtonState.toggleMenu(false)
@@ -60,6 +65,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                                 contentDescription = null,
                             )
                         },
+                        modifier = Modifier.testTag("BasicCollectionCreateButton")
                     )
                     FloatingActionButtonMenuItem(
                         onClick = {
@@ -75,6 +81,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                                 contentDescription = null,
                             )
                         },
+                        modifier = Modifier.testTag("SmartCollectionCreateButton")
                     )
                 }
             },

@@ -46,7 +46,9 @@ internal fun Form<SmartCollectionForm>.CollectionNameTextField2(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
             ),
-            modifier = modifier.onFocusChanged { field.handleFocus(it.hasFocus) },
+            modifier = modifier
+                .handleFocusChanged(field)
+                .testTag(CollectionNameField),
         )
     }
 }

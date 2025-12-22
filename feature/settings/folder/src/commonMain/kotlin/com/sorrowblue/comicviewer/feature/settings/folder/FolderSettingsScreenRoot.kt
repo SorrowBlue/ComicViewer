@@ -1,17 +1,18 @@
 package com.sorrowblue.comicviewer.feature.settings.folder
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
-import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 
 @Composable
 context(context: FolderSettingsScreenContext)
-fun FolderSettingsScreenRoot(
+internal fun FolderSettingsScreenRoot(
     onBackClick: () -> Unit,
     onSortTypeClick: (SortType) -> Unit,
     onImageScaleClick: (ImageScale) -> Unit,
@@ -24,21 +25,22 @@ fun FolderSettingsScreenRoot(
         uiState = state.uiState,
         onBackClick = onBackClick,
         onShowHiddenFilesChange = state::onShowHiddenFilesChange,
-        onShowThumbnailsChange = state::onShowThumbnailsChange,
+        onShowFilesExtensionChange = state::onShowFilesExtensionChange,
         onSortTypeClick = { onSortTypeClick(state.uiState.fileSort) },
+        onShowThumbnailsChange = state::onShowThumbnailsChange,
         onImageScaleClick = { onImageScaleClick(state.uiState.imageScale) },
         onImageFilterQualityClick = { onImageFilterQualityClick(state.uiState.imageFilterQuality) },
-        onShowFilesExtensionChange = state::onShowFilesExtensionChange,
         onChangeOpenImageFolder = state::onChangeOpenImageFolder,
         onSavedThumbnailChange = state::onSavedThumbnailChange,
-        onFontSizeChange = state::onFontSizeChange,
-        onImageFormatClick = { onImageFormatClick(state.uiState.imageFormat) },
-        onThumbnailQualityChange = state::onThumbnailQualityChange,
         onFolderThumbnailOrderClick = {
             onFolderThumbnailOrderClick(
                 state.uiState.folderThumbnailOrder,
             )
         },
+        onFontSizeChange = state::onFontSizeChange,
+        onImageFormatClick = { onImageFormatClick(state.uiState.imageFormat) },
+        onThumbnailQualityChange = state::onThumbnailQualityChange,
+        modifier = Modifier.testTag("FolderSettingsRoot")
     )
 
     NavigationResultEffect(SortTypeScreenResultKey, state::onFileSortChange)
@@ -47,29 +49,3 @@ fun FolderSettingsScreenRoot(
     NavigationResultEffect(ImageFormatScreenResultKey, state::onImageFormatChange)
     NavigationResultEffect(FolderThumbnailOrderScreenResultKey, state::onFolderThumbnailOrderChange)
 }
-
-val SortTypeScreenResultKey = SerializableNavigationResultKey(
-    serializer = SortType.serializer(),
-    resultKey = "SortTypeScreenResultKey",
-)
-
-val ImageScaleScreenResultKey = SerializableNavigationResultKey(
-    serializer = ImageScale.serializer(),
-    resultKey = "ImageScaleScreenResultKey",
-)
-
-val ImageFilterQualityScreenResultKey: SerializableNavigationResultKey<ImageFilterQuality> =
-    SerializableNavigationResultKey(
-        serializer = ImageFilterQuality.serializer(),
-        resultKey = "ImageFilterQualityScreenResultKey",
-    )
-
-val ImageFormatScreenResultKey = SerializableNavigationResultKey(
-    serializer = ImageFormat.serializer(),
-    resultKey = "ImageFormatScreenResultKey",
-)
-
-val FolderThumbnailOrderScreenResultKey = SerializableNavigationResultKey(
-    serializer = FolderThumbnailOrder.serializer(),
-    resultKey = "FolderThumbnailOrderScreenResultKey",
-)
