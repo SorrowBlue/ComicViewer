@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfFolderNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.rememberNavigator
@@ -43,7 +44,7 @@ fun rememberComicViewerUIState(
     mainViewModel: MainViewModel = viewModel { MainViewModel() },
 ): ComicViewerUIState {
     val navigator = rememberNavigator(
-        startKey = BookshelfNavKey.Main,
+        startKey = BookshelfNavKey,
         topLevelRoutes = context.navigationKeys.sortedBy { it.order }.toSet(),
         configuration = SavedStateConfiguration {
             serializersModule = SerializersModule {
@@ -118,7 +119,7 @@ private class ComicViewerUIStateImpl(
             val bookshelfId = folderList.first().bookshelfId
             if (folderList.size == 1) {
                 navigator.navigate(
-                    BookshelfNavKey.Folder(
+                    BookshelfFolderNavKey(
                         bookshelfId = bookshelfId,
                         path = folderList.first().path,
                         restorePath = book.path,
@@ -132,7 +133,7 @@ private class ComicViewerUIStateImpl(
                 }
             } else {
                 navigator.navigate(
-                    BookshelfNavKey.Folder(
+                    BookshelfFolderNavKey(
                         bookshelfId = bookshelfId,
                         path = folderList.first().path,
                         restorePath = null,
@@ -143,7 +144,7 @@ private class ComicViewerUIStateImpl(
                 }
                 folderList.drop(1).dropLast(1).forEach { folder ->
                     navigator.navigate(
-                        BookshelfNavKey.Folder(
+                        BookshelfFolderNavKey(
                             bookshelfId = bookshelfId,
                             path = folderList.first().path,
                             restorePath = null,
@@ -154,7 +155,7 @@ private class ComicViewerUIStateImpl(
                     }
                 }
                 navigator.navigate(
-                    BookshelfNavKey.Folder(
+                    BookshelfFolderNavKey(
                         bookshelfId = bookshelfId,
                         path = folderList.last().path,
                         restorePath = book.path,

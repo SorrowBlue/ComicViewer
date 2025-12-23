@@ -5,6 +5,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -27,6 +28,7 @@ internal fun NotificationRequestScreen(
     scanType: ScanType,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -48,6 +50,7 @@ internal fun NotificationRequestScreen(
             }
             Text(text = stringResource(id))
         },
+        modifier = modifier,
     )
 }
 

@@ -13,36 +13,28 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
 @Serializable
-internal sealed interface ReadLaterNavKey : NavigationKey {
+internal data object ReadLaterNavKey : NavigationKey {
     override val title
         @Composable
         get() = stringResource(Res.string.readlater_title)
     override val icon get() = ComicIcons.WatchLater
 
-    @Serializable
-    data object Main : ReadLaterNavKey
-
     override val order get() = 3
+}
 
-    @Serializable
-    data class FileInfo(override val fileKey: File.Key) :
-        ReadLaterNavKey,
-        FileInfoNavKey {
-        override val isOpenFolderEnabled: Boolean = true
-    }
+@Serializable
+internal data class ReadLaterFileInfoNavKey(override val fileKey: File.Key) : FileInfoNavKey {
+    override val isOpenFolderEnabled: Boolean = true
+}
 
-    @Serializable
-    data class Folder(
-        override val bookshelfId: BookshelfId,
-        override val path: String,
-        override val restorePath: String? = null,
-    ) : ReadLaterNavKey,
-        FolderNavKey
+@Serializable
+internal data class ReadLaterFolderNavKey(
+    override val bookshelfId: BookshelfId,
+    override val path: String,
+    override val restorePath: String? = null,
+) : FolderNavKey
 
-    @Serializable
-    data class FolderFileInfo(override val fileKey: File.Key) :
-        ReadLaterNavKey,
-        FileInfoNavKey {
-        override val isOpenFolderEnabled: Boolean = false
-    }
+@Serializable
+internal data class ReadLaterFolderFileInfoNavKey(override val fileKey: File.Key) : FileInfoNavKey {
+    override val isOpenFolderEnabled: Boolean = false
 }

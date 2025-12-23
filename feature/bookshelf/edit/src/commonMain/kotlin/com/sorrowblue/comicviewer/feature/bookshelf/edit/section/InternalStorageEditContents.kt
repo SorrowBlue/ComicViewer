@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentWithReceiverOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.InternalStorageEditorScreenState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.InternalStorageEditScreenState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -18,7 +18,7 @@ import soil.form.annotation.InternalSoilFormApi
 @OptIn(InternalSoilFormApi::class)
 @Composable
 internal fun InternalStorageEditorContents(
-    state: InternalStorageEditorScreenState,
+    state: InternalStorageEditScreenState,
     onBackClick: () -> Unit,
     scrollState: ScrollState = rememberScrollState(),
 ) {

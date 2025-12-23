@@ -24,7 +24,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.section.BasicCollectionContent
-import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameTextField
+import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme

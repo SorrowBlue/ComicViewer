@@ -6,7 +6,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameTextField
+import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel

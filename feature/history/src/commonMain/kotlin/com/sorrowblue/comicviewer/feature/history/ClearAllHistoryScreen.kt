@@ -4,6 +4,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_btn_clear_all
 import comicviewer.feature.history.generated.resources.history_text_clear_all
@@ -13,7 +14,11 @@ import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun ClearAllHistoryScreen(onDismissRequest: () -> Unit, onConfirm: () -> Unit) {
+internal fun ClearAllHistoryScreen(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
@@ -28,5 +33,6 @@ internal fun ClearAllHistoryScreen(onDismissRequest: () -> Unit, onConfirm: () -
         },
         title = { Text(text = stringResource(Res.string.history_title_clear_all)) },
         text = { Text(text = stringResource(Res.string.history_text_clear_all)) },
+        modifier = modifier,
     )
 }

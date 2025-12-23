@@ -25,7 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditorForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_save
@@ -37,8 +37,8 @@ import soil.form.compose.watch
 
 @Composable
 internal fun EditorScreen(
-    form: Form<out BookshelfEditorForm>,
-    uiState: BookshelfEditorScreenUiState,
+    form: Form<out BookshelfEditForm>,
+    uiState: BookshelfEditScreenUiState,
     onBackClick: () -> Unit,
     scrollState: ScrollState,
     modifier: Modifier = Modifier,

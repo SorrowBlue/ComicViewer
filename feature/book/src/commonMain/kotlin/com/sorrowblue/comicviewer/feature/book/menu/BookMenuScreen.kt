@@ -22,19 +22,7 @@ internal data class BookMenuScreenUiState(
 )
 
 @Composable
-context(context: BookMenuScreenContext)
-fun BookMenuScreenRoot(onDismissRequest: () -> Unit) {
-    val state = rememberBookMenuScreenState()
-    BookMenuScreen(
-        uiState = state.uiState,
-        onDismissRequest = onDismissRequest,
-        onPageFormatChange = state::onPageFormatChange,
-        onPageScaleChange = state::onPageScaleChange,
-    )
-}
-
-@Composable
-private fun BookMenuScreen(
+internal fun BookMenuScreen(
     uiState: BookMenuScreenUiState,
     onDismissRequest: () -> Unit,
     onPageFormatChange: (PageFormat2) -> Unit,
