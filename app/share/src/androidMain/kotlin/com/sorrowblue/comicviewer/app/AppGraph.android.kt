@@ -19,7 +19,7 @@ import dev.zacsweers.metrox.android.MetroAppComponentProviders
 actual interface AppGraph :
     PlatformGraph,
     MetroAppComponentProviders {
-        actual val context: PlatformContext
+    actual val context: PlatformContext
     actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
 
     @DependencyGraph.Factory

@@ -13,12 +13,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 context(context: SmartCollectionCreateScreenContext)
-fun SmartCollectionCreateScreenRoot(
+internal fun SmartCollectionCreateScreenRoot(
     bookshelfId: BookshelfId?,
     searchCondition: SearchCondition,
     onCancelClick: () -> Unit,
     onComplete: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val state = rememberSmartCollectionCreateScreenState(bookshelfId, searchCondition)
     SmartCollectionEditorScreen(
@@ -26,7 +25,7 @@ fun SmartCollectionCreateScreenRoot(
         uiState = state.uiState,
         title = { Text(text = stringResource(Res.string.collection_editor_title_smart_create)) },
         onCancel = onCancelClick,
-        modifier = modifier.testTag("SmartCollectionCreateScreenRoot"),
+        modifier = Modifier.testTag("SmartCollectionCreateScreenRoot"),
     )
     EventEffect(state.event) {
         when (it) {

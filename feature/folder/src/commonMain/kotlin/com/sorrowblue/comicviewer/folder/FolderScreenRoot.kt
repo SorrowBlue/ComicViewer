@@ -22,6 +22,7 @@ fun FolderScreenRoot(
     onFileInfoClick: (File) -> Unit,
     onSettingsClick: () -> Unit,
     onRestoreComplete: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val state =
         rememberFolderScreenState(
@@ -42,7 +43,7 @@ fun FolderScreenRoot(
         onFolderScopeOnlyClick = { state.onFolderScopeOnlyClick() },
         onSettingsClick = onSettingsClick,
         onRefresh = state::onRefresh,
-        modifier = Modifier.testTag("FolderScreenRoot"),
+        modifier = modifier.testTag("FolderScreenRoot"),
     )
 
     NavigationResultEffect(SortTypeSelectScreenResultKey, state::onSortTypeSelectScreenResult)

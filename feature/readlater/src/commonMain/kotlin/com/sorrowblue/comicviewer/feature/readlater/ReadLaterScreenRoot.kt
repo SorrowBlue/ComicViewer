@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 
 @Composable
 context(context: ReadLaterScreenContext)
-fun ReadLaterScreenRoot(
+internal fun ReadLaterScreenRoot(
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,

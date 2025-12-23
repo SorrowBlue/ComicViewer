@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.Collection
 
 @Composable
 context(context: CollectionListScreenContext)
-fun CollectionListScreenRoot(
+internal fun CollectionListScreenRoot(
     onItemClick: (Collection) -> Unit,
     onEditClick: (Collection) -> Unit,
     onDeleteClick: (Collection) -> Unit,

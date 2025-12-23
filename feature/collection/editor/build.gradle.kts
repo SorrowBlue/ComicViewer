@@ -11,6 +11,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.soil.form)
+                implementation(projects.feature.collection.nav)
             }
         }
     }

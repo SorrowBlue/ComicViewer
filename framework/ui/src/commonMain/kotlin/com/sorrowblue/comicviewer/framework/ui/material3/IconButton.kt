@@ -26,7 +26,7 @@ fun SettingsIconButton(
 }
 
 @Composable
-fun BackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true,) {
+fun BackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     IconButton(
         onClick = onClick,
         enabled = enabled,
@@ -40,7 +40,7 @@ fun BackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: 
 }
 
 @Composable
-fun CloseIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true,) {
+fun CloseIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     IconButton(
         onClick = onClick,
         enabled = enabled,

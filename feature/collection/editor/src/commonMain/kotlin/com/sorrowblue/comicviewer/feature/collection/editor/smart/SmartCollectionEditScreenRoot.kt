@@ -12,11 +12,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 context(context: SmartCollectionEditScreenContext)
-fun SmartCollectionEditScreenRoot(
+internal fun SmartCollectionEditScreenRoot(
     collectionId: CollectionId,
     onCancelClick: () -> Unit,
     onComplete: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val state = rememberSmartCollectionEditScreenState(collectionId = collectionId)
     SmartCollectionEditorScreen(
@@ -24,7 +23,7 @@ fun SmartCollectionEditScreenRoot(
         uiState = state.uiState,
         title = { Text(text = stringResource(Res.string.collection_editor_title_smart_edit)) },
         onCancel = onCancelClick,
-        modifier = modifier.testTag("SmartCollectionEditScreenRoot"),
+        modifier = Modifier.testTag("SmartCollectionEditScreenRoot"),
     )
     EventEffect(state.event) {
         when (it) {

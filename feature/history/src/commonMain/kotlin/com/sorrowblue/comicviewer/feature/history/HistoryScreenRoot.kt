@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 
 @Composable
 context(context: HistoryScreenContext)
-fun HistoryScreenRoot(
+internal fun HistoryScreenRoot(
     onDeleteAllClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onBookClick: (Book) -> Unit,

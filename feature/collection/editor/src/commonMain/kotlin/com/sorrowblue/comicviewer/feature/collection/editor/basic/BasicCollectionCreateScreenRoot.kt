@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
 @Composable
 context(context: BasicCollectionCreateScreenContext)
-fun BasicCollectionCreateScreenRoot(
+internal fun BasicCollectionCreateScreenRoot(
     bookshelfId: BookshelfId,
     path: String,
     onBackClick: () -> Unit,
