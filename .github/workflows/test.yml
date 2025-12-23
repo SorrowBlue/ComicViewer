@@ -23,6 +23,8 @@ jobs:
         uses: dorny/test-reporter@v2
         with:
           name: 'Unit Test'
-          path: '**/build/{test-results/*/TEST-*.xml,outputs/Test-result/**/Test-*.xml}'
+          path: |
+            **/build/test-results/*/TEST-*.xml
+            **/build/outputs/*Test-result/**/Test-*.xml
           reporter: 'java-junit'
           fail-on-error: false

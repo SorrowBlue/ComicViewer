@@ -49,9 +49,8 @@ kotlin {
         }
         val androidDeviceTest by getting {
             dependencies {
-                implementation("androidx.compose.ui:ui-test:${libs.versions.compose.ui.get()}")
-                implementation("androidx.compose.ui:ui-test-junit4:${libs.versions.compose.ui.get()}")
-                implementation("androidx.compose.ui:ui-test-manifest:${libs.versions.compose.ui.get()}")
+                implementation(libs.compose.uiTestJunit4)
+                implementation(libs.compose.uiTestManifest)
             }
         }
     }

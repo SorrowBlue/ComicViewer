@@ -77,11 +77,9 @@ dependencies {
     debugImplementation(projects.feature.bookshelf.edit)
     debugImplementation(libs.kotlinx.serializationJson)
 
-    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
-    androidTestImplementation("androidx.compose.ui:ui-test:${libs.versions.compose.ui.get()}")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${libs.versions.compose.ui.get()}")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:${libs.versions.compose.ui.get()}")
-    debugImplementation("androidx.compose.ui:ui-tooling:${libs.versions.compose.ui.get()}")
+    androidTestImplementation(libs.compose.uiTestJunit4)
+    debugImplementation(libs.compose.uiTestManifest)
+    debugImplementation(libs.compose.uiTooling)
 }
 
 val gitTagProvider = providers.of(GitTagValueSource::class) {}
