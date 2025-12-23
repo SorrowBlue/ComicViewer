@@ -30,6 +30,6 @@ jobs:
         uses: dorny/test-reporter@v2
         with:
           name: 'Instrumentation Test'
-          path: '**/build/outputs/*Test-results/**/Test-*.xml'
+          path: '**/build/outputs/*Test-results/**/TEST-*.xml'
           reporter: 'java-junit'
           fail-on-error: false
