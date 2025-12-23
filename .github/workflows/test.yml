@@ -13,7 +13,7 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run Unit Tests
-        run: ./gradlew allTests --continue
+        run: ./gradlew allTests pixel9api35Check --continue
       - if: cancelled() != true
         uses: dorny/test-reporter@v2
         with:
