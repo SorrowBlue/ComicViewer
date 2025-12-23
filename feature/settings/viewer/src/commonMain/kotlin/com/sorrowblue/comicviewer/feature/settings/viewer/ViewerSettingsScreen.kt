@@ -56,7 +56,7 @@ internal fun ViewerSettingsScreen(
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_viewer_title)) },
         onBackClick = onBackClick,
-        modifier = modifier
+        modifier = modifier,
     ) {
         SwitchSetting(
             title = Res.string.settings_viewer_title_show_status_bar,

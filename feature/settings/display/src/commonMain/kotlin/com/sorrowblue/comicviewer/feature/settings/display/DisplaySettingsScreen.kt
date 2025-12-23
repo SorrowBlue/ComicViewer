@@ -36,7 +36,7 @@ internal fun DisplaySettingsScreen(
             Text(text = stringResource(Res.string.settings_display_title))
         },
         onBackClick = onBackClick,
-        modifier = Modifier.testTag("DisplaySettingsRoot")
+        modifier = Modifier.testTag("DisplaySettingsRoot"),
     ) {
         Setting(
             title = Res.string.settings_display_label_appearance,

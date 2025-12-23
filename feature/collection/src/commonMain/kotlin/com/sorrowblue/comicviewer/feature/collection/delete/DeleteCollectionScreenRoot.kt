@@ -7,12 +7,16 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 
 @Composable
 context(context: DeleteCollectionScreenContext)
-internal fun DeleteCollectionScreenRoot(id: CollectionId, onBackClick: () -> Unit, onComplete: () -> Unit) {
+internal fun DeleteCollectionScreenRoot(
+    id: CollectionId,
+    onBackClick: () -> Unit,
+    onComplete: () -> Unit,
+) {
     val state = rememberDeleteCollectionScreenState(id)
     DeleteCollectionScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
         onConfirm = { state.delete(onComplete) },
-        modifier = Modifier.testTag("DeleteCollectionScreenRoot")
+        modifier = Modifier.testTag("DeleteCollectionScreenRoot"),
     )
 }

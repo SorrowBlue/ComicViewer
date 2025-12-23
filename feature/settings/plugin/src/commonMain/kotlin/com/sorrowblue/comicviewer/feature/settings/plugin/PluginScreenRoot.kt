@@ -12,6 +12,6 @@ internal fun PluginScreenRoot(onBackClick: () -> Unit, onPdfPluginClick: () -> U
         uiState = state.uiState,
         onBackClick = onBackClick,
         onPdfPluginClick = onPdfPluginClick,
-        modifier = Modifier.testTag("PluginSettingsRoot")
+        modifier = Modifier.testTag("PluginSettingsRoot"),
     )
 }

@@ -67,7 +67,7 @@ internal fun FolderAppBar(
                                 stringResource(Res.string.folder_label_search),
                             )
                         },
-                        label = { stringResource(Res.string.folder_label_search) }
+                        label = { stringResource(Res.string.folder_label_search) },
                     )
                     gridSizeItemState.gridSizeItem()
                     hiddenFilesToggleableItemState.hiddenFilesToggleableItem()

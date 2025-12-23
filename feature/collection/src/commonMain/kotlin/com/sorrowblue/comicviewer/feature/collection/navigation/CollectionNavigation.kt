@@ -85,7 +85,7 @@ interface CollectionNavigation {
 
                                 is SmartCollection ->
                                     CollectionNavKey.SmartEdit(it.id)
-                            }
+                            },
                         )
                     },
                     onDeleteClick = {
@@ -149,7 +149,7 @@ interface CollectionNavigation {
                             when (it) {
                                 is BasicCollection -> CollectionNavKey.BasicEdit(it.id)
                                 is SmartCollection -> CollectionNavKey.SmartEdit(it.id)
-                            }
+                            },
                         )
                     },
                     onDeleteClick = { navigator.navigate(CollectionNavKey.Delete(it)) },
@@ -304,8 +304,8 @@ interface CollectionNavigation {
         factory: DeleteCollectionScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         entry<CollectionNavKey.Delete>(
-            metadata = DialogSceneStrategy.dialog()
-                + NavDisplay.transitionMaterialFadeThrough()
+            metadata = DialogSceneStrategy.dialog() +
+                NavDisplay.transitionMaterialFadeThrough(),
         ) {
             with(rememberRetained { factory.createDeleteCollectionScreenContext() }) {
                 DeleteCollectionScreenRoot(

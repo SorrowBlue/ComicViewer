@@ -21,6 +21,6 @@ internal fun ViewerSettingsScreenRoot(onBackClick: () -> Unit) {
         onImageQualityChange = state::onImageQualityChange,
         onFixScreenBrightnessChange = state::onFixScreenBrightnessChange,
         onScreenBrightnessChange = state::onScreenBrightnessChange,
-        modifier = Modifier.testTag("ViewerSettingsRoot")
+        modifier = Modifier.testTag("ViewerSettingsRoot"),
     )
 }

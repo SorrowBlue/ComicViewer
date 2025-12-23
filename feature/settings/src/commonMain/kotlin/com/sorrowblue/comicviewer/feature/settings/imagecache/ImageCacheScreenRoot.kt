@@ -13,6 +13,6 @@ internal fun ImageCacheScreenRoot(onBackClick: () -> Unit) {
         snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onClick = state::onClick,
-        modifier = Modifier.testTag("ImageCacheSettingsRoot")
+        modifier = Modifier.testTag("ImageCacheSettingsRoot"),
     )
 }

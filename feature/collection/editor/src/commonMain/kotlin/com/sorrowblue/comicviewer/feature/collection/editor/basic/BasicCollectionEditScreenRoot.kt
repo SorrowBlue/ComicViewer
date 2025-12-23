@@ -20,7 +20,7 @@ fun BasicCollectionEditScreenRoot(
         lazyPagingItems = state.lazyPagingItems,
         onBackClick = onBackClick,
         onDeleteClick = state::onDeleteClick,
-        modifier = Modifier.testTag("BasicCollectionEditScreenRoot")
+        modifier = Modifier.testTag("BasicCollectionEditScreenRoot"),
     )
     EventEffect(state.events) {
         when (it) {

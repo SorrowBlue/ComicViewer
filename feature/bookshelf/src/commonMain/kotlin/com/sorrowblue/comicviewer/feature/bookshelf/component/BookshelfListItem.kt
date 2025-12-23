@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -146,7 +145,11 @@ private fun BookshelfRowItem(
     val colors = CardDefaults.cardColors(
         containerColor = ComicTheme.colorScheme.surfaceContainer,
     )
-    Card(onClick = onClick, colors = colors, modifier = modifier.testTag("BookshelfListItem-${bookshelfFolder.bookshelf.id.value}")) {
+    Card(
+        onClick = onClick,
+        colors = colors,
+        modifier = modifier.testTag("BookshelfListItem-${bookshelfFolder.bookshelf.id.value}"),
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             FileThumbnailAsyncImage(
                 fileThumbnail = FolderThumbnail.from(bookshelfFolder.folder),

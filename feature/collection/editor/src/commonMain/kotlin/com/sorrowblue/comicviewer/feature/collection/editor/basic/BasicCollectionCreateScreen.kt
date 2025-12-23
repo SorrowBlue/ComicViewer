@@ -38,18 +38,18 @@ internal fun BasicCollectionCreateScreen(
             CreateButton(
                 isLoading = uiState.isLoading,
                 form = form,
-                modifier = Modifier.testTag("CreateButton")
+                modifier = Modifier.testTag("CreateButton"),
             )
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest,
                 enabled = !uiState.isLoading,
-                modifier = Modifier.testTag("CloseButton")
+                modifier = Modifier.testTag("CloseButton"),
             ) {
                 Text(text = stringResource(Res.string.collection_editor_label_cancel))
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }

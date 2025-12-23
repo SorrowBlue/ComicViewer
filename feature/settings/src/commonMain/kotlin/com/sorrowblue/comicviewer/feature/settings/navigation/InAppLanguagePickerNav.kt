@@ -18,8 +18,8 @@ internal data object InAppLanguagePickerNavKey : ScreenKey
 context(factory: InAppLanguagePickerScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.inAppLanguagePickerNavEntry(navigator: Navigator) {
     entry<InAppLanguagePickerNavKey>(
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
-            + NavDisplay.transitionMaterialSharedAxisX(),
+        metadata = ListDetailSceneStrategy.detailPane("Settings") +
+            NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         with(rememberRetained { factory.createInAppLanguagePickerScreenContext() }) {
             InAppLanguagePickerScreenRoot(onBackClick = navigator::goBack)

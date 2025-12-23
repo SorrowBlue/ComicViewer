@@ -19,7 +19,7 @@ fun BasicCollectionCreateScreenRoot(
         uiState = state.uiState,
         form = state.form,
         onDismissRequest = onBackClick,
-        modifier = Modifier.testTag("BasicCollectionCreateScreenRoot")
+        modifier = Modifier.testTag("BasicCollectionCreateScreenRoot"),
     )
 
     EventEffect(state.event) {

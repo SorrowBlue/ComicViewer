@@ -25,6 +25,6 @@ fun CollectionListScreenRoot(
         onSettingsClick = onSettingsClick,
         onCreateBasicCollectionClick = onCreateBasicCollectionClick,
         onCreateSmartCollectionClick = onCreateSmartCollectionClick,
-        modifier = Modifier.testTag("CollectionListScreenRoot")
+        modifier = Modifier.testTag("CollectionListScreenRoot"),
     )
 }

@@ -31,7 +31,7 @@ fun HiddenFilesToggleableItemState.hiddenFilesToggleableItem() {
         checked = showHiddenFile,
         onCheckedChange = ::onCheckedChange,
         icon = { Icon(ComicIcons.FolderOff, null) },
-        label = { stringResource(Res.string.file_action_show_hidden) }
+        label = { stringResource(Res.string.file_action_show_hidden) },
     )
 }
 

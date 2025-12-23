@@ -88,11 +88,11 @@ fun FileListDisplayItem(modifier: Modifier = Modifier) {
                 },
                 modifier = Modifier.semantics { role = Role.RadioButton },
                 shapes =
-                    when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        FileListDisplay.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                    },
+                when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    FileListDisplay.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                },
             ) {
                 Icon(
                     imageVector = when (option) {

@@ -23,6 +23,6 @@ internal fun BookshelfScreenRoot(
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
         onBookshelfInfoClick = onBookshelfInfoClick,
-        modifier = Modifier.testTag("BookshelfScreenRoot")
+        modifier = Modifier.testTag("BookshelfScreenRoot"),
     )
 }

@@ -49,7 +49,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
             },
             floatingActionButton = {
                 PrimaryActionButtonMenu(
-                    modifier = Modifier.testTag("FloatingActionButton")
+                    modifier = Modifier.testTag("FloatingActionButton"),
                 ) {
                     FloatingActionButtonMenuItem(
                         onClick = {
@@ -65,7 +65,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                                 contentDescription = null,
                             )
                         },
-                        modifier = Modifier.testTag("BasicCollectionCreateButton")
+                        modifier = Modifier.testTag("BasicCollectionCreateButton"),
                     )
                     FloatingActionButtonMenuItem(
                         onClick = {
@@ -81,7 +81,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                                 contentDescription = null,
                             )
                         },
-                        modifier = Modifier.testTag("SmartCollectionCreateButton")
+                        modifier = Modifier.testTag("SmartCollectionCreateButton"),
                     )
                 }
             },

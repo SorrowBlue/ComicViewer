@@ -28,7 +28,7 @@ fun HistoryScreenRoot(
         onSettingsClick = onSettingsClick,
         onBookClick = onBookClick,
         onBookInfoClick = onBookInfoClick,
-        modifier = Modifier.testTag("HistoryScreenRoot")
+        modifier = Modifier.testTag("HistoryScreenRoot"),
     )
     val resultConsumer = LocalNavigationResultConsumer.current
     val navigationResult: SerializedNavigationResult<ClearAllHistoryScreenResult>? by remember(

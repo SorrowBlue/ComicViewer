@@ -161,7 +161,6 @@ interface SearchNavigation {
 
 @Serializable
 sealed interface SearchNavKey : ScreenKey {
-
     @Serializable
     data class Main(val bookshelfId: BookshelfId, val path: PathString) : SearchNavKey
 

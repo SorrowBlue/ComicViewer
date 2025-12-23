@@ -46,7 +46,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
                         navigator = state.navigator,
                         entryProvider = entryProvider {
                             appGraph.entries.forEach { it(state.navigator) }
-                        }
+                        },
                     )
                 }
             }
@@ -55,10 +55,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
 }
 
 @Composable
-private fun ComicViewerUI(
-    navigator: Navigator,
-    entryProvider: (NavKey) -> NavEntry<NavKey>,
-) {
+private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEntry<NavKey>) {
     SharedTransitionLayout(modifier = Modifier.background(ComicTheme.colorScheme.background)) {
         CompositionLocalProvider(
             ProvidesAppState,

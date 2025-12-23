@@ -16,7 +16,7 @@ fun SettingsIconButton(
     IconButton(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier.testTag("SettingsButton")
+        modifier = modifier.testTag("SettingsButton"),
     ) {
         Icon(
             imageVector = ComicIcons.Settings,
@@ -26,11 +26,7 @@ fun SettingsIconButton(
 }
 
 @Composable
-fun BackIconButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
+fun BackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true,) {
     IconButton(
         onClick = onClick,
         enabled = enabled,
@@ -44,15 +40,11 @@ fun BackIconButton(
 }
 
 @Composable
-fun CloseIconButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
+fun CloseIconButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true,) {
     IconButton(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier.testTag("CloseButton")
+        modifier = modifier.testTag("CloseButton"),
     ) {
         Icon(
             imageVector = ComicIcons.Close,

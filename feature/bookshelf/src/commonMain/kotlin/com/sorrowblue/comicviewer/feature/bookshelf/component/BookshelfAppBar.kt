@@ -4,7 +4,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.bookshelf.generated.resources.Res

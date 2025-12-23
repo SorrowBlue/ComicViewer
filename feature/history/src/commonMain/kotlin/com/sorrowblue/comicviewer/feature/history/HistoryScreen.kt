@@ -25,7 +25,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.HistoryScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     AdaptiveNavigationSuiteScaffold(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Scaffold(
             topBar = {

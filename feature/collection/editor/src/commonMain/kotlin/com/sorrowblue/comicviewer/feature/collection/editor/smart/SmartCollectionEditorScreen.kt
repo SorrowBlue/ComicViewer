@@ -71,7 +71,7 @@ internal fun SmartCollectionEditorScreen(
                             },
                             iconEnabled = !uiState.enabledForm,
                             enabled = uiState.enabledForm && form.meta.canSubmit,
-                            modifier = Modifier.testTag("CreateButton")
+                            modifier = Modifier.testTag("CreateButton"),
                         ) {
                             Text(text = "Save")
                         }

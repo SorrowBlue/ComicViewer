@@ -28,7 +28,7 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
                 label = { Text(key.title) },
                 icon = { Icon(key.icon, null) },
                 onClick = { navigator.navigate(key) },
-                modifier = Modifier.testTag("NavigationSuiteItem")
+                modifier = Modifier.testTag("NavigationSuiteItem"),
             )
         }
     },

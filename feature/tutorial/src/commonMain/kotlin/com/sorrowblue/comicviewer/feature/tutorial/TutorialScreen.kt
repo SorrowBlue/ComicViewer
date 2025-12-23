@@ -41,7 +41,7 @@ internal fun TutorialScreen(
     Scaffold(
         bottomBar = { TutorialBottomBar(pageState, onNextClick) },
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = Modifier.testTag("TutorialScreen")
+        modifier = Modifier.testTag("TutorialScreen"),
     ) { contentPadding ->
         HorizontalPager(state = pageState) {
             when (uiState.list[it]) {

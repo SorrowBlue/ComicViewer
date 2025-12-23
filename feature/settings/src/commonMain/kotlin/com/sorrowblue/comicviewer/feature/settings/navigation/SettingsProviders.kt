@@ -2,9 +2,9 @@ package com.sorrowblue.comicviewer.feature.settings.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.sorrowblue.comicviewer.feature.settings.inapp.InAppLanguagePickerScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCacheScreenContext
+import com.sorrowblue.comicviewer.feature.settings.inapp.InAppLanguagePickerScreenContext
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.toPair

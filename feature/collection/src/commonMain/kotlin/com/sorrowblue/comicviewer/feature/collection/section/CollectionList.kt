@@ -78,7 +78,7 @@ internal fun CollectionList(
                             collection = it,
                             onClick = { onItemClick(it) },
                             content = content,
-                            modifier = Modifier.testTag("CollectionListItem")
+                            modifier = Modifier.testTag("CollectionListItem"),
                         )
                     } else {
                         CollectionListCardItem(

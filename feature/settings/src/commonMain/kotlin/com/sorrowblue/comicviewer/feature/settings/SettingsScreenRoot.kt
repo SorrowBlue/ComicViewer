@@ -18,6 +18,6 @@ internal fun SettingsScreenRoot(
             state.onSettingsClick(it, onSettingsClick)
         },
         onSettingsLongClick = onSettingsLongClick,
-        modifier = Modifier.testTag("SettingsScreenRoot")
+        modifier = Modifier.testTag("SettingsScreenRoot"),
     )
 }

@@ -22,7 +22,7 @@ internal fun SecuritySettingsScreenRoot(
         onPasswordChangeClick = onPasswordChangeClick,
         onChangeBiometricEnable = state::onChangeBiometricEnabled,
         onChangeBackgroundLockEnable = state::onChangeBackgroundLockEnabled,
-        modifier = Modifier.testTag("SecuritySettingsRoot")
+        modifier = Modifier.testTag("SecuritySettingsRoot"),
     )
 
     if (state.uiState.isBiometricsDialogShow) {

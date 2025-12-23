@@ -18,9 +18,7 @@ import comicviewer.feature.collection.generated.resources.collection_label_delet
 import comicviewer.feature.collection.generated.resources.collection_label_edit
 import org.jetbrains.compose.resources.stringResource
 
-internal data class CollectionAppBarUiState(
-    val title: String = "",
-)
+internal data class CollectionAppBarUiState(val title: String = "")
 
 @Composable
 internal fun CollectionAppBar(
@@ -41,13 +39,13 @@ internal fun CollectionAppBar(
                     icon = { Icon(ComicIcons.Edit, null) },
                     label = { stringResource(Res.string.collection_label_edit) },
                     onClick = onEditClick,
-                    testTag = "EditButton"
+                    testTag = "EditButton",
                 )
                 clickableItem(
                     icon = { Icon(ComicIcons.Delete, null) },
                     label = { stringResource(Res.string.collection_label_delete) },
                     onClick = onDeleteClick,
-                    testTag = "DeleteButton"
+                    testTag = "DeleteButton",
                 )
                 fileListDisplayItemState.fileListDisplayItem()
                 gridSizeItemState.gridSizeItem()

@@ -18,8 +18,8 @@ internal data object ImageCacheNavKey : ScreenKey
 context(factory: ImageCacheScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.imageCacheNavEntry(navigator: Navigator) {
     entry<ImageCacheNavKey>(
-        metadata = ListDetailSceneStrategy.detailPane("Settings")
-            + NavDisplay.transitionMaterialSharedAxisX(),
+        metadata = ListDetailSceneStrategy.detailPane("Settings") +
+            NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         with(rememberRetained { factory.createImageCacheScreenContext() }) {
             ImageCacheScreenRoot(onBackClick = navigator::goBack)

@@ -40,7 +40,7 @@ internal fun FolderSettingsScreenRoot(
         onFontSizeChange = state::onFontSizeChange,
         onImageFormatClick = { onImageFormatClick(state.uiState.imageFormat) },
         onThumbnailQualityChange = state::onThumbnailQualityChange,
-        modifier = Modifier.testTag("FolderSettingsRoot")
+        modifier = Modifier.testTag("FolderSettingsRoot"),
     )
 
     NavigationResultEffect(SortTypeScreenResultKey, state::onFileSortChange)

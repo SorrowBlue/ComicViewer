@@ -36,7 +36,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.ReadLaterScreen(
     modifier: Modifier = Modifier,
 ) {
     AdaptiveNavigationSuiteScaffold(
-        modifier = modifier
+        modifier = modifier,
     ) {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(

@@ -12,6 +12,6 @@ internal fun AppInfoSettingsScreenRoot(onBackClick: () -> Unit, onLicenceClick: 
         onBackClick = onBackClick,
         onRateAppClick = state::launchReview,
         onLicenceClick = onLicenceClick,
-        modifier = Modifier.testTag("InfoSettingsRoot")
+        modifier = Modifier.testTag("InfoSettingsRoot"),
     )
 }

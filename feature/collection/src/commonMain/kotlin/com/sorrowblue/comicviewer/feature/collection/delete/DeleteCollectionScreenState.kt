@@ -13,7 +13,6 @@ import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseC
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
 internal interface DeleteCollectionScreenState {

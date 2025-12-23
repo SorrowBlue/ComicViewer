@@ -38,7 +38,7 @@ internal fun DeleteCollectionScreen(
         confirmButton = {
             FilledTonalButton(
                 onClick = onConfirm,
-                modifier = Modifier.testTag("ConfirmButton")
+                modifier = Modifier.testTag("ConfirmButton"),
             ) {
                 Text(stringResource(Res.string.collection_label_delete))
             }
@@ -46,12 +46,12 @@ internal fun DeleteCollectionScreen(
         dismissButton = {
             TextButton(
                 onClick = onBackClick,
-                modifier = Modifier.testTag("DismissButton")
+                modifier = Modifier.testTag("DismissButton"),
             ) {
                 Text(stringResource(FrameworkResString.cancel))
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 

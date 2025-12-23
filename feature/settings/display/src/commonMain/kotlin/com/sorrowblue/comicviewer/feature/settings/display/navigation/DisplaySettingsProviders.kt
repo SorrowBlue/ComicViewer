@@ -16,7 +16,6 @@ import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface DisplaySettingsProviders {
-
     @Provides
     @ElementsIntoSet
     private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =

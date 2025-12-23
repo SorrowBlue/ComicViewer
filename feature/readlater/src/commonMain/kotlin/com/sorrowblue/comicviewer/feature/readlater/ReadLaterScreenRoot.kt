@@ -20,6 +20,6 @@ fun ReadLaterScreenRoot(
         onSettingsClick = onSettingsClick,
         onFileClick = onFileClick,
         onFileInfoClick = onFileInfoClick,
-        modifier = Modifier.testTag("ReadLaterScreenRoot")
+        modifier = Modifier.testTag("ReadLaterScreenRoot"),
     )
 }

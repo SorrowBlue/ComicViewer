@@ -32,7 +32,6 @@ import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
-import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.dialogPaddingHorizonal
 import comicviewer.feature.collection.editor.generated.resources.Res

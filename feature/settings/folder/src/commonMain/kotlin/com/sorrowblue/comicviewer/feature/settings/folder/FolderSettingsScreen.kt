@@ -71,7 +71,7 @@ internal fun FolderSettingsScreen(
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_folder_title)) },
         onBackClick = onBackClick,
-        modifier = modifier
+        modifier = modifier,
     ) {
         SwitchSetting(
             title = Res.string.settings_folder_label_show_hidden_files,
