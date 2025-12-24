@@ -8,6 +8,20 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.app.share"
+        androidResources.enable = true
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//            execution = "ANDROIDX_TEST_ORCHESTRATOR"
+            managedDevices {
+                localDevices {
+                    create("pixel9api35") {
+                        device = "Pixel 9"
+                        apiLevel = 35
+                        systemImageSource = "aosp-atd"
+                    }
+                }
+            }
+        }
     }
     sourceSets {
         commonMain {
@@ -31,6 +45,13 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(projects.data.reader.document.android)
+            implementation(libs.metro.android)
+        }
+        val androidDeviceTest by getting {
+            dependencies {
+                implementation(libs.compose.uiTestJunit4)
+                implementation(libs.compose.uiTestManifest)
+            }
         }
     }
 }

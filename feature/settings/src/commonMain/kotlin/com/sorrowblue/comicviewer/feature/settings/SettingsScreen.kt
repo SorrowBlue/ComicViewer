@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.settings.section.NavigationDrawerItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -92,7 +93,7 @@ internal fun SettingsScreen(
                         modifier = Modifier.combinedClickable(
                             onClick = { onSettingsClick(settings) },
                             onLongClick = { onSettingsLongClick(settings) },
-                        ),
+                        ).testTag(settings.testTag),
                     )
                 }
             }
@@ -141,15 +142,15 @@ internal fun SettingsScreen(
     }
 }
 
-enum class SettingsItem(val title: StringResource, val icon: ImageVector) {
-    DISPLAY(Res.string.settings_label_display, ComicIcons.DisplaySettings),
-    FOLDER(Res.string.settings_label_folder, ComicIcons.FolderOpen),
-    VIEWER(Res.string.settings_label_viewer, ComicIcons.Image),
-    SECURITY(Res.string.settings_label_security, ComicIcons.Lock),
-    APP(Res.string.settings_label_app, ComicIcons.Info),
-    TUTORIAL(Res.string.settings_label_tutorial, ComicIcons.Start),
+enum class SettingsItem(val title: StringResource, val icon: ImageVector, val testTag: String) {
+    DISPLAY(Res.string.settings_label_display, ComicIcons.DisplaySettings, "DisplaySettings"),
+    FOLDER(Res.string.settings_label_folder, ComicIcons.FolderOpen, "FolderSettings"),
+    VIEWER(Res.string.settings_label_viewer, ComicIcons.Image, "ViewerSettings"),
+    SECURITY(Res.string.settings_label_security, ComicIcons.Lock, "SecuritySettings"),
+    APP(Res.string.settings_label_app, ComicIcons.Info, "InfoSettings"),
+    TUTORIAL(Res.string.settings_label_tutorial, ComicIcons.Start, "TutorialSettings"),
 
-    Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage),
-    Plugin(Res.string.settings_label_plugin, ComicIcons.Extension),
-    LANGUAGE(Res.string.settings_label_language, ComicIcons.Language),
+    Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage, "ImageCacheSettings"),
+    Plugin(Res.string.settings_label_plugin, ComicIcons.Extension, "PluginSettings"),
+    LANGUAGE(Res.string.settings_label_language, ComicIcons.Language, "InAppLanguageSettings"),
 }

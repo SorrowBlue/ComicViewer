@@ -18,6 +18,7 @@ interface NavigationKey : ScreenKey {
         get
 
     val icon: ImageVector
+    val order: Int
 }
 
 @Suppress("UNCHECKED_CAST")

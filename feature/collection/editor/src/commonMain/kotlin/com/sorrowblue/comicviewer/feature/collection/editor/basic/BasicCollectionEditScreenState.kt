@@ -70,6 +70,7 @@ internal fun rememberBasicCollectionEditScreenState(
                 PagingCollectionFileUseCase.Request(PagingConfig(PageSize), collectionId),
             )
         }
+        initialize()
     }
 }
 
@@ -92,7 +93,7 @@ private class BasicCollectionEditScreenStateImpl(
 
     override val events = EventFlow<BasicCollectionEditScreenStateEvent>()
 
-    init {
+    fun initialize() {
         scope.launch {
             uiState = uiState.copy(isLoading = true)
             getCollectionUseCase(GetCollectionUseCase.Request(collectionId))

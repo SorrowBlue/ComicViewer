@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 context(context: DarkModeScreenContext)
-fun DarkModeScreenRoot(onDismissRequest: () -> Unit, onComplete: () -> Unit) {
+internal fun DarkModeScreenRoot(onDismissRequest: () -> Unit, onComplete: () -> Unit) {
     val state = rememberDarkModeScreenState()
     DarkModeScreen(
         uiState = state.uiState,

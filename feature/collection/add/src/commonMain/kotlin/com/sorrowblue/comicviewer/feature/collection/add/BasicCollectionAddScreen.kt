@@ -62,6 +62,7 @@ internal fun BasicCollectionAddScreen(
     onClick: (Collection, Boolean) -> Unit,
     onClickCollectionSort: (CollectionSort) -> Unit,
     onCollectionCreateClick: () -> Unit,
+    modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     sheetState: SheetState = rememberModalBottomSheetState(true),
 ) {
@@ -70,7 +71,7 @@ internal fun BasicCollectionAddScreen(
         sheetState = sheetState,
         dragHandle = null,
         contentWindowInsets = { WindowInsets(0) },
-        modifier = Modifier.statusBarsPadding(),
+        modifier = modifier.statusBarsPadding(),
     ) {
         var buttonHeight by remember { mutableStateOf(0.dp) }
         val density = LocalDensity.current

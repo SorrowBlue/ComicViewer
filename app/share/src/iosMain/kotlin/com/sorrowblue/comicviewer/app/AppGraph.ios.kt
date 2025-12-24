@@ -30,10 +30,10 @@ import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectio
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenContext
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenContext
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenContext
-import com.sorrowblue.comicviewer.feature.settings.InAppLanguagePickerScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.imagecache.ImageCacheScreenContext
+import com.sorrowblue.comicviewer.feature.settings.inapp.InAppLanguagePickerScreenContext
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseScreenContext
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.feature.settings.plugin.PluginScreenContext
@@ -107,7 +107,8 @@ actual interface AppGraph :
     SmartCollectionEditScreenContext.Factory,
     TutorialScreenContext.Factory,
     ViewerSettingsScreenContext.Factory {
-        actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
+    actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
+    actual val context: PlatformContext
 
     @DependencyGraph.Factory
     actual fun interface Factory {

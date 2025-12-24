@@ -21,40 +21,27 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditorForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_save
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_title_edit
-import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
-import soil.form.compose.watch
 
 @Composable
 internal fun EditorScreen(
-    form: Form<out BookshelfEditorForm>,
-    uiState: BookshelfEditorScreenUiState,
+    form: Form<out BookshelfEditForm>,
+    uiState: BookshelfEditScreenUiState,
     onBackClick: () -> Unit,
     scrollState: ScrollState,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val fields = form.watch { this.meta.fields }
-    LaunchedEffect(fields) {
-        logcat {
-            "canSubmit: ${form.meta.canSubmit} fields: [${
-                fields.map { it.value }.joinToString(
-                    ",",
-                ) { "isValidated: ${it.isValidated}, mode:${it.mode}" }
-            }]"
-        }
-    }
     Scaffold(
         topBar = {
             TopAppBar(

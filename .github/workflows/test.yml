@@ -8,9 +8,28 @@ jobs:
     name: Unit Test
     runs-on: ubuntu-latest
     steps:
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run Unit Tests
-        run: echo "Run Test..."
+        run: ./gradlew allTests pixel9api35Check --continue
+      - if: cancelled() != true
+        uses: dorny/test-reporter@v2
+        with:
+          name: 'Unit Test'
+          path: '**/build/test-results/*/TEST-*.xml'
+          reporter: 'java-junit'
+          fail-on-error: false
+      - if: cancelled() != true
+        uses: dorny/test-reporter@v2
+        with:
+          name: 'Instrumentation Test'
+          path: '**/build/outputs/*Test-results/**/TEST-*.xml'
+          reporter: 'java-junit'
+          fail-on-error: false

@@ -21,9 +21,12 @@ internal fun AdaptiveNavigationSuiteScaffoldState.HistoryScreen(
     onSettingsClick: () -> Unit,
     onBookClick: (Book) -> Unit,
     onBookInfoClick: (Book) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    AdaptiveNavigationSuiteScaffold {
+    AdaptiveNavigationSuiteScaffold(
+        modifier = modifier,
+    ) {
         Scaffold(
             topBar = {
                 HistoryTopAppBar(

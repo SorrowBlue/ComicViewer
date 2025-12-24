@@ -10,6 +10,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
@@ -27,6 +28,7 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
                 label = { Text(key.title) },
                 icon = { Icon(key.icon, null) },
                 onClick = { navigator.navigate(key) },
+                modifier = Modifier.testTag("NavigationSuiteItem"),
             )
         }
     },

@@ -1,12 +1,14 @@
 package com.sorrowblue.comicviewer.feature.collection.add
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 
 @Composable
 context(context: BasicCollectionAddScreenContext)
-fun BasicCollectionAddScreenRoot(
+internal fun BasicCollectionAddScreenRoot(
     bookshelfId: BookshelfId,
     path: String,
     onBackClick: () -> Unit,
@@ -23,5 +25,6 @@ fun BasicCollectionAddScreenRoot(
         onCollectionCreateClick = {
             onCollectionCreateClick(bookshelfId, path)
         },
+        modifier = Modifier.testTag("BasicCollectionAddScreenRoot"),
     )
 }

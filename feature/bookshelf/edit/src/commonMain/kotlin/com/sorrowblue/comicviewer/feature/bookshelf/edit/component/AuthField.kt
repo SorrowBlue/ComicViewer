@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditorForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.fixedColors
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
@@ -24,12 +24,12 @@ import soil.form.compose.watch
 
 @Composable
 internal fun AuthField(
-    form: Form<SmbEditorForm>,
+    form: Form<SmbEditForm>,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    field: FormField<SmbEditorForm.Auth> = form.rememberAuthField(enabled),
+    field: FormField<SmbEditForm.Auth> = form.rememberAuthField(enabled),
 ) {
-    val list = remember { SmbEditorForm.Auth.entries }
+    val list = remember { SmbEditForm.Auth.entries }
     Column(modifier = modifier) {
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
             list.forEachIndexed { index, auth ->
@@ -43,8 +43,8 @@ internal fun AuthField(
                     Text(
                         text = stringResource(
                             when (auth) {
-                                SmbEditorForm.Auth.Guest -> Res.string.bookshelf_edit_label_guest
-                                SmbEditorForm.Auth.UserPass -> Res.string.bookshelf_edit_label_username_password
+                                SmbEditForm.Auth.Guest -> Res.string.bookshelf_edit_label_guest
+                                SmbEditForm.Auth.UserPass -> Res.string.bookshelf_edit_label_username_password
                             },
                         ),
                     )
@@ -61,7 +61,7 @@ internal fun AuthField(
 internal const val AuthField: FieldName = "Auth"
 
 @Composable
-private fun Form<SmbEditorForm>.rememberAuthField(enabled: Boolean): FormField<SmbEditorForm.Auth> =
+private fun Form<SmbEditForm>.rememberAuthField(enabled: Boolean): FormField<SmbEditForm.Auth> =
     rememberField(
         name = AuthField,
         selector = { it.auth },

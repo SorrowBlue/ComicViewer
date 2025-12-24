@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  checks: write
   id-token: write
   security-events: write
 

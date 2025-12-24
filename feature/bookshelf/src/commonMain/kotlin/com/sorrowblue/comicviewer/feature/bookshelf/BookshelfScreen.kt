@@ -10,6 +10,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -43,6 +44,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
                 text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
                 icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
                 onClick = onFabClick,
+                modifier = Modifier.testTag("BookshelfFab"),
             )
         },
     ) {

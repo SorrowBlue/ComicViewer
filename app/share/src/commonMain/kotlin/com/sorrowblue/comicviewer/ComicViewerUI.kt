@@ -14,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -22,9 +23,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.app.AppGraph
 import com.sorrowblue.comicviewer.app.PreAppScreen
 import com.sorrowblue.comicviewer.app.ProvidesAppState
-import com.sorrowblue.comicviewer.app.rememberPreAppScreenContext
-import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.providePlatformContext
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
@@ -34,15 +33,21 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.toEntries
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberCustomNavEntryDecorator
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
+import io.github.takahirom.rin.rememberRetained
 
 @Composable
-context(context: PlatformContext, appGraph: AppGraph)
+context(appGraph: AppGraph)
 fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
-    CompositionLocalProvider(LocalPlatformContext provides context) {
+    CompositionLocalProvider(providePlatformContext(appGraph.context)) {
         ComicTheme {
-            with(rememberPreAppScreenContext()) {
+            with(rememberRetained { appGraph.createPreAppScreenContext() }) {
                 PreAppScreen(finishApp = finishApp) {
-                    ComicViewerUI(navigator = state.navigator)
+                    ComicViewerUI(
+                        navigator = state.navigator,
+                        entryProvider = entryProvider {
+                            appGraph.entries.forEach { it(state.navigator) }
+                        },
+                    )
                 }
             }
         }
@@ -50,8 +55,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
 }
 
 @Composable
-context(appGraph: AppGraph)
-private fun ComicViewerUI(navigator: Navigator) {
+private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEntry<NavKey>) {
     SharedTransitionLayout(modifier = Modifier.background(ComicTheme.colorScheme.background)) {
         CompositionLocalProvider(
             ProvidesAppState,
@@ -74,10 +78,6 @@ private fun ComicViewerUI(navigator: Navigator) {
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
                 val customNavEntryDecorator =
                     rememberCustomNavEntryDecorator<NavKey>(directive = directive)
-                val entryProvider = entryProvider {
-                    appGraph.entries.forEach { it(navigator) }
-                    // onBookshelfFolderRestoreComplete
-                }
                 Transitions.InitSlideDistance()
                 Transitions.motionScheme = ComicTheme.motionScheme
                 NavDisplay(
@@ -91,7 +91,7 @@ private fun ComicViewerUI(navigator: Navigator) {
                             rememberViewModelStoreNavEntryDecorator(),
                             customNavEntryDecorator,
                         ),
-                        entryProvider,
+                        entryProvider = entryProvider,
                     ),
                     onBack = { navigator.goBack() },
                     sceneStrategy = supportingPaneSceneStrategy

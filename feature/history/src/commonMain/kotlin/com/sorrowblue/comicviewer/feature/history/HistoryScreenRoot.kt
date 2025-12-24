@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultConsumer
 import io.github.irgaly.navigation3.resultstate.SerializedNavigationResult
@@ -12,7 +14,7 @@ import kotlinx.serialization.json.Json
 
 @Composable
 context(context: HistoryScreenContext)
-fun HistoryScreenRoot(
+internal fun HistoryScreenRoot(
     onDeleteAllClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onBookClick: (Book) -> Unit,
@@ -26,6 +28,7 @@ fun HistoryScreenRoot(
         onSettingsClick = onSettingsClick,
         onBookClick = onBookClick,
         onBookInfoClick = onBookInfoClick,
+        modifier = Modifier.testTag("HistoryScreenRoot"),
     )
     val resultConsumer = LocalNavigationResultConsumer.current
     val navigationResult: SerializedNavigationResult<ClearAllHistoryScreenResult>? by remember(

@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.collection
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
@@ -28,8 +29,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold {
+    AdaptiveNavigationSuiteScaffold(modifier = modifier) {
         Scaffold(
             topBar = {
                 CollectionAppBar(

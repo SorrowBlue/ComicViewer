@@ -1,12 +1,14 @@
 package com.sorrowblue.comicviewer.feature.settings.security
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 
 @Composable
 context(context: SecuritySettingsScreenContext)
-fun SecuritySettingsScreenRoot(
+internal fun SecuritySettingsScreenRoot(
     onBackClick: () -> Unit,
     onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
@@ -20,10 +22,11 @@ fun SecuritySettingsScreenRoot(
         onPasswordChangeClick = onPasswordChangeClick,
         onChangeBiometricEnable = state::onChangeBiometricEnabled,
         onChangeBackgroundLockEnable = state::onChangeBackgroundLockEnabled,
+        modifier = Modifier.testTag("SecuritySettingsRoot"),
     )
 
     if (state.uiState.isBiometricsDialogShow) {
-        BiometricsRequestScreen(
+        BiometricsRequestDialog(
             onConfirmClick = state::onBiometricsDialogClick,
             onDismissRequest = state::onBiometricsDialogDismissRequest,
         )

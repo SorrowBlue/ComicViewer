@@ -25,4 +25,5 @@ actual interface AppGraph : PlatformGraph {
     }
 
     actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
+    actual val context: PlatformContext
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.BookshelfSource
@@ -26,7 +27,11 @@ internal fun SelectionList(
         modifier = modifier,
     ) {
         items(items = items) {
-            BookshelfSource(type = it, onClick = { onSourceClick(it) })
+            BookshelfSource(
+                type = it,
+                onClick = { onSourceClick(it) },
+                modifier = Modifier.testTag("BookshelfSelectionItem-${it.name}"),
+            )
         }
     }
 }

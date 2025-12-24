@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.settings.viewer
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
@@ -50,10 +51,12 @@ internal fun ViewerSettingsScreen(
     onImageQualityChange: (Float) -> Unit,
     onFixScreenBrightnessChange: (Boolean) -> Unit,
     onScreenBrightnessChange: (Float) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_viewer_title)) },
         onBackClick = onBackClick,
+        modifier = modifier,
     ) {
         SwitchSetting(
             title = Res.string.settings_viewer_title_show_status_bar,

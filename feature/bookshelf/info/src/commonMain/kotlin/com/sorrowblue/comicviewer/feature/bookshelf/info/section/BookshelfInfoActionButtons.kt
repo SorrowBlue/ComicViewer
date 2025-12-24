@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -59,6 +60,7 @@ internal fun BottomActions(enabled: Boolean, onRemoveClick: () -> Unit, onEditCl
                     onClick = onRemoveClick,
                     contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                     enabled = enabled,
+                    modifier = Modifier.testTag("DeleteButton"),
                 ) {
                     Icon(imageVector = ComicIcons.Delete, contentDescription = null)
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
@@ -68,6 +70,7 @@ internal fun BottomActions(enabled: Boolean, onRemoveClick: () -> Unit, onEditCl
                     onClick = onEditClick,
                     contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                     enabled = enabled,
+                    modifier = Modifier.testTag("EditButton"),
                 ) {
                     Icon(imageVector = ComicIcons.Edit, contentDescription = null)
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))

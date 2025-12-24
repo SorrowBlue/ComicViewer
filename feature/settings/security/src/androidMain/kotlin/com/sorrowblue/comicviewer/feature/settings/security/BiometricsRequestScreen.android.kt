@@ -10,11 +10,11 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 @Preview
 @Composable
-internal fun BiometricsRequestScreenPreview() {
+internal fun BiometricsRequestDialogPreview() {
     PreviewTheme {
         var isShow by remember { mutableStateOf(true) }
         if (isShow) {
-            BiometricsRequestScreen(
+            BiometricsRequestDialog(
                 onConfirmClick = { isShow = false },
                 onDismissRequest = { isShow = false },
             )

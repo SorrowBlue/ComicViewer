@@ -18,6 +18,10 @@ licensee {
     allowUrl("http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt")
     allowUrl("https://www.gnu.org/licenses/agpl-3.0.html")
 
+    // MIT
+    allowUrl("https://github.com/composablehorizons/compose-unstyled/blob/main/LICENSE")
+    allowUrl("https://github.com/composablehorizons/compose-ripple-indication/blob/main/LICENSE")
+
     allowUrl("https://www.gnu.org/licenses/lgpl.txt")
     allowUrl("https://www.bouncycastle.org/licence.html")
     allowUrl("http://www.7-zip.org/license.txt")

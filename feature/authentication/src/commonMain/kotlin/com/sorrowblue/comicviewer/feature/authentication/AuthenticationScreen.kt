@@ -116,9 +116,10 @@ internal fun AuthenticationScreen(
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     onPinChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val isCompactWindowClass = isCompactWindowClass()
-    DetectOrientation(Modifier.fillMaxSize()) { isLandscape ->
+    DetectOrientation(modifier.fillMaxSize()) { isLandscape ->
         val isCompactLandscape by remember(isCompactWindowClass, isLandscape) {
             logcat(
                 "AuthenticationScreen",

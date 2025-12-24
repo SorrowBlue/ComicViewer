@@ -12,6 +12,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialSheet
 import com.sorrowblue.comicviewer.feature.tutorial.isLastPage
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -32,7 +33,7 @@ internal fun TutorialBottomBar(pageState: PagerState, onNextClick: () -> Unit) {
             activeColor = MaterialTheme.colorScheme.primary,
             pageCount = TutorialSheet.entries.size,
         )
-        TextButton(onClick = onNextClick) {
+        TextButton(onClick = onNextClick, modifier = Modifier.testTag("NextButton")) {
             if (pageState.isLastPage) {
                 Text(text = "Done")
             } else {

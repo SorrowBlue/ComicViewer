@@ -215,8 +215,6 @@ private fun SpreadBookPage(
                 is BookPage.Spread.Unrated -> SpreadCombineTransformation.unrated {
                     onPageLoad(bookPage, it)
                 }
-
-                else -> SpreadCombineTransformation.Spread2
             },
             modifier = Modifier
                 .fillMaxSize()

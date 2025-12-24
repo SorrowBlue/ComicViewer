@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 context(context: LicenseScreenContext)
-fun LicenseScreenRoot(onBackClick: () -> Unit) {
+internal fun LicenseScreenRoot(onBackClick: () -> Unit) {
     val state = rememberLicenseScreenState()
     LicenseScreen(
         uiState = state.uiState,

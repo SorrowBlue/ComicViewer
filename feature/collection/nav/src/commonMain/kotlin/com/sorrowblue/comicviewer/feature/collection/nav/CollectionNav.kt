@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.collection.nav
 import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope
@@ -20,13 +19,9 @@ interface CollectionNav {
     @ElementsIntoSet
     private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
         listOf(
-            toPair(BasicCollectionAddNavKey.serializer()),
             toPair(SmartCollectionCreateNavKey.serializer()),
         )
 }
-
-@Serializable
-data class BasicCollectionAddNavKey(val bookshelfId: BookshelfId, val path: PathString) : ScreenKey
 
 @Serializable
 data class SmartCollectionCreateNavKey(

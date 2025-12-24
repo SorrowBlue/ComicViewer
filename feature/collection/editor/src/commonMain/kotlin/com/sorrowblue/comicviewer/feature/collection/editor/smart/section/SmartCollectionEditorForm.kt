@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.feature.collection.editor.component.CollectionNameTextField2
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditorScreenUiState
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.BookshelfField
+import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField2
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.PeriodField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.QueryField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.RangeField

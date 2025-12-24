@@ -1,8 +1,7 @@
 package com.sorrowblue.comicviewer.file.component
 
-import androidx.compose.material3.AppBarRowScope2
+import androidx.compose.material3.AppBarRowScope
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +16,7 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySet
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_action_change_grid_size
 import dev.zacsweers.metro.AppScope
@@ -35,15 +35,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-context(scope: AppBarRowScope2)
+context(scope: AppBarRowScope)
 fun GridSizeItemState.gridSizeItem() {
-    scope.clickableItem(
-        visible = fileListDisplay == FileListDisplay.Grid,
-        autoDismiss = false,
-        label = { Text(stringResource(Res.string.file_action_change_grid_size)) },
-        icon = { Icon(ComicIcons.Grid4x4, null) },
-        onClick = ::onClick,
-    )
+    if (this.fileListDisplay == FileListDisplay.Grid) {
+        scope.clickableItem(
+            icon = { Icon(ComicIcons.Grid4x4, null) },
+            label = { stringResource(Res.string.file_action_change_grid_size) },
+            onClick = ::onClick,
+        )
+    }
 }
 
 @Composable
