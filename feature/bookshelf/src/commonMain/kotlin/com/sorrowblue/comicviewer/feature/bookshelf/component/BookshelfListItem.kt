@@ -206,7 +206,12 @@ private fun BookshelfRowItem(
                     }
                 },
                 trailingContent = {
-                    IconButton(onClick = onInfoClick) {
+                    IconButton(
+                        onClick = onInfoClick,
+                        modifier = Modifier.testTag(
+                            "BookshelfListItemMenu-${bookshelfFolder.bookshelf.id.value}",
+                        ),
+                    ) {
                         Icon(ComicIcons.MoreVert, null)
                     }
                 },

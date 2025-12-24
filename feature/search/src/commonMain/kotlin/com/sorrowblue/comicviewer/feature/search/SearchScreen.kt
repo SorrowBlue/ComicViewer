@@ -42,6 +42,7 @@ internal fun SearchScreen(
     onShowHiddenClick: () -> Unit,
     onItemClick: (File) -> Unit,
     onItemInfoClick: (File) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -59,7 +60,7 @@ internal fun SearchScreen(
                 onShowHiddenClick = onShowHiddenClick,
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         val navigationSuiteType =
             NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())

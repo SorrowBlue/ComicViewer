@@ -68,6 +68,7 @@ internal fun FolderAppBar(
                             )
                         },
                         label = { stringResource(Res.string.folder_label_search) },
+                        testTag = "SearchButton",
                     )
                     gridSizeItemState.gridSizeItem()
                     hiddenFilesToggleableItemState.hiddenFilesToggleableItem()

@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import comicviewer.feature.bookshelf.info.generated.resources.Res
@@ -50,6 +51,7 @@ internal fun BookshelfDeleteScreen(
                 onClick = onConfirmClick,
                 enabled = !uiState.isProcessing,
                 contentPadding = if (uiState.isProcessing) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding,
+                modifier = Modifier.testTag("ConfirmButton"),
             ) {
                 AnimatedVisibility(uiState.isProcessing, label = "progress") {
                     Row {
@@ -68,6 +70,7 @@ internal fun BookshelfDeleteScreen(
             TextButton(
                 onClick = onDismissClick,
                 enabled = !uiState.isProcessing,
+                modifier = Modifier.testTag("DismissButton"),
             ) {
                 Text(stringResource(Res.string.bookshelf_info_delete_btn_cancel))
             }

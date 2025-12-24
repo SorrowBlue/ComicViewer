@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -28,9 +26,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.WindowInsets
+import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 
 @Composable
 fun ExtraPaneScaffold(
@@ -57,9 +55,7 @@ fun ExtraPaneScaffold(
                     title = title,
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = containerColor),
                     actions = {
-                        IconButton(onClick = onCloseClick) {
-                            Icon(ComicIcons.Close, null)
-                        }
+                        CloseIconButton(onClick = onCloseClick)
                     },
                     windowInsets = if (singlePane) {
                         WindowInsets.safeDrawing.only(

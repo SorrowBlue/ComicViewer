@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.feature.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -11,7 +13,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 context(context: SearchScreenContext)
-fun SearchScreenRoot(
+internal fun SearchScreenRoot(
     bookshelfId: BookshelfId,
     path: PathString,
     onBackClick: () -> Unit,
@@ -38,6 +40,7 @@ fun SearchScreenRoot(
         onShowHiddenClick = state::onShowHiddenClick,
         onItemClick = onFileClick,
         onItemInfoClick = onFileInfoClick,
+        modifier = Modifier.testTag("SearchScreenRoot"),
     )
 
     LaunchedEffect(state.uiState.searchCondition) {
