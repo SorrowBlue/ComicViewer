@@ -34,8 +34,8 @@ ComicViewerは、Android、iOS、Desktopをサポートするマルチプラッ�
 
 - **Kotlin Multiplatform**: メインプログラミング言語
 - **Jetpack Compose**: UI フレームワーク（Android、Desktop、iOS）
-- **Kotlin**: 2.2.10
-- **Gradle**: 9.0.0+
+- **Kotlin**: 2.3.0
+- **Gradle**: 9.2.1
 - **Java**: 21（必須）
 - **Android SDK**: compileSdk 36、minSdk 30
 - **モジュラーアーキテクチャ**: feature/domain/data レイヤー構成
@@ -88,8 +88,8 @@ chmod +x gradlew
 # クリーンビルド（45-60分）
 ./gradlew clean build
 
-# Compose Appのビルド（30-40分）
-./gradlew composeApp:build
+# アプリのビルド（30-40分）
+./gradlew app:android:build app:desktop:build
 
 # 全モジュールのチェック（25-35分）
 ./gradlew check
@@ -99,20 +99,20 @@ chmod +x gradlew
 
 ```bash
 # Android Debug（25-35分）
-./gradlew composeApp:assembleDebug
+./gradlew app:android:assembleDebug
 
 # Android Release（30-40分）
-./gradlew composeApp:assembleRelease
+./gradlew app:android:assembleRelease
 
 # Desktop（20-30分）
-./gradlew composeApp:packageDistributionForCurrentOS
+./gradlew app:desktop:packageDistributionForCurrentOS
 ```
 
 ### テストコマンド
 
 ```bash
 # 全テストの実行（20-30分）
-./gradlew test
+./gradlew allTests
 
 # Android Unitテストのみ（10-15分）
 ./gradlew testDebugUnitTest
@@ -138,13 +138,13 @@ chmod +x gradlew
 ./gradlew detektFormat
 
 # Android Lint - Debug（8-12分）
-./gradlew composeApp:lintDebug
+./gradlew app:android:lintDebug
 
 # Android Lint - すべてのビルドバリアント
-./gradlew composeApp:lintDebug
-./gradlew composeApp:lintInternal
-./gradlew composeApp:lintPrerelease
-./gradlew composeApp:lintRelease
+./gradlew app:android:lintDebug
+./gradlew app:android:lintInternal
+./gradlew app:android:lintPrerelease
+./gradlew app:android:lintRelease
 
 # Version Catalog チェック（2-3分）
 ./gradlew versionCatalogLint
@@ -257,12 +257,12 @@ src/
 ### 検証シナリオ
 
 #### Android検証
-1. `./gradlew composeApp:assembleDebug composeApp:testDebugUnitTest`
-2. `./gradlew composeApp:lintDebug`
+1. `./gradlew app:android:assembleDebug app:android:testDebugUnitTest`
+2. `./gradlew app:android:lintDebug`
 3. UI変更がある場合は手動でコアユーザーフローをテスト
 
 #### Desktop検証
-1. `./gradlew composeApp:packageDistributionForCurrentOS`
+1. `./gradlew app:desktop:packageDistributionForCurrentOS`
 2. デスクトップ固有機能のテスト（ウィンドウ管理、ファイルシステムアクセス）
 3. マルチプラットフォームコードが全ターゲットで動作することを確認
 
@@ -388,10 +388,10 @@ Closes #123
 ./gradlew detektAndroidAll detektDesktopAll detektIosAll
 
 # 3. Lint チェック
-./gradlew composeApp:lintDebug
+./gradlew app:android:lintDebug
 
 # 4. テスト実行
-./gradlew test
+./gradlew allTests
 ```
 
 ### PR説明の書き方
@@ -451,7 +451,11 @@ Fixed #123
 ComicViewerは以下のレイヤー構造を採用しています:
 
 ```
-├── composeApp/           # メインアプリケーション（Android/Desktop エントリポイント）
+├── app/                  # メインアプリケーション（Android/Desktop/iOS エントリポイント）
+│   ├── android/          # Android アプリケーション
+│   ├── desktop/          # Desktop アプリケーション
+│   ├── ios/              # iOS アプリケーション
+│   └── share/            # 共有コード
 ├── feature/              # UI機能モジュール（画面とナビゲーション）
 │   ├── authentication/   # ログイン・認証画面
 │   ├── book/             # コミックビューワーと管理
@@ -683,15 +687,3 @@ ComicViewerは完全自動化されたリリースプロセスを採用してい
 - `settings.gradle.kts` - マルチモジュールプロジェクト設定
 
 ---
-
-## ライセンス
-
-このプロジェクトのライセンス情報については、リポジトリのLICENSEファイルを参照してください。
-
-## コントリビューション
-
-コントリビューションを歓迎します！プルリクエストを送信する前に、このドキュメントのガイドラインに従ってください。
-
-## サポート
-
-問題や質問がある場合は、GitHubのIssuesセクションで報告してください。
