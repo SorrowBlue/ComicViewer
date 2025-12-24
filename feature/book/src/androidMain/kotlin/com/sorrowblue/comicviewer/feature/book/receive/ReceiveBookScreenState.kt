@@ -24,11 +24,14 @@ import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
+import comicviewer.feature.book.generated.resources.Res
+import comicviewer.feature.book.generated.resources.book_error_file_not_opened
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import logcat.logcat
+import org.jetbrains.compose.resources.getString
 
 internal interface ReceiveBookScreenState {
     val uiState: BookScreenUiState
@@ -75,7 +78,9 @@ private class ReceiveBookScreenStateImpl(
 ) : ReceiveBookScreenState {
     init {
         if (uri == null) {
-            Toast.makeText(context, "ファイルを開けませんでした", Toast.LENGTH_SHORT).show()
+            scope.launch {
+                Toast.makeText(context, getString(Res.string.book_error_file_not_opened), Toast.LENGTH_SHORT).show()
+            }
         } else {
             scope.launch {
                 getIntentBookUseCase(GetIntentBookUseCase.Request(uri)).collect { resource ->

@@ -20,6 +20,9 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import comicviewer.feature.settings.generated.resources.Res
+import comicviewer.feature.settings.generated.resources.settings_imagecache_label_other
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun OtherImageCacheItem(
@@ -29,7 +32,7 @@ internal fun OtherImageCacheItem(
 ) {
     SettingsCategory(
         modifier = modifier,
-        title = { Text(text = "その他の画像キャッシュ") },
+        title = { Text(text = stringResource(Res.string.settings_imagecache_label_other)) },
     ) {
         Setting(title = {}, onClick = {}, widget = {
             IconButton(onClick = onClick) {
