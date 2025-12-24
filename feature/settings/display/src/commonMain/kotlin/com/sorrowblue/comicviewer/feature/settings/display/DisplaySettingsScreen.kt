@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.feature.settings.display
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
@@ -34,6 +36,7 @@ internal fun DisplaySettingsScreen(
             Text(text = stringResource(Res.string.settings_display_title))
         },
         onBackClick = onBackClick,
+        modifier = Modifier.testTag("DisplaySettingsRoot"),
     ) {
         Setting(
             title = Res.string.settings_display_label_appearance,

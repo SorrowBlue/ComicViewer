@@ -23,8 +23,8 @@ import androidx.compose.ui.semantics.contentDataType
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditorForm.Auth
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditorScreenState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm.Auth
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DomainField
@@ -38,7 +38,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun SmbEditorContents(
-    state: SmbEditorScreenState,
+    state: SmbEditScreenState,
     onBackClick: () -> Unit,
     scrollState: ScrollState = rememberScrollState(),
 ) {

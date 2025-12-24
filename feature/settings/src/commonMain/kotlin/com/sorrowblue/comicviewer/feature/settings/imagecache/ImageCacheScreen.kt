@@ -33,11 +33,13 @@ internal fun ImageCacheScreen(
     snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onClick: (BookshelfId, ImageCache) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_label_image_cache)) },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         onBackClick = onBackClick,
+        modifier = modifier,
     ) {
         uiState.imageCacheInfos.forEach { imageCacheInfo ->
             BookshelfImageCacheInfoItem(

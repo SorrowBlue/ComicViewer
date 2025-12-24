@@ -7,3 +7,5 @@ val LocalPlatformContext: ProvidableCompositionLocal<PlatformContext> =
     staticCompositionLocalOf {
         error("No PlatformContext provided")
     }
+
+fun providePlatformContext(context: PlatformContext) = LocalPlatformContext provides context

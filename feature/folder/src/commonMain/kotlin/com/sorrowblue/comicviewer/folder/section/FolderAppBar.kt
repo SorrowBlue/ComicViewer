@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AppBarRow2
+import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
@@ -23,6 +24,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
+import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import com.sorrowblue.comicviewer.framework.ui.material3.settingsItem
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.folder.generated.resources.Res
@@ -56,9 +58,7 @@ internal fun FolderAppBar(
             actions = {
                 val gridSizeItemState = rememberGridSizeItemState()
                 val hiddenFilesToggleableItemState = rememberHiddenFilesToggleableItemState()
-                AppBarRow2(
-                    maxItemCount = 2,
-                ) {
+                AppBarRow(maxItemCount = 2, modifier = Modifier.testTag("AppBarMenu")) {
                     clickableItem(
                         onClick = onSearchClick,
                         icon = {
@@ -67,9 +67,8 @@ internal fun FolderAppBar(
                                 stringResource(Res.string.folder_label_search),
                             )
                         },
-                        label = {
-                            Text(text = stringResource(Res.string.folder_label_search))
-                        },
+                        label = { stringResource(Res.string.folder_label_search) },
+                        testTag = "SearchButton",
                     )
                     gridSizeItemState.gridSizeItem()
                     hiddenFilesToggleableItemState.hiddenFilesToggleableItem()

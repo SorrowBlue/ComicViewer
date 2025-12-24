@@ -20,6 +20,7 @@ androidx-sqlite = "2.6.2"
 androidx-startup = "1.2.0"
 androidx-testCore = "1.7.0"
 androidx-testExtJunit = "1.3.0"
+androidx-testOrchestrator = "1.6.1"
 androidx-testRules = "1.7.0"
 androidx-testRunner = "1.7.0"
 androidx-window = "1.5.1"
@@ -31,6 +32,7 @@ compose-animationGraphics = "1.10.0"
 compose-material3 = "1.10.0-alpha05"
 compose-material3Adaptive = "1.3.0-alpha03"
 compose-runtime = "1.10.0"
+compose-ui = "1.10.0"
 composeHotReload = "1.0.0"
 composeMultiplatform = "1.10.0-rc02"
 detekt = "2.0.0-alpha.1"
@@ -96,6 +98,7 @@ androidx-sqliteBundled = { group = "androidx.sqlite", name = "sqlite-bundled", v
 androidx-startupRuntime = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx-startup" }
 androidx-testCoreKtx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx-testCore" }
 androidx-testExtJunitKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-testExtJunit" }
+androidx-testOrchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidx-testOrchestrator" }
 androidx-testRules = { group = "androidx.test", name = "rules", version.ref = "androidx-testRules" }
 androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "androidx-testRunner" }
 androidx-windowCore = { group = "androidx.window", name = "window-core", version.ref = "androidx-window" }
@@ -118,6 +121,8 @@ compose-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-previ
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-runtime" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
 compose-uiBackhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
+compose-uiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose-ui" }
+compose-uiTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose-ui" }
 compose-uiTooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling", version.ref = "composeMultiplatform" }
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detekt-compose" }
 detekt-gradlePlugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
@@ -145,6 +150,7 @@ kotlinx-serializationProtobuf = { group = "org.jetbrains.kotlinx", name = "kotli
 kover-gradlePlugin = { group = "org.jetbrains.kotlinx.kover", name = "org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinxKover" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 licensee-gradlePlugin = { group = "app.cash.licensee", name = "licensee-gradle-plugin", version.ref = "licensee" }
+metro-android = { group = "dev.zacsweers.metro", name = "metrox-android", version.ref = "metro" }
 metro-gradlePlugin = { group = "dev.zacsweers.metro", name = "dev.zacsweers.metro.gradle.plugin", version.ref = "metro" }
 navigation3-resultstate = { group = "io.github.irgaly.navigation3.resultstate", name = "resultstate", version.ref = "navigation3-resultstate" }
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "squareup-okio" }

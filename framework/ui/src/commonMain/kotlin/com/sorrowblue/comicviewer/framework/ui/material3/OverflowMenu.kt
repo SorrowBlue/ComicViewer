@@ -1,104 +1,103 @@
 package com.sorrowblue.comicviewer.framework.ui.material3
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.AppBarRowScope2
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.AppBarRowScope
+import androidx.compose.material3.AppBarScope
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.framework.ui.generated.resources.Res
 import comicviewer.framework.ui.generated.resources.label_settings
 import org.jetbrains.compose.resources.stringResource
 
-interface OverflowMenuScope {
-    val state: OverflowMenuState
-}
-
-@Composable
-fun OverflowMenuScope.OverflowMenuItem(
-    text: String,
-    icon: ImageVector,
+fun AppBarScope.clickableItem(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    icon: @Composable () -> Unit,
+    label: @Composable () -> String,
+    enabled: Boolean = true,
+    testTag: String? = null,
 ) {
-    DropdownMenuItem(
-        text = { Text(text = text) },
-        leadingIcon = { Icon(imageVector = icon, text) },
-        onClick = {
-            state.collapse()
-            onClick()
+    customItem(
+        appbarContent = {
+            TooltipBox(
+                positionProvider =
+                TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                tooltip = { PlainTooltip { Text(label()) } },
+                state = rememberTooltipState(),
+                modifier = if (testTag != null) Modifier.testTag(testTag) else Modifier,
+            ) {
+                IconButton(onClick = onClick, enabled = enabled, content = icon)
+            }
         },
-        modifier = modifier,
+        menuContent = { state ->
+            DropdownMenuItem(
+                leadingIcon = icon,
+                enabled = enabled,
+                text = { Text(label()) },
+                onClick = {
+                    onClick()
+                    state.dismiss()
+                },
+                modifier = if (testTag != null) Modifier.testTag(testTag) else Modifier,
+            )
+        },
     )
 }
 
-@Composable
-fun OverflowMenuScope.SettingsOverflowMenuItem(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+fun AppBarScope.toggleableItem(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    icon: @Composable () -> Unit,
+    label: @Composable () -> String,
+    enabled: Boolean = true,
 ) {
-    OverflowMenuItem(
-        text = stringResource(Res.string.label_settings),
-        icon = ComicIcons.Settings,
-        onClick = onClick,
-        modifier = modifier,
+    customItem(
+        appbarContent = {
+            TooltipBox(
+                positionProvider =
+                TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                tooltip = { PlainTooltip { Text(label()) } },
+                state = rememberTooltipState(),
+            ) {
+                IconToggleButton(
+                    checked = checked,
+                    onCheckedChange = onCheckedChange,
+                    enabled = enabled,
+                    content = icon,
+                )
+            }
+        },
+        menuContent = { state ->
+            DropdownMenuItem(
+                leadingIcon = icon,
+                enabled = enabled,
+                text = { Text(label()) },
+                onClick = {
+                    onCheckedChange(!checked)
+                    state.dismiss()
+                },
+            )
+        },
     )
 }
 
-fun AppBarRowScope2.settingsItem(onClick: () -> Unit) {
+fun AppBarRowScope.settingsItem(onClick: () -> Unit) {
     clickableItem(
-        label = { Text(stringResource(Res.string.label_settings)) },
+        onClick = onClick,
         icon = {
             Icon(ComicIcons.Settings, null)
         },
-        onClick = onClick,
+        label = { stringResource(Res.string.label_settings) },
+        testTag = "SettingsButton",
     )
-}
-
-@Composable
-fun OverflowMenu(
-    modifier: Modifier = Modifier,
-    state: OverflowMenuState = rememberOverflowMenuState(),
-    content: @Composable OverflowMenuScope.() -> Unit,
-) {
-    Box(modifier = modifier) {
-        IconButton(onClick = state::expand) {
-            Icon(ComicIcons.MoreVert, "Open Options")
-        }
-        DropdownMenu(
-            expanded = state.expanded,
-            onDismissRequest = state::collapse,
-        ) {
-            content.invoke(object : OverflowMenuScope {
-                override val state = state
-            })
-        }
-    }
-}
-
-class OverflowMenuState {
-    var expanded by mutableStateOf(false)
-        private set
-
-    fun expand() {
-        expanded = true
-    }
-
-    fun collapse() {
-        expanded = false
-    }
-}
-
-@Composable
-fun rememberOverflowMenuState() = remember {
-    OverflowMenuState()
 }

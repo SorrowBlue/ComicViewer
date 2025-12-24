@@ -10,6 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.onEach
 
 internal interface CollectionScreenState {
     val uiState: CollectionScreenUiState
+    val collection: Collection
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
@@ -63,10 +65,13 @@ private class CollectionScreenStateImpl(
     override lateinit var lazyPagingItems: LazyPagingItems<File>
     override var uiState by mutableStateOf(CollectionScreenUiState())
 
+    override lateinit var collection: Collection
+
     init {
         getCollectionUseCase(GetCollectionUseCase.Request(id))
             .mapNotNull { it.dataOrNull() }
             .onEach {
+                collection = it
                 uiState = uiState.copy(appBarUiState = uiState.appBarUiState.copy(title = it.name))
             }.launchIn(scope)
     }

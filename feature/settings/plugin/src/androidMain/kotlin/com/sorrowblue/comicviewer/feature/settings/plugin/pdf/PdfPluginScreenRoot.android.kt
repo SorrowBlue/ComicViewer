@@ -4,6 +4,6 @@ import androidx.compose.runtime.Composable
 
 @Composable
 context(context: PdfPluginScreenContext)
-actual fun PdfPluginScreenRoot(onBackClick: () -> Unit) {
+internal actual fun PdfPluginScreenRoot(onBackClick: () -> Unit) {
     // Do nothing
 }

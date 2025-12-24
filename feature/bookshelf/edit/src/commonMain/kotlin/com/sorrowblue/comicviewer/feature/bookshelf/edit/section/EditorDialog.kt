@@ -16,7 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditorForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_save
@@ -25,12 +25,12 @@ import comicviewer.feature.bookshelf.edit.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
 
-data class BookshelfEditorScreenUiState(val progress: Boolean = true)
+data class BookshelfEditScreenUiState(val progress: Boolean = true)
 
 @Composable
 internal fun EditorDialog(
-    form: Form<out BookshelfEditorForm>,
-    uiState: BookshelfEditorScreenUiState,
+    form: Form<out BookshelfEditForm>,
+    uiState: BookshelfEditScreenUiState,
     onDismissRequest: () -> Unit,
     scrollState: ScrollState,
     modifier: Modifier = Modifier,

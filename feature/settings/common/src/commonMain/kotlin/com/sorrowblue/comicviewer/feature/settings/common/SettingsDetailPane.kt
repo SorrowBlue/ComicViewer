@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
@@ -26,15 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.window.core.layout.WindowSizeClass
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-
-interface SettingsDetailNavigator {
-    fun navigateBack()
-}
-
-interface SettingsExtraNavigator {
-    fun navigateUp()
-}
+import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 
 @Composable
 fun SettingsDetailPane(
@@ -63,12 +53,7 @@ fun SettingsDetailPane(
                 TopAppBar(
                     title = title,
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(
-                                imageVector = ComicIcons.ArrowBack,
-                                contentDescription = "上へ移動",
-                            )
-                        }
+                        BackIconButton(onClick = onBackClick)
                     },
                     actions = actions,
                     windowInsets = WindowInsets.safeDrawing

@@ -1,8 +1,7 @@
 package com.sorrowblue.comicviewer.file.component
 
-import androidx.compose.material3.AppBarRowScope2
+import androidx.compose.material3.AppBarRowScope
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.toggleableItem
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_action_show_hidden
 import dev.zacsweers.metro.AppScope
@@ -25,16 +25,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-context(scope: AppBarRowScope2)
+context(scope: AppBarRowScope)
 fun HiddenFilesToggleableItemState.hiddenFilesToggleableItem() {
     scope.toggleableItem(
         checked = showHiddenFile,
-        autoDismiss = false,
         onCheckedChange = ::onCheckedChange,
         icon = { Icon(ComicIcons.FolderOff, null) },
-        label = {
-            Text(stringResource(Res.string.file_action_show_hidden))
-        },
+        label = { stringResource(Res.string.file_action_show_hidden) },
     )
 }
 

@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.data.database
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.Inject
 import kotlin.io.path.absolutePathString
@@ -16,9 +15,8 @@ internal actual class DatabaseHelper actual constructor(private val context: Pla
             it.createDirectories()
             logcat { "getDatabaseBuilder path=${it.absolutePathString()}" }
         }
-        return Room
-            .databaseBuilder<ComicViewerDatabase>(
-                name = dbPath.resolve(DatabaseName).absolutePathString(),
-            ).setDriver(BundledSQLiteDriver())
+        return Room.databaseBuilder<ComicViewerDatabase>(
+            name = dbPath.resolve(DatabaseName).absolutePathString(),
+        )
     }
 }

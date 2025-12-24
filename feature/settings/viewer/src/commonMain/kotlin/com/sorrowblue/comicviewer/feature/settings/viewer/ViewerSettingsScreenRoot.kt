@@ -1,10 +1,12 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 
 @Composable
 context(context: ViewerSettingsScreenContext)
-fun ViewerSettingsScreenRoot(onBackClick: () -> Unit) {
+internal fun ViewerSettingsScreenRoot(onBackClick: () -> Unit) {
     val state = rememberViewerSettingsScreenState()
     ViewerSettingsScreen(
         uiState = state.uiState,
@@ -19,5 +21,6 @@ fun ViewerSettingsScreenRoot(onBackClick: () -> Unit) {
         onImageQualityChange = state::onImageQualityChange,
         onFixScreenBrightnessChange = state::onFixScreenBrightnessChange,
         onScreenBrightnessChange = state::onScreenBrightnessChange,
+        modifier = Modifier.testTag("ViewerSettingsRoot"),
     )
 }

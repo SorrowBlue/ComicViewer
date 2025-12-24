@@ -10,6 +10,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.feature.bookshelf.edit)
                 implementation(projects.feature.file)
                 implementation(libs.androidx.coreUri)
             }

@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.tutorial.component.TutorialBottomBar
@@ -40,6 +41,7 @@ internal fun TutorialScreen(
     Scaffold(
         bottomBar = { TutorialBottomBar(pageState, onNextClick) },
         contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = Modifier.testTag("TutorialScreen"),
     ) { contentPadding ->
         HorizontalPager(state = pageState) {
             when (uiState.list[it]) {
@@ -55,7 +57,6 @@ internal fun TutorialScreen(
             }
         }
     }
-    LocalMinimumInteractiveComponentSize
 }
 
 @Preview

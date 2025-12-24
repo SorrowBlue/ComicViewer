@@ -4,14 +4,14 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditorForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import soil.form.compose.Form
 
 @Composable
 internal fun EditorContents(
-    form: Form<out BookshelfEditorForm>,
-    uiState: BookshelfEditorScreenUiState,
+    form: Form<out BookshelfEditForm>,
+    uiState: BookshelfEditScreenUiState,
     onBackClick: () -> Unit,
     scrollState: ScrollState,
     modifier: Modifier = Modifier,

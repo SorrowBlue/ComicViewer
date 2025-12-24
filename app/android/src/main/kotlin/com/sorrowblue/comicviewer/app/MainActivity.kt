@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.app
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +15,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import com.sorrowblue.comicviewer.ComicViewerUI
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
+import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
 
@@ -24,7 +26,6 @@ internal class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         installSplashScreen().apply {
             enableEdgeToEdge(
                 navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
@@ -57,7 +58,7 @@ internal class MainActivity : AppCompatActivity() {
                     allowNavigationRestored = receivedBookData.isNullOrEmpty(),
                 )
             }
-            with((application as MainApplication).platformGraph) {
+            with(getPlatformGraph() as AppGraph) {
                 ComicViewerUI(finishApp = ::finish, state = state)
             }
             LaunchedEffect(receivedBookData.isNullOrEmpty()) {

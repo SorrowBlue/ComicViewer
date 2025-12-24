@@ -2,10 +2,9 @@ package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.AppBarRowScope2
+import androidx.compose.material3.AppBarRowScope
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TonalToggleButton
 import androidx.compose.runtime.Composable
@@ -21,6 +20,7 @@ import androidx.compose.ui.semantics.semantics
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_list_label_switch_grid_view
 import comicviewer.feature.file.generated.resources.file_list_label_switch_list_view
@@ -32,15 +32,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-context(scope: AppBarRowScope2)
+context(scope: AppBarRowScope)
 fun FileListDisplayItemState.fileListDisplayItem() {
     scope.clickableItem(
         onClick = ::onClick,
         icon = {
             Icon(
-                if (fileListDisplay ==
-                    FileListDisplay.Grid
-                ) {
+                if (fileListDisplay == FileListDisplay.Grid) {
                     ComicIcons.ViewList
                 } else {
                     ComicIcons.GridView
@@ -49,15 +47,12 @@ fun FileListDisplayItemState.fileListDisplayItem() {
             )
         },
         label = {
-            Text(
-                if (fileListDisplay == FileListDisplay.Grid) {
-                    stringResource(Res.string.file_list_label_switch_list_view)
-                } else {
-                    stringResource(Res.string.file_list_label_switch_grid_view)
-                },
-            )
+            if (fileListDisplay == FileListDisplay.Grid) {
+                stringResource(Res.string.file_list_label_switch_list_view)
+            } else {
+                stringResource(Res.string.file_list_label_switch_grid_view)
+            }
         },
-        autoDismiss = false,
     )
 }
 

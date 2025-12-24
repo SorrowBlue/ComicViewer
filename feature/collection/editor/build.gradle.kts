@@ -5,11 +5,11 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.collection.editor"
-        // resourcePrefix("collection_editor")
     }
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.feature.collection.nav)
                 implementation(libs.soil.form)
             }
         }

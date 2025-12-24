@@ -12,6 +12,7 @@ import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
@@ -77,6 +78,7 @@ internal fun CollectionList(
                             collection = it,
                             onClick = { onItemClick(it) },
                             content = content,
+                            modifier = Modifier.testTag("CollectionListItem"),
                         )
                     } else {
                         CollectionListCardItem(

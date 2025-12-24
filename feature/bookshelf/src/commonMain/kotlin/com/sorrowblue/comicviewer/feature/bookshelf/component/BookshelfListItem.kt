@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -144,7 +145,11 @@ private fun BookshelfRowItem(
     val colors = CardDefaults.cardColors(
         containerColor = ComicTheme.colorScheme.surfaceContainer,
     )
-    Card(onClick = onClick, colors = colors, modifier = modifier) {
+    Card(
+        onClick = onClick,
+        colors = colors,
+        modifier = modifier.testTag("BookshelfListItem-${bookshelfFolder.bookshelf.id.value}"),
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             FileThumbnailAsyncImage(
                 fileThumbnail = FolderThumbnail.from(bookshelfFolder.folder),
@@ -201,7 +206,12 @@ private fun BookshelfRowItem(
                     }
                 },
                 trailingContent = {
-                    IconButton(onClick = onInfoClick) {
+                    IconButton(
+                        onClick = onInfoClick,
+                        modifier = Modifier.testTag(
+                            "BookshelfListItemMenu-${bookshelfFolder.bookshelf.id.value}",
+                        ),
+                    ) {
                         Icon(ComicIcons.MoreVert, null)
                     }
                 },

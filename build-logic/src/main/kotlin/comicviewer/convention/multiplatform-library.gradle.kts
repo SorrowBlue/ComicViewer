@@ -31,10 +31,10 @@ kotlin {
 
     sourceSets {
         val noAndroid by creating {
-            dependsOn(sourceSets.commonMain.get())
+            dependsOn(commonMain.get())
         }
         val noAndroidTest by creating {
-            dependsOn(sourceSets.commonTest.get())
+            dependsOn(commonTest.get())
         }
         desktopMain {
             dependsOn(noAndroid)

@@ -11,9 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_cancel
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_delete
@@ -28,31 +28,12 @@ internal data class BookshelfDeleteScreenUiState(
 )
 
 @Composable
-context(context: BookshelfDeleteScreenContext)
-fun BookshelfDeleteScreen(
-    bookshelfId: BookshelfId,
-    onBackClick: () -> Unit,
-    onComplete: () -> Unit,
-) {
-    val state = rememberBookshelfDeleteScreenState(
-        bookshelfId = bookshelfId,
-        getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
-        updateDeletionFlagUseCase = context.updateDeletionFlagUseCase,
-    )
-    BookshelfDeleteScreen(
-        uiState = state.uiState,
-        onDismissRequest = onBackClick,
-        onDismissClick = onBackClick,
-        onConfirmClick = { state.onConfirmClick(onComplete) },
-    )
-}
-
-@Composable
 internal fun BookshelfDeleteScreen(
     uiState: BookshelfDeleteScreenUiState,
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -70,6 +51,7 @@ internal fun BookshelfDeleteScreen(
                 onClick = onConfirmClick,
                 enabled = !uiState.isProcessing,
                 contentPadding = if (uiState.isProcessing) ButtonDefaults.TextButtonWithIconContentPadding else ButtonDefaults.TextButtonContentPadding,
+                modifier = Modifier.testTag("ConfirmButton"),
             ) {
                 AnimatedVisibility(uiState.isProcessing, label = "progress") {
                     Row {
@@ -88,6 +70,7 @@ internal fun BookshelfDeleteScreen(
             TextButton(
                 onClick = onDismissClick,
                 enabled = !uiState.isProcessing,
+                modifier = Modifier.testTag("DismissButton"),
             ) {
                 Text(stringResource(Res.string.bookshelf_info_delete_btn_cancel))
             }
@@ -97,5 +80,6 @@ internal fun BookshelfDeleteScreen(
         } else {
             DialogProperties()
         },
+        modifier = modifier,
     )
 }

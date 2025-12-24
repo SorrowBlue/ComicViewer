@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
@@ -15,13 +16,12 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfLoadin
 
 @Composable
 context(context: BookshelfInfoScreenContext)
-fun BookshelfInfoScreenRoot(
+internal fun BookshelfInfoScreenRoot(
     bookshelfId: BookshelfId,
     onBackClick: () -> Unit,
     onRemoveClick: () -> Unit,
     showNotificationPermissionRationale: (ScanType) -> Unit,
     onEditClick: (BookshelfId, BookshelfType) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val state = rememberBookshelfInfoScreenState(bookshelfId = bookshelfId)
 
@@ -40,7 +40,7 @@ fun BookshelfInfoScreenRoot(
                 )
             }
         },
-        modifier = modifier,
+        modifier = Modifier.testTag("BookshelfInfoScreenRoot"),
     ) { contentPadding ->
         when (val uiState = state.uiState) {
             is BookshelfInfoSheetUiState.Loaded -> {
