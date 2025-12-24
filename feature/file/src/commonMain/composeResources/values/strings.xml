@@ -14,5 +14,23 @@
     <string name="file_desc_open_file_info">Open file information</string>
     <string name="file_action_change_grid_size">Change Grid size</string>
     <string name="file_action_show_hidden">Show hidden files</string>
+    <string name="file_label_path">Path</string>
+    <string name="file_label_type">Type</string>
+    <string name="file_label_size">Size</string>
+    <string name="file_label_page_count">Page count</string>
+    <string name="file_label_last_read_time">Last read time</string>
+    <string name="file_label_folder">Folder</string>
+    <string name="file_label_attributes">Attributes</string>
+    <string name="file_attribute_archive">Archive</string>
+    <string name="file_attribute_compressed">Compressed</string>
+    <string name="file_attribute_hidden">Hidden</string>
+    <string name="file_attribute_normal">Normal</string>
+    <string name="file_attribute_directory">Directory</string>
+    <string name="file_attribute_readonly">Read-only</string>
+    <string name="file_attribute_shared_read">Shared read access</string>
+    <string name="file_attribute_system">System</string>
+    <string name="file_attribute_temporary">Temporary</string>
+    <string name="file_attribute_volume">Volume</string>
+    <string name="file_info_label_remove_read_later">Remove from Read later</string>
 
 </resources>

@@ -27,6 +27,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.folder.generated.resources.Res
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_apply_to_folder_only
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_asc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_desc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_name_asc
@@ -107,7 +108,7 @@ private fun SortTypeSelectScreen(
                 Column {
                     ListItem(
                         headlineContent = {
-                            Text(text = "このフォルダにだけ適用")
+                            Text(text = stringResource(Res.string.folder_sorttype_label_apply_to_folder_only))
                         },
                         leadingContent = {
                             Checkbox(
