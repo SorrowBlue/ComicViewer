@@ -185,10 +185,7 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-
-        navigationCollectioncreateedit()
-        // Basic collection delete
-        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        navigationCollectioncreateeditdelete()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -208,11 +205,7 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-
-        navigationCollectioncreateedit()
-        // Basic collection delete
-        composeTestRule.onNodeWithTag("DeleteButton").performClick()
-        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        navigationCollectionsmartcreate()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -232,12 +225,7 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-
-        navigationCollectioncreateedit()
-        // Basic collection delete
-        composeTestRule.onNodeWithTag("DeleteButton").performClick()
-        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        navigationCollectionsmartcreateedit()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -257,14 +245,7 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-        navigationCollectioncreateedit()
-        // Basic collection delete
-        composeTestRule.onNodeWithTag("DeleteButton").performClick()
-        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitUntil(10000) {
-            composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").isNotDisplayed()
-        }
+        navigationCollectionsmartcreateeditdelete()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -284,16 +265,7 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-
-        navigationCollectioncreateedit()
-        // Basic collection delete
-        composeTestRule.onNodeWithTag("DeleteButton").performClick()
-        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitUntil(10000) {
-            composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").isNotDisplayed()
-        }
-        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+        navigationCollectionsmartcreateeditdelete()
     }
 
     @OptIn(ExperimentalTestApi::class)
