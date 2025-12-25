@@ -5,7 +5,6 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
-import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onFirst
@@ -19,7 +18,6 @@ import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sorrowblue.comicviewer.ComicViewerUI
-import com.sorrowblue.comicviewer.data.database.di.DatabaseProviders
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.SortUtil
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -31,45 +29,34 @@ import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
-import dev.zacsweers.metro.asContribution
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-val graph by lazy {
-    createGraphFactory<Navigation3TestGraph.Factory>().create(
-        InstrumentationRegistry.getInstrumentation().context,
-        object : LicenseeHelper {
-            override suspend fun loadLibraries(): ByteArray {
-                TODO("Not yet implemented")
-            }
-        })
-}
-
-val appGraph by lazy {
-    createGraphFactory<AppGraph.Factory>().createAppGraph(
-        InstrumentationRegistry.getInstrumentation().context,
-        object : LicenseeHelper {
-            override suspend fun loadLibraries(): ByteArray {
-                TODO("Not yet implemented")
-            }
-        })
-}
-
 class ComposeNavigation3Test {
 
     @get:Rule
     val composeTestRule = createComposeRule()
+    // use createAndroidComposeRule<YourActivity>() if you need access to
+    // an activity
+
+    val graph by lazy {
+        createGraphFactory<Navigation3TestGraph.Factory>().create(
+            InstrumentationRegistry.getInstrumentation().context,
+            object : LicenseeHelper {
+                override suspend fun loadLibraries(): ByteArray {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
 
     var bookshelfId: BookshelfId? = null
 
     @OptIn(InternalDataApi::class)
     @Before
     fun setup() {
-        appGraph.asContribution<DatabaseProviders>()
-        getPlatformGraph = { appGraph }
         runTest {
             var folder: Folder? = null
             graph.bookshelfLocalDataSource.updateOrCreate(
@@ -90,7 +77,15 @@ class ComposeNavigation3Test {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun tabTest() {
+    fun myTest() {
+        val graph = createGraphFactory<AppGraph.Factory>().createAppGraph(
+            InstrumentationRegistry.getInstrumentation().context,
+            object : LicenseeHelper {
+                override suspend fun loadLibraries(): ByteArray {
+                    TODO("Not yet implemented")
+                }
+            })
+        getPlatformGraph = { graph }
         // Start the app
         composeTestRule.setContent {
             with(InstrumentationRegistry.getInstrumentation().context) {
@@ -106,70 +101,16 @@ class ComposeNavigation3Test {
         tutorial()
 
         tab()
-    }
 
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun bookshelfTest() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-        tutorial()
+        settings()
+
+        navigationCollection()
 
         bookshelf()
     }
 
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun collectionTest() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
-        navigationCollection()
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun settingsTest() {
-        getPlatformGraph = { appGraph }
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
-        settings()
-    }
-
     private fun tutorial() {
-        if (composeTestRule.onNodeWithTag("TutorialScreen").isNotDisplayed()) return
+        composeTestRule.onNodeWithTag("TutorialScreen").assertIsDisplayed()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("NextButton").performClick()
         composeTestRule.waitForIdle()
