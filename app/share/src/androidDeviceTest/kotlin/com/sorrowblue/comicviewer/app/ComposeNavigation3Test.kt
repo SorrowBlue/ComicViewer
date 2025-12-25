@@ -312,74 +312,46 @@ class ComposeNavigation3Test {
 
     private fun bookshelf() {
         composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[0].performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("BookshelfFab").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("CloseButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.DEVICE}")
             .performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("CloseButton").performClick()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BackButton").performClick()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfListItemMenu-${bookshelfId!!.value}").performClick()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("BookshelfInfoScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("EditButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfDeleteScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("DismissButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfInfoScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("BookshelfListItem-${bookshelfId!!.value}")
             .performTouchInput {
-                click(Offset(10f, 10f))
+                click(Offset(centerX, 10f))
             }
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("SearchButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
     }
 }
