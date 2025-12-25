@@ -5,7 +5,6 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -145,12 +144,12 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-        navigationCollectioncreate()
+        navigationCollection()
     }
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun collectionTest2() {
+    fun collection2Test() {
         // Start the app
         composeTestRule.setContent {
             with(InstrumentationRegistry.getInstrumentation().context) {
@@ -165,7 +164,7 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-        navigationCollectioncreateedit()
+        navigationCollection2()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -185,87 +184,7 @@ class ComposeNavigation3Test {
 
         tutorial()
 
-        navigationCollectioncreateeditdelete()
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun collection4Test() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
-        navigationCollectionsmartcreate()
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun collection5Test() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
-        navigationCollectionsmartcreateedit()
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun collection6Test() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
-        navigationCollectionsmartcreateeditdelete()
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun collection7Test() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
-        navigationCollectionsmartcreateeditdelete()
+        navigationCollection3()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -423,7 +342,7 @@ class ComposeNavigation3Test {
     }
 
     @OptIn(ExperimentalTestApi::class)
-    private fun navigationCollectioncreate() {
+    private fun navigationCollection2() {
         composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
@@ -438,13 +357,6 @@ class ComposeNavigation3Test {
         }
         composeTestRule.onNodeWithTag("CreateButton").performClick()
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
-        return
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    private fun navigationCollectioncreateedit() {
-
-        navigationCollectioncreate()
 
         // Collection
         composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
@@ -455,26 +367,12 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("BasicCollectionEditScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("CloseButton").performClick()
         composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
-    }
 
-    @OptIn(ExperimentalTestApi::class)
-    private fun navigationCollectioncreateeditdelete() {
-
-        navigationCollectioncreateedit()
         // Basic collection delete
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
         composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithTag("CollectionListScreenRoot").isDisplayed()
-        }
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
-
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    private fun navigationCollectionsmartcreate() {
-        navigationCollectioncreateeditdelete()
 
         // Smart collection create
         composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
@@ -486,16 +384,8 @@ class ComposeNavigation3Test {
             pressKey(Key.Enter, 1000)
         }
         composeTestRule.onNodeWithTag("CreateButton").performClick()
-        composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithTag("CollectionListScreenRoot").isDisplayed()
-        }
-
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    private fun navigationCollectionsmartcreateedit() {
-        navigationCollectionsmartcreate()
+        return
 
         // Collection
         composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
@@ -506,20 +396,76 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("SmartCollectionEditScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("CloseButton").performClick()
         composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
-    }
 
-    @OptIn(ExperimentalTestApi::class)
-    private fun navigationCollectionsmartcreateeditdelete() {
-        navigationCollectionsmartcreateedit()
         // Smart collection delete
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
         composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithTag("CollectionListScreenRoot").isDisplayed()
-        }
-
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun navigationCollection3() {
+        composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Basic collection create
+        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionCreateButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").requestFocus()
+        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
+        composeTestRule.onNodeWithTag("CollectionNameField").performKeyInput {
+            pressKey(Key.Enter, 1000)
+        }
+        composeTestRule.onNodeWithTag("CreateButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Collection
+        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection edit
+        composeTestRule.onNodeWithTag("EditButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CloseButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection delete
+        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Smart collection create
+        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
+        composeTestRule.onNodeWithTag("QueryField").performTextInput("Search keyword")
+        composeTestRule.onNodeWithTag("QueryField").performKeyInput {
+            pressKey(Key.Enter, 1000)
+        }
+        composeTestRule.onNodeWithTag("CreateButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Collection
+        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Smart collection edit
+        composeTestRule.onNodeWithTag("EditButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CloseButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Smart collection delete
+        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
     }
 
     private fun bookshelf() {
