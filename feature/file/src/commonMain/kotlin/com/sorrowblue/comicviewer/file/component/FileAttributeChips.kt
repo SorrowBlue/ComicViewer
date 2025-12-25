@@ -10,26 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import comicviewer.feature.file.generated.resources.Res
-import comicviewer.feature.file.generated.resources.file_attribute_archive
-import comicviewer.feature.file.generated.resources.file_attribute_compressed
-import comicviewer.feature.file.generated.resources.file_attribute_directory
-import comicviewer.feature.file.generated.resources.file_attribute_hidden
-import comicviewer.feature.file.generated.resources.file_attribute_normal
-import comicviewer.feature.file.generated.resources.file_attribute_readonly
-import comicviewer.feature.file.generated.resources.file_attribute_shared_read
-import comicviewer.feature.file.generated.resources.file_attribute_system
-import comicviewer.feature.file.generated.resources.file_attribute_temporary
-import comicviewer.feature.file.generated.resources.file_attribute_volume
-import comicviewer.feature.file.generated.resources.file_label_attributes
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun FileAttributeChips(fileAttribute: FileAttribute, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
-            text = stringResource(Res.string.file_label_attributes),
+            text = "属性",
             style = ComicTheme.typography.labelSmall,
             modifier = Modifier,
         )
@@ -38,34 +25,34 @@ internal fun FileAttributeChips(fileAttribute: FileAttribute, modifier: Modifier
         ) {
             fileAttribute.let {
                 if (it.archive) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_archive)) })
+                    AssistChip(onClick = {}, label = { Text(text = "アーカイブ") })
                 }
                 if (it.compressed) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_compressed)) })
+                    AssistChip(onClick = {}, label = { Text(text = "圧縮") })
                 }
                 if (it.hidden) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_hidden)) })
+                    AssistChip(onClick = {}, label = { Text(text = "隠しファイル") })
                 }
                 if (it.normal) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_normal)) })
+                    AssistChip(onClick = {}, label = { Text(text = "標準") })
                 }
                 if (it.directory) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_directory)) })
+                    AssistChip(onClick = {}, label = { Text(text = "ディレクトリ") })
                 }
                 if (it.readonly) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_readonly)) })
+                    AssistChip(onClick = {}, label = { Text(text = "読取専用") })
                 }
                 if (it.sharedRead) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_shared_read)) })
+                    AssistChip(onClick = {}, label = { Text(text = "読取共有アクセス") })
                 }
                 if (it.system) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_system)) })
+                    AssistChip(onClick = {}, label = { Text(text = "システム") })
                 }
                 if (it.temporary) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_temporary)) })
+                    AssistChip(onClick = {}, label = { Text(text = "一時ファイル") })
                 }
                 if (it.volume) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_volume)) })
+                    AssistChip(onClick = {}, label = { Text(text = "ボリューム") })
                 }
             }
         }

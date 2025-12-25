@@ -11,9 +11,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import comicviewer.feature.authentication.generated.resources.Res
-import comicviewer.feature.authentication.generated.resources.authentication_header
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun HeaderContents(modifier: Modifier = Modifier) {
@@ -27,7 +24,7 @@ internal fun HeaderContents(modifier: Modifier = Modifier) {
             modifier = Modifier.size(48.dp),
         )
         Text(
-            text = stringResource(Res.string.authentication_header),
+            text = "ComicViewer authentication",
             style = ComicTheme.typography.displayMedium,
             textAlign = TextAlign.Center,
         )

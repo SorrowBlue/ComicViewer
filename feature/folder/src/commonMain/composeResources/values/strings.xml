@@ -18,5 +18,4 @@
     <string name="folder_sorttype_label_date_desc">Timestamp (descending)</string>
     <string name="folder_sorttype_label_size_asc">File size (ascending)</string>
     <string name="folder_sorttype_label_size_desc">File size (descending)</string>
-    <string name="folder_sorttype_label_apply_to_folder_only">Apply to this folder only</string>
 </resources>

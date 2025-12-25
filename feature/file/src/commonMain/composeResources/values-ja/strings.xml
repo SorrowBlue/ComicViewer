@@ -13,22 +13,4 @@
     <string name="file_desc_open_file_info">ファイル情報を見る</string>
     <string name="file_action_change_grid_size">グリッドサイズ</string>
     <string name="file_action_show_hidden">隠しファイルを表示</string>
-    <string name="file_label_path">パス</string>
-    <string name="file_label_type">種類</string>
-    <string name="file_label_size">サイズ</string>
-    <string name="file_label_page_count">ページ数</string>
-    <string name="file_label_last_read_time">最後に読んだ日時</string>
-    <string name="file_label_folder">フォルダ</string>
-    <string name="file_label_attributes">属性</string>
-    <string name="file_attribute_archive">アーカイブ</string>
-    <string name="file_attribute_compressed">圧縮</string>
-    <string name="file_attribute_hidden">隠しファイル</string>
-    <string name="file_attribute_normal">標準</string>
-    <string name="file_attribute_directory">ディレクトリ</string>
-    <string name="file_attribute_readonly">読取専用</string>
-    <string name="file_attribute_shared_read">読取共有アクセス</string>
-    <string name="file_attribute_system">システム</string>
-    <string name="file_attribute_temporary">一時ファイル</string>
-    <string name="file_attribute_volume">ボリューム</string>
-    <string name="file_info_label_remove_read_later">後で読むから削除</string>
 </resources>

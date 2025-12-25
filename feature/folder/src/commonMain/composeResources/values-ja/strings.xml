@@ -13,5 +13,4 @@
     <string name="folder_sorttype_label_date_desc">更新日時（降順）</string>
     <string name="folder_sorttype_label_size_asc">ファイルサイズ（昇順）</string>
     <string name="folder_sorttype_label_size_desc">ファイルサイズ（降順）</string>
-    <string name="folder_sorttype_label_apply_to_folder_only">このフォルダにだけ適用</string>
 </resources>
