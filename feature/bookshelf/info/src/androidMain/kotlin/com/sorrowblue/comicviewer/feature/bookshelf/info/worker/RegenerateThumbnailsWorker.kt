@@ -89,8 +89,8 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
             val notification =
                 NotificationCompat
                     .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("サムネイルのスキャン")
-                    .setContentText("サムネイルのスキャンはキャンセルされました。")
+                    .setContentTitle(applicationContext.getString(com.sorrowblue.comicviewer.framework.notification.R.string.framework_notification_title_thumbnail_scan))
+                    .setContentText(applicationContext.getString(com.sorrowblue.comicviewer.framework.notification.R.string.framework_notification_msg_thumbnail_scan_cancelled))
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(R.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)

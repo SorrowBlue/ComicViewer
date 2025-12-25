@@ -67,8 +67,8 @@ internal class ScanFileWorker(appContext: Context, workerParams: WorkerParameter
             val notification =
                 NotificationCompat
                     .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャン")
-                    .setContentText("スキャンはキャンセルされました。")
+                    .setContentTitle(applicationContext.getString(com.sorrowblue.comicviewer.framework.notification.R.string.framework_notification_name_bookshelf_scan))
+                    .setContentText(applicationContext.getString(com.sorrowblue.comicviewer.framework.notification.R.string.framework_notification_msg_scan_cancelled))
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(NotificationR.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)
@@ -99,7 +99,7 @@ internal class ScanFileWorker(appContext: Context, workerParams: WorkerParameter
             val notification =
                 NotificationCompat
                     .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("本棚のスキャンが完了しました")
+                    .setContentTitle(applicationContext.getString(com.sorrowblue.comicviewer.framework.notification.R.string.framework_notification_title_scan_completed))
                     .setSubText(bookshelfInfo.bookshelf.displayName)
                     .setSmallIcon(NotificationR.drawable.ic_sync_done_24dp)
                     .setOngoing(false)

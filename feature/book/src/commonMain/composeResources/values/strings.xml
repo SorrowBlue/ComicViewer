@@ -22,4 +22,6 @@
     <string name="book_label_next_book">Next book</string>
     <string name="book_label_prev_book">Previous book</string>
     <string name="book_msg_page_not_loaded">This page could not be loaded</string>
+    <string name="book_action_reload">Reload</string>
+    <string name="book_error_file_not_opened">Could not open file</string>
 </resources>
