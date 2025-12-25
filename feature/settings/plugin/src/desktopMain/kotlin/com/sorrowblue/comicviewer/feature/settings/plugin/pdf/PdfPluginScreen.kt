@@ -24,7 +24,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.plugin.generated.resources.Res
-import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_label_select_install_folder
 import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_title_pdf
 import org.jetbrains.compose.resources.stringResource
 
@@ -53,7 +52,7 @@ internal fun PdfPluginScreen(uiState: PdfPluginScreenUiState, onOpenFolderClick:
         ) {
             OutlinedTextField(
                 label = {
-                    Text(stringResource(Res.string.settings_plugin_label_select_install_folder))
+                    Text("インストールフォルダを選択")
                 },
                 value = uiState.folderPath,
                 onValueChange = {},

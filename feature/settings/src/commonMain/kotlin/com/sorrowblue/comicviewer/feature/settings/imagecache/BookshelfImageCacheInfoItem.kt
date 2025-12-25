@@ -23,10 +23,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
-import comicviewer.feature.settings.generated.resources.Res
-import comicviewer.feature.settings.generated.resources.settings_imagecache_label_page
-import comicviewer.feature.settings.generated.resources.settings_imagecache_label_thumbnail
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun BookshelfImageCacheInfoItem(
@@ -56,7 +52,7 @@ internal fun BookshelfImageCacheInfoItem(
 private fun ThumbnailImageCacheItem(imageCache: ThumbnailImageCache, onClick: () -> Unit) {
     Setting(
         title = {
-            Text(text = stringResource(Res.string.settings_imagecache_label_thumbnail))
+            Text(text = "サムネイル画像キャッシュ")
         },
         onClick = {},
         summary = {
@@ -96,7 +92,7 @@ private fun ThumbnailImageCacheItem(imageCache: ThumbnailImageCache, onClick: ()
 private fun BookPageImageCacheItem(imageCache: BookPageImageCache, onClick: () -> Unit) {
     Setting(
         title = {
-            Text(text = stringResource(Res.string.settings_imagecache_label_page))
+            Text(text = "ページキャッシュ")
         },
         onClick = {},
         summary = {

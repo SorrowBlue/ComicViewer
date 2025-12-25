@@ -40,7 +40,6 @@ import com.sorrowblue.comicviewer.feature.book.createSplitBitmap
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.book.generated.resources.Res
-import comicviewer.feature.book.generated.resources.book_action_reload
 import comicviewer.feature.book.generated.resources.book_msg_page_not_loaded
 import org.jetbrains.compose.resources.stringResource
 
@@ -122,7 +121,7 @@ private fun DefaultBookPage(
                     )
 
                     OutlinedButton(onClick = { painter.restart() }) {
-                        Text(text = stringResource(Res.string.book_action_reload))
+                        Text(text = "Reload")
                     }
                 }
             }

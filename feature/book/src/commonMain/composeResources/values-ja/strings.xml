@@ -21,6 +21,4 @@
     <string name="book_text_favorite_book">お気に入りの本</string>
     <string name="book_text_folder_book">フォルダの本</string>
     <string name="book_msg_page_not_loaded">このページを読み込めませんでした</string>
-    <string name="book_action_reload">再読み込み</string>
-    <string name="book_error_file_not_opened">ファイルを開けませんでした</string>
 </resources>

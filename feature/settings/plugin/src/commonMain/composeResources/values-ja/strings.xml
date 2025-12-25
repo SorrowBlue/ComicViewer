@@ -6,6 +6,5 @@
     <string name="settings_plugin_label_disable">無効</string>
     <string name="settings_plugin_error_not_found">PDFプラグインが見つかりません。インストールディレクトリを指定してください</string>
     <string name="settings_plugin_error_not_supported_version">サポートされていないPDFプラグインです</string>
-    <string name="settings_plugin_label_select_install_folder">インストールフォルダを選択</string>
 
 </resources>
