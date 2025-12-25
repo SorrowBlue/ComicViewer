@@ -149,6 +149,46 @@ class ComposeNavigation3Test {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
+    fun collection2Test() {
+        // Start the app
+        composeTestRule.setContent {
+            with(InstrumentationRegistry.getInstrumentation().context) {
+                val state = with(rememberComicViewerUIContext()) {
+                    rememberComicViewerUIState(allowNavigationRestored = false)
+                }
+                with(getPlatformGraph() as AppGraph) {
+                    ComicViewerUI(finishApp = {}, state = state)
+                }
+            }
+        }
+
+        tutorial()
+
+        navigationCollection2()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun collection3Test() {
+        // Start the app
+        composeTestRule.setContent {
+            with(InstrumentationRegistry.getInstrumentation().context) {
+                val state = with(rememberComicViewerUIContext()) {
+                    rememberComicViewerUIState(allowNavigationRestored = false)
+                }
+                with(getPlatformGraph() as AppGraph) {
+                    ComicViewerUI(finishApp = {}, state = state)
+                }
+            }
+        }
+
+        tutorial()
+
+        navigationCollection3()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
     fun settingsTest() {
         getPlatformGraph = { appGraph }
         // Start the app
@@ -253,79 +293,178 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("CreateButton").performClick()
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
+        // Collection
+        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection edit
+        composeTestRule.onNodeWithTag("EditButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CloseButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection delete
+        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        return
+
+        // Smart collection create
+        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
+        composeTestRule.onNodeWithTag("QueryField").performTextInput("Search keyword")
+        composeTestRule.onNodeWithTag("QueryField").performKeyInput {
+            pressKey(Key.Enter, 1000)
+        }
+        composeTestRule.onNodeWithTag("CreateButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Collection
+        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Smart collection edit
+        composeTestRule.onNodeWithTag("EditButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CloseButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Smart collection delete
+        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun navigationCollection2() {
+        composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Basic collection create
+        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionCreateButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").requestFocus()
+        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
+        composeTestRule.onNodeWithTag("CollectionNameField").performKeyInput {
+            pressKey(Key.Enter, 1000)
+        }
+        composeTestRule.onNodeWithTag("CreateButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Collection
+        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection edit
+        composeTestRule.onNodeWithTag("EditButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CloseButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection delete
+        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Smart collection create
+        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
+        composeTestRule.onNodeWithTag("QueryField").performTextInput("Search keyword")
+        composeTestRule.onNodeWithTag("QueryField").performKeyInput {
+            pressKey(Key.Enter, 1000)
+        }
+        composeTestRule.onNodeWithTag("CreateButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
         return
 
         // Collection
         composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-
-        // Basic collection edit
-        composeTestRule.onNodeWithTag("EditButton").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("BasicCollectionEditScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("CloseButton").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-
-        // Basic collection delete
-        composeTestRule.onNodeWithTag("DeleteButton").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-
-        // Smart collection create
-        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("SmartCollectionCreateButton").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("QueryField").performTextInput("Search keyword")
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("QueryField").performKeyInput {
-            pressKey(Key.Enter, 1000)
-        }
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("CreateButton").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-
-        // Collection
-        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
 
         // Smart collection edit
         composeTestRule.onNodeWithTag("EditButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("SmartCollectionEditScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("CloseButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
 
         // Smart collection delete
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
-        composeTestRule.waitForIdle()
+
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun navigationCollection3() {
+        composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Basic collection create
+        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionCreateButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").requestFocus()
+        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
+        composeTestRule.onNodeWithTag("CollectionNameField").performKeyInput {
+            pressKey(Key.Enter, 1000)
+        }
+        composeTestRule.onNodeWithTag("CreateButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Collection
+        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection edit
+        composeTestRule.onNodeWithTag("EditButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CloseButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Basic collection delete
+        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Smart collection create
+        composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
+        composeTestRule.onNodeWithTag("QueryField").performTextInput("Search keyword")
+        composeTestRule.onNodeWithTag("QueryField").performKeyInput {
+            pressKey(Key.Enter, 1000)
+        }
+        composeTestRule.onNodeWithTag("CreateButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
+
+        // Collection
+        composeTestRule.onAllNodesWithTag("CollectionListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Smart collection edit
+        composeTestRule.onNodeWithTag("EditButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CloseButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionScreenRoot").assertIsDisplayed()
+
+        // Smart collection delete
+        composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
     }
 
