@@ -33,6 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.TextButtonWithIcon
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
+import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_save
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
@@ -73,7 +74,7 @@ internal fun SmartCollectionEditorScreen(
                             enabled = uiState.enabledForm && form.meta.canSubmit,
                             modifier = Modifier.testTag("CreateButton"),
                         ) {
-                            Text(text = "Save")
+                            Text(text = stringResource(Res.string.collection_editor_label_save))
                         }
                     },
                     windowInsets = WindowInsets.safeDrawing.only(

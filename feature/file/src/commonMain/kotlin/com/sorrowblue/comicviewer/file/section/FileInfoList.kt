@@ -18,7 +18,13 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import comicviewer.feature.file.generated.resources.Res
+import comicviewer.feature.file.generated.resources.file_label_folder
+import comicviewer.feature.file.generated.resources.file_label_last_read_time
 import comicviewer.feature.file.generated.resources.file_label_modified_date
+import comicviewer.feature.file.generated.resources.file_label_page_count
+import comicviewer.feature.file.generated.resources.file_label_path
+import comicviewer.feature.file.generated.resources.file_label_size
+import comicviewer.feature.file.generated.resources.file_label_type
 import comicviewer.feature.file.generated.resources.file_text_page_count
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -44,7 +50,7 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
         val clipboardManager = LocalClipboard.current
         val scope = rememberCoroutineScope()
         FileInfoListItem(
-            overlineContent = { Text(text = "パス") },
+            overlineContent = { Text(text = stringResource(Res.string.file_label_path)) },
             headlineContent = { Text(text = file.path) },
             modifier = Modifier.combinedClickable(onLongClick = {
                 scope.launch {
@@ -53,11 +59,11 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
             }, onClick = {}),
         )
         FileInfoListItem(
-            overlineContent = { Text(text = "種類") },
-            headlineContent = { Text(text = if (file is IFolder) "フォルダ" else file.name.extension) },
+            overlineContent = { Text(text = stringResource(Res.string.file_label_type)) },
+            headlineContent = { Text(text = if (file is IFolder) stringResource(Res.string.file_label_folder) else file.name.extension) },
         )
         FileInfoListItem(
-            overlineContent = { Text(text = "サイズ") },
+            overlineContent = { Text(text = stringResource(Res.string.file_label_size)) },
             headlineContent = { Text(text = file.size.asFileSize) },
         )
         FileInfoListItem(
@@ -66,7 +72,7 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
         )
         if (file is Book) {
             FileInfoListItem(
-                overlineContent = { Text(text = "ページ数") },
+                overlineContent = { Text(text = stringResource(Res.string.file_label_page_count)) },
                 headlineContent = {
                     Text(
                         text = pluralStringResource(
@@ -78,7 +84,7 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
                 },
             )
             FileInfoListItem(
-                overlineContent = { Text(text = "最後に読んだ日時") },
+                overlineContent = { Text(text = stringResource(Res.string.file_label_last_read_time)) },
                 headlineContent = { Text(text = file.lastReadTime.asDateTime) },
             )
         }
