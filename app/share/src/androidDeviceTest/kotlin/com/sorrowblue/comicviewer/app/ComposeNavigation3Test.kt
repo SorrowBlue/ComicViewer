@@ -465,8 +465,8 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
         composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitUntil(10000) {
-            composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").isNotDisplayed()
+        composeTestRule.waitUntil(5000) {
+            composeTestRule.onNodeWithTag("CollectionListScreenRoot").isDisplayed()
         }
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
@@ -486,8 +486,8 @@ class ComposeNavigation3Test {
             pressKey(Key.Enter, 1000)
         }
         composeTestRule.onNodeWithTag("CreateButton").performClick()
-        composeTestRule.waitUntil(10000) {
-            composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").isNotDisplayed()
+        composeTestRule.waitUntil(5000) {
+            composeTestRule.onNodeWithTag("CollectionListScreenRoot").isDisplayed()
         }
 
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
@@ -515,8 +515,8 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
         composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitUntil(10000) {
-            composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").isNotDisplayed()
+        composeTestRule.waitUntil(5000) {
+            composeTestRule.onNodeWithTag("CollectionListScreenRoot").isDisplayed()
         }
 
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
