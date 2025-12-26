@@ -19,7 +19,7 @@ jobs:
           # ユーザ名;パスワード;UID;GID
           USER: "testuser;testpass"
           # 共有フォルダ名;/パス;公開範囲;読み書き設定
-          SHARE: "testshare;/mnt/share;true"
+          SHARE: "testshare;/mnt/share"
           # 権限の問題を避けるためtmpfsをマウントするか、GitHub Actionsのパスをマウント
         options: >-
           --name samba-server
