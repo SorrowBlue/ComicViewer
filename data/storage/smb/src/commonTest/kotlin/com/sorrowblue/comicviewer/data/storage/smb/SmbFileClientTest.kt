@@ -6,8 +6,6 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClientType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.createGraph
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,7 +25,6 @@ import kotlinx.coroutines.test.runTest
  */
 @Suppress("UNCHECKED_CAST")
 class SmbFileClientTest {
-
     private val graph = createGraph<TestGraph>()
 
     /**
@@ -369,5 +366,3 @@ class SmbFileClientTest {
         assertEquals(original.id, modified.id)
     }
 }
-
-
