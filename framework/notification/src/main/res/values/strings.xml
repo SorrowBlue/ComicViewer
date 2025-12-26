@@ -5,4 +5,8 @@
 
     <string name="framework_notification_name_download">book download</string>
     <string name="framework_notification_description_download">Book download notification</string>
+    <string name="framework_notification_msg_scan_cancelled">Scan cancelled.</string>
+    <string name="framework_notification_msg_thumbnail_scan_cancelled">Thumbnail scan cancelled.</string>
+    <string name="framework_notification_title_scan_completed">Bookshelf scan completed</string>
+    <string name="framework_notification_title_thumbnail_scan">Thumbnail scan</string>
 </resources>
