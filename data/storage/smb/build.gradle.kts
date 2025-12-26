@@ -17,6 +17,13 @@ kotlin {
                 implementation(libs.androidx.coreUri)
             }
         }
+        commonTest {
+            dependencies {
+                implementation(projects.framework.test)
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.coroutinesTest)
+            }
+        }
         androidMain {
             dependencies {
                 implementation(libs.jcifs)
