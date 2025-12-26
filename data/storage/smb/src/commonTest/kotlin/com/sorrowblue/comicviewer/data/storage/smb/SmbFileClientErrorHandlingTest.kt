@@ -98,8 +98,8 @@ class SmbFileClientErrorHandlingTest {
     fun testOperationsWithInvalidCredentials() = runTest {
         val server = SmbServer(
             "Invalid Credentials",
-            "10.0.2.2",
-            445,
+            SmbTestConfig.smbServerHost,
+            SmbTestConfig.smbServerPort,
             SmbServer.Auth.UsernamePassword("", "invalid_user", "invalid_pass"),
         )
         val factory = graph.fileClientFactory.getValue(
@@ -108,7 +108,7 @@ class SmbFileClientErrorHandlingTest {
         val client = factory.create(server)
 
         assertFailsWith<FileClientException.InvalidAuth> {
-            client.connect("/share/")
+            client.connect("/${SmbTestConfig.testShareName}/")
         }
     }
 

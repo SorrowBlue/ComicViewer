@@ -11,6 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 
 /**
@@ -163,8 +164,8 @@ class SmbFileClientTest {
     fun testConnectWithInvalidAuthThrowsException() = runTest {
         val server = SmbServer(
             "Auth Test Server",
-            "10.0.2.2",
-            445,
+            SmbTestConfig.smbServerHost,
+            SmbTestConfig.smbServerPort,
             SmbServer.Auth.UsernamePassword("", "wronguser", "wrongpass"),
         )
         val factory = graph.fileClientFactory.getValue(
@@ -174,8 +175,33 @@ class SmbFileClientTest {
 
         // Attempting to connect with invalid credentials should throw an exception
         assertFailsWith<FileClientException.InvalidAuth> {
-            client.connect("/share/")
+            client.connect("/${SmbTestConfig.testShareName}/")
         }
+    }
+
+    /**
+     * Tests that client accepts valid SMB server connection.
+     */
+    @Test
+    fun testValidServerConnection() = runTest {
+        val server = SmbServer(
+            "Valid Server",
+            SmbTestConfig.smbServerHost,
+            SmbTestConfig.smbServerPort,
+            SmbServer.Auth.UsernamePassword(
+                "",
+                SmbTestConfig.testUsername,
+                SmbTestConfig.testPassword
+            ),
+        )
+        val factory = graph.fileClientFactory.getValue(
+            FileClientType.Smb,
+        ) as FileClient.Factory<Bookshelf>
+        val client = factory.create(server)
+
+        // Valid connection should succeed
+        client.connect("/${SmbTestConfig.testShareName}/")
+        assertTrue(client.exists("/${SmbTestConfig.testShareName}/"))
     }
 
     /**

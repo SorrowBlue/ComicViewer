@@ -18,15 +18,19 @@ class SmbTest {
         runTest {
             val server = SmbServer(
                 "Test",
-                "10.0.2.2",
-                445,
-                SmbServer.Auth.UsernamePassword("", "testuser", "testpass"),
+                SmbTestConfig.smbServerHost,
+                SmbTestConfig.smbServerPort,
+                SmbServer.Auth.UsernamePassword(
+                    "",
+                    SmbTestConfig.testUsername,
+                    SmbTestConfig.testPassword
+                ),
             )
             val factory = graph.fileClientFactory.getValue(
                 FileClientType.Smb,
             ) as FileClient.Factory<Bookshelf>
             val smbServer = factory.create(server)
-            assertTrue(smbServer.exists("/testshare/"))
+            assertTrue(smbServer.exists("/${SmbTestConfig.testShareName}/"))
         }
     }
 }
