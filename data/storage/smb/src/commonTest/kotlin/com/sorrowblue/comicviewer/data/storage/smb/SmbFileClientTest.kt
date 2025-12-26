@@ -31,7 +31,6 @@ class SmbFileClientTest {
      * Tests that SmbFileClient can be created with UsernamePassword authentication.
      */
     @Test
-    @Suppress("UNCHECKED_CAST")
     fun testCreateClientWithUsernamePasswordAuth() {
         val server = SmbServer(
             "Test Server",

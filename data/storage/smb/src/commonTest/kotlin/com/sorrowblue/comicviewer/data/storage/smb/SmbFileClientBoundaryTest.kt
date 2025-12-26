@@ -179,7 +179,7 @@ class SmbFileClientBoundaryTest {
      */
     @Test
     fun testVeryLongHostname() {
-        val longHostname = "host" + "h".repeat(246) + ".com" // Total 254 chars (max DNS)
+        val longHostname = "host" + "h".repeat(245) + ".com" // Total 253 chars (max DNS)
         val server = SmbServer(
             "Long Hostname Server",
             longHostname,
@@ -192,7 +192,7 @@ class SmbFileClientBoundaryTest {
         val client = factory.create(server)
 
         assertNotNull(client)
-        assertEquals(254, (client.bookshelf as SmbServer).host.length)
+        assertEquals(253, (client.bookshelf as SmbServer).host.length)
     }
 
     /**

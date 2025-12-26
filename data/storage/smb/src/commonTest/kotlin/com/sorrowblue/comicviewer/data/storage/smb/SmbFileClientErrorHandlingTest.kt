@@ -76,7 +76,7 @@ class SmbFileClientErrorHandlingTest {
         val server = SmbServer(
             "Invalid Port Server",
             "10.0.2.2",
-            99999, // Invalid port number
+            65536, // Invalid port number (exceeds max of 65535)
             SmbServer.Auth.Guest,
         )
         val factory = graph.fileClientFactory.getValue(
