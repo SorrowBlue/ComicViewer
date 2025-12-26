@@ -12,24 +12,30 @@ import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 
 class SmbTest {
-
-
     @Test
-    fun smbTest() {
+    fun testSmbServerConnection() {
         val graph = createGraph<TestGraph>()
         runTest {
-            val server = SmbServer("Test", "10.0.2.2", 445, SmbServer.Auth.UsernamePassword("","testuser", "testpass"))
+            val server = SmbServer(
+                "Test",
+                SmbTestConfig.smbServerHost,
+                SmbTestConfig.smbServerPort,
+                SmbServer.Auth.UsernamePassword(
+                    "",
+                    SmbTestConfig.testUsername,
+                    SmbTestConfig.testPassword
+                ),
+            )
             val factory = graph.fileClientFactory.getValue(
                 FileClientType.Smb,
             ) as FileClient.Factory<Bookshelf>
             val smbServer = factory.create(server)
-            assertTrue(smbServer.exists("/testshare/"))
+            assertTrue(smbServer.exists("/${SmbTestConfig.testShareName}/"))
         }
     }
 }
 
 @DependencyGraph(DataScope::class)
 internal interface TestGraph {
-
     val fileClientFactory: Map<FileClientType, FileClient.Factory<*>>
 }
