@@ -22,6 +22,7 @@ import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_label_file_size
 import comicviewer.feature.folder.generated.resources.folder_label_name
 import comicviewer.feature.folder.generated.resources.folder_label_update_date
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_apply_to_folder_only
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -55,7 +56,7 @@ internal fun SortTypeItem(
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         DropdownMenuItem(
             text = {
-                Text(text = "このフォルダにだけ適用")
+                Text(text = stringResource(Res.string.folder_sorttype_label_apply_to_folder_only))
             },
             leadingIcon = {
                 Checkbox(

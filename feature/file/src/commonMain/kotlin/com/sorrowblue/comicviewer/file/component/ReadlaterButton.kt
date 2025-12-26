@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_info_label_add_read_later
+import comicviewer.feature.file.generated.resources.file_info_label_remove_read_later
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -46,7 +47,7 @@ internal fun ReadlaterButton(
         },
         text = {
             if (checked) {
-                Text(text = "後で読むから削除")
+                Text(text = stringResource(Res.string.file_info_label_remove_read_later))
             } else {
                 Text(text = stringResource(Res.string.file_info_label_add_read_later))
             }

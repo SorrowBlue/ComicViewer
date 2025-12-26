@@ -6,4 +6,5 @@
     <string name="settings_plugin_label_disable">Disable</string>
     <string name="settings_plugin_error_not_found">PDF plugin not found. Please specify the installation directory</string>
     <string name="settings_plugin_error_not_supported_version">Unsupported PDF plugin</string>
+    <string name="settings_plugin_label_select_install_folder">Select installation folder</string>
 </resources>

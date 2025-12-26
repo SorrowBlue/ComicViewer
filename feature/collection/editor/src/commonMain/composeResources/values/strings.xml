@@ -38,4 +38,5 @@
     <string name="collection_editor_label_no_books">There are no books in collection</string>
     <string name="collection_editor_msg_success_create">“%1$s” collection has been created</string>
     <string name="collection_editor_msg_success_create_add">Added book to collection</string>
+    <string name="collection_editor_label_save">Save</string>
 </resources>

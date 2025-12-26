@@ -11,7 +11,9 @@ kotlin {
         androidResources.enable = true
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//            execution = "ANDROIDX_TEST_ORCHESTRATOR"
+            execution = "ANDROIDX_TEST_ORCHESTRATOR"
+            animationsDisabled = true
+            instrumentationRunnerArguments["clearPackageData"] = "true"
             managedDevices {
                 localDevices {
                     create("pixel9api35") {
@@ -54,4 +56,8 @@ kotlin {
             }
         }
     }
+}
+
+dependencies {
+    androidTestUtil("androidx.test:orchestrator:1.6.1")
 }

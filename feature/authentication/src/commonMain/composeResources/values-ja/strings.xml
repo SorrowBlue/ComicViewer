@@ -12,4 +12,6 @@
 <!--    <string name="authentication_title_change_passcode">パスコードを変更する</string>-->
 <!--    <string name="authentication_title_disable_passcode">パスコードロックを無効化する</string>-->
 <!--    <string name="authentication_title_enable_passcode">パスコードロックを有効化する</string>-->
+    <string name="authentication_header">ComicViewer 認証</string>
+    <string name="authentication_biometric_cancel">キャンセル</string>
 </resources>

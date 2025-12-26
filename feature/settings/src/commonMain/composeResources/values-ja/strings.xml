@@ -16,4 +16,7 @@
     <string name="settings_language_label_us">英語（アメリカ）</string>
     <string name="settings_language_title">アプリ言語</string>
     <string name="settings_title">設定</string>
+    <string name="settings_imagecache_label_thumbnail">サムネイル画像キャッシュ</string>
+    <string name="settings_imagecache_label_page">ページキャッシュ</string>
+    <string name="settings_imagecache_label_other">その他の画像キャッシュ</string>
 </resources>
