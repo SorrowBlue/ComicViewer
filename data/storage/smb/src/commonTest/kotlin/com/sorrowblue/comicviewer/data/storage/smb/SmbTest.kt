@@ -18,7 +18,7 @@ class SmbTest {
     fun smbTest() {
         val graph = createGraph<TestGraph>()
         runTest {
-            val server = SmbServer("Test", "10.0.2.2", 445, SmbServer.Auth.UsernamePassword("","testuser", "testpass"))
+            val server = SmbServer("Test", "localhost", 445, SmbServer.Auth.UsernamePassword("","testuser", "testpass"))
             val factory = graph.fileClientFactory.getValue(
                 FileClientType.Smb,
             ) as FileClient.Factory<Bookshelf>
