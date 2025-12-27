@@ -72,7 +72,7 @@ jobs:
           -PsmbPort=445
           -PsmbUsername=testuser
           -PsmbPassword=testpass
-          -PsmbPath="/testshare/"
+          -PsmbPath="/testshare/samba_share/"
       - if: cancelled() != true
         uses: dorny/test-reporter@v2
         with:
