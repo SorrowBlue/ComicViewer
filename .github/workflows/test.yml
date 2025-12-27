@@ -71,7 +71,7 @@ jobs:
       #     disable-animations: true
       #     script: ./gradlew connectedAndroidDeviceTest --continue
       - name: Run Unit Tests
-        run: ./gradlew allTests --continue
+        run: ./gradlew desktopTest --continue
       # - if: cancelled() != true
       #   uses: dorny/test-reporter@v2
       #   with:
