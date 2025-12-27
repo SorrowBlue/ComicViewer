@@ -4,18 +4,22 @@ import com.sorrowblue.comicviewer.data.smb.BuildTestConfig
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientType
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.test.MultiplatformAndroidJUnit4
 import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
 import dev.zacsweers.metro.createGraph
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
+import okio.use
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 class SmbFileClientCommonTest {
@@ -98,4 +102,45 @@ class SmbFileClientCommonTest {
             )
         })
     }
+
+    @Test
+    fun testBufferedSource() = runTest {
+        val client = createClient()
+        val file = Folder(
+            path = BuildTestConfig.smbPath,
+            bookshelfId = server.id,
+            name = BuildTestConfig.smbPath.trimEnd('/'),
+            parent = "",
+            size = 0,
+            lastModifier = 0,
+            isHidden = false
+        )
+        val list = client.listFiles(file)
+        list.firstOrNull { it is BookFile }?.let {
+            client.bufferedSource(it).use {
+                assertEquals(it.readUtf8Line()?.isNotEmpty(), true, "file should not be empty")
+            }
+        }
+    }
+    @Test
+    fun testSeekableInputStream() = runTest {
+        val client = createClient()
+        val file = Folder(
+            path = BuildTestConfig.smbPath,
+            bookshelfId = server.id,
+            name = BuildTestConfig.smbPath.trimEnd('/'),
+            parent = "",
+            size = 0,
+            lastModifier = 0,
+            isHidden = false
+        )
+        val list = client.listFiles(file)
+        list.firstOrNull { it is BookFile }?.let {
+            client.seekableInputStream(it).use {
+                checkSeekableInputStream(it)
+            }
+        } ?: error("file not found")
+    }
 }
+
+expect fun checkSeekableInputStream(seekableInputStream: SeekableInputStream)
