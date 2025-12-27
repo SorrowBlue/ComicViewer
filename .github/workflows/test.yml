@@ -18,19 +18,19 @@ jobs:
           USER: "testuser;testpass"
           SHARE: "testshare;/mnt/share"
         volumes:
-          - ${{ github.workspace }}../samba_share:/mnt/share
+          - ${{ github.workspace }}/../samba_share:/mnt/share
         options: >-
           --name samba-server
 
     steps:
       - name: Create test file for SMB share
         run: |
-          sudo mkdir -p ${{ github.workspace }}../samba_share/testfolder
+          mkdir -p ${{ github.workspace }}/../samba_share/testfolder
           for i in {1..100}; do
             FILENAME=$(printf "test%03d.txt" $i)
-            sudo echo "Hello world. This is file $FILENAME" > ${{ github.workspace }}../samba_share/testfolder/$FILENAME
+            echo "Hello world. This is file $FILENAME" > ${{ github.workspace }}/../samba_share/testfolder/$FILENAME
           done
-          chmod -R 777 ${{ github.workspace }}../samba_share
+          chmod -R 777 ${{ github.workspace }}/../samba_share
 
       - name: Checkout
         uses: actions/checkout@v6
