@@ -30,7 +30,6 @@ jobs:
             FILENAME=$(printf "test%03d.txt" $i)
             echo "Hello world. This is file $FILENAME" > sudo ${{ github.workspace }}/../samba_share/testfolder/$FILENAME
           done
-          chmod -R 777 ${{ github.workspace }}/../samba_share
 
       - name: Checkout
         uses: actions/checkout@v6
