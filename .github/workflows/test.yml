@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Create test file for SMB share
         run: |
-          mkdir -p ${{ github.workspace }}/samba_share/testfolder
+          sudo mkdir -p ${{ github.workspace }}/samba_share/testfolder
           for i in {1..100}; do
             FILENAME=$(printf "test%03d.txt" $i)
             echo "Hello world. This is file $FILENAME" > ${{ github.workspace }}/samba_share/testfolder/$FILENAME
