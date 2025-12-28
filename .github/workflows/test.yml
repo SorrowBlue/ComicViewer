@@ -28,9 +28,8 @@ jobs:
           sudo mkdir -p ${{ github.workspace }}/../samba_share/testfolder
           for i in {1..100}; do
             FILENAME=$(printf "test%03d.txt" $i)
-            echo "Hello world. This is file $FILENAME" > sudo ${{ github.workspace }}/../samba_share/testfolder/$FILENAME
+            echo "Hello world. This is file $FILENAME" > sudo tee ${{ github.workspace }}/../samba_share/testfolder/$FILENAME
           done
-          ls -l ${{ github.workspace }}/../samba_share/testfolder
 
       - name: Checkout
         uses: actions/checkout@v6
