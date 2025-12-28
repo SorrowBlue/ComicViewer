@@ -74,6 +74,10 @@ jobs:
           -PsmbPassword=testpass
           -PsmbPath="/testshare/testfolder/"
       - if: cancelled() != true
+        run: cat data/storage/smb/build/test-results/desktopTest/TEST-com.sorrowblue.comicviewer.data.storage.smb.SmbFileClientCommonTest.xml
+      - if: cancelled() != true
+        run: cat data/storage/smb/build/test-results/testAndroidHostTest/TEST-com.sorrowblue.comicviewer.data.storage.smb.SmbFileClientCommonTest.xml
+      - if: cancelled() != true
         uses: dorny/test-reporter@v2
         with:
           name: 'Unit Test'
