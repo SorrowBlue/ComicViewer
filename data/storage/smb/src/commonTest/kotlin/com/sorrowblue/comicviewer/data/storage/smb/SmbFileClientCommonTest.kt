@@ -116,6 +116,10 @@ class SmbFileClientCommonTest {
             isHidden = false
         )
         val list = client.listFiles(file)
+        println("file: $file")
+        list.forEach {
+            println("list.forEach: $it")
+        }
         list.firstOrNull { it is BookFile }?.let {
             client.bufferedSource(it).use {
                 assertEquals(it.readUtf8Line()?.isNotEmpty(), true, "file should not be empty")
