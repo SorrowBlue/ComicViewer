@@ -1,7 +1,6 @@
 name: Test
 on:
   workflow_call:
-  workflow_dispatch:
 
 jobs:
 
@@ -31,52 +30,48 @@ jobs:
             echo "Hello world. This is file $FILENAME" | sudo tee ${{ github.workspace }}/../samba_share/testfolder/$FILENAME
           done
 
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Checkout
         uses: actions/checkout@v6
-
-          # - name: Enable KVM group perms
-          # run: |
-          # echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          # sudo udevadm control --reload-rules
-        # sudo udevadm trigger --name-match=kvm
 
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
 
-      # - name: AVD cache
-      #   uses: actions/cache@v4
-      #   id: avd-cache
-      #   with:
-      #     path: |
-      #       ~/.android/avd/*
-      #       ~/.android/adb*
-      #     key: avd-35
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-35
 
-      # - name: create AVD and generate snapshot for caching
-      #   if: steps.avd-cache.outputs.cache-hit != 'true'
-      #   uses: reactivecircus/android-emulator-runner@v2
-      #   with:
-      #     api-level: 35
-      #     target: aosp_atd
-      #     arch: x86_64
-      #     profile: pixel_7_pro
-      #     force-avd-creation: false
-      #     emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-      #     disable-animations: false
-      #     script: echo "Generated AVD snapshot for caching."
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: aosp_atd
+          arch: x86_64
+          profile: pixel_7_pro
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
       - name: Run Unit Tests
         run: >
-          ./gradlew desktopTest --continue
+          ./gradlew allTests --continue
           -PsmbHost=localhost
           -PsmbPort=445
           -PsmbUsername=testuser
           -PsmbPassword=testpass
           -PsmbPath="/testshare/testfolder/"
-      - if: cancelled() != true
-        run: cat data/storage/smb/build/test-results/desktopTest/TEST-com.sorrowblue.comicviewer.data.storage.smb.SmbFileClientCommonTest.xml
-      - if: cancelled() != true
-        run: cat data/storage/smb/build/test-results/testAndroidHostTest/TEST-com.sorrowblue.comicviewer.data.storage.smb.SmbFileClientCommonTest.xml
       - if: cancelled() != true
         uses: dorny/test-reporter@v2
         with:
@@ -85,21 +80,21 @@ jobs:
           reporter: 'java-junit'
           fail-on-error: false
 
-      # - name: Run Instrumentation tests
-      #   uses: reactivecircus/android-emulator-runner@v2
-      #   with:
-      #     api-level: 35
-      #     target: aosp_atd
-      #     arch: x86_64
-      #     profile: pixel_7_pro
-      #     force-avd-creation: false
-      #     emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-      #     disable-animations: true
-      #     script: ./gradlew connectedAndroidDeviceTest --continue
-      # - if: cancelled() != true
-      #   uses: dorny/test-reporter@v2
-      #   with:
-      #     name: 'Instrumentation Test'
-      #     path: '**/build/outputs/*Test-results/**/TEST-*.xml'
-      #     reporter: 'java-junit'
-      #     fail-on-error: false
+      - name: Run Instrumentation tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: aosp_atd
+          arch: x86_64
+          profile: pixel_7_pro
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedAndroidDeviceTest --continue
+      - if: cancelled() != true
+        uses: dorny/test-reporter@v2
+        with:
+          name: 'Instrumentation Test'
+          path: '**/build/outputs/*Test-results/**/TEST-*.xml'
+          reporter: 'java-junit'
+          fail-on-error: false

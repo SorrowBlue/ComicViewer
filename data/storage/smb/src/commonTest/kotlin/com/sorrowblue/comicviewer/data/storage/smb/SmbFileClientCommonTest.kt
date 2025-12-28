@@ -115,17 +115,17 @@ class SmbFileClientCommonTest {
             lastModifier = 0,
             isHidden = false
         )
-        val list = client.listFiles(file)
-        println("file: $file")
-        list.forEach {
-            println("list.forEach: $it")
-        }
-        list.firstOrNull { it is BookFile }?.let {
-            client.bufferedSource(it).use {
-                assertEquals(it.readUtf8Line()?.isNotEmpty(), true, "file should not be empty")
+        client.listFiles(file).firstOrNull { it is BookFile }?.let {
+            client.bufferedSource(it).use { bufferedSource ->
+                assertEquals(
+                    bufferedSource.readUtf8Line()?.isNotEmpty(),
+                    true,
+                    "file should not be empty"
+                )
             }
         } ?: error("file not found")
     }
+
     @Test
     fun testSeekableInputStream() = runTest {
         val client = createClient()
@@ -138,10 +138,9 @@ class SmbFileClientCommonTest {
             lastModifier = 0,
             isHidden = false
         )
-        val list = client.listFiles(file)
-        list.firstOrNull { it is BookFile }?.let {
-            client.seekableInputStream(it).use {
-                checkSeekableInputStream(it)
+        client.listFiles(file).firstOrNull { it is BookFile }?.let {
+            client.seekableInputStream(it).use { inputStream ->
+                checkSeekableInputStream(inputStream)
             }
         } ?: error("file not found")
     }
