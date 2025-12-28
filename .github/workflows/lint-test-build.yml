@@ -50,13 +50,18 @@ jobs:
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/static-code-analysis.yml
 
-  test:
+  test-unit:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/test-unit.yml
+
+  test-instrumentation:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/test-instrumentation.yml
 
   build:
-    needs: [check-commit, lint, static-code-analysis, test]
+    needs: [check-commit, lint, static-code-analysis, test-unit, test-instrumentation]
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
     with:
