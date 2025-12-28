@@ -40,25 +40,25 @@ jobs:
             echo "Running workflow"
           fi
 
-#  lint:
-#    needs: check-commit
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/lint.yml
+  lint:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/lint.yml
 
-#  static-code-analysis:
-#    needs: check-commit
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/static-code-analysis.yml
+  static-code-analysis:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/static-code-analysis.yml
 
   test:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/test.yml
 
-#  build:
-#    needs: [check-commit, lint, static-code-analysis, test]
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/build.yml
-#    with:
-#      environment: android
-#    secrets: inherit
+  build:
+    needs: [check-commit, lint, static-code-analysis, test]
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/build.yml
+    with:
+      environment: android
+    secrets: inherit
