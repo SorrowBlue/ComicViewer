@@ -1,21 +1,22 @@
-name: Test
+name: Instrumentation Test
 on:
   workflow_call:
 
 jobs:
 
   test:
-    name: Unit Test
+    name: Instrumentation Test
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
 
+    steps:
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
@@ -42,7 +43,7 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
-      - name: run tests
+      - name: Run Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -53,15 +54,6 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: ./gradlew connectedAndroidDeviceTest --continue
-      - name: Run Unit Tests
-        run: ./gradlew allTests --continue
-      - if: cancelled() != true
-        uses: dorny/test-reporter@v2
-        with:
-          name: 'Unit Test'
-          path: '**/build/test-results/*/TEST-*.xml'
-          reporter: 'java-junit'
-          fail-on-error: false
       - if: cancelled() != true
         uses: dorny/test-reporter@v2
         with:

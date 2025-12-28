@@ -1,0 +1,53 @@
+name: Unit Test
+on:
+  workflow_call:
+
+jobs:
+
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    services:
+      samba:
+        image: dperson/samba
+        ports:
+          - 445:445
+        env:
+          USER: "testuser;testpass"
+          SHARE: "testshare;/mnt/share"
+        volumes:
+          - ${{ github.workspace }}/../samba_share:/mnt/share
+        options: >-
+          --name samba-server
+
+    steps:
+      - name: Create test file for SMB share
+        run: |
+          sudo mkdir -p ${{ github.workspace }}/../samba_share/testfolder
+          for i in {1..100}; do
+            FILENAME=$(printf "test%03d.txt" $i)
+            echo "Hello world. This is file $FILENAME" | sudo tee ${{ github.workspace }}/../samba_share/testfolder/$FILENAME
+          done
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: Run Unit Tests
+        run: >
+          ./gradlew allTests --continue
+          -PsmbHost=localhost
+          -PsmbPort=445
+          -PsmbUsername=testuser
+          -PsmbPassword=testpass
+          -PsmbPath="/testshare/testfolder/"
+      - if: cancelled() != true
+        uses: dorny/test-reporter@v2
+        with:
+          name: 'Unit Test'
+          path: '**/build/test-results/*/TEST-*.xml'
+          reporter: 'java-junit'
+          fail-on-error: false
