@@ -30,6 +30,7 @@ jobs:
             FILENAME=$(printf "test%03d.txt" $i)
             echo "Hello world. This is file $FILENAME" > sudo ${{ github.workspace }}/../samba_share/testfolder/$FILENAME
           done
+          ls -l ${{ github.workspace }}/../samba_share/testfolder
 
       - name: Checkout
         uses: actions/checkout@v6

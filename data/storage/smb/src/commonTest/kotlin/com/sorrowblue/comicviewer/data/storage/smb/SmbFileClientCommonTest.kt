@@ -124,7 +124,7 @@ class SmbFileClientCommonTest {
             client.bufferedSource(it).use {
                 assertEquals(it.readUtf8Line()?.isNotEmpty(), true, "file should not be empty")
             }
-        }
+        } ?: error("file not found")
     }
     @Test
     fun testSeekableInputStream() = runTest {
