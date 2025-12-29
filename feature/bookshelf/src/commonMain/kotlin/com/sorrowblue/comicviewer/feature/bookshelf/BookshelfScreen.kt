@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -65,7 +66,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
                 PaddingValues(
                     start = ComicTheme.dimension.margin,
                     end = ComicTheme.dimension.margin,
-                    bottom = ComicTheme.dimension.margin,
+                    bottom = ComicTheme.dimension.margin + 68.dp,
                 )
             }
             BookshelfSheet(

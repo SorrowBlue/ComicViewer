@@ -1,12 +1,15 @@
 package com.sorrowblue.comicviewer.folder.section
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -48,52 +51,60 @@ internal fun FolderAppBar(
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior2: TopAppBarScrollBehavior? = null,
 ) {
     with(LocalSharedTransitionScope.current) {
-        AdaptiveAppBar(
-            title = { Text(text = uiState.title) },
-            navigationIcon = {
-                BackIconButton(onClick = onBackClick)
-            },
-            actions = {
-                val gridSizeItemState = rememberGridSizeItemState()
-                val hiddenFilesToggleableItemState = rememberHiddenFilesToggleableItemState()
-                AppBarRow(maxItemCount = 2, modifier = Modifier.testTag("AppBarMenu")) {
-                    clickableItem(
-                        onClick = onSearchClick,
-                        icon = {
-                            Icon(
-                                ComicIcons.Search,
-                                stringResource(Res.string.folder_label_search),
-                            )
-                        },
-                        label = { stringResource(Res.string.folder_label_search) },
-                        testTag = "SearchButton",
-                    )
-                    gridSizeItemState.gridSizeItem()
-                    hiddenFilesToggleableItemState.hiddenFilesToggleableItem()
-                    settingsItem(onClick = onSettingsClick)
-                }
-            },
-            bottomComponent = {
-                Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                    SortTypeItem(
-                        sortType = uiState.sortType,
-                        folderScopeOnly = uiState.folderScopeOnly,
-                        onFolderScopeOnlyClick = {
-                            onFolderScopeOnlyClick()
-                        },
-                        onClick = {
-                            onSortClick(it)
-                        },
-                    )
-                    Spacer(Modifier.weight(1f))
-                    FileListDisplayItem()
-                }
-            },
-            scrollBehavior = scrollBehavior,
-            modifier = modifier,
-        )
+        Column {
+            AdaptiveAppBar(
+                title = { Text(text = uiState.title) },
+                navigationIcon = {
+                    BackIconButton(onClick = onBackClick)
+                },
+                actions = {
+                    val gridSizeItemState = rememberGridSizeItemState()
+                    val hiddenFilesToggleableItemState = rememberHiddenFilesToggleableItemState()
+                    AppBarRow(maxItemCount = 2, modifier = Modifier.testTag("AppBarMenu")) {
+                        clickableItem(
+                            onClick = onSearchClick,
+                            icon = {
+                                Icon(
+                                    ComicIcons.Search,
+                                    stringResource(Res.string.folder_label_search),
+                                )
+                            },
+                            label = { stringResource(Res.string.folder_label_search) },
+                            testTag = "SearchButton",
+                        )
+                        gridSizeItemState.gridSizeItem()
+                        hiddenFilesToggleableItemState.hiddenFilesToggleableItem()
+                        settingsItem(onClick = onSettingsClick)
+                    }
+                },
+                scrollBehavior = scrollBehavior,
+                modifier = modifier,
+            )
+            AdaptiveAppBar(
+                title = {
+                    Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                        SortTypeItem(
+                            sortType = uiState.sortType,
+                            folderScopeOnly = uiState.folderScopeOnly,
+                            onFolderScopeOnlyClick = {
+                                onFolderScopeOnlyClick()
+                            },
+                            onClick = {
+                                onSortClick(it)
+                            },
+                        )
+                        Spacer(Modifier.weight(1f))
+                        FileListDisplayItem()
+                    }
+                },
+                scrollBehavior = scrollBehavior2,
+                windowInsets = WindowInsets(),
+                sharedAnimation = false
+            )
+        }
     }
 }
 
