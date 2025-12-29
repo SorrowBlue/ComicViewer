@@ -10,6 +10,7 @@ import androidx.compose.ui.window.rememberTrayState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.Application
 import com.sorrowblue.comicviewer.framework.common.DesktopContext
+import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import comicviewer.app.desktop.generated.resources.Res
@@ -22,6 +23,7 @@ fun main() = application {
     val context = DesktopContext.invoke()
     val appGraph =
         createGraphFactory<AppGraph.Factory>().createAppGraph(context, LicenseeHelperImpl())
+    getPlatformGraph = { appGraph }
     context.platformGraph = appGraph
 
     val trayState = rememberTrayState()

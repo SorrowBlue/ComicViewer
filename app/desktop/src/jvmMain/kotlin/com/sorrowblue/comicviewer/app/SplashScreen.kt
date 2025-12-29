@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZOut
 import comicviewer.app.desktop.generated.resources.Res
@@ -38,8 +39,8 @@ fun SplashScreen(keepOnScreenCondition: () -> Boolean) {
     }
     AnimatedVisibility(
         visible = shouldKeepSplash,
-        enter = materialSharedAxisZIn(),
-        exit = materialSharedAxisZOut(),
+        enter = materialSharedAxisZIn(ComicTheme.motionScheme),
+        exit = materialSharedAxisZOut(ComicTheme.motionScheme),
     ) {
         Box(
             modifier = Modifier.fillMaxSize().background(Color(235, 236, 242)),

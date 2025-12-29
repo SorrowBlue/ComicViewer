@@ -9,6 +9,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Modifier
 import coil3.Bitmap
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
@@ -44,6 +45,7 @@ internal fun BookScreen(
     onPageChange: (Int) -> Unit,
     onSettingsClick: () -> Unit,
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = {
@@ -73,6 +75,7 @@ internal fun BookScreen(
             }
         },
         contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = modifier
     ) { _ ->
         BookSheet(
             uiState = uiState.bookSheetUiState,

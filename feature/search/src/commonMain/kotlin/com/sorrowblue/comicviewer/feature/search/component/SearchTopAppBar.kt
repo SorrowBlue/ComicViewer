@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.feature.search.component
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -19,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -66,89 +68,95 @@ internal fun SearchTopAppBar(
     onSortTypeClick: (SortType) -> Unit,
     onShowHiddenClick: () -> Unit,
 ) {
-    AdaptiveAppBar(
-        title = {
-            val skc = LocalSoftwareKeyboardController.current
-            TextField(
-                value = searchCondition.query,
-                onValueChange = onQueryChange,
-                placeholder = { Text(text = stringResource(Res.string.search_label_search)) },
-                maxLines = 1,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                ),
-                trailingIcon = if (searchCondition.query.isEmpty()) {
-                    null
-                } else {
-                    {
-                        IconButton(onClick = { onQueryChange("") }) {
-                            Icon(ComicIcons.Close, null)
-                        }
-                    }
-                },
-                keyboardActions = KeyboardActions(onSearch = { skc?.hide() }),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
-        navigationIcon = {
-            BackIconButton(onClick = onBackClick)
-        },
-        actions = {
-            IconButton(onClick = onSmartCollectionClick) {
-                Icon(ComicIcons.CollectionsBookmark, null)
-            }
-            SettingsIconButton(onClick = onSettingsClick)
-        },
-        bottomComponent = {
-            Row(
-                modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal),
-                    ).padding(horizontal = ComicTheme.dimension.margin),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                DropdownMenuChip(
-                    text = stringResource(searchCondition.range.displayText),
-                    onChangeSelect = onRangeClick,
-                    menus = remember { SearchCondition.Range.entries },
-                ) {
-                    Text(stringResource(it.displayText))
-                }
-                DropdownMenuChip(
-                    text = stringResource(searchCondition.period.displayText),
-                    onChangeSelect = onPeriodClick,
-                    menus = remember { SearchCondition.Period.entries },
-                ) {
-                    Text(stringResource(it.displayText))
-                }
-                DropdownMenuChip(
-                    text = stringResource(searchCondition.sortType.displayText),
-                    onChangeSelect = onSortTypeClick,
-                    menus = remember { SortType.entries },
-                ) {
-                    Text(text = stringResource(it.displayText))
-                }
-                FilterChip(
-                    selected = searchCondition.showHidden,
-                    onClick = onShowHiddenClick,
-                    label = {
-                        Text(
-                            text = stringResource(Res.string.search_label_show_hidden_files),
-                        )
-                    },
-                    leadingIcon = {
-                        if (searchCondition.showHidden) {
-                            Icon(imageVector = ComicIcons.Check, contentDescription = null)
+    Column {
+        AdaptiveAppBar(
+            title = {
+                val skc = LocalSoftwareKeyboardController.current
+                TextField(
+                    value = searchCondition.query,
+                    onValueChange = onQueryChange,
+                    placeholder = { Text(text = stringResource(Res.string.search_label_search)) },
+                    maxLines = 1,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent,
+                    ),
+                    trailingIcon = if (searchCondition.query.isEmpty()) {
+                        null
+                    } else {
+                        {
+                            IconButton(onClick = { onQueryChange("") }) {
+                                Icon(ComicIcons.Close, null)
+                            }
                         }
                     },
+                    keyboardActions = KeyboardActions(onSearch = { skc?.hide() }),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    modifier = Modifier.fillMaxWidth(),
                 )
-            }
-        },
-        scrollBehavior = scrollBehavior,
-    )
+            },
+            navigationIcon = {
+                BackIconButton(onClick = onBackClick)
+            },
+            actions = {
+                IconButton(onClick = onSmartCollectionClick) {
+                    Icon(ComicIcons.CollectionsBookmark, null)
+                }
+                SettingsIconButton(onClick = onSettingsClick)
+            },
+            scrollBehavior = scrollBehavior,
+        )
+        TopAppBar(
+            title = {
+                Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal),
+                        ).padding(horizontal = ComicTheme.dimension.margin),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    DropdownMenuChip(
+                        text = stringResource(searchCondition.range.displayText),
+                        onChangeSelect = onRangeClick,
+                        menus = remember { SearchCondition.Range.entries },
+                    ) {
+                        Text(stringResource(it.displayText))
+                    }
+                    DropdownMenuChip(
+                        text = stringResource(searchCondition.period.displayText),
+                        onChangeSelect = onPeriodClick,
+                        menus = remember { SearchCondition.Period.entries },
+                    ) {
+                        Text(stringResource(it.displayText))
+                    }
+                    DropdownMenuChip(
+                        text = stringResource(searchCondition.sortType.displayText),
+                        onChangeSelect = onSortTypeClick,
+                        menus = remember { SortType.entries },
+                    ) {
+                        Text(text = stringResource(it.displayText))
+                    }
+                    FilterChip(
+                        selected = searchCondition.showHidden,
+                        onClick = onShowHiddenClick,
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.search_label_show_hidden_files),
+                            )
+                        },
+                        leadingIcon = {
+                            if (searchCondition.showHidden) {
+                                Icon(imageVector = ComicIcons.Check, contentDescription = null)
+                            }
+                        },
+                    )
+                }
+            },
+            windowInsets = WindowInsets(),
+            scrollBehavior = scrollBehavior,
+        )
+    }
 }
 
 private val SearchCondition.Period.displayText

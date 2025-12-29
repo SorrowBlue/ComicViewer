@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.material3.FloatingToolbarDefaults.floatingToolbarVerticalNestedScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -39,7 +40,8 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     AdaptiveNavigationSuiteScaffold(
         modifier = modifier,
     ) {
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val scrollBehavior2 = TopAppBarDefaults.enterAlwaysScrollBehavior()
         Scaffold(
             topBar = {
                 FolderAppBar(
@@ -50,9 +52,10 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
                     onFolderScopeOnlyClick = onFolderScopeOnlyClick,
                     onSettingsClick = onSettingsClick,
                     scrollBehavior = scrollBehavior,
+                    scrollBehavior2 = scrollBehavior2,
                 )
             },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).nestedScroll(scrollBehavior2.nestedScrollConnection),
         ) { contentPadding ->
             FolderList(
                 uiState = uiState.folderListUiState,
