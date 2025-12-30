@@ -1,6 +1,6 @@
 [versions]
 aboutlibraries = "13.2.1"
-android-gradle = "9.0.0-rc01"
+android-gradle = "9.0.0-rc02"
 androidx-activity = "1.12.2"
 androidx-appcompat = "1.7.1"
 androidx-biometric = "1.4.0-alpha05"
