@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
@@ -141,14 +142,14 @@ fun rememberLazyPagingColumnType(
     fileListDisplay: FileListDisplay,
     gridColumnSize: GridColumnSize,
 ): State<LazyPagingColumn> {
-    val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
+        currentWindowAdaptiveInfo(),
+    )
     return remember(fileListDisplay, gridColumnSize) {
         mutableStateOf(
             when (fileListDisplay) {
-                FileListDisplay.List -> if (scaffoldDirective.maxHorizontalPartitions ==
-                    1
-                ) {
+                FileListDisplay.List -> if (navigationSuiteType.isNavigationBar) {
                     LazyPagingColumn.List
                 } else {
                     LazyPagingColumn.ListMedium
@@ -187,6 +188,25 @@ private fun GridFileLazyGridPreview() {
         Scaffold {
             FileLazyVerticalGrid(
                 uiState = FileLazyVerticalGridUiState(),
+                lazyPagingItems = lazyPagingItems,
+                onItemClick = {},
+                onItemInfoClick = {},
+                contentPadding = it,
+            )
+        }
+    }
+}
+
+@PreviewMultiplatform
+@Composable
+private fun GridFileLazyListPreview() {
+    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
+    PreviewTheme {
+        Scaffold {
+            FileLazyVerticalGrid(
+                uiState = FileLazyVerticalGridUiState(
+                    fileListDisplay = FileListDisplay.List,
+                ),
                 lazyPagingItems = lazyPagingItems,
                 onItemClick = {},
                 onItemInfoClick = {},

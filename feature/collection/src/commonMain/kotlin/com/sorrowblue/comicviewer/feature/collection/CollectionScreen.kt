@@ -1,9 +1,11 @@
 package com.sorrowblue.comicviewer.feature.collection
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
@@ -12,6 +14,7 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
 internal data class CollectionScreenUiState(
     val appBarUiState: CollectionAppBarUiState = CollectionAppBarUiState(),
@@ -49,7 +52,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
                 lazyGridState = lazyGridState,
                 onItemClick = onFileClick,
                 onItemInfoClick = onFileInfoClick,
-                contentPadding = contentPadding,
+                contentPadding = contentPadding + PaddingValues(16.dp),
             )
         }
     }

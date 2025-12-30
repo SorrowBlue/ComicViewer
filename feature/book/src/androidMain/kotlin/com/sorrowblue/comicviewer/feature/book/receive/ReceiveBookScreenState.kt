@@ -79,7 +79,11 @@ private class ReceiveBookScreenStateImpl(
     init {
         if (uri == null) {
             scope.launch {
-                Toast.makeText(context, getString(Res.string.book_error_file_not_opened), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(Res.string.book_error_file_not_opened),
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
         } else {
             scope.launch {

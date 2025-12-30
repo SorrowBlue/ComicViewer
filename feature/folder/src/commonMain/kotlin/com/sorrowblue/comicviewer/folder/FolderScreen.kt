@@ -1,8 +1,9 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.material3.FloatingToolbarDefaults.floatingToolbarVerticalNestedScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     onFolderScopeOnlyClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onRefresh: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     AdaptiveNavigationSuiteScaffold(
@@ -55,7 +57,12 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
                     scrollBehavior2 = scrollBehavior2,
                 )
             },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).nestedScroll(scrollBehavior2.nestedScrollConnection),
+            snackbarHost = {
+                SnackbarHost(snackbarHostState)
+            },
+            modifier = Modifier.nestedScroll(
+                scrollBehavior.nestedScrollConnection,
+            ).nestedScroll(scrollBehavior2.nestedScrollConnection),
         ) { contentPadding ->
             FolderList(
                 uiState = uiState.folderListUiState,

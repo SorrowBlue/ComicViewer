@@ -2,11 +2,13 @@ package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +53,7 @@ internal interface FolderScreenState {
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
+    val snackbarHostState: SnackbarHostState
 
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
 
@@ -103,6 +106,7 @@ internal fun rememberFolderScreenState(
             )
         }
         scope = coroutineScope
+        snackbarHostState = remember { SnackbarHostState() }
         lazyGridState = rememberLazyGridState()
         scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     }
@@ -126,6 +130,7 @@ private class FolderScreenStateImpl(
     override lateinit var lazyPagingItems: LazyPagingItems<File>
     override lateinit var lazyGridState: LazyGridState
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
+    override lateinit var snackbarHostState: SnackbarHostState
 
     override val events = EventFlow<FolderScreenEvent>()
     override var uiState by mutableStateOf(
@@ -206,25 +211,25 @@ private class FolderScreenStateImpl(
         }
         if (lazyPagingItems.loadState.refresh is LoadState.Error) {
             ((lazyPagingItems.loadState.refresh as LoadState.Error).error as? PagingException)?.let {
-//                scope.launch {
-//                    when (it) {
-//                        is PagingException.InvalidAuth -> scaffoldState.snackbarHostState.showSnackbar(
-//                            "認証エラー"
-//                        )
-//
-//                        is PagingException.InvalidServer -> scaffoldState.snackbarHostState.showSnackbar(
-//                            "サーバーエラー"
-//                        )
-//
-//                        is PagingException.NoNetwork -> scaffoldState.snackbarHostState.showSnackbar(
-//                            "ネットワークエラー"
-//                        )
-//
-//                        is PagingException.NotFound -> scaffoldState.snackbarHostState.showSnackbar(
-//                            "見つかりませんでした"
-//                        )
-//                    }
-//                }
+                scope.launch {
+                    when (it) {
+                        is PagingException.InvalidAuth -> snackbarHostState.showSnackbar(
+                            "認証エラー",
+                        )
+
+                        is PagingException.InvalidServer -> snackbarHostState.showSnackbar(
+                            "サーバーエラー",
+                        )
+
+                        is PagingException.NoNetwork -> snackbarHostState.showSnackbar(
+                            "ネットワークエラー",
+                        )
+
+                        is PagingException.NotFound -> snackbarHostState.showSnackbar(
+                            "見つかりませんでした",
+                        )
+                    }
+                }
             }
         }
     }

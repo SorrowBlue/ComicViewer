@@ -3,12 +3,14 @@ package com.sorrowblue.comicviewer.feature.readlater
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -80,7 +82,7 @@ private fun ReadLaterContents(
         FileLazyVerticalGrid(
             uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             lazyPagingItems = lazyPagingItems,
-            contentPadding = contentPadding,
+            contentPadding = contentPadding + PaddingValues(16.dp),
             onItemClick = onItemClick,
             onItemInfoClick = onItemInfoClick,
             state = lazyGridState,

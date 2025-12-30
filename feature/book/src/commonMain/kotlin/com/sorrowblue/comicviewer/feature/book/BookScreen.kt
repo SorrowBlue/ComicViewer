@@ -75,7 +75,7 @@ internal fun BookScreen(
             }
         },
         contentWindowInsets = WindowInsets.safeDrawing,
-        modifier = modifier
+        modifier = modifier,
     ) { _ ->
         BookSheet(
             uiState = uiState.bookSheetUiState,

@@ -108,7 +108,11 @@ private fun SortTypeSelectScreen(
                 Column {
                     ListItem(
                         headlineContent = {
-                            Text(text = stringResource(Res.string.folder_sorttype_label_apply_to_folder_only))
+                            Text(
+                                text = stringResource(
+                                    Res.string.folder_sorttype_label_apply_to_folder_only,
+                                ),
+                            )
                         },
                         leadingContent = {
                             Checkbox(
