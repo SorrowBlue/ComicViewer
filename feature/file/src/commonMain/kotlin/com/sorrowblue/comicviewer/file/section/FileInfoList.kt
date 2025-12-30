@@ -60,7 +60,17 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
         )
         FileInfoListItem(
             overlineContent = { Text(text = stringResource(Res.string.file_label_type)) },
-            headlineContent = { Text(text = if (file is IFolder) stringResource(Res.string.file_label_folder) else file.name.extension) },
+            headlineContent = {
+                Text(
+                    text = if (file is IFolder) {
+                        stringResource(
+                            Res.string.file_label_folder,
+                        )
+                    } else {
+                        file.name.extension
+                    },
+                )
+            },
         )
         FileInfoListItem(
             overlineContent = { Text(text = stringResource(Res.string.file_label_size)) },
@@ -84,7 +94,11 @@ internal fun FileInfoList(file: File, modifier: Modifier = Modifier) {
                 },
             )
             FileInfoListItem(
-                overlineContent = { Text(text = stringResource(Res.string.file_label_last_read_time)) },
+                overlineContent = {
+                    Text(
+                        text = stringResource(Res.string.file_label_last_read_time),
+                    )
+                },
                 headlineContent = { Text(text = file.lastReadTime.asDateTime) },
             )
         }

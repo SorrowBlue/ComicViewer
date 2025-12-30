@@ -34,7 +34,7 @@ internal fun EntryProviderScope<NavKey>.collectionListNavEntry(navigator: Naviga
                     )
                 },
                 onDeleteClick = {
-                    navigator.navigate(CollectionNavKey(it.id))
+                    navigator.navigate(CollectionDeleteNavKey(it.id))
                 },
                 onSettingsClick = {
                     navigator.navigate(SettingsNavKey)

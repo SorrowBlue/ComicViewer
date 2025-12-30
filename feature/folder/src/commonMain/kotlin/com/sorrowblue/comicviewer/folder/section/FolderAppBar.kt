@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -54,7 +53,7 @@ internal fun FolderAppBar(
     scrollBehavior2: TopAppBarScrollBehavior? = null,
 ) {
     with(LocalSharedTransitionScope.current) {
-        Column {
+        Column(modifier = modifier) {
             AdaptiveAppBar(
                 title = { Text(text = uiState.title) },
                 navigationIcon = {
@@ -81,7 +80,6 @@ internal fun FolderAppBar(
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                modifier = modifier,
             )
             AdaptiveAppBar(
                 title = {
@@ -102,7 +100,7 @@ internal fun FolderAppBar(
                 },
                 scrollBehavior = scrollBehavior2,
                 windowInsets = WindowInsets(),
-                sharedAnimation = false
+                sharedAnimation = false,
             )
         }
     }

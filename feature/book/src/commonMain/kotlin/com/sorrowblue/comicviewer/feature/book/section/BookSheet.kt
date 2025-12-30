@@ -14,10 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import coil3.Bitmap
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 import kotlinx.coroutines.launch
 
 @Composable
@@ -31,67 +29,69 @@ internal fun BookSheet(
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-    HorizontalPager(
-        state = pagerState,
-        beyondViewportPageCount = 3,
-        pageSize = PageSize.Fill,
-        reverseLayout = true,
-        key = { pages[it].key },
-        modifier = modifier.fillMaxSize(),
-    ) { pageIndex ->
-        when (val item = pages[pageIndex]) {
-            is NextPage -> NextBookSheet(item, onClick = onNextBookClick)
-            is BookPage -> BookPage(
-                book = uiState.book,
-                page = item,
-                pageScale = uiState.pageScale,
-                onPageLoad = onPageLoad,
+    Box(modifier = modifier) {
+        val scope = rememberCoroutineScope()
+        HorizontalPager(
+            state = pagerState,
+            beyondViewportPageCount = 3,
+            pageSize = PageSize.Fill,
+            reverseLayout = true,
+            key = { pages[it].key },
+            modifier = Modifier.fillMaxSize(),
+        ) { pageIndex ->
+            when (val item = pages[pageIndex]) {
+                is NextPage -> NextBookSheet(item, onClick = onNextBookClick)
+                is BookPage -> BookPage(
+                    book = uiState.book,
+                    page = item,
+                    pageScale = uiState.pageScale,
+                    onPageLoad = onPageLoad,
+                )
+            }
+        }
+        Row(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onLongClick = onLongClick,
+                        onClick = {
+                            scope.launch {
+                                pagerState.scrollToPage(pagerState.currentPage - 1)
+                            }
+                        },
+                    ),
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onLongClick = onLongClick,
+                        onClick = onClick,
+                    ),
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onLongClick = onLongClick,
+                        onClick = {
+                            scope.launch {
+                                pagerState.scrollToPage(pagerState.currentPage + 1)
+                            }
+                        },
+                    ),
             )
         }
-    }
-    Row(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .combinedClickable(
-                    interactionSource = remember { MutableInteractionSource() } ,
-                    indication = null,
-                    onLongClick = onLongClick,
-                    onClick = {
-                        scope.launch {
-                            pagerState.scrollToPage(pagerState.currentPage - 1)
-                        }
-                    }
-                )
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .combinedClickable(
-                    interactionSource = remember { MutableInteractionSource() } ,
-                    indication = null,
-                    onLongClick = onLongClick,
-                    onClick = onClick
-                )
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .combinedClickable(
-                    interactionSource = remember { MutableInteractionSource() } ,
-                    indication = null,
-                    onLongClick = onLongClick,
-                    onClick = {
-                        scope.launch {
-                            pagerState.scrollToPage(pagerState.currentPage + 1)
-                        }
-                    }
-                )
-        )
     }
 }
 

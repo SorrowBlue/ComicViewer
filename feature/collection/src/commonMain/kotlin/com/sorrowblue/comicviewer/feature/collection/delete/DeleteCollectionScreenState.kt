@@ -42,7 +42,6 @@ private class DeleteCollectionScreenStateImpl(
     getCollectionUseCase: GetCollectionUseCase,
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : DeleteCollectionScreenState {
-
     override var uiState by mutableStateOf(DeleteCollectionScreenUiState())
 
     init {
@@ -61,7 +60,6 @@ private class DeleteCollectionScreenStateImpl(
                 }
         }
     }
-
 
     override fun delete(onComplete: () -> Unit) {
         coroutineScope.launch {

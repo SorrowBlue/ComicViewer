@@ -35,6 +35,7 @@ fun FolderScreenRoot(
         uiState = state.uiState,
         lazyPagingItems = state.lazyPagingItems,
         lazyGridState = state.lazyGridState,
+        snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onSearchClick = onSearchClick,
         onFileClick = onFileClick,

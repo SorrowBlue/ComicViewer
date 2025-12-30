@@ -26,7 +26,9 @@ fun AdaptiveAppBar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
-    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(
+        WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+    ),
     scrollBehavior: TopAppBarScrollBehavior? = null,
     sharedAnimation: Boolean = true,
 ) {
@@ -45,16 +47,20 @@ fun AdaptiveAppBar(
             TopAppBar(
                 title = {
                     Box(
-                        modifier = if (sharedAnimation) Modifier
-                            .animateEnterExit(
-                                enter = AppBarTitleTransitionEnter,
-                                exit = AppBarTitleTransitionExit,
-                            ).sharedElement(
-                                animatedVisibilityScope = this,
-                                sharedContentState = rememberSharedContentState(
-                                    TopAppBarTitleSharedElementKey,
-                                ),
-                            ) else Modifier,
+                        modifier = if (sharedAnimation) {
+                            Modifier
+                                .animateEnterExit(
+                                    enter = AppBarTitleTransitionEnter,
+                                    exit = AppBarTitleTransitionExit,
+                                ).sharedElement(
+                                    animatedVisibilityScope = this,
+                                    sharedContentState = rememberSharedContentState(
+                                        TopAppBarTitleSharedElementKey,
+                                    ),
+                                )
+                        } else {
+                            Modifier
+                        },
                     ) {
                         title()
                     }
@@ -75,12 +81,16 @@ fun AdaptiveAppBar(
                 scrollBehavior = scrollBehavior,
                 windowInsets = windowInsets,
                 modifier = modifier.then(
-                    if (sharedAnimation) Modifier.sharedElement(
-                        animatedVisibilityScope = this,
-                        sharedContentState = rememberSharedContentState(
-                            TopAppBarSharedElementKey,
-                        ),
-                    ) else Modifier
+                    if (sharedAnimation) {
+                        Modifier.sharedElement(
+                            animatedVisibilityScope = this,
+                            sharedContentState = rememberSharedContentState(
+                                TopAppBarSharedElementKey,
+                            ),
+                        )
+                    } else {
+                        Modifier
+                    },
                 ),
             )
         }

@@ -38,34 +38,80 @@ internal fun FileAttributeChips(fileAttribute: FileAttribute, modifier: Modifier
         ) {
             fileAttribute.let {
                 if (it.archive) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_archive)) })
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(text = stringResource(Res.string.file_attribute_archive)) },
+                    )
                 }
                 if (it.compressed) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_compressed)) })
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.file_attribute_compressed),
+                            )
+                        },
+                    )
                 }
                 if (it.hidden) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_hidden)) })
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(text = stringResource(Res.string.file_attribute_hidden)) },
+                    )
                 }
                 if (it.normal) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_normal)) })
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(text = stringResource(Res.string.file_attribute_normal)) },
+                    )
                 }
                 if (it.directory) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_directory)) })
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.file_attribute_directory),
+                            )
+                        },
+                    )
                 }
                 if (it.readonly) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_readonly)) })
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(text = stringResource(Res.string.file_attribute_readonly)) },
+                    )
                 }
                 if (it.sharedRead) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_shared_read)) })
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.file_attribute_shared_read),
+                            )
+                        },
+                    )
                 }
                 if (it.system) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_system)) })
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(text = stringResource(Res.string.file_attribute_system)) },
+                    )
                 }
                 if (it.temporary) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_temporary)) })
+                    AssistChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                text = stringResource(Res.string.file_attribute_temporary),
+                            )
+                        },
+                    )
                 }
                 if (it.volume) {
-                    AssistChip(onClick = {}, label = { Text(text = stringResource(Res.string.file_attribute_volume)) })
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(text = stringResource(Res.string.file_attribute_volume)) },
+                    )
                 }
             }
         }

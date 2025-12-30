@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.collection.list
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
@@ -8,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionList
@@ -16,6 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButtonMenu
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_collection
@@ -92,7 +95,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
                 onEditClick = onEditClick,
                 onDeleteClick = onDeleteClick,
                 lazyListState = lazyListState,
-                contentPadding = contentPadding,
+                contentPadding = contentPadding + PaddingValues(16.dp),
             )
         }
     }
