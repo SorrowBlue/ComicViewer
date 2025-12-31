@@ -52,6 +52,8 @@ internal fun rememberBasicCollectionEditScreenState(
     collectionId: CollectionId,
 ): BasicCollectionEditScreenState {
     val scope = rememberCoroutineScope()
+    val formState =
+        rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
     return rememberRetained {
         BasicCollectionEditScreenStateImpl(
             scope = scope,
@@ -59,10 +61,10 @@ internal fun rememberBasicCollectionEditScreenState(
             getCollectionUseCase = context.getCollectionUseCase,
             updateCollectionUseCase = context.updateCollectionUseCase,
             removeCollectionFileUseCase = context.removeCollectionFileUseCase,
+            formState = formState,
         )
     }.apply {
-        this.formState =
-            rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
+        this.formState = formState
         this.form = rememberForm(state = this.formState, onSubmit = ::onSubmit)
         this.scope = scope
         this.lazyPagingItems = rememberPagingItems {
@@ -70,7 +72,6 @@ internal fun rememberBasicCollectionEditScreenState(
                 PagingCollectionFileUseCase.Request(PagingConfig(PageSize), collectionId),
             )
         }
-        initialize()
     }
 }
 
@@ -83,25 +84,23 @@ private class BasicCollectionEditScreenStateImpl(
     private val getCollectionUseCase: GetCollectionUseCase,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
+    var formState: FormState<BasicCollectionForm>,
 ) : BasicCollectionEditScreenState {
     override var uiState by mutableStateOf(BasicCollectionEditScreenUiState())
         private set
-    private var initialForm = BasicCollectionForm()
-    lateinit var formState: FormState<BasicCollectionForm>
     override lateinit var form: Form<BasicCollectionForm>
     override lateinit var lazyPagingItems: LazyPagingItems<File>
 
     override val events = EventFlow<BasicCollectionEditScreenStateEvent>()
 
-    fun initialize() {
+    init {
         scope.launch {
             uiState = uiState.copy(isLoading = true)
             getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }
                 .first()
                 .let {
-                    initialForm = BasicCollectionForm(name = it.name)
-                    formState.reset(initialForm)
+                    formState.reset(BasicCollectionForm(name = it.name))
                     uiState = uiState.copy(isLoading = false)
                 }
         }

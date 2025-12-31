@@ -14,6 +14,12 @@ internal actual class DatabaseHelper actual constructor(private val context: Pla
             .databaseBuilder<ComicViewerDatabase>(
                 context = appContext,
                 name = dbFile.absolutePath,
-            )
+            ).enableMultiInstanceInvalidation()
+            .apply {
+                val list = appContext.assets.list("database")
+                if (!list.isNullOrEmpty() && list.contains("comic_viewer_database.db")) {
+                    createFromAsset("database/comic_viewer_database.db")
+                }
+            }
     }
 }

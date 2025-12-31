@@ -17,8 +17,7 @@ private const val CiperTransformation =
     "${KeyProperties.KEY_ALGORITHM_RSA}/${KeyProperties.BLOCK_MODE_ECB}/${KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1}"
 
 @ContributesTo(DataScope::class)
-interface
-AndroidDatabaseBindings {
+interface AndroidDatabaseBindings {
     @Binds
     private val AndroidCryptUtil.bind: CryptUtil get() = this
 }
@@ -31,11 +30,13 @@ internal class AndroidCryptUtil : CryptUtil {
         if (!keyStore.containsAlias(alias)) {
             return null
         }
-        val cipher = Cipher.getInstance(CiperTransformation)
-        cipher.init(Cipher.DECRYPT_MODE, keyStore.getKey(alias, null))
-        val bytes = Base64.decode(encryptedText, Base64.URL_SAFE)
-        val b = cipher.doFinal(bytes)
-        return b.decodeToString()
+        return runCatching {
+            val cipher = Cipher.getInstance(CiperTransformation)
+            cipher.init(Cipher.DECRYPT_MODE, keyStore.getKey(alias, null))
+            val bytes = Base64.decode(encryptedText, Base64.URL_SAFE)
+            val b = cipher.doFinal(bytes)
+            b.decodeToString()
+        }.getOrNull()
     }
 
     override fun encrypt(alias: String, text: String): String {

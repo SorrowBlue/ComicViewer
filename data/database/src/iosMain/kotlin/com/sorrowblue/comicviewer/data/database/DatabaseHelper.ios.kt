@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.database
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.Inject
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -17,6 +18,7 @@ internal actual class DatabaseHelper actual constructor(context: PlatformContext
             .databaseBuilder<ComicViewerDatabase>(
                 name = dbFilePath,
             )
+            .setDriver(BundledSQLiteDriver())
     }
 
     private fun documentDirectory(): String {
