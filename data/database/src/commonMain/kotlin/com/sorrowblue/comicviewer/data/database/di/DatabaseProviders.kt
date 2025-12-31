@@ -43,7 +43,6 @@ interface DatabaseProviders {
         .getDatabaseBuilder()
         .addMigrations(ComicViewerDatabase.ManualMigration7to8())
         .addTypeConverter(decryptedPasswordConverters)
-        .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(dispatcher)
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .build()
