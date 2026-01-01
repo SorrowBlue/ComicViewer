@@ -22,13 +22,20 @@ internal fun EntryProviderScope<NavKey>.bookshelfNavEntry(navigator: Navigator) 
     ) {
         with(rememberRetained { factory.createBookshelfScreenContext() }) {
             BookshelfScreenRoot(
-                onSettingsClick = { navigator.navigate(SettingsNavKey) },
-                onFabClick = { navigator.navigate(BookshelfSelectionNavKey) },
+                onSettingsClick = {
+                    navigator.navigate(SettingsNavKey)
+                },
+                onFabClick = {
+                    navigator.navigate(BookshelfSelectionNavKey)
+                },
                 onBookshelfClick = { id, path ->
                     navigator.navigate(BookshelfFolderNavKey(id, path))
                 },
                 onBookshelfInfoClick = {
-                    navigator.navigate(BookshelfInfoNavKey(it.bookshelf.id))
+                    navigator.navigate<BookshelfInfoNavKey>(
+                        BookshelfInfoNavKey(it.bookshelf.id),
+                        inclusive = true,
+                    )
                 },
             )
         }

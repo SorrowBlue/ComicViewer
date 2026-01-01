@@ -22,7 +22,9 @@ internal fun EntryProviderScope<NavKey>.readLaterNavEntry(navigator: Navigator) 
     ) {
         with(rememberRetained { factory.createReadLaterScreenContext() }) {
             ReadLaterScreenRoot(
-                onSettingsClick = { navigator.navigate(SettingsNavKey) },
+                onSettingsClick = {
+                    navigator.navigate(SettingsNavKey)
+                },
                 onFileClick = { file ->
                     when (file) {
                         is Book -> {
@@ -36,14 +38,21 @@ internal fun EntryProviderScope<NavKey>.readLaterNavEntry(navigator: Navigator) 
                         }
 
                         is Folder -> {
-                            navigator.navigate(
-                                ReadLaterFolderNavKey(file.bookshelfId, file.path),
+                            navigator.navigate<ReadLaterFileInfoNavKey>(
+                                ReadLaterFolderNavKey(
+                                    bookshelfId = file.bookshelfId,
+                                    path = file.path,
+                                ),
+                                inclusive = true,
                             )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate(ReadLaterFileInfoNavKey(it.key()))
+                    navigator.navigate<ReadLaterFileInfoNavKey>(
+                        ReadLaterFileInfoNavKey(it.key()),
+                        inclusive = true,
+                    )
                 },
             )
         }

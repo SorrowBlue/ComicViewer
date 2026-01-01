@@ -27,7 +27,9 @@ internal fun EntryProviderScope<NavKey>.collectionNavEntry(navigator: Navigator)
         with(rememberRetained { factory.createCollectionScreenContext() }) {
             CollectionScreenRoot(
                 id = detail.id,
-                onBackClick = navigator::goBack,
+                onBackClick = {
+                    navigator.pop<CollectionNavKey>(inclusive = true)
+                },
                 onFileClick = { file ->
                     when (file) {
                         is Book -> {
@@ -42,17 +44,21 @@ internal fun EntryProviderScope<NavKey>.collectionNavEntry(navigator: Navigator)
                         }
 
                         is Folder -> {
-                            navigator.navigate(
+                            navigator.navigate<CollectionFileInfoNavKey>(
                                 CollectionFolderNavKey(
                                     bookshelfId = file.bookshelfId,
                                     path = file.path,
                                 ),
+                                inclusive = true,
                             )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate(CollectionFileInfoNavKey(it.key()))
+                    navigator.navigate<CollectionFileInfoNavKey>(
+                        CollectionFileInfoNavKey(it.key()),
+                        inclusive = true,
+                    )
                 },
                 onEditClick = {
                     navigator.navigate(
@@ -62,8 +68,12 @@ internal fun EntryProviderScope<NavKey>.collectionNavEntry(navigator: Navigator)
                         },
                     )
                 },
-                onDeleteClick = { navigator.navigate(CollectionDeleteNavKey(it)) },
-                onSettingsClick = { navigator.navigate(SettingsNavKey) },
+                onDeleteClick = {
+                    navigator.navigate(CollectionDeleteNavKey(it))
+                },
+                onSettingsClick = {
+                    navigator.navigate(SettingsNavKey)
+                },
             )
         }
     }

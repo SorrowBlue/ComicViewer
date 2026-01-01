@@ -28,7 +28,9 @@ internal fun EntryProviderScope<NavKey>.historyNavEntry(navigator: Navigator) {
                 onDeleteAllClick = {
                     navigator.navigate(HistoryClearAllNavKey)
                 },
-                onSettingsClick = { navigator.navigate(SettingsNavKey) },
+                onSettingsClick = {
+                    navigator.navigate(SettingsNavKey)
+                },
                 onBookClick = { book ->
                     navigator.navigate(
                         BookNavKey(
@@ -39,7 +41,10 @@ internal fun EntryProviderScope<NavKey>.historyNavEntry(navigator: Navigator) {
                     )
                 },
                 onBookInfoClick = {
-                    navigator.navigate(HistoryFileInfoNavKey(it.key()))
+                    navigator.navigate<HistoryFileInfoNavKey>(
+                        HistoryFileInfoNavKey(it.key()),
+                        inclusive = true,
+                    )
                 },
             )
         }

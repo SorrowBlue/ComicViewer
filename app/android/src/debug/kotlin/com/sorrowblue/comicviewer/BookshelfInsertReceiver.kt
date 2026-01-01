@@ -30,24 +30,27 @@ internal class BookshelfInsertReceiver : BroadcastReceiver() {
         logcat { "onReceive: ${intent.getStringExtra("json")}" }
         if (!intent.hasExtra("json")) return
         val jsonString = intent.getStringExtra("json") ?: return
+        val repeat = intent.getIntExtra("repeat", 1)
         runCatching {
             Json.decodeFromString<InsertJson>(jsonString)
         }.onSuccess { insertJson ->
             goAsync {
-                insertJson.bookshelf.forEach {
-                    registerBookshelfUseCase(
-                        RegisterBookshelfUseCase.Request(
-                            it.toModel(),
-                            it.path,
-                        ),
-                    ).fold(
-                        onSuccess = { bookshelf ->
-                            logcat(TAG) { "insert success. $bookshelf" }
-                        },
-                        onError = { error ->
-                            logcat(TAG, LogPriority.ERROR) { "insert error. $error" }
-                        },
-                    )
+                repeat(repeat) { index ->
+                    insertJson.bookshelf.forEach {
+                        registerBookshelfUseCase(
+                            RegisterBookshelfUseCase.Request(
+                                it.toModel().copy(displayName = "${it.displayName}-${index + 1}"),
+                                it.path,
+                            ),
+                        ).fold(
+                            onSuccess = { bookshelf ->
+                                logcat(TAG) { "insert success. $bookshelf" }
+                            },
+                            onError = { error ->
+                                logcat(TAG, LogPriority.ERROR) { "insert error. $error" }
+                            },
+                        )
+                    }
                 }
             }
         }.onFailure {

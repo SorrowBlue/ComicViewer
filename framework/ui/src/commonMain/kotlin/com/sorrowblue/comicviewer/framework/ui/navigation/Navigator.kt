@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
+import logcat.logcat
 
 val LocalNavigator = staticCompositionLocalOf<Navigator> {
     error("No AdaptiveNavigationSuiteState provided")
@@ -31,7 +32,7 @@ class Navigator(val state: NavigationState) {
     val topLevelKey: NavKey get() = state.topLevelRoute
     val topLevelRoutes get() = state.topLevelRoutes
 
-    val backStack get() = state.stacksInUse
+    val backStack get() = state.backStacks.getValue(state.topLevelRoute)
 
     fun navigate(route: NavKey) {
         if (route in state.backStacks.keys) {
@@ -39,6 +40,26 @@ class Navigator(val state: NavigationState) {
             state.topLevelRoute = route
         } else {
             state.backStacks[state.topLevelRoute]?.add(route)
+        }
+    }
+
+    inline fun <reified T : NavKey> navigate(route: NavKey, inclusive: Boolean) {
+        if (route in state.backStacks.keys) {
+            // This is a top level route, just switch to it
+            state.topLevelRoute = route
+        } else {
+            val currentStack = state.backStacks[state.topLevelRoute]
+                ?: error("Stack for ${state.topLevelRoute} not found")
+            logcat {
+                "currentStack=${currentStack.joinToString { it::class.simpleName.orEmpty() }}"
+            }
+            val popIndex = currentStack.indexOfLast { it is T }
+            if (0 <= popIndex) {
+                repeat(currentStack.lastIndex - (if (inclusive) popIndex - 1 else popIndex)) {
+                    currentStack.removeLastOrNull()
+                }
+            }
+            currentStack.add(route)
         }
     }
 

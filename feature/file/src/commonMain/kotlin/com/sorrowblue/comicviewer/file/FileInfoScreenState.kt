@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
@@ -52,14 +53,18 @@ internal fun rememberFileInfoScreenState(
         )
     }.apply {
         this.coroutineScope = coroutineScope
-        this.lazyPagingItems = rememberPagingItems {
-            context.pagingFolderBookThumbnailsUseCase(
-                PagingFolderBookThumbnailsUseCase.Request(
-                    file.bookshelfId,
-                    file.path,
-                    PagingConfig(10),
-                ),
-            )
+        this.lazyPagingItems = if (file is Book) {
+            null
+        } else {
+            rememberPagingItems {
+                context.pagingFolderBookThumbnailsUseCase(
+                    PagingFolderBookThumbnailsUseCase.Request(
+                        file.bookshelfId,
+                        file.path,
+                        PagingConfig(10),
+                    ),
+                )
+            }
         }
     }
     return state
@@ -67,7 +72,7 @@ internal fun rememberFileInfoScreenState(
 
 internal interface FileInfoScreenState {
     val uiState: FileInfoScreenUiState
-    val lazyPagingItems: LazyPagingItems<BookThumbnail>
+    val lazyPagingItems: LazyPagingItems<BookThumbnail>?
 
     fun onReadLaterClick()
 }
@@ -91,7 +96,7 @@ private class FileInfoScreenStateImpl(
             ),
         ),
     )
-    override lateinit var lazyPagingItems: LazyPagingItems<BookThumbnail>
+    override var lazyPagingItems: LazyPagingItems<BookThumbnail>? = null
 
     init {
         existsReadlaterUseCase(

@@ -25,7 +25,9 @@ internal fun EntryProviderScope<NavKey>.bookshelfInfoNavEntry(
             BookshelfInfoScreenRoot(
                 bookshelfId = it.id,
                 onBackClick = navigator::goBack,
-                onRemoveClick = { navigator.navigate(BookshelfDeleteNavKey(it.id)) },
+                onRemoveClick = {
+                    navigator.navigate(BookshelfDeleteNavKey(it.id))
+                },
                 showNotificationPermissionRationale = { scanType ->
                     navigator.navigate(BookshelfNotificationNavKey(scanType))
                 },

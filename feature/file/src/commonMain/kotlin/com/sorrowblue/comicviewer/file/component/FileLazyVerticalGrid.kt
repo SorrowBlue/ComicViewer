@@ -119,7 +119,7 @@ fun <T : File> FileLazyVerticalGrid(
                 )
             }
 
-            is LazyPagingColumn.Grid -> GridFile(
+            is LazyPagingColumn.Grid, is LazyPagingColumn.FixedGrid -> GridFile(
                 file = item,
                 onClick = { onItemClick(item) },
                 onInfoClick = { onItemInfoClick(item) },
@@ -159,22 +159,22 @@ fun rememberLazyPagingColumnType(
                     windowSizeClass.isWidthAtLeastBreakpoint(
                         WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
                     ) -> when (gridColumnSize) {
-                        GridColumnSize.Medium -> 160
-                        GridColumnSize.Large -> 200
+                        GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
+                        GridColumnSize.Large -> LazyPagingColumn.Grid(200)
                     }
 
                     windowSizeClass.isWidthAtLeastBreakpoint(
                         WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
                     ) -> when (gridColumnSize) {
-                        GridColumnSize.Medium -> 160
-                        GridColumnSize.Large -> 200
+                        GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
+                        GridColumnSize.Large -> LazyPagingColumn.Grid(200)
                     }
 
                     else -> when (gridColumnSize) {
-                        GridColumnSize.Medium -> 120
-                        GridColumnSize.Large -> 180
+                        GridColumnSize.Medium -> LazyPagingColumn.FixedGrid(3)
+                        GridColumnSize.Large -> LazyPagingColumn.FixedGrid(2)
                     }
-                }.let(LazyPagingColumn::Grid)
+                }
             },
         )
     }

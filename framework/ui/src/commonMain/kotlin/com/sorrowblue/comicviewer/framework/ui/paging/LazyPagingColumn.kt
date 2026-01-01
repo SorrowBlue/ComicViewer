@@ -44,6 +44,9 @@ sealed class LazyPagingColumn {
     data class Grid(val minSize: Int) : LazyPagingColumn() {
         override val columns = GridCells.Adaptive(minSize.dp)
     }
+    data class FixedGrid(val count: Int) : LazyPagingColumn() {
+        override val columns = GridCells.Fixed(count)
+    }
 }
 
 @Composable
