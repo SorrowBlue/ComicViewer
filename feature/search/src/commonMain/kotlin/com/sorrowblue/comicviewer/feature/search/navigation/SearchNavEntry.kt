@@ -20,13 +20,17 @@ internal fun EntryProviderScope<NavKey>.searchNavEntry(navigator: Navigator) {
     entry<SearchNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane("Search") +
             NavDisplay.transitionMaterialSharedAxisX(),
-    ) {
+    ) { navKey ->
         with(rememberRetained { factory.createSearchScreenContext() }) {
             SearchScreenRoot(
-                bookshelfId = it.bookshelfId,
-                path = it.path,
-                onBackClick = navigator::goBack,
-                onSettingsClick = { navigator.navigate(SettingsNavKey) },
+                bookshelfId = navKey.bookshelfId,
+                path = navKey.path,
+                onBackClick = {
+                    navigator.pop<SearchNavKey>(inclusive = true)
+                },
+                onSettingsClick = {
+                    navigator.navigate(SettingsNavKey)
+                },
                 onSmartCollectionClick = { id, condition ->
                     navigator.navigate(SmartCollectionCreateNavKey(id, condition))
                 },
@@ -43,12 +47,21 @@ internal fun EntryProviderScope<NavKey>.searchNavEntry(navigator: Navigator) {
                         }
 
                         is Folder -> {
-                            navigator.navigate(SearchFolderNavKey(file.bookshelfId, file.path))
+                            navigator.navigate<SearchFileInfoNavKey>(
+                                SearchFolderNavKey(
+                                    file.bookshelfId,
+                                    file.path,
+                                ),
+                                inclusive = true,
+                            )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate(SearchFolderNavKey(it.bookshelfId, it.path))
+                    navigator.navigate<SearchFileInfoNavKey>(
+                        SearchFileInfoNavKey(it.key()),
+                        inclusive = true,
+                    )
                 },
             )
         }

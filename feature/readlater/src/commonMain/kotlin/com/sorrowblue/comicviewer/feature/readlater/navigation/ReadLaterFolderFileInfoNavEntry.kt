@@ -18,7 +18,12 @@ internal fun EntryProviderScope<NavKey>.readLaterFolderFileInfoNavEntry(navigato
         with(factoryFileInfo) {
             folderFileInfoNavEntry<ReadLaterFolderNavKey, ReadLaterFolderFileInfoNavKey>(
                 sceneKeyPrefix = "ReadLater",
-                onBackClick = navigator::goBack,
+                onBackClick = {
+                    navigator.pop<ReadLaterFolderNavKey>(inclusive = true)
+                },
+                onInfoBackClick = {
+                    navigator.goBack()
+                },
                 onFileClick = { file ->
                     when (file) {
                         is Book -> {
@@ -32,19 +37,27 @@ internal fun EntryProviderScope<NavKey>.readLaterFolderFileInfoNavEntry(navigato
                         }
 
                         is Folder -> {
-                            if (navigator.backStack.lastOrNull() is ReadLaterFolderFileInfoNavKey) {
-                                navigator.goBack()
-                            }
-                            navigator.navigate(
-                                ReadLaterFolderNavKey(file.bookshelfId, file.path),
+                            navigator.navigate<ReadLaterFolderFileInfoNavKey>(
+                                ReadLaterFolderNavKey(
+                                    bookshelfId = file.bookshelfId,
+                                    path = file.path,
+                                ),
+                                inclusive = true,
                             )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate(ReadLaterFolderFileInfoNavKey(it.key()))
+                    navigator.navigate<ReadLaterFolderFileInfoNavKey>(
+                        ReadLaterFolderFileInfoNavKey(
+                            it.key(),
+                        ),
+                        inclusive = true,
+                    )
                 },
-                onSettingsClick = { navigator.navigate(SettingsNavKey) },
+                onSettingsClick = {
+                    navigator.navigate(SettingsNavKey)
+                },
                 onCollectionClick = {
                     navigator.navigate(BasicCollectionAddNavKey(it.bookshelfId, it.path))
                 },

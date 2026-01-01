@@ -20,16 +20,19 @@ internal fun EntryProviderScope<NavKey>.bookNavEntry(navigator: Navigator) {
                 path = it.path,
                 name = it.name,
                 collectionId = it.collectionId,
-                onBackClick = navigator::goBack,
+                onBackClick = {
+                    navigator.pop<BookNavKey>(inclusive = true)
+                },
                 onSettingsClick = { navigator.navigate(SettingsNavKey) },
                 onNextBookClick = { book, collectionId ->
-                    navigator.navigate(
+                    navigator.navigate<BookNavKey>(
                         BookNavKey(
                             bookshelfId = book.bookshelfId,
                             path = book.path,
                             name = book.name,
                             collectionId = collectionId,
                         ),
+                        inclusive = true,
                     )
                 },
                 onContainerLongClick = {

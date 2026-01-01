@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name="com.sorrowblue.comicviewer.app.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -15,7 +15,7 @@
         android:theme="@style/Theme.ComicViewer"
         tools:targetApi="tiramisu">
         <activity
-            android:name="com.sorrowblue.comicviewer.app.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting"
             android:windowSoftInputMode="adjustResize">

@@ -8,7 +8,7 @@ import dev.zacsweers.metrox.android.MetroApplication
 import logcat.LogPriority
 import logcat.logcat
 
-internal class MainApplication :
+class MainApplication :
     Application(),
     MetroApplication {
     private val appGraph by lazy {

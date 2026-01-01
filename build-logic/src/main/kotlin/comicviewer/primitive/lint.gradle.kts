@@ -45,7 +45,7 @@ private fun Lint.configure() {
         "GradleDependency",
         "AppLinksAutoVerify",
     )
-    baseline = project.file("lint-baseline.xml")
+    baseline = rootProject.file("config/lint-baseline.xml")
     htmlReport = !isCI
     htmlOutput =
         if (htmlReport) {

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.data.database.di
 
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import com.sorrowblue.comicviewer.data.database.DatabaseHelper
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao

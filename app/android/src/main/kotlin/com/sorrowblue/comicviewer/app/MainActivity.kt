@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.rememberComicViewerUIState
 /**
  * Main activity
  */
-internal class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

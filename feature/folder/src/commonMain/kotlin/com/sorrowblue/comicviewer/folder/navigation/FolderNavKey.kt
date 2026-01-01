@@ -65,6 +65,7 @@ context(factoryFolder: FolderScreenContext.Factory, factoryFileInfo: FileInfoScr
 inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> EntryProviderScope<NavKey>.folderFileInfoNavEntry(
     sceneKeyPrefix: String,
     noinline onBackClick: () -> Unit,
+    noinline onInfoBackClick: () -> Unit,
     noinline onSearchClick: (BookshelfId, PathString) -> Unit = { _, _ -> },
     noinline onFileClick: (File) -> Unit,
     noinline onFileInfoClick: (File) -> Unit,
@@ -82,7 +83,7 @@ inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> EntryProviderS
     )
     fileInfoEntry<V>(
         "${sceneKeyPrefix}Folder",
-        onBackClick = onBackClick,
+        onBackClick = onInfoBackClick,
         onCollectionClick = onCollectionClick,
         onOpenFolderClick = onOpenFolderClick,
     )
