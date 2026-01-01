@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - internal
+      - main
     paths-ignore:
       - '.github/**'
       - '.idea/**'
