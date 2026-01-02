@@ -47,6 +47,9 @@ internal class DocumentInitializer : Initializer<Unit> {
             }
             if (SupportMajorVersion <= targetMajor) {
                 // Supported
+                datastoreDataSource.updatePdfPluginSettings {
+                    it.copy(isEnabled = true, isInstallationChecked = true)
+                }
                 datastoreDataSource.updateFolderSettings { settings ->
                     settings.copy(
                         supportExtension = settings.supportExtension.plus(Document.entries),
@@ -54,6 +57,9 @@ internal class DocumentInitializer : Initializer<Unit> {
                 }
             } else {
                 // Not supported
+                datastoreDataSource.updatePdfPluginSettings {
+                    it.copy(isEnabled = false, isInstallationChecked = true)
+                }
                 this.logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
                 datastoreDataSource.updateFolderSettings { settings ->
                     settings.copy(
@@ -63,6 +69,9 @@ internal class DocumentInitializer : Initializer<Unit> {
             }
         } else {
             this.logcat(LogPriority.INFO) { "PdfPlugin is not supported." }
+            datastoreDataSource.updatePdfPluginSettings {
+                it.copy(isEnabled = false, isInstallationChecked = true)
+            }
             datastoreDataSource.updateFolderSettings { settings ->
                 settings.copy(
                     supportExtension = settings.supportExtension.filterNot {

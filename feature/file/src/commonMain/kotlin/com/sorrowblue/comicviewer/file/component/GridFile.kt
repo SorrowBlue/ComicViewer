@@ -27,6 +27,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -110,7 +111,8 @@ fun GridFile(
             }
             IconButton(
                 onClick = onInfoClick,
-                modifier = Modifier.align(Alignment.BottomEnd),
+                modifier = Modifier.align(Alignment.BottomEnd)
+                    .testTag("FileListItemMenu"),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = ComicTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
                     contentColor = ComicTheme.colorScheme.surfaceVariant,

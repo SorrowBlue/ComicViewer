@@ -148,7 +148,7 @@ private fun BookshelfRowItem(
     Card(
         onClick = onClick,
         colors = colors,
-        modifier = modifier.testTag("BookshelfListItem-${bookshelfFolder.bookshelf.id.value}"),
+        modifier = modifier.testTag("BookshelfListItem"),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             FileThumbnailAsyncImage(
@@ -209,7 +209,7 @@ private fun BookshelfRowItem(
                     IconButton(
                         onClick = onInfoClick,
                         modifier = Modifier.testTag(
-                            "BookshelfListItemMenu-${bookshelfFolder.bookshelf.id.value}",
+                            "BookshelfListItemMenu",
                         ),
                     ) {
                         Icon(ComicIcons.MoreVert, null)

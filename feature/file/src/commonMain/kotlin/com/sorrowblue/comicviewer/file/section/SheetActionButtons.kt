@@ -7,6 +7,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.file.component.ActionButton
 import com.sorrowblue.comicviewer.file.component.ReadlaterButton
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -34,7 +35,7 @@ internal fun SheetActionButtons(
         Spacer(Modifier.size(ComicTheme.dimension.padding * 2))
 
         ActionButton(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).testTag("AddCollectionButton"),
             onClick = onCollectionClick,
             icon = {
                 Icon(ComicIcons.Favorite, null)
@@ -46,7 +47,7 @@ internal fun SheetActionButtons(
         if (uiState.isOpenFolderEnabled) {
             Spacer(Modifier.size(ComicTheme.dimension.padding * 2))
             ActionButton(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).testTag("OpenFolderButton"),
                 onClick = onOpenFolderClick,
                 icon = {
                     Icon(ComicIcons.FolderOpen, null)

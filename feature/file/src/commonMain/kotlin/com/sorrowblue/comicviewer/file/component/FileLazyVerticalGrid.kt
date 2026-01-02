@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -89,7 +90,7 @@ fun <T : File> FileLazyVerticalGrid(
             LazyPagingColumn.List -> {
                 ListFile(
                     file = item,
-                    onLongClick = { onItemInfoClick(item) },
+                    onInfoClick = { onItemInfoClick(item) },
                     showThumbnail = uiState.showThumbnails,
                     fontSize = uiState.fontSize,
                     contentScale = contentScale,
@@ -98,7 +99,7 @@ fun <T : File> FileLazyVerticalGrid(
                         Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                     } else {
                         Modifier
-                    }.animateItem().clickable { onItemClick(item) },
+                    }.animateItem().clickable { onItemClick(item) }.testTag("FileListItem"),
                 )
             }
 
@@ -106,7 +107,7 @@ fun <T : File> FileLazyVerticalGrid(
                 ListFileCard(
                     file = item,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemInfoClick(item) },
+                    onInfoClick = { onItemInfoClick(item) },
                     showThumbnail = uiState.showThumbnails,
                     fontSize = uiState.fontSize,
                     contentScale = contentScale,
@@ -115,7 +116,7 @@ fun <T : File> FileLazyVerticalGrid(
                         Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                     } else {
                         Modifier
-                    }.animateItem(),
+                    }.animateItem().testTag("FileListItem"),
                 )
             }
 
@@ -131,7 +132,7 @@ fun <T : File> FileLazyVerticalGrid(
                     Modifier.blink(ComicTheme.colorScheme.secondary, 0.0f..0.3f)
                 } else {
                     Modifier
-                }.animateItem(),
+                }.animateItem().testTag("FileListItem"),
             )
         }
     }

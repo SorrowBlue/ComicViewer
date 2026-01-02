@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
@@ -47,6 +48,7 @@ internal fun EditorDialog(
                 onClick = form::handleSubmit,
                 enabled = !uiState.progress,
                 colors = ButtonDefaults.textButtonColors(contentColor = LocalContentColor.current),
+                modifier = Modifier.testTag("SaveButton"),
             ) {
                 AnimatedContent(targetState = uiState.progress, label = "progress") {
                     if (it) {

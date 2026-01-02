@@ -1,8 +1,11 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
+
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
     alias(libs.plugins.comicviewer.di)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -60,4 +63,41 @@ kotlin {
 
 dependencies {
     androidTestUtil("androidx.test:orchestrator:1.6.1")
+}
+
+buildkonfig {
+    packageName = "com.sorrowblue.comicviewer.app"
+    objectName = "BuildTestConfig"
+    defaultConfigs {
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "smbHost",
+            project.findProperty("smbHost")?.toString().orEmpty()
+        )
+        buildConfigField(
+            FieldSpec.Type.INT,
+            "smbPort",
+            project.findProperty("smbPort")?.toString()?.toIntOrNull()?.toString() ?: "445"
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "smbUsername",
+            project.findProperty("smbUsername")?.toString().orEmpty()
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "smbDomain",
+            project.findProperty("smbDomain")?.toString().orEmpty()
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "smbPassword",
+            project.findProperty("smbPassword")?.toString().orEmpty()
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "smbPath",
+            project.findProperty("smbPath")?.toString().orEmpty()
+        )
+    }
 }

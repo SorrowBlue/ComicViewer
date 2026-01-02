@@ -47,12 +47,12 @@ internal data class SmbEditForm(
     /**
      * SMB authentication type.
      */
-    enum class Auth {
+    enum class Auth(val testTag: String) {
         /** Guest authentication. */
-        Guest,
+        Guest("AuthGuest"),
 
         /** Username/Password authentication. */
-        UserPass,
+        UserPass("AuthUserPass"),
     }
 
     override fun <T : BookshelfEditForm> update(displayName: String): T {

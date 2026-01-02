@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -55,7 +56,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ListFile(
     file: File,
-    onLongClick: () -> Unit,
+    onInfoClick: () -> Unit,
     showThumbnail: Boolean,
     fontSize: Int,
     contentScale: ContentScale,
@@ -139,7 +140,7 @@ fun ListFile(
                 }
             },
             trailingContent = {
-                IconButton(onClick = onLongClick) {
+                IconButton(onClick = onInfoClick, modifier = Modifier.testTag("FileListItemMenu")) {
                     Icon(
                         imageVector = ComicIcons.MoreVert,
                         contentDescription = stringResource(Res.string.file_desc_open_file_info),
@@ -157,7 +158,7 @@ fun ListFile(
  *
  * @param file ファイル
  * @param onClick クリック時の処理
- * @param onLongClick ロングクリック時の処理
+ * @param onInfoClick 情報ボタンクリック時の処理
  * @param showThumbnail サムネイル表示するか
  * @param fontSize
  * @param contentScale
@@ -168,7 +169,7 @@ fun ListFile(
 fun ListFileCard(
     file: File,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
+    onInfoClick: () -> Unit,
     showThumbnail: Boolean,
     fontSize: Int,
     contentScale: ContentScale,
@@ -178,7 +179,7 @@ fun ListFileCard(
     Card(onClick = onClick, colors = CardDefaults.cardColors(), modifier = modifier) {
         ListFile(
             file = file,
-            onLongClick = onLongClick,
+            onInfoClick = onInfoClick,
             showThumbnail = showThumbnail,
             fontSize = fontSize,
             contentScale = contentScale,
@@ -196,7 +197,7 @@ private fun FileListPreview(@PreviewParameter(BooleanProvider::class) showThumbn
         Column {
             ListFile(
                 file = fakeBookFile(name = "Fake book name"),
-                onLongClick = {},
+                onInfoClick = {},
                 showThumbnail = showThumbnail,
                 fontSize = FolderDisplaySettingsDefaults.FontSize,
                 contentScale = ContentScale.Crop,
@@ -204,7 +205,7 @@ private fun FileListPreview(@PreviewParameter(BooleanProvider::class) showThumbn
             )
             ListFile(
                 file = fakeFolder(),
-                onLongClick = {},
+                onInfoClick = {},
                 showThumbnail = showThumbnail,
                 fontSize = FolderDisplaySettingsDefaults.FontSize,
                 contentScale = ContentScale.Crop,
@@ -223,7 +224,7 @@ private fun FileListCardPreview(@PreviewParameter(BooleanProvider::class) showTh
             ListFileCard(
                 file = fakeBookFile(name = "Fake book name"),
                 onClick = {},
-                onLongClick = {},
+                onInfoClick = {},
                 showThumbnail = showThumbnail,
                 fontSize = FolderDisplaySettingsDefaults.FontSize,
                 contentScale = ContentScale.Crop,
@@ -232,7 +233,7 @@ private fun FileListCardPreview(@PreviewParameter(BooleanProvider::class) showTh
             ListFileCard(
                 file = fakeFolder(),
                 onClick = {},
-                onLongClick = {},
+                onInfoClick = {},
                 showThumbnail = showThumbnail,
                 fontSize = FolderDisplaySettingsDefaults.FontSize,
                 contentScale = ContentScale.Crop,
