@@ -1,6 +1,8 @@
 package com.sorrowblue.comicviewer.file
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.file.File
 
 @Composable
@@ -11,6 +13,7 @@ fun FileInfoScreenRoot(
     onBackClick: () -> Unit,
     onCollectionClick: (File) -> Unit,
     onOpenFolderClick: (File) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val prepareState = rememberFileInfoPrepareState(fileKey, isOpenFolderEnabled)
     when (val uiState = prepareState.uiState) {
@@ -25,6 +28,7 @@ fun FileInfoScreenRoot(
                 onOpenFolderClick = {
                     onOpenFolderClick(state.uiState.file)
                 },
+                modifier = modifier.testTag("FileInfoScreenRoot")
             )
         }
 

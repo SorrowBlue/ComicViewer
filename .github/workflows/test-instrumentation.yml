@@ -8,7 +8,38 @@ jobs:
     name: Instrumentation Test
     runs-on: ubuntu-latest
 
+    services:
+      samba:
+        image: dperson/samba
+        ports:
+          - 445:445
+        env:
+          USER: "testuser;testpass"
+          SHARE: "testshare;/mnt/share"
+        volumes:
+          - ${{ github.workspace }}/../samba_share:/mnt/share
+        options: >-
+          --name samba-server
+
     steps:
+      - name: Create test file for SMB share
+        run: |
+          sudo mkdir -p ${{ github.workspace }}/../samba_share/testfolder/books
+          for i in {1..100}; do
+            FILENAME=$(printf "test%03d.txt" $i)
+            echo "Hello world. This is file $FILENAME" | sudo tee ${{ github.workspace }}/../samba_share/testfolder/books/$FILENAME
+          done
+
+      - name: Zip test files
+        run: |
+          sudo zip -j ${{ github.workspace }}/../samba_share/testfolder/books/test_files.zip ${{ github.workspace }}/../samba_share/testfolder/books/*.txt
+
+      - name: Upload Zip Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: smb-test-zip
+          path: /home/runner/work/ComicViewer/samba_share
+
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -53,7 +84,14 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedAndroidDeviceTest --continue
+          script: >
+            ./gradlew connectedAndroidDeviceTest --continue
+            -PsmbHost=10.0.2.2
+            -PsmbPort=445
+            -PsmbUsername=testuser
+            -PsmbPassword=testpass
+            -PsmbPath="/testshare/testfolder/"
+
       - if: cancelled() != true
         uses: dorny/test-reporter@v2
         with:

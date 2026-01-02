@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.fixedColors
@@ -39,6 +40,7 @@ internal fun AuthField(
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = list.size),
                     enabled = field.isEnabled,
                     colors = SegmentedButtonDefaults.fixedColors(),
+                    modifier = Modifier.testTag(auth.testTag)
                 ) {
                     Text(
                         text = stringResource(

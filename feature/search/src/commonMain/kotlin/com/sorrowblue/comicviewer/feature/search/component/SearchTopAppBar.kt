@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
@@ -99,7 +100,7 @@ internal fun SearchTopAppBar(
                 BackIconButton(onClick = onBackClick)
             },
             actions = {
-                IconButton(onClick = onSmartCollectionClick) {
+                IconButton(onClick = onSmartCollectionClick, modifier = Modifier.testTag("SmartCollectionButton")) {
                     Icon(ComicIcons.CollectionsBookmark, null)
                 }
                 SettingsIconButton(onClick = onSettingsClick)

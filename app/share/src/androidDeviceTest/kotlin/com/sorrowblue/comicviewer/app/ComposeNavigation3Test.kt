@@ -13,6 +13,7 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
@@ -21,32 +22,16 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.sorrowblue.comicviewer.ComicViewerUI
 import com.sorrowblue.comicviewer.data.database.di.DatabaseProviders
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
-import com.sorrowblue.comicviewer.domain.model.SortUtil
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
-import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
 import dev.zacsweers.metro.asContribution
 import dev.zacsweers.metro.createGraphFactory
-import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
-val graph by lazy {
-    createGraphFactory<Navigation3TestGraph.Factory>().create(
-        InstrumentationRegistry.getInstrumentation().context,
-        object : LicenseeHelper {
-            override suspend fun loadLibraries(): ByteArray {
-                TODO("Not yet implemented")
-            }
-        })
-}
 
 val appGraph by lazy {
     createGraphFactory<AppGraph.Factory>().createAppGraph(
@@ -63,29 +48,11 @@ class ComposeNavigation3Test {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    var bookshelfId: BookshelfId? = null
-
     @OptIn(InternalDataApi::class)
     @Before
     fun setup() {
         appGraph.asContribution<DatabaseProviders>()
         getPlatformGraph = { appGraph }
-        runTest {
-            var folder: Folder? = null
-            graph.bookshelfLocalDataSource.updateOrCreate(
-                InternalStorage("Navigation3Test"),
-            ) {
-                bookshelfId = it.id
-                folder = Folder(it.id, "name", "", "/test/", 0, 0, false)
-                graph.fileLocalDataSource.addUpdate(folder)
-            }
-            val files = SortUtil.sortedIndex(
-                List(4) {
-                    BookFile(bookshelfId!!, "name$it", "/test/", "/test/name$it", 0, 0, false)
-                }
-            )
-            graph.fileLocalDataSource.updateHistory(folder!!, files)
-        }
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -317,22 +284,45 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("BookshelfFab").performClick()
         composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
 
+        composeTestRule.onNodeWithTag("BackButton").performClick()
+        composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("BookshelfFab").performClick()
+        composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
+
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
         composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
+
         composeTestRule.onNodeWithTag("CloseButton").performClick()
         composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.DEVICE}")
             .performClick()
         composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
+
         composeTestRule.onNodeWithTag("CloseButton").performClick()
-
         composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("BackButton").performClick()
 
+        composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
+        composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("DisplayNameField").performTextInput("SMBBookshelf")
+        composeTestRule.onNodeWithTag("HostField").performTextInput(BuildTestConfig.smbHost)
+        composeTestRule.onNodeWithTag("PortField").performTextClearance()
+        composeTestRule.onNodeWithTag("PortField").performTextInput(BuildTestConfig.smbPort.toString())
+        composeTestRule.onNodeWithTag("PathField").performTextInput(BuildTestConfig.smbPath)
+        composeTestRule.onNodeWithTag("AuthUserPass").performClick()
+        composeTestRule.onNodeWithTag("DomainField").performTextInput(BuildTestConfig.smbDomain)
+        composeTestRule.onNodeWithTag("UsernameField").performTextInput(BuildTestConfig.smbUsername)
+        composeTestRule.onNodeWithTag("PasswordField").performTextInput(BuildTestConfig.smbPassword)
+        composeTestRule.onNodeWithTag("SaveButton").performClick()
+
+        composeTestRule.waitUntil(5000) {
+            composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").isNotDisplayed()
+        }
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("BookshelfListItemMenu-${bookshelfId!!.value}").performClick()
 
+        composeTestRule.onAllNodesWithTag("BookshelfListItemMenu").onFirst().performClick()
         composeTestRule.onNodeWithTag("BookshelfInfoScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("EditButton").performClick()
         composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
@@ -345,13 +335,46 @@ class ComposeNavigation3Test {
         composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("BookshelfListItem-${bookshelfId!!.value}")
+        composeTestRule.onAllNodesWithTag("BookshelfListItem").onFirst()
             .performTouchInput {
                 click(Offset(centerX, 10f))
             }
         composeTestRule.onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
 
+        composeTestRule.onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
+        composeTestRule.onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("AddCollectionButton").performClick()
+        composeTestRule.onNodeWithTag("BasicCollectionAddScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
+        composeTestRule.onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
+        composeTestRule.onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onAllNodesWithTag("FileListItem").onFirst().performClick()
+        composeTestRule.onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
+
         composeTestRule.onNodeWithTag("SearchButton").performClick()
+        composeTestRule.onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
+        composeTestRule.onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("OpenFolderButton").performClick()
+        composeTestRule.onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("BackButton").performClick()
+        composeTestRule.onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
+        composeTestRule.onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("SmartCollectionButton").performClick()
+        composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
+
+        composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
         composeTestRule.onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
     }
 }

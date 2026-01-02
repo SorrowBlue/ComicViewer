@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
@@ -53,6 +54,7 @@ internal fun EditorScreen(
                     TextButton(
                         onClick = form::handleSubmit,
                         enabled = !uiState.progress && form.meta.canSubmit,
+                        modifier = Modifier.testTag("SaveButton"),
                     ) {
                         AnimatedContent(targetState = uiState.progress, label = "progress") {
                             if (it) {
