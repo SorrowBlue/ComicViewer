@@ -1,5 +1,5 @@
 [versions]
-aboutlibraries = "13.2.1"
+aboutlibraries = "14.0.0-a02"
 android-gradle = "9.0.0-rc02"
 androidx-activity = "1.12.2"
 androidx-appcompat = "1.7.1"
