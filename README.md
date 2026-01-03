@@ -4,6 +4,17 @@
 [![Deploy Dokka and static content to Pages](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml)
 [![Release](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml)
 
+## Developer Guide
+
+📘 **For comprehensive development guidelines, please refer to [AGENTS.md](AGENTS.md)**
+
+AGENTS.md contains detailed information about:
+- Project setup and environment configuration
+- Build and test commands with execution time estimates
+- Code style guidelines and best practices
+- Architecture and module structure
+- Pull Request policies and release process
+
 ## Release Automation
 
 ComicViewer uses automated GitHub Actions workflows for releases. See [docs/release-automation.md](docs/release-automation.md) for details on the automated release process that builds and deploys both Android and Desktop versions.
