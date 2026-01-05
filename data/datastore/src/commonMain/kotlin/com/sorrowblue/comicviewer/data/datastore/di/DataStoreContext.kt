@@ -10,12 +10,12 @@ import dev.zacsweers.metro.Scope
 annotation class DataStoreScope
 
 @GraphExtension(DataStoreScope::class)
-interface DataStoreGraph {
+interface DataStoreContext {
     val datastoreDataSource: DatastoreDataSource
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory
     interface Factory {
-        fun createDataStoreGraph(): DataStoreGraph
+        fun createDataStoreContext(): DataStoreContext
     }
 }

@@ -64,8 +64,8 @@ fun rememberManageFolderDisplaySettingsUseCase(): ManageFolderDisplaySettingsUse
             }
         }
     } else {
-        val factory = LocalPlatformContext.current.require<GridSizeItemGraph.Factory>()
-        rememberRetained { factory.createGridSizeItemGraph() }.manageFolderDisplaySettingsUseCase
+        val factory = LocalPlatformContext.current.require<GridSizeItemContext.Factory>()
+        rememberRetained { factory.createGridSizeItemContext() }.manageFolderDisplaySettingsUseCase
     }
 
 @Composable
@@ -121,12 +121,12 @@ private class GridSizeItemStateImpl(
 annotation class GridSizeItemScope
 
 @GraphExtension(GridSizeItemScope::class)
-interface GridSizeItemGraph {
+interface GridSizeItemContext {
     val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory
     interface Factory {
-        fun createGridSizeItemGraph(): GridSizeItemGraph
+        fun createGridSizeItemContext(): GridSizeItemContext
     }
 }

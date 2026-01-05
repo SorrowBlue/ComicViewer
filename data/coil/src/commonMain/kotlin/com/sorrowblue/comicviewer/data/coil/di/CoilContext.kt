@@ -14,7 +14,7 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
 
 @GraphExtension(CoilScope::class)
-interface CoilGraph {
+interface CoilContext {
     @BookThumbnailFetcher
     val bookThumbnailFetcher: Fetcher.Factory<BookThumbnail>
 
@@ -30,6 +30,6 @@ interface CoilGraph {
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory
     interface Factory {
-        fun createCoilGraph(): CoilGraph
+        fun createCoilContext(): CoilContext
     }
 }

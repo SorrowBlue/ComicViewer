@@ -12,12 +12,10 @@ import dev.zacsweers.metro.Scope
 @Scope
 annotation class DocumentInitializerScope
 
-@ContributesTo(DocumentInitializerScope::class)
-@GraphExtension
+@GraphExtension(DocumentInitializerScope::class)
 interface DocumentInitializerContext {
     val datastoreDataSource: DatastoreDataSource
 
-//    val pdfPluginDataSource: Lazy<PdfPluginDataSource>
     val pdfPluginDataSourceFactory: DocumentReaderDataSource
 
     @ContributesTo(AppScope::class)

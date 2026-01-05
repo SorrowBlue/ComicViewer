@@ -8,14 +8,13 @@ import dev.zacsweers.metro.Scope
 @Scope
 annotation class AppLocaleIsoScope
 
-@ContributesTo(AppLocaleIsoScope::class)
-@GraphExtension
-interface AppLocaleIsoGraph {
+@GraphExtension(AppLocaleIsoScope::class)
+interface AppLocaleIsoContext {
     val appLocaleIso: AppLocaleIso
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory
     fun interface Factory {
-        fun createAppLocaleIsoGraph(): AppLocaleIsoGraph
+        fun createAppLocaleIsoContext(): AppLocaleIsoContext
     }
 }
