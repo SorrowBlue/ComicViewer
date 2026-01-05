@@ -8,26 +8,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalInspectionMode
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_action_change_grid_size
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Scope
-import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -45,28 +34,6 @@ fun GridSizeItemState.gridSizeItem() {
         )
     }
 }
-
-@Composable
-fun rememberManageFolderDisplaySettingsUseCase(): ManageFolderDisplaySettingsUseCase =
-    if (LocalInspectionMode.current) {
-        // Preview implementation
-        remember {
-            object : ManageFolderDisplaySettingsUseCase {
-                val localSettings = MutableStateFlow(FolderDisplaySettings())
-
-                override val settings: Flow<FolderDisplaySettings> = localSettings.asStateFlow()
-
-                override suspend fun edit(
-                    action: (FolderDisplaySettings) -> FolderDisplaySettings,
-                ) {
-                    localSettings.value = action(localSettings.value)
-                }
-            }
-        }
-    } else {
-        val factory = LocalPlatformContext.current.require<GridSizeItemContext.Factory>()
-        rememberRetained { factory.createGridSizeItemContext() }.manageFolderDisplaySettingsUseCase
-    }
 
 @Composable
 fun rememberGridSizeItemState(): GridSizeItemState {
@@ -119,14 +86,3 @@ private class GridSizeItemStateImpl(
 
 @Scope
 annotation class GridSizeItemScope
-
-@GraphExtension(GridSizeItemScope::class)
-interface GridSizeItemContext {
-    val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    interface Factory {
-        fun createGridSizeItemContext(): GridSizeItemContext
-    }
-}
