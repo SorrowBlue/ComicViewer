@@ -27,7 +27,13 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
                 selected = isSelected,
                 label = { Text(key.title) },
                 icon = { Icon(key.icon, null) },
-                onClick = { navigator.navigate(key) },
+                onClick = {
+                    if (key == navigator.topLevelKey) {
+                        onNavigationSelected()
+                    } else {
+                        navigator.navigate(key)
+                    }
+                },
                 modifier = Modifier.testTag("NavigationSuiteItem"),
             )
         }

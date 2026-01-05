@@ -34,7 +34,15 @@ internal fun rememberHistoryScreenState(): HistoryScreenState {
             PagingHistoryBookUseCase.Request(PagingConfig(20)),
         )
     }
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
+        onNavigationSelected = {
+            if (lazyGridState.canScrollBackward) {
+                scope.launch {
+                    lazyGridState.animateScrollToItem(0)
+                }
+            }
+        }
+    )
 
     return remember(lazyGridState, lazyPagingItems, scaffoldState) {
         HistoryScreenStateImpl(
