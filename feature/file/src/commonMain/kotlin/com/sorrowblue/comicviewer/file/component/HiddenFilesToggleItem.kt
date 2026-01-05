@@ -78,17 +78,3 @@ private class HiddenFilesToggleableItemStateImpl(
         }
     }
 }
-
-@Scope
-annotation class HiddenFilesToggleItemScope
-
-@GraphExtension(HiddenFilesToggleItemScope::class)
-interface HiddenFilesToggleableItemGraph {
-    val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    interface Factory {
-        fun createHiddenFilesToggleableItemGraph(): HiddenFilesToggleableItemGraph
-    }
-}

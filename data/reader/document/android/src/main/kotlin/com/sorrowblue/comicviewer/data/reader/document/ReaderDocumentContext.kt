@@ -9,8 +9,7 @@ import dev.zacsweers.metro.Scope
 @Scope
 annotation class ReaderDocumentContextScope
 
-@ContributesTo(ReaderDocumentContextScope::class)
-@GraphExtension
+@GraphExtension(ReaderDocumentContextScope::class)
 interface ReaderDocumentContext {
     val datastoreDataSource: DatastoreDataSource
 

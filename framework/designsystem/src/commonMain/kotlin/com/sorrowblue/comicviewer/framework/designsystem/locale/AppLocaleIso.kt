@@ -48,7 +48,7 @@ val ProvideLocalAppLocaleIso: ProvidedValue<*>
     get() {
         val context = LocalPlatformContext.current
         val graph = rememberRetained {
-            context.require<AppLocaleIsoGraph.Factory>().createAppLocaleIsoGraph()
+            context.require<AppLocaleIsoContext.Factory>().createAppLocaleIsoContext()
         }
         return graph.appLocaleIso provides appLanguageTag
     }

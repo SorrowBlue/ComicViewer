@@ -8,11 +8,7 @@ import dev.zacsweers.metro.binding
 actual typealias PlatformContext = IosContext
 
 @Suppress("UtilityClassWithPublicConstructor")
-abstract class IosContext {
-    companion object {
-        lateinit var platformGraph: PlatformGraph
-    }
-}
+abstract class IosContext
 
 @ContributesBinding(AppScope::class, binding = binding<PlatformContext>())
 @Inject

@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
-interface SettingsProviders {
+interface SettingsNavProviders {
     @Provides
     @ElementsIntoSet
     private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
