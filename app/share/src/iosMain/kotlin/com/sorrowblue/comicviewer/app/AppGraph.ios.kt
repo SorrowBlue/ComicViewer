@@ -69,7 +69,7 @@ import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSetti
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenContext
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialProviders
 import com.sorrowblue.comicviewer.file.FileInfoScreenContext
-import com.sorrowblue.comicviewer.file.component.GridSizeItemContext
+import com.sorrowblue.comicviewer.file.component.FileAppBarItemContext
 import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
@@ -153,12 +153,12 @@ actual interface AppGraph :
     TutorialScreenContext.Factory,
     TutorialProviders,
     FileInfoScreenContext.Factory,
-    GridSizeItemContext.Factory,
+    FileAppBarItemContext.Factory,
     FolderScreenContext.Factory,
     AppLocaleIsoContext.Factory,
     PlatformGraph,
     FrameworkCommonProviders {
-        actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
+    actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
     actual val context: PlatformContext
 
     @DependencyGraph.Factory

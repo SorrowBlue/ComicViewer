@@ -7,7 +7,6 @@ import dev.zacsweers.metro.GraphExtension
 
 @GraphExtension(PdfPluginScreenScope::class)
 actual interface PdfPluginScreenContext : ScreenContext {
-
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory
     actual fun interface Factory {

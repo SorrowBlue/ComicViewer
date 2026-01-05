@@ -28,7 +28,7 @@ fun FileInfoScreenRoot(
                 onOpenFolderClick = {
                     onOpenFolderClick(state.uiState.file)
                 },
-                modifier = modifier.testTag("FileInfoScreenRoot")
+                modifier = modifier.testTag("FileInfoScreenRoot"),
             )
         }
 

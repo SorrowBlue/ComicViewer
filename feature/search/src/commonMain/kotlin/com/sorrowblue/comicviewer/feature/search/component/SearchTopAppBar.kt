@@ -100,7 +100,10 @@ internal fun SearchTopAppBar(
                 BackIconButton(onClick = onBackClick)
             },
             actions = {
-                IconButton(onClick = onSmartCollectionClick, modifier = Modifier.testTag("SmartCollectionButton")) {
+                IconButton(
+                    onClick = onSmartCollectionClick,
+                    modifier = Modifier.testTag("SmartCollectionButton"),
+                ) {
                     Icon(ComicIcons.CollectionsBookmark, null)
                 }
                 SettingsIconButton(onClick = onSettingsClick)

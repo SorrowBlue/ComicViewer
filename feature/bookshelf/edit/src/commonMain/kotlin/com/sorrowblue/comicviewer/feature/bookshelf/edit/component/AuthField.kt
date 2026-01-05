@@ -40,7 +40,7 @@ internal fun AuthField(
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = list.size),
                     enabled = field.isEnabled,
                     colors = SegmentedButtonDefaults.fixedColors(),
-                    modifier = Modifier.testTag(auth.testTag)
+                    modifier = Modifier.testTag(auth.testTag),
                 ) {
                     Text(
                         text = stringResource(
