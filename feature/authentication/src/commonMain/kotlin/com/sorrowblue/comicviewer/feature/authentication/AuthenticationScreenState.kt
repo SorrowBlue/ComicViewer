@@ -27,6 +27,8 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val biometricManager = rememberBiometricManager()
+    val securitySettings = context.securitySettingsUseCase
+    
     return rememberListSaveable(
         screenType,
         save = { arrayListOf(it.pinHistory, it.uiState.encodeToByteArray()) },
@@ -36,11 +38,11 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
         },
     ) {
         AuthenticationScreenStateImpl(
-            snackbarHostState = snackbarHostState,
             screenType = screenType,
             scope = scope,
+            securitySettings = securitySettings,
+            snackbarHostState = snackbarHostState,
             biometricManager = biometricManager,
-            securitySettings = context.securitySettingsUseCase,
         )
     }
 }
@@ -56,7 +58,7 @@ internal interface AuthenticationScreenState {
 }
 
 private class AuthenticationScreenStateImpl(
-    screenType: ScreenType,
+    private val screenType: ScreenType,
     private val scope: CoroutineScope,
     private val securitySettings: ManageSecuritySettingsUseCase,
     override val snackbarHostState: SnackbarHostState,
