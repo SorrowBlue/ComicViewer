@@ -25,7 +25,7 @@ context(context: BookshelfScreenContext)
 internal fun rememberBookshelfScreenState(): BookshelfScreenState {
     val lazyGridState = rememberLazyGridState()
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(onNavigationSelected = {
+    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(onNavigationReSelect = {
         if (lazyGridState.canScrollBackward) {
             scope.launch {
                 lazyGridState.animateScrollToItem(0)

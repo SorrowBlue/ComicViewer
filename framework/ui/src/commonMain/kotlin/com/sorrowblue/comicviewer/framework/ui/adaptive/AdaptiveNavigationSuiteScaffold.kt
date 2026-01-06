@@ -29,7 +29,7 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
                 icon = { Icon(key.icon, null) },
                 onClick = {
                     if (key == navigator.topLevelKey) {
-                        onNavigationSelected()
+                        onNavigationReSelect()
                     } else {
                         navigator.navigate(key)
                     }

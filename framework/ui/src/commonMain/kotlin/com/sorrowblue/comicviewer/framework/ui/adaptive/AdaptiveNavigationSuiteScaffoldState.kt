@@ -16,7 +16,8 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonSta
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 
 interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
-    fun onNavigationSelected()
+    fun onNavigationReSelect()
+
     val navigationSuiteType: NavigationSuiteType
     val wideNavigationRailState: WideNavigationRailState
     val floatingActionButtonState: FloatingActionButtonState
@@ -24,7 +25,7 @@ interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
 
 @Composable
 fun rememberAdaptiveNavigationSuiteScaffoldState(
-    onNavigationSelected: () -> Unit = {},
+    onNavigationReSelect: () -> Unit = {},
 ): AdaptiveNavigationSuiteScaffoldState {
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
     val navigationSuiteType =
@@ -32,7 +33,7 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(
     return remember {
         AdaptiveNavigationSuiteScaffoldStateImpl(
             navigationSuiteScaffoldState = navigationSuiteScaffoldState,
-            onNavigationClick = onNavigationSelected
+            onNavigationReSelect = onNavigationReSelect,
         )
     }.apply {
         this.navigationSuiteType = navigationSuiteType
@@ -43,13 +44,14 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(
 
 private class AdaptiveNavigationSuiteScaffoldStateImpl(
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
-    private val onNavigationClick: () -> Unit,
+    private val onNavigationReSelect: () -> Unit,
 ) : AdaptiveNavigationSuiteScaffoldState,
     NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
     override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
     override lateinit var wideNavigationRailState: WideNavigationRailState
     override lateinit var floatingActionButtonState: FloatingActionButtonState
-    override fun onNavigationSelected() {
-        onNavigationClick()
+
+    override fun onNavigationReSelect() {
+        onNavigationReSelect.invoke()
     }
 }

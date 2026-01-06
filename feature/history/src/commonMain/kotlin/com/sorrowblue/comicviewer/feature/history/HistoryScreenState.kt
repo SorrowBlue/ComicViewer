@@ -35,13 +35,13 @@ internal fun rememberHistoryScreenState(): HistoryScreenState {
         )
     }
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
-        onNavigationSelected = {
+        onNavigationReSelect = {
             if (lazyGridState.canScrollBackward) {
                 scope.launch {
                     lazyGridState.animateScrollToItem(0)
                 }
             }
-        }
+        },
     )
 
     return remember(lazyGridState, lazyPagingItems, scaffoldState) {
