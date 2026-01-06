@@ -243,6 +243,8 @@ private class BookScreenStateImpl(
 
     private fun handleSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
+        if (index < 0) return
+
         currentList[index] = if (bitmap.imageWidth < bitmap.imageHeight) {
             BookPage.Spread.Single(spread.index)
         } else {
