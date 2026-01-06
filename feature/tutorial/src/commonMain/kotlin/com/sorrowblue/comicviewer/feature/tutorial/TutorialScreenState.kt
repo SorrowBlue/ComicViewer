@@ -53,9 +53,7 @@ private class TutorialScreenStateImpl(
         manageViewerOperationSettingsUseCase.settings
             .onEach {
                 uiState = uiState.copy(
-                    directionSheetUiState = uiState.directionSheetUiState.copy(
-                        direction = it.bindingDirection,
-                    ),
+                    bindingDirection = it.bindingDirection,
                 )
             }.launchIn(scope)
     }
