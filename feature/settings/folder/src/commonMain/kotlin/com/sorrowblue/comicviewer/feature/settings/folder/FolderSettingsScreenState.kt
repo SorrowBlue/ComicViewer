@@ -57,15 +57,13 @@ internal fun rememberFolderSettingsScreenState(): FolderSettingsScreenState {
             manageFolderDisplaySettingsUseCase = context.manageFolderDisplaySettingsUseCase,
             coroutineScope = coroutineScope,
         )
-    }.apply {
-        this.coroutineScope = coroutineScope
     }
 }
 
 private class FolderSettingsScreenStateImpl(
     private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
     private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    var coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) : FolderSettingsScreenState {
     override var uiState: FolderSettingsScreenUiState by mutableStateOf(
         FolderSettingsScreenUiState(),

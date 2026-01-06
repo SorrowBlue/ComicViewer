@@ -28,14 +28,12 @@ internal fun rememberDarkModeScreenState(): DarkModeScreenState {
             displaySettingsUseCase = context.displaySettingsUseCase,
             coroutineScope = coroutineScope,
         )
-    }.apply {
-        this.coroutineScope = coroutineScope
     }
 }
 
 private class DarkModeScreenStateImpl(
     private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
-    var coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) : DarkModeScreenState {
     override var uiState by mutableStateOf(DarkModeScreenUiState())
 
