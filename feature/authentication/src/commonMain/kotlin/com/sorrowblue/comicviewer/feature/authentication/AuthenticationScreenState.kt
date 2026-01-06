@@ -13,9 +13,7 @@ import com.sorrowblue.comicviewer.framework.ui.saveable.decodeTo
 import com.sorrowblue.comicviewer.framework.ui.saveable.encodeToByteArray
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 internal sealed interface AuthenticationScreenEvent {
     data object Complete : AuthenticationScreenEvent
@@ -27,11 +25,19 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val biometricManager = rememberBiometricManager()
+    val pinFlowManager = remember { PinFlowManager(context.securitySettingsUseCase) }
+    val pinInputFlowStateHolder = remember { PinInputFlowStateHolder() }
+
     return rememberListSaveable(
         screenType,
-        save = { arrayListOf(it.pinHistory, it.uiState.encodeToByteArray()) },
+        save = {
+            arrayListOf(
+                it.pinInputFlowStateHolder.getTemporaryPin(),
+                it.uiState.encodeToByteArray(),
+            )
+        },
         restore = {
-            pinHistory = it[0] as String
+            pinInputFlowStateHolder.storeTemporaryPin(it[0] as String)
             uiState = (it[1] as ByteArray).decodeTo()
         },
     ) {
@@ -40,7 +46,8 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
             screenType = screenType,
             scope = scope,
             biometricManager = biometricManager,
-            securitySettings = context.securitySettingsUseCase,
+            pinFlowManager = pinFlowManager,
+            pinInputFlowStateHolder = pinInputFlowStateHolder,
         )
     }
 }
@@ -58,9 +65,10 @@ internal interface AuthenticationScreenState {
 private class AuthenticationScreenStateImpl(
     screenType: ScreenType,
     private val scope: CoroutineScope,
-    private val securitySettings: ManageSecuritySettingsUseCase,
     override val snackbarHostState: SnackbarHostState,
     private val biometricManager: BiometricManager,
+    private val pinFlowManager: PinFlowManager,
+    val pinInputFlowStateHolder: PinInputFlowStateHolder,
 ) : AuthenticationScreenState {
     override val events = EventFlow<AuthenticationScreenEvent>()
 
@@ -73,141 +81,145 @@ private class AuthenticationScreenStateImpl(
         },
     )
 
-    var pinHistory by mutableStateOf("")
-
     init {
-        if (screenType == ScreenType.Authenticate &&
-            runBlocking { securitySettings.settings.first().useBiometrics }
-        ) {
+        if (screenType == ScreenType.Authenticate) {
             scope.launch {
-                when (val result = biometricManager.authenticate()) {
-                    is AuthenticationResult.Error -> snackbarHostState.showSnackbar(result.message)
-                    AuthenticationResult.Success -> events.tryEmit(
-                        AuthenticationScreenEvent.Complete,
-                    )
+                if (pinFlowManager.isBiometricsEnabled()) {
+                    handleBiometricAuthentication()
                 }
             }
+        }
+    }
+
+    private suspend fun handleBiometricAuthentication() {
+        when (val result = biometricManager.authenticate()) {
+            is AuthenticationResult.Error -> snackbarHostState.showSnackbar(result.message)
+            AuthenticationResult.Success -> events.tryEmit(AuthenticationScreenEvent.Complete)
         }
     }
 
     override fun onPinChange(pin: String) {
-        uiState =
-            uiState.copyPin(if (pin.all { it.digitToIntOrNull() != null }) pin else "")
+        uiState = uiState.copyPin(if (pin.all { it.digitToIntOrNull() != null }) pin else "")
     }
 
     override fun onNextClick() {
         when (val currentUiState = uiState) {
-            is AuthenticationScreenUiState.Authentication -> {
-                scope.launch {
-                    if (uiState.pin == securitySettings.settings.first().password) {
-                        uiState = currentUiState.copy(loading = true)
-                        events.tryEmit(AuthenticationScreenEvent.Complete)
-                    } else {
-                        uiState = AuthenticationScreenUiState.Authentication(
-                            pin = "",
-                            error = ErrorType.IncorrectPin,
-                        )
-                    }
-                }
-            }
-
-            is AuthenticationScreenUiState.Erase -> {
-                scope.launch {
-                    if (uiState.pin == securitySettings.settings.first().password) {
-                        securitySettings.edit { it.copy(password = null, useBiometrics = false) }
-                        uiState = currentUiState.copy(loading = true)
-                        events.tryEmit(AuthenticationScreenEvent.Complete)
-                    } else {
-                        uiState = AuthenticationScreenUiState.Erase(
-                            pin = "",
-                            error = ErrorType.IncorrectPin,
-                        )
-                    }
-                }
-            }
-
-            is AuthenticationScreenUiState.Change -> onNextClickChangeScreen(currentUiState)
-            is AuthenticationScreenUiState.Register -> onNextClickRegisterScreen(currentUiState)
+            is AuthenticationScreenUiState.Authentication -> handleAuthentication(currentUiState)
+            is AuthenticationScreenUiState.Erase -> handleErase(currentUiState)
+            is AuthenticationScreenUiState.Change -> handleChange(currentUiState)
+            is AuthenticationScreenUiState.Register -> handleRegister(currentUiState)
         }
     }
 
-    private fun onNextClickChangeScreen(currentUiState: AuthenticationScreenUiState.Change) {
-        when (currentUiState) {
-            is AuthenticationScreenUiState.Change.ConfirmOld -> {
-                scope.launch {
-                    uiState = if (uiState.pin == securitySettings.settings.first().password) {
-                        AuthenticationScreenUiState.Change.Input("")
-                    } else {
-                        AuthenticationScreenUiState.Change.ConfirmOld(
-                            pin = "",
-                            error = ErrorType.IncorrectPin,
-                        )
-                    }
-                }
-            }
-
-            is AuthenticationScreenUiState.Change.Input -> {
-                if (MinPinSize <= uiState.pin.count()) {
-                    pinHistory = uiState.pin
-                    uiState = AuthenticationScreenUiState.Change.Confirm("")
-                } else {
-                    uiState = AuthenticationScreenUiState.Change.Input(
-                        pin = "",
-                        error = ErrorType.Pin4More,
-                    )
-                }
-            }
-
-            is AuthenticationScreenUiState.Change.Confirm -> {
-                val pin = uiState.pin
-                if (pin == pinHistory) {
-                    scope.launch {
-                        securitySettings.edit { it.copy(password = pin) }
-                        uiState = currentUiState.copy(loading = true)
-                        events.tryEmit(AuthenticationScreenEvent.Complete)
-                    }
-                } else {
-                    uiState = AuthenticationScreenUiState.Change.Input(
-                        pin = "",
-                        error = ErrorType.IncorrectPin,
-                    )
-                }
+    private fun handleAuthentication(currentUiState: AuthenticationScreenUiState.Authentication) {
+        scope.launch {
+            if (pinFlowManager.verifyPin(uiState.pin)) {
+                uiState = currentUiState.copy(loading = true)
+                events.tryEmit(AuthenticationScreenEvent.Complete)
+            } else {
+                uiState = AuthenticationScreenUiState.Authentication(
+                    pin = "",
+                    error = ErrorType.IncorrectPin,
+                )
             }
         }
     }
 
-    private fun onNextClickRegisterScreen(currentUiState: AuthenticationScreenUiState.Register) {
-        when (currentUiState) {
-            is AuthenticationScreenUiState.Register.Input -> {
-                if (MinPinSize <= uiState.pin.count()) {
-                    pinHistory = uiState.pin
-                    uiState = AuthenticationScreenUiState.Register.Confirm("")
-                } else {
-                    uiState = AuthenticationScreenUiState.Register.Input(
-                        pin = "",
-                        error = ErrorType.Pin4More,
-                    )
-                }
+    private fun handleErase(currentUiState: AuthenticationScreenUiState.Erase) {
+        scope.launch {
+            if (pinFlowManager.verifyPin(uiState.pin)) {
+                pinFlowManager.removePin()
+                uiState = currentUiState.copy(loading = true)
+                events.tryEmit(AuthenticationScreenEvent.Complete)
+            } else {
+                uiState = AuthenticationScreenUiState.Erase(
+                    pin = "",
+                    error = ErrorType.IncorrectPin,
+                )
             }
+        }
+    }
 
-            is AuthenticationScreenUiState.Register.Confirm -> {
-                val pin = uiState.pin
-                if (pin == pinHistory) {
-                    scope.launch {
-                        securitySettings.edit { it.copy(password = pin) }
-                        uiState = currentUiState.copy(loading = true)
-                        events.tryEmit(AuthenticationScreenEvent.Complete)
-                    }
-                } else {
-                    pinHistory = ""
-                    uiState = AuthenticationScreenUiState.Register.Input(
-                        pin = "",
-                        error = ErrorType.PinNotMatch,
-                    )
-                }
+    private fun handleChange(currentUiState: AuthenticationScreenUiState.Change) {
+        when (currentUiState) {
+            is AuthenticationScreenUiState.Change.ConfirmOld -> handleChangeConfirmOld()
+            is AuthenticationScreenUiState.Change.Input -> handleChangeInput(currentUiState)
+            is AuthenticationScreenUiState.Change.Confirm -> handleChangeConfirm(currentUiState)
+        }
+    }
+
+    private fun handleChangeConfirmOld() {
+        scope.launch {
+            if (pinFlowManager.verifyPin(uiState.pin)) {
+                uiState = AuthenticationScreenUiState.Change.Input("")
+            } else {
+                uiState = AuthenticationScreenUiState.Change.ConfirmOld(
+                    pin = "",
+                    error = ErrorType.IncorrectPin,
+                )
             }
+        }
+    }
+
+    private fun handleChangeInput(currentUiState: AuthenticationScreenUiState.Change.Input) {
+        if (pinFlowManager.validatePinLength(uiState.pin)) {
+            pinInputFlowStateHolder.storeTemporaryPin(uiState.pin)
+            uiState = AuthenticationScreenUiState.Change.Confirm("")
+        } else {
+            uiState = currentUiState.copy(
+                pin = "",
+                error = ErrorType.Pin4More,
+            )
+        }
+    }
+
+    private fun handleChangeConfirm(currentUiState: AuthenticationScreenUiState.Change.Confirm) {
+        if (pinInputFlowStateHolder.verifyTemporaryPin(uiState.pin)) {
+            scope.launch {
+                pinFlowManager.savePin(uiState.pin)
+                uiState = currentUiState.copy(loading = true)
+                events.tryEmit(AuthenticationScreenEvent.Complete)
+            }
+        } else {
+            uiState = AuthenticationScreenUiState.Change.Input(
+                pin = "",
+                error = ErrorType.IncorrectPin,
+            )
+        }
+    }
+
+    private fun handleRegister(currentUiState: AuthenticationScreenUiState.Register) {
+        when (currentUiState) {
+            is AuthenticationScreenUiState.Register.Input -> handleRegisterInput(currentUiState)
+            is AuthenticationScreenUiState.Register.Confirm -> handleRegisterConfirm(currentUiState)
+        }
+    }
+
+    private fun handleRegisterInput(currentUiState: AuthenticationScreenUiState.Register.Input) {
+        if (pinFlowManager.validatePinLength(uiState.pin)) {
+            pinInputFlowStateHolder.storeTemporaryPin(uiState.pin)
+            uiState = AuthenticationScreenUiState.Register.Confirm("")
+        } else {
+            uiState = currentUiState.copy(
+                pin = "",
+                error = ErrorType.Pin4More,
+            )
+        }
+    }
+
+    private fun handleRegisterConfirm(currentUiState: AuthenticationScreenUiState.Register.Confirm) {
+        if (pinInputFlowStateHolder.verifyTemporaryPin(uiState.pin)) {
+            scope.launch {
+                pinFlowManager.savePin(uiState.pin)
+                uiState = currentUiState.copy(loading = true)
+                events.tryEmit(AuthenticationScreenEvent.Complete)
+            }
+        } else {
+            pinInputFlowStateHolder.clearTemporaryPin()
+            uiState = AuthenticationScreenUiState.Register.Input(
+                pin = "",
+                error = ErrorType.PinNotMatch,
+            )
         }
     }
 }
-
-private const val MinPinSize = 4
