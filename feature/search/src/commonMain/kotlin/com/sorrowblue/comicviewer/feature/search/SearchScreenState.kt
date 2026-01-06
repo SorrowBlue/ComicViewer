@@ -48,21 +48,34 @@ internal interface SearchScreenState {
 context(context: SearchScreenContext)
 internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): SearchScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val lazyGridState = rememberLazyGridState()
+    
+    // Create a reference that will hold the state holder
+    // This allows lazyPagingItems to access the state holder's uiState
+    val stateHolderRef = remember { mutableStateOf<SearchScreenStateImpl?>(null) }
+    
+    // Create lazyPagingItems that accesses stateHolder via the reference
+    // The lambda is evaluated lazily when data is actually requested by the paging system,
+    // which happens after stateHolderRef is set. The fallback to SearchCondition() handles
+    // the unlikely case of early evaluation.
+    val lazyPagingItems = rememberPagingItems {
+        context.pagingQueryFileUseCase(
+            PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
+                stateHolderRef.value?.uiState?.searchCondition ?: SearchCondition()
+            },
+        )
+    }
+    
+    // Create state holder with all dependencies
+    return remember(lazyGridState, lazyPagingItems) {
         SearchScreenStateImpl(
             path = path,
+            lazyGridState = lazyGridState,
+            lazyPagingItems = lazyPagingItems,
             coroutineScope = coroutineScope,
             manageFolderDisplaySettingsUseCase = context.manageFolderDisplaySettingsUseCase,
-        )
-    }.apply {
-        this.coroutineScope = coroutineScope
-        this.lazyGridState = rememberLazyGridState()
-        this.lazyPagingItems = rememberPagingItems {
-            context.pagingQueryFileUseCase(
-                PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
-                    uiState.searchCondition
-                },
-            )
+        ).also {
+            stateHolderRef.value = it
         }
     }
 }
@@ -70,11 +83,11 @@ internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): 
 @OptIn(SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
     private val path: String,
-    var coroutineScope: CoroutineScope,
+    override val lazyGridState: LazyGridState,
+    override val lazyPagingItems: LazyPagingItems<File>,
+    private val coroutineScope: CoroutineScope,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : SearchScreenState {
-    override lateinit var lazyGridState: LazyGridState
-    override lateinit var lazyPagingItems: LazyPagingItems<File>
 
     override var uiState by mutableStateOf(SearchScreenUiState())
 
@@ -140,6 +153,10 @@ private class SearchScreenStateImpl(
     ): SearchScreenUiState = uiState.copy(searchCondition = action(uiState.searchCondition))
 
     private fun update() {
+        // Update state flags to trigger scroll and skip first refresh
+        // Note: lazyPagingItems.refresh() is intentionally handled in SearchScreenRoot
+        // via LaunchedEffect(state.uiState.searchCondition) to properly coordinate with
+        // the UI lifecycle and avoid calling refresh() during composition.
         isScrollableTop = true
         if (isSkipFirstRefresh) {
             isSkipFirstRefresh = false
