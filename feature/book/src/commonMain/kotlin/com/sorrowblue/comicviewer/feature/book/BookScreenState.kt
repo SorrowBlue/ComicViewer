@@ -38,20 +38,21 @@ import kotlinx.coroutines.sync.withLock
 @Composable
 context(context: BookScreenContext)
 internal fun rememberBookScreenState(
-    uiState: BookScreenUiState.Loaded,
-    currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() },
-    pagerState: PagerState = rememberPagerState(
-        initialPage = uiState.book.lastPageRead + 1,
-        pageCount = { currentList.size },
-    ),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    systemUiController: SystemUiController = rememberSystemUiController(),
+    initialUiState: BookScreenUiState.Loaded,
 ): BookScreenState {
     val isCompactWindowClass = isCompactWindowClass()
+    val scope = rememberCoroutineScope()
+    val systemUiController = rememberSystemUiController()
+    val currentList = remember { mutableStateListOf<PageItem>() }
+    val pagerState = rememberPagerState(
+        initialPage = initialUiState.book.lastPageRead + 1,
+        pageCount = { currentList.size },
+    )
+
     return remember(isCompactWindowClass) {
         BookScreenStateImpl(
             isCompactWindowClass = isCompactWindowClass,
-            uiState = uiState,
+            initialUiState = initialUiState,
             currentList = currentList,
             pagerState = pagerState,
             scope = scope,
@@ -80,17 +81,17 @@ internal interface BookScreenState {
 }
 
 private class BookScreenStateImpl(
-    val scope: CoroutineScope,
-    val systemUiController: SystemUiController,
-    uiState: BookScreenUiState.Loaded,
-    isCompactWindowClass: Boolean,
+    private val isCompactWindowClass: Boolean,
+    initialUiState: BookScreenUiState.Loaded,
     override val currentList: SnapshotStateList<PageItem>,
     override val pagerState: PagerState,
-    getNextBookUseCase: GetNextBookUseCase,
-    manageBookSettingsUseCase: ManageBookSettingsUseCase,
+    private val scope: CoroutineScope,
+    private val systemUiController: SystemUiController,
+    private val getNextBookUseCase: GetNextBookUseCase,
+    private val manageBookSettingsUseCase: ManageBookSettingsUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
 ) : BookScreenState {
-    override var uiState by mutableStateOf(uiState)
+    override var uiState by mutableStateOf(initialUiState)
         private set
 
     private suspend fun GetNextBookUseCase.execute(isNext: Boolean): NextPage {
@@ -120,70 +121,78 @@ private class BookScreenStateImpl(
         return NextPage(isNext, nextBookList)
     }
 
+    private suspend fun buildPageList(pageFormat: BookSettings.PageFormat): List<PageItem> =
+        buildList {
+            add(getNextBookUseCase.execute(false))
+            addAll(
+                when (pageFormat) {
+                    BookSettings.PageFormat.Default -> (1..uiState.book.totalPageCount)
+                        .map {
+                            BookPage.Default(it - 1)
+                        }
+
+                    BookSettings.PageFormat.Spread ->
+                        (1..uiState.book.totalPageCount).map {
+                            BookPage.Spread.Unrated(it - 1)
+                        }
+
+                    BookSettings.PageFormat.Split -> (1..uiState.book.totalPageCount)
+                        .map {
+                            BookPage.Split.Unrated(it - 1)
+                        }
+
+                    BookSettings.PageFormat.Auto ->
+                        if (isCompactWindowClass) {
+                            (1..uiState.book.totalPageCount).map {
+                                BookPage.Split.Unrated(it - 1)
+                            }
+                        } else {
+                            (1..uiState.book.totalPageCount).map {
+                                BookPage.Spread.Unrated(it - 1)
+                            }
+                        }
+                },
+            )
+            add(getNextBookUseCase.execute(true))
+        }
+
     init {
         manageBookSettingsUseCase.settings
             .map { it.pageFormat }
             .distinctUntilChanged()
             .onEach { pageFormat ->
-                currentList.addAll(
-                    buildList {
-                        add(getNextBookUseCase.execute(false))
-                        addAll(
-                            when (pageFormat) {
-                                BookSettings.PageFormat.Default -> (1..uiState.book.totalPageCount)
-                                    .map {
-                                        BookPage.Default(it - 1)
-                                    }
-
-                                BookSettings.PageFormat.Spread ->
-                                    (1..uiState.book.totalPageCount).map {
-                                        BookPage.Spread.Unrated(it - 1)
-                                    }
-
-                                BookSettings.PageFormat.Split -> (1..uiState.book.totalPageCount)
-                                    .map {
-                                        BookPage.Split.Unrated(it - 1)
-                                    }
-
-                                BookSettings.PageFormat.Auto ->
-                                    if (isCompactWindowClass) {
-                                        (1..uiState.book.totalPageCount).map {
-                                            BookPage.Split.Unrated(it - 1)
-                                        }
-                                    } else {
-                                        (1..uiState.book.totalPageCount).map {
-                                            BookPage.Spread.Unrated(it - 1)
-                                        }
-                                    }
-                            },
-                        )
-                        add(getNextBookUseCase.execute(true))
-                    },
-                )
+                currentList.addAll(buildPageList(pageFormat))
             }.launchIn(scope)
         manageBookSettingsUseCase.settings
-            .onEach {
-                this.uiState = this.uiState.copy(
-                    bookSheetUiState = this.uiState.bookSheetUiState.copy(
-                        pageScale = when (it.pageScale) {
-                            BookSettings.PageScale.Fit -> PageScale.Fit
-                            BookSettings.PageScale.FillWidth -> PageScale.FillWidth
-                            BookSettings.PageScale.FillHeight -> PageScale.FillHeight
-                            BookSettings.PageScale.Inside -> PageScale.Inside
-                            BookSettings.PageScale.None -> PageScale.None
-                            BookSettings.PageScale.FillBounds -> PageScale.FillBounds
-                        },
+            .onEach { settings ->
+                uiState = uiState.copy(
+                    bookSheetUiState = uiState.bookSheetUiState.copy(
+                        pageScale = mapPageScale(settings.pageScale),
                     ),
                 )
             }.launchIn(scope)
+        // Save the initial page position when screen opens
+        scope.launch {
+            updateLastReadPage()
+        }
+    }
+
+    private fun mapPageScale(pageScale: BookSettings.PageScale): PageScale = when (pageScale) {
+        BookSettings.PageScale.Fit -> PageScale.Fit
+        BookSettings.PageScale.FillWidth -> PageScale.FillWidth
+        BookSettings.PageScale.FillHeight -> PageScale.FillHeight
+        BookSettings.PageScale.Inside -> PageScale.Inside
+        BookSettings.PageScale.None -> PageScale.None
+        BookSettings.PageScale.FillBounds -> PageScale.FillBounds
+    }
+
+    private suspend fun updateLastReadPage() {
         val request = UpdateLastReadPageUseCase.Request(
             uiState.book.bookshelfId,
             uiState.book.path,
             pagerState.currentPage - 1,
         )
-        scope.launch {
-            updateLastReadPageUseCase(request)
-        }
+        updateLastReadPageUseCase(request)
     }
 
     override fun toggleTooltip() {
@@ -196,13 +205,8 @@ private class BookScreenStateImpl(
     }
 
     override fun onStop() {
-        val request = UpdateLastReadPageUseCase.Request(
-            uiState.book.bookshelfId,
-            uiState.book.path,
-            pagerState.currentPage - 1,
-        )
         scope.launch {
-            updateLastReadPageUseCase(request)
+            updateLastReadPage()
         }
     }
 
@@ -212,46 +216,52 @@ private class BookScreenStateImpl(
         }
     }
 
-    val mutex = Mutex()
+    private val mutex = Mutex()
 
     override fun onPageLoad(unratedPage: UnratedPage, bitmap: Bitmap) {
         scope.launch {
             mutex.withLock {
                 when (unratedPage) {
-                    is BookPage.Spread.Unrated -> onSpreadPageLoad(unratedPage, bitmap)
-
-                    is BookPage.Split.Unrated -> onSplitPageLoad(unratedPage, bitmap)
+                    is BookPage.Spread.Unrated -> handleSpreadPageLoad(unratedPage, bitmap)
+                    is BookPage.Split.Unrated -> handleSplitPageLoad(unratedPage, bitmap)
                 }
             }
         }
     }
 
-    private fun onSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
+    private fun handleSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(split)
-        if (0 < index) {
-            if (bitmap.imageWidth < bitmap.imageHeight) {
-                currentList[index] = BookPage.Split.Single(split.index)
-            } else {
-                currentList[index] = BookPage.Split.Right(split.index)
-                currentList.add(index + 1, BookPage.Split.Left(split.index))
-            }
+        if (index < 0) return
+
+        currentList[index] = if (bitmap.imageWidth < bitmap.imageHeight) {
+            BookPage.Split.Single(split.index)
+        } else {
+            currentList.add(index + 1, BookPage.Split.Left(split.index))
+            BookPage.Split.Right(split.index)
         }
     }
 
-    private fun onSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
+    private fun handleSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(spread)
-        if (bitmap.imageWidth < bitmap.imageHeight) {
-            currentList[index] = BookPage.Spread.Single(spread.index)
+        if (index < 0) return
+
+        currentList[index] = if (bitmap.imageWidth < bitmap.imageHeight) {
+            BookPage.Spread.Single(spread.index)
         } else {
-            // 横
-            currentList[index] = BookPage.Spread.Spread2(spread.index)
+            BookPage.Spread.Spread2(spread.index)
         }
 
+        updateSpreadPageList()
+    }
+
+    private fun updateSpreadPageList() {
         val skipIndex = mutableListOf<Int>()
         val newList = mutableListOf<PageItem>()
         var nextSingle: BookPage.Spread.Single? = null
-        currentList.forEachIndexed { index1, bookItem ->
-            if (skipIndex.contains(index1)) return@forEachIndexed
+
+        currentList.forEachIndexed { index, bookItem ->
+            if (skipIndex.contains(index)) return@forEachIndexed
+
             when (val item = nextSingle ?: bookItem) {
                 is BookPage.Spread.Combine -> newList.add(item)
                 is BookPage.Spread.Single -> {
@@ -259,23 +269,7 @@ private class BookScreenStateImpl(
                         newList.add(item)
                         nextSingle = null
                     } else {
-                        when (val nextItem = currentList[index1 + 1]) {
-                            is BookPage.Spread.Single -> {
-                                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                                skipIndex += index1 + 1
-                                nextSingle = null
-                            }
-
-                            is BookPage.Spread.Combine -> {
-                                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                                nextSingle = BookPage.Spread.Single(nextItem.nextIndex)
-                            }
-
-                            else -> {
-                                newList.add(item)
-                                nextSingle = null
-                            }
-                        }
+                        processSingleSpreadPage(item, index, newList, skipIndex).also { nextSingle = it }
                     }
                 }
 
@@ -286,5 +280,36 @@ private class BookScreenStateImpl(
         }
         currentList.clear()
         currentList.addAll(newList)
+    }
+
+    private fun processSingleSpreadPage(
+        item: BookPage.Spread.Single,
+        currentIndex: Int,
+        newList: MutableList<PageItem>,
+        skipIndex: MutableList<Int>,
+    ): BookPage.Spread.Single? {
+        // Bounds check to prevent IndexOutOfBoundsException
+        if (currentIndex + 1 >= currentList.size) {
+            newList.add(item)
+            return null
+        }
+
+        return when (val nextItem = currentList[currentIndex + 1]) {
+            is BookPage.Spread.Single -> {
+                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
+                skipIndex += currentIndex + 1
+                null
+            }
+
+            is BookPage.Spread.Combine -> {
+                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
+                BookPage.Spread.Single(nextItem.nextIndex)
+            }
+
+            else -> {
+                newList.add(item)
+                null
+            }
+        }
     }
 }

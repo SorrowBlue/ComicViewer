@@ -109,7 +109,7 @@ internal fun BookScreenRoot(
                     BookErrorScreen(uiState = uiState, onBackClick = onBackClick)
 
                 is BookScreenUiState.Loaded -> {
-                    val state = rememberBookScreenState(uiState)
+                    val state = rememberBookScreenState(initialUiState = uiState)
                     BookScreen(
                         uiState = state.uiState,
                         pagerState = state.pagerState,
