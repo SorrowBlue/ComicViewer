@@ -48,33 +48,44 @@ internal interface SearchScreenState {
 context(context: SearchScreenContext)
 internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): SearchScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val lazyGridState = rememberLazyGridState()
+    
+    // Create a mutable reference to store the state holder
+    val stateHolderRef = remember(path) { mutableStateOf<SearchScreenStateImpl?>(null) }
+    
+    // Create lazyPagingItems that accesses stateHolder via the reference
+    val lazyPagingItems = rememberPagingItems {
+        context.pagingQueryFileUseCase(
+            PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
+                stateHolderRef.value?.uiState?.searchCondition ?: SearchCondition()
+            },
+        )
+    }
+    
+    // Create state holder with all dependencies
+    val stateHolder = remember(lazyGridState, lazyPagingItems) {
         SearchScreenStateImpl(
             path = path,
+            lazyGridState = lazyGridState,
+            lazyPagingItems = lazyPagingItems,
             coroutineScope = coroutineScope,
             manageFolderDisplaySettingsUseCase = context.manageFolderDisplaySettingsUseCase,
-        )
-    }.apply {
-        this.coroutineScope = coroutineScope
-        this.lazyGridState = rememberLazyGridState()
-        this.lazyPagingItems = rememberPagingItems {
-            context.pagingQueryFileUseCase(
-                PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
-                    uiState.searchCondition
-                },
-            )
+        ).also {
+            stateHolderRef.value = it
         }
     }
+    
+    return stateHolder
 }
 
 @OptIn(SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
     private val path: String,
-    var coroutineScope: CoroutineScope,
+    override val lazyGridState: LazyGridState,
+    override val lazyPagingItems: LazyPagingItems<File>,
+    private val coroutineScope: CoroutineScope,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : SearchScreenState {
-    override lateinit var lazyGridState: LazyGridState
-    override lateinit var lazyPagingItems: LazyPagingItems<File>
 
     override var uiState by mutableStateOf(SearchScreenUiState())
 
