@@ -50,10 +50,12 @@ internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): 
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
     
-    // Create a mutable reference to store the state holder
-    val stateHolderRef = remember(path) { mutableStateOf<SearchScreenStateImpl?>(null) }
+    // Create a reference that will hold the state holder
+    // This allows lazyPagingItems to access the state holder's uiState
+    val stateHolderRef = remember { mutableStateOf<SearchScreenStateImpl?>(null) }
     
     // Create lazyPagingItems that accesses stateHolder via the reference
+    // The lambda is evaluated lazily, so stateHolderRef will be set by then
     val lazyPagingItems = rememberPagingItems {
         context.pagingQueryFileUseCase(
             PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
@@ -63,7 +65,7 @@ internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): 
     }
     
     // Create state holder with all dependencies
-    val stateHolder = remember(lazyGridState, lazyPagingItems) {
+    return remember(lazyGridState, lazyPagingItems) {
         SearchScreenStateImpl(
             path = path,
             lazyGridState = lazyGridState,
@@ -74,8 +76,6 @@ internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): 
             stateHolderRef.value = it
         }
     }
-    
-    return stateHolder
 }
 
 @OptIn(SavedStateHandleSaveableApi::class)
