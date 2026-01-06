@@ -45,10 +45,10 @@ internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScree
     val scope = rememberCoroutineScope()
     val manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val state = remember(scope, snackbarHostState) {
+    val androidContext = LocalContext.current
+    val state = remember(scope, snackbarHostState, androidContext, manageSecuritySettingsUseCase) {
         SecuritySettingsScreenStateImpl(
-            context = context,
+            context = androidContext,
             scope = scope,
             manageSecuritySettingsUseCase = manageSecuritySettingsUseCase,
             snackbarHostState = snackbarHostState,
