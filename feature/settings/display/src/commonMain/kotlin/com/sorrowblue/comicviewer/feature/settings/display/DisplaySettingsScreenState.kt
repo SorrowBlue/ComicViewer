@@ -29,14 +29,12 @@ internal fun rememberDisplaySettingsScreenState(): DisplaySettingsScreenState {
             coroutineScope = coroutineScope,
             displaySettingsUseCase = context.displaySettingsUseCase,
         )
-    }.apply {
-        this.coroutineScope = coroutineScope
     }
 }
 
 private class DisplaySettingsScreenStateImpl(
     private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
-    var coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) : DisplaySettingsScreenState {
     override var uiState by mutableStateOf(SettingsDisplayScreenUiState())
         private set

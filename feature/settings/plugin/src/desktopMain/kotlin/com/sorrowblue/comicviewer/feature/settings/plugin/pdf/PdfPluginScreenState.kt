@@ -33,18 +33,18 @@ internal interface PdfPluginScreenState {
 context(context: PdfPluginScreenContext)
 internal fun rememberPdfPluginScreenState(): PdfPluginScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val state = remember(coroutineScope) {
         PdfPluginScreenStateImpl(
             managePdfPluginSettingsUseCase = context.managePdfPluginSettingsUseCase,
             registerPdfPluginUseCase = context.registerPdfPluginUseCase,
             coroutineScope = coroutineScope,
         )
-    }.apply {
-        directoryPickerLauncher = rememberDirectoryPickerLauncher(
-            title = "ComicViewer PDFプラグインのインストールディレクトリを選択",
-            onResult = ::onDirectoryPickerResult,
-        )
     }
+    state.directoryPickerLauncherState.value = rememberDirectoryPickerLauncher(
+        title = "ComicViewer PDFプラグインのインストールディレクトリを選択",
+        onResult = state::onDirectoryPickerResult,
+    )
+    return state
 }
 
 private class PdfPluginScreenStateImpl(
@@ -52,7 +52,10 @@ private class PdfPluginScreenStateImpl(
     private val registerPdfPluginUseCase: RegisterPdfPluginUseCase,
     private val coroutineScope: CoroutineScope,
 ) : PdfPluginScreenState {
-    lateinit var directoryPickerLauncher: PickerResultLauncher
+    val directoryPickerLauncherState = mutableStateOf<PickerResultLauncher?>(null)
+    private val directoryPickerLauncher: PickerResultLauncher
+        get() = directoryPickerLauncherState.value
+            ?: error("directoryPickerLauncher not initialized. Make sure rememberPdfPluginScreenState is called.")
 
     override var uiState by mutableStateOf(PdfPluginScreenUiState())
 
