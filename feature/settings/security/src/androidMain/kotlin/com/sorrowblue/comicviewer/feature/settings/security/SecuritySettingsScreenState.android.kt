@@ -43,14 +43,13 @@ import org.jetbrains.compose.resources.getString
 context(context: SecuritySettingsScreenContext)
 internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScreenState {
     val scope = rememberCoroutineScope()
-    val manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
     val snackbarHostState = remember { SnackbarHostState() }
     val androidContext = LocalContext.current
-    val state = remember(scope, snackbarHostState, androidContext, manageSecuritySettingsUseCase) {
+    val state = remember(scope, snackbarHostState, androidContext, context) {
         SecuritySettingsScreenStateImpl(
             context = androidContext,
             scope = scope,
-            manageSecuritySettingsUseCase = manageSecuritySettingsUseCase,
+            manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase,
             snackbarHostState = snackbarHostState,
         )
     }
@@ -152,6 +151,9 @@ private class SecuritySettingsScreenStateImpl(
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
                     logcat { "Authentication error: $errString" }
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message = errString.toString())
+                    }
                 }
 
                 override fun onAuthenticationSucceeded(
@@ -188,7 +190,7 @@ private class SecuritySettingsScreenStateImpl(
     override fun onChangeBackgroundLockEnabled(value: Boolean) {
         scope.launch {
             manageSecuritySettingsUseCase.edit {
-                it.copy(lockOnBackground = true)
+                it.copy(lockOnBackground = value)
             }
         }
     }
