@@ -55,7 +55,9 @@ internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): 
     val stateHolderRef = remember { mutableStateOf<SearchScreenStateImpl?>(null) }
     
     // Create lazyPagingItems that accesses stateHolder via the reference
-    // The lambda is evaluated lazily, so stateHolderRef will be set by then
+    // The lambda is evaluated lazily when data is actually requested by the paging system,
+    // which happens after stateHolderRef is set. The fallback to SearchCondition() handles
+    // the unlikely case of early evaluation.
     val lazyPagingItems = rememberPagingItems {
         context.pagingQueryFileUseCase(
             PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
@@ -151,6 +153,10 @@ private class SearchScreenStateImpl(
     ): SearchScreenUiState = uiState.copy(searchCondition = action(uiState.searchCondition))
 
     private fun update() {
+        // Update state flags to trigger scroll and skip first refresh
+        // Note: lazyPagingItems.refresh() is intentionally handled in SearchScreenRoot
+        // via LaunchedEffect(state.uiState.searchCondition) to properly coordinate with
+        // the UI lifecycle and avoid calling refresh() during composition.
         isScrollableTop = true
         if (isSkipFirstRefresh) {
             isSkipFirstRefresh = false
