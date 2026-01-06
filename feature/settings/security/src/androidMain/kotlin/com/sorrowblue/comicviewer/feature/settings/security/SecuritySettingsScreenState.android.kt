@@ -68,11 +68,14 @@ private class SecuritySettingsScreenStateImpl(
     override val snackbarHostState: SnackbarHostState,
 ) : SecuritySettingsScreenState {
     private val biometricManager = BiometricManager.from(context)
-    
-    val resultLauncherState = mutableStateOf<ManagedActivityResultLauncher<Intent, ActivityResult>?>(null)
+
+    val resultLauncherState =
+        mutableStateOf<ManagedActivityResultLauncher<Intent, ActivityResult>?>(null)
     private val resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
         get() = resultLauncherState.value
-            ?: error("resultLauncher not initialized. Make sure rememberSecuritySettingsScreenState is called.")
+            ?: error(
+                "resultLauncher not initialized. Make sure rememberSecuritySettingsScreenState is called."
+            )
 
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
