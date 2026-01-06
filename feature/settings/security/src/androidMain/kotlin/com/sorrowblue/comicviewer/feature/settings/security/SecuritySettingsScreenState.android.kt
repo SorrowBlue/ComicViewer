@@ -45,16 +45,16 @@ internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScree
     val scope = rememberCoroutineScope()
     val manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val state = remember {
+    val androidContext = LocalContext.current
+    val state = remember(scope, snackbarHostState, androidContext, manageSecuritySettingsUseCase) {
         SecuritySettingsScreenStateImpl(
-            context = context,
+            context = androidContext,
             scope = scope,
             manageSecuritySettingsUseCase = manageSecuritySettingsUseCase,
             snackbarHostState = snackbarHostState,
         )
     }
-    state.resultLauncher = rememberLauncherForActivityResult(
+    state.resultLauncherState.value = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { state.activityResult() },
     )
@@ -69,7 +69,13 @@ private class SecuritySettingsScreenStateImpl(
 ) : SecuritySettingsScreenState {
     private val biometricManager = BiometricManager.from(context)
 
-    lateinit var resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
+    val resultLauncherState =
+        mutableStateOf<ManagedActivityResultLauncher<Intent, ActivityResult>?>(null)
+    private val resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
+        get() = resultLauncherState.value
+            ?: error(
+                "resultLauncher not initialized. Make sure rememberSecuritySettingsScreenState is called."
+            )
 
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
