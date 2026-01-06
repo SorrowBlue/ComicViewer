@@ -28,7 +28,7 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
     val scope = rememberCoroutineScope()
     val biometricManager = rememberBiometricManager()
     val securitySettings = context.securitySettingsUseCase
-    
+
     return rememberListSaveable(
         screenType,
         save = { arrayListOf(it.pinHistory, it.uiState.encodeToByteArray()) },
