@@ -171,6 +171,7 @@ private class BookScreenStateImpl(
                     ),
                 )
             }.launchIn(scope)
+        // Save the initial page position when screen opens
         scope.launch {
             updateLastReadPage()
         }
@@ -230,7 +231,7 @@ private class BookScreenStateImpl(
 
     private fun handleSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
         val index = currentList.indexOf(split)
-        if (index <= 0) return
+        if (index < 0) return
 
         currentList[index] = if (bitmap.imageWidth < bitmap.imageHeight) {
             BookPage.Split.Single(split.index)
@@ -285,6 +286,12 @@ private class BookScreenStateImpl(
         newList: MutableList<PageItem>,
         skipIndex: MutableList<Int>,
     ): BookPage.Spread.Single? {
+        // Bounds check to prevent IndexOutOfBoundsException
+        if (currentIndex + 1 >= currentList.size) {
+            newList.add(item)
+            return null
+        }
+
         return when (val nextItem = currentList[currentIndex + 1]) {
             is BookPage.Spread.Single -> {
                 newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
