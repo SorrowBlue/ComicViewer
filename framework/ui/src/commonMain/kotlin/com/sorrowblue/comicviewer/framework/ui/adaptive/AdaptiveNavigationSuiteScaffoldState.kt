@@ -16,19 +16,24 @@ import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonSta
 import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 
 interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
+    fun onNavigationReSelect()
+
     val navigationSuiteType: NavigationSuiteType
     val wideNavigationRailState: WideNavigationRailState
     val floatingActionButtonState: FloatingActionButtonState
 }
 
 @Composable
-fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaffoldState {
+fun rememberAdaptiveNavigationSuiteScaffoldState(
+    onNavigationReSelect: () -> Unit = {},
+): AdaptiveNavigationSuiteScaffoldState {
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
     val navigationSuiteType =
         NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
     return remember {
         AdaptiveNavigationSuiteScaffoldStateImpl(
             navigationSuiteScaffoldState = navigationSuiteScaffoldState,
+            onNavigationReSelect = onNavigationReSelect,
         )
     }.apply {
         this.navigationSuiteType = navigationSuiteType
@@ -39,9 +44,14 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(): AdaptiveNavigationSuiteScaff
 
 private class AdaptiveNavigationSuiteScaffoldStateImpl(
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
+    private val onNavigationReSelect: () -> Unit,
 ) : AdaptiveNavigationSuiteScaffoldState,
     NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
     override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
     override lateinit var wideNavigationRailState: WideNavigationRailState
     override lateinit var floatingActionButtonState: FloatingActionButtonState
+
+    override fun onNavigationReSelect() {
+        onNavigationReSelect.invoke()
+    }
 }

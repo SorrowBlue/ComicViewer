@@ -12,50 +12,46 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolder
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 interface BookshelfScreenState {
     val lazyPagingItems: LazyPagingItems<BookshelfFolder>
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyGridState: LazyGridState
-
-    fun onNavItemReSelected()
 }
 
 @Composable
 context(context: BookshelfScreenContext)
 internal fun rememberBookshelfScreenState(): BookshelfScreenState {
-    val stateImpl = remember {
-        BookshelfScreenStateImpl()
-    }.apply {
-        scope = rememberCoroutineScope()
-        lazyGridState = rememberLazyGridState()
-        lazyPagingItems = rememberPagingItems {
-            context.pagingBookshelfFolderUseCase(
-                PagingBookshelfFolderUseCase.Request(
-                    PagingConfig(PageSize),
-                ),
-            )
-        }
-        scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-    }
-    return stateImpl
-}
-
-private class BookshelfScreenStateImpl : BookshelfScreenState {
-    override lateinit var lazyGridState: LazyGridState
-    lateinit var scope: CoroutineScope
-    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
-    override lateinit var lazyPagingItems: LazyPagingItems<BookshelfFolder>
-
-    override fun onNavItemReSelected() {
+    val lazyGridState = rememberLazyGridState()
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(onNavigationReSelect = {
         if (lazyGridState.canScrollBackward) {
             scope.launch {
                 lazyGridState.animateScrollToItem(0)
             }
         }
+    })
+    val lazyPagingItems = rememberPagingItems {
+        context.pagingBookshelfFolderUseCase(
+            PagingBookshelfFolderUseCase.Request(
+                PagingConfig(PageSize),
+            ),
+        )
+    }
+    return remember(lazyGridState, scaffoldState, lazyPagingItems) {
+        BookshelfScreenStateImpl(
+            lazyGridState = lazyGridState,
+            scaffoldState = scaffoldState,
+            lazyPagingItems = lazyPagingItems,
+        )
     }
 }
+
+private class BookshelfScreenStateImpl(
+    override val lazyGridState: LazyGridState,
+    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
+    override val lazyPagingItems: LazyPagingItems<BookshelfFolder>,
+) : BookshelfScreenState
 
 private const val PageSize = 20
