@@ -28,7 +28,7 @@ internal enum class TutorialSheet {
 
 internal data class TutorialScreenUiState(
     val list: List<TutorialSheet> = TutorialSheet.entries,
-    val directionSheetUiState: DirectionSheetUiState = DirectionSheetUiState(),
+    val bindingDirection: BindingDirection = BindingDirection.RTL,
 )
 
 @Composable
@@ -39,7 +39,14 @@ internal fun TutorialScreen(
     onBindingDirectionChange: (BindingDirection) -> Unit,
 ) {
     Scaffold(
-        bottomBar = { TutorialBottomBar(pageState, onNextClick) },
+        bottomBar = {
+            TutorialBottomBar(
+                pagerState = pageState,
+                pageCount = uiState.list.size,
+                isLastPage = pageState.isLastPage,
+                onNextClick = onNextClick,
+            )
+        },
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier.testTag("TutorialScreen"),
     ) { contentPadding ->
@@ -50,7 +57,7 @@ internal fun TutorialScreen(
                 TutorialSheet.DOCUMENT -> DocumentSheet(contentPadding = contentPadding)
 
                 TutorialSheet.READING_DIRECTION -> DirectionSheet(
-                    uiState = uiState.directionSheetUiState,
+                    uiState = DirectionSheetUiState(direction = uiState.bindingDirection),
                     onBindingDirectionChange = onBindingDirectionChange,
                     contentPadding = contentPadding,
                 )

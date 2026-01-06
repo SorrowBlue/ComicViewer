@@ -13,13 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.sorrowblue.comicviewer.feature.tutorial.TutorialSheet
-import com.sorrowblue.comicviewer.feature.tutorial.isLastPage
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.material3.HorizontalPagerIndicator
 
 @Composable
-internal fun TutorialBottomBar(pageState: PagerState, onNextClick: () -> Unit) {
+internal fun TutorialBottomBar(
+    pagerState: PagerState,
+    pageCount: Int,
+    isLastPage: Boolean,
+    onNextClick: () -> Unit,
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -29,12 +32,12 @@ internal fun TutorialBottomBar(pageState: PagerState, onNextClick: () -> Unit) {
             .padding(ComicTheme.dimension.margin),
     ) {
         HorizontalPagerIndicator(
-            pagerState = pageState,
+            pagerState = pagerState,
             activeColor = MaterialTheme.colorScheme.primary,
-            pageCount = TutorialSheet.entries.size,
+            pageCount = pageCount,
         )
         TextButton(onClick = onNextClick, modifier = Modifier.testTag("NextButton")) {
-            if (pageState.isLastPage) {
+            if (isLastPage) {
                 Text(text = "Done")
             } else {
                 Text(text = "Next")
