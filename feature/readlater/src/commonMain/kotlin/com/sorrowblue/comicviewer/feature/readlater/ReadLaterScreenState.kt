@@ -27,33 +27,43 @@ internal interface ReadLaterScreenState {
 @Composable
 context(context: ReadLaterScreenContext)
 internal fun rememberReadLaterScreenState(): ReadLaterScreenState {
-    val state = remember {
+    val lazyGridState = rememberLazyGridState()
+    val scope = rememberCoroutineScope()
+    val lazyPagingItems = rememberPagingItems {
+        context.pagingReadLaterFileUseCase(
+            PagingReadLaterFileUseCase.Request(PagingConfig(20)),
+        )
+    }
+    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
+        onNavigationReSelect = {
+            if (lazyGridState.canScrollBackward) {
+                scope.launch {
+                    lazyGridState.animateScrollToItem(0)
+                }
+            }
+        },
+    )
+
+    return remember(lazyGridState, lazyPagingItems, scaffoldState) {
         ReadLaterScreenStateImpl(
             deleteAllReadLaterUseCase = context.deleteAllReadLaterUseCase,
+            lazyGridState = lazyGridState,
+            lazyPagingItems = lazyPagingItems,
+            scaffoldState = scaffoldState,
+            scope = scope,
         )
-    }.apply {
-        scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-        lazyPagingItems = rememberPagingItems {
-            context.pagingReadLaterFileUseCase(
-                PagingReadLaterFileUseCase.Request(PagingConfig(20)),
-            )
-        }
-        lazyGridState = rememberLazyGridState()
-        coroutineScope = rememberCoroutineScope()
     }
-    return state
 }
 
 private class ReadLaterScreenStateImpl(
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
+    override val lazyGridState: LazyGridState,
+    override val lazyPagingItems: LazyPagingItems<File>,
+    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
+    private val scope: CoroutineScope,
 ) : ReadLaterScreenState {
-    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
-    override lateinit var lazyPagingItems: LazyPagingItems<File>
-    override lateinit var lazyGridState: LazyGridState
-    lateinit var coroutineScope: CoroutineScope
-
     override fun onClearAllClick() {
-        coroutineScope.launch {
+        scope.launch {
             deleteAllReadLaterUseCase(DeleteAllReadLaterUseCase.Request)
         }
     }
