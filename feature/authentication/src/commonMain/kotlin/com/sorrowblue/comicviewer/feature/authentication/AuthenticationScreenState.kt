@@ -52,6 +52,16 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
     }
 }
 
+/**
+ * State holder for the authentication screen.
+ * Acts as a coordinator between UI state and business logic components.
+ *
+ * This interface follows state hoisting best practices by:
+ * - Exposing UI state through [uiState]
+ * - Providing event callbacks through [onNextClick] and [onPinChange]
+ * - Delegating business logic to [PinFlowManager]
+ * - Managing temporary flow state through [PinInputFlowStateHolder]
+ */
 internal interface AuthenticationScreenState {
     val uiState: AuthenticationScreenUiState
     val events: EventFlow<AuthenticationScreenEvent>
@@ -62,6 +72,21 @@ internal interface AuthenticationScreenState {
     fun onPinChange(pin: String)
 }
 
+/**
+ * Implementation of [AuthenticationScreenState] that coordinates authentication flows.
+ *
+ * Responsibilities:
+ * - Manages UI state transitions based on screen type and user actions
+ * - Delegates PIN validation and security operations to [PinFlowManager]
+ * - Uses [PinInputFlowStateHolder] for temporary PIN storage during confirmation flows
+ * - Handles biometric authentication integration
+ * - Emits completion events when authentication succeeds
+ *
+ * This implementation separates concerns by:
+ * - UI State Management: Handled by this class
+ * - Business Logic: Delegated to [PinFlowManager]
+ * - Flow State: Managed by [PinInputFlowStateHolder]
+ */
 private class AuthenticationScreenStateImpl(
     screenType: ScreenType,
     private val scope: CoroutineScope,
