@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import dev.zacsweers.metro.Scope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
@@ -80,7 +81,7 @@ private class PreAppScreenStateImpl(
                     AuthStatus.AuthRequired(
                         authed =
                         authStatus is AuthStatus.AuthRequired &&
-                            (authStatus as AuthStatus.AuthRequired).authed
+                            (authStatus as AuthStatus.AuthRequired).authed,
                     )
                 } else {
                     AuthStatus.NoAuthRequired
