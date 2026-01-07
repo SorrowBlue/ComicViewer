@@ -15,7 +15,7 @@ internal interface SecuritySettingsScreenState {
     fun onBiometricsDialogDismissRequest()
 
     val snackbarHostState: SnackbarHostState
-    var uiState: SecuritySettingsScreenUiState
+    val uiState: SecuritySettingsScreenUiState
 }
 
 @Composable

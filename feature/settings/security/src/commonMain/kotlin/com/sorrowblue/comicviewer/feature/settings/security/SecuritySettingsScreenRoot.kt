@@ -17,6 +17,7 @@ internal fun SecuritySettingsScreenRoot(
 
     SecuritySettingsScreen(
         uiState = state.uiState,
+        snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onChangeAuthEnable = onChangeAuthEnable,
         onPasswordChangeClick = onPasswordChangeClick,
