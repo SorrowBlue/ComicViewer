@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 sealed interface AuthStatus {
     data object Unknown : AuthStatus
@@ -55,31 +54,35 @@ internal interface PreAppScreenState {
 
 @Suppress("OPT_IN_USAGE")
 private class PreAppScreenStateImpl(
-    val scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
 ) : PreAppScreenState {
     override var authStatus by mutableStateOf<AuthStatus>(AuthStatus.Unknown)
         private set
 
-    override var tutorialRequired by mutableStateOf(
-        runBlocking { !loadSettingsUseCase.settings.first().doneTutorial },
-    )
+    override var tutorialRequired by mutableStateOf(true)
         private set
 
     init {
+        // Initialize tutorial status and listen for changes
         loadSettingsUseCase.settings
-            .mapLatest { it.doneTutorial }
+            .mapLatest { !it.doneTutorial }
             .distinctUntilChanged()
-            .onEach {
-                tutorialRequired = !it
-            }.launchIn(scope)
+            .onEach { tutorialRequired = it }
+            .launchIn(scope)
+
+        // Initialize auth status and listen for changes
         manageSecuritySettingsUseCase.settings
             .mapLatest { !it.password.isNullOrEmpty() }
             .distinctUntilChanged()
-            .onEach {
-                authStatus = if (it) {
-                    AuthStatus.AuthRequired(authed = authStatus !is AuthStatus.Unknown)
+            .onEach { hasPassword ->
+                authStatus = if (hasPassword) {
+                    AuthStatus.AuthRequired(
+                        authed =
+                        authStatus is AuthStatus.AuthRequired &&
+                            (authStatus as AuthStatus.AuthRequired).authed
+                    )
                 } else {
                     AuthStatus.NoAuthRequired
                 }
@@ -91,7 +94,7 @@ private class PreAppScreenStateImpl(
     }
 
     override fun onStop() {
-        runBlocking {
+        scope.launch {
             if (authStatus is AuthStatus.AuthRequired &&
                 manageSecuritySettingsUseCase.settings.first().lockOnBackground
             ) {
