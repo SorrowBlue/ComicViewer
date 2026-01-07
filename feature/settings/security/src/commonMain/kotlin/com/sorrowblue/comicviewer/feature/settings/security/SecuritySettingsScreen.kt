@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings.security
 
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,6 +29,7 @@ internal data class SecuritySettingsScreenUiState(
 @Composable
 internal fun SecuritySettingsScreen(
     uiState: SecuritySettingsScreenUiState,
+    snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onChangeAuthEnable: (Boolean) -> Unit,
     onPasswordChangeClick: () -> Unit,
@@ -37,6 +40,7 @@ internal fun SecuritySettingsScreen(
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_security_title)) },
         onBackClick = onBackClick,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = modifier,
     ) {
         SwitchSetting(
