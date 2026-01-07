@@ -26,7 +26,7 @@ fun rememberAppState(
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
         currentWindowAdaptiveInfo(),
     )
-    return remember(sharedTransitionScope, snackbarHostState, coroutineScope) {
+    return remember(sharedTransitionScope, snackbarHostState) {
         AppStateImpl(
             navigationSuiteType = navigationSuiteType,
             sharedTransitionScope = sharedTransitionScope,
