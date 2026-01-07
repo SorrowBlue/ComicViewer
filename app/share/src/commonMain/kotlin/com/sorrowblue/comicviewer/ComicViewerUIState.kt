@@ -12,6 +12,7 @@ import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSe
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorrowblue.comicviewer.app.MainViewModel
 import com.sorrowblue.comicviewer.domain.EmptyRequest
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
@@ -58,8 +59,13 @@ fun rememberComicViewerUIState(
         },
     )
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    return remember(
+        allowNavigationRestored,
+        context.manageDisplaySettingsUseCase,
+        context.getNavigationHistoryUseCase,
+    ) {
         ComicViewerUIStateImpl(
+            navigator = navigator,
             allowNavigationRestored = allowNavigationRestored,
             coroutineScope = coroutineScope,
             manageDisplaySettingsUseCase = context.manageDisplaySettingsUseCase,
@@ -69,39 +75,30 @@ fun rememberComicViewerUIState(
                 mainViewModel.isInitialized.value = true
             },
         )
-    }.apply {
-        this.navigator = navigator
     }
 }
 
 private class ComicViewerUIStateImpl(
+    override val navigator: Navigator,
     allowNavigationRestored: Boolean,
     private val coroutineScope: CoroutineScope,
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val completeInit: () -> Unit,
 ) : ComicViewerUIState {
-    override lateinit var navigator: Navigator
-    var isNavigationRestored by mutableStateOf(false)
+    private var isNavigationRestored by mutableStateOf(false)
 
     init {
-        if (allowNavigationRestored) {
-            if (!isNavigationRestored) {
-                coroutineScope.launch {
-                    if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
-                        cancelJob(
-                            coroutineScope,
-                            3000,
-                            ::completeRestoreHistory,
-                            ::restoreNavigation,
-                        )
-                    } else {
-                        completeRestoreHistory()
-                    }
+        if (allowNavigationRestored && !isNavigationRestored) {
+            coroutineScope.launch {
+                if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
+                    restoreNavigationWithTimeout()
+                } else {
+                    completeRestoreHistory()
                 }
-            } else {
-                completeRestoreHistory()
             }
+        } else if (allowNavigationRestored) {
+            completeRestoreHistory()
         }
     }
 
@@ -110,64 +107,90 @@ private class ComicViewerUIStateImpl(
         completeRestoreHistory()
     }
 
+    private fun restoreNavigationWithTimeout() {
+        val restorationJob = coroutineScope.launch {
+            restoreNavigation()
+        }
+        coroutineScope.launch {
+            delay(RESTORE_TIMEOUT_MILLIS)
+            restorationJob.cancel()
+            completeRestoreHistory()
+        }
+    }
+
     private fun restoreNavigation(): Job = coroutineScope.launch {
         val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
         if (history?.folderList.isNullOrEmpty()) {
             completeRestoreHistory()
+            return@launch
+        }
+
+        val (folderList, book) = history.value
+        val bookshelfId = folderList.first().bookshelfId
+
+        if (folderList.size == 1) {
+            navigateToSingleFolder(bookshelfId, folderList.first().path, book.path)
         } else {
-            val (folderList, book) = history.value
-            val bookshelfId = folderList.first().bookshelfId
-            if (folderList.size == 1) {
-                navigator.navigate(
-                    BookshelfFolderNavKey(
-                        bookshelfId = bookshelfId,
-                        path = folderList.first().path,
-                        restorePath = book.path,
-                        onRestoreComplete = {
-                            onNavigationHistoryRestore()
-                        },
-                    ),
-                )
-                logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                }
-            } else {
-                navigator.navigate(
-                    BookshelfFolderNavKey(
-                        bookshelfId = bookshelfId,
-                        path = folderList.first().path,
-                        restorePath = null,
-                    ),
-                )
-                logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
-                }
-                folderList.drop(1).dropLast(1).forEach { folder ->
-                    navigator.navigate(
-                        BookshelfFolderNavKey(
-                            bookshelfId = bookshelfId,
-                            path = folderList.first().path,
-                            restorePath = null,
-                        ),
-                    )
-                    logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                        "-> folder(${folder.path})"
-                    }
-                }
-                navigator.navigate(
-                    BookshelfFolderNavKey(
-                        bookshelfId = bookshelfId,
-                        path = folderList.last().path,
-                        restorePath = book.path,
-                        onRestoreComplete = {
-                            onNavigationHistoryRestore()
-                        },
-                    ),
-                )
-                logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
-                    "-> folder${folderList.last().path}, ${book.path}"
-                }
+            navigateToNestedFolders(bookshelfId, folderList, book.path)
+        }
+    }
+
+    private fun navigateToSingleFolder(bookshelfId: BookshelfId, path: String, bookPath: String) {
+        navigator.navigate(
+            BookshelfFolderNavKey(
+                bookshelfId = bookshelfId,
+                path = path,
+                restorePath = bookPath,
+                onRestoreComplete = ::onNavigationHistoryRestore,
+            ),
+        )
+        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+            "bookshelf(${bookshelfId.value}) -> folder($path)"
+        }
+    }
+
+    private fun navigateToNestedFolders(
+        bookshelfId: BookshelfId,
+        folderList: List<com.sorrowblue.comicviewer.domain.model.file.Folder>,
+        bookPath: String,
+    ) {
+        // Navigate to first folder
+        navigator.navigate(
+            BookshelfFolderNavKey(
+                bookshelfId = bookshelfId,
+                path = folderList.first().path,
+                restorePath = null,
+            ),
+        )
+        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+            "bookshelf(${bookshelfId.value}) -> folder(${folderList.first().path})"
+        }
+
+        // Navigate through intermediate folders
+        folderList.drop(1).dropLast(1).forEach { folder ->
+            navigator.navigate(
+                BookshelfFolderNavKey(
+                    bookshelfId = bookshelfId,
+                    path = folder.path,
+                    restorePath = null,
+                ),
+            )
+            logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+                "-> folder(${folder.path})"
             }
+        }
+
+        // Navigate to last folder with book restoration
+        navigator.navigate(
+            BookshelfFolderNavKey(
+                bookshelfId = bookshelfId,
+                path = folderList.last().path,
+                restorePath = bookPath,
+                onRestoreComplete = ::onNavigationHistoryRestore,
+            ),
+        )
+        logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
+            "-> folder(${folderList.last().path}), $bookPath"
         }
     }
 
@@ -176,29 +199,7 @@ private class ComicViewerUIStateImpl(
         isNavigationRestored = true
     }
 
-    /**
-     * Cancel job
-     *
-     * @param scope
-     * @param waitTimeMillis
-     * @param onCancel
-     * @param action
-     * @receiver
-     * @receiver
-     */
-    private fun cancelJob(
-        scope: CoroutineScope,
-        waitTimeMillis: Long,
-        onCancel: () -> Unit,
-        action: () -> Unit,
-    ) {
-        val job = scope.launch {
-            action()
-        }
-        scope.launch {
-            delay(waitTimeMillis)
-            onCancel()
-            job.cancel()
-        }
+    companion object {
+        private const val RESTORE_TIMEOUT_MILLIS = 3000L
     }
 }

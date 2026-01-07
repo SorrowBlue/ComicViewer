@@ -21,28 +21,33 @@ import kotlinx.coroutines.CoroutineScope
 fun rememberAppState(
     sharedTransitionScope: SharedTransitionScope,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): AppState {
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
         currentWindowAdaptiveInfo(),
     )
-    val appState = remember {
-        AppStateImpl(navigationSuiteType, sharedTransitionScope, snackbarHostState)
+    return remember(sharedTransitionScope, snackbarHostState) {
+        AppStateImpl(
+            navigationSuiteType = navigationSuiteType,
+            sharedTransitionScope = sharedTransitionScope,
+            snackbarHostState = snackbarHostState,
+            coroutineScope = coroutineScope,
+        )
+    }.apply {
+        // Update navigationSuiteType when window size changes
+        this.navigationSuiteType = navigationSuiteType
     }
-    appState.navigationSuiteType = navigationSuiteType
-    appState.snackbarHostState = snackbarHostState
-    appState.coroutineScope = rememberCoroutineScope()
-    return appState
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 private class AppStateImpl(
     navigationSuiteType: NavigationSuiteType,
-    sharedTransitionScope: SharedTransitionScope,
-    override var snackbarHostState: SnackbarHostState,
+    private val sharedTransitionScope: SharedTransitionScope,
+    override val snackbarHostState: SnackbarHostState,
+    override val coroutineScope: CoroutineScope,
 ) : AppState,
     SharedTransitionScope by sharedTransitionScope {
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)
-    override lateinit var coroutineScope: CoroutineScope
 }
 
 context(scope: SharedTransitionScope)
