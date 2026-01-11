@@ -51,27 +51,26 @@ context(context: BasicCollectionEditScreenContext)
 internal fun rememberBasicCollectionEditScreenState(
     collectionId: CollectionId,
 ): BasicCollectionEditScreenState {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
+    val lazyPagingItems = rememberPagingItems {
+        context.pagingCollectionFileUseCase(
+            PagingCollectionFileUseCase.Request(PagingConfig(PageSize), collectionId),
+        )
+    }
     return rememberRetained {
         BasicCollectionEditScreenStateImpl(
-            scope = scope,
             collectionId = collectionId,
             getCollectionUseCase = context.getCollectionUseCase,
             updateCollectionUseCase = context.updateCollectionUseCase,
             removeCollectionFileUseCase = context.removeCollectionFileUseCase,
             formState = formState,
+            coroutineScope = coroutineScope,
+            lazyPagingItems = lazyPagingItems,
         )
     }.apply {
-        this.formState = formState
-        this.form = rememberForm(state = this.formState, onSubmit = ::onSubmit)
-        this.scope = scope
-        this.lazyPagingItems = rememberPagingItems {
-            context.pagingCollectionFileUseCase(
-                PagingCollectionFileUseCase.Request(PagingConfig(PageSize), collectionId),
-            )
-        }
+        this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
     }
 }
 
@@ -79,22 +78,22 @@ private const val PageSize = 20
 
 @Stable
 private class BasicCollectionEditScreenStateImpl(
-    var scope: CoroutineScope,
     private val collectionId: CollectionId,
     private val getCollectionUseCase: GetCollectionUseCase,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
-    var formState: FormState<BasicCollectionForm>,
+    private val formState: FormState<BasicCollectionForm>,
+    private val coroutineScope: CoroutineScope,
+    override val lazyPagingItems: LazyPagingItems<File>,
 ) : BasicCollectionEditScreenState {
     override var uiState by mutableStateOf(BasicCollectionEditScreenUiState())
         private set
     override lateinit var form: Form<BasicCollectionForm>
-    override lateinit var lazyPagingItems: LazyPagingItems<File>
 
     override val events = EventFlow<BasicCollectionEditScreenStateEvent>()
 
     init {
-        scope.launch {
+        coroutineScope.launch {
             uiState = uiState.copy(isLoading = true)
             getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }
@@ -107,7 +106,7 @@ private class BasicCollectionEditScreenStateImpl(
     }
 
     override fun onDeleteClick(file: File) {
-        scope.launch {
+        coroutineScope.launch {
             removeCollectionFileUseCase(
                 RemoveCollectionFileUseCase.Request(
                     CollectionFile(
@@ -121,7 +120,7 @@ private class BasicCollectionEditScreenStateImpl(
     }
 
     override fun onSubmit(formData: BasicCollectionForm) {
-        scope.launch {
+        coroutineScope.launch {
             uiState = uiState.copy(isLoading = true)
             val collection = getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
                 .mapNotNull { it.dataOrNull() as? BasicCollection }

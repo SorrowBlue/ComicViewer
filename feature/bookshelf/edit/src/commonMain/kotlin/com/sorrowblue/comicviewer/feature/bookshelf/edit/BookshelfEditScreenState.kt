@@ -84,8 +84,8 @@ internal interface InternalStorageEditScreenState : BookshelfEditScreenState {
 context(context: BookshelfEditScreenContext)
 internal fun rememberBookshelfEditScreenState(
     editType: BookshelfEditType,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): BookshelfEditScreenState {
+    val coroutineScope = rememberCoroutineScope()
     val state = when (editType.bookshelfType) {
         BookshelfType.SMB -> {
             val formState =
@@ -109,12 +109,10 @@ internal fun rememberBookshelfEditScreenState(
                     registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
                     formState = formState,
-                ).apply {
-                    initialForm = SmbEditForm()
-                }
+                    initialForm = SmbEditForm(),
+                )
             }.apply {
-                this.coroutineScope = coroutineScope
-                this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
+                form = rememberForm(state = formState, onSubmit = ::onSubmit)
             }
         }
 
@@ -127,13 +125,11 @@ internal fun rememberBookshelfEditScreenState(
                     registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
                     formState = formState,
-                ).apply {
-                    initialForm = InternalStorageEditForm()
-                }
+                    initialForm = InternalStorageEditForm(),
+                )
             }.apply {
-                this.coroutineScope = coroutineScope
-                this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
-                this.folderSelectFieldState = rememberFolderSelectFieldState(
+                form = rememberForm(state = formState, onSubmit = ::onSubmit)
+                folderSelectFieldState = rememberFolderSelectFieldState(
                     form = form,
                     onOpenDocumentTreeCancel = ::onOpenDocumentTreeCancel,
                 )
@@ -149,12 +145,14 @@ private class SmbEditScreenStateImpl(
     registerBookshelfUseCase: RegisterBookshelfUseCase,
     coroutineScope: CoroutineScope,
     override val formState: FormState<SmbEditForm>,
+    initialForm: BookshelfEditForm,
 ) : BookshelfEditScreenStateImpl(
     editType,
     getBookshelfInfoUseCase,
     registerBookshelfUseCase,
     coroutineScope,
     formState,
+    initialForm,
 ),
     SmbEditScreenState {
     override lateinit var form: Form<SmbEditForm>
@@ -166,12 +164,14 @@ private class InternalStorageEditScreenStateImpl(
     registerBookshelfUseCase: RegisterBookshelfUseCase,
     coroutineScope: CoroutineScope,
     override val formState: FormState<InternalStorageEditForm>,
+    initialForm: BookshelfEditForm,
 ) : BookshelfEditScreenStateImpl(
     editType,
     getBookshelfInfoUseCase,
     registerBookshelfUseCase,
     coroutineScope,
     formState,
+    initialForm,
 ),
     InternalStorageEditScreenState {
     override lateinit var form: Form<InternalStorageEditForm>
@@ -194,9 +194,8 @@ private abstract class BookshelfEditScreenStateImpl(
     private val registerBookshelfUseCase: RegisterBookshelfUseCase,
     var coroutineScope: CoroutineScope,
     override val formState: FormState<out BookshelfEditForm>,
+    override var initialForm: BookshelfEditForm,
 ) : IBookshelfEditScreenState {
-    override lateinit var initialForm: BookshelfEditForm
-
     override val events: EventFlow<BookshelfEditScreenEvent> = EventFlow()
 
     override var uiState by mutableStateOf(BookshelfEditScreenUiState())

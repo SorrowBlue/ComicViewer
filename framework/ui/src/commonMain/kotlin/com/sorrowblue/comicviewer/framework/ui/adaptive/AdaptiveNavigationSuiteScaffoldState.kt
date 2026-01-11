@@ -28,28 +28,29 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(
     onNavigationReSelect: () -> Unit = {},
 ): AdaptiveNavigationSuiteScaffoldState {
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
-    val navigationSuiteType =
-        NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
+    val wideNavigationRailState = rememberWideNavigationRailState()
+    val floatingActionButtonState = rememberFloatingActionButtonState()
     return remember {
         AdaptiveNavigationSuiteScaffoldStateImpl(
             navigationSuiteScaffoldState = navigationSuiteScaffoldState,
+            wideNavigationRailState = wideNavigationRailState,
+            floatingActionButtonState = floatingActionButtonState,
             onNavigationReSelect = onNavigationReSelect,
         )
     }.apply {
-        this.navigationSuiteType = navigationSuiteType
-        this.wideNavigationRailState = rememberWideNavigationRailState()
-        this.floatingActionButtonState = rememberFloatingActionButtonState()
+        navigationSuiteType =
+            NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
     }
 }
 
 private class AdaptiveNavigationSuiteScaffoldStateImpl(
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
+    override val wideNavigationRailState: WideNavigationRailState,
+    override val floatingActionButtonState: FloatingActionButtonState,
     private val onNavigationReSelect: () -> Unit,
 ) : AdaptiveNavigationSuiteScaffoldState,
     NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
-    override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
-    override lateinit var wideNavigationRailState: WideNavigationRailState
-    override lateinit var floatingActionButtonState: FloatingActionButtonState
+        override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
 
     override fun onNavigationReSelect() {
         onNavigationReSelect.invoke()

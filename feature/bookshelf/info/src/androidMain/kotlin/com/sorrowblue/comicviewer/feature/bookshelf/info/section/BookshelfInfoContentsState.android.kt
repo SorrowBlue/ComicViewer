@@ -56,7 +56,7 @@ internal actual fun rememberBookshelfInfoContentsState(
             appState = appState,
         )
     }.apply {
-        lazyPagingItems = rememberPagingItems(bookshelfFolder.bookshelf.id.toString()) {
+        lazyPagingItems = rememberPagingItems {
             context.pagingBookshelfBookUseCase(
                 PagingBookshelfBookUseCase.Request(
                     bookshelfFolder.bookshelf.id,

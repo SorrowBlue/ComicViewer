@@ -37,13 +37,13 @@ context(context: SmartCollectionEditScreenContext)
 internal fun rememberSmartCollectionEditScreenState(
     collectionId: CollectionId,
 ): SmartCollectionEditorScreenState {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
     return rememberSaveable(
         saver = SmartCollectionEditScreenImpl.saver(
             collectionId = collectionId,
-            scope = scope,
+            scope = coroutineScope,
             formState = formState,
             flowBookshelfListUseCase = context.flowBookshelfListUseCase,
             getCollectionUseCase = context.getCollectionUseCase,
@@ -53,16 +53,14 @@ internal fun rememberSmartCollectionEditScreenState(
         SmartCollectionEditScreenImpl(
             isDataLoaded = false,
             collectionId = collectionId,
-            coroutineScope = scope,
+            coroutineScope = coroutineScope,
             formState = formState,
             flowBookshelfListUseCase = context.flowBookshelfListUseCase,
             updateCollectionUseCase = context.updateCollectionUseCase,
             getCollectionUseCase = context.getCollectionUseCase,
         )
     }.apply {
-        this.formState = formState
-        this.form = rememberForm(formState, ::onSubmit)
-        this.coroutineScope = scope
+        form = rememberForm(formState, ::onSubmit)
     }
 }
 
@@ -71,8 +69,8 @@ private class SmartCollectionEditScreenImpl(
     private val collectionId: CollectionId,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
     private val getCollectionUseCase: GetCollectionUseCase,
-    var coroutineScope: CoroutineScope,
-    var formState: FormState<SmartCollectionForm>,
+    private val coroutineScope: CoroutineScope,
+    private val formState: FormState<SmartCollectionForm>,
     private val updateCollectionUseCase: UpdateCollectionUseCase,
 ) : SmartCollectionEditorScreenState {
     companion object {

@@ -20,21 +20,20 @@ internal interface BookshelfInfoScreenState {
 @Composable
 context(context: BookshelfInfoScreenContext)
 internal fun rememberBookshelfInfoScreenState(bookshelfId: BookshelfId): BookshelfInfoScreenState {
-    val scope = rememberCoroutineScope()
-    val stateImpl = remember(bookshelfId) {
+    val coroutineScope = rememberCoroutineScope()
+    return remember(bookshelfId) {
         BookshelfInfoScreenStateImpl(
             bookshelfId = bookshelfId,
-            bookshelfInfoUseCase = context.bookshelfInfoUseCase,
-            scope = scope,
+            getBookshelfInfoUseCase = context.bookshelfInfoUseCase,
+            coroutineScope = coroutineScope,
         )
     }
-    return stateImpl
 }
 
 private class BookshelfInfoScreenStateImpl(
-    bookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val bookshelfId: BookshelfId,
-    scope: CoroutineScope,
+    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    coroutineScope: CoroutineScope,
 ) : BookshelfInfoScreenState {
     override var uiState by mutableStateOf<BookshelfInfoSheetUiState>(
         BookshelfInfoSheetUiState.Loading,
@@ -42,12 +41,12 @@ private class BookshelfInfoScreenStateImpl(
         private set
 
     init {
-        bookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
+        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
             .onEach {
                 uiState = when (it) {
                     is Resource.Error -> BookshelfInfoSheetUiState.Error
                     is Resource.Success -> BookshelfInfoSheetUiState.Loaded(it.data)
                 }
-            }.launchIn(scope)
+            }.launchIn(coroutineScope)
     }
 }

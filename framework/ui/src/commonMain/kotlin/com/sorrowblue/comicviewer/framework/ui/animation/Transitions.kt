@@ -27,9 +27,9 @@ object Transitions {
 
     @Composable
     fun InitSlideDistance() {
-        val slideDistanceDp = 30.dp
         val density = LocalDensity.current
-        slideDistance = remember(density, slideDistanceDp) {
+        slideDistance = remember(density) {
+            val slideDistanceDp = 30.dp
             with(density) { slideDistanceDp.roundToPx() }
         }
     }

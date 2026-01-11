@@ -73,7 +73,7 @@ private class SecuritySettingsScreenStateImpl(
     private val resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
         get() = resultLauncherState.value
             ?: error(
-                "resultLauncher not initialized. Make sure rememberSecuritySettingsScreenState is called."
+                "resultLauncher not initialized. Make sure rememberSecuritySettingsScreenState is called.",
             )
 
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())

@@ -32,21 +32,21 @@ internal fun rememberFileInfoPrepareState(
     isOpenFolderEnabled: Boolean,
 ): FileInfoPrepareState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(fileKey, isOpenFolderEnabled, coroutineScope) {
+    return remember(fileKey, isOpenFolderEnabled) {
         FileInfoPrepareStateImpl(
             fileKey = fileKey,
             isOpenFolderEnabled = isOpenFolderEnabled,
-            coroutineScope = coroutineScope,
             getFileUseCase = context.getFileUseCase,
+            coroutineScope = coroutineScope,
         )
     }
 }
 
 private class FileInfoPrepareStateImpl(
-    val fileKey: File.Key,
-    val isOpenFolderEnabled: Boolean,
-    val coroutineScope: CoroutineScope,
-    val getFileUseCase: GetFileUseCase,
+    fileKey: File.Key,
+    private val isOpenFolderEnabled: Boolean,
+    getFileUseCase: GetFileUseCase,
+    coroutineScope: CoroutineScope,
 ) : FileInfoPrepareState {
     override var uiState by mutableStateOf<FileInfoPrepareUiState>(FileInfoPrepareUiState.Loading)
 

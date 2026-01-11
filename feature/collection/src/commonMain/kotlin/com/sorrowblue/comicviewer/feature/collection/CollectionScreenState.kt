@@ -35,34 +35,34 @@ internal interface CollectionScreenState {
 @Composable
 context(context: CollectionScreenContext)
 internal fun rememberCollectionScreenState(id: CollectionId): CollectionScreenState {
-    val lazyGridState: LazyGridState = rememberLazyGridState()
-    val scope = rememberCoroutineScope()
-    val state = remember(id, scope) {
+    val lazyGridState = rememberLazyGridState()
+    val coroutineScope = rememberCoroutineScope()
+    val lazyPagingItems = rememberPagingItems {
+        context.pagingCollectionFileUseCase(
+            PagingCollectionFileUseCase.Request(PagingConfig(20), id),
+        )
+    }
+    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+    return remember(id) {
         CollectionScreenStateImpl(
             id = id,
-            scope = scope,
+            coroutineScope = coroutineScope,
             getCollectionUseCase = context.getCollectionUseCase,
+            lazyGridState = lazyGridState,
+            scaffoldState = scaffoldState,
+            lazyPagingItems = lazyPagingItems,
         )
-    }.apply {
-        this.lazyPagingItems = rememberPagingItems {
-            context.pagingCollectionFileUseCase(
-                PagingCollectionFileUseCase.Request(PagingConfig(20), id),
-            )
-        }
-        this.scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-        this.lazyGridState = lazyGridState
     }
-    return state
 }
 
 private class CollectionScreenStateImpl(
     id: CollectionId,
-    scope: CoroutineScope,
+    coroutineScope: CoroutineScope,
     getCollectionUseCase: GetCollectionUseCase,
+    override val lazyGridState: LazyGridState,
+    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
+    override val lazyPagingItems: LazyPagingItems<File>,
 ) : CollectionScreenState {
-    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
-    override lateinit var lazyGridState: LazyGridState
-    override lateinit var lazyPagingItems: LazyPagingItems<File>
     override var uiState by mutableStateOf(CollectionScreenUiState())
 
     override lateinit var collection: Collection
@@ -73,6 +73,6 @@ private class CollectionScreenStateImpl(
             .onEach {
                 collection = it
                 uiState = uiState.copy(appBarUiState = uiState.appBarUiState.copy(title = it.name))
-            }.launchIn(scope)
+            }.launchIn(coroutineScope)
     }
 }

@@ -14,10 +14,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun <T : Any> rememberPagingItems(
-    key: String? = null,
     viewModel: PagingViewModel = viewModel { PagingViewModel() },
     block: @DisallowComposableCalls () -> Flow<PagingData<T>>,
-): LazyPagingItems<T> = rememberRetained(key) {
+): LazyPagingItems<T> = rememberRetained {
     block().cachedIn(viewModel.viewModelScope)
 }.collectAsLazyPagingItems()
 

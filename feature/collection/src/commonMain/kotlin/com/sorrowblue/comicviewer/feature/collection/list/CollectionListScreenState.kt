@@ -26,34 +26,33 @@ internal interface CollectionListScreenState {
 
 @Composable
 context(context: CollectionListScreenContext)
-internal fun rememberCollectionListScreenState(
-    scope: CoroutineScope = rememberCoroutineScope(),
-    lazyListState: LazyListState = rememberLazyListState(),
-): CollectionListScreenState {
+internal fun rememberCollectionListScreenState(): CollectionListScreenState {
+    val lazyListState: LazyListState = rememberLazyListState()
+    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     val lazyPagingItems = rememberPagingItems {
         context.pagingCollectionUseCase(PagingCollectionUseCase.Request(PagingConfig(20)))
     }
+    val coroutineScope = rememberCoroutineScope()
     return remember {
-        CollectionListScreenStateImpl()
-    }.apply {
-        this.scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-        this.lazyListState = lazyListState
-        this.scope = scope
-        this.lazyPagingItems = lazyPagingItems
+        CollectionListScreenStateImpl(
+            lazyListState = lazyListState,
+            scaffoldState = scaffoldState,
+            lazyPagingItems = lazyPagingItems,
+            coroutineScope = coroutineScope,
+        )
     }
 }
 
 @Stable
-private class CollectionListScreenStateImpl : CollectionListScreenState {
-    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
-    override lateinit var lazyListState: LazyListState
-    lateinit var scope: CoroutineScope
-
-    override lateinit var lazyPagingItems: LazyPagingItems<Collection>
-
+private class CollectionListScreenStateImpl(
+    override val lazyListState: LazyListState,
+    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
+    override val lazyPagingItems: LazyPagingItems<Collection>,
+    val coroutineScope: CoroutineScope,
+) : CollectionListScreenState {
     override fun onNavClick() {
         if (lazyListState.canScrollBackward) {
-            scope.launch {
+            coroutineScope.launch {
                 lazyListState.scrollToItem(0)
             }
         }

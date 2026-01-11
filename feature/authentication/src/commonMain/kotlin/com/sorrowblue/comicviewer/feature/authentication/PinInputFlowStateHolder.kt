@@ -18,9 +18,7 @@ internal class PinInputFlowStateHolder {
     /**
      * Verifies if the provided PIN matches the stored temporary PIN.
      */
-    fun verifyTemporaryPin(pin: String): Boolean {
-        return pin == temporaryPin
-    }
+    fun verifyTemporaryPin(pin: String): Boolean = pin == temporaryPin
 
     /**
      * Clears the temporarily stored PIN.

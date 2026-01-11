@@ -44,8 +44,9 @@ fun rememberManageFolderDisplaySettingsUseCase(): ManageFolderDisplaySettingsUse
             }
         }
     } else {
-        val factory = LocalPlatformContext.current.require<FileAppBarItemContext.Factory>()
+        val context = LocalPlatformContext.current
         rememberRetained {
-            factory.createFileAppBarItemContext()
-        }.manageFolderDisplaySettingsUseCase
+            val factory = context.require<FileAppBarItemContext.Factory>()
+            factory.createFileAppBarItemContext().manageFolderDisplaySettingsUseCase
+        }
     }

@@ -81,7 +81,7 @@ private class PreAppScreenStateImpl(
                     AuthStatus.AuthRequired(
                         authed =
                         authStatus is AuthStatus.AuthRequired &&
-                            (authStatus as AuthStatus.AuthRequired).authed
+                            (authStatus as AuthStatus.AuthRequired).authed,
                     )
                 } else {
                     AuthStatus.NoAuthRequired

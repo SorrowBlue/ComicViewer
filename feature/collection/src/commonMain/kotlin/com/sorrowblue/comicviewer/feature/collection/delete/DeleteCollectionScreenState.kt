@@ -25,20 +25,19 @@ internal interface DeleteCollectionScreenState {
 context(context: DeleteCollectionScreenContext)
 internal fun rememberDeleteCollectionScreenState(id: CollectionId): DeleteCollectionScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(id, coroutineScope) {
+    return remember(id) {
         DeleteCollectionScreenStateImpl(
             id = id,
             coroutineScope = coroutineScope,
             deleteCollectionUseCase = context.deleteCollectionUseCase,
             getCollectionUseCase = context.getCollectionUseCase,
         )
-    }.apply {
     }
 }
 
 private class DeleteCollectionScreenStateImpl(
     private val id: CollectionId,
-    var coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
     getCollectionUseCase: GetCollectionUseCase,
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : DeleteCollectionScreenState {

@@ -24,7 +24,6 @@ internal fun BookshelfInfoScreenRoot(
     onEditClick: (BookshelfId, BookshelfType) -> Unit,
 ) {
     val state = rememberBookshelfInfoScreenState(bookshelfId = bookshelfId)
-
     val scrollState: ScrollState = rememberScrollState()
     BookshelfInfoScreen(
         uiState = state.uiState,

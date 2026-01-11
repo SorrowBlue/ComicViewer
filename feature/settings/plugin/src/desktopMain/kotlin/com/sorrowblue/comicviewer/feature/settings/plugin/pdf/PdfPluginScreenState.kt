@@ -56,7 +56,7 @@ private class PdfPluginScreenStateImpl(
     private val directoryPickerLauncher: PickerResultLauncher
         get() = directoryPickerLauncherState.value
             ?: error(
-                "directoryPickerLauncher not initialized. Make sure rememberPdfPluginScreenState is called."
+                "directoryPickerLauncher not initialized. Make sure rememberPdfPluginScreenState is called.",
             )
 
     override var uiState by mutableStateOf(PdfPluginScreenUiState())

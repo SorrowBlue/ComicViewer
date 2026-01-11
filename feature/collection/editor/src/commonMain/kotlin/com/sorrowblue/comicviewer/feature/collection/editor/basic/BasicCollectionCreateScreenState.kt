@@ -45,7 +45,9 @@ internal fun rememberBasicCollectionCreateScreenState(
     bookshelfId: BookshelfId,
     path: String,
 ): BasicCollectionCreateScreenState {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
+    val formState =
+        rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
     return remember {
         BasicCollectionCreateScreenStateImpl(
             bookshelfId = bookshelfId,
@@ -53,23 +55,20 @@ internal fun rememberBasicCollectionCreateScreenState(
             createCollectionUseCase = context.createCollectionUseCase,
             addCollectionFileUseCase = context.addCollectionFileUseCase,
             notificationManager = context.notificationManager,
-            scope = scope,
+            coroutineScope = coroutineScope,
         )
     }.apply {
-        val formState =
-            rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
-        this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
-        this.scope = scope
+        form = rememberForm(state = formState, onSubmit = ::onSubmit)
     }
 }
 
 private class BasicCollectionCreateScreenStateImpl(
-    var scope: CoroutineScope,
     private val bookshelfId: BookshelfId,
     private val path: String,
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val notificationManager: NotificationManager,
+    private val coroutineScope: CoroutineScope,
 ) : BasicCollectionCreateScreenState {
     override lateinit var form: Form<BasicCollectionForm>
 
@@ -78,7 +77,7 @@ private class BasicCollectionCreateScreenStateImpl(
     override val uiState by mutableStateOf(BasicCollectionsCreateScreenUiState())
 
     override fun onSubmit(formData: BasicCollectionForm) {
-        scope.launch {
+        coroutineScope.launch {
             createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
                 .fold(
                     onSuccess = { collection ->

@@ -39,9 +39,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold(
-        modifier = modifier,
-    ) {
+    AdaptiveNavigationSuiteScaffold(modifier = modifier) {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val scrollBehavior2 = TopAppBarDefaults.enterAlwaysScrollBehavior()
         Scaffold(
@@ -60,9 +58,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
             snackbarHost = {
                 SnackbarHost(snackbarHostState)
             },
-            modifier = Modifier.nestedScroll(
-                scrollBehavior.nestedScrollConnection,
-            ).nestedScroll(scrollBehavior2.nestedScrollConnection),
+            modifier = Modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .nestedScroll(scrollBehavior2.nestedScrollConnection),
         ) { contentPadding ->
             FolderList(
                 uiState = uiState.folderListUiState,
