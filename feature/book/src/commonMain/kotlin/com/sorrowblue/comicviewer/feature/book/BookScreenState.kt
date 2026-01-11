@@ -37,11 +37,9 @@ import kotlinx.coroutines.sync.withLock
 
 @Composable
 context(context: BookScreenContext)
-internal fun rememberBookScreenState(
-    initialUiState: BookScreenUiState.Loaded,
-): BookScreenState {
+internal fun rememberBookScreenState(initialUiState: BookScreenUiState.Loaded): BookScreenState {
     val isCompactWindowClass = isCompactWindowClass()
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val systemUiController = rememberSystemUiController()
     val currentList = remember { mutableStateListOf<PageItem>() }
     val pagerState = rememberPagerState(
@@ -55,7 +53,7 @@ internal fun rememberBookScreenState(
             initialUiState = initialUiState,
             currentList = currentList,
             pagerState = pagerState,
-            scope = scope,
+            coroutineScope = coroutineScope,
             systemUiController = systemUiController,
             getNextBookUseCase = context.getNextBookUseCase,
             manageBookSettingsUseCase = context.manageBookSettingsUseCase,
@@ -85,7 +83,7 @@ private class BookScreenStateImpl(
     initialUiState: BookScreenUiState.Loaded,
     override val currentList: SnapshotStateList<PageItem>,
     override val pagerState: PagerState,
-    private val scope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
     private val systemUiController: SystemUiController,
     private val getNextBookUseCase: GetNextBookUseCase,
     private val manageBookSettingsUseCase: ManageBookSettingsUseCase,
@@ -162,7 +160,7 @@ private class BookScreenStateImpl(
             .distinctUntilChanged()
             .onEach { pageFormat ->
                 currentList.addAll(buildPageList(pageFormat))
-            }.launchIn(scope)
+            }.launchIn(coroutineScope)
         manageBookSettingsUseCase.settings
             .onEach { settings ->
                 uiState = uiState.copy(
@@ -170,9 +168,9 @@ private class BookScreenStateImpl(
                         pageScale = mapPageScale(settings.pageScale),
                     ),
                 )
-            }.launchIn(scope)
+            }.launchIn(coroutineScope)
         // Save the initial page position when screen opens
-        scope.launch {
+        coroutineScope.launch {
             updateLastReadPage()
         }
     }
@@ -205,13 +203,13 @@ private class BookScreenStateImpl(
     }
 
     override fun onStop() {
-        scope.launch {
+        coroutineScope.launch {
             updateLastReadPage()
         }
     }
 
     override fun onPageChange(page: Int) {
-        scope.launch {
+        coroutineScope.launch {
             pagerState.animateScrollToPage(page)
         }
     }
@@ -219,7 +217,7 @@ private class BookScreenStateImpl(
     private val mutex = Mutex()
 
     override fun onPageLoad(unratedPage: UnratedPage, bitmap: Bitmap) {
-        scope.launch {
+        coroutineScope.launch {
             mutex.withLock {
                 when (unratedPage) {
                     is BookPage.Spread.Unrated -> handleSpreadPageLoad(unratedPage, bitmap)
@@ -269,7 +267,12 @@ private class BookScreenStateImpl(
                         newList.add(item)
                         nextSingle = null
                     } else {
-                        processSingleSpreadPage(item, index, newList, skipIndex).also { nextSingle = it }
+                        processSingleSpreadPage(
+                            item,
+                            index,
+                            newList,
+                            skipIndex,
+                        ).also { nextSingle = it }
                     }
                 }
 

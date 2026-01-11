@@ -25,9 +25,12 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Plugin
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFaq
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.tokens.ElevationTokens
 import comicviewer.feature.book.generated.resources.Res
 import comicviewer.feature.book.generated.resources.book_text_could_not_open
@@ -85,6 +88,56 @@ internal fun BookErrorScreen(uiState: BookScreenUiState.Error, onBackClick: () -
                     stringResource(Res.string.book_text_could_not_open_name, uiState.name)
                 },
                 style = MaterialTheme.typography.headlineSmall,
+            )
+        }
+    }
+}
+
+@Composable
+internal fun BookPluginErrorScreen(
+    uiState: BookScreenUiState.PluginError,
+    onBackClick: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = uiState.name)
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = ComicIcons.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                        elevation = ElevationTokens.Level2,
+                    ),
+                ),
+                windowInsets = WindowInsets.safeDrawing.only(
+                    WindowInsetsSides.Horizontal + WindowInsetsSides.Top,
+                ),
+            )
+        },
+        contentWindowInsets = WindowInsets.safeDrawing,
+    ) { innerPadding ->
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+        ) {
+            Icon(
+                modifier = Modifier.size(96.dp),
+                painter = rememberVectorPainter(image = ComicIcons.Plugin),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+            Text(
+                text = uiState.error,
+                style = ComicTheme.typography.bodyLarge,
             )
         }
     }

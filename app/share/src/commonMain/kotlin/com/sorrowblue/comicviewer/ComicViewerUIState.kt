@@ -59,11 +59,7 @@ fun rememberComicViewerUIState(
         },
     )
     val coroutineScope = rememberCoroutineScope()
-    return remember(
-        allowNavigationRestored,
-        context.manageDisplaySettingsUseCase,
-        context.getNavigationHistoryUseCase,
-    ) {
+    return remember(allowNavigationRestored) {
         ComicViewerUIStateImpl(
             navigator = navigator,
             allowNavigationRestored = allowNavigationRestored,

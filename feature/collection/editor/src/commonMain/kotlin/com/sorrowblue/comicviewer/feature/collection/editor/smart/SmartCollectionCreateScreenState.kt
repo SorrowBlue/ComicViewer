@@ -49,23 +49,21 @@ internal fun rememberSmartCollectionCreateScreenState(
     )
     return remember {
         SmartCollectionCreateScreenStateImpl(
-            coroutineScope = coroutineScope,
             flowBookshelfListUseCase = context.flowBookshelfListUseCase,
             createCollectionUseCase = context.createCollectionUseCase,
             formState = formState,
+            coroutineScope = coroutineScope,
         )
     }.apply {
-        this.coroutineScope = coroutineScope
-        this.formState = formState
-        this.form = rememberForm(state = formState, onSubmit = ::onSubmit)
+        form = rememberForm(state = formState, onSubmit = ::onSubmit)
     }
 }
 
 private class SmartCollectionCreateScreenStateImpl(
-    var coroutineScope: CoroutineScope,
-    var formState: FormState<SmartCollectionForm>,
     flowBookshelfListUseCase: FlowBookshelfListUseCase,
     private val createCollectionUseCase: CreateCollectionUseCase,
+    private val formState: FormState<SmartCollectionForm>,
+    private val coroutineScope: CoroutineScope,
 ) : SmartCollectionEditorScreenState {
     override lateinit var form: Form<SmartCollectionForm>
     override val event = EventFlow<SmartCollectionEditorScreenStateEvent>()

@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.material3.AppBarRowScope
 import androidx.compose.material3.AppBarScope
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -80,6 +81,15 @@ fun AppBarScope.toggleableItem(
         menuContent = { state ->
             DropdownMenuItem(
                 leadingIcon = icon,
+                trailingIcon = {
+                    Checkbox(
+                        checked = checked,
+                        onCheckedChange = {
+                            onCheckedChange(it)
+                            state.dismiss()
+                        },
+                    )
+                },
                 enabled = enabled,
                 text = { Text(label()) },
                 onClick = {

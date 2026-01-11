@@ -29,7 +29,7 @@ internal fun rememberBookshelfDeleteScreenState(
     updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
 ): BookshelfDeleteScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    return remember(bookshelfId) {
         BookshelfDeleteScreenStateImpl(
             getBookshelfInfoUseCase = getBookshelfInfoUseCase,
             scope = coroutineScope,

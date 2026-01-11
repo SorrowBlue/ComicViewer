@@ -41,7 +41,20 @@ internal fun rememberFileInfoScreenState(
     isOpenFolderEnabled: Boolean,
 ): FileInfoScreenState {
     val coroutineScope = rememberCoroutineScope()
-    val state = remember(file, isOpenFolderEnabled) {
+    val lazyPagingItems = if (file is Book) {
+        null
+    } else {
+        rememberPagingItems {
+            context.pagingFolderBookThumbnailsUseCase(
+                PagingFolderBookThumbnailsUseCase.Request(
+                    file.bookshelfId,
+                    file.path,
+                    PagingConfig(10),
+                ),
+            )
+        }
+    }
+    return remember(file, isOpenFolderEnabled) {
         FileInfoScreenStateImpl(
             file = file,
             isOpenFolderEnabled = isOpenFolderEnabled,
@@ -49,25 +62,10 @@ internal fun rememberFileInfoScreenState(
             existsReadlaterUseCase = context.existsReadlaterUseCase,
             addReadLaterUseCase = context.addReadLaterUseCase,
             deleteReadLaterUseCase = context.deleteReadLaterUseCase,
+            lazyPagingItems = lazyPagingItems,
             coroutineScope = coroutineScope,
         )
-    }.apply {
-        this.coroutineScope = coroutineScope
-        this.lazyPagingItems = if (file is Book) {
-            null
-        } else {
-            rememberPagingItems {
-                context.pagingFolderBookThumbnailsUseCase(
-                    PagingFolderBookThumbnailsUseCase.Request(
-                        file.bookshelfId,
-                        file.path,
-                        PagingConfig(10),
-                    ),
-                )
-            }
-        }
     }
-    return state
 }
 
 internal interface FileInfoScreenState {
@@ -78,13 +76,14 @@ internal interface FileInfoScreenState {
 }
 
 private class FileInfoScreenStateImpl(
-    val file: File,
-    val isOpenFolderEnabled: Boolean,
-    val getFileAttributeUseCase: GetFileAttributeUseCase,
-    val existsReadlaterUseCase: ExistsReadlaterUseCase,
-    val addReadLaterUseCase: AddReadLaterUseCase,
-    val deleteReadLaterUseCase: DeleteReadLaterUseCase,
-    var coroutineScope: CoroutineScope,
+    private val file: File,
+    private val isOpenFolderEnabled: Boolean,
+    getFileAttributeUseCase: GetFileAttributeUseCase,
+    existsReadlaterUseCase: ExistsReadlaterUseCase,
+    private val addReadLaterUseCase: AddReadLaterUseCase,
+    private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
+    override val lazyPagingItems: LazyPagingItems<BookThumbnail>?,
+    private val coroutineScope: CoroutineScope,
 ) : FileInfoScreenState {
     private val runningJob = ArrayDeque<Job>()
 
@@ -96,7 +95,6 @@ private class FileInfoScreenStateImpl(
             ),
         ),
     )
-    override var lazyPagingItems: LazyPagingItems<BookThumbnail>? = null
 
     init {
         existsReadlaterUseCase(

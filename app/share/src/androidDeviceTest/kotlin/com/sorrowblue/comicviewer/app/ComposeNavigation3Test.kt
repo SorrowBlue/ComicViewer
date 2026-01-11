@@ -246,6 +246,7 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("FloatingActionButton").performClick()
         composeTestRule.onNodeWithTag("SmartCollectionCreateButton").performClick()
         composeTestRule.onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("CollectionNameField").requestFocus()
         composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
         composeTestRule.onNodeWithTag("QueryField").performTextInput("Search keyword")
         composeTestRule.onNodeWithTag("QueryField").performKeyInput {

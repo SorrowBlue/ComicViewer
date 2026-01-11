@@ -26,7 +26,6 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
     val biometricManager = rememberBiometricManager()
     val pinFlowManager = remember { PinFlowManager(context.securitySettingsUseCase) }
     val pinInputFlowStateHolder = remember { PinInputFlowStateHolder() }
-
     return rememberListSaveable(
         screenType,
         save = {
@@ -231,7 +230,9 @@ private class AuthenticationScreenStateImpl(
         }
     }
 
-    private fun handleRegisterConfirm(currentUiState: AuthenticationScreenUiState.Register.Confirm) {
+    private fun handleRegisterConfirm(
+        currentUiState: AuthenticationScreenUiState.Register.Confirm,
+    ) {
         if (pinInputFlowStateHolder.verifyTemporaryPin(uiState.pin)) {
             scope.launch {
                 pinFlowManager.savePin(uiState.pin)

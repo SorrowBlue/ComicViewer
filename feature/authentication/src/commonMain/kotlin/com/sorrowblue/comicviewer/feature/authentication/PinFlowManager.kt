@@ -7,22 +7,16 @@ import kotlinx.coroutines.flow.first
  * Manages PIN authentication flow business logic.
  * Handles PIN validation, comparison, and security settings updates.
  */
-internal class PinFlowManager(
-    private val securitySettings: ManageSecuritySettingsUseCase,
-) {
+internal class PinFlowManager(private val securitySettings: ManageSecuritySettingsUseCase) {
     /**
      * Validates if the provided PIN meets minimum requirements.
      */
-    fun validatePinLength(pin: String): Boolean {
-        return pin.length >= MIN_PIN_SIZE
-    }
+    fun validatePinLength(pin: String): Boolean = pin.length >= MIN_PIN_SIZE
 
     /**
      * Verifies if the provided PIN matches the stored password.
      */
-    suspend fun verifyPin(pin: String): Boolean {
-        return pin == securitySettings.settings.first().password
-    }
+    suspend fun verifyPin(pin: String): Boolean = pin == securitySettings.settings.first().password
 
     /**
      * Saves the new PIN to security settings.
@@ -41,9 +35,7 @@ internal class PinFlowManager(
     /**
      * Checks if biometric authentication is enabled in security settings.
      */
-    suspend fun isBiometricsEnabled(): Boolean {
-        return securitySettings.settings.first().useBiometrics
-    }
+    suspend fun isBiometricsEnabled(): Boolean = securitySettings.settings.first().useBiometrics
 
     companion object {
         const val MIN_PIN_SIZE = 4

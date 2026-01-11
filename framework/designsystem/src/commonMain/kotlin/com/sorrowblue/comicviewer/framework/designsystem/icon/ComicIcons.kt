@@ -51,6 +51,7 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.OpenInBrowser
+import androidx.compose.material.icons.rounded.RemoveRedEye
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.RocketLaunch
 import androidx.compose.material.icons.rounded.Save
@@ -122,6 +123,7 @@ object ComicIcons {
     val Book = Icons.Rounded.Book
     val BrokenImage = Icons.Rounded.BrokenImage
     val Folder = Icons.Rounded.Folder
+    val RemoveRedEye = Icons.Rounded.RemoveRedEye
     val InsertDriveFile = Icons.AutoMirrored.Rounded.InsertDriveFile
     val Storage = Icons.Rounded.Storage
     val Notifications = Icons.Rounded.Notifications

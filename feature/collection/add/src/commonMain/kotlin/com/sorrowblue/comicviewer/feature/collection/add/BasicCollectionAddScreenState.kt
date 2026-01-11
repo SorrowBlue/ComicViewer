@@ -42,21 +42,10 @@ context(context: BasicCollectionAddScreenContext)
 internal fun rememberBasicCollectionAddScreenState(
     bookshelfId: BookshelfId,
     path: String,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    lazyListState: LazyListState = rememberLazyListState(),
-): BasicCollectionAddScreenState = remember {
-    BasicCollectionAddScreenStateImpl(
-        bookshelfId = bookshelfId,
-        path = path,
-        coroutineScope = coroutineScope,
-        removeCollectionFileUseCase = context.removeCollectionFileUseCase,
-        addCollectionFileUseCase = context.addCollectionFileUseCase,
-        collectionSettingsUseCase = context.collectionSettingsUseCase,
-    )
-}.apply {
-    this.coroutineScope = coroutineScope
-    this.lazyListState = lazyListState
-    this.lazyPagingItems = rememberPagingItems {
+): BasicCollectionAddScreenState {
+    val coroutineScope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
+    val lazyPagingItems = rememberPagingItems {
         context.pagingCollectionExistUseCase(
             PagingCollectionExistUseCase.Request(
                 pagingConfig = PagingConfig(PageSize),
@@ -66,6 +55,18 @@ internal fun rememberBasicCollectionAddScreenState(
             ),
         )
     }
+    return remember(bookshelfId, path) {
+        BasicCollectionAddScreenStateImpl(
+            bookshelfId = bookshelfId,
+            path = path,
+            coroutineScope = coroutineScope,
+            removeCollectionFileUseCase = context.removeCollectionFileUseCase,
+            addCollectionFileUseCase = context.addCollectionFileUseCase,
+            collectionSettingsUseCase = context.collectionSettingsUseCase,
+            lazyListState = lazyListState,
+            lazyPagingItems = lazyPagingItems,
+        )
+    }
 }
 
 private const val PageSize = 20
@@ -73,13 +74,13 @@ private const val PageSize = 20
 private class BasicCollectionAddScreenStateImpl(
     private val bookshelfId: BookshelfId,
     private val path: String,
-    var coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,
+    override val lazyListState: LazyListState,
+    override val lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>,
 ) : BasicCollectionAddScreenState {
-    override lateinit var lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>
-    override lateinit var lazyListState: LazyListState
     override var uiState by mutableStateOf(BasicCollectionAddScreenUiState())
         private set
 

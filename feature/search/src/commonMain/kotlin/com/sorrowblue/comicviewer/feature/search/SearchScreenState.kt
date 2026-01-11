@@ -49,11 +49,11 @@ context(context: SearchScreenContext)
 internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): SearchScreenState {
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
-    
+
     // Create a reference that will hold the state holder
     // This allows lazyPagingItems to access the state holder's uiState
     val stateHolderRef = remember { mutableStateOf<SearchScreenStateImpl?>(null) }
-    
+
     // Create lazyPagingItems that accesses stateHolder via the reference
     // The lambda is evaluated lazily when data is actually requested by the paging system,
     // which happens after stateHolderRef is set. The fallback to SearchCondition() handles
@@ -65,7 +65,7 @@ internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): 
             },
         )
     }
-    
+
     // Create state holder with all dependencies
     return remember(lazyGridState, lazyPagingItems) {
         SearchScreenStateImpl(
@@ -88,7 +88,6 @@ private class SearchScreenStateImpl(
     private val coroutineScope: CoroutineScope,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : SearchScreenState {
-
     override var uiState by mutableStateOf(SearchScreenUiState())
 
     override var isScrollableTop by mutableStateOf(false)

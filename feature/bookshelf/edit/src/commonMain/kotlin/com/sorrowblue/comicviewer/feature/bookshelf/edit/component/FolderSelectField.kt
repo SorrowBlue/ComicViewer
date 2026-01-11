@@ -88,9 +88,7 @@ internal fun rememberFolderSelectFieldState(
     scope: CoroutineScope = rememberCoroutineScope(),
     pickerResultLauncher: PickerResultLauncher =
         rememberDirectoryPickerLauncher { platformDirectory ->
-            logcat(
-                "FolderSelectFieldState",
-            ) {
+            logcat("FolderSelectFieldState") {
                 "PickerResultLauncher onResult uri=$platformDirectory, pathString=${platformDirectory?.path}"
             }
             platformDirectory?.let {
