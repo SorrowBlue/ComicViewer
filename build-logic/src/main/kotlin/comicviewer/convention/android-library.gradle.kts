@@ -3,7 +3,7 @@ package comicviewer.convention
 import com.sorrowblue.comicviewer.libs
 
 plugins {
-    `android-library`
+    com.android.library
     id("comicviewer.primitive.lint")
     id("comicviewer.primitive.detekt")
     id("comicviewer.primitive.dokka")

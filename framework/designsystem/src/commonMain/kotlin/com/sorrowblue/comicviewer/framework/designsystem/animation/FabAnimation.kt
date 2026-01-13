@@ -10,7 +10,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.ui.graphics.TransformOrigin
-import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
+import com.sorrowblue.comicviewer.framework.designsystem.tokens.MotionTokens
 
 fun fabEnter() = fadeIn(
     animationSpec = tween(

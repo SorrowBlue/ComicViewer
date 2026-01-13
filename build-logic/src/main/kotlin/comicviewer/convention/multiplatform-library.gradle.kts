@@ -5,7 +5,7 @@ import desktopMain
 import desktopTest
 
 plugins {
-    `kotlin-multiplatform`
+    org.jetbrains.kotlin.multiplatform
     com.android.kotlin.multiplatform.library
     id("comicviewer.primitive.lint")
     id("comicviewer.primitive.detekt")

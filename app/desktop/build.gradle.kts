@@ -1,4 +1,4 @@
-import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
+    import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
 import com.sorrowblue.comicviewer.configureKotlin
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -32,6 +32,8 @@ kotlin {
 
             implementation(compose.desktop.currentOs)
 
+            implementation(libs.androidx.lifecycleViewmodelCompose)
+            implementation(libs.compose.material3)
             implementation(libs.compose.componentsAnimatedimage)
         }
     }

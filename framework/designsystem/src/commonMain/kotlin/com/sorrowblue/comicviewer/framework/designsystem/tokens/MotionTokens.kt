@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.designsystem.theme
+package com.sorrowblue.comicviewer.framework.designsystem.tokens
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.PathEasing

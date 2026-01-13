@@ -44,7 +44,7 @@ internal fun rememberReadLaterScreenState(): ReadLaterScreenState {
         },
     )
 
-    return remember(lazyGridState, lazyPagingItems, scaffoldState) {
+    return remember {
         ReadLaterScreenStateImpl(
             deleteAllReadLaterUseCase = context.deleteAllReadLaterUseCase,
             lazyGridState = lazyGridState,
