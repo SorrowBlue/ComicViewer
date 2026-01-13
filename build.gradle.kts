@@ -1,4 +1,5 @@
 import dev.detekt.gradle.report.ReportMergeTask
+import nl.littlerobots.vcu.plugin.resolver.VersionSelectors
 
 //import dev.iurysouza.modulegraph.ModuleType.Custom
 //import dev.iurysouza.modulegraph.Theme
@@ -21,8 +22,12 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.detekt)
 //    alias(libs.plugins.modulegraph)
+    id("nl.littlerobots.version-catalog-update") version "1.0.1"
 }
 
+versionCatalogUpdate {
+    versionSelector(VersionSelectors.LATEST)
+}
 dependencies {
 //    dokka(projects.app.android)
 //    dokka(projects.app.desktop)

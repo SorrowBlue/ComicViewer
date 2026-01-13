@@ -10,8 +10,6 @@ android {
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
         targetSdk = libs.versions.targetSdk.get().toInt()
-        // versionCode calculated from versionName in androidComponents block
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     androidResources {
         generateLocaleConfig = true
@@ -73,12 +71,6 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.metro.android)
 
-    debugImplementation(projects.domain.usecase)
-    debugImplementation(projects.feature.bookshelf.edit)
-    debugImplementation(libs.kotlinx.serializationJson)
-
-    androidTestImplementation(libs.compose.uiTestJunit4)
-    debugImplementation(libs.compose.uiTestManifest)
     debugImplementation(libs.compose.uiTooling)
 }
 

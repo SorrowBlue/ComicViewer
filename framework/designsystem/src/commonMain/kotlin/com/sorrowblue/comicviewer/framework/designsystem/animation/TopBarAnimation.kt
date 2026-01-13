@@ -8,7 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import com.sorrowblue.comicviewer.framework.designsystem.theme.MotionTokens
+import com.sorrowblue.comicviewer.framework.designsystem.tokens.MotionTokens
 import kotlin.math.roundToInt
 
 fun AnimatedContentTransitionScope<*>.topAppBarAnimation() = slideInVertically(

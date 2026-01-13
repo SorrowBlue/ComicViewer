@@ -1,3 +1,5 @@
+import com.sorrowblue.comicviewer.libs
+
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
@@ -15,19 +17,24 @@ kotlin {
                 implementation(projects.framework.designsystem)
                 implementation(projects.domain.model)
 
-                // Navigation + Serialization
-                implementation(libs.kotlinx.serializationCbor)
-                // Image
-                implementation(libs.coil3.compose)
-                // Paging
-                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.navigation3UI)
+                implementation(libs.androidx.lifecycleViewmodelCompose)
                 implementation(libs.androidx.pagingCompose)
-                implementation(libs.composables.core)
-                implementation(libs.androidx.collection)
+                implementation(libs.coil3.compose)
+                implementation(libs.composables.composeunstyledPrimitive)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.material3Adaptive)
+                implementation(libs.compose.material3AdaptiveLayout)
+                implementation(libs.compose.material3AdaptiveNavigation3)
+                implementation(libs.compose.material3AdaptiveNavigationSuite)
+                implementation(libs.kotlinx.serializationCbor)
+                implementation(libs.navigation3.resultstate)
+                implementation(libs.rin)
             }
         }
         androidMain {
             dependencies {
+                implementation(libs.androidx.coreKtx)
                 implementation(libs.compose.edgeToEdgePreview)
             }
         }

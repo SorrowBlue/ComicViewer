@@ -8,6 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
+@Composable
+internal expect fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): ColorScheme
+
 internal val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,

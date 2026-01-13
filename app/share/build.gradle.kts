@@ -1,4 +1,5 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
+import com.sorrowblue.comicviewer.libs
 
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
@@ -46,6 +47,17 @@ kotlin {
                 // Required for metro dependency resolution
                 implementation(libs.androidx.datastore)
                 implementation(projects.data.reader.zip)
+
+                implementation(libs.androidx.navigation3Runtime)
+                implementation(libs.androidx.lifecycleCompose)
+                implementation(libs.androidx.lifecycleViewmodelCompose)
+                implementation(libs.androidx.lifecycleViewmodelNavigation3)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.material3AdaptiveLayout)
+                implementation(libs.compose.material3AdaptiveNavigation3)
+                implementation(libs.compose.material3AdaptiveNavigationSuite)
+                implementation(libs.rin)
+                implementation(libs.navigation3.resultstate)
             }
         }
         androidMain.dependencies {

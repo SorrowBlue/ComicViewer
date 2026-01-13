@@ -27,7 +27,7 @@ internal interface CollectionListScreenState {
 @Composable
 context(context: CollectionListScreenContext)
 internal fun rememberCollectionListScreenState(): CollectionListScreenState {
-    val lazyListState: LazyListState = rememberLazyListState()
+    val lazyListState = rememberLazyListState()
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     val lazyPagingItems = rememberPagingItems {
         context.pagingCollectionUseCase(PagingCollectionUseCase.Request(PagingConfig(20)))
