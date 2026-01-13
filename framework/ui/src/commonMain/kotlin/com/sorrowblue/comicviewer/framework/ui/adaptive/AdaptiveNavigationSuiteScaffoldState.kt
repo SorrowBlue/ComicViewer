@@ -50,7 +50,7 @@ private class AdaptiveNavigationSuiteScaffoldStateImpl(
     private val onNavigationReSelect: () -> Unit,
 ) : AdaptiveNavigationSuiteScaffoldState,
     NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
-        override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
+    override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
 
     override fun onNavigationReSelect() {
         onNavigationReSelect.invoke()
