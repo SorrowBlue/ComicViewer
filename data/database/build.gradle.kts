@@ -87,8 +87,6 @@ dependencies {
     kspIosArm64Test(libs.androidx.roomCompiler)
     kspIosSimulatorArm64(libs.androidx.roomCompiler)
     kspIosSimulatorArm64Test(libs.androidx.roomCompiler)
-    kspIosX64(libs.androidx.roomCompiler)
-    kspIosX64Test(libs.androidx.roomCompiler)
     androidTestUtil(libs.androidx.testOrchestrator)
 }
 

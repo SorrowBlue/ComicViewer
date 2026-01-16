@@ -23,7 +23,6 @@ kotlin {
     }
     jvm("desktop")
 
-    iosX64() // iPhone Simulator on 64-bit MacOS
     iosArm64() // 64-bit iPhone devices
     iosSimulatorArm64() // iPhone Simulator on Arm 64-bit MacOS
 
