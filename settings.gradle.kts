@@ -21,7 +21,7 @@ pluginManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.4"
-    id("com.android.settings") version "9.0.0-rc03"
+    id("com.android.settings") version "9.0.0"
 }
 
 android {
