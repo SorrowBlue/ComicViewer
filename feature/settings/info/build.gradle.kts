@@ -8,7 +8,6 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.settings.info"
-        // resourcePrefix("settings_info")
     }
     sourceSets {
         commonMain {

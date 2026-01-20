@@ -5,7 +5,6 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.bookshelf.edit"
-        // resourcePrefix("bookshelf_edit")
     }
     sourceSets {
         commonMain {

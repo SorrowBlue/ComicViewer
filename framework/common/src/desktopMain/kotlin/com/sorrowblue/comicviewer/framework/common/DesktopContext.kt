@@ -9,7 +9,6 @@ import kotlin.io.path.notExists
 abstract class DesktopContext {
     abstract val filesDir: Path
     abstract val cacheDir: Path
-    lateinit var platformGraph: PlatformGraph
 
     companion object {
         fun invoke(): DesktopContext = DesktopContextImpl()

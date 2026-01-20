@@ -5,7 +5,6 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.settings.folder"
-        // resourcePrefix("settings_folder")
     }
     sourceSets {
         commonMain {
