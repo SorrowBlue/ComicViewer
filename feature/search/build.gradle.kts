@@ -5,7 +5,6 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.search"
-        // resourcePrefix("search")
     }
     sourceSets {
         commonMain {
