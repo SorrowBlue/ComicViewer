@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
+import com.sorrowblue.comicviewer.framework.notification.DesktopNotification
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
@@ -21,6 +22,8 @@ import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_file
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan_completed
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_thumbnail_scan_completed
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
@@ -50,7 +53,7 @@ internal actual fun rememberBookshelfInfoContentsState(
 }
 
 private class BookshelfInfoContentsStateImpl(
-    bookshelfFolder: BookshelfFolder,
+    private val bookshelfFolder: BookshelfFolder,
     private val appState: AppState,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
@@ -83,10 +86,11 @@ private class BookshelfInfoContentsStateImpl(
         showSnackbar()
         appState.coroutineScope.launch {
             scanBookshelfUseCase.invoke(
-                ScanBookshelfUseCase.Request(
-                    bookshelfId = uiState.bookshelf.id,
-                ) { bookshelf, file ->
-                },
+                ScanBookshelfUseCase.Request(bookshelfId = uiState.bookshelf.id) { _, _ -> },
+            )
+            DesktopNotification().notify(
+                getString(Res.string.bookshelf_info_notification_title_file_scan_completed),
+                bookshelfFolder.bookshelf.displayName,
             )
         }
     }
@@ -99,6 +103,10 @@ private class BookshelfInfoContentsStateImpl(
                     bookshelfId = uiState.bookshelf.id,
                 ) { bookshelf, progress, max ->
                 },
+            )
+            DesktopNotification().notify(
+                getString(Res.string.bookshelf_info_notification_title_thumbnail_scan_completed),
+                bookshelfFolder.bookshelf.displayName,
             )
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
+import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
@@ -25,8 +26,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenCont
 import com.sorrowblue.comicviewer.feature.bookshelf.info.IntentLauncher
 import com.sorrowblue.comicviewer.feature.bookshelf.info.NotificationPermissionRequest
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
-import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.RegenerateThumbnailsWorker
-import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ScanFileWorker
+import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.FileScanWorker
+import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ThumbnailScanWorker
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
@@ -54,6 +55,7 @@ internal actual fun rememberBookshelfInfoContentsState(
             bookshelfFolder = bookshelfFolder,
             activity = activity,
             appState = appState,
+            workManager = context.workManager,
         )
     }.apply {
         lazyPagingItems = rememberPagingItems {
@@ -79,6 +81,7 @@ private class BookshelfInfoMainContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
     override val activity: Activity,
     private val appState: AppState,
+    private val workManager: WorkManager,
 ) : BookshelfInfoContentsState,
     NotificationPermissionRequest,
     IntentLauncher {
@@ -144,12 +147,12 @@ private class BookshelfInfoMainContentsStateImpl(
 
     private fun scanFile() {
         showSnackbar()
-        ScanFileWorker.enqueueUniqueWork(activity, uiState.bookshelf.id)
+        FileScanWorker.enqueueUniqueWork(workManager, uiState.bookshelf.id)
     }
 
     private fun scanThumbnail() {
         showSnackbar()
-        RegenerateThumbnailsWorker.enqueueUniqueWork(activity, uiState.bookshelf.id)
+        ThumbnailScanWorker.enqueueUniqueWork(activity, uiState.bookshelf.id)
     }
 
     private fun showSnackbar() {

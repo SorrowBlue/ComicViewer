@@ -52,9 +52,9 @@ interface DataStoreProviders {
     @Display
     @SingleIn(DataScope::class)
     @Provides
-    private fun provideDisplaySettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<DisplaySettings> {
-        return dataStoreMaker.createDataStore(DisplaySettingsSerializer)
-    }
+    private fun provideDisplaySettingsDataStore(
+        dataStoreMaker: DataStoreMaker,
+    ): DataStore<DisplaySettings> = dataStoreMaker.createDataStore(DisplaySettingsSerializer)
 
     @FolderDisplay
     @SingleIn(DataScope::class)

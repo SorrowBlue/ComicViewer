@@ -1,26 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 9.0.0-rc02" type="baseline" client="gradle" dependencies="true" name="AGP (9.0.0-rc02)" variant="all" version="9.0.0-rc02">
+<issues format="6" by="lint 9.0.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.0.0)" variant="all" version="9.0.0">
 
     <issue
-        id="Registered"
-        message="The `&lt;activity> com.sorrowblue.comicviewer.app.MainActivity` is not registered in the manifest"
-        errorLine1="class MainActivity : AppCompatActivity() {"
-        errorLine2="      ~~~~~~~~~~~~">
+        id="Instantiatable"
+        message="This class should provide a default constructor (a public constructor with no arguments) (`com.sorrowblue.comicviewer.app.MainActivity`)"
+        errorLine1="            android:name=&quot;.MainActivity&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~">
         <location
-            file="../../app/android/src/main/kotlin/com/sorrowblue/comicviewer/app/MainActivity.kt"
-            line="25"
-            column="7"/>
-    </issue>
-
-    <issue
-        id="Registered"
-        message="The `&lt;activity> com.sorrowblue.comicviewer.app.MainActivity` is not registered in the manifest"
-        errorLine1="class MainActivity : AppCompatActivity() {"
-        errorLine2="      ~~~~~~~~~~~~">
-        <location
-            file="../../../app/android/src/main/kotlin/com/sorrowblue/comicviewer/app/MainActivity.kt"
-            line="25"
-            column="7"/>
+            file="src/main/AndroidManifest.xml"
+            line="18"
+            column="27"/>
     </issue>
 
     <issue
@@ -30,7 +19,7 @@
         errorLine2="      ~~~~~~~~~~~~~~~">
         <location
             file="../../app/android/src/main/kotlin/com/sorrowblue/comicviewer/app/MainApplication.kt"
-            line="11"
+            line="12"
             column="7"/>
     </issue>
 
@@ -41,96 +30,8 @@
         errorLine2="      ~~~~~~~~~~~~~~~">
         <location
             file="../../../app/android/src/main/kotlin/com/sorrowblue/comicviewer/app/MainApplication.kt"
-            line="11"
+            line="12"
             column="7"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.drawable.ic_sync_book_24dp` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^">
-        <location
-            file="../../framework/notification/src/main/res/drawable/ic_sync_book_24dp.xml"
-            line="2"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.drawable.ic_sync_cancel_24dp` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^">
-        <location
-            file="../../framework/notification/src/main/res/drawable/ic_sync_cancel_24dp.xml"
-            line="2"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.drawable.ic_sync_done_24dp` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^">
-        <location
-            file="../../framework/notification/src/main/res/drawable/ic_sync_done_24dp.xml"
-            line="2"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.drawable.ic_sync_image_24dp` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^">
-        <location
-            file="../../framework/notification/src/main/res/drawable/ic_sync_image_24dp.xml"
-            line="2"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.framework_notification_msg_scan_cancelled` appears to be unused"
-        errorLine1="    &lt;string name=&quot;framework_notification_msg_scan_cancelled&quot;>Scan cancelled.&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../../framework/notification/src/main/res/values/strings.xml"
-            line="8"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.framework_notification_msg_thumbnail_scan_cancelled` appears to be unused"
-        errorLine1="    &lt;string name=&quot;framework_notification_msg_thumbnail_scan_cancelled&quot;>Thumbnail scan cancelled.&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../../framework/notification/src/main/res/values/strings.xml"
-            line="9"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.framework_notification_title_scan_completed` appears to be unused"
-        errorLine1="    &lt;string name=&quot;framework_notification_title_scan_completed&quot;>Bookshelf scan completed&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../../framework/notification/src/main/res/values/strings.xml"
-            line="10"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.framework_notification_title_thumbnail_scan` appears to be unused"
-        errorLine1="    &lt;string name=&quot;framework_notification_title_thumbnail_scan&quot;>Thumbnail scan&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../../framework/notification/src/main/res/values/strings.xml"
-            line="11"
-            column="13"/>
     </issue>
 
 </issues>

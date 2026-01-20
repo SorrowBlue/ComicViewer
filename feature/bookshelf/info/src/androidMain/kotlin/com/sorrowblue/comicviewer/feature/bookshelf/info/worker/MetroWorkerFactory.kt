@@ -1,0 +1,28 @@
+package com.sorrowblue.comicviewer.feature.bookshelf.info.worker
+
+import android.content.Context
+import androidx.work.ListenableWorker
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import kotlin.collections.get
+import kotlin.reflect.KClass
+
+@ContributesBinding(AppScope::class)
+@Inject
+class MetroWorkerFactory(
+    val workerProviders: Map<KClass<out ListenableWorker>, WorkerInstanceFactory<*>>,
+) : WorkerFactory() {
+    override fun createWorker(
+        appContext: Context,
+        workerClassName: String,
+        workerParameters: WorkerParameters,
+    ): ListenableWorker? =
+        workerProviders[Class.forName(workerClassName).kotlin]?.create(workerParameters)
+
+    interface WorkerInstanceFactory<T : ListenableWorker> {
+        fun create(params: WorkerParameters): T
+    }
+}

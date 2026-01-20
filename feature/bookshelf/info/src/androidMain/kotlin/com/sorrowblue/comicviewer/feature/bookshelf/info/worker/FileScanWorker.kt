@@ -21,58 +21,39 @@ import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
-import com.sorrowblue.comicviewer.framework.common.require
-import com.sorrowblue.comicviewer.framework.notification.ChannelID
-import com.sorrowblue.comicviewer.framework.notification.R
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
+import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
+import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
-import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title_scan
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_description_file_scan_cancelled
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan
+import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan_completed
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
-import dev.zacsweers.metro.Scope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
-@Scope
-annotation class RegenerateThumbnailsWorkerScope
-
-@GraphExtension(RegenerateThumbnailsWorkerScope::class)
-interface RegenerateThumbnailsWorkerContext {
-    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
-    val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    fun interface Factory {
-        fun createRegenerateThumbnailsWorkerContext(): RegenerateThumbnailsWorkerContext
-    }
-}
-
-internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(appContext, workerParams) {
-    private val notificationManager = NotificationManagerCompat.from(appContext)
+@AssistedInject
+class FileScanWorker(
+    context: Context,
+    @Assisted params: WorkerParameters,
+    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    private val scanBookshelfUseCase: ScanBookshelfUseCase,
+    private val notificationManager: NotificationManagerCompat,
+) : CoroutineWorker(context, params) {
     private val notificationID = Random.nextInt()
 
-    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
-    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase
-
-    init {
-        appContext.require<RegenerateThumbnailsWorkerContext.Factory>()
-            .createRegenerateThumbnailsWorkerContext()
-            .apply {
-                this@RegenerateThumbnailsWorker.getBookshelfInfoUseCase = getBookshelfInfoUseCase
-                this@RegenerateThumbnailsWorker.regenerateThumbnailsUseCase =
-                    regenerateThumbnailsUseCase
-            }
-    }
-
-    override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo("", 0, 0, true)
+    override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo("", "")
 
     override suspend fun doWork(): Result {
         @OptIn(InternalDataApi::class)
@@ -81,26 +62,24 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
             getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
                 .first()
                 .dataOrNull() ?: return Result.failure()
-        setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, 0, 0, true))
+        setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
         return try {
             innerWork(bookshelfInfo)
         } catch (e: kotlinx.coroutines.CancellationException) {
             logcat { "catch: ${e.asLog()}" }
             val notification =
                 NotificationCompat
-                    .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
+                    .Builder(applicationContext, AndroidNotificationChannel.SCAN_BOOKSHELF.id)
                     .setContentTitle(
-                        applicationContext.getString(
-                            com.sorrowblue.comicviewer.framework.notification.R.string.framework_notification_title_thumbnail_scan,
-                        ),
+                        getString(Res.string.bookshelf_info_notification_title_file_scan),
                     )
                     .setContentText(
-                        applicationContext.getString(
-                            com.sorrowblue.comicviewer.framework.notification.R.string.framework_notification_msg_thumbnail_scan_cancelled,
+                        getString(
+                            Res.string.bookshelf_info_notification_description_file_scan_cancelled,
                         ),
                     )
                     .setSubText(bookshelfInfo.bookshelf.displayName)
-                    .setSmallIcon(R.drawable.ic_sync_cancel_24dp)
+                    .setSmallIcon(NotificationR.drawable.ic_sync_cancel_24dp)
                     .setOngoing(false)
                     .build()
             if (ActivityCompat.checkSelfPermission(
@@ -116,18 +95,26 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
 
     private suspend fun innerWork(bookshelfInfo: BookshelfFolder): Result {
         val useCaseRequest =
-            RegenerateThumbnailsUseCase.Request(
-                bookshelfInfo.bookshelf.id,
-            ) { bookshelf, progress, max ->
-                setForeground(createForegroundInfo(bookshelf.displayName, progress, max))
+            ScanBookshelfUseCase.Request(bookshelfInfo.bookshelf.id) { bookshelf, file ->
+                if (file is Folder) {
+                    setProgress(
+                        workDataOf(
+                            "path" to file.path,
+                            "id" to file.bookshelfId.value,
+                        ),
+                    )
+                    setForeground(createForegroundInfo(bookshelf.displayName, file.path))
+                }
             }
-        return regenerateThumbnailsUseCase(useCaseRequest).fold({
+        return scanBookshelfUseCase(useCaseRequest).fold({
             val notification =
                 NotificationCompat
-                    .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
-                    .setContentTitle("サムネイルのスキャンが完了しました")
-                    .setSubText(bookshelfInfo.bookshelf.displayName)
-                    .setSmallIcon(R.drawable.ic_sync_done_24dp)
+                    .Builder(applicationContext, AndroidNotificationChannel.SCAN_BOOKSHELF.id)
+                    .setContentTitle(
+                        getString(Res.string.bookshelf_info_notification_title_file_scan_completed),
+                    )
+                    .setContentText(bookshelfInfo.bookshelf.displayName)
+                    .setSmallIcon(NotificationR.drawable.ic_sync_done_24dp)
                     .setOngoing(false)
                     .build()
             if (ActivityCompat.checkSelfPermission(
@@ -145,8 +132,7 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
 
     private suspend fun createForegroundInfo(
         bookshelfName: String,
-        progress: Long,
-        max: Long,
+        path: String,
         init: Boolean = false,
     ): ForegroundInfo {
         val cancelIntent = WorkManager
@@ -154,15 +140,16 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
             .createCancelPendingIntent(id)
         val notification =
             NotificationCompat
-                .Builder(applicationContext, ChannelID.SCAN_BOOKSHELF.id)
+                .Builder(applicationContext, AndroidNotificationChannel.SCAN_BOOKSHELF.id)
                 .apply {
-                    setContentTitle(getString(Res.string.bookshelf_info_title_scan))
-                    setSubText(bookshelfName)
-                    setContentText("$progress/$max")
-                    setProgress(max.toInt(), progress.toInt(), init)
-                    setSmallIcon(R.drawable.ic_sync_image_24dp)
+                    setContentTitle(
+                        getString(Res.string.bookshelf_info_notification_title_file_scan),
+                    )
+                    setContentText(bookshelfName)
+                    setContentText(path)
+                    setSmallIcon(NotificationR.drawable.ic_sync_book_24dp)
                     addAction(
-                        R.drawable.ic_sync_cancel_24dp,
+                        NotificationR.drawable.ic_sync_cancel_24dp,
                         applicationContext.getString(android.R.string.cancel),
                         cancelIntent,
                     )
@@ -184,7 +171,7 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
     companion object {
         const val BOOKSHELF_ID = "BOOKSHELF_ID"
 
-        fun enqueueUniqueWork(context: Context, bookshelfId: BookshelfId) {
+        fun enqueueUniqueWork(workManager: WorkManager, bookshelfId: BookshelfId) {
             val constraints = Constraints
                 .Builder()
                 .apply {
@@ -194,14 +181,20 @@ internal class RegenerateThumbnailsWorker(appContext: Context, workerParams: Wor
                     setRequiresStorageNotLow(true)
                 }.build()
             val myWorkRequest = OneTimeWorkRequest
-                .Builder(RegenerateThumbnailsWorker::class.java)
+                .Builder(FileScanWorker::class.java)
                 .setConstraints(constraints)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .setInputData(workDataOf(BOOKSHELF_ID to bookshelfId.value))
                 .build()
-            WorkManager
-                .getInstance(context)
-                .enqueueUniqueWork("scan2", ExistingWorkPolicy.KEEP, myWorkRequest)
+            workManager.enqueueUniqueWork("scan", ExistingWorkPolicy.KEEP, myWorkRequest)
         }
     }
+
+    @WorkerKey(FileScanWorker::class)
+    @ContributesIntoMap(
+        AppScope::class,
+        binding = binding<MetroWorkerFactory.WorkerInstanceFactory<*>>(),
+    )
+    @AssistedFactory
+    fun interface Factory : MetroWorkerFactory.WorkerInstanceFactory<FileScanWorker>
 }

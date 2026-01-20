@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bookshelf_info_title">本棚情報</string>
-    <string name="bookshelf_info_title_scan">本棚をスキャンしています</string>
     <string name="bookshelf_info_label_display_name">表示名</string>
     <string name="bookshelf_info_label_host">IP/ホスト名</string>
     <string name="bookshelf_info_label_path">ファイルパス</string>
@@ -37,4 +36,11 @@
     <string name="bookshelf_info_notification_text_scan_file">ファイルのスキャン状況を通知で確認できます。\nファイルのスキャンは実行中です。</string>
     <string name="bookshelf_info_notification_text_scan_thumbnail">サムネイルのスキャン状況を通知で確認できます。\nサムネイルのスキャンは実行中です。</string>
     <string name="bookshelf_info_notification_btn_not_allowed">許可しない</string>
+
+    <string name="bookshelf_info_notification_title_file_scan">ファイル スキャン</string>
+    <string name="bookshelf_info_notification_title_file_scan_completed">ファイル スキャンが完了しました</string>
+    <string name="bookshelf_info_notification_description_file_scan_cancelled">ファイル スキャンをキャンセルしました</string>
+    <string name="bookshelf_info_notification_title_thumbnail_scan">サムネイル スキャン</string>
+    <string name="bookshelf_info_notification_title_thumbnail_scan_completed">サムネイル スキャンンが完了しました</string>
+    <string name="bookshelf_info_notification_description_thumbnail_scan_cancelled">サムネイル スキャンをキャンセルしました</string>
 </resources>

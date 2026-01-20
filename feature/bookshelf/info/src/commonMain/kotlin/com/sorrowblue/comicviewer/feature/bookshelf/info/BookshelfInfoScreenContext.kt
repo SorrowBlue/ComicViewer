@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.info
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
@@ -15,9 +14,8 @@ import dev.zacsweers.metro.Scope
 annotation class BookshelfInfoScreenScope
 
 @GraphExtension(BookshelfInfoScreenScope::class)
-interface BookshelfInfoScreenContext : ScreenContext {
+expect interface BookshelfInfoScreenContext : ScreenContext {
     val bookshelfInfoUseCase: GetBookshelfInfoUseCase
-    val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase
     val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase
     val scanBookshelfUseCase: ScanBookshelfUseCase
     val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase

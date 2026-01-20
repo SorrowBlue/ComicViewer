@@ -6,7 +6,6 @@ import android.content.Context
 import androidx.core.content.getSystemService
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
-import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
@@ -17,14 +16,12 @@ internal class NotificationInitializer : Initializer<Unit> {
         val (createChannels, deleteChannels) = AndroidNotificationChannel.entries.partition {
             it.enable
         }
-        runBlocking {
-            createChannels.forEach {
-                val channel =
-                    NotificationChannel(it.id, getString(it.nameRes), it.important).apply {
-                        description = getString(it.descriptionRes)
-                    }
-                notificationManager.createNotificationChannel(channel)
-            }
+        createChannels.forEach {
+            val channel =
+                NotificationChannel(it.id, context.getString(it.nameRes), it.important).apply {
+                    description = context.getString(it.descriptionRes)
+                }
+            notificationManager.createNotificationChannel(channel)
         }
         deleteChannels.forEach {
             notificationManager.deleteNotificationChannel(it.id)
