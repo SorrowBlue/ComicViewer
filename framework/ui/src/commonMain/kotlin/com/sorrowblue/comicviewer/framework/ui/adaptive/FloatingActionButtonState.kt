@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.canonical
+package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonStateImpl.Companion.saver
+import com.sorrowblue.comicviewer.framework.ui.adaptive.FloatingActionButtonStateImpl.Companion.saver
 
 enum class FloatingActionButtonValue {
     Visible,

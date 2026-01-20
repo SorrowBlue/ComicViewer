@@ -16,44 +16,45 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import kotlin.reflect.KClass
 
-class SupportingPaneExt<T : NavKey>(val clazz: KClass<T>)
+class SupportingPaneWindowInsetsMetadata<T : NavKey>(val clazz: KClass<T>)
 
-const val TransitionName = "com.sorrowblue.comicviewer.framework.ui.navigation3.transitionName"
-
-fun transitionName(key: String) = mapOf(TransitionName to key)
+const val SupportingPaneWindowInsetsKey =
+    "com.sorrowblue.comicviewer.framework.ui.navigation3.SupportingPaneWindowInsets"
 
 inline fun <reified T : NavKey> SupportingPaneSceneStrategy.Companion.mainPane(sceneKey: String) =
     SupportingPaneSceneStrategy.mainPane(sceneKey) +
-        mapOf("SupportingPaneExt" to SupportingPaneExt(T::class))
+        mapOf(SupportingPaneWindowInsetsKey to SupportingPaneWindowInsetsMetadata(T::class))
 
 @Composable
-fun <T : Any> rememberCustomNavEntryDecorator(
-    directive: PaneScaffoldDirective,
-): CustomNavEntryDecorator<T> = remember(directive) {
-    CustomNavEntryDecorator(directive)
-}
+fun <T : Any> rememberSupportingPaneWindowInsetsDecorator(
+    directive: PaneScaffoldDirective
+): NavEntryDecorator<T> = remember(directive) { SupportingPaneWindowInsetsDecorator(directive) }
 
-class CustomNavEntryDecorator<T : Any> internal constructor(directive: PaneScaffoldDirective) :
+private class SupportingPaneWindowInsetsDecorator<T : Any>(directive: PaneScaffoldDirective) :
     NavEntryDecorator<T>(
         decorate = { entry ->
-            val insets = if (directive.maxHorizontalPartitions == 1) {
-                // Single pane
-                WindowInsets()
-            } else {
+            if (entry.metadata.contains(
+                    SupportingPaneWindowInsetsKey
+                ) && directive.maxHorizontalPartitions != 1
+            ) {
                 // Two pane
                 val isSupportingPaneShow =
-                    (entry.metadata["SupportingPaneExt"] as? SupportingPaneExt<*>)?.let {
-                        LocalNavigator.current.backStack.last()::class == it.clazz
-                    } ?: false
-                if (isSupportingPaneShow) {
+                    LocalNavigator.current.backStack.last()::class == (
+                        entry.metadata.getValue(
+                        SupportingPaneWindowInsetsKey,
+                    ) as SupportingPaneWindowInsetsMetadata<*>
+                    ).clazz
+                val insets = if (isSupportingPaneShow) {
                     WindowInsets.safeDrawing.only(WindowInsetsSides.End)
                 } else {
                     WindowInsets()
                 }
-            }
-            Box(modifier = Modifier.consumeWindowInsets(insets)) {
+                Box(modifier = Modifier.consumeWindowInsets(insets)) {
+                    entry.Content()
+                }
+            } else {
                 entry.Content()
             }
         },
-        onPop = { contentKey -> },
+        onPop = {},
     )

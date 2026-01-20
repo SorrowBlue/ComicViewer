@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.navigation.LocalCanonicalScaffoldBound
 import kotlin.jvm.JvmInline
 import kotlin.math.max
 
@@ -119,28 +118,6 @@ fun PaddingValues.copy(
     end: Dp = calculateEndPadding(layoutDirection),
     bottom: Dp = calculateBottomPadding(),
 ) = PaddingValues(start = start, top = top, end = end, bottom = bottom)
-
-@Composable
-fun animateMainContentPaddingValues(
-    ignore: Boolean = false,
-    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
-    animationSpec: AnimationSpec<PaddingValues> = paddingValuesDefaultSpring,
-    finishedListener: ((PaddingValues) -> Unit)? = null,
-): State<PaddingValues> {
-    val bound = LocalCanonicalScaffoldBound.current
-    return animateValueAsState(
-        targetValue = PaddingValues(
-            start = if (ignore || !bound.start) 0.dp else ComicTheme.dimension.margin,
-            top = if (ignore || !bound.top) 0.dp else ComicTheme.dimension.margin,
-            end = if (ignore || !bound.end) 0.dp else ComicTheme.dimension.margin,
-            bottom = if (ignore || !bound.bottom) 0.dp else ComicTheme.dimension.margin,
-        ),
-        typeConverter = paddingValuesToVector(layoutDirection),
-        animationSpec = animationSpec,
-        label = "PaddingValuesAnimation",
-        finishedListener = finishedListener,
-    )
-}
 
 @Composable
 fun animatePaddingValues(

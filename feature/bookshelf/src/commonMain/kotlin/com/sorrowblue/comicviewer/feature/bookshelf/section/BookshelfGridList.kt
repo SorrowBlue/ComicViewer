@@ -20,7 +20,6 @@ internal fun BookshelfGridList(
     contentPadding: PaddingValues,
 ) {
     LazyPagingColumn(
-        autoPadding = false,
         contentPadding = contentPadding,
         lazyPagingItems = lazyPagingItems,
         state = lazyGridState,

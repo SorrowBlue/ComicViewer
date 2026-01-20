@@ -27,8 +27,6 @@ import com.composables.core.ScrollArea
 import com.composables.core.Thumb
 import com.composables.core.VerticalScrollbar
 import com.composables.core.rememberScrollAreaState
-import com.sorrowblue.comicviewer.framework.ui.layout.animateMainContentPaddingValues
-import com.sorrowblue.comicviewer.framework.ui.layout.plus
 
 sealed class LazyPagingColumn {
     abstract val columns: GridCells
@@ -55,7 +53,6 @@ fun <T : Any> LazyPagingColumn(
     lazyPagingItems: LazyPagingItems<T>,
     type: LazyPagingColumn,
     modifier: Modifier = Modifier,
-    autoPadding: Boolean = true,
     state: LazyGridState = rememberLazyGridState(),
     contentPadding: PaddingValues = PaddingValues(),
     fillWidth: Boolean = type is LazyPagingColumn.List,
@@ -63,17 +60,12 @@ fun <T : Any> LazyPagingColumn(
     contentType: (index: Int) -> Any? = { type },
     itemContent: @Composable (LazyGridItemScope.(index: Int, item: T) -> Unit),
 ) {
-    val padding = if (autoPadding) {
-        animateMainContentPaddingValues(type == LazyPagingColumn.List).value
-    } else {
-        PaddingValues()
-    }
     val scrollAreaState = rememberScrollAreaState(state)
     ScrollArea(state = scrollAreaState, modifier = modifier) {
         LazyVerticalGrid(
             columns = type.columns,
             state = state,
-            contentPadding = contentPadding.plus(padding),
+            contentPadding = contentPadding,
             verticalArrangement = if (fillWidth) {
                 Arrangement.Top
             } else {

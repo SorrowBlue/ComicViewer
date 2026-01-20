@@ -12,8 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.framework.ui.canonical.FloatingActionButtonState
-import com.sorrowblue.comicviewer.framework.ui.canonical.rememberFloatingActionButtonState
 
 interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
     fun onNavigationReSelect()

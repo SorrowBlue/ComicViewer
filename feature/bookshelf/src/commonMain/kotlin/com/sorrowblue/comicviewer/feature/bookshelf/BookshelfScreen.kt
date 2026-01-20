@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButton
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add

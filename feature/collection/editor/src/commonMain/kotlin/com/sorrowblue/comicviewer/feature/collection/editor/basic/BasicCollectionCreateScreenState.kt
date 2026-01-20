@@ -12,8 +12,9 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseCase
+import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.NotificationManager
+import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
@@ -45,6 +46,7 @@ internal fun rememberBasicCollectionCreateScreenState(
     bookshelfId: BookshelfId,
     path: String,
 ): BasicCollectionCreateScreenState {
+    val appState = LocalAppState.current
     val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
@@ -54,7 +56,7 @@ internal fun rememberBasicCollectionCreateScreenState(
             path = path,
             createCollectionUseCase = context.createCollectionUseCase,
             addCollectionFileUseCase = context.addCollectionFileUseCase,
-            notificationManager = context.notificationManager,
+            appState = appState,
             coroutineScope = coroutineScope,
         )
     }.apply {
@@ -67,7 +69,7 @@ private class BasicCollectionCreateScreenStateImpl(
     private val path: String,
     private val createCollectionUseCase: CreateCollectionUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
-    private val notificationManager: NotificationManager,
+    private val appState: AppState,
     private val coroutineScope: CoroutineScope,
 ) : BasicCollectionCreateScreenState {
     override lateinit var form: Form<BasicCollectionForm>
@@ -88,15 +90,12 @@ private class BasicCollectionCreateScreenStateImpl(
                                 path = path,
                             )
                         } else {
-                            withContext(Dispatchers.Main) {
-                                notificationManager.toast(
-                                    getString(
-                                        Res.string.collection_editor_msg_success_create,
-                                        collection.name,
-                                    ),
-                                    NotificationManager.LengthShort,
-                                )
-                            }
+                            appState.snackbarHostState.showSnackbar(
+                                getString(
+                                    Res.string.collection_editor_msg_success_create,
+                                    collection.name,
+                                ),
+                            )
                             event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                         }
                     },
@@ -116,12 +115,11 @@ private class BasicCollectionCreateScreenStateImpl(
             onSuccess = {
                 event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                 withContext(Dispatchers.Main) {
-                    notificationManager.toast(
+                    appState.snackbarHostState.showSnackbar(
                         getString(
                             Res.string.collection_editor_msg_success_create_add,
                             collection.name,
                         ),
-                        NotificationManager.LengthShort,
                     )
                 }
             },
