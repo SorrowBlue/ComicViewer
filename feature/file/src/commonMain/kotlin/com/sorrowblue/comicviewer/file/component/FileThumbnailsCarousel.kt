@@ -32,7 +32,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.framework.common.isTouchable
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
 import kotlin.math.max
 import kotlinx.coroutines.launch
 

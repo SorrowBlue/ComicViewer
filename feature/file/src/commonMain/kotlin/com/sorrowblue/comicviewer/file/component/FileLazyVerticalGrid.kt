@@ -27,7 +27,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform

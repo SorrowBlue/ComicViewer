@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.framework.ui.canonical
+package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 

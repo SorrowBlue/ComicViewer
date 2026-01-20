@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
 
 @Composable
 fun AdaptiveAppBar(

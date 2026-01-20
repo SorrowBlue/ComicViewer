@@ -31,8 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
-import com.sorrowblue.comicviewer.framework.ui.canonical.isVisible
 
 @Composable
 fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButton(

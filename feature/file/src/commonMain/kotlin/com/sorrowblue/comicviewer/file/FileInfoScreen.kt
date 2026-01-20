@@ -39,8 +39,8 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
+import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme

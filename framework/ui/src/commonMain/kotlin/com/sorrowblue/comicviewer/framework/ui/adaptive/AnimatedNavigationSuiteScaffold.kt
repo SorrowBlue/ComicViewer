@@ -3,6 +3,10 @@ package com.sorrowblue.comicviewer.framework.ui.adaptive
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,14 +36,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationBarSharedElementKey
-import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationBarTransitionEnter
-import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationBarTransitionExit
-import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailSharedElementKey
-import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailTransitionEnter
-import com.sorrowblue.comicviewer.framework.ui.canonical.NavigationRailTransitionExit
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationBar
-import com.sorrowblue.comicviewer.framework.ui.canonical.isNavigationRail
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 /**
  * @see androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
@@ -169,3 +166,35 @@ private fun Modifier.navigationSuiteScaffoldConsumeWindowInsets(
 )
 
 private val NoWindowInsets = WindowInsets(0, 0, 0, 0)
+
+internal val NavigationBarTransitionEnter
+    @Composable
+    get() = slideInVertically(
+        animationSpec = ComicTheme.motionScheme.defaultSpatialSpec(),
+        initialOffsetY = { it },
+    )
+
+internal val NavigationBarTransitionExit
+    @Composable
+    get() = slideOutVertically(
+        animationSpec = ComicTheme.motionScheme.defaultSpatialSpec(),
+        targetOffsetY = { it },
+    )
+
+internal data object NavigationBarSharedElementKey
+
+internal val NavigationRailTransitionEnter
+    @Composable
+    get() = slideInHorizontally(
+        animationSpec = ComicTheme.motionScheme.defaultSpatialSpec(),
+        initialOffsetX = { -it },
+    )
+
+internal val NavigationRailTransitionExit
+    @Composable
+    get() = slideOutHorizontally(
+        animationSpec = ComicTheme.motionScheme.defaultSpatialSpec(),
+        targetOffsetX = { -it },
+    )
+
+internal data object NavigationRailSharedElementKey

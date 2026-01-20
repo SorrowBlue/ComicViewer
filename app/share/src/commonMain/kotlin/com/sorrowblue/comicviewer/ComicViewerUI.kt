@@ -31,7 +31,7 @@ import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.toEntries
-import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberCustomNavEntryDecorator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
 import io.github.takahirom.rin.rememberRetained
 
@@ -77,7 +77,7 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                     rememberListDetailSceneStrategy<NavKey>(directive = directive)
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
                 val customNavEntryDecorator =
-                    rememberCustomNavEntryDecorator<NavKey>(directive = directive)
+                    rememberSupportingPaneWindowInsetsDecorator<NavKey>(directive = directive)
                 Transitions.InitSlideDistance()
                 Transitions.motionScheme = ComicTheme.motionScheme
                 NavDisplay(
