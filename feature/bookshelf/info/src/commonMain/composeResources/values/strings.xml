@@ -14,7 +14,6 @@
     <string name="bookshelf_info_btn_scan_thumbnail">Scan thumbnail</string>
     <string name="bookshelf_info_label_bookshelf_type">Bookshelf type</string>
     <string name="bookshelf_info_msg_remove">You deleted the bookshelf</string>
-    <string name="bookshelf_info_title_scan">scanning bookshelf</string>
 
     <string name="bookshelf_info_label_auth_method">Authentication method</string>
     <string name="bookshelf_info_label_guest">Guest</string>
@@ -45,4 +44,11 @@
     <string name="bookshelf_info_delete_btn_delete">Delete</string>
     <string name="bookshelf_info_delete_btn_cancel">Cancel</string>
     <!--</editor-fold>-->
+
+    <string name="bookshelf_info_notification_title_file_scan">File scanning</string>
+    <string name="bookshelf_info_notification_title_file_scan_completed">File scan completed</string>
+    <string name="bookshelf_info_notification_description_file_scan_cancelled">Scan cancelled</string>
+    <string name="bookshelf_info_notification_title_thumbnail_scan">Thumbnail scanning</string>
+    <string name="bookshelf_info_notification_title_thumbnail_scan_completed">Thumbnail e scan completed</string>
+    <string name="bookshelf_info_notification_description_thumbnail_scan_cancelled">Thumbnail scan cancelled</string>
  </resources>

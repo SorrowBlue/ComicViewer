@@ -1,3 +1,5 @@
+import com.sorrowblue.comicviewer.libs
+
 plugins {
     alias(libs.plugins.comicviewer.multiplatformFeature)
 }
@@ -5,11 +7,11 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.sorrowblue.comicviewer.feature.bookshelf.info"
-        // resourcePrefix("bookshelf_info")
     }
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.notification)
                 implementation(projects.feature.bookshelf.edit)
                 implementation(projects.feature.file)
                 implementation(libs.androidx.coreUri)
@@ -17,9 +19,8 @@ kotlin {
         }
         androidMain {
             dependencies {
-                implementation(projects.framework.notification)
-
                 implementation(libs.androidx.workRuntime)
+                implementation(libs.metro.android)
             }
         }
     }

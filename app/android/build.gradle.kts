@@ -64,6 +64,7 @@ dependencies {
     implementation(projects.framework.ui)
 
     implementation(libs.androidx.activityCompose)
+    implementation(libs.androidx.workRuntime)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.coreSplashscreen)
     implementation(libs.androidx.lifecycleCommon)

@@ -8,7 +8,6 @@ import dev.zacsweers.metro.Provides
 
 @ContributesTo(AppScope::class)
 interface FrameworkNotificationProviders {
-
     @Provides
     fun provideNotificationManagerCompat(context: Context): NotificationManagerCompat =
         NotificationManagerCompat.from(context)

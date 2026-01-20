@@ -35,11 +35,10 @@ kotlin {
                 rootProject.subprojects.filterNot {
                     it.path == project.path || it.path.startsWith(projects.app.path)
                         || it.path == projects.data.reader.document.android.path
-                        || it.path == projects.framework.notification.path
                 }.forEach {
                     val hasSource = it.projectDir.resolve("src").exists()
                     if (hasSource) {
-                        implementation(it)
+                        api(it)
                     } else {
                         logger.lifecycle("Skipping empty or non-source module: ${it.path}")
                     }
@@ -61,8 +60,11 @@ kotlin {
             }
         }
         androidMain.dependencies {
-            implementation(projects.data.reader.document.android)
+            api(projects.data.reader.document.android)
             implementation(libs.metro.android)
+            implementation(libs.androidx.workRuntime)
+            implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.coreSplashscreen)
         }
         val androidDeviceTest by getting {
             dependencies {
