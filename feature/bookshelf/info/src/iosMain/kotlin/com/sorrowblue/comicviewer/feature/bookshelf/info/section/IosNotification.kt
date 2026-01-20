@@ -15,7 +15,6 @@ import platform.UserNotifications.UNNotificationSettings
 import platform.UserNotifications.UNUserNotificationCenter
 
 enum class PermissionState {
-
     /**
      * Starting state for each permission.
      */
@@ -26,17 +25,15 @@ enum class PermissionState {
     /**
      * On Android only applicable to Push Notifications.
      */
-    DeniedAlways
+    DeniedAlways,
 }
 
 internal class NotificationPermissionDelegate {
+    suspend fun providePermission(): PermissionState =
+        provideNotificationPermission(getPermissionStatus())
 
-    suspend fun providePermission(): PermissionState {
-        return provideNotificationPermission(getPermissionStatus())
-    }
-
-    suspend fun getPermissionState(): PermissionState {
-        return when (val status: UNAuthorizationStatus = getPermissionStatus()) {
+    suspend fun getPermissionState(): PermissionState =
+        when (val status: UNAuthorizationStatus = getPermissionStatus()) {
             UNAuthorizationStatusAuthorized,
             UNAuthorizationStatusProvisional,
             UNAuthorizationStatusEphemeral,
@@ -46,7 +43,6 @@ internal class NotificationPermissionDelegate {
             UNAuthorizationStatusDenied -> PermissionState.DeniedAlways
             else -> error("unknown push authorization status $status")
         }
-    }
 
     private suspend fun getPermissionStatus(): UNAuthorizationStatus {
         val currentCenter = UNUserNotificationCenter.currentNotificationCenter()
@@ -55,10 +51,10 @@ internal class NotificationPermissionDelegate {
                 mainContinuation { settings: UNNotificationSettings? ->
                     continuation.resumeWith(
                         Result.success(
-                            settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined
-                        )
+                            settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined,
+                        ),
                     )
-                }
+                },
             )
         }
     }
@@ -67,9 +63,9 @@ internal class NotificationPermissionDelegate {
         status: UNAuthorizationStatus,
     ): PermissionState {
         when (status) {
-            UNAuthorizationStatusAuthorized,// 許可
-            UNAuthorizationStatusProvisional,// お試し
-            UNAuthorizationStatusEphemeral,// 特定の期間だけ許可
+            UNAuthorizationStatusAuthorized, // 許可
+            UNAuthorizationStatusProvisional, // お試し
+            UNAuthorizationStatusEphemeral, // 特定の期間だけ許可
             -> return PermissionState.Granted
 
             // 未確認
@@ -86,17 +82,17 @@ internal class NotificationPermissionDelegate {
                                 if (granted && error == null) {
                                     continuation.resumeWith(
                                         Result.success(
-                                            UNAuthorizationStatusAuthorized
-                                        )
+                                            UNAuthorizationStatusAuthorized,
+                                        ),
                                     )
                                 } else {
                                     continuation.resumeWith(
                                         Result.success(
-                                            UNAuthorizationStatusDenied
-                                        )
+                                            UNAuthorizationStatusDenied,
+                                        ),
                                     )
                                 }
-                            }
+                            },
                         )
                 }
                 return provideNotificationPermission(newStatus)

@@ -88,52 +88,48 @@ private class BookshelfInfoContentsStateImpl(
     override fun onScanFileClick() {
         currentScanType = ScanType.File
         appState.coroutineScope.launch {
-            try {
-                val status = NotificationPermissionDelegate().providePermission()
-                when (status) {
-                    PermissionState.NotDetermined -> {
-
-                    }
-
-                    PermissionState.Granted -> {
-                        notify()
-                        scanFile()
-                    }
-
-                    PermissionState.DeniedAlways -> {
-                        events.tryEmit(
-                            BookshelfInfoContentsEvent.ShowNotificationPermissionRationale(
-                                ScanType.File,
-                            ),
-                        )
-                        scanFile()
-                    }
+            val status = NotificationPermissionDelegate().providePermission()
+            when (status) {
+                PermissionState.NotDetermined -> {
                 }
-            } catch (e: Exception) {
+
+                PermissionState.Granted -> {
+                    notify()
+                    scanFile()
+                }
+
+                PermissionState.DeniedAlways -> {
+                    events.tryEmit(
+                        BookshelfInfoContentsEvent.ShowNotificationPermissionRationale(
+                            ScanType.File,
+                        ),
+                    )
+                    scanFile()
+                }
             }
         }
     }
 
     override fun onScanThumbnailClick() {
         currentScanType = ScanType.Thumbnail
-        try {
-            val center = UNUserNotificationCenter.currentNotificationCenter()
-            center.requestAuthorizationWithOptions(
-                options = UNAuthorizationOptionAlert or
-                    UNAuthorizationOptionSound or
-                    UNAuthorizationOptionBadge,
-                completionHandler = { granted, _ ->
-                    if (granted) notify() else {
-                        events.tryEmit(
-                            BookshelfInfoContentsEvent.ShowNotificationPermissionRationale(
-                                ScanType.File,
-                            ),
-                        )
-                    }
-                    scanThumbnail()
-                })
-        } catch (e: Exception) {
-        }
+        val center = UNUserNotificationCenter.currentNotificationCenter()
+        center.requestAuthorizationWithOptions(
+            options = UNAuthorizationOptionAlert or
+                UNAuthorizationOptionSound or
+                UNAuthorizationOptionBadge,
+            completionHandler = { granted, _ ->
+                if (granted) {
+                    notify()
+                } else {
+                    events.tryEmit(
+                        BookshelfInfoContentsEvent.ShowNotificationPermissionRationale(
+                            ScanType.File,
+                        ),
+                    )
+                }
+                scanThumbnail()
+            },
+        )
     }
 
     private suspend fun getPermissionStatus(): UNAuthorizationStatus {
@@ -143,10 +139,10 @@ private class BookshelfInfoContentsStateImpl(
                 mainContinuation { settings ->
                     continuation.resumeWith(
                         Result.success(
-                            settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined
-                        )
+                            settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined,
+                        ),
                     )
-                }
+                },
             )
         }
     }
@@ -158,7 +154,7 @@ private class BookshelfInfoContentsStateImpl(
                 ScanBookshelfUseCase.Request(
                     bookshelfId = uiState.bookshelf.id,
                 ) { bookshelf, file ->
-                }
+                },
             )
         }
     }
@@ -202,12 +198,10 @@ private class BookshelfInfoContentsStateImpl(
             identifier = "$id",
             content = content,
             trigger = null,
-
-            )
+        )
         UNUserNotificationCenter.currentNotificationCenter()
-            .addNotificationRequest(request = request)
-            { error ->
-                println("IosNotificationManager---${error}")
+            .addNotificationRequest(request = request) { error ->
+                println("IosNotificationManager---$error")
             }
     }
 }
@@ -220,9 +214,7 @@ internal object MainRunDispatcher : CoroutineDispatcher() {
 }
 
 @Suppress("LESS_VISIBLE_TYPE_ACCESS_IN_INLINE_WARNING")
-inline fun <T1> mainContinuation(
-    noinline block: (T1) -> Unit,
-): (T1) -> Unit = { arg1 ->
+inline fun <T1> mainContinuation(noinline block: (T1) -> Unit): (T1) -> Unit = { arg1 ->
     if (NSThread.isMainThread()) {
         block.invoke(arg1)
     } else {
@@ -233,14 +225,13 @@ inline fun <T1> mainContinuation(
 }
 
 @Suppress("LESS_VISIBLE_TYPE_ACCESS_IN_INLINE_WARNING")
-inline fun <T1, T2> mainContinuation(
-    noinline block: (T1, T2) -> Unit,
-): (T1, T2) -> Unit = { arg1, arg2 ->
-    if (NSThread.isMainThread()) {
-        block.invoke(arg1, arg2)
-    } else {
-        MainRunDispatcher.run {
+inline fun <T1, T2> mainContinuation(noinline block: (T1, T2) -> Unit): (T1, T2) -> Unit =
+    { arg1, arg2 ->
+        if (NSThread.isMainThread()) {
             block.invoke(arg1, arg2)
+        } else {
+            MainRunDispatcher.run {
+                block.invoke(arg1, arg2)
+            }
         }
     }
-}
