@@ -117,7 +117,7 @@ compose-material3AdaptiveNavigation3 = { group = "org.jetbrains.compose.material
 compose-material3AdaptiveNavigationSuite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "compose-material3" }
 compose-materialIconsExtended = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "androidx-compose-material" }
 compose-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "composeMultiplatform" }
-#compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
+compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
 compose-uiBackhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
 compose-uiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose-ui" }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="framework_notification_channel_name_bookshelf_scan">本棚のスキャン</string>
+    <string name="framework_notification_channel_description_bookshelf_scan">本棚のスキャンに関する通知</string>
+</resources>
