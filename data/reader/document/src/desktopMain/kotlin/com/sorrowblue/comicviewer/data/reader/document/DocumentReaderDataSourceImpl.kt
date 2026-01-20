@@ -16,7 +16,7 @@ internal class DocumentReaderDataSourceImpl : DocumentReaderDataSource {
 
     override fun initializePdfPlugin(rootPath: String): DocumentReaderState {
         val jarPaths = findPluginJarPaths(rootPath)
-        if (this.jarPaths == jarPaths) {
+        if (jarPaths.isNotEmpty() && this.jarPaths == jarPaths) {
             // 同じパス
             return DocumentReaderState.Success
         } else if (jarPaths.isNotEmpty()) {
