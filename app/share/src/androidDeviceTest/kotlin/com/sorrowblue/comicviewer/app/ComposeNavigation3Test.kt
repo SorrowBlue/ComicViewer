@@ -20,28 +20,14 @@ import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sorrowblue.comicviewer.ComicViewerUI
-import com.sorrowblue.comicviewer.data.database.di.DatabaseProviders
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
-import dev.zacsweers.metro.asContribution
-import dev.zacsweers.metro.createGraphFactory
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
-val appGraph by lazy {
-    createGraphFactory<AppGraph.Factory>().createAppGraph(
-        InstrumentationRegistry.getInstrumentation().context,
-        object : LicenseeHelper {
-            override suspend fun loadLibraries(): ByteArray {
-                TODO("Not yet implemented")
-            }
-        })
-}
 
 class ComposeNavigation3Test {
 
@@ -51,8 +37,6 @@ class ComposeNavigation3Test {
     @OptIn(InternalDataApi::class)
     @Before
     fun setup() {
-        appGraph.asContribution<DatabaseProviders>()
-        getPlatformGraph = { appGraph }
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -117,7 +101,6 @@ class ComposeNavigation3Test {
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun settingsTest() {
-        getPlatformGraph = { appGraph }
         // Start the app
         composeTestRule.setContent {
             with(InstrumentationRegistry.getInstrumentation().context) {
@@ -310,7 +293,8 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("DisplayNameField").performTextInput("SMBBookshelf")
         composeTestRule.onNodeWithTag("HostField").performTextInput(BuildTestConfig.smbHost)
         composeTestRule.onNodeWithTag("PortField").performTextClearance()
-        composeTestRule.onNodeWithTag("PortField").performTextInput(BuildTestConfig.smbPort.toString())
+        composeTestRule.onNodeWithTag("PortField")
+            .performTextInput(BuildTestConfig.smbPort.toString())
         composeTestRule.onNodeWithTag("PathField").performTextInput(BuildTestConfig.smbPath)
         composeTestRule.onNodeWithTag("AuthUserPass").performClick()
         composeTestRule.onNodeWithTag("DomainField").performTextInput(BuildTestConfig.smbDomain)

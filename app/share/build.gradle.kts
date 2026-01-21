@@ -14,7 +14,7 @@ kotlin {
         namespace = "com.sorrowblue.comicviewer.app.share"
         androidResources.enable = true
         withDeviceTest {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            instrumentationRunner = "com.sorrowblue.comicviewer.app.InstrumentationTestRunner"
             execution = "ANDROIDX_TEST_ORCHESTRATOR"
             animationsDisabled = true
             instrumentationRunnerArguments["clearPackageData"] = "true"
@@ -68,6 +68,7 @@ kotlin {
         }
         val androidDeviceTest by getting {
             dependencies {
+                implementation(libs.androidx.testRunner)
                 implementation(libs.compose.uiTestJunit4)
                 implementation(libs.compose.uiTestManifest)
             }
