@@ -193,7 +193,7 @@ comicviewer-androidLibrary = { id = "comicviewer.convention.android-library" }
 comicviewer-androidLint = { id = "comicviewer.primitive.lint" }
 comicviewer-detekt = { id = "comicviewer.primitive.detekt" }
 comicviewer-di = { id = "comicviewer.primitive.metro" }
-comicviewer-dokka = { id = "comicviewer.primitive.dokka" }
+comicviewer-primitive-dokka = { id = "comicviewer.primitive.dokka" }
 comicviewer-multiplatformCompose = { id = "comicviewer.convention.multiplatform-compose" }
 comicviewer-multiplatformFeature = { id = "comicviewer.convention.multiplatform-feature" }
 comicviewer-multiplatformLibrary = { id = "comicviewer.convention.multiplatform-library" }
