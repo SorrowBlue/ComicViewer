@@ -24,7 +24,6 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
-import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
 import com.sorrowblue.comicviewer.framework.notification.R
 import comicviewer.feature.bookshelf.info.generated.resources.Res
@@ -32,47 +31,27 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_not
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_thumbnail_scan
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_thumbnail_scan_completed
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
-import dev.zacsweers.metro.Scope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.binding
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
-@Scope
-annotation class RegenerateThumbnailsWorkerScope
+@AssistedInject
+class ThumbnailScanWorker(
+    appContext: Context,
+    @Assisted params: WorkerParameters,
+    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
+    private val notificationManager: NotificationManagerCompat,
+) : CoroutineWorker(appContext, params) {
 
-@GraphExtension(RegenerateThumbnailsWorkerScope::class)
-interface RegenerateThumbnailsWorkerContext {
-    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
-    val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    fun interface Factory {
-        fun createRegenerateThumbnailsWorkerContext(): RegenerateThumbnailsWorkerContext
-    }
-}
-
-internal class ThumbnailScanWorker(appContext: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(appContext, workerParams) {
-    private val notificationManager = NotificationManagerCompat.from(appContext)
     private val notificationID = Random.nextInt()
-
-    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
-    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase
-
-    init {
-        appContext.require<RegenerateThumbnailsWorkerContext.Factory>()
-            .createRegenerateThumbnailsWorkerContext()
-            .apply {
-                this@ThumbnailScanWorker.getBookshelfInfoUseCase = getBookshelfInfoUseCase
-                this@ThumbnailScanWorker.regenerateThumbnailsUseCase =
-                    regenerateThumbnailsUseCase
-            }
-    }
 
     override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo("", 0, 0, true)
 
@@ -186,6 +165,14 @@ internal class ThumbnailScanWorker(appContext: Context, workerParams: WorkerPara
             ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
         )
     }
+
+    @WorkerKey(ThumbnailScanWorker::class)
+    @ContributesIntoMap(
+        AppScope::class,
+        binding = binding<MetroWorkerFactory.WorkerInstanceFactory<*>>(),
+    )
+    @AssistedFactory
+    fun interface Factory : MetroWorkerFactory.WorkerInstanceFactory<ThumbnailScanWorker>
 
     companion object {
         const val BOOKSHELF_ID = "BOOKSHELF_ID"
