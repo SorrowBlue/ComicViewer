@@ -60,7 +60,3 @@ fun main() {
         }
     }
 }
-
-val user = getUserById(42)?.toString()
-
-fun getUserById(i: Int): List<Int> = listOf(i)
