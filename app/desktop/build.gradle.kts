@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.comicviewer.multiplatformCompose)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.comicviewer.di)
+    alias(libs.plugins.comicviewer.primitive.detekt)
     alias(libs.plugins.comicviewer.primitive.dokka)
     alias(libs.plugins.comicviewer.primitive.licensee)
     alias(libs.plugins.comicviewer.primitive.aboutlibraries)

@@ -16,7 +16,6 @@ import dev.zacsweers.metro.Provides
     additionalScopes = [DataScope::class],
 )
 interface Navigation3TestGraph {
-
     val bookshelfLocalDataSource: BookshelfLocalDataSource
     val fileLocalDataSource: FileLocalDataSource
 
@@ -31,5 +30,3 @@ interface Navigation3TestGraph {
         ): Navigation3TestGraph
     }
 }
-
-object FakeBindings

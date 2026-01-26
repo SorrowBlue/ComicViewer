@@ -8,6 +8,7 @@ import android.os.IBinder
 import androidx.core.net.toUri
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.PluginManager
+import com.sorrowblue.comicviewer.plugin.aidl.FileReader as PluginFileReader
 import com.sorrowblue.comicviewer.plugin.pdf.aidl.IRemotePdfService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +21,6 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 import okio.BufferedSink
-import com.sorrowblue.comicviewer.plugin.aidl.FileReader as PluginFileReader
 
 internal const val PdfPluginPackage = "com.sorrowblue.comicviewer.plugin.pdf"
 internal const val PdfPluginService = "com.sorrowblue.comicviewer.plugin.pdf.PdfService"
@@ -32,7 +32,6 @@ open class AndroidDocumentFileReader(
     private val pluginManager: PluginManager,
     private val dispatcher: CoroutineDispatcher,
 ) : ServiceConnection {
-
     private val mutex = Mutex(true)
     private var pdfService: IRemotePdfService? = null
     private var reader: PluginFileReader? = null

@@ -7,6 +7,5 @@ import dev.zacsweers.metro.DependencyGraph
 
 @DependencyGraph(DataScope::class)
 expect interface SmbTestGraph {
-
     val fileClientFactory: Map<FileClientType, FileClient.Factory<*>>
 }

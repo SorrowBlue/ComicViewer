@@ -23,7 +23,6 @@ import okio.use
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 class SmbFileClientCommonTest {
-
     private val server
         get() = SmbServer(
             displayName = "Test",
@@ -32,14 +31,18 @@ class SmbFileClientCommonTest {
             auth = SmbServer.Auth.UsernamePassword(
                 domain = BuildTestConfig.smbDomain,
                 username = BuildTestConfig.smbUsername,
-                password = BuildTestConfig.smbPassword
-            )
+                password = BuildTestConfig.smbPassword,
+            ),
         )
 
     private fun createClient(): FileClient<Bookshelf> {
         val graph = createGraph<SmbTestGraph>()
         @Suppress("UNCHECKED_CAST")
-        return (graph.fileClientFactory.getValue(FileClientType.Smb) as FileClient.Factory<Bookshelf>)
+        return (
+            graph.fileClientFactory.getValue(
+                FileClientType.Smb,
+            ) as FileClient.Factory<Bookshelf>
+            )
             .create(server)
     }
 
@@ -48,7 +51,7 @@ class SmbFileClientCommonTest {
         val client = createClient()
         assertTrue(
             BuildTestConfig.smbPath.isNotEmpty(),
-            "BuildTestConfig.smbPath must be provided for tests"
+            "BuildTestConfig.smbPath must be provided for tests",
         )
         assertTrue(client.exists(BuildTestConfig.smbPath))
     }
@@ -90,17 +93,19 @@ class SmbFileClientCommonTest {
             parent = "",
             size = 0,
             lastModifier = 0,
-            isHidden = false
+            isHidden = false,
         )
         val list = client.listFiles(file)
         assertTrue(list.isNotEmpty(), "listFiles should return entries for $dir")
-        assertTrue(list.any {
-            it.path == BuildTestConfig.smbPath || it.path.contains(
-                BuildTestConfig.smbPath.trimEnd(
-                    '/'
+        assertTrue(
+            list.any {
+                it.path == BuildTestConfig.smbPath || it.path.contains(
+                    BuildTestConfig.smbPath.trimEnd(
+                        '/',
+                    ),
                 )
-            )
-        })
+            },
+        )
     }
 
     @Test
@@ -113,14 +118,14 @@ class SmbFileClientCommonTest {
             parent = "",
             size = 0,
             lastModifier = 0,
-            isHidden = false
+            isHidden = false,
         )
         client.listFiles(file).firstOrNull { it is BookFile }?.let {
             client.bufferedSource(it).use { bufferedSource ->
                 assertEquals(
                     bufferedSource.readUtf8Line()?.isNotEmpty(),
                     true,
-                    "file should not be empty"
+                    "file should not be empty",
                 )
             }
         } ?: error("file not found")
@@ -136,7 +141,7 @@ class SmbFileClientCommonTest {
             parent = "",
             size = 0,
             lastModifier = 0,
-            isHidden = false
+            isHidden = false,
         )
         client.listFiles(file).firstOrNull { it is BookFile }?.let {
             client.seekableInputStream(it).use { inputStream ->

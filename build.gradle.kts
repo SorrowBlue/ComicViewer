@@ -85,7 +85,7 @@ subprojects {
     reportMerge {
         input.from(
             tasks.withType<dev.detekt.gradle.Detekt>()
-                .map { it.reports.checkstyle.outputLocation })
+                .map { it.reports.sarif.outputLocation })
     }
 }
 

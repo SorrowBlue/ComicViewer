@@ -190,14 +190,13 @@ androidxRoom = { id = "androidx.room", version.ref = "androidx-room" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 comicviewer-androidApplication = { id = "comicviewer.convention.android-application" }
 comicviewer-androidLibrary = { id = "comicviewer.convention.android-library" }
-comicviewer-androidLint = { id = "comicviewer.primitive.lint" }
-comicviewer-detekt = { id = "comicviewer.primitive.detekt" }
 comicviewer-di = { id = "comicviewer.primitive.metro" }
-comicviewer-primitive-dokka = { id = "comicviewer.primitive.dokka" }
 comicviewer-multiplatformCompose = { id = "comicviewer.convention.multiplatform-compose" }
 comicviewer-multiplatformFeature = { id = "comicviewer.convention.multiplatform-feature" }
 comicviewer-multiplatformLibrary = { id = "comicviewer.convention.multiplatform-library" }
 comicviewer-primitive-aboutlibraries = { id = "comicviewer.primitive.aboutlibraries" }
+comicviewer-primitive-detekt = { id = "comicviewer.primitive.detekt" }
+comicviewer-primitive-dokka = { id = "comicviewer.primitive.dokka" }
 comicviewer-primitive-licensee = { id = "comicviewer.primitive.licensee" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
