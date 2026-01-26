@@ -27,24 +27,21 @@ inline fun <reified T : NavKey> SupportingPaneSceneStrategy.Companion.mainPane(s
 
 @Composable
 fun <T : Any> rememberSupportingPaneWindowInsetsDecorator(
-    directive: PaneScaffoldDirective
+    directive: PaneScaffoldDirective,
 ): NavEntryDecorator<T> = remember(directive) { SupportingPaneWindowInsetsDecorator(directive) }
 
 private class SupportingPaneWindowInsetsDecorator<T : Any>(directive: PaneScaffoldDirective) :
     NavEntryDecorator<T>(
         decorate = { entry ->
             if (entry.metadata.contains(
-                    SupportingPaneWindowInsetsKey
+                    SupportingPaneWindowInsetsKey,
                 ) && directive.maxHorizontalPartitions != 1
             ) {
                 // Two pane
-                val isSupportingPaneShow =
-                    LocalNavigator.current.backStack.last()::class == (
-                        entry.metadata.getValue(
-                        SupportingPaneWindowInsetsKey,
-                    ) as SupportingPaneWindowInsetsMetadata<*>
-                    ).clazz
-                val insets = if (isSupportingPaneShow) {
+                val currentStackClass = LocalNavigator.current.backStack.last()::class
+                val currentPaneClass = entry.metadata.getValue(SupportingPaneWindowInsetsKey)
+                    .cast<SupportingPaneWindowInsetsMetadata<*>>().clazz
+                val insets = if (currentStackClass == currentPaneClass) {
                     WindowInsets.safeDrawing.only(WindowInsetsSides.End)
                 } else {
                     WindowInsets()
@@ -58,3 +55,6 @@ private class SupportingPaneWindowInsetsDecorator<T : Any>(directive: PaneScaffo
         },
         onPop = {},
     )
+
+@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
+inline fun <T : Any> Any.cast(): T = this as T

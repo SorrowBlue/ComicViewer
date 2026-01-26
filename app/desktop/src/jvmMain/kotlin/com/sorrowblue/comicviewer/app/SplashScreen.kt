@@ -28,7 +28,7 @@ import org.jetbrains.compose.animatedimage.animate
 import org.jetbrains.compose.animatedimage.loadAnimatedImage
 
 @Composable
-fun SplashScreen(keepOnScreenCondition: () -> Boolean) {
+internal fun SplashScreen(keepOnScreenCondition: () -> Boolean) {
     var shouldKeepSplash by remember { mutableStateOf(true) }
     val currentKeepOnScreenCondition by rememberUpdatedState(keepOnScreenCondition)
     LaunchedEffect(Unit) {

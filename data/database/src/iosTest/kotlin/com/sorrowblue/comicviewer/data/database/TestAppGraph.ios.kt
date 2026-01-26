@@ -15,9 +15,11 @@ class TestIosContext : IosContext()
 
 @DependencyGraph(
     scope = AppScope::class,
-    additionalScopes = [DataScope::class]
+    additionalScopes = [DataScope::class],
 )
-internal actual interface TestAppGraph : IosDatabaseProviders, DatabaseProviders {
+internal actual interface TestAppGraph :
+    IosDatabaseProviders,
+    DatabaseProviders {
     actual val database: ComicViewerDatabase
     actual val platformContext: PlatformContext
 

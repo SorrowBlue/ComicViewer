@@ -10,7 +10,7 @@ internal actual fun createPlatformContext(): PlatformContext = TestDesktopContex
 
 @DependencyGraph(
     scope = AppScope::class,
-    additionalScopes = [DataScope::class]
+    additionalScopes = [DataScope::class],
 )
 internal actual interface TestAppGraph {
     actual val database: ComicViewerDatabase

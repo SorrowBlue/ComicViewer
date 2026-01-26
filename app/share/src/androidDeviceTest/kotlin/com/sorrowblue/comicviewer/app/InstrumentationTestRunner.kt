@@ -9,7 +9,5 @@ class InstrumentationTestRunner : AndroidJUnitRunner() {
         classLoader: ClassLoader?,
         className: String?,
         context: Context?,
-    ): Application {
-        return super.newApplication(classLoader, TestApplication::class.java.name, context)
-    }
+    ): Application = super.newApplication(classLoader, TestApplication::class.java.name, context)
 }

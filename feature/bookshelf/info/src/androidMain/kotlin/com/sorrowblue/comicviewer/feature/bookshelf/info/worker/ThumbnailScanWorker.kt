@@ -50,7 +50,6 @@ class ThumbnailScanWorker(
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
     private val notificationManager: NotificationManagerCompat,
 ) : CoroutineWorker(appContext, params) {
-
     private val notificationID = Random.nextInt()
 
     override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo("", 0, 0, true)

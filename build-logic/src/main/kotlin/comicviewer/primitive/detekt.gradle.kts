@@ -1,10 +1,20 @@
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+
 package comicviewer.primitive
 
 import com.sorrowblue.comicviewer.libs
 import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.extensions.DetektExtension
+import dev.detekt.gradle.plugin.internal.DetektAndroidCompilations
 
 plugins {
     dev.detekt
+}
+
+plugins.withId("com.android.application") {
+    val extension = project.extensions.getByType<DetektExtension>()
+    DetektAndroidCompilations.registerTasks(project, extension)
+    DetektAndroidCompilations.linkTasks(project, extension)
 }
 
 dependencies {
@@ -32,16 +42,19 @@ tasks.withType<Detekt>().configureEach {
 }
 
 mapOf(
-    "detektAndroidAll" to "(?i)^(?!.*(SourceSet|metadata)).*android.*$".toRegex(),
-    "detektDesktopAll" to "(?i)^(?!.*(SourceSet|metadata)).*desktop.*$".toRegex(),
-    "detektIosAll" to "(?i)^(?!.*(metadata)).*ios.*$".toRegex(),
+    "detektAndroidAll" to
+        "^detekt(Main|Debug|Internal|Prerelease|Release|DebugUnitTest|DebugAndroidTest|MainAndroid|HostTestAndroid|DeviceTestAndroid)$".toRegex(),
+    "detektDesktopAll" to "^detekt(MainDesktop|TestDesktop|MainJvm|TestJvm)$".toRegex(),
+    "detektIosAll" to
+        "^detekt((Native|Apple|Ios|IosArm64|IosSimulatorArm64)|(Main|Test))SourceSet$".toRegex(),
+    "detektCommonAll" to "^detekt((Common|NoAndroid)|(Main|Test))SourceSet$".toRegex(),
 ).forEach { (taskName, regex) ->
     tasks.register(taskName) {
+        val detektTasks = tasks
+            .withType<Detekt>()
+            .matching { detekt -> detekt.name.contains(regex) }
+        enabled = detektTasks.isNotEmpty()
         group = LifecycleBasePlugin.VERIFICATION_GROUP
-        dependsOn(
-            tasks
-                .withType<Detekt>()
-                .matching { detekt -> detekt.name.contains(regex) },
-        )
+        dependsOn(detektTasks)
     }
 }

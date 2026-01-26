@@ -20,24 +20,16 @@ import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sorrowblue.comicviewer.ComicViewerUI
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
 class ComposeNavigation3Test {
-
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @OptIn(InternalDataApi::class)
-    @Before
-    fun setup() {
-    }
 
     @OptIn(ExperimentalTestApi::class)
     @Test

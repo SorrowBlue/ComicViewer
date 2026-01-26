@@ -24,7 +24,9 @@ internal class DocumentInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         runBlocking {
             runCatching {
-                with(context.require<ReaderDocumentContext.Factory>().createReaderDocumentContext()) {
+                with(
+                    context.require<ReaderDocumentContext.Factory>().createReaderDocumentContext(),
+                ) {
                     updatePdfPluginSupport(context)
                 }
             }.onFailure {
