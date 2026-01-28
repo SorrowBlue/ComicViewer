@@ -82,6 +82,14 @@
       "matchPackageNames": [
         "com.sorrowblue.cmpdestinations{/,}**"
       ]
+    },
+    {
+      "groupName": "detekt",
+      "groupSlug": "detekt",
+      "matchPackageNames": [
+        "dev.detekt{/,}**",
+        "io.nlopez.compose.rules{/,}**"
+      ]
     }
   ]
 }
