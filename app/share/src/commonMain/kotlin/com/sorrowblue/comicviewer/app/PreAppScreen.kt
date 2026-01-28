@@ -78,6 +78,7 @@ internal fun PreAppScreen(
             }
 
             AuthStatus.NoAuthRequired -> Unit
+
             AuthStatus.Unknown -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()

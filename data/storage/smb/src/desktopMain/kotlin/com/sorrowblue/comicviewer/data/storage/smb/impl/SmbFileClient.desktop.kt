@@ -76,10 +76,13 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                         ) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
                         when (it.ntStatus) {
                             NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath()
+
                             NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth()
+
                             NtStatus.NT_STATUS_INVALID_PARAMETER ->
                                 FileClientException
                                     .InvalidPath()
+
                             NtStatus.NT_STATUS_UNSUCCESSFUL -> {
                                 if (it.cause is ConnectionTimeoutException ||
                                     it.cause is TransportException ||
@@ -159,8 +162,11 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                 ) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
                 when (it.ntStatus) {
                     NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath()
+
                     NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth()
+
                     NtStatus.NT_STATUS_INVALID_PARAMETER -> FileClientException.InvalidPath()
+
                     NtStatus.NT_STATUS_UNSUCCESSFUL -> {
                         if (it.cause is ConnectionTimeoutException ||
                             it.cause is TransportException
@@ -259,6 +265,7 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
         } else {
             when (bookshelfAuth) {
                 SmbServer.Auth.Guest -> credentials.isGuest
+
                 is SmbServer.Auth.UsernamePassword -> {
                     NtlmPasswordAuthenticator(
                         bookshelfAuth.domain,
@@ -314,6 +321,7 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
         val context = BaseContext(PropertyConfiguration(prop))
         return when (val auth = this.bookshelf.auth) {
             SmbServer.Auth.Guest -> context.withGuestCredentials()
+
             is SmbServer.Auth.UsernamePassword -> context.withCredentials(
                 NtlmPasswordAuthenticator(auth.domain, auth.username, auth.password),
             )

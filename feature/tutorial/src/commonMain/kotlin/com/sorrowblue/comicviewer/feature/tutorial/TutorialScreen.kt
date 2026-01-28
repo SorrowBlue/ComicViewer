@@ -53,7 +53,9 @@ internal fun TutorialScreen(
         HorizontalPager(state = pageState) {
             when (uiState.list[it]) {
                 TutorialSheet.WELCOME -> WelcomeSheet(contentPadding = contentPadding)
+
                 TutorialSheet.ARCHIVE -> ArchiveSheet(contentPadding = contentPadding)
+
                 TutorialSheet.DOCUMENT -> DocumentSheet(contentPadding = contentPadding)
 
                 TutorialSheet.READING_DIRECTION -> DirectionSheet(

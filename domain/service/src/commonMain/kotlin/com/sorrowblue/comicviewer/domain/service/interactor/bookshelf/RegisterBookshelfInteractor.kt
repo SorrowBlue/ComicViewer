@@ -59,7 +59,6 @@ internal class RegisterBookshelfInteractor(
                                     .file(request.path) as IFolder
                             val folderModel = when (folder) {
                                 is BookFolder -> folder.copy(parent = "")
-
                                 is Folder -> folder.copy(parent = "")
                             }
                             fileLocalDataSource.addUpdate(folderModel)

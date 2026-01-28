@@ -219,6 +219,7 @@ internal fun FileDao.pagingSourceFileSearch(
         }
         when (searchCondition.period) {
             SearchCondition.Period.None -> Unit
+
             SearchCondition.Period.Hour24 -> add(
                 "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
             )
@@ -307,6 +308,7 @@ internal suspend fun FileDao.bookshelfIdCacheKey(
         }
         when (searchCondition.period) {
             SearchCondition.Period.None -> Unit
+
             SearchCondition.Period.Hour24 -> add(
                 "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
             )

@@ -57,6 +57,7 @@ internal class GetBookInteractor(
             onError = {
                 when (it) {
                     LocalDataSourceQueryError.NotFound -> Resource.Error(Error.NotFound)
+
                     is LocalDataSourceQueryError.SystemError -> {
                         // TODO Report Error
                         Resource.Error(Error.ReportedSystemError)

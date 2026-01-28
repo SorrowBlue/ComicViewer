@@ -42,6 +42,7 @@ internal actual fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): Colo
         }
 
         DarkMode.DARK -> darkScheme
+
         DarkMode.LIGHT -> lightScheme
     }
 }

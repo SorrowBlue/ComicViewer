@@ -46,6 +46,7 @@ internal class CollectionLocalDataSourceImpl(
         val criteria = collectionCriteria()
         when (criteria.type) {
             CollectionType.Smart -> TODO()
+
             CollectionType.Basic ->
                 if (criteria.recent) {
                     dao.pagingSourceBasicRecent(bookshelfId, path)
