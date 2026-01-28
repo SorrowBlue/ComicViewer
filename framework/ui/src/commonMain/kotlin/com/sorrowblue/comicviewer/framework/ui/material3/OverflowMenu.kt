@@ -32,7 +32,7 @@ fun AppBarScope.clickableItem(
         appbarContent = {
             TooltipBox(
                 positionProvider =
-                TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                    TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                 tooltip = { PlainTooltip { Text(label()) } },
                 state = rememberTooltipState(),
                 modifier = if (testTag != null) Modifier.testTag(testTag) else Modifier,
@@ -66,7 +66,7 @@ fun AppBarScope.toggleableItem(
         appbarContent = {
             TooltipBox(
                 positionProvider =
-                TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                    TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                 tooltip = { PlainTooltip { Text(label()) } },
                 state = rememberTooltipState(),
             ) {

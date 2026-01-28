@@ -40,7 +40,9 @@ internal class NotificationPermissionDelegate {
             -> PermissionState.Granted
 
             UNAuthorizationStatusNotDetermined -> PermissionState.NotDetermined
+
             UNAuthorizationStatusDenied -> PermissionState.DeniedAlways
+
             else -> error("unknown push authorization status $status")
         }
 
@@ -99,6 +101,7 @@ internal class NotificationPermissionDelegate {
             }
 
             UNAuthorizationStatusDenied -> return PermissionState.DeniedAlways
+
             else -> error("unknown notifications authorization status $status")
         }
     }

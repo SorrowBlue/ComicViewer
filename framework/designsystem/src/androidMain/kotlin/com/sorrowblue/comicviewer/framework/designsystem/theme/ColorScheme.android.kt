@@ -14,5 +14,6 @@ internal actual fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean) = whe
     }
 
     darkTheme -> darkScheme
+
     else -> lightScheme
 }

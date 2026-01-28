@@ -21,6 +21,7 @@ internal fun EntryProviderScope<NavKey>.bookshelfEditNavEntry(navigator: Navigat
                     when (it.type) {
                         is BookshelfEditType.Edit ->
                             navigator.goBack()
+
                         is BookshelfEditType.Register ->
                             navigator.pop<BookshelfSelectionNavKey>(inclusive = true)
                     }

@@ -39,16 +39,23 @@ internal fun EntryProviderScope<NavKey>.settingsNavEntry(navigator: Navigator) {
             onSettingsClick = { item ->
                 when (item) {
                     SettingsItem.DISPLAY -> navigator.navigate(DisplaySettingsNavKey)
+
                     SettingsItem.FOLDER -> navigator.navigate(FolderSettingsNavKey)
+
                     SettingsItem.VIEWER -> navigator.navigate(ViewerSettingsNavKey)
+
                     SettingsItem.SECURITY -> navigator.navigate(SecuritySettingsNavKey)
+
                     SettingsItem.APP -> navigator.navigate(InfoSettingsNavKey)
+
                     SettingsItem.TUTORIAL -> {
                         navigator.navigate(TutorialNavKey)
                     }
 
                     SettingsItem.Thumbnail -> navigator.navigate(ImageCacheNavKey)
+
                     SettingsItem.Plugin -> navigator.navigate(PluginSettingsNavKey)
+
                     SettingsItem.LANGUAGE -> navigator.navigate(InAppLanguagePickerNavKey)
                 }
             },

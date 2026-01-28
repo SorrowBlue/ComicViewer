@@ -80,8 +80,8 @@ private class PreAppScreenStateImpl(
                 authStatus = if (hasPassword) {
                     AuthStatus.AuthRequired(
                         authed =
-                        authStatus is AuthStatus.AuthRequired &&
-                            (authStatus as AuthStatus.AuthRequired).authed,
+                            authStatus is AuthStatus.AuthRequired &&
+                                (authStatus as AuthStatus.AuthRequired).authed,
                     )
                 } else {
                     AuthStatus.NoAuthRequired

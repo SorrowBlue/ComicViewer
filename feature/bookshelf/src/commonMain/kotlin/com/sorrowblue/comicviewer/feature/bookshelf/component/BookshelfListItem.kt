@@ -109,6 +109,7 @@ private fun BookshelfColumnItem(
                                     )
 
                                     is SmbServer -> stringResource(Res.string.bookshelf_label_smb)
+
                                     ShareContents -> ""
                                 },
                             )

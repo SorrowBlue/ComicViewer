@@ -51,12 +51,12 @@ internal fun AuthenticationRowContents(
                 Spacer(Modifier.size(ComicTheme.dimension.padding))
                 Text(
                     text =
-                    when (uiState) {
-                        is AuthenticationScreenUiState.Authentication -> ""
-                        is AuthenticationScreenUiState.Change -> "PINを変更"
-                        is AuthenticationScreenUiState.Erase -> "PINを削除"
-                        is AuthenticationScreenUiState.Register -> "PINを登録"
-                    },
+                        when (uiState) {
+                            is AuthenticationScreenUiState.Authentication -> ""
+                            is AuthenticationScreenUiState.Change -> "PINを変更"
+                            is AuthenticationScreenUiState.Erase -> "PINを削除"
+                            is AuthenticationScreenUiState.Register -> "PINを登録"
+                        },
                     style = ComicTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                 )
@@ -108,12 +108,12 @@ internal fun AuthenticationColumnContents(
             Spacer(Modifier.size(ComicTheme.dimension.padding))
             Text(
                 text =
-                when (uiState) {
-                    is AuthenticationScreenUiState.Authentication -> ""
-                    is AuthenticationScreenUiState.Change -> "PINを変更"
-                    is AuthenticationScreenUiState.Erase -> "PINを削除"
-                    is AuthenticationScreenUiState.Register -> "PINを登録"
-                },
+                    when (uiState) {
+                        is AuthenticationScreenUiState.Authentication -> ""
+                        is AuthenticationScreenUiState.Change -> "PINを変更"
+                        is AuthenticationScreenUiState.Erase -> "PINを削除"
+                        is AuthenticationScreenUiState.Register -> "PINを登録"
+                    },
                 style = ComicTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
             )

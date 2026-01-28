@@ -53,6 +53,7 @@ internal fun BookPage(
 ) {
     when (page) {
         is BookPage.Default -> DefaultBookPage(book = book, bookPage = page, pageScale = pageScale)
+
         is BookPage.Spread -> SpreadBookPage(
             book = book,
             bookPage = page,
@@ -158,7 +159,9 @@ private fun SplitBookPage(
             }
 
             is BookPage.Split.Single -> SpreadSplitTransformation.Single
+
             is BookPage.Split.Left -> SpreadSplitTransformation.left()
+
             is BookPage.Split.Right -> SpreadSplitTransformation.right()
         },
         contentScale = pageScale.contentScale,
@@ -212,7 +215,9 @@ private fun SpreadBookPage(
             contentScale = pageScale.contentScale,
             transform = when (bookPage) {
                 is BookPage.Spread.Single -> SpreadCombineTransformation.Single
+
                 is BookPage.Spread.Spread2 -> SpreadCombineTransformation.Spread2
+
                 is BookPage.Spread.Unrated -> SpreadCombineTransformation.unrated {
                     onPageLoad(bookPage, it)
                 }
