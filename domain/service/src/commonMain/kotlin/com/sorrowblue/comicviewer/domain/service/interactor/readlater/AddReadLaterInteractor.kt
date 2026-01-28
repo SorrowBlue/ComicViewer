@@ -14,6 +14,7 @@ internal class AddReadLaterInteractor(
     override suspend fun run(request: Request) =
         when (val result = localDataSource.updateOrAdd(request.readLaterFile)) {
             is Resource.Success -> Resource.Success(request.readLaterFile)
+
             is Resource.Error -> {
                 sendFatalErrorUseCase(SendFatalErrorUseCase.Request(result.error.throwable))
                 Resource.Error(Unit)

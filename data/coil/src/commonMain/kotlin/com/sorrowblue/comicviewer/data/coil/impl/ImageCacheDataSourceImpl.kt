@@ -70,7 +70,9 @@ internal class ImageCacheDataSourceImpl(
         .runCatching {
             when (imageCache) {
                 is BookPageImageCache -> lazyCoilDiskCache.value.pageDiskCache(bookshelfId).clear()
+
                 is OtherImageCache -> imageCacheDiskCache.value.clear()
+
                 is ThumbnailImageCache ->
                     lazyCoilDiskCache.value
                         .thumbnailDiskCache(bookshelfId)

@@ -56,6 +56,7 @@ internal fun BookSheet(
         ) { pageIndex ->
             when (val item = pages[pageIndex]) {
                 is NextPage -> NextBookSheet(item, onClick = onNextBookClick)
+
                 is BookPage -> BookPage(
                     book = uiState.book,
                     page = item,

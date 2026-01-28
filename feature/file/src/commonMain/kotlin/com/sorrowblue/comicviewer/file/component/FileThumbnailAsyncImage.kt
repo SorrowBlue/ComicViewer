@@ -97,6 +97,7 @@ private fun FileThumbnailAsyncImagePreview(
     }
     when (state) {
         FileThumbnailAsyncImageProvider.State.Error -> ComicTheme(content = content)
+
         FileThumbnailAsyncImageProvider.State.Loading,
         FileThumbnailAsyncImageProvider.State.Success,
         -> PreviewTheme(content = content)

@@ -90,6 +90,7 @@ private class ReceiveBookScreenStateImpl(
                 getIntentBookUseCase(GetIntentBookUseCase.Request(uri)).collect { resource ->
                     when (resource) {
                         is Resource.Error -> Unit
+
                         is Resource.Success -> {
                             logcat { "book=${resource.data}" }
                             uiState = BookScreenUiState.Loaded(
@@ -176,6 +177,7 @@ private class ReceiveBookScreenStateImpl(
             if (skipIndex.contains(index1)) return@forEachIndexed
             when (val item = nextSingle ?: bookItem) {
                 is BookPage.Spread.Combine -> newList.add(item)
+
                 is BookPage.Spread.Single -> {
                     if (item.index == 0) {
                         newList.add(item)
@@ -202,7 +204,9 @@ private class ReceiveBookScreenStateImpl(
                 }
 
                 is BookPage.Spread.Spread2 -> newList.add(item)
+
                 is BookPage.Spread.Unrated -> newList.add(item)
+
                 else -> newList.add(item)
             }
         }

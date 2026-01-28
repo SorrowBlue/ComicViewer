@@ -262,6 +262,7 @@ private class BookScreenStateImpl(
 
             when (val item = nextSingle ?: bookItem) {
                 is BookPage.Spread.Combine -> newList.add(item)
+
                 is BookPage.Spread.Single -> {
                     if (item.index == 0) {
                         newList.add(item)
@@ -277,7 +278,9 @@ private class BookScreenStateImpl(
                 }
 
                 is BookPage.Spread.Spread2 -> newList.add(item)
+
                 is BookPage.Spread.Unrated -> newList.add(item)
+
                 else -> newList.add(item)
             }
         }

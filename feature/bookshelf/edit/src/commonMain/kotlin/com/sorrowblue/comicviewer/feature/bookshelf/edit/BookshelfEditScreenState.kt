@@ -236,6 +236,7 @@ private abstract class BookshelfEditScreenStateImpl(
                                     .removeSuffix("/"),
                                 auth = when (bookshelf.auth) {
                                     is SmbServer.Auth.Guest -> SmbEditForm.Auth.Guest
+
                                     is SmbServer.Auth.UsernamePassword ->
                                         SmbEditForm.Auth.UserPass
                                 },
@@ -291,6 +292,7 @@ private abstract class BookshelfEditScreenStateImpl(
                     val paths = "/${form.path}/".replace("(/+)".toRegex(), "/")
                     val auth = when (form.auth) {
                         SmbEditForm.Auth.Guest -> SmbServer.Auth.Guest
+
                         SmbEditForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
                             domain = form.domain,
                             username = form.username,

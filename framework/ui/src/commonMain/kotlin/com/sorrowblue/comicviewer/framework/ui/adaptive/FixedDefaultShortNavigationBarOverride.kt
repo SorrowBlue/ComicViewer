@@ -35,25 +35,25 @@ object FixedDefaultShortNavigationBarOverride : ShortNavigationBarOverride {
         Surface(color = containerColor, contentColor = contentColor, modifier = modifier) {
             Layout(
                 modifier =
-                Modifier
-                    .windowInsetsPadding(windowInsets)
-                    .defaultMinSize(minHeight = ContainerHeight)
-                    .selectableGroup(),
+                    Modifier
+                        .windowInsetsPadding(windowInsets)
+                        .defaultMinSize(minHeight = ContainerHeight)
+                        .selectableGroup(),
                 content = content,
                 measurePolicy =
-                when (arrangement) {
-                    ShortNavigationBarArrangement.EqualWeight -> {
-                        FixedEqualWeightContentMeasurePolicy()
-                    }
+                    when (arrangement) {
+                        ShortNavigationBarArrangement.EqualWeight -> {
+                            FixedEqualWeightContentMeasurePolicy()
+                        }
 
-                    ShortNavigationBarArrangement.Centered -> {
-                        FixedCenteredContentMeasurePolicy()
-                    }
+                        ShortNavigationBarArrangement.Centered -> {
+                            FixedCenteredContentMeasurePolicy()
+                        }
 
-                    else -> {
-                        throw IllegalArgumentException("Invalid ItemsArrangement value.")
-                    }
-                },
+                        else -> {
+                            throw IllegalArgumentException("Invalid ItemsArrangement value.")
+                        }
+                    },
             )
         }
     }

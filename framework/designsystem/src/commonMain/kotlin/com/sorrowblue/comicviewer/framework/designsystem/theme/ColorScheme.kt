@@ -89,9 +89,15 @@ internal val darkScheme = darkColorScheme(
 
 @Stable
 fun ColorScheme.imageBackground(backgroundColor: Color): Color = when (backgroundColor) {
-    surface -> surfaceContainerHigh // OutlineCard
-    surfaceContainerHighest -> surfaceContainerHigh // FilledCard
-    surfaceContainerLow -> surfaceContainerHigh // ElevateCard
+    surface -> surfaceContainerHigh
+
+    // OutlineCard
+    surfaceContainerHighest -> surfaceContainerHigh
+
+    // FilledCard
+    surfaceContainerLow -> surfaceContainerHigh
+
+    // ElevateCard
     else -> Color.Red
 }
 

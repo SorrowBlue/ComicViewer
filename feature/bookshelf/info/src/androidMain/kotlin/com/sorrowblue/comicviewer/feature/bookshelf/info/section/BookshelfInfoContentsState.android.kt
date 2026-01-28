@@ -179,6 +179,7 @@ private class BookshelfInfoMainContentsStateImpl(
                 )
                 when (result) {
                     SnackbarResult.Dismissed -> Unit
+
                     SnackbarResult.ActionPerformed -> {
                         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                             putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)

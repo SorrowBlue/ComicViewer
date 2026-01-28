@@ -100,10 +100,10 @@ fun AlertDialogContent(
                 AlertDialogFlowRow(
                     mainAxisSpacing = ButtonsMainAxisSpacing,
                     crossAxisSpacing =
-                    (ButtonsCrossAxisSpacing - buttonPaddingFromMICS).coerceIn(
-                        0.dp,
-                        ButtonsCrossAxisSpacing,
-                    ),
+                        (ButtonsCrossAxisSpacing - buttonPaddingFromMICS).coerceIn(
+                            0.dp,
+                            ButtonsCrossAxisSpacing,
+                        ),
                 ) {
                     confirmButton?.invoke()
                     dismissButton?.invoke()

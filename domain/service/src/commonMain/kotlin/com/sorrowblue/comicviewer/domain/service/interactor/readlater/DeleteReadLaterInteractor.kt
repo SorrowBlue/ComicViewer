@@ -14,6 +14,7 @@ internal class DeleteReadLaterInteractor(
     override suspend fun run(request: Request): Resource<Unit, Unit> =
         when (val result = readLaterFileLocalDataSource.delete(request.readLaterFile)) {
             is Resource.Success -> Resource.Success(Unit)
+
             is Resource.Error -> {
                 sendFatalErrorUseCase(SendFatalErrorUseCase.Request(result.error.throwable))
                 Resource.Error(Unit)

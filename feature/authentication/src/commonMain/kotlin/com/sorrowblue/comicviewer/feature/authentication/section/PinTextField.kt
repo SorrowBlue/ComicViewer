@@ -66,6 +66,7 @@ internal fun PinTextField(
                     }
 
                     KeyEventType.KeyDown if it.key == Key.Enter -> true
+
                     else -> false
                 }
             },

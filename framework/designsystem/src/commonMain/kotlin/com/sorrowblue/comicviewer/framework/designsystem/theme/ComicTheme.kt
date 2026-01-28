@@ -67,6 +67,7 @@ fun ComicTheme(
                 windowSizeClass.isWidthAtLeastBreakpoint(
                     WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
                 ) -> mediumDimension
+
                 else -> compactDimension
             },
         )
