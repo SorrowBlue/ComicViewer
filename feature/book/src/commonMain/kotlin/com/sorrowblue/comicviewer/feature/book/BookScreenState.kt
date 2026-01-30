@@ -86,7 +86,7 @@ private class BookScreenStateImpl(
     private val coroutineScope: CoroutineScope,
     private val systemUiController: SystemUiController,
     private val getNextBookUseCase: GetNextBookUseCase,
-    private val manageBookSettingsUseCase: ManageBookSettingsUseCase,
+    manageBookSettingsUseCase: ManageBookSettingsUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
 ) : BookScreenState {
     override var uiState by mutableStateOf(initialUiState)

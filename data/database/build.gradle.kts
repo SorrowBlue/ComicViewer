@@ -17,6 +17,7 @@ kotlin {
 //            execution = "ANDROIDX_TEST_ORCHESTRATOR"
             managedDevices {
                 localDevices {
+                    @Suppress("UnstableApiUsage")
                     create("pixel9api35") {
                         device = "Pixel 9"
                         apiLevel = 35

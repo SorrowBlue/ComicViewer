@@ -16,6 +16,7 @@ plugins {
 
 kotlin {
     androidLibrary {
+        @Suppress("UnstableApiUsage")
         optimization {
             consumerKeepRules.publish = true
             consumerKeepRules.file("consumer-rules.pro")

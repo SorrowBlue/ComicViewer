@@ -160,7 +160,9 @@ private class FolderScreenStateImpl(
             .onEach { folderDisplaySettings ->
                 uiState = uiState.copy(
                     folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                        folderScopeOnly = folderDisplaySettings.folderScopeOnlyList.any { scopeOnly, ->
+                        folderScopeOnly = folderDisplaySettings.folderScopeOnlyList.any {
+                                scopeOnly
+                            ->
                             scopeOnly.bookshelfId == bookshelfId && scopeOnly.path == path
                         },
                         sortType = folderDisplaySettings.folderScopeOnlyList
@@ -247,8 +249,7 @@ private class FolderScreenStateImpl(
             folderDisplaySettingsUseCase.edit { settings ->
                 val beforeFolderScopeOnly =
                     settings.folderScopeOnlyList.find {
-                        it.bookshelfId == bookshelfId &&
-                            it.path == path
+                        it.bookshelfId == bookshelfId && it.path == path
                     }
                 when {
                     uiState.folderAppBarUiState.folderScopeOnly -> {
@@ -329,8 +330,7 @@ private class FolderScreenStateImpl(
             folderDisplaySettingsUseCase.edit { settings ->
                 val beforeFolderScopeOnly =
                     settings.folderScopeOnlyList.find {
-                        it.bookshelfId == bookshelfId &&
-                            it.path == path
+                        it.bookshelfId == bookshelfId && it.path == path
                     }
                 when {
                     result.folderScopeOnly -> {

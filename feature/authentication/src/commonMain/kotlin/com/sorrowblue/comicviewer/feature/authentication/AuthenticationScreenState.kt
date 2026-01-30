@@ -173,10 +173,10 @@ private class AuthenticationScreenStateImpl(
 
     private fun handleChangeConfirmOld() {
         scope.launch {
-            if (pinFlowManager.verifyPin(uiState.pin)) {
-                uiState = AuthenticationScreenUiState.Change.Input("")
+            uiState = if (pinFlowManager.verifyPin(uiState.pin)) {
+                AuthenticationScreenUiState.Change.Input("")
             } else {
-                uiState = AuthenticationScreenUiState.Change.ConfirmOld(
+                AuthenticationScreenUiState.Change.ConfirmOld(
                     pin = "",
                     error = ErrorType.IncorrectPin,
                 )

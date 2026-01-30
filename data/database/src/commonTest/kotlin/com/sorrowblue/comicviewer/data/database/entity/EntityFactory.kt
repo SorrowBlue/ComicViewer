@@ -42,7 +42,7 @@ internal class EntityFactory {
             lastPageRead = 0,
             lastReadTime = lastReadTime,
         ).let {
-            FileEntity.Companion.fromModel(it)
+            FileEntity.fromModel(it)
         }
 
     fun createCollectionEntity(): CollectionEntity = CollectionEntity(

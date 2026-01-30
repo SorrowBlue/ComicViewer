@@ -21,7 +21,7 @@ internal class FileDaoTest : DatabaseTest() {
         val factory = EntityFactory()
         val bookshelfEntity = factory.createBookshelfEntity().let { entity ->
             dao.upsert(entity).let {
-                entity.copy(BookshelfId(it.toInt()))
+                entity.copy(id = BookshelfId(it.toInt()))
             }
         }
 

@@ -12,6 +12,7 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
     }
     androidResources {
+        @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
     }
     buildTypes {
