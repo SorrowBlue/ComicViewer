@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.collection.add.navigation
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.collection.add.BasicCollectionAddScreenContext
-import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
 import dev.zacsweers.metro.AppScope

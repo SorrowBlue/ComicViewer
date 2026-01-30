@@ -85,7 +85,7 @@ private class SearchScreenStateImpl(
     private val path: String,
     override val lazyGridState: LazyGridState,
     override val lazyPagingItems: LazyPagingItems<File>,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
     manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : SearchScreenState {
     override var uiState by mutableStateOf(SearchScreenUiState())

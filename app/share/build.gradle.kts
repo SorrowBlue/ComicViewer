@@ -20,6 +20,7 @@ kotlin {
             instrumentationRunnerArguments["clearPackageData"] = "true"
             managedDevices {
                 localDevices {
+                    @Suppress("UnstableApiUsage")
                     create("pixel9api35") {
                         device = "Pixel 9"
                         apiLevel = 35

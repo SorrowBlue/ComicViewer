@@ -8,7 +8,6 @@ import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import logcat.LogPriority
 import logcat.logcat
-import org.jetbrains.compose.resources.getString
 
 internal class NotificationInitializer : Initializer<Unit> {
     override fun create(context: Context) {
