@@ -20,6 +20,7 @@ import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import logcat.LogPriority
 import logcat.logcat
 
 @AssistedInject
@@ -66,6 +67,7 @@ internal class FileModelRemoteMediator(
             }.fold({
                 return MediatorResult.Success(endOfPaginationReached = true)
             }, {
+                logcat(LogPriority.ERROR) { it.message.orEmpty() }
                 val error = if (it is RemoteException) {
                     when (it) {
                         is RemoteException.InvalidAuth -> PagingException.InvalidAuth()

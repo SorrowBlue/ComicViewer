@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5FDEE0362F2FE76000447DCE /* SwiftZip in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0352F2FE76000447DCE /* SwiftZip */; };
+		5FDEE0382F2FE76000447DCE /* SwiftZipUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0372F2FE76000447DCE /* SwiftZipUtils */; };
+		5FDEE03A2F2FE76000447DCE /* zip in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0392F2FE76000447DCE /* zip */; };
+		5FDEE0422F3296E000447DCE /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0412F3296E000447DCE /* AMSMB2 */; };
+		5FDEE0492F32CDB200447DCE /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0482F32CDB200447DCE /* AMSMB2 */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		AF9F6EF1A7C523ADBC61A850 /* ComicViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComicViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -41,6 +49,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FDEE0492F32CDB200447DCE /* AMSMB2 in Frameworks */,
+				5FDEE0422F3296E000447DCE /* AMSMB2 in Frameworks */,
+				5FDEE0382F2FE76000447DCE /* SwiftZipUtils in Frameworks */,
+				5FDEE0362F2FE76000447DCE /* SwiftZip in Frameworks */,
+				5FDEE03A2F2FE76000447DCE /* zip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +98,11 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				5FDEE0352F2FE76000447DCE /* SwiftZip */,
+				5FDEE0372F2FE76000447DCE /* SwiftZipUtils */,
+				5FDEE0392F2FE76000447DCE /* zip */,
+				5FDEE0412F3296E000447DCE /* AMSMB2 */,
+				5FDEE0482F32CDB200447DCE /* AMSMB2 */,
 			);
 			productName = iosApp;
 			productReference = AF9F6EF1A7C523ADBC61A850 /* ComicViewer.app */;
@@ -114,6 +132,10 @@
 			);
 			mainGroup = 8628CBA4F89FDA9DF1F6FA45;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */,
+				5FDEE0472F32CDB200447DCE /* XCLocalSwiftPackageReference "../../AMSMB2" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B1B0708EBC9DC268E16A9BC4 /* Products */;
 			projectDirPath = "";
@@ -152,7 +174,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :app:ios:embedSwiftExportForXcode\n";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :app:ios:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -368,6 +390,50 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		5FDEE0472F32CDB200447DCE /* XCLocalSwiftPackageReference "../../AMSMB2" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../AMSMB2;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftZip/SwiftZip.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5FDEE0352F2FE76000447DCE /* SwiftZip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */;
+			productName = SwiftZip;
+		};
+		5FDEE0372F2FE76000447DCE /* SwiftZipUtils */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */;
+			productName = SwiftZipUtils;
+		};
+		5FDEE0392F2FE76000447DCE /* zip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */;
+			productName = zip;
+		};
+		5FDEE0412F3296E000447DCE /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AMSMB2;
+		};
+		5FDEE0482F32CDB200447DCE /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AMSMB2;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EB96CAE46C7F693B5C48867C /* Project object */;
 }

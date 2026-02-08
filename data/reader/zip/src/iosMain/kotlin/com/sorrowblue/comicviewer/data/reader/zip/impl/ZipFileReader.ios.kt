@@ -9,15 +9,9 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import logcat.asLog
-import logcat.logcat
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okio.BufferedSink
-import okio.FileSystem
-import okio.Path.Companion.toPath
-import okio.buffer
-import okio.openZip
-import okio.use
-import platform.Foundation.NSURL
 
 @AssistedInject
 internal actual class ZipFileReader(
@@ -34,47 +28,25 @@ internal actual class ZipFileReader(
         ): ZipFileReader
     }
 
-    val zipFileSystem = FileSystem.SYSTEM.openZip(
-        NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath(),
-    )
-    val fileSystem = FileSystem.SYSTEM
+    val iosZipFileReader = IosZipFileReader.factory.create(seekableInputStream, supportedException)
 
-    val paths = zipFileSystem
-        .listRecursively("/".toPath())
-        .filter { zipFileSystem.metadata(it).isRegularFile }
-        .toList()
-
-    init {
-        kotlin
-            .runCatching {
-                FileSystem.SYSTEM.openZip(
-                    NSURL.URLWithString(URLString = seekableInputStream.path)!!.path!!.toPath(),
-                )
-            }.onFailure {
-                logcat { "path=${it.asLog()}" }
-            }.onSuccess {
-                logcat { "path=$it" }
-            }
-    }
-
-    init {
-        logcat { "ZipFileReader init $zipFileSystem, path=$paths" }
-    }
+    private val mutex = Mutex()
 
     actual override fun close() {
-        zipFileSystem.close()
-        fileSystem.close()
+        iosZipFileReader.close()
     }
 
-    actual override suspend fun pageCount(): Int = paths.size
+    actual override suspend fun pageCount(): Int = iosZipFileReader.pageCount()
 
     actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
-        zipFileSystem.source(paths[pageIndex]).buffer().use { source ->
-            source.readAll(bufferedSink)
+        mutex.withLock {
+            iosZipFileReader.copyTo(pageIndex, bufferedSink)
         }
     }
 
-    actual override suspend fun fileSize(pageIndex: Int): Long = 0
+    actual override suspend fun fileSize(pageIndex: Int): Long =
+        iosZipFileReader.fileSize(pageIndex)
 
-    actual override suspend fun fileName(pageIndex: Int): String = paths[pageIndex].name
+    actual override suspend fun fileName(pageIndex: Int): String =
+        iosZipFileReader.fileName(pageIndex)
 }
