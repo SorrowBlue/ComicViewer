@@ -4,7 +4,6 @@ import com.sorrowblue.comicviewer.libs
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
-    alias(libs.plugins.comicviewer.di)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildkonfig)
 }
@@ -36,6 +35,7 @@ kotlin {
                 rootProject.subprojects.filterNot {
                     it.path == project.path || it.path.startsWith(projects.app.path)
                         || it.path == projects.data.reader.document.android.path
+                            || it.path == projects.data.storage.smb.path
                 }.forEach {
                     val hasSource = it.projectDir.resolve("src").exists()
                     if (hasSource) {
@@ -44,6 +44,12 @@ kotlin {
                         logger.lifecycle("Skipping empty or non-source module: ${it.path}")
                     }
                 }
+
+
+                api(projects.data.storage.smb) {
+                    exclude(libs.jcifs.get().group, libs.jcifs.get().module.name)
+                }
+
                 // Required for metro dependency resolution
                 implementation(libs.androidx.datastore)
                 implementation(projects.data.reader.zip)

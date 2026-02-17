@@ -49,3 +49,39 @@ internal data class UpdateFileEntityMinimumWithSortIndex(
         )
     }
 }
+
+internal data class UpdateFileEntityMinimumWithSortIndexWithoutFileType(
+    val path: String,
+    @ColumnInfo(name = FileEntity.BookshelfId) val bookshelfId: BookshelfId,
+    val name: String,
+    val parent: String,
+    val size: Long,
+    @ColumnInfo(name = "last_modified") val lastModified: Long,
+    @ColumnInfo(name = "hidden") val isHidden: Boolean,
+    @ColumnInfo(name = "sort_index") val sortIndex: Int,
+) {
+    companion object {
+        fun fromModel(model: File) = UpdateFileEntityMinimumWithSortIndexWithoutFileType(
+            path = model.path,
+            bookshelfId = model.bookshelfId,
+            name = model.name,
+            parent = model.parent,
+            size = model.size,
+            lastModified = model.lastModifier,
+            isHidden = model.isHidden,
+            sortIndex = model.sortIndex,
+        )
+
+        fun fromFileEntity(entity: FileEntity) =
+            UpdateFileEntityMinimumWithSortIndexWithoutFileType(
+                path = entity.path,
+                bookshelfId = BookshelfId(entity.bookshelfId),
+                name = entity.name,
+                parent = entity.parent,
+                size = entity.size,
+                lastModified = entity.lastModified,
+                isHidden = entity.isHidden,
+                sortIndex = entity.sortIndex,
+            )
+    }
+}

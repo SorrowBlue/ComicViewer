@@ -9,6 +9,7 @@ plugins {
     com.android.kotlin.multiplatform.library
     id("comicviewer.primitive.lint")
     id("comicviewer.primitive.detekt")
+    id("comicviewer.primitive.metro")
     id("comicviewer.primitive.dokka")
     id("comicviewer.primitive.aboutlibraries")
     id("comicviewer.primitive.licensee")
@@ -25,7 +26,7 @@ kotlin {
     jvm("desktop")
 
     iosArm64() // 64-bit iPhone devices
-    iosSimulatorArm64() // iPhone Simulator on Arm 64-bit MacOS
+    iosSimulatorArm64() // iPhone Simulator on Arm 64-bit macOS
 
     applyDefaultHierarchyTemplate()
 

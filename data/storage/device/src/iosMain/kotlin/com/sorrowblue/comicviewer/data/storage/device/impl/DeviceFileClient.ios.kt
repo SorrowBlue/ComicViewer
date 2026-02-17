@@ -45,22 +45,19 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
         actual override fun create(bookshelf: InternalStorage): DeviceFileClient
     }
 
-    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> {
-        return FileUtils.fromString(
+    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> =
+        FileUtils.fromString(
             input = file.path,
             isDirectory = !NSURL(fileURLWithPath = file.path).fileURL,
         )
             ?.listFiles()?.map {
                 it.toFileModel(resolveImageFolder)
             } ?: throw FileClientException.InvalidPath()
-    }
 
-    actual override suspend fun exists(path: String): Boolean {
-        return FileUtils.fromString(
-            input = path,
-            isDirectory = !NSURL(fileURLWithPath = path).fileURL,
-        )?.getExists() ?: false
-    }
+    actual override suspend fun exists(path: String): Boolean = FileUtils.fromString(
+        input = path,
+        isDirectory = !NSURL(fileURLWithPath = path).fileURL,
+    )?.getExists() ?: false
 
     actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         val file =

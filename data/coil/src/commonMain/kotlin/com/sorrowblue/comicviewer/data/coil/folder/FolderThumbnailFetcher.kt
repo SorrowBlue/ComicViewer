@@ -14,10 +14,13 @@ import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -30,6 +33,8 @@ internal class FolderThumbnailFetcher(
     private val data: FolderThumbnail,
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
+    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : FileFetcher<FolderThumbnailMetadata>(options, diskCache) {
     override val diskCacheKey
         get() = options.diskCacheKey ?: "folder:${data.bookshelfId.value}:${data.path}"
@@ -50,6 +55,23 @@ internal class FolderThumbnailFetcher(
     override fun BufferedSource.readMetadata() = CoilMetadata.from<FolderThumbnailMetadata>(this)
 
     override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
+        val folderSettings = datastoreDataSource.folderSettings.first()
+        val resolveImageFolder = folderSettings.resolveImageFolder
+        val folder =
+            checkNotNull(
+                fileLocalDataSource.flow(data.bookshelfId, data.path).first(),
+            ) { "Folder not found. id: ${data.bookshelfId}, path: ${data.path}" }
+        if (folder.parent != "" && resolveImageFolder) {
+            val bookshelf = checkNotNull(bookshelfLocalDataSource.flow(data.bookshelfId).first()) {
+                "Bookshelf not found. id: ${data.bookshelfId}"
+            }
+            val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
+            val currentFile =
+                remoteDataSource.file(folder.path, resolveImageFolder = resolveImageFolder)
+            if (currentFile is BookFolder) {
+                fileLocalDataSource.updateFileType(currentFile)
+            }
+        }
         val folderThumbnailOrder =
             datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
         val thumbnailCache = getThumbnailCache(folderThumbnailOrder)
@@ -96,6 +118,8 @@ internal class FolderThumbnailFetcherFactory(
     private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
     private val fileModelLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
+    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : Fetcher.Factory<FolderThumbnail> {
     override fun create(
         data: FolderThumbnail,
@@ -107,5 +131,7 @@ internal class FolderThumbnailFetcherFactory(
         data,
         fileModelLocalDataSource,
         datastoreDataSource,
+        bookshelfLocalDataSource,
+        remoteDataSourceFactory,
     )
 }

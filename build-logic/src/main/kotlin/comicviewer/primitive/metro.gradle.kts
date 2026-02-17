@@ -1,9 +1,16 @@
 package comicviewer.primitive
 
-plugins {
-    dev.zacsweers.metro
-}
+val kotlinPluginIds = listOf(
+    "org.jetbrains.kotlin.jvm",
+    "org.jetbrains.kotlin.android",
+    "org.jetbrains.kotlin.multiplatform"
+)
 
-metro {
-    contributesAsInject.set(true)
+if (kotlinPluginIds.any(pluginManager::hasPlugin)) {
+    plugins {
+        dev.zacsweers.metro
+    }
+    configure<dev.zacsweers.metro.gradle.MetroPluginExtension> {
+        contributesAsInject = true
+    }
 }

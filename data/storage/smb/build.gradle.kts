@@ -2,7 +2,6 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec
 
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
-    alias(libs.plugins.comicviewer.di)
     alias(libs.plugins.buildkonfig)
 }
 

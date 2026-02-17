@@ -3,7 +3,6 @@ import com.sorrowblue.comicviewer.libs
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
-    alias(libs.plugins.comicviewer.di)
 }
 
 kotlin {

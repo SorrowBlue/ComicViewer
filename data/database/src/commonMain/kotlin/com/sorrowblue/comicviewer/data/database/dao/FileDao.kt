@@ -15,8 +15,10 @@ import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimum
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimumWithSortIndex
+import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimumWithSortIndexWithoutFileType
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileHistoryEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileInfoEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileTypeInfoEntity
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
@@ -37,10 +39,16 @@ internal interface FileDao {
     suspend fun updateInfo(updateFileInfoEntity: UpdateFileInfoEntity)
 
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateFileType(updateFileTypeInfoEntity: UpdateFileTypeInfoEntity)
+
+    @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateSimple(entity: UpdateFileEntityMinimum): Int
 
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateSimple(list: List<UpdateFileEntityMinimumWithSortIndex>)
+
+    @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateSimple2(list: List<UpdateFileEntityMinimumWithSortIndexWithoutFileType>)
 
     @Transaction
     suspend fun updateSimpleGet(entity: UpdateFileEntityMinimum): FileEntity? {
@@ -70,9 +78,13 @@ internal interface FileDao {
 
         // DBにファイルを更新
         // ファイルサイズ、更新日時、タイプ ソート、インデックス
-        updateSimple(
-            existsFiles.map(UpdateFileEntityMinimumWithSortIndex.Companion::fromFileEntity),
+        val (folder, file) = existsFiles.partition { it.fileType == FileEntity.Type.FOLDER }
+        updateSimple2(
+            folder.map(
+                UpdateFileEntityMinimumWithSortIndexWithoutFileType.Companion::fromFileEntity,
+            ),
         )
+        updateSimple(file.map(UpdateFileEntityMinimumWithSortIndex.Companion::fromFileEntity))
     }
 
     @Delete

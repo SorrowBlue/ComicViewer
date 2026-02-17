@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.data.database.entity.file
 
 import androidx.room.ColumnInfo
+import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity.Type
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
 internal class UpdateFileInfoEntity(
@@ -8,4 +9,11 @@ internal class UpdateFileInfoEntity(
     @ColumnInfo(name = FileEntity.BookshelfId) val bookshelfId: BookshelfId,
     @ColumnInfo(name = "cache_key") val cacheKey: String = "",
     @ColumnInfo(name = "total_page_count") val totalPageCount: Int = 0,
+)
+
+internal class UpdateFileTypeInfoEntity(
+    val path: String,
+    @ColumnInfo(name = FileEntity.BookshelfId) val bookshelfId: BookshelfId,
+    @ColumnInfo(name = "file_type") val fileType: Type,
+    @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileType.order,
 )

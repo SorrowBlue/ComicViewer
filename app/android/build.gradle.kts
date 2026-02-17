@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.jcifs)
     implementation(projects.app.share)
     implementation(projects.feature.book)
     implementation(projects.feature.settings.info)
