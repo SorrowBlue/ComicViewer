@@ -134,4 +134,5 @@ interface FileLocalDataSource {
     suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File>
 
     suspend fun count(bookshelfId: BookshelfId): Long
+    suspend fun updateFileType(file: File)
 }

@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import logcat.logcat
 
 @Inject
 internal class BookshelfLocalDataSourceImpl(
@@ -85,6 +86,7 @@ internal class BookshelfLocalDataSourceImpl(
         }.flow
             .map { pagingData ->
                 pagingData.map {
+                    logcat { "pagingData.map ${it.entity.displayName}" }
                     BookshelfFolder(
                         it.entity.toModel(it.fileCount),
                         it.fileEntity.toModel() as Folder,

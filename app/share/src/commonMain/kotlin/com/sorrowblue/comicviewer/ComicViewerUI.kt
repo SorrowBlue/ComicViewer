@@ -93,6 +93,7 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                         ),
                         entryProvider = entryProvider,
                     ),
+                    sharedTransitionScope = this,
                     onBack = { navigator.goBack() },
                     sceneStrategy = supportingPaneSceneStrategy
                         .then(listDetailSceneStrategy)

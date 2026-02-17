@@ -6,7 +6,6 @@ import com.sorrowblue.comicviewer.libs
 plugins {
     id("comicviewer.convention.multiplatform-library")
     id("comicviewer.convention.multiplatform-compose")
-    id("comicviewer.primitive.metro")
 }
 
 kotlin {

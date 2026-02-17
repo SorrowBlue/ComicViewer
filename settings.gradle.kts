@@ -7,14 +7,6 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-
-        maven {
-            name = "Central Portal Snapshots"
-            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-            content {
-                includeGroup("dev.zacsweers.metro")
-            }
-        }
     }
 }
 
@@ -64,15 +56,6 @@ dependencyResolutionManagement {
             url = uri("https://gitlab.com/api/v4/projects/59936705/packages/maven")
             content {
                 includeModule("com.github.shayartzi.sevenzipjbinding", "sevenzipjbinding-all-platforms")
-            }
-        }
-
-        maven {
-            name = "Central Portal Snapshots"
-            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-            content {
-                includeGroup("com.sorrowblue.cmpdestinations")
-                includeGroup("dev.zacsweers.metro")
             }
         }
     }

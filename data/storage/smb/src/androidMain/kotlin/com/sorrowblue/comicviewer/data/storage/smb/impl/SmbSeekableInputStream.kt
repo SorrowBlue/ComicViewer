@@ -4,7 +4,17 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import org.codelibs.jcifs.smb.SmbConstants
 import org.codelibs.jcifs.smb.impl.SmbFile
 
+/**
+ * An implementation of [SeekableInputStream] for accessing files over the SMB protocol.
+ *
+ * This class uses the jCIFS [SmbFile.openRandomAccess] method to provide seekable
+ * read and write capabilities on a remote SMB share.
+ *
+ * @param smbFile the remote file to open.
+ * @param write whether the file should be opened with write access ("rw") or read-only ("r").
+ */
 internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) : SeekableInputStream {
+
     private val file = runCatching {
         if (write) {
             smbFile.openRandomAccess("rw", SmbConstants.DEFAULT_SHARING)

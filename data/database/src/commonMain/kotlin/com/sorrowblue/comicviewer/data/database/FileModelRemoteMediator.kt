@@ -58,7 +58,7 @@ internal class FileModelRemoteMediator(
                         SupportExtension::extension,
                     )
                     val files = SortUtil.sortedIndex(
-                        remoteDataSource.listFiles(file, settings.resolveImageFolder) {
+                        remoteDataSource.listFiles(file, false) {
                             SortUtil.filter(it, supportExtensions)
                         },
                     )

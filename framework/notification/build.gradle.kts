@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
-    alias(libs.plugins.comicviewer.di)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 }

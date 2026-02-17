@@ -196,10 +196,9 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
 
     private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
         if (resolveImageFolder && isDirectory && runCatching {
-                listFiles { it.isFile && it.name.extension in SUPPORTED_IMAGE }.isNotEmpty()
-            }.getOrDefault(
-                false,
-            )
+                children { it.isFile && it.name.extension in SUPPORTED_IMAGE }.asSequence().take(1)
+                    .toList().isNotEmpty()
+            }.getOrDefault(false)
         ) {
             return BookFolder(
                 path = url.path,
@@ -280,30 +279,23 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
     }
 
     private suspend fun smbFile(path: String): SmbFile = mutex.withLock {
-        rootSmbFile?.let { smbFile ->
-            if (smbFile.isSame(path)) {
-                val nPath = path.removePrefix("/${smbFile.share}/")
-                if (nPath.isEmpty() || nPath == "/") {
-                    smbFile
-                } else {
-                    smbFile.resolve(
-                        nPath,
-                    ) as SmbFile
-                }
-            } else {
-                null
-            }
-        } ?: run {
-            val smbFile = this.bookshelf.smbFile(path)
-            smbFile.share?.let { share ->
-                this.bookshelf.smbFile("/$share/").let {
-                    rootSmbFile = it
-                    val nPath = path.removePrefix("/${smbFile.share}/")
-                    if (nPath.isEmpty() || nPath == "/") it else it.resolve(nPath) as SmbFile
-                }
-            } ?: smbFile.also {
-                rootSmbFile = smbFile
-            }
+        rootSmbFile?.takeIf { it.isSame(path) }?.let { root ->
+            return@withLock root.resolveRelative(path)
+        }
+        val file = bookshelf.smbFile(path)
+        val shareName = file.share ?: return@withLock file.also { rootSmbFile = it }
+        val root = bookshelf.smbFile("/$shareName/").also {
+            rootSmbFile = it
+        }
+        root.resolveRelative(path)
+    }
+
+    private fun SmbFile.resolveRelative(fullPath: String): SmbFile {
+        val relativePath = fullPath.removePrefix("/$share/").removePrefix("/")
+        return if (relativePath.isEmpty()) {
+            this
+        } else {
+            resolve(relativePath) as SmbFile
         }
     }
 

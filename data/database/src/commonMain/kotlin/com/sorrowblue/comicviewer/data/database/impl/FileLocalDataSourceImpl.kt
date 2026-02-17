@@ -13,10 +13,13 @@ import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMini
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimumWithSortIndex
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileHistoryEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileInfoEntity
+import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileTypeInfoEntity
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
@@ -81,6 +84,17 @@ internal class FileLocalDataSourceImpl(
     ) {
         withContext(dispatcher) {
             dao.updateInfo(UpdateFileInfoEntity(path, bookshelfId, cacheKey, totalPage))
+        }
+    }
+
+    override suspend fun updateFileType(file: File) {
+        withContext(dispatcher) {
+            val fileType = when (file) {
+                is BookFile -> FileEntity.Type.FILE
+                is BookFolder -> FileEntity.Type.IMAGE_FOLDER
+                is Folder -> FileEntity.Type.FOLDER
+            }
+            dao.updateFileType(UpdateFileTypeInfoEntity(file.path, file.bookshelfId, fileType))
         }
     }
 
