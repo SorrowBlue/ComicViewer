@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZOut
-import comicviewer.app.desktop.generated.resources.Res
+import comicviewer.app.jvm.generated.resources.Res
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.animatedimage.AnimatedImage
 import org.jetbrains.compose.animatedimage.animate
