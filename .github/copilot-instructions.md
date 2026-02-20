@@ -38,7 +38,7 @@ AGENTS.mdには以下の重要な情報が含まれています：
 ### ビルドコマンド
 ```bash
 # Detekt（静的コード解析）
-./gradlew detektAndroidAll detektDesktopAll detektIosAll
+./gradlew reportMerge
 
 # Android Lint
 ./gradlew app:android:lintDebug

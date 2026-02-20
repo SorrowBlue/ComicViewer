@@ -44,7 +44,7 @@ jobs:
           name: android
           path: app/android/build/outputs/
 
-  build-desktop:
+  build-jvm:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
@@ -57,17 +57,17 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
       - name: Run packageDistributionForCurrentOS
         run: ./gradlew packageDistributionForCurrentOS
-      - name: Upload Desktop Binaries
+      - name: Upload Jvm Binaries
         uses: actions/upload-artifact@v6
         with:
-          name: desktop-${{ runner.os }}
-          path: app/desktop/build/compose/binaries/main/
+          name: jvm-${{ runner.os }}
+          path: app/jvm/build/compose/binaries/main/
 
   build:
     name: All Build Passed
     runs-on: ubuntu-latest
     environment: android
-    needs: [ build-android, build-desktop ]
+    needs: [ build-android, build-jvm ]
     steps:
       - name: Confirm All Build Jobs Succeeded
         run: echo "✅ All build jobs (Android, Windows, macOS, Linux) completed successfully."

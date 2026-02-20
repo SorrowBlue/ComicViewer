@@ -30,7 +30,7 @@ versionCatalogUpdate {
 }
 dependencies {
     dokka(projects.app.android)
-    dokka(projects.app.desktop)
+    dokka(projects.app.jvm)
     dokka(projects.app.ios)
     dokka(projects.app.share)
     dokka(projects.data.coil)

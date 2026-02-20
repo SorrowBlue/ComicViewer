@@ -17,7 +17,7 @@ AGENTS.md contains detailed information about:
 
 ## Release Automation
 
-ComicViewer uses automated GitHub Actions workflows for releases. See [docs/release-automation.md](docs/release-automation.md) for details on the automated release process that builds and deploys both Android and Desktop versions.
+ComicViewer uses automated GitHub Actions workflows for releases. See [docs/release-automation.md](docs/release-automation.md) for details on the automated release process that builds and deploys both Android and JVM versions.
 
 ## Coding rules
 

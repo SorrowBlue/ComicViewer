@@ -16,8 +16,8 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
       - name: 🤖 ExportLibraryDefinitions for android
         run: ./gradlew :app:android:exportLibraryDefinitions
-      - name: 🖥️ ExportLibraryDefinitions for desktop
-        run: ./gradlew :app:desktop:exportLibraryDefinitions
+      - name: 🖥️ ExportLibraryDefinitions for jvm
+        run: ./gradlew :app:jvm:exportLibraryDefinitions
       - name: 🍎 ExportLibraryDefinitions for ios
         run: ./gradlew :app:ios:exportLibraryDefinitions
 

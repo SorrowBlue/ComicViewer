@@ -38,7 +38,7 @@ jobs:
 
       - name: Run Unit Tests
         run: >
-          ./gradlew desktopTest testAndroidHostTest --continue
+          ./gradlew jvmTest testAndroidHostTest --continue
           -PsmbHost=localhost
           -PsmbPort=445
           -PsmbUsername=testuser

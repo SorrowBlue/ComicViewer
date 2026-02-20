@@ -12,7 +12,7 @@ kotlin {
                 implementation(libs.compose.uiBackhandler)
             }
         }
-        desktopMain {
+        jvmMain {
             dependencies {
                 implementation(libs.filekit.compose)
             }

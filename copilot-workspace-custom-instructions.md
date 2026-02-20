@@ -8,11 +8,11 @@
 
 ## 1. プロジェクト概要
 
-ComicViewerは、Android、iOS、Desktopをサポートするマルチプラットフォームコミックビューアアプリです。
+ComicViewerは、Android、iOS、JVM(Desktop)をサポートするマルチプラットフォームコミックビューアアプリです。
 
 ### 技術スタック
 - **Kotlin Multiplatform**: メインプログラミング言語
-- **Jetpack Compose**: UI フレームワーク（Android、Desktop、iOS）
+- **Jetpack Compose**: UI フレームワーク（Android、JVM、iOS）
 - **モジュラーアーキテクチャ**: feature/domain/data レイヤー構成
 - **Metro**: 依存性注入フレームワーク
 - **Room**: データベース（Android）
@@ -81,7 +81,7 @@ ComicViewerは、Android、iOS、Desktopをサポートするマルチプラッ�
 - Platform-specific実装は expect/actual パターンを使用してください
 - iOS Human Interface Guidelines を考慮してください
 
-### Desktop
+### JVM
 - デスクトップ特有のUI パターン（メニューバー、キーボードショートカット）を考慮してください
 - ウィンドウ管理機能を適切に実装してください
 
