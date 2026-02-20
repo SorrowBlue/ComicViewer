@@ -136,7 +136,7 @@ google-services.json
 
 aboutlibraries.json
 !/app/ios/src/iosMain/composeResources/files/aboutlibraries.json
-!/app/desktop/src/jvmMain/composeResources/files/aboutlibraries.json
+!/app/jvm/src/jvmMain/composeResources/files/aboutlibraries.json
 !/app/android/src/main/res/raw/aboutlibraries.json
 /iosApp/iosApp.xcodeproj/xcuserdata/
 UserInterfaceState.xcuserstate

@@ -12,7 +12,7 @@ kotlin {
                 implementation(projects.feature.settings.common)
             }
         }
-        desktopMain {
+        jvmMain {
             dependencies {
                 implementation(libs.filekit.compose)
             }

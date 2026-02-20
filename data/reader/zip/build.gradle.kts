@@ -22,7 +22,7 @@ kotlin {
                 implementation(libs.sevenzipjbinding.android)
             }
         }
-        desktopMain {
+        jvmMain {
             dependencies {
                 implementation(libs.sevenzipjbinding)
                 implementation(libs.sevenzipjbinding.allPlatforms)

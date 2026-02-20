@@ -1,8 +1,6 @@
 package comicviewer.convention
 
 import com.sorrowblue.comicviewer.libs
-import desktopMain
-import desktopTest
 
 plugins {
     org.jetbrains.kotlin.multiplatform
@@ -23,7 +21,7 @@ kotlin {
             consumerKeepRules.file("consumer-rules.pro")
         }
     }
-    jvm("desktop")
+    jvm()
 
     iosArm64() // 64-bit iPhone devices
     iosSimulatorArm64() // iPhone Simulator on Arm 64-bit macOS
@@ -37,10 +35,10 @@ kotlin {
         val noAndroidTest by creating {
             dependsOn(commonTest.get())
         }
-        desktopMain {
+        jvmMain {
             dependsOn(noAndroid)
         }
-        desktopTest {
+        jvmTest {
             dependsOn(noAndroidTest)
         }
         iosMain {

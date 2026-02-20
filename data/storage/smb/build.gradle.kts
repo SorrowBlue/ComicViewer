@@ -39,7 +39,7 @@ kotlin {
                 implementation(libs.robolectric)
             }
         }
-        desktopMain {
+        jvmMain {
             dependencies {
                 implementation(libs.jcifs)
             }

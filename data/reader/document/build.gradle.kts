@@ -20,7 +20,7 @@ kotlin {
                 implementation(libs.androidx.startupRuntime)
             }
         }
-        desktopMain {
+        jvmMain {
             dependencies {
                 implementation(libs.kotlinx.coroutinesCore)
             }

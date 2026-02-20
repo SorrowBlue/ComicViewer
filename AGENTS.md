@@ -20,10 +20,10 @@
 
 ## プロジェクト概要
 
-ComicViewerは、Android、iOS、Desktopをサポートするマルチプラットフォームコミックビューアアプリケーションです。Kotlin Multiplatformで開発され、Jetpack Composeを使用したモダンなUIを提供します。
+ComicViewerは、Android、iOS、JVM(Desktop)をサポートするマルチプラットフォームコミックビューアアプリケーションです。Kotlin Multiplatformで開発され、Jetpack Composeを使用したモダンなUIを提供します。
 
 ### 主な機能
-- マルチプラットフォーム対応（Android、iOS、Desktop）
+- マルチプラットフォーム対応（Android、iOS、JVM）
 - モジュラーアーキテクチャによる高い保守性
 - ローカルストレージおよびネットワークストレージ（SMB）のサポート
 - 複数のファイル形式に対応（アーカイブ、ドキュメント）
@@ -33,7 +33,7 @@ ComicViewerは、Android、iOS、Desktopをサポートするマルチプラッ�
 ## 技術スタック
 
 - **Kotlin Multiplatform**: メインプログラミング言語
-- **Jetpack Compose**: UI フレームワーク（Android、Desktop、iOS）
+- **Jetpack Compose**: UI フレームワーク（Android、JVM、iOS）
 - **Kotlin**: 2.3.0
 - **Gradle**: 9.2.1
 - **Java**: 21（必須）
@@ -89,7 +89,7 @@ chmod +x gradlew
 ./gradlew clean build
 
 # アプリのビルド（30-40分）
-./gradlew app:android:build app:desktop:build
+./gradlew app:android:build app:jvm:build
 
 # 全モジュールのチェック（25-35分）
 ./gradlew check
@@ -104,8 +104,8 @@ chmod +x gradlew
 # Android Release（30-40分）
 ./gradlew app:android:assembleRelease
 
-# Desktop（20-30分）
-./gradlew app:desktop:packageDistributionForCurrentOS
+# JVM（20-30分）
+./gradlew app:jvm:packageDistributionForCurrentOS
 ```
 
 ### テストコマンド
@@ -117,8 +117,8 @@ chmod +x gradlew
 # Android Unitテストのみ（10-15分）
 ./gradlew testDebugUnitTest
 
-# Desktop テスト（5-10分）
-./gradlew desktopTest
+# JVM テスト（5-10分）
+./gradlew jvmTest
 
 # 特定のモジュールのテスト
 ./gradlew :domain:model:test
@@ -129,7 +129,7 @@ chmod +x gradlew
 
 ```bash
 # Detekt（静的コード解析）全プラットフォーム（15-20分）
-./gradlew detektAndroidAll detektDesktopAll detektIosAll detektMetadataAll
+./gradlew reportMerge
 
 # build-logic の Detekt（3-5分）
 ./gradlew :build-logic:detektAll
@@ -261,13 +261,13 @@ src/
 2. `./gradlew app:android:lintDebug`
 3. UI変更がある場合は手動でコアユーザーフローをテスト
 
-#### Desktop検証
-1. `./gradlew app:desktop:packageDistributionForCurrentOS`
+#### JVM検証
+1. `./gradlew app:jvm:packageDistributionForCurrentOS`
 2. デスクトップ固有機能のテスト（ウィンドウ管理、ファイルシステムアクセス）
 3. マルチプラットフォームコードが全ターゲットで動作することを確認
 
 #### クロスプラットフォーム検証
-1. `./gradlew detektAndroidAll detektDesktopAll detektIosAll`
+1. `./gradlew reportMerge`
 2. `./gradlew :domain:model:test :data:database:test`
 3. expect/actual実装が正しく動作することを確認
 
@@ -385,7 +385,7 @@ Closes #123
 ./gradlew detektFormat
 
 # 2. 静的コード解析
-./gradlew detektAndroidAll detektDesktopAll detektIosAll
+./gradlew reportMerge
 
 # 3. Lint チェック
 ./gradlew app:android:lintDebug
@@ -509,7 +509,7 @@ ComicViewerは以下のレイヤー構造を採用しています:
 1. README.mdのモジュール依存関係図で依存関係を確認
 2. 同じパッケージ構造で対応するテストファイルを更新
 3. 影響を受けるモジュールのlintとtestコマンドを実行
-4. AndroidとDesktopの両方の互換性を確認
+4. AndroidとJVMの両方の互換性を確認
 
 #### データベース変更
 
@@ -531,7 +531,7 @@ ComicViewerは以下のレイヤー構造を採用しています:
 - iOS Human Interface Guidelinesを考慮
 - すべてのexpect宣言に対応するactual実装があることを確認
 
-#### Desktop
+#### JVM
 - デスクトップ固有のUIパターン（メニューバー、キーボードショートカット）を考慮
 - 適切なウィンドウ管理機能を実装
 - ファイルシステムアクセスなどのデスクトップ固有機能をテスト
@@ -558,7 +558,7 @@ ComicViewerは完全自動化されたリリースプロセスを採用してい
 
 - リリースが公開されたときに自動実行
 - 品質チェック（Detekt、Lint、Test）
-- AndroidリリースとDesktopリリースの並行ビルド
+- AndroidリリースとJVMリリースの並行ビルド
 - Google Play Console（Internal App Sharing）へのAABアップロード
 - GitHub Releaseへの成果物アップロード
 - Discord通知の送信
@@ -620,7 +620,7 @@ ComicViewerは完全自動化されたリリースプロセスを採用してい
 - **Expect/Actual不一致**: すべてのexpect宣言に対応するactual実装があることを確認
 - **プラットフォーム固有API**: プラットフォーム差異に適切なexpect/actualパターンを使用
 - **依存関係の競合**: 互換性のあるマルチプラットフォームライブラリバージョンのバージョンカタログを確認
-- **ビルドバリアントの問題**: AndroidとDesktopの両方のターゲットで変更をテスト
+- **ビルドバリアントの問題**: AndroidとJVMの両方のターゲットで変更をテスト
 
 ### モジュール依存関係の問題
 

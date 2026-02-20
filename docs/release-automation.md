@@ -6,7 +6,7 @@
 
 リリース自動化は以下の2つのワークフローによって実現されています：
 - **Release Drafter**: Pull Requestから自動的にドラフトリリースを作成
-- **Release**: リリースが公開されたときにAndroidおよびDesktopバージョンをビルド・配布
+- **Release**: リリースが公開されたときにAndroidおよびJVMバージョンをビルド・配布
 
 バージョン管理は完全に自動化されており、`versionCode`は`versionName`（Gitタグ）から自動計算されます。
 
@@ -62,7 +62,7 @@ Release Drafterワークフロー（`/.github/workflows/release-drafter.yml`）�
 - Google Play Console（Internal App Sharing）にAABをアップロード
 - GitHub ReleaseのためにAABとAPK成果物を保存
 
-### 3. Desktopリリース
+### 3. JVMリリース
 Androidリリースと並行して：
 - Windows、macOS、Linuxのネイティブディストリビューションをビルド
 - Compose Multiplatformを使用してプラットフォーム固有のパッケージを作成
@@ -115,7 +115,7 @@ Androidリリースと並行して：
 
 4. **自動ビルドと配布**:
    - 品質チェック（lint、test、static code analysis）の実行
-   - AndroidリリースとDesktopリリースの並行ビルド
+   - AndroidリリースとJVMリリースの並行ビルド
    - 成果物のGitHub Releaseへのアップロード
    - Discord通知の送信
 
