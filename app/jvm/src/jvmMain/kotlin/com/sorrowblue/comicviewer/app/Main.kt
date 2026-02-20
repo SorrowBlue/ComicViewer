@@ -16,9 +16,9 @@ import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
-import comicviewer.app.desktop.generated.resources.Res
-import comicviewer.app.desktop.generated.resources.app_label_exit
-import comicviewer.app.desktop.generated.resources.app_label_show
+import comicviewer.app.jvm.generated.resources.Res
+import comicviewer.app.jvm.generated.resources.app_label_exit
+import comicviewer.app.jvm.generated.resources.app_label_show
 import comicviewer.framework.ui.generated.resources.app_name
 import dev.zacsweers.metro.createGraphFactory
 import java.awt.Dimension
