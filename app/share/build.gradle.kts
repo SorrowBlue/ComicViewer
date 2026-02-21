@@ -1,5 +1,4 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import com.sorrowblue.comicviewer.libs
 
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
@@ -75,6 +74,7 @@ kotlin {
         }
         val androidDeviceTest by getting {
             dependencies {
+                implementation(libs.jcifs)
                 implementation(libs.androidx.testRunner)
                 implementation(libs.compose.uiTestJunit4)
                 implementation(libs.compose.uiTestManifest)

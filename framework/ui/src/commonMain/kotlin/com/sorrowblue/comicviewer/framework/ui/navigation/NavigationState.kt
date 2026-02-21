@@ -7,8 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavEntryDecorator
@@ -68,35 +66,48 @@ class NavigationState(
     val backStacks: Map<NavKey, NavBackStack<NavKey>>,
 ) {
     var topLevelRoute: NavKey by topLevelRoute
-    val stacksInUse: List<NavKey>
-        get() = if (topLevelRoute == startRoute) {
-            listOf(startRoute)
-        } else {
-            listOf(startRoute, topLevelRoute)
-        }
-}
 
-/**
- * Convert [NavigationState] into a list of [NavEntry].
- *
- * @param entryDecorators - a list of [NavEntryDecorator] that will be applied to the entries in the [NavigationState]
- * @param entryProvider - a provider that creates a [NavEntry] for a given [NavKey]
- * @return a [SnapshotStateList] containing the decorated [NavEntry]s for the current state
- */
-@Composable
-fun NavigationState.toEntries(
-    entryDecorators: List<NavEntryDecorator<NavKey>> = listOf(),
-    entryProvider: (NavKey) -> NavEntry<NavKey>,
-): SnapshotStateList<NavEntry<NavKey>> {
-    val decoratedEntries = backStacks.mapValues { (_, stack) ->
-        rememberDecoratedNavEntries(
-            backStack = stack,
-            entryDecorators = entryDecorators,
-            entryProvider = entryProvider,
-        )
+    /**
+     * Convert the navigation state into `NavEntry`s that have been decorated with a
+     * `SaveableStateHolder`.
+     *
+     * @param entryProvider - the entry provider used to convert the keys in the
+     * back stacks to `NavEntry`s.
+     */
+    @Composable
+    fun toDecoratedEntries(
+        entryDecorators: List<NavEntryDecorator<NavKey>> = listOf(),
+        entryProvider: (NavKey) -> NavEntry<NavKey>,
+    ): List<NavEntry<NavKey>> {
+        // For each back stack, create a `SaveableStateHolder` decorator and use it to decorate
+        // the entries from that stack. When backStacks changes, `rememberDecoratedNavEntries` will
+        // be recomposed and a new list of decorated entries is returned.
+        val decoratedEntries = backStacks.mapValues { (_, stack) ->
+            rememberDecoratedNavEntries(
+                backStack = stack,
+                entryDecorators = entryDecorators,
+                entryProvider = entryProvider,
+            )
+        }
+
+        // Only return the entries for the stacks that are currently in use.
+        return getTopLevelRoutesInUse().flatMap { decoratedEntries[it].orEmpty() }
     }
 
-    return stacksInUse
-        .flatMap { decoratedEntries[it].orEmpty() }
-        .toMutableStateList()
+    /**
+     * Get the top level routes that are currently in use. The start route is always the first route
+     * in the list. This means the user will always exit the app through the starting route
+     * ("exit through home" pattern). The list will contain a maximum of one other route. This is a
+     * design decision. In your app, you may wish to allow more than two top level routes to be
+     * active.
+     *
+     * Note that even if a top level route is not in use its state is still retained.
+     *
+     * @return the current top level routes that are in use.
+     */
+    private fun getTopLevelRoutesInUse(): List<NavKey> = if (topLevelRoute == startRoute) {
+        listOf(startRoute)
+    } else {
+        listOf(startRoute, topLevelRoute)
+    }
 }
