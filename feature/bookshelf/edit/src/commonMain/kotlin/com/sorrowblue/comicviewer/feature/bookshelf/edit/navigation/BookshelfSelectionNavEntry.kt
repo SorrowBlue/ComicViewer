@@ -15,7 +15,6 @@ internal fun EntryProviderScope<NavKey>.bookshelfSelectionNavEntry(navigator: Na
         BookshelfSelectionScreenRoot(
             onBackClick = navigator::goBack,
             onTypeClick = { type ->
-                navigator.pop<BookshelfSelectionNavKey>(true)
                 navigator.navigate(
                     BookshelfEditNavKey(BookshelfEditType.Register(type)),
                 )

@@ -61,6 +61,7 @@ internal class RemoteDataSourceImpl(
                     fileClient.connect(path)
                 }
             }.getOrElse {
+                logcat { it.asLog() }
                 throw when (it) {
                     is FileClientException -> when (it) {
                         is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()

@@ -1,5 +1,3 @@
-import com.sorrowblue.comicviewer.libs
-
 plugins {
     alias(libs.plugins.comicviewer.multiplatformFeature)
 }

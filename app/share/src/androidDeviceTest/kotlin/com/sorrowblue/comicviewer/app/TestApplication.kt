@@ -6,6 +6,9 @@ import androidx.work.Configuration
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import dev.zacsweers.metro.createGraphFactory
+import logcat.AndroidLogcatLogger
+import logcat.LogPriority
+import logcat.LogcatLogger
 
 class TestApplication :
     Application(),
@@ -23,6 +26,7 @@ class TestApplication :
 
     init {
         getPlatformGraph = { appGraph }
+        LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
     }
 
     override val workManagerConfiguration: Configuration
