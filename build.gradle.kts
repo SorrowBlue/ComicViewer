@@ -22,7 +22,7 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.detekt)
 //    alias(libs.plugins.modulegraph)
-    id("nl.littlerobots.version-catalog-update") version "1.0.1"
+    id("nl.littlerobots.version-catalog-update") version "1.1.0"
 }
 
 versionCatalogUpdate {
