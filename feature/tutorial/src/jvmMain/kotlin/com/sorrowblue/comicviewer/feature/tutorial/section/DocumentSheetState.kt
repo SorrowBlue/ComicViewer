@@ -16,6 +16,7 @@ import com.sorrowblue.scomicviewer.domain.usecase.RegisterPdfPluginUseCase
 import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_msg_not_found_pdf_plugin
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberDirectoryPickerLauncher
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +41,7 @@ internal fun rememberDocumentSheetState(
         )
     }.apply {
         directoryPickerLauncher = rememberDirectoryPickerLauncher(
-            title = "ComicViewer PDFプラグインのインストールディレクトリを選択",
+            dialogSettings = FileKitDialogSettings(title = "ComicViewer PDFプラグインのインストールディレクトリを選択"),
             onResult = ::onDirectoryPickerResult,
         )
     }
