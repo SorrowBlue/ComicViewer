@@ -40,7 +40,10 @@ interface DatabaseProviders {
         @IoDispatcher dispatcher: CoroutineDispatcher,
     ): ComicViewerDatabase = helper
         .getDatabaseBuilder()
-        .addMigrations(ComicViewerDatabase.ManualMigration7to8())
+        .addMigrations(
+            ComicViewerDatabase.ManualMigration7to8(),
+            ComicViewerDatabase.ManualMigration8to9(),
+        )
         .addTypeConverter(decryptedPasswordConverters)
         .setQueryCoroutineContext(dispatcher)
         .fallbackToDestructiveMigrationOnDowngrade(true)

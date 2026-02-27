@@ -11,6 +11,7 @@ kotlin {
             dependencies {
                 implementation(libs.soil.form)
                 implementation(libs.filekit.compose)
+                implementation(libs.kotlinx.serializationJson)
             }
         }
     }

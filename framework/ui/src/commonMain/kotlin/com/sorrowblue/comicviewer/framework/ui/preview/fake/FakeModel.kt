@@ -2,13 +2,13 @@ package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 
 @OptIn(InternalDataApi::class)
-fun fakeInternalStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()) = InternalStorage(
+fun fakeInternalStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()) = DeviceStorage(
     id = BookshelfId(bookshelfId),
     displayName = name,
     fileCount = 999,

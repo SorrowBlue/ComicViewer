@@ -26,7 +26,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
         val entity = BookshelfEntity(
             id = BookshelfId(1),
             displayName = "Test",
-            type = BookshelfEntity.Type.INTERNAL,
+            type = BookshelfEntity.Type.DEVICE,
             deleted = false,
             host = "",
             port = 0,
@@ -44,7 +44,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
         val entity = BookshelfEntity(
             id = BookshelfId(3),
             displayName = "DeleteId",
-            type = BookshelfEntity.Type.INTERNAL,
+            type = BookshelfEntity.Type.DEVICE,
             deleted = false,
             host = "",
             port = 0,
@@ -62,7 +62,7 @@ internal class BookshelfDaoTest : DatabaseTest() {
         val entity = BookshelfEntity(
             id = BookshelfId(4),
             displayName = "Update",
-            type = BookshelfEntity.Type.INTERNAL,
+            type = BookshelfEntity.Type.DEVICE,
             deleted = false,
             host = "",
             port = 0,

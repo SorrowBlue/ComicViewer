@@ -6,7 +6,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenRoot
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfSelectionNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
@@ -26,7 +26,7 @@ internal fun EntryProviderScope<NavKey>.bookshelfNavEntry(navigator: Navigator) 
                     navigator.navigate(SettingsNavKey)
                 },
                 onFabClick = {
-                    navigator.navigate(BookshelfSelectionNavKey)
+                    navigator.navigate(BookshelfWizardNavKey.Selection)
                 },
                 onBookshelfClick = { id, path ->
                     navigator.navigate(BookshelfFolderNavKey(id, path))

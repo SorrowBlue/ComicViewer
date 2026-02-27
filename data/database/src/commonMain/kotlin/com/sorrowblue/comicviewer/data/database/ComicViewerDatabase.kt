@@ -23,7 +23,7 @@ import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFile
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 
-internal const val DatabaseVersion = 8
+internal const val DatabaseVersion = 9
 internal const val DatabaseName = "comic_viewer_database"
 
 @Database(
@@ -43,6 +43,7 @@ internal const val DatabaseName = "comic_viewer_database"
         AutoMigration(5, 6),
         AutoMigration(6, 7),
         AutoMigration(7, 8, ComicViewerDatabase.AutoMigration7to8::class),
+        AutoMigration(8, 9),
     ],
     exportSchema = true,
 )
@@ -99,6 +100,17 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
                 ;
                 """.trimIndent(),
             )
+        }
+    }
+
+    /**
+     * Migration from 8 to 9.
+     *
+     * Update bookshelf type from 'INTERNAL' to 'DEVICE'
+     */
+    class ManualMigration8to9 : Migration(8, 9) {
+        override fun migrate(connection: SQLiteConnection) {
+            connection.execSQL("UPDATE bookshelf SET type = 'DEVICE' WHERE type = 'INTERNAL'")
         }
     }
 }

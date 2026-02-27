@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
@@ -104,7 +104,7 @@ private fun BookshelfColumnItem(
                         label = {
                             Text(
                                 text = when (bookshelfFolder.bookshelf) {
-                                    is InternalStorage -> stringResource(
+                                    is DeviceStorage -> stringResource(
                                         Res.string.bookshelf_label_device,
                                     )
 
@@ -182,7 +182,7 @@ private fun BookshelfRowItem(
                             label = {
                                 Text(
                                     text = when (bookshelfFolder.bookshelf) {
-                                        is InternalStorage -> stringResource(
+                                        is DeviceStorage -> stringResource(
                                             Res.string.bookshelf_label_device,
                                         )
 
@@ -223,7 +223,7 @@ private fun BookshelfRowItem(
 
 private val BookshelfFolder.displayName
     get() = when (val bookshelf = bookshelf) {
-        is InternalStorage -> bookshelf.displayName.ifEmpty { folder.name }
+        is DeviceStorage -> bookshelf.displayName.ifEmpty { folder.name }
         is SmbServer -> bookshelf.displayName.ifEmpty { bookshelf.host }
         ShareContents -> bookshelf.displayName.ifEmpty { bookshelf.displayName }
     }

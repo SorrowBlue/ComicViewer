@@ -4,8 +4,7 @@ import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrate
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfEditNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
@@ -32,9 +31,7 @@ internal fun EntryProviderScope<NavKey>.bookshelfInfoNavEntry(
                     navigator.navigate(BookshelfNotificationNavKey(scanType))
                 },
                 onEditClick = { id, type ->
-                    navigator.navigate(
-                        BookshelfEditNavKey(BookshelfEditType.Edit(id, type)),
-                    )
+                    navigator.navigate(BookshelfWizardNavKey.Edit(id, type))
                 },
             )
         }

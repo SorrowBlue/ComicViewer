@@ -62,13 +62,13 @@ internal data class SmbEditForm(
 }
 
 /**
- * Internal storage bookshelf editor form state.
+ * Device bookshelf editor form state.
  *
  * @property displayName Bookshelf display name.
- * @property path Path to the directory in internal storage. Null if the root directory is selected.
+ * @property path Path to the directory in device. Null if the root directory is selected.
  */
 @Serializable
-internal data class InternalStorageEditForm(
+internal data class DeviceEditForm(
     override val displayName: String = "",
     val path: String? = null,
 ) : BookshelfEditForm {

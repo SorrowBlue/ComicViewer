@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderException
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -41,7 +41,7 @@ internal class RemoteDataSourceImpl(
 
     @Suppress("UNCHECKED_CAST")
     private val fileClient = when (bookshelf) {
-        is InternalStorage -> fileClientFactory.getValue(
+        is DeviceStorage -> fileClientFactory.getValue(
             FileClientType.Device,
         ) as FileClient.Factory<Bookshelf>
 

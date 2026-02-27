@@ -19,31 +19,17 @@ interface BookshelfEditProviders {
     @ElementsIntoSet
     private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
         listOf(
-            toPair(BookshelfEditNavKey.serializer()),
-            toPair(BookshelfSelectionNavKey.serializer()),
+            toPair(BookshelfWizardNavKey.Selection.serializer()),
+            toPair(BookshelfWizardNavKey.Edit.serializer()),
         )
 
     @Provides
     @IntoSet
-    private fun provideBookshelfEditNavEntry(
+    private fun provideBookshelfWizardNavEntry(
         factory: BookshelfEditScreenContext.Factory,
     ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
         with(factory) {
-            bookshelfEditNavEntry(navigator)
+            bookshelfWizardNavEntry(navigator)
         }
     }
-
-    @Provides
-    @IntoSet
-    private fun provideBookshelfSelectionNavEntry(): EntryProviderScope<NavKey>.(
-        Navigator,
-    ) -> Unit =
-        { navigator -> bookshelfSelectionNavEntry(navigator) }
-
-    @Provides
-    @IntoSet
-    private fun provideBookshelfDiscardConfirmNavEntry(): EntryProviderScope<NavKey>.(
-        Navigator,
-    ) -> Unit =
-        { navigator -> bookshelfDiscardConfirmNavEntry(navigator) }
 }

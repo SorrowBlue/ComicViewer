@@ -5,6 +5,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -258,29 +259,33 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfFab").performClick()
-        composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BackButton").performClick()
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfFab").performClick()
-        composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
-        composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("BookshelfEditorContents").assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("CloseButton").performClick()
-        composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("BackButton").performClick()
+        composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.DEVICE}")
             .performClick()
-        composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
+        composeTestRule.waitUntil(1000) {
+            composeTestRule.onNodeWithTag("BookshelfEditorContents").isDisplayed()
+        }
 
-        composeTestRule.onNodeWithTag("CloseButton").performClick()
-        composeTestRule.onNodeWithTag("BookshelfSelectionScreenRoot").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("BackButton").performClick()
+        composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
-        composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
+        composeTestRule.waitUntil(1000) {
+            composeTestRule.onNodeWithTag("BookshelfEditorContents").isDisplayed()
+        }
 
         composeTestRule.onNodeWithTag("DisplayNameField").performTextInput("SMBBookshelf")
         composeTestRule.onNodeWithTag("HostField").performTextInput(BuildTestConfig.smbHost)
@@ -295,15 +300,15 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("SaveButton").performClick()
 
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").isNotDisplayed()
+            composeTestRule.onNodeWithTag("BookshelfEditorContents").isNotDisplayed()
         }
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
         composeTestRule.onAllNodesWithTag("BookshelfListItemMenu").onFirst().performClick()
         composeTestRule.onNodeWithTag("BookshelfInfoScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("EditButton").performClick()
-        composeTestRule.onNodeWithTag("BookshelfEditScreenRoot").assertIsDisplayed()
-        composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
+        composeTestRule.onNodeWithTag("BookshelfEditorContents").assertIsDisplayed()
+        composeTestRule.onAllNodesWithTag("BackButton").onLast().performClick()
 
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
         composeTestRule.onNodeWithTag("BookshelfDeleteScreenRoot").assertIsDisplayed()

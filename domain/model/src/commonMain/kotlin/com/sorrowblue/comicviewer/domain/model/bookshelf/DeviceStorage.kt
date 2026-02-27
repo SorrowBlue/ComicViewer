@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.domain.model.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 
-data class InternalStorage private constructor(
+data class DeviceStorage private constructor(
     override val id: BookshelfId,
     override val displayName: String,
     override val fileCount: Int,
@@ -13,7 +13,7 @@ data class InternalStorage private constructor(
     fun copy(displayName: String = this.displayName) = copy(id = id, displayName = displayName)
 
     companion object {
-        operator fun invoke(displayName: String) = InternalStorage(
+        operator fun invoke(displayName: String) = DeviceStorage(
             id = BookshelfId(),
             displayName = displayName,
             fileCount = 0,
@@ -26,7 +26,7 @@ data class InternalStorage private constructor(
             displayName: String,
             fileCount: Int,
             isDeleted: Boolean,
-        ) = InternalStorage(
+        ) = DeviceStorage(
             id = id,
             displayName = displayName,
             fileCount = fileCount,

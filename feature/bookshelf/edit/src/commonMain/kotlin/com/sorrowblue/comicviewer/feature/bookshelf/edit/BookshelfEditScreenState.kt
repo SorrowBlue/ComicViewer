@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
@@ -72,12 +72,12 @@ internal interface SmbEditScreenState : BookshelfEditScreenState {
     override val form: Form<SmbEditForm>
 }
 
-internal interface InternalStorageEditScreenState : BookshelfEditScreenState {
+internal interface LocalEditScreenState : BookshelfEditScreenState {
     fun onOpenDocumentTreeCancel()
 
     val folderSelectFieldState: FolderSelectFieldState
-    override val formState: FormState<InternalStorageEditForm>
-    override val form: Form<InternalStorageEditForm>
+    override val formState: FormState<DeviceEditForm>
+    override val form: Form<DeviceEditForm>
 }
 
 @Composable
@@ -117,15 +117,15 @@ internal fun rememberBookshelfEditScreenState(
         }
 
         BookshelfType.DEVICE -> {
-            val formState = rememberFormState(InternalStorageEditForm(), kSerializableSaver())
+            val formState = rememberFormState(DeviceEditForm(), kSerializableSaver())
             rememberRetained {
-                InternalStorageEditScreenStateImpl(
+                LocalEditScreenStateImpl(
                     editType = editType,
                     getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
                     registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
                     formState = formState,
-                    initialForm = InternalStorageEditForm(),
+                    initialForm = DeviceEditForm(),
                 )
             }.apply {
                 form = rememberForm(state = formState, onSubmit = ::onSubmit)
@@ -158,12 +158,12 @@ private class SmbEditScreenStateImpl(
     override lateinit var form: Form<SmbEditForm>
 }
 
-private class InternalStorageEditScreenStateImpl(
+private class LocalEditScreenStateImpl(
     editType: BookshelfEditType,
     getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     registerBookshelfUseCase: RegisterBookshelfUseCase,
     coroutineScope: CoroutineScope,
-    override val formState: FormState<InternalStorageEditForm>,
+    override val formState: FormState<DeviceEditForm>,
     initialForm: BookshelfEditForm,
 ) : BookshelfEditScreenStateImpl(
     editType,
@@ -173,8 +173,8 @@ private class InternalStorageEditScreenStateImpl(
     formState,
     initialForm,
 ),
-    InternalStorageEditScreenState {
-    override lateinit var form: Form<InternalStorageEditForm>
+    LocalEditScreenState {
+    override lateinit var form: Form<DeviceEditForm>
     override lateinit var folderSelectFieldState: FolderSelectFieldState
 
     override fun onOpenDocumentTreeCancel() {
@@ -219,8 +219,8 @@ private abstract class BookshelfEditScreenStateImpl(
                 onSuccess = {
                     val form: BookshelfEditForm
                     when (val bookshelf = it.bookshelf) {
-                        is InternalStorage -> {
-                            form = InternalStorageEditForm(
+                        is DeviceStorage -> {
+                            form = DeviceEditForm(
                                 displayName = bookshelf.displayName,
                                 path = it.folder.path,
                             )
@@ -275,15 +275,15 @@ private abstract class BookshelfEditScreenStateImpl(
             val bookshelf: Bookshelf
             val path: String
             when (form) {
-                is InternalStorageEditForm -> when (editType) {
+                is DeviceEditForm -> when (editType) {
                     is BookshelfEditType.Edit -> {
-                        bookshelf = (getBookshelf(editType.bookshelfId) as InternalStorage)
+                        bookshelf = (getBookshelf(editType.bookshelfId) as DeviceStorage)
                             .copy(displayName = form.displayName)
                         path = requireNotNull(form.path)
                     }
 
                     is BookshelfEditType.Register -> {
-                        bookshelf = InternalStorage(form.displayName)
+                        bookshelf = DeviceStorage(form.displayName)
                         path = requireNotNull(form.path)
                     }
                 }

@@ -30,4 +30,9 @@
     <string name="bookshelf_edit_discord_title">保存していない変更は失われます</string>
     <string name="bookshelf_edit_discord_btn_confirm">OK</string>
     <string name="bookshelf_edit_discord_btn_dismiss">編集を続ける</string>
+
+    <string name="bookshelf_wizard_title_register">本棚の登録</string>
+    <string name="bookshelf_wizard_title_register_of">本棚の登録 - %1$s</string>
+    <string name="bookshelf_wizard_title_edit">本棚の編集</string>
+    <string name="bookshelf_wizard_title_edit_of">本棚の編集 - %1$s</string>
 </resources>

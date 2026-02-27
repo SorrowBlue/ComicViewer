@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 
@@ -27,10 +27,10 @@ internal data class BookshelfEntity(
         const val ID = "id"
 
         fun fromModel(model: Bookshelf) = when (model) {
-            is InternalStorage -> BookshelfEntity(
+            is DeviceStorage -> BookshelfEntity(
                 id = model.id,
                 displayName = model.displayName,
-                type = Type.INTERNAL,
+                type = Type.DEVICE,
                 deleted = false,
                 host = "",
                 port = 0,
@@ -74,10 +74,10 @@ internal data class BookshelfEntity(
         }
     }
 
-    enum class Type { INTERNAL, SMB, SHARE_CONTENTS }
+    enum class Type { DEVICE, SMB, SHARE_CONTENTS }
 
     fun toModel(fileCount: Int): Bookshelf = when (type) {
-        Type.INTERNAL -> InternalStorage(
+        Type.DEVICE -> DeviceStorage(
             id = id,
             displayName = displayName,
             fileCount = fileCount,

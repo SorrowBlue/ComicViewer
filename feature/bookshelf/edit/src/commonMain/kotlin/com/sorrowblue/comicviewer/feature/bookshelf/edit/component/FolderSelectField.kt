@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.InternalStorageEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.DeviceEditForm
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_select_folder
@@ -82,7 +82,7 @@ internal interface FolderSelectFieldState {
 
 @Composable
 internal fun rememberFolderSelectFieldState(
-    form: Form<InternalStorageEditForm>,
+    form: Form<DeviceEditForm>,
     onOpenDocumentTreeCancel: () -> Unit,
     formField: FormField<String?> = form.rememberFolderSelectField(),
     scope: CoroutineScope = rememberCoroutineScope(),
@@ -111,7 +111,7 @@ private class FolderSelectFieldStateImpl(
 ) : FolderSelectFieldState
 
 @Composable
-private fun Form<InternalStorageEditForm>.rememberFolderSelectField(): FormField<String?> {
+private fun Form<DeviceEditForm>.rememberFolderSelectField(): FormField<String?> {
     val errorMessage = stringResource(Res.string.bookshelf_edit_error_select_folder)
     return rememberField(
         name = FolderSelectFieldName,

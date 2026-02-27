@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -16,12 +17,12 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.BookshelfSour
 internal fun SelectionList(
     items: List<BookshelfType>,
     onSourceClick: (BookshelfType) -> Unit,
-    state: LazyListState,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     LazyColumn(
-        state = state,
+        state = lazyListState,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier,

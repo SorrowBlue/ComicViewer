@@ -61,7 +61,7 @@ private class PreAppScreenStateImpl(
     override var authStatus by mutableStateOf<AuthStatus>(AuthStatus.Unknown)
         private set
 
-    override var tutorialRequired by mutableStateOf(true)
+    override var tutorialRequired by mutableStateOf(false)
         private set
 
     init {

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -88,7 +87,7 @@ fun AlertDialogContent(
     titleContentColor: Color = AlertDialogDefaults.titleContentColor,
     textContentColor: Color = AlertDialogDefaults.textContentColor,
     tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
-    content: @Composable (() -> Unit)? = null,
+    content: @Composable ((PaddingValues) -> Unit)? = null,
 ) {
     AlertDialogContent(
         modifier = modifier,
@@ -144,7 +143,7 @@ private fun AlertDialogContent(
     titleContentColor: Color,
     textContentColor: Color,
     modifier: Modifier = Modifier,
-    content: @Composable (() -> Unit)?,
+    content: @Composable ((PaddingValues) -> Unit)?,
 ) {
     Surface(
         modifier = modifier,
@@ -206,27 +205,19 @@ private fun AlertDialogContent(
                         scrollableState?.let {
                             when (scrollableState) {
                                 is LazyListState -> {
-                                    content()
+                                    content(PaddingValues())
                                 }
 
                                 is LazyGridState -> {
-                                    content()
+                                    content(PaddingValues())
                                 }
 
                                 is ScrollState -> {
-                                    Column(
-                                        Modifier
-                                            .padding(DialogPaddingHorizonal)
-                                            .verticalScroll(scrollableState),
-                                    ) {
-                                        content()
-                                    }
+                                    content(DialogPaddingHorizonal)
                                 }
                             }
                         } ?: run {
-                            Box(Modifier.padding(DialogPaddingHorizonal)) {
-                                content()
-                            }
+                            content(DialogPaddingHorizonal)
                         }
                     }
                 }

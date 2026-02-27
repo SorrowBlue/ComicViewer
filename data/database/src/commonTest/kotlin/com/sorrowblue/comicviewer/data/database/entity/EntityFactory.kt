@@ -15,7 +15,7 @@ internal class EntityFactory {
         BookshelfEntity(
             id = BookshelfId(id),
             displayName = "displayName$id",
-            type = BookshelfEntity.Type.INTERNAL,
+            type = BookshelfEntity.Type.DEVICE,
             deleted = deleted,
             host = "",
             port = 0,

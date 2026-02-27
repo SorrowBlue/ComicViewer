@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.uri.UriUtils
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Folder
@@ -49,7 +49,7 @@ internal fun BookshelfInfo(bookshelf: Bookshelf, folder: Folder, modifier: Modif
             headlineContent = { Text(text = bookshelf.displayName) },
         )
         when (bookshelf) {
-            is InternalStorage -> {
+            is DeviceStorage -> {
                 BookshelfInfoListItem(
                     overlineContent = {
                         Text(
@@ -158,7 +158,7 @@ private fun BookshelfInfoListItem(
 
 @Composable
 private fun Bookshelf?.source() = when (this) {
-    is InternalStorage -> stringResource(Res.string.bookshelf_info_label_internal_storage)
+    is DeviceStorage -> stringResource(Res.string.bookshelf_info_label_internal_storage)
     is SmbServer -> stringResource(Res.string.bookshelf_info_label_smb)
     else -> ""
 }

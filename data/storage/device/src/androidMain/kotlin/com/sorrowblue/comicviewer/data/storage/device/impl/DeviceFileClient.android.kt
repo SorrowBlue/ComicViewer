@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.domain.model.bookshelf.InternalStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.extension
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
@@ -24,12 +24,12 @@ import okio.source
 
 @AssistedInject
 internal actual class DeviceFileClient(
-    @Assisted actual override val bookshelf: InternalStorage,
+    @Assisted actual override val bookshelf: DeviceStorage,
     private val context: Context,
-) : FileClient<InternalStorage> {
+) : FileClient<DeviceStorage> {
     @AssistedFactory
-    actual fun interface Factory : FileClient.Factory<InternalStorage> {
-        actual override fun create(bookshelf: InternalStorage): DeviceFileClient
+    actual fun interface Factory : FileClient.Factory<DeviceStorage> {
+        actual override fun create(bookshelf: DeviceStorage): DeviceFileClient
     }
 
     private val contentResolver = context.contentResolver
