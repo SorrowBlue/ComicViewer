@@ -35,7 +35,7 @@ jobs:
           sudo zip -j ${{ github.workspace }}/../samba_share/testfolder/books/test_files.zip ${{ github.workspace }}/../samba_share/testfolder/books/*.txt
 
       - name: Upload Zip Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: smb-test-zip
           path: /home/runner/work/ComicViewer/samba_share
