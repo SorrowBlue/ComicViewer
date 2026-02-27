@@ -14,6 +14,7 @@ import comicviewer.feature.settings.plugin.generated.resources.Res
 import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_error_not_found
 import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_error_not_supported_version
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberDirectoryPickerLauncher
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +42,7 @@ internal fun rememberPdfPluginScreenState(): PdfPluginScreenState {
         )
     }
     state.directoryPickerLauncherState.value = rememberDirectoryPickerLauncher(
-        title = "ComicViewer PDFプラグインのインストールディレクトリを選択",
+        dialogSettings = FileKitDialogSettings(title = "ComicViewer PDFプラグインのインストールディレクトリを選択"),
         onResult = state::onDirectoryPickerResult,
     )
     return state
