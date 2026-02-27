@@ -39,7 +39,7 @@ jobs:
           ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
       - name: Upload AAB to Internal App Sharing
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: android
           path: app/android/build/outputs/
@@ -58,7 +58,7 @@ jobs:
       - name: Run packageDistributionForCurrentOS
         run: ./gradlew packageDistributionForCurrentOS
       - name: Upload Jvm Binaries
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: jvm-${{ runner.os }}
           path: app/jvm/build/compose/binaries/main/
