@@ -39,7 +39,6 @@ kotlin {
         implementation(libs.androidx.lifecycleCompose)
         implementation(libs.androidx.lifecycleViewmodelNavigation3)
         implementation(libs.androidx.navigation3UI)
-        implementation(libs.androidx.navigation3Runtime)
         implementation(libs.androidx.navigationeventCompose)
         implementation(libs.kotlinx.serializationCore)
         implementation(libs.navigation3.resultstate)

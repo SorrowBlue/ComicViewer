@@ -53,7 +53,6 @@ kotlin {
                 implementation(libs.androidx.datastore)
                 implementation(projects.data.reader.zip)
 
-                implementation(libs.androidx.navigation3Runtime)
                 implementation(libs.androidx.lifecycleCompose)
                 implementation(libs.androidx.lifecycleViewmodelCompose)
                 implementation(libs.androidx.lifecycleViewmodelNavigation3)
