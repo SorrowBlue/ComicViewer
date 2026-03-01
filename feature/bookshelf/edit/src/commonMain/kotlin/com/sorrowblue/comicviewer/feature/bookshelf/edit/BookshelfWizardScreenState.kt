@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.framework.ui.material3.animateScrollToPage
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_selection_label_device
@@ -37,6 +38,8 @@ sealed interface BookshelfWizardPage {
 internal interface BookshelfWizardScreenState {
     fun onSourceClick(type: BookshelfType)
     fun onBack(): Boolean
+    fun onNextClick()
+    fun onPrevClick()
     fun onKeep()
     fun onFormChange(isSame: Boolean)
 
@@ -80,10 +83,22 @@ private class BookshelfWizardScreenStateImpl(
 
     override val pagerState = PagerState { pages.size }
 
-    private var isSameForm by mutableStateOf(true)
+    private var isSameForm = true
 
     override fun onFormChange(isSame: Boolean) {
         isSameForm = isSame
+    }
+
+    override fun onNextClick() {
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(true)
+        }
+    }
+
+    override fun onPrevClick() {
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(false)
+        }
     }
 
     private fun updateTitle(update: suspend () -> String) {
@@ -158,7 +173,7 @@ private class BookshelfWizardScreenStateImpl(
                     )
                 }
                 coroutineScope.launch {
-                    delay(100)
+                    delay(50)
                     pagerState.animateScrollToPage(pages.lastIndex)
                 }
             }
@@ -179,7 +194,7 @@ private class BookshelfWizardScreenStateImpl(
                     )
                 }
                 coroutineScope.launch {
-                    delay(100)
+                    delay(50)
                     pagerState.animateScrollToPage(pages.lastIndex)
                 }
             }

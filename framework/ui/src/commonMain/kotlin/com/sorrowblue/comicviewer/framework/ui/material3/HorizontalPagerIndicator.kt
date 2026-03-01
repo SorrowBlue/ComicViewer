@@ -21,6 +21,21 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
+suspend fun PagerState.animateScrollToPage(isNext: Boolean): Boolean {
+    if (isNext) {
+        if (currentPage < pageCount - 1) {
+            animateScrollToPage(currentPage + 1)
+            return true
+        }
+    } else {
+        if (0 < currentPage) {
+            animateScrollToPage(currentPage - 1)
+            return true
+        }
+    }
+    return false
+}
+
 @Composable
 fun HorizontalPagerIndicator(
     pagerState: PagerState,

@@ -43,7 +43,10 @@ object FixedDefaultBasicAlertDialogOverride : BasicAlertDialogOverride {
                         if (isFullScreenDialog) {
                             Modifier
                         } else {
-                            Modifier.sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
+                            Modifier.sizeIn(
+                                minWidth = DialogMinWidth,
+                                maxWidth = DialogMaxWidth
+                            ).sizeIn(maxHeight = DialogMaxWidth)
                         },
                     ),
                 propagateMinConstraints = true,

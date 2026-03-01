@@ -34,6 +34,8 @@ internal fun BookshelfWizardScreenRoot(key: BookshelfWizardNavKey, onBack: () ->
                 onBack()
             }
         },
+        onPrevClick = state::onPrevClick,
+        onNextClick = state::onNextClick,
     ) { page, contentPadding ->
         when (page) {
             is BookshelfWizardPage.Selection -> {

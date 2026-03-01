@@ -3,14 +3,18 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -27,6 +31,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditor
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SelectionList
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditorContents
+import com.sorrowblue.comicviewer.framework.common.isTouchable
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.material3.AdaptiveAlertDialog
@@ -48,6 +54,8 @@ internal fun BookshelfWizardScreen(
     pages: SnapshotStateList<BookshelfWizardPage>,
     pagerState: PagerState,
     onBack: () -> Unit,
+    onPrevClick: () -> Unit,
+    onNextClick: () -> Unit,
     content: @Composable (BookshelfWizardPage, PaddingValues) -> Unit,
 ) {
     AdaptiveAlertDialog(
@@ -58,27 +66,61 @@ internal fun BookshelfWizardScreen(
             onBack()
         },
     ) { contentPadding ->
-        HorizontalPager(
-            state = pagerState,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(),
-        ) { pageIndex ->
-            content(pages[pageIndex], contentPadding.plus(PaddingValues(top = 8.dp)))
-        }
-        AnimatedVisibility(pages.size != 1, enter = fadeIn(), exit = fadeOut()) {
-            HorizontalPagerIndicator(
-                pagerState = pagerState,
-                pageCount = pagerState.pageCount,
-                indicatorWidth = 24.dp,
-                indicatorHeight = 8.dp,
-                spacing = 8.dp,
-                indicatorShape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .padding(
-                        contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Horizontal),
+        Box {
+            HorizontalPager(
+                state = pagerState,
+                verticalAlignment = Alignment.Top,
+                contentPadding = PaddingValues(),
+            ) { pageIndex ->
+                content(pages[pageIndex], contentPadding.plus(PaddingValues(top = 8.dp)))
+            }
+            AnimatedVisibility(pages.size != 1, enter = fadeIn(), exit = fadeOut()) {
+                Row {
+                    HorizontalPagerIndicator(
+                        pagerState = pagerState,
+                        pageCount = pagerState.pageCount,
+                        indicatorWidth = 24.dp,
+                        indicatorHeight = 8.dp,
+                        spacing = 8.dp,
+                        indicatorShape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .padding(
+                                contentPadding.only(
+                                    PaddingValuesSides.Top + PaddingValuesSides.Horizontal
+                                ),
+                            ),
+                    )
+                }
+            }
+            if (!isTouchable) {
+//                if (pagerState.canScrollBackward) {
+                FilledTonalIconButton(
+                    onClick = onPrevClick,
+                    modifier = Modifier.align(
+                        Alignment.CenterStart
+                    ).animateFloatingActionButton(
+                        0 < pagerState.targetPage && 0 < pagerState.currentPage,
+                        Alignment.Center
                     ),
-            )
+                ) {
+                    Icon(ComicIcons.ArrowLeft, null)
+                }
+//                }
+//                if (pagerState.canScrollForward) {
+                FilledTonalIconButton(
+                    onClick = onNextClick,
+                    modifier = Modifier.align(
+                        Alignment.CenterEnd
+                    ).animateFloatingActionButton(
+                        pagerState.targetPage < pagerState.pageCount - 1 &&
+                            pagerState.currentPage < pagerState.pageCount - 1,
+                        Alignment.Center
+                    ),
+                ) {
+                    Icon(ComicIcons.ArrowRight, null)
+                }
+//                }
+            }
         }
     }
 }
@@ -99,6 +141,8 @@ private fun BookshelfWizardScreenSelectionPreview() {
             },
             pagerState = remember { PagerState { 1 } },
             onBack = {},
+            onPrevClick = {},
+            onNextClick = {},
             content = { _, contentPadding ->
                 SelectionList(
                     items = remember { List(4) { BookshelfType.entries }.flatten() },
@@ -127,11 +171,12 @@ private fun BookshelfWizardScreenSmbEditorPreview() {
             },
             pagerState = remember { PagerState(1) { 2 } },
             onBack = {},
+            onPrevClick = {},
+            onNextClick = {},
             content = { _, contentPadding ->
                 BookshelfEditorContents(
                     onSaveClick = {},
                     contentPadding = contentPadding,
-                    modifier = Modifier.fillMaxSize(),
                 ) {
                     SmbEditorContents(
                         form = rememberForm(
@@ -162,6 +207,8 @@ private fun BookshelfWizardScreenDeviceEditorPreview() {
             },
             pagerState = remember { PagerState(1) { 2 } },
             onBack = {},
+            onPrevClick = {},
+            onNextClick = {},
             content = { _, contentPadding ->
                 BookshelfEditorContents(
                     onSaveClick = {},

@@ -58,7 +58,7 @@ internal fun BookshelfEditorContents(
                 folderSelectFieldState = state.folderSelectFieldState,
                 uiState = state.uiState,
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1f, false)
                     .verticalScroll(scrollState)
                     .padding(
                         contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Horizontal)
@@ -70,7 +70,7 @@ internal fun BookshelfEditorContents(
                 form = state.form,
                 uiState = state.uiState,
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1f, false)
                     .verticalScroll(scrollState)
                     .padding(
                         contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Horizontal)
