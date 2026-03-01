@@ -161,7 +161,7 @@ private class BookshelfWizardScreenStateImpl(
                 if (pages.contains(smb)) {
                     // Do nothing
                 } else if (pages.contains(device)) {
-                    pages.removeLast()
+                    pages.removeAt(pages.lastIndex)
                     pages.add(smb)
                 } else {
                     pages.add(smb)
@@ -182,7 +182,7 @@ private class BookshelfWizardScreenStateImpl(
                 if (pages.contains(device)) {
                     // Do nothing
                 } else if (pages.contains(smb)) {
-                    pages.removeLast()
+                    pages.removeAt(pages.lastIndex)
                     pages.add(device)
                 } else {
                     pages.add(device)
