@@ -23,8 +23,8 @@ import kotlinx.serialization.Serializable
 interface ReceiveBookNavigation {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        listOf(toPair(ReceiveBookNavKey.serializer()))
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        setOf(toPair(ReceiveBookNavKey.serializer()))
 
     @Provides
     @IntoSet

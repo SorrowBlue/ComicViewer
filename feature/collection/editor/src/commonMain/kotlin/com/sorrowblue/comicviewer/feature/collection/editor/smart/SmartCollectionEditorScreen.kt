@@ -115,11 +115,14 @@ internal fun SmartCollectionEditorScreen(
                     }
                 },
                 scrollableState = scrollState,
-            ) {
+            ) { contentPadding ->
                 SmartCollectionEditorForm(
                     form = form,
                     uiState = uiState,
                     bookshelf = uiState.bookshelf,
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(contentPadding),
                 )
             }
         }

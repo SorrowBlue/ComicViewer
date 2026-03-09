@@ -20,8 +20,8 @@ import kotlinx.serialization.KSerializer
 interface CollectionEditProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        listOf(
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        setOf(
             toPair(BasicCollectionCreateNavKey.serializer()),
             toPair(BasicCollectionEditNavKey.serializer()),
             toPair(SmartCollectionEditNavKey.serializer()),

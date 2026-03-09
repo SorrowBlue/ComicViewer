@@ -26,8 +26,8 @@ interface CollectionProviders {
 
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        listOf(
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        setOf(
             toPair(CollectionListNavKey.serializer()),
             toPair(CollectionNavKey.serializer()),
             toPair(CollectionFileInfoNavKey.serializer()),

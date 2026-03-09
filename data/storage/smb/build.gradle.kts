@@ -27,7 +27,17 @@ kotlin {
                 implementation(libs.kotlinx.coroutinesTest)
             }
         }
+        val androidJvm by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                implementation(libs.jcifs)
+            }
+        }
+        val androidJvmTest by creating {
+            dependsOn(commonTest.get())
+        }
         androidMain {
+            dependsOn(androidJvm)
             dependencies {
                 implementation(libs.jcifs)
                 implementation(libs.slf4j.android)
@@ -35,14 +45,19 @@ kotlin {
             }
         }
         getByName("androidHostTest") {
+            dependsOn(androidJvmTest)
             dependencies {
                 implementation(libs.robolectric)
             }
         }
         jvmMain {
+            dependsOn(androidJvm)
             dependencies {
                 implementation(libs.jcifs)
             }
+        }
+        jvmTest {
+            dependsOn(androidJvmTest)
         }
         iosMain {
             dependencies {

@@ -18,8 +18,8 @@ import kotlinx.serialization.KSerializer
 interface BookProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): List<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        listOf(toPair(BookMenuNavKey.serializer()))
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
+        setOf(toPair(BookMenuNavKey.serializer()))
 
     @Provides
     @IntoSet

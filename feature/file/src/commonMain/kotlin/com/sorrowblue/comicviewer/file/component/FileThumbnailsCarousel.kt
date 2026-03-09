@@ -1,7 +1,8 @@
 package com.sorrowblue.comicviewer.file.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.animateScrollBy
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,9 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
@@ -20,12 +20,13 @@ import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
@@ -33,8 +34,10 @@ import com.sorrowblue.comicviewer.framework.common.isTouchable
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
+import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
+import com.sorrowblue.comicviewer.framework.ui.layout.only
 import kotlin.math.max
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 @Composable
 fun FileThumbnailsCarousel(
@@ -88,29 +91,53 @@ fun FileThumbnailsCarousel(
             }
 
             if (!isTouchable) {
-                val scope = rememberCoroutineScope()
-                val density = LocalDensity.current
-                val size = remember { with(density) { 186.dp.toPx() } }
-                IconButton(
-                    onClick = { scope.launch { carouselState.animateScrollBy(size * -1) } },
-                    modifier = Modifier.align(Alignment.CenterStart),
-                    colors = IconButtonDefaults.filledTonalIconButtonColors().run {
-                        copy(containerColor = containerColor.copy(alpha = 0.5f))
+                rememberCoroutineScope()
+                FilledTonalIconButton(
+                    onPressed = {
+                        carouselState.animateScrollToItem(carouselState.currentItem - 1)
                     },
+                    modifier = Modifier.align(Alignment.CenterStart)
+                        .padding(contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Start)),
                 ) {
                     Icon(ComicIcons.ArrowLeft, null)
                 }
-                IconButton(
-                    onClick = { scope.launch { carouselState.animateScrollBy(size) } },
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    colors = IconButtonDefaults.filledTonalIconButtonColors().run {
-                        copy(containerColor = containerColor.copy(alpha = 0.5f))
+                FilledTonalIconButton(
+                    onPressed = {
+                        carouselState.animateScrollToItem(carouselState.currentItem + 1)
                     },
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                        .padding(contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.End))
                 ) {
                     Icon(ComicIcons.ArrowRight, null)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun FilledTonalIconButton(
+    onPressed: suspend () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(300)
+            while (true) {
+                onPressed()
+//                delay(10)
+            }
+        }
+    }
+    FilledTonalIconButton(
+        onClick = { },
+        interactionSource = interactionSource,
+        modifier = modifier
+    ) {
+        content()
     }
 }
 

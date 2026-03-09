@@ -36,6 +36,7 @@ kotlin {
 
             implementation(libs.androidx.lifecycleViewmodelCompose)
             implementation(libs.compose.material3)
+            implementation(libs.jcifs)
             implementation(libs.compose.componentsAnimatedimage)
         }
     }

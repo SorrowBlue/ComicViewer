@@ -41,11 +41,16 @@ internal class GetBookInteractor(
         val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
         val resolveImageFolder =
             folderSettingsInteractor.settings.first().resolveImageFolder
-        val localFile = when (val file = remoteDataSource.file(path, resolveImageFolder)) {
-            is BookFile -> fileLocalDataSource.updateSimple(file)
-            is BookFolder -> fileLocalDataSource.updateSimple(file)
-            is Folder -> return Resource.Error(Error.NotFound)
-        }
+        val localFile =
+            runCatching {
+                when (val file = remoteDataSource.file(path, resolveImageFolder)) {
+                    is BookFile -> fileLocalDataSource.updateSimple(file)
+                    is BookFolder -> fileLocalDataSource.updateSimple(file)
+                    is Folder -> return Resource.Error(Error.NotFound)
+                }
+            }.getOrElse {
+                return Resource.Error(Error.NotFound)
+            }
         return localFile.fold(
             onSuccess = {
                 when (it) {

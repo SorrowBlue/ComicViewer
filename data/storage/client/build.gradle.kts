@@ -13,10 +13,17 @@ kotlin {
                 implementation(libs.kotlinx.coroutinesCore)
             }
         }
+        val androidJvm by creating {
+            dependsOn(commonMain.get())
+        }
         androidMain {
+            dependsOn(androidJvm)
             dependencies {
                 implementation(libs.androidx.startupRuntime)
             }
+        }
+        jvmMain {
+            dependsOn(androidJvm)
         }
     }
 }
