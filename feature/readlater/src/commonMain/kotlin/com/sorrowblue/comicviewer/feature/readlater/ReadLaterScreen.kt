@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.readlater
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -22,6 +21,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveB
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_label_nothing_to_read_later

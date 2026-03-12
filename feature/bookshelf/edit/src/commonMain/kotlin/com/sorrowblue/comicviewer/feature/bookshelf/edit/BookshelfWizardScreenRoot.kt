@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.plus
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -15,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SelectionList
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_discord_btn_confirm
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_discord_btn_dismiss

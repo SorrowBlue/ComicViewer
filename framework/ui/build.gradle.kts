@@ -4,7 +4,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.sorrowblue.comicviewer.framework.ui"
         androidResources.enable = true
     }

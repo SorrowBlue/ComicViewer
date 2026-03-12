@@ -77,6 +77,13 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
                 val windowInsetsDecorator =
                     rememberSupportingPaneWindowInsetsDecorator<NavKey>(directive = directive)
+                val sceneStrategies = remember {
+                    listOf(
+                        supportingPaneSceneStrategy,
+                        listDetailSceneStrategy,
+                        dialogSceneStrategy,
+                    )
+                }
                 Transitions.InitSlideDistance()
                 Transitions.motionScheme = ComicTheme.motionScheme
                 NavDisplay(
@@ -92,10 +99,8 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                         ),
                         entryProvider = entryProvider,
                     ),
+                    sceneStrategies = sceneStrategies,
                     onBack = { navigator.goBack() },
-                    sceneStrategy = supportingPaneSceneStrategy
-                        .then(listDetailSceneStrategy)
-                        .then(dialogSceneStrategy),
                 )
             }
         }

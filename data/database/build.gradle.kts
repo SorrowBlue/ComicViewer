@@ -5,7 +5,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.sorrowblue.comicviewer.data.database"
         androidResources.enable = true
         withHostTest {
