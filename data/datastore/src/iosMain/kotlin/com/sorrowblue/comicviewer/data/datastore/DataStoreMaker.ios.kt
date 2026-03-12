@@ -1,13 +1,15 @@
 package com.sorrowblue.comicviewer.data.datastore
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioStorage
 import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.Inject
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.SupervisorJob
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import platform.Foundation.NSDocumentDirectory
@@ -16,7 +18,10 @@ import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
 @Inject
-internal actual class DataStoreMaker actual constructor(context: PlatformContext) {
+internal actual class DataStoreMaker actual constructor(
+    context: PlatformContext,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+) {
     actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {
         val producePath = {
             @OptIn(ExperimentalForeignApi::class)
@@ -29,13 +34,14 @@ internal actual class DataStoreMaker actual constructor(context: PlatformContext
             )
             "${requireNotNull(documentDirectory).path}/${okioSerializer.fileName}"
         }
-        return DataStoreFactory.create(
+        return DataStore.Builder(
             storage = OkioStorage(
                 fileSystem = FileSystem.SYSTEM,
                 producePath = { producePath().toPath() },
                 serializer = okioSerializer,
             ),
-            corruptionHandler = ReplaceFileCorruptionHandler { okioSerializer.defaultValue },
-        )
+            context = dispatcher + SupervisorJob(),
+        ).setCorruptionHandler(ReplaceFileCorruptionHandler { okioSerializer.defaultValue })
+            .build()
     }
 }

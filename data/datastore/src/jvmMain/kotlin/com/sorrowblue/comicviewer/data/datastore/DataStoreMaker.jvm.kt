@@ -1,29 +1,35 @@
 package com.sorrowblue.comicviewer.data.datastore
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioStorage
 import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.Inject
 import kotlin.io.path.createDirectories
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.SupervisorJob
 import okio.FileSystem
 import okio.Path.Companion.toOkioPath
 
 @Inject
-internal actual class DataStoreMaker actual constructor(private val context: PlatformContext) {
+internal actual class DataStoreMaker actual constructor(
+    private val context: PlatformContext,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+) {
     actual fun <T> createDataStore(okioSerializer: OkioKSerializer<T>): DataStore<T> {
         val datastorePath = context.filesDir.resolve("datastore").also {
             it.createDirectories()
         }
-        return DataStoreFactory.create(
+        return DataStore.Builder(
             storage = OkioStorage(
                 fileSystem = FileSystem.SYSTEM,
                 producePath = { datastorePath.resolve(okioSerializer.fileName).toOkioPath() },
                 serializer = okioSerializer,
             ),
-            corruptionHandler = ReplaceFileCorruptionHandler { okioSerializer.defaultValue },
-        )
+            context = dispatcher + SupervisorJob(),
+        ).setCorruptionHandler(ReplaceFileCorruptionHandler { okioSerializer.defaultValue })
+            .build()
     }
 }
