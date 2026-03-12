@@ -98,12 +98,10 @@ private class BookshelfInfoContentsStateImpl(
     private fun scanThumbnail() {
         showSnackbar()
         appState.coroutineScope.launch {
-            regenerateThumbnailsUseCase.invoke(
-                RegenerateThumbnailsUseCase.Request(
-                    bookshelfId = uiState.bookshelf.id,
-                ) { bookshelf, progress, max ->
-                },
-            )
+            val request =
+                RegenerateThumbnailsUseCase.Request(bookshelfId = uiState.bookshelf.id) { _, _, _ ->
+                }
+            regenerateThumbnailsUseCase(request)
             DesktopNotification().notify(
                 getString(Res.string.bookshelf_info_notification_title_thumbnail_scan_completed),
                 bookshelfFolder.bookshelf.displayName,

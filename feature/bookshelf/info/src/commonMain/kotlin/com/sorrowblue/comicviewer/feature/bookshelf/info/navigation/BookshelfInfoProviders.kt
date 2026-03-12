@@ -16,6 +16,7 @@ import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface BookshelfInfoProviders {
+
     @Provides
     @ElementsIntoSet
     private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
@@ -27,28 +28,24 @@ interface BookshelfInfoProviders {
 
     @Provides
     @IntoSet
-    private fun provideBookshelfInfoNavEntry(
-        factory: BookshelfInfoScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
-        with(factory) {
-            bookshelfInfoNavEntry(navigator, "Bookshelf")
+    private fun provideBookshelfInfoNavEntry(factory: BookshelfInfoScreenContext.Factory): EntryProviderScope<NavKey>.(Navigator) -> Unit =
+        { navigator ->
+            with(factory) {
+                bookshelfInfoNavEntry(navigator, "Bookshelf")
+            }
         }
-    }
 
     @Provides
     @IntoSet
-    private fun provideBookshelfNotificationNavEntry(): EntryProviderScope<NavKey>.(
-        Navigator,
-    ) -> Unit =
+    private fun provideBookshelfNotificationNavEntry(): EntryProviderScope<NavKey>.(Navigator) -> Unit =
         { navigator -> bookshelfNotificationNavEntry(navigator) }
 
     @Provides
     @IntoSet
-    private fun provideBookshelfDeleteNavEntry(
-        factory: BookshelfDeleteScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
-        with(factory) {
-            bookshelfDeleteNavEntry(navigator)
+    private fun provideBookshelfDeleteNavEntry(factory: BookshelfDeleteScreenContext.Factory): EntryProviderScope<NavKey>.(Navigator) -> Unit =
+        { navigator ->
+            with(factory) {
+                bookshelfDeleteNavEntry(navigator)
+            }
         }
-    }
 }

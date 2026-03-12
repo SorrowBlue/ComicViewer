@@ -68,11 +68,12 @@ internal fun BookshelfInfoContents(
         FileThumbnailsCarousel(
             lazyPagingItems = lazyPagingItems,
             contentPadding = contentPadding
-                .only(
-                    PaddingValuesSides.Horizontal + PaddingValuesSides.Top,
-                )
+                .only(PaddingValuesSides.Horizontal + PaddingValuesSides.Top)
                 .plus(
-                    PaddingValues(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+                    PaddingValues(
+                        horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding,
+                        vertical = ComicTheme.dimension.padding
+                    )
                 ),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -84,7 +85,6 @@ internal fun BookshelfInfoContents(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(contentPadding.only(PaddingValuesSides.Horizontal))
-                .padding(top = ComicTheme.dimension.targetSpacing)
                 .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
         )
         BookshelfInfo(
