@@ -72,8 +72,8 @@ internal fun BookshelfInfoContents(
                 .plus(
                     PaddingValues(
                         horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding,
-                        vertical = ComicTheme.dimension.padding
-                    )
+                        vertical = ComicTheme.dimension.padding,
+                    ),
                 ),
             modifier = Modifier.fillMaxWidth(),
         )

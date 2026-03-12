@@ -86,7 +86,7 @@ internal fun BookshelfWizardScreen(
                         modifier = Modifier
                             .padding(
                                 contentPadding.only(
-                                    PaddingValuesSides.Top + PaddingValuesSides.Horizontal
+                                    PaddingValuesSides.Top + PaddingValuesSides.Horizontal,
                                 ),
                             ),
                     )
@@ -97,10 +97,10 @@ internal fun BookshelfWizardScreen(
                 FilledTonalIconButton(
                     onClick = onPrevClick,
                     modifier = Modifier.align(
-                        Alignment.CenterStart
+                        Alignment.CenterStart,
                     ).animateFloatingActionButton(
                         0 < pagerState.targetPage && 0 < pagerState.currentPage,
-                        Alignment.Center
+                        Alignment.Center,
                     ),
                 ) {
                     Icon(ComicIcons.ArrowLeft, null)
@@ -110,11 +110,11 @@ internal fun BookshelfWizardScreen(
                 FilledTonalIconButton(
                     onClick = onNextClick,
                     modifier = Modifier.align(
-                        Alignment.CenterEnd
+                        Alignment.CenterEnd,
                     ).animateFloatingActionButton(
                         pagerState.targetPage < pagerState.pageCount - 1 &&
                             pagerState.currentPage < pagerState.pageCount - 1,
-                        Alignment.Center
+                        Alignment.Center,
                     ),
                 ) {
                     Icon(ComicIcons.ArrowRight, null)

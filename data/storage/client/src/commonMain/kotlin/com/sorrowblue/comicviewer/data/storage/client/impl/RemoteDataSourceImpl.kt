@@ -125,6 +125,7 @@ internal class RemoteDataSourceImpl(
                 is FileClientException.InvalidServer -> RemoteException.InvalidServer()
                 is FileClientException.NoNetwork -> RemoteException.NoNetwork()
             }
+
             else -> it
         }
     }

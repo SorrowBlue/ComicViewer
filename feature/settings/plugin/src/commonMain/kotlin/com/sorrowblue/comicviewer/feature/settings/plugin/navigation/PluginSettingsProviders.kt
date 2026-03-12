@@ -25,11 +25,10 @@ import kotlinx.serialization.KSerializer
 interface PluginSettingsProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(
-            toPair(PluginSettingsNavKey.serializer()),
-            toPair(PdfPluginNavKey.serializer()),
-        )
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
+        toPair(PluginSettingsNavKey.serializer()),
+        toPair(PdfPluginNavKey.serializer()),
+    )
 
     @Provides
     @IntoSet

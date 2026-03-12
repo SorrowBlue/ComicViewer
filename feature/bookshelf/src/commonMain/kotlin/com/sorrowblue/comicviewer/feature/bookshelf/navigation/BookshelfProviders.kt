@@ -20,12 +20,11 @@ import kotlinx.serialization.KSerializer
 interface BookshelfProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(
-            toPair(BookshelfNavKey.serializer()),
-            toPair(BookshelfFolderNavKey.serializer()),
-            toPair(BookshelfFolderFileInfoNavKey.serializer()),
-        )
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
+        toPair(BookshelfNavKey.serializer()),
+        toPair(BookshelfFolderNavKey.serializer()),
+        toPair(BookshelfFolderFileInfoNavKey.serializer()),
+    )
 
     @Provides
     @IntoSet

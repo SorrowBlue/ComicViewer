@@ -8,7 +8,7 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 
 @ContributesTo(DataScope::class)
-interface ReaderZipProviders {
+interface JvmReaderZipProviders {
     @Binds
     @IntoSet
     private val SevenZipInitializer.bind: Initializer<*> get() = this

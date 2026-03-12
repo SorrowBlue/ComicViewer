@@ -20,14 +20,13 @@ import kotlinx.serialization.KSerializer
 interface HistoryProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(
-            toPair(HistoryNavKey.serializer()),
-            toPair(HistoryFileInfoNavKey.serializer()),
-            toPair(HistoryFolderFileInfoNavKey.serializer()),
-            toPair(HistoryClearAllNavKey.serializer()),
-            toPair(HistoryFolderNavKey.serializer()),
-        )
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
+        toPair(HistoryNavKey.serializer()),
+        toPair(HistoryFileInfoNavKey.serializer()),
+        toPair(HistoryFolderFileInfoNavKey.serializer()),
+        toPair(HistoryClearAllNavKey.serializer()),
+        toPair(HistoryFolderNavKey.serializer()),
+    )
 
     @Provides
     @IntoSet

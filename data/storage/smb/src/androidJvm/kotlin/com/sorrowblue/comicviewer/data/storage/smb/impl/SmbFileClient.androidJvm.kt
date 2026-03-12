@@ -272,10 +272,10 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                 }
             }
         }
-        return sameAuth
-                && server == this@SmbFileClient.bookshelf.host
-                && share == this@SmbFileClient.bookshelf.smbFile(path).share
-                && url.port == this@SmbFileClient.bookshelf.port
+        return sameAuth &&
+            server == this@SmbFileClient.bookshelf.host &&
+            share == this@SmbFileClient.bookshelf.smbFile(path).share &&
+            url.port == this@SmbFileClient.bookshelf.port
     }
 
     private suspend fun smbFile(path: String): SmbFile = mutex.withLock {

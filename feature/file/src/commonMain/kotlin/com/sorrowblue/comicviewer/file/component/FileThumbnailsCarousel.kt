@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -93,20 +94,24 @@ fun FileThumbnailsCarousel(
             if (!isTouchable) {
                 rememberCoroutineScope()
                 FilledTonalIconButton(
-                    onPressed = {
+                    onPress = {
                         carouselState.animateScrollToItem(carouselState.currentItem - 1)
                     },
                     modifier = Modifier.align(Alignment.CenterStart)
-                        .padding(contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Start)),
+                        .padding(
+                            contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Start),
+                        ),
                 ) {
                     Icon(ComicIcons.ArrowLeft, null)
                 }
                 FilledTonalIconButton(
-                    onPressed = {
+                    onPress = {
                         carouselState.animateScrollToItem(carouselState.currentItem + 1)
                     },
                     modifier = Modifier.align(Alignment.CenterEnd)
-                        .padding(contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.End))
+                        .padding(
+                            contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.End),
+                        ),
                 ) {
                     Icon(ComicIcons.ArrowRight, null)
                 }
@@ -117,17 +122,18 @@ fun FileThumbnailsCarousel(
 
 @Composable
 private fun FilledTonalIconButton(
-    onPressed: suspend () -> Unit,
+    onPress: suspend () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val currentOnPress by rememberUpdatedState(onPress)
     val isPressed by interactionSource.collectIsPressedAsState()
     LaunchedEffect(isPressed) {
         if (isPressed) {
             delay(300)
             while (true) {
-                onPressed()
+                currentOnPress()
 //                delay(10)
             }
         }
@@ -135,7 +141,7 @@ private fun FilledTonalIconButton(
     FilledTonalIconButton(
         onClick = { },
         interactionSource = interactionSource,
-        modifier = modifier
+        modifier = modifier,
     ) {
         content()
     }

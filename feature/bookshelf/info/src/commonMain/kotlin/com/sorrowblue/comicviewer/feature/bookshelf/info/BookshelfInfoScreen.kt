@@ -12,10 +12,8 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
@@ -32,7 +30,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import com.sorrowblue.comicviewer.framework.ui.preview.layout.scratch
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_title
 import org.jetbrains.compose.resources.stringResource
@@ -110,8 +107,8 @@ private fun BookshelfInfoScreenPreview2() {
     val scaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         initialDestinationHistory = listOf(
             ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
-            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, "")
-        )
+            ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, ""),
+        ),
     )
     PreviewTheme {
         SupportingPaneScaffold(
@@ -143,6 +140,7 @@ private fun BookshelfInfoScreenPreview2() {
                         contentPadding = contentPadding,
                     )
                 }
-            })
+            },
+        )
     }
 }

@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenRoot
-import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
@@ -25,7 +24,7 @@ internal fun EntryProviderScope<NavKey>.bookshelfInfoNavEntry(
 ) {
     entry<BookshelfInfoNavKey>(
         metadata = SupportingPaneSceneStrategy.extraPane(sceneKey = sceneKey) +
-                NavDisplay.transitionMaterialSharedAxisX(),
+            NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         with(rememberRetained { factory.createBookshelfInfoScreenContext() }) {
             BookshelfInfoScreenRoot(

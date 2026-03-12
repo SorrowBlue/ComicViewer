@@ -35,15 +35,14 @@ import kotlinx.serialization.KSerializer
 interface FolderSettingsProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(
-            toPair(FolderSettingsNavKey.serializer()),
-            toPair(SortTypeNavKey.serializer()),
-            toPair(ImageScaleNavKey.serializer()),
-            toPair(ImageFilterQualityNavKey.serializer()),
-            toPair(ImageFormatNavKey.serializer()),
-            toPair(FolderThumbnailOrderNavKey.serializer()),
-        )
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
+        toPair(FolderSettingsNavKey.serializer()),
+        toPair(SortTypeNavKey.serializer()),
+        toPair(ImageScaleNavKey.serializer()),
+        toPair(ImageFilterQualityNavKey.serializer()),
+        toPair(ImageFormatNavKey.serializer()),
+        toPair(FolderThumbnailOrderNavKey.serializer()),
+    )
 
     @Provides
     @IntoSet

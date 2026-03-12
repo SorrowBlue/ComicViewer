@@ -17,11 +17,10 @@ import kotlinx.serialization.KSerializer
 interface BookshelfEditProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(
-            toPair(BookshelfWizardNavKey.Selection.serializer()),
-            toPair(BookshelfWizardNavKey.Edit.serializer()),
-        )
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
+        toPair(BookshelfWizardNavKey.Selection.serializer()),
+        toPair(BookshelfWizardNavKey.Edit.serializer()),
+    )
 
     @Provides
     @IntoSet

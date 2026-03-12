@@ -18,11 +18,10 @@ import kotlinx.serialization.KSerializer
 interface DisplaySettingsProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(
-            toPair(DisplaySettingsNavKey.serializer()),
-            toPair(DarkModeNavKey.serializer()),
-        )
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
+        toPair(DisplaySettingsNavKey.serializer()),
+        toPair(DarkModeNavKey.serializer()),
+    )
 
     @Provides
     @IntoSet

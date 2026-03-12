@@ -45,7 +45,7 @@ object FixedDefaultBasicAlertDialogOverride : BasicAlertDialogOverride {
                         } else {
                             Modifier.sizeIn(
                                 minWidth = DialogMinWidth,
-                                maxWidth = DialogMaxWidth
+                                maxWidth = DialogMaxWidth,
                             ).sizeIn(maxHeight = DialogMaxWidth)
                         },
                     ),

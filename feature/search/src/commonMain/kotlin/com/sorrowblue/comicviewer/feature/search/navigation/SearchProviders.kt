@@ -19,13 +19,12 @@ import kotlinx.serialization.KSerializer
 interface SearchProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(
-            toPair(SearchNavKey.serializer()),
-            toPair(SearchFileInfoNavKey.serializer()),
-            toPair(SearchFolderFileInfoNavKey.serializer()),
-            toPair(SearchFolderNavKey.serializer()),
-        )
+    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
+        toPair(SearchNavKey.serializer()),
+        toPair(SearchFileInfoNavKey.serializer()),
+        toPair(SearchFolderFileInfoNavKey.serializer()),
+        toPair(SearchFolderNavKey.serializer()),
+    )
 
     @Provides
     @IntoSet
