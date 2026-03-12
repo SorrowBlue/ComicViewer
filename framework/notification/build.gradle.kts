@@ -5,7 +5,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.sorrowblue.comicviewer.framework.notification"
         androidResources.enable = true
     }

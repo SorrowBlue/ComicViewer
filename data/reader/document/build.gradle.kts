@@ -3,7 +3,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.sorrowblue.comicviewer.data.reader.document"
     }
     sourceSets {

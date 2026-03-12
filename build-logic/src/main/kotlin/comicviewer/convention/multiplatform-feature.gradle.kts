@@ -9,7 +9,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         androidResources.enable = true
     }
     sourceSets.commonMain.dependencies {
