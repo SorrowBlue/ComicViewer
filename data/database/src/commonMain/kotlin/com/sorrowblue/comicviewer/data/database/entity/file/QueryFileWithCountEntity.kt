@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.database.entity.file
 
-import androidx.room.Embedded
+import androidx.room3.Embedded
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder

@@ -1,8 +1,10 @@
 package com.sorrowblue.comicviewer.data.database.dao
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Query
+import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
+import androidx.room3.Query
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntity
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntityCount
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntityCountExist
@@ -11,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 internal interface CollectionDao {
     @Query(
         """

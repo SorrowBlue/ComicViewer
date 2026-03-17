@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
-import androidx.room.ColumnInfo
+import androidx.room3.ColumnInfo
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 
 internal data class BookshelfIdCacheKey(

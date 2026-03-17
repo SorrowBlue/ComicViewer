@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
-import androidx.room.ProvidedTypeConverter
-import androidx.room.TypeConverter
+import androidx.room3.ProvidedTypeConverter
+import androidx.room3.TypeConverter
 import dev.zacsweers.metro.Inject
 
 private const val ALIAS = "library-data.password"

@@ -77,7 +77,7 @@ internal fun BookshelfInfoScreen(
 @Preview(locale = "ja")
 @Composable
 private fun BookshelfInfoScreenPreview() {
-    PreviewTheme {
+    PreviewTheme(true) {
         ExtraPaneScaffold(
             title = { Text(text = stringResource(Res.string.bookshelf_info_title)) },
             onCloseClick = { },
@@ -110,7 +110,7 @@ private fun BookshelfInfoScreenPreview2() {
             ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, ""),
         ),
     )
-    PreviewTheme {
+    PreviewTheme(true) {
         SupportingPaneScaffold(
             modifier = Modifier.background(ComicTheme.colorScheme.background),
             directive = scaffoldNavigator.scaffoldDirective,

@@ -110,6 +110,7 @@ Compose:
       'LocalSharedTransitionScope',
       'LocalComposeEffectErrorHandler',
       'LocalAppLocaleIsoInternal',
+      'LocalNavigationItems',
     ]
   CompositionLocalNaming:
     active: true

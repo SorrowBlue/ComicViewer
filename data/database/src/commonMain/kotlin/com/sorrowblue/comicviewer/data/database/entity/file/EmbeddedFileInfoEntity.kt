@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.database.entity.file
 
-import androidx.room.ColumnInfo
+import androidx.room3.ColumnInfo
 
 internal data class EmbeddedFileInfoEntity(
     @ColumnInfo(name = "cache_key") val cacheKey: String = "",

@@ -1,9 +1,6 @@
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import dev.zacsweers.metro.Binds
-import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -21,12 +18,6 @@ import kotlin.io.path.outputStream
 
 private const val CipherTransformation = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
-
-@ContributesTo(DataScope::class)
-interface DesktopDatabaseBindings {
-    @Binds
-    private val DesktopCryptUtil.bind: CryptUtil get() = this
-}
 
 @Inject
 internal class DesktopCryptUtil(private val context: PlatformContext) : CryptUtil {

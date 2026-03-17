@@ -21,7 +21,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import okio.Buffer
 import okio.BufferedSource
@@ -36,6 +35,34 @@ internal class BookThumbnailFetcher(
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : FileFetcher<BookThumbnailMetadata>(options, diskCacheLazy) {
+
+    @ContributesBinding(DataScope::class)
+    internal class Factory(
+        private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
+        private val remoteDataSourceFactory: RemoteDataSource.Factory,
+        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+        private val fileModelLocalDataSource: FileLocalDataSource,
+        private val datastoreDataSource: DatastoreDataSource,
+    ) : Fetcher.Factory<BookThumbnail> {
+        override fun create(
+            data: BookThumbnail,
+            options: Options,
+            imageLoader: ImageLoader,
+        ): Fetcher = BookThumbnailFetcher(
+            options = options,
+            diskCacheLazy = lazy {
+                coilDiskCacheLazy.value.thumbnailDiskCache(
+                    data.bookshelfId,
+                )
+            },
+            data = data,
+            remoteDataSourceFactory = remoteDataSourceFactory,
+            bookshelfLocalDataSource = bookshelfLocalDataSource,
+            fileLocalDataSource = fileModelLocalDataSource,
+            datastoreDataSource = datastoreDataSource,
+        )
+    }
+
     override val diskCacheKey
         get() = options.diskCacheKey ?: "book:${data.bookshelfId.value}:${data.path}"
 
@@ -103,26 +130,4 @@ internal class BookThumbnailFetcher(
             }
         } ?: throw CoilRuntimeException("FileReaderが取得できない")
     }
-}
-
-@com.sorrowblue.comicviewer.data.coil.BookThumbnailFetcher
-@ContributesBinding(DataScope::class)
-@Inject
-internal class BookThumbnailFetcherFactory(
-    private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-    private val fileModelLocalDataSource: FileLocalDataSource,
-    private val datastoreDataSource: DatastoreDataSource,
-) : Fetcher.Factory<BookThumbnail> {
-    override fun create(data: BookThumbnail, options: Options, imageLoader: ImageLoader): Fetcher =
-        BookThumbnailFetcher(
-            options = options,
-            diskCacheLazy = lazy { coilDiskCacheLazy.value.thumbnailDiskCache(data.bookshelfId) },
-            data = data,
-            remoteDataSourceFactory = remoteDataSourceFactory,
-            bookshelfLocalDataSource = bookshelfLocalDataSource,
-            fileLocalDataSource = fileModelLocalDataSource,
-            datastoreDataSource = datastoreDataSource,
-        )
 }

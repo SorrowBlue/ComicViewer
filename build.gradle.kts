@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.androidMultiplatform) apply false
-    alias(libs.plugins.androidxRoom) apply false
+    alias(libs.plugins.androidxRoom3) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.composeHotReload) apply false
     alias(libs.plugins.composeMultiplatform) apply false

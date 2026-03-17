@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
+import androidx.room3.ColumnInfo
+import androidx.room3.Embedded
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 
 internal class EmbeddedBookshelfFileCountEntity(

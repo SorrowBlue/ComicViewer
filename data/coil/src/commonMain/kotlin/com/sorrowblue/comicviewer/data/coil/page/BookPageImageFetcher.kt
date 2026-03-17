@@ -20,7 +20,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -41,6 +40,23 @@ internal class BookPageImageFetcher(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : FileFetcher<BookPageImageMetadata>(options, diskCacheLazy) {
+
+    @ContributesBinding(DataScope::class)
+    internal class Factory(
+        private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
+        private val remoteDataSourceFactory: RemoteDataSource.Factory,
+        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    ) : Fetcher.Factory<BookPageImage> {
+        override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
+            BookPageImageFetcher(
+                options,
+                lazy { coilDiskCacheLazy.value.pageDiskCache(data.book.bookshelfId) },
+                data,
+                remoteDataSourceFactory,
+                bookshelfLocalDataSource,
+            )
+    }
+
     override val diskCacheKey
         get() = options.diskCacheKey
             ?: "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}"
@@ -100,22 +116,4 @@ internal class BookPageImageFetcher(
             logcat { "同じFileReaderを使う。${data.book.bookshelfId} ${data.book.path}" }
         }
     }
-}
-
-@com.sorrowblue.comicviewer.data.coil.BookPageImageFetcher
-@ContributesBinding(DataScope::class)
-@Inject
-internal class BookPageImageFetcherFactory(
-    private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-) : Fetcher.Factory<BookPageImage> {
-    override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
-        BookPageImageFetcher(
-            options,
-            lazy { coilDiskCacheLazy.value.pageDiskCache(data.book.bookshelfId) },
-            data,
-            remoteDataSourceFactory,
-            bookshelfLocalDataSource,
-        )
 }

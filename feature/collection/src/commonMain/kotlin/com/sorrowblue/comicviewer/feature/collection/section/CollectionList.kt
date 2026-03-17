@@ -25,6 +25,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawNoDat
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_label_no_collection
@@ -52,7 +53,13 @@ internal fun CollectionList(
         val isCompact = isCompactWindowClass()
         LazyColumn(
             state = lazyListState,
-            contentPadding = contentPadding,
+            contentPadding = if (isCompact) {
+                contentPadding
+            } else {
+                contentPadding + PaddingValues(
+                    16.dp,
+                )
+            },
             verticalArrangement = Arrangement.spacedBy(
                 if (isCompact) 0.dp else ComicTheme.dimension.padding,
                 Alignment.Top,

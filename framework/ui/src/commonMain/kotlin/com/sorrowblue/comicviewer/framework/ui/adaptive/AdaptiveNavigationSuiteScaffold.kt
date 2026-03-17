@@ -8,6 +8,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaul
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -16,10 +17,17 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 
-@Composable
-fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
-    modifier: Modifier = Modifier,
-    navigationItems: @Composable () -> Unit = {
+val LocalNavigationItems = staticCompositionLocalOf<NavigationItems> { DefaultNavigationItems }
+
+interface NavigationItems {
+
+    @Composable
+    fun Content(onNavigationReSelect: () -> Unit)
+}
+
+object DefaultNavigationItems : NavigationItems {
+    @Composable
+    override fun Content(onNavigationReSelect: () -> Unit) {
         val navigator = LocalNavigator.current
         navigator.topLevelRoutes.forEach { key ->
             val isSelected = key == navigator.topLevelKey
@@ -37,6 +45,14 @@ fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
                 modifier = Modifier.testTag("NavigationSuiteItem"),
             )
         }
+    }
+}
+
+@Composable
+fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
+    modifier: Modifier = Modifier,
+    navigationItems: @Composable () -> Unit = {
+        LocalNavigationItems.current.Content(::onNavigationReSelect)
     },
     primaryActionContent: @Composable () -> Unit = {},
     primaryActionContentHorizontalAlignment: Alignment.Horizontal = NavigationSuiteScaffoldDefaults.primaryActionContentAlignment,

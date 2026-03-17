@@ -1,28 +1,44 @@
-package com.sorrowblue.comicviewer.framework.ui.preview.fake
+package com.sorrowblue.comicviewer.framework.ui.preview
 
-import android.content.Context
 import android.graphics.Bitmap
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ProvidedValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import coil3.Canvas
 import coil3.Image
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.AsyncImagePreviewHandler
+import coil3.compose.LocalAsyncImagePreviewHandler
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.ui.R
 
-internal class PreviewImage(context: Context) : Image {
+@OptIn(ExperimentalCoilApi::class)
+internal actual val provideAsyncImagePreviewHandler: ProvidedValue<AsyncImagePreviewHandler>
+    @Composable
+    get() {
+        val context = LocalContext.current
+        val previewHandler = AsyncImagePreviewHandler { PreviewImage(context) }
+        return LocalAsyncImagePreviewHandler provides previewHandler
+    }
+
+internal actual class PreviewImage(context: PlatformContext) : Image {
     private val bitmap =
         requireNotNull(ContextCompat.getDrawable(context, nextSampleAvatar)).toBitmap()
 
-    override val shareable = false
+    actual override val shareable = false
 
-    override val size
+    actual override val size
         get() = bitmap.allocationByteCountCompat.toLong()
 
-    override val width
+    actual override val width
         get() = bitmap.width
 
-    override val height
+    actual override val height
         get() = bitmap.height
 
-    override fun draw(canvas: coil3.Canvas) {
+    actual override fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, 0f, 0f, null)
     }
 

@@ -23,7 +23,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import okio.BufferedSource
 
@@ -36,6 +35,30 @@ internal class FolderThumbnailFetcher(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : FileFetcher<FolderThumbnailMetadata>(options, diskCache) {
+
+    @ContributesBinding(DataScope::class)
+    internal class Factory(
+        private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
+        private val fileModelLocalDataSource: FileLocalDataSource,
+        private val datastoreDataSource: DatastoreDataSource,
+        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+        private val remoteDataSourceFactory: RemoteDataSource.Factory,
+    ) : Fetcher.Factory<FolderThumbnail> {
+        override fun create(
+            data: FolderThumbnail,
+            options: Options,
+            imageLoader: ImageLoader,
+        ): Fetcher = FolderThumbnailFetcher(
+            options,
+            lazy { lazyCoilDiskCache.value.thumbnailDiskCache(data.bookshelfId) },
+            data,
+            fileModelLocalDataSource,
+            datastoreDataSource,
+            bookshelfLocalDataSource,
+            remoteDataSourceFactory,
+        )
+    }
+
     override val diskCacheKey
         get() = options.diskCacheKey ?: "folder:${data.bookshelfId.value}:${data.path}"
 
@@ -110,28 +133,3 @@ internal class FolderThumbnailFetcher(
 }
 
 private const val CachesFetchCount = 4
-
-@com.sorrowblue.comicviewer.data.coil.FolderThumbnailFetcher
-@ContributesBinding(DataScope::class)
-@Inject
-internal class FolderThumbnailFetcherFactory(
-    private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
-    private val fileModelLocalDataSource: FileLocalDataSource,
-    private val datastoreDataSource: DatastoreDataSource,
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
-) : Fetcher.Factory<FolderThumbnail> {
-    override fun create(
-        data: FolderThumbnail,
-        options: Options,
-        imageLoader: ImageLoader,
-    ): Fetcher = FolderThumbnailFetcher(
-        options,
-        lazy { lazyCoilDiskCache.value.thumbnailDiskCache(data.bookshelfId) },
-        data,
-        fileModelLocalDataSource,
-        datastoreDataSource,
-        bookshelfLocalDataSource,
-        remoteDataSourceFactory,
-    )
-}

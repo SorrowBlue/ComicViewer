@@ -3,9 +3,6 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import dev.zacsweers.metro.Binds
-import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
 import java.security.KeyPairGenerator
 import java.security.KeyStore
@@ -15,12 +12,6 @@ private const val PROVIDER = "AndroidKeyStore"
 
 private const val CiperTransformation =
     "${KeyProperties.KEY_ALGORITHM_RSA}/${KeyProperties.BLOCK_MODE_ECB}/${KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1}"
-
-@ContributesTo(DataScope::class)
-interface AndroidDatabaseBindings {
-    @Binds
-    private val AndroidCryptUtil.bind: CryptUtil get() = this
-}
 
 @Inject
 internal class AndroidCryptUtil : CryptUtil {

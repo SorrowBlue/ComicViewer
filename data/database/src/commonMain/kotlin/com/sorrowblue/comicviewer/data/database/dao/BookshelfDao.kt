@@ -1,9 +1,11 @@
 package com.sorrowblue.comicviewer.data.database.dao
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Query
-import androidx.room.Upsert
+import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
+import androidx.room3.Query
+import androidx.room3.Upsert
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.sorrowblue.comicviewer.data.database.ComicViewerDatabase
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.EmbeddedBookshelfFileCountEntity
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
  * inserting, updating, deleting, and querying bookshelf data.
  */
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 internal abstract class BookshelfDao(val database: ComicViewerDatabase) {
     /**
      * Insert or update a bookshelf entity.

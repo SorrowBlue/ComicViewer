@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.database.entity.file
 
-import androidx.room.ColumnInfo
+import androidx.room3.ColumnInfo
 
 internal data class EmbeddedFileHistoryEntity(
     @ColumnInfo(name = "last_read_page") val lastReadPage: Int = 0,

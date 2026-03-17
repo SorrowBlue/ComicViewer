@@ -1,13 +1,15 @@
 package com.sorrowblue.comicviewer.data.database.dao
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.RawQuery
-import androidx.room.RoomRawQuery
+import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
+import androidx.room3.Delete
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.RawQuery
+import androidx.room3.RoomRawQuery
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfIdCacheKey
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.Flow
  * entities.
  */
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 internal interface CollectionFileDao {
     /**
      * Inserts a CollectionFileEntity into the database. If the entity already

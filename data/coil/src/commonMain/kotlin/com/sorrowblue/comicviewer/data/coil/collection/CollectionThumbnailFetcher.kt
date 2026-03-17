@@ -19,7 +19,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalD
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
 import logcat.LogPriority
 import logcat.logcat
 import okio.BufferedSource
@@ -32,6 +31,25 @@ internal class CollectionThumbnailFetcher(
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : FileFetcher<CollectionThumbnailMetadata>(options, diskCache) {
+
+    @ContributesBinding(DataScope::class)
+    internal class Factory(
+        private val diskCache: Lazy<DiskCache>,
+        private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
+        private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
+        private val fileModelLocalDataSource: FileLocalDataSource,
+    ) : Fetcher.Factory<Collection> {
+        override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
+            CollectionThumbnailFetcher(
+                options = options,
+                diskCache = diskCache,
+                coilDiskCacheLazy = coilDiskCacheLazy,
+                data = data,
+                collectionFileLocalDataSource = collectionFileLocalDataSource,
+                fileLocalDataSource = fileModelLocalDataSource,
+            )
+    }
+
     override val diskCacheKey get() = options.diskCacheKey ?: "collection:${data.id.value}"
 
     override suspend fun metadata(): CollectionThumbnailMetadata {
@@ -78,23 +96,3 @@ internal class CollectionThumbnailFetcher(
 }
 
 private const val CachesFetchCount = 4
-
-@com.sorrowblue.comicviewer.data.coil.CollectionThumbnailFetcher
-@ContributesBinding(DataScope::class)
-@Inject
-internal class CollectionThumbnailFetcherFactory(
-    private val diskCache: Lazy<DiskCache>,
-    private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-    private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
-    private val fileModelLocalDataSource: FileLocalDataSource,
-) : Fetcher.Factory<Collection> {
-    override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
-        CollectionThumbnailFetcher(
-            options = options,
-            diskCache = diskCache,
-            coilDiskCacheLazy = coilDiskCacheLazy,
-            data = data,
-            collectionFileLocalDataSource = collectionFileLocalDataSource,
-            fileLocalDataSource = fileModelLocalDataSource,
-        )
-}

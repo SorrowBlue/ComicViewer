@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
-    alias(libs.plugins.androidxRoom)
+    alias(libs.plugins.androidxRoom3)
     alias(libs.plugins.ksp)
 }
 
@@ -35,8 +35,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.domain.service)
-                implementation(libs.androidx.roomRuntime)
-                implementation(libs.androidx.roomPaging)
+                implementation(libs.androidx.room3Runtime)
+                implementation(libs.androidx.room3Paging)
                 implementation(libs.androidx.sqliteBundled)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serializationJson)
@@ -48,7 +48,7 @@ kotlin {
                 implementation(projects.framework.test)
                 implementation(libs.kotlin.test)
                 implementation(libs.androidx.pagingTesting)
-                implementation(libs.androidx.roomTesting)
+                implementation(libs.androidx.room3Testing)
                 implementation(libs.kotlinx.coroutinesTest)
             }
         }
@@ -70,7 +70,8 @@ kotlin {
                 implementation(libs.androidx.testRules)
                 implementation(libs.androidx.testExtJunitKtx)
                 implementation(libs.kotlinx.coroutinesTest)
-                implementation(libs.androidx.roomTesting)
+                implementation(libs.androidx.room3Testing)
+                implementation(libs.androidx.room3SqliteWrapper)
                 implementation(libs.androidx.sqliteBundled)
             }
         }
@@ -78,19 +79,19 @@ kotlin {
 }
 
 dependencies {
-    kspAndroid(libs.androidx.roomCompiler)
-    add("kspAndroidHostTest", libs.androidx.roomCompiler)
-    add("kspAndroidDeviceTest", libs.androidx.roomCompiler)
-    kspJvm(libs.androidx.roomCompiler)
-    kspJvmTest(libs.androidx.roomCompiler)
-    kspIosArm64(libs.androidx.roomCompiler)
-    kspIosArm64Test(libs.androidx.roomCompiler)
-    kspIosSimulatorArm64(libs.androidx.roomCompiler)
-    kspIosSimulatorArm64Test(libs.androidx.roomCompiler)
+    kspAndroid(libs.androidx.room3Compiler)
+    add("kspAndroidHostTest", libs.androidx.room3Compiler)
+    add("kspAndroidDeviceTest", libs.androidx.room3Compiler)
+    kspJvm(libs.androidx.room3Compiler)
+    kspJvmTest(libs.androidx.room3Compiler)
+    kspIosArm64(libs.androidx.room3Compiler)
+    kspIosArm64Test(libs.androidx.room3Compiler)
+    kspIosSimulatorArm64(libs.androidx.room3Compiler)
+    kspIosSimulatorArm64Test(libs.androidx.room3Compiler)
     androidTestUtil(libs.androidx.testOrchestrator)
 }
 
-room {
+room3 {
     schemaDirectory("$projectDir/schemas")
 }
 

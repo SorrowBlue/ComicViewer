@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import androidx.room.RoomRawQuery
+import androidx.room3.RoomRawQuery
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.pagingSourceFileSearch
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity

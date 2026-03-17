@@ -27,6 +27,7 @@ kotlin {
                 implementation(libs.kotlinx.serializationCbor)
                 implementation(libs.navigation3.resultstate)
                 implementation(libs.rin)
+                implementation(libs.compose.edgeToEdgePreview)
             }
         }
         androidMain {

@@ -14,6 +14,7 @@ androidx-lifecycle = "2.10.0-beta01"
 androidx-navigationevent = "1.0.1"
 androidx-paging = "3.4.2"
 androidx-room = "2.8.4"
+androidx-room3 = "3.0.0-alpha01"
 androidx-sqlite = "2.6.2"
 androidx-startup = "1.2.0"
 androidx-testCore = "1.7.0"
@@ -90,6 +91,11 @@ androidx-roomCompiler = { group = "androidx.room", name = "room-compiler", versi
 androidx-roomPaging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-roomRuntime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
 androidx-roomTesting = { group = "androidx.room", name = "room-testing", version.ref = "androidx-room" }
+androidx-room3Compiler = { group = "androidx.room3", name = "room3-compiler", version.ref = "androidx-room3" }
+androidx-room3Paging = { group = "androidx.room3", name = "room3-paging", version.ref = "androidx-room3" }
+androidx-room3Runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "androidx-room3" }
+androidx-room3Testing = { group = "androidx.room3", name = "room3-testing", version.ref = "androidx-room3" }
+androidx-room3SqliteWrapper = { group = "androidx.room3", name = "room3-sqlite-wrapper", version.ref = "androidx-room3" }
 androidx-sqliteBundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-startupRuntime = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx-startup" }
 androidx-testCoreKtx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx-testCore" }
@@ -184,6 +190,7 @@ androidApplication = { id = "com.android.application", version.ref = "android-gr
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidMultiplatform = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 androidxRoom = { id = "androidx.room", version.ref = "androidx-room" }
+androidxRoom3 = { id = "androidx.room3", version.ref = "androidx-room3" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 comicviewer-androidApplication = { id = "comicviewer.convention.android-application" }
 comicviewer-androidLibrary = { id = "comicviewer.convention.android-library" }

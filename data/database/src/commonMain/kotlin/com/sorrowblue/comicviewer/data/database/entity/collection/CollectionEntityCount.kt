@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.database.entity.collection
 
-import androidx.room.Embedded
+import androidx.room3.Embedded
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 
 internal class CollectionEntityCount(

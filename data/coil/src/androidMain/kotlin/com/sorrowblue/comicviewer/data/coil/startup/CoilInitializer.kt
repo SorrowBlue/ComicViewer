@@ -21,8 +21,6 @@ internal class CoilInitializer :
         bitmapConfig(Bitmap.Config.ARGB_8888)
     }
 
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        @Suppress("OPT_IN_USAGE")
-        return listOf(LogcatInitializer::class.java)
-    }
+    override fun dependencies(): List<Class<out Initializer<*>>> =
+        listOf(LogcatInitializer::class.java)
 }

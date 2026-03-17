@@ -1,14 +1,14 @@
 package com.sorrowblue.comicviewer.data.database
 
-import androidx.room.AutoMigration
-import androidx.room.ConstructedBy
-import androidx.room.Database
-import androidx.room.DeleteTable
-import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
-import androidx.room.TypeConverters
-import androidx.room.migration.AutoMigrationSpec
-import androidx.room.migration.Migration
+import androidx.room3.AutoMigration
+import androidx.room3.ConstructedBy
+import androidx.room3.Database
+import androidx.room3.DeleteTable
+import androidx.room3.RoomDatabase
+import androidx.room3.RoomDatabaseConstructor
+import androidx.room3.TypeConverters
+import androidx.room3.migration.AutoMigrationSpec
+import androidx.room3.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import com.sorrowblue.comicviewer.data.database.dao.BookshelfDao
@@ -65,7 +65,7 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
     class AutoMigration7to8 : AutoMigrationSpec
 
     class ManualMigration7to8 : Migration(7, 8) {
-        override fun migrate(connection: SQLiteConnection) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             connection.execSQL(
                 """
                 INSERT INTO
@@ -109,12 +109,13 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
      * Update bookshelf type from 'INTERNAL' to 'DEVICE'
      */
     class ManualMigration8to9 : Migration(8, 9) {
-        override fun migrate(connection: SQLiteConnection) {
+        override suspend fun migrate(connection: SQLiteConnection) {
             connection.execSQL("UPDATE bookshelf SET type = 'DEVICE' WHERE type = 'INTERNAL'")
         }
     }
 }
 
+@Suppress("KotlinNoActualForExpect")
 internal expect object ComicViewerDatabaseConstructor :
     RoomDatabaseConstructor<ComicViewerDatabase> {
     override fun initialize(): ComicViewerDatabase

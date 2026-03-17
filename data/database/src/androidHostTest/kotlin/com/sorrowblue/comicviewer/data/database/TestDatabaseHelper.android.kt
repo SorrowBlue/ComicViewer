@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.database
 
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
 import androidx.test.platform.app.InstrumentationRegistry
 import dev.zacsweers.metro.Inject
 
