@@ -49,7 +49,7 @@ internal fun LicenseScreen(
             contentPadding = contentPadding,
             onLibraryClick = onLibraryClick,
             colors = LibraryDefaults.libraryColors(
-                libraryBackgroundColor = ComicTheme.colorScheme.surfaceContainer,
+                libraryBackgroundColor = ComicTheme.colorScheme.surface,
                 libraryContentColor = ComicTheme.colorScheme.onSurface,
             ),
         )

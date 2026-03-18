@@ -160,13 +160,12 @@ private class FolderScreenStateImpl(
             .onEach { folderDisplaySettings ->
                 uiState = uiState.copy(
                     folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                        folderScopeOnly = folderDisplaySettings.folderScopeOnlyList.any { scopeOnly, ->
-                            scopeOnly.bookshelfId == bookshelfId && scopeOnly.path == path
+                        folderScopeOnly = folderDisplaySettings.folderScopeOnlyList.any { scope ->
+                            scope.bookshelfId == bookshelfId && scope.path == path
                         },
                         sortType = folderDisplaySettings.folderScopeOnlyList
                             .find { scopeOnly ->
-                                scopeOnly.bookshelfId == bookshelfId &&
-                                    scopeOnly.path == path
+                                scopeOnly.bookshelfId == bookshelfId && scopeOnly.path == path
                             }?.sortType
                             ?: folderDisplaySettings.sortType,
                     ),
