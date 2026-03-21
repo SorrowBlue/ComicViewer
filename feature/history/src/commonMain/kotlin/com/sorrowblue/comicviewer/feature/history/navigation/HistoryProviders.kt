@@ -1,31 +1,28 @@
 package com.sorrowblue.comicviewer.feature.history.navigation
 
-import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenContext
 import com.sorrowblue.comicviewer.file.FileInfoScreenContext
 import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
+import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
-import kotlin.reflect.KClass
-import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface HistoryProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
-        toPair(HistoryNavKey.serializer()),
-        toPair(HistoryFileInfoNavKey.serializer()),
-        toPair(HistoryFolderFileInfoNavKey.serializer()),
-        toPair(HistoryClearAllNavKey.serializer()),
-        toPair(HistoryFolderNavKey.serializer()),
+    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
+        HistoryNavKey.serializer().asEntry<HistoryNavKey>(),
+        HistoryFileInfoNavKey.serializer().asEntry<HistoryFileInfoNavKey>(),
+        HistoryFolderFileInfoNavKey.serializer().asEntry<HistoryFolderFileInfoNavKey>(),
+        HistoryClearAllNavKey.serializer().asEntry<HistoryClearAllNavKey>(),
+        HistoryFolderNavKey.serializer().asEntry<HistoryFolderNavKey>(),
     )
 
     @Provides
@@ -36,7 +33,7 @@ interface HistoryProviders {
     @IntoSet
     private fun provideHistoryNavEntry(
         factory: HistoryScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = {
+    ): ScreenEntryProvider = {
         with(factory) {
             historyNavEntry(it)
         }
@@ -44,14 +41,15 @@ interface HistoryProviders {
 
     @Provides
     @IntoSet
-    private fun provideHistoryClearAllNavEntry(): EntryProviderScope<NavKey>.(Navigator) -> Unit =
-        { historyClearAllNavEntry(it) }
+    private fun provideHistoryClearAllNavEntry(): ScreenEntryProvider = {
+        historyClearAllNavEntry(it)
+    }
 
     @Provides
     @IntoSet
     private fun provideHistoryFileInfoNavEntry(
         factory: FileInfoScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = {
+    ): ScreenEntryProvider = {
         with(factory) {
             historyFileInfoNavEntry(it)
         }
@@ -62,7 +60,7 @@ interface HistoryProviders {
     private fun provideHistoryFolderFileInfoNavEntry(
         factoryFolder: FolderScreenContext.Factory,
         factoryFileInfo: FileInfoScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = {
+    ): ScreenEntryProvider = {
         with(factoryFolder) {
             with(factoryFileInfo) {
                 historyFolderFileInfoNavEntry(it)

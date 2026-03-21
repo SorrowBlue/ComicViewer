@@ -1,40 +1,37 @@
 package com.sorrowblue.comicviewer.feature.settings.security.navigation
 
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
-import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationNavKey
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
+import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import io.github.takahirom.rin.rememberRetained
-import kotlin.reflect.KClass
-import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface SecuritySettingsProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(toPair(SecuritySettingsNavKey.serializer()))
+    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> =
+        setOf(SecuritySettingsNavKey.serializer().asEntry())
 
     @Provides
     @IntoSet
     private fun provideSecuritySettingsEntry(
         factory: SecuritySettingsScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         entry<SecuritySettingsNavKey>(
             metadata = ListDetailSceneStrategy.detailPane("Settings") +
-                NavDisplay.transitionMaterialSharedAxisX(),
+                    NavDisplay.transitionMaterialSharedAxisX(),
         ) {
             with(rememberRetained { factory.createSecuritySettingsScreenContext() }) {
                 SecuritySettingsScreenRoot(

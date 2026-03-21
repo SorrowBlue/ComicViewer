@@ -1,30 +1,27 @@
 package com.sorrowblue.comicviewer.feature.readlater.navigation
 
-import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenContext
 import com.sorrowblue.comicviewer.file.FileInfoScreenContext
 import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
+import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
-import kotlin.reflect.KClass
-import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface ReadLaterProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
-        toPair(ReadLaterNavKey.serializer()),
-        toPair(ReadLaterFileInfoNavKey.serializer()),
-        toPair(ReadLaterFolderNavKey.serializer()),
-        toPair(ReadLaterFolderFileInfoNavKey.serializer()),
+    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
+        ReadLaterNavKey.serializer().asEntry(),
+        ReadLaterFileInfoNavKey.serializer().asEntry(),
+        ReadLaterFolderNavKey.serializer().asEntry(),
+        ReadLaterFolderFileInfoNavKey.serializer().asEntry(),
     )
 
     @Provides
@@ -35,7 +32,7 @@ interface ReadLaterProviders {
     @IntoSet
     private fun provideReadLaterNavEntry(
         factory: ReadLaterScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             readLaterNavEntry(navigator)
         }
@@ -45,7 +42,7 @@ interface ReadLaterProviders {
     @IntoSet
     private fun provideReadLaterFileInfoNavEntry(
         factory: FileInfoScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             readLaterFileInfoNavEntry(navigator)
         }
@@ -56,7 +53,7 @@ interface ReadLaterProviders {
     private fun provideReadLaterFolderFileInfoNavEntry(
         factoryFolder: FolderScreenContext.Factory,
         factoryFileInfo: FileInfoScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factoryFolder) {
             with(factoryFileInfo) {
                 readLaterFolderFileInfoNavEntry(navigator)

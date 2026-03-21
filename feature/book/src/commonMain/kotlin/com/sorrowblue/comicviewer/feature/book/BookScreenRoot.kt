@@ -14,11 +14,11 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
+import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
 @Composable
 context(context: BookScreenContext)
@@ -75,7 +75,7 @@ private fun BookScreenWrapper(
         name = name,
         collectionId = collectionId,
     )
-    with(LocalAppState.current) {
+    with(LocalSharedTransitionScope.current) {
         val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
         Surface(
             modifier = Modifier

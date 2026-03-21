@@ -1,36 +1,33 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.navigation
 
-import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionCreateScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionEditScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionCreateScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditScreenContext
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
+import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
-import kotlin.reflect.KClass
-import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface CollectionEditProviders {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
-        toPair(BasicCollectionCreateNavKey.serializer()),
-        toPair(BasicCollectionEditNavKey.serializer()),
-        toPair(SmartCollectionEditNavKey.serializer()),
+    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
+        BasicCollectionCreateNavKey.serializer().asEntry(),
+        BasicCollectionEditNavKey.serializer().asEntry(),
+        SmartCollectionEditNavKey.serializer().asEntry(),
     )
 
     @Provides
     @IntoSet
     private fun provideBasicCollectionCreateNavEntry(
         factory: BasicCollectionCreateScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             basicCollectionCreateNavEntry(navigator)
         }
@@ -40,7 +37,7 @@ interface CollectionEditProviders {
     @IntoSet
     private fun provideBasicCollectionEditNavEntry(
         factory: BasicCollectionEditScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             basicCollectionEditNavEntry(navigator)
         }
@@ -50,7 +47,7 @@ interface CollectionEditProviders {
     @IntoSet
     private fun provideSmartCollectionCreateNavEntry(
         factory: SmartCollectionCreateScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             smartCollectionCreateNavEntry(navigator)
         }
@@ -60,7 +57,7 @@ interface CollectionEditProviders {
     @IntoSet
     private fun provideSmartCollectionEditNavEntry(
         factory: SmartCollectionEditScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             smartCollectionEditNavEntry(navigator)
         }

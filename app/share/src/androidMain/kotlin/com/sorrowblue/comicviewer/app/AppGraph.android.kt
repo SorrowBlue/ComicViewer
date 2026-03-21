@@ -1,15 +1,12 @@
 package com.sorrowblue.comicviewer.app
 
 import android.content.Context
-import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavKey
 import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.MetroWorkerFactory
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
@@ -23,7 +20,6 @@ actual interface AppGraph :
     PlatformGraph,
     MetroAppComponentProviders {
     actual val context: PlatformContext
-    actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
 
     val workerFactory: MetroWorkerFactory
 

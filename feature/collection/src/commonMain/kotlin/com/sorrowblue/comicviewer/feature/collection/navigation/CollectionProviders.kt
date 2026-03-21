@@ -1,22 +1,19 @@
 package com.sorrowblue.comicviewer.feature.collection.navigation
 
-import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.feature.collection.CollectionScreenContext
 import com.sorrowblue.comicviewer.feature.collection.delete.DeleteCollectionScreenContext
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenContext
 import com.sorrowblue.comicviewer.file.FileInfoScreenContext
 import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
+import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
+import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
-import kotlin.reflect.KClass
-import kotlinx.serialization.KSerializer
 
 @ContributesTo(AppScope::class)
 interface CollectionProviders {
@@ -26,20 +23,20 @@ interface CollectionProviders {
 
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> = setOf(
-        toPair(CollectionListNavKey.serializer()),
-        toPair(CollectionNavKey.serializer()),
-        toPair(CollectionFileInfoNavKey.serializer()),
-        toPair(CollectionFolderNavKey.serializer()),
-        toPair(CollectionFolderFileInfoNavKey.serializer()),
-        toPair(CollectionDeleteNavKey.serializer()),
+    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
+        CollectionListNavKey.serializer().asEntry(),
+        CollectionNavKey.serializer().asEntry(),
+        CollectionFileInfoNavKey.serializer().asEntry(),
+        CollectionFolderNavKey.serializer().asEntry(),
+        CollectionFolderFileInfoNavKey.serializer().asEntry(),
+        CollectionDeleteNavKey.serializer().asEntry(),
     )
 
     @Provides
     @IntoSet
     private fun provideCollectionListNavEntry(
         factory: CollectionListScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             collectionListNavEntry(navigator)
         }
@@ -49,15 +46,17 @@ interface CollectionProviders {
     @IntoSet
     private fun provideCollectionNavEntry(
         factory: CollectionScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
-        with(factory) { collectionNavEntry(navigator) }
+    ): ScreenEntryProvider = { navigator ->
+        with(factory) {
+            collectionNavEntry(navigator)
+        }
     }
 
     @Provides
     @IntoSet
     private fun provideCollectionFileInfoNavEntry(
         factory: FileInfoScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             collectionFileInfoNavEntry(navigator)
         }
@@ -68,7 +67,7 @@ interface CollectionProviders {
     private fun provideCollectionFolderInfoNavEntry(
         factoryFolder: FolderScreenContext.Factory,
         factoryFileInfo: FileInfoScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factoryFolder) {
             with(factoryFileInfo) {
                 collectionFolderInfoNavEntry(navigator)
@@ -80,7 +79,7 @@ interface CollectionProviders {
     @IntoSet
     private fun provideCollectionDeleteNavEntry(
         factory: DeleteCollectionScreenContext.Factory,
-    ): EntryProviderScope<NavKey>.(Navigator) -> Unit = { navigator ->
+    ): ScreenEntryProvider = { navigator ->
         with(factory) {
             deleteCollectionNavEntry(navigator)
         }

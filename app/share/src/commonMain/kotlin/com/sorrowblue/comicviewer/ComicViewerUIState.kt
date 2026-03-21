@@ -7,7 +7,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorrowblue.comicviewer.app.MainViewModel
@@ -20,6 +22,9 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfFolderNa
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.rememberNavigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
+import com.sorrowblue.comicviewer.framework.ui.navigation3.serializer
+import com.sorrowblue.comicviewer.framework.ui.navigation3.subclass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -33,6 +38,7 @@ import logcat.LogPriority
 import logcat.logcat
 
 interface ComicViewerUIState {
+    val entryProvider: (NavKey) -> NavEntry<NavKey>
     val navigator: Navigator
 
     fun onNavigationHistoryRestore()
@@ -52,7 +58,7 @@ fun rememberComicViewerUIState(
                 contextual(SnapshotStateListSerializer(PolymorphicSerializer(NavKey::class)))
                 polymorphic(NavKey::class) {
                     context.navKeySubclassMap.forEach {
-                        subclass(it.first, it.second)
+                        subclass(it.subclass, it.serializer)
                     }
                 }
             }
@@ -70,6 +76,7 @@ fun rememberComicViewerUIState(
                 mainViewModel.shouldKeepSplash.value = false
                 mainViewModel.isInitialized.value = true
             },
+            screenEntryProviders = context.screenEntryProviders
         )
     }
 }
@@ -81,6 +88,7 @@ private class ComicViewerUIStateImpl(
     private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     private val completeInit: () -> Unit,
+    private val screenEntryProviders: Set<ScreenEntryProvider>,
 ) : ComicViewerUIState {
     private var isNavigationRestored by mutableStateOf(false)
 
@@ -96,6 +104,10 @@ private class ComicViewerUIStateImpl(
         } else if (allowNavigationRestored) {
             completeRestoreHistory()
         }
+    }
+
+    override val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
+        screenEntryProviders.forEach { entryProvider -> entryProvider(navigator) }
     }
 
     override fun onNavigationHistoryRestore() {

@@ -16,7 +16,7 @@ val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope>
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-interface AppState : SharedTransitionScope {
+interface AppState {
     var navigationSuiteType: NavigationSuiteType
     val snackbarHostState: SnackbarHostState
     val coroutineScope: CoroutineScope

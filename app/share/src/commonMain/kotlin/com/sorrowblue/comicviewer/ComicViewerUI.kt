@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
@@ -37,15 +36,17 @@ import io.github.takahirom.rin.rememberRetained
 @Composable
 context(appGraph: AppGraph)
 fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
-    CompositionLocalProvider(providePlatformContext(appGraph.context)) {
+    CompositionLocalProvider(
+        providePlatformContext(appGraph.context),
+        LocalNavigator provides state.navigator,
+        ProvidesAppState
+    ) {
         ComicTheme {
             with(rememberRetained { appGraph.createPreAppScreenContext() }) {
                 PreAppScreen(finishApp = finishApp) {
                     ComicViewerUI(
                         navigator = state.navigator,
-                        entryProvider = entryProvider {
-                            appGraph.entries.forEach { it(state.navigator) }
-                        },
+                        entryProvider = state.entryProvider,
                     )
                 }
             }
@@ -56,11 +57,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
 @Composable
 private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEntry<NavKey>) {
     SharedTransitionLayout(modifier = Modifier.background(ComicTheme.colorScheme.background)) {
-        CompositionLocalProvider(
-            ProvidesAppState,
-            LocalSharedTransitionScope provides this,
-            LocalNavigator provides navigator,
-        ) {
+        CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             Scaffold(
                 snackbarHost = {
                     SnackbarHost(LocalAppState.current.snackbarHostState)

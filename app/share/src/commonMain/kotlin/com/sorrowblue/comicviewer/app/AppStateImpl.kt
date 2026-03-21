@@ -19,17 +19,15 @@ import kotlinx.coroutines.CoroutineScope
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun rememberAppState(
-    sharedTransitionScope: SharedTransitionScope,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): AppState {
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
         currentWindowAdaptiveInfo(),
     )
-    return remember(sharedTransitionScope, snackbarHostState) {
+    return remember(snackbarHostState) {
         AppStateImpl(
             navigationSuiteType = navigationSuiteType,
-            sharedTransitionScope = sharedTransitionScope,
             snackbarHostState = snackbarHostState,
             coroutineScope = coroutineScope,
         )
@@ -42,15 +40,12 @@ fun rememberAppState(
 @OptIn(ExperimentalSharedTransitionApi::class)
 private class AppStateImpl(
     navigationSuiteType: NavigationSuiteType,
-    private val sharedTransitionScope: SharedTransitionScope,
     override val snackbarHostState: SnackbarHostState,
     override val coroutineScope: CoroutineScope,
-) : AppState,
-    SharedTransitionScope by sharedTransitionScope {
+) : AppState {
     override var navigationSuiteType by mutableStateOf(navigationSuiteType)
 }
 
-context(scope: SharedTransitionScope)
 internal val ProvidesAppState
     @Composable
-    get() = LocalAppState provides rememberAppState(scope)
+    get() = LocalAppState provides rememberAppState()

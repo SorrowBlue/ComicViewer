@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings.nav
 
 import androidx.navigation3.runtime.NavKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.toPair
+import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
@@ -14,5 +14,5 @@ interface SettingsNavProviders {
     @Provides
     @ElementsIntoSet
     private fun provideNavKeySubclassMap(): Set<Pair<KClass<NavKey>, KSerializer<NavKey>>> =
-        setOf(toPair(SettingsNavKey.serializer()))
+        setOf(SettingsNavKey.serializer().asEntry<SettingsNavKey>())
 }

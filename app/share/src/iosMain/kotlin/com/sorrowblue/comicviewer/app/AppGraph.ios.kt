@@ -16,7 +16,6 @@ import dev.zacsweers.metro.Provides
     additionalScopes = [DataScope::class],
 )
 actual interface AppGraph : PlatformGraph {
-    actual val entries: Set<EntryProviderScope<NavKey>.(Navigator) -> Unit>
     actual val context: PlatformContext
 
     @DependencyGraph.Factory

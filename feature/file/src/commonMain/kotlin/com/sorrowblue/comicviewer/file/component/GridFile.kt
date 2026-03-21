@@ -41,6 +41,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -73,7 +74,7 @@ fun GridFile(
 ) {
     Card(onClick = onClick, colors = colors, modifier = modifier) {
         Box {
-            with(LocalAppState.current) {
+            with(LocalSharedTransitionScope.current) {
                 if (showThumbnail) {
                     val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                     FileThumbnailAsyncImage(
