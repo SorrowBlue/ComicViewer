@@ -8,7 +8,7 @@ import org.jetbrains.skia.EncodedImageFormat
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.impl.use
 
-actual suspend fun resizeImage(
+internal actual suspend fun resizeImage(
     source: BufferedSource,
     sink: BufferedSink,
     imageFormat: ImageFormat,

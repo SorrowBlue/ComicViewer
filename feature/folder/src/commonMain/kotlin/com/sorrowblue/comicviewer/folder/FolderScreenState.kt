@@ -100,7 +100,7 @@ internal fun rememberFolderScreenState(
                 lazyGridState = lazyGridState,
                 snackbarHostState = snackbarHostState,
                 lazyPagingItems = lazyPagingItems,
-                scope = coroutineScope,
+                coroutineScope = coroutineScope,
             )
         },
     ) {
@@ -114,7 +114,7 @@ internal fun rememberFolderScreenState(
             lazyGridState = lazyGridState,
             snackbarHostState = snackbarHostState,
             lazyPagingItems = lazyPagingItems,
-            scope = coroutineScope,
+            coroutineScope = coroutineScope,
         )
     }.apply {
         scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
@@ -138,7 +138,7 @@ private class FolderScreenStateImpl(
     override val snackbarHostState: SnackbarHostState,
     override val lazyPagingItems: LazyPagingItems<File>,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    var scope: CoroutineScope,
+    var coroutineScope: CoroutineScope,
     getFileUseCase: GetFileUseCase,
 ) : FolderScreenState {
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
@@ -181,7 +181,7 @@ private class FolderScreenStateImpl(
                             ),
                     ),
                 )
-            }.launchIn(scope)
+            }.launchIn(coroutineScope)
         getFileUseCase(GetFileUseCase.Request(bookshelfId, path))
             .onEach {
                 when (it) {
@@ -195,7 +195,7 @@ private class FolderScreenStateImpl(
                         )
                     }
                 }
-            }.launchIn(scope)
+            }.launchIn(coroutineScope)
     }
 
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
@@ -204,7 +204,7 @@ private class FolderScreenStateImpl(
             if (0 <= index) {
                 isRestored = true
                 runCatching {
-                    scope.launch {
+                    coroutineScope.launch {
                         lazyGridState.scrollToItem(min(index, lazyPagingItems.itemCount - 1))
                     }
                 }.onFailure {
@@ -217,7 +217,7 @@ private class FolderScreenStateImpl(
         }
         if (lazyPagingItems.loadState.refresh is LoadState.Error) {
             ((lazyPagingItems.loadState.refresh as LoadState.Error).error as? PagingException)?.let {
-                scope.launch {
+                coroutineScope.launch {
                     when (it) {
                         is PagingException.InvalidAuth -> snackbarHostState.showSnackbar(
                             "認証エラー",
@@ -241,7 +241,7 @@ private class FolderScreenStateImpl(
     }
 
     override fun onSortClick(sortType: SortType) {
-        scope.launch {
+        coroutineScope.launch {
             var refresh = false
             folderDisplaySettingsUseCase.edit { settings ->
                 val beforeFolderScopeOnly =
@@ -301,7 +301,7 @@ private class FolderScreenStateImpl(
     }
 
     override fun onFolderScopeOnlyClick() {
-        scope.launch {
+        coroutineScope.launch {
             folderDisplaySettingsUseCase.edit { settings ->
                 val beforeFolderScopeOnly =
                     settings.folderScopeOnlyList.find {
@@ -322,7 +322,7 @@ private class FolderScreenStateImpl(
     }
 
     override fun onSortTypeSelectScreenResult(result: SortTypeSelectScreenResult) {
-        scope.launch {
+        coroutineScope.launch {
             var refresh = false
             folderDisplaySettingsUseCase.edit { settings ->
                 val beforeFolderScopeOnly =

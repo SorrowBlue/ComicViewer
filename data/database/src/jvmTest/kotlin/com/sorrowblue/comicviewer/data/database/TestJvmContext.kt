@@ -6,7 +6,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
 
-internal class TestDesktopContext : DesktopContext() {
+internal class TestJvmContext : DesktopContext() {
     private val os by lazy { System.getProperty("os.name").lowercase() }
     private val currentTime = System.currentTimeMillis().toString()
 

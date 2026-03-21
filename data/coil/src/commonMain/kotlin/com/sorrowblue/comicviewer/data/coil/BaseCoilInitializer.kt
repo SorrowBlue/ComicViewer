@@ -4,11 +4,7 @@ import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.request.crossfade
 import coil3.size.Precision
-import com.sorrowblue.comicviewer.data.coil.book.BookThumbnailKeyer
-import com.sorrowblue.comicviewer.data.coil.collection.CollectionThumbnailKeyer
 import com.sorrowblue.comicviewer.data.coil.di.CoilContext
-import com.sorrowblue.comicviewer.data.coil.folder.FolderThumbnailKeyer
-import com.sorrowblue.comicviewer.data.coil.page.BookPageImageKeyer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import logcat.LogPriority
@@ -20,19 +16,8 @@ internal open class BaseCoilInitializer {
             SingletonImageLoader.setSafe { context ->
                 ImageLoader(context)
                     .newBuilder()
-                    .components {
-                        add(BookThumbnailKeyer)
-                        add(bookThumbnailFetcher)
-
-                        add(FolderThumbnailKeyer)
-                        add(folderThumbnailFetcher)
-
-                        add(BookPageImageKeyer)
-                        add(bookPageImageFetcher)
-
-                        add(CollectionThumbnailKeyer)
-                        add(collectionThumbnailFetcher)
-                    }.crossfade(true)
+                    .components(componentRegistry)
+                    .crossfade(true)
                     .precision(Precision.INEXACT)
                     .apply { setup() }
                     .build()

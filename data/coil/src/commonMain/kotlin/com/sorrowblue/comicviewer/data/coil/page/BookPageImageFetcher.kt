@@ -10,6 +10,7 @@ import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
+import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.pageDiskCache
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -18,7 +19,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.FileReader
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
@@ -41,8 +41,14 @@ internal class BookPageImageFetcher(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : FileFetcher<BookPageImageMetadata>(options, diskCacheLazy) {
 
-    @ContributesBinding(DataScope::class)
-    internal class Factory(
+    @ContributesBinding(CoilScope::class)
+    class Keyer : coil3.key.Keyer<BookPageImage> {
+        override fun key(data: BookPageImage, options: Options) =
+            "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}"
+    }
+
+    @ContributesBinding(CoilScope::class)
+    class Factory(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,

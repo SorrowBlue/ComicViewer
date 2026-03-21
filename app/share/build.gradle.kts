@@ -52,6 +52,7 @@ kotlin {
                 // Required for metro dependency resolution
                 implementation(libs.androidx.datastore)
                 implementation(projects.data.reader.zip)
+                implementation(libs.coil3)
 
                 implementation(libs.androidx.lifecycleCompose)
                 implementation(libs.androidx.lifecycleViewmodelCompose)
@@ -84,6 +85,10 @@ kotlin {
 
 dependencies {
     androidTestUtil("androidx.test:orchestrator:1.6.1")
+}
+
+metro {
+    reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
 }
 
 buildkonfig {

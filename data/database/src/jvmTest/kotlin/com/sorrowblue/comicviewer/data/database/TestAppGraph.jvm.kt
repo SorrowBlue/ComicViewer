@@ -6,7 +6,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 
-internal actual fun createPlatformContext(): PlatformContext = TestDesktopContext()
+internal actual fun createPlatformContext(): PlatformContext = TestJvmContext()
 
 @DependencyGraph(
     scope = AppScope::class,

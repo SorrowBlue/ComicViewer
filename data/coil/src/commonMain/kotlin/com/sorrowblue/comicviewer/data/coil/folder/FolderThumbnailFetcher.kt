@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
+import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
@@ -21,7 +22,6 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.first
 import okio.BufferedSource
@@ -36,8 +36,14 @@ internal class FolderThumbnailFetcher(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : FileFetcher<FolderThumbnailMetadata>(options, diskCache) {
 
-    @ContributesBinding(DataScope::class)
-    internal class Factory(
+    @ContributesBinding(CoilScope::class)
+    class Keyer : coil3.key.Keyer<FolderThumbnail> {
+        override fun key(data: FolderThumbnail, options: Options) =
+            "folder:${data.bookshelfId.value}:${data.path}"
+    }
+
+    @ContributesBinding(CoilScope::class)
+    class Factory(
         private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
         private val fileModelLocalDataSource: FileLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,

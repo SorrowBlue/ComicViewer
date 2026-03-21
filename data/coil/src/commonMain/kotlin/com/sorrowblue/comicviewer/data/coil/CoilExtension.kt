@@ -25,7 +25,7 @@ internal fun AutoCloseable.closeQuietly() {
     }
 }
 
-expect suspend fun resizeImage(
+internal expect suspend fun resizeImage(
     source: BufferedSource,
     sink: BufferedSink,
     imageFormat: ImageFormat,

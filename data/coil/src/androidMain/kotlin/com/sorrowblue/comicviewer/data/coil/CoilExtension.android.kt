@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import okio.BufferedSink
 import okio.BufferedSource
 
-actual suspend fun resizeImage(
+internal actual suspend fun resizeImage(
     source: BufferedSource,
     sink: BufferedSink,
     imageFormat: ImageFormat,

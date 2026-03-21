@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.data.reader.document.PdfPluginPackage
 import com.sorrowblue.comicviewer.data.reader.document.PdfPluginService
-import com.sorrowblue.comicviewer.data.reader.document.ReaderDocumentContext
 import com.sorrowblue.comicviewer.domain.model.SupportExtension.Document
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
@@ -25,7 +24,7 @@ internal class DocumentInitializer : Initializer<Unit> {
         runBlocking {
             runCatching {
                 with(
-                    context.require<ReaderDocumentContext.Factory>().createReaderDocumentContext(),
+                    context.require<DocumentInitializerContext.Factory>().createReaderDocumentContext(),
                 ) {
                     updatePdfPluginSupport(context)
                 }
@@ -35,7 +34,7 @@ internal class DocumentInitializer : Initializer<Unit> {
         }
     }
 
-    context(context: ReaderDocumentContext)
+    context(context: DocumentInitializerContext)
     private suspend fun updatePdfPluginSupport(platformContext: PlatformContext) {
         val datastoreDataSource = context.datastoreDataSource
         if (checkPdfService(platformContext)) {

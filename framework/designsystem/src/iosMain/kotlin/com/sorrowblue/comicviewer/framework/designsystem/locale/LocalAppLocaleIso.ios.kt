@@ -8,9 +8,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import platform.Foundation.NSLocale
-import platform.Foundation.NSLocaleIdentifier
 import platform.Foundation.NSUserDefaults
-import platform.Foundation.languageIdentifier
 import platform.Foundation.preferredLanguages
 
 private const val LangKey = "AppleLanguages"
@@ -62,6 +60,4 @@ actual class AppLocaleIso {
  * [Locale]の表示名
  */
 actual val Locale.displayLanguageName: String
-    get() = platformLocale
-        .run { displayNameForKey(NSLocaleIdentifier, languageIdentifier) }
-        .orEmpty()
+    get() = toLanguageTag()

@@ -13,11 +13,11 @@ import com.sorrowblue.comicviewer.data.coil.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
+import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesBinding
 import logcat.LogPriority
 import logcat.logcat
@@ -32,8 +32,13 @@ internal class CollectionThumbnailFetcher(
     private val fileLocalDataSource: FileLocalDataSource,
 ) : FileFetcher<CollectionThumbnailMetadata>(options, diskCache) {
 
-    @ContributesBinding(DataScope::class)
-    internal class Factory(
+    @ContributesBinding(CoilScope::class)
+    class Keyer : coil3.key.Keyer<Collection> {
+        override fun key(data: Collection, options: Options) = "collection:${data.id.value}"
+    }
+
+    @ContributesBinding(CoilScope::class)
+    class Factory(
         private val diskCache: Lazy<DiskCache>,
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val collectionFileLocalDataSource: CollectionFileLocalDataSource,

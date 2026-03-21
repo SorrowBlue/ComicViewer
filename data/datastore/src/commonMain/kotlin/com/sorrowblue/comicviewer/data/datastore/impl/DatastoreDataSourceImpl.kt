@@ -23,12 +23,10 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySett
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 
-@ContributesBinding(DataScope::class)
 @SingleIn(DataScope::class)
 @Inject
 internal class DatastoreDataSourceImpl(

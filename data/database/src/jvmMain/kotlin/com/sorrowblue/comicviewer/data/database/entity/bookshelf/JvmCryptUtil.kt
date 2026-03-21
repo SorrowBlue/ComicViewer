@@ -20,7 +20,7 @@ private const val CipherTransformation = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
 
 @Inject
-internal class DesktopCryptUtil(private val context: PlatformContext) : CryptUtil {
+internal class JvmCryptUtil(private val context: PlatformContext) : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String {
         val key = loadKeyStore(alias)
         val iv = IvParameterSpec(IV.toByteArray())
