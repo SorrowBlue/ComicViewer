@@ -45,7 +45,7 @@ jobs:
           -PsmbPassword=testpass
           -PsmbPath="/testshare/testfolder/"
       - if: cancelled() != true
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         with:
           name: 'Unit Test'
           path: '**/build/test-results/*/TEST-*.xml'
