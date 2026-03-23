@@ -39,7 +39,7 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
     CompositionLocalProvider(
         providePlatformContext(appGraph.context),
         LocalNavigator provides state.navigator,
-        ProvidesAppState
+        ProvidesAppState,
     ) {
         ComicTheme {
             with(rememberRetained { appGraph.createPreAppScreenContext() }) {

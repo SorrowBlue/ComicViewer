@@ -11,6 +11,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,30 +31,42 @@ import kotlinx.coroutines.CoroutineScope
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun PreviewTheme(show: Boolean = false, content: @Composable () -> Unit) {
-    EdgeToEdgeTemplate(
-        navMode = NavigationMode.Gesture,
-        navigationBarMode = if (show) InsetMode.Visible else InsetMode.Off,
-        statusBarMode = if (show) InsetMode.Visible else InsetMode.Off,
-        cameraCutoutMode = CameraCutoutMode.Middle,
-        showInsetsBorder = show,
-        useHiddenApiHack = show,
-    ) {
-        SharedTransitionLayout {
-            CompositionLocalProvider(LocalSharedTransitionScope provides this) {
-                AnimatedContent(true) {
-                    if (it) {
-                        CompositionLocalProvider(
-                            ProvidesAppState,
-                            LocalNavAnimatedContentScope provides this,
-                        ) {
-                            ComicTheme {
-                                CompositionLocalProvider(provideAsyncImagePreviewHandler, content)
+    val movableContent = remember {
+        movableContentOf {
+            SharedTransitionLayout {
+                CompositionLocalProvider(LocalSharedTransitionScope provides this) {
+                    AnimatedContent(true) {
+                        if (it) {
+                            CompositionLocalProvider(
+                                ProvidesAppState,
+                                LocalNavAnimatedContentScope provides this,
+                            ) {
+                                ComicTheme {
+                                    CompositionLocalProvider(
+                                        provideAsyncImagePreviewHandler,
+                                        content,
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+    if (show) {
+        EdgeToEdgeTemplate(
+            navMode = NavigationMode.Gesture,
+            navigationBarMode = InsetMode.Visible,
+            statusBarMode = InsetMode.Visible,
+            cameraCutoutMode = CameraCutoutMode.Middle,
+            showInsetsBorder = show,
+            useHiddenApiHack = show,
+        ) {
+            movableContent()
+        }
+    } else {
+        movableContent()
     }
 }
 

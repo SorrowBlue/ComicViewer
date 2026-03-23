@@ -76,7 +76,7 @@ fun rememberComicViewerUIState(
                 mainViewModel.shouldKeepSplash.value = false
                 mainViewModel.isInitialized.value = true
             },
-            screenEntryProviders = context.screenEntryProviders
+            screenEntryProviders = context.screenEntryProviders,
         )
     }
 }

@@ -5,6 +5,7 @@ import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
@@ -17,7 +18,7 @@ import io.github.takahirom.rin.rememberRetained
 @Scope
 annotation class ComicViewerUIScope
 
-@GraphExtension(ComicViewerUIScope::class)
+@GraphExtension(ComicViewerUIScope::class, additionalScopes = [NavScope::class])
 interface ComicViewerUIContext {
     val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase
     val getNavigationHistoryUseCase: GetNavigationHistoryUseCase

@@ -8,12 +8,11 @@ import com.sorrowblue.comicviewer.feature.settings.inapp.InAppLanguagePickerScre
 import com.sorrowblue.comicviewer.feature.settings.inapp.InAppLanguagePickerScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data object InAppLanguagePickerNavKey : ScreenKey
+internal data object InAppLanguagePickerNavKey : NavKey
 
 context(factory: InAppLanguagePickerScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.inAppLanguagePickerNavEntry(navigator: Navigator) {

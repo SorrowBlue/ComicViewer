@@ -5,7 +5,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface BookshelfEditType {
+internal sealed interface BookshelfEditType {
     val bookshelfType: BookshelfType
 
     @Serializable

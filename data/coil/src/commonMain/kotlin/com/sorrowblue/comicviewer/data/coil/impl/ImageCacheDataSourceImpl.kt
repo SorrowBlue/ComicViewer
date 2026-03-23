@@ -1,9 +1,9 @@
 package com.sorrowblue.comicviewer.data.coil.impl
 
 import coil3.disk.DiskCache
-import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
-import com.sorrowblue.comicviewer.data.coil.pageDiskCache
-import com.sorrowblue.comicviewer.data.coil.thumbnailDiskCache
+import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.cache.pageDiskCache
+import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.ImageCache

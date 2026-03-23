@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.coil.di
 
 import coil3.disk.DiskCache
-import com.sorrowblue.comicviewer.data.coil.CoilDiskCache
+import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.impl.ImageCacheDataSourceImpl
 import com.sorrowblue.comicviewer.data.coil.impl.ThumbnailDataSourceImpl
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource

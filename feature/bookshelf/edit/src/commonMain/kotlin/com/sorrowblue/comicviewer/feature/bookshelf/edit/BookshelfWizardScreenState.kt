@@ -26,7 +26,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 @Serializable
-sealed interface BookshelfWizardPage {
+internal sealed interface BookshelfWizardPage {
 
     @Serializable
     data object Selection : BookshelfWizardPage

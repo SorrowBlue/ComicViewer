@@ -8,12 +8,11 @@ import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettingsScreenCo
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ViewerSettingsNavKey : ScreenKey
+data object ViewerSettingsNavKey : NavKey
 
 context(factory: ViewerSettingsScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.viewerSettingsNavEntry(navigator: Navigator) {

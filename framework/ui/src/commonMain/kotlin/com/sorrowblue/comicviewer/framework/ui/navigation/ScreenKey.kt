@@ -7,9 +7,9 @@ import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
 
-interface ScreenKey : NavKey
+annotation class NavScope
 
-interface NavigationKey : ScreenKey {
+interface NavigationKey : NavKey {
     val title: String
         @Composable
         get
@@ -19,6 +19,5 @@ interface NavigationKey : ScreenKey {
 }
 
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T : NavKey> KSerializer<T>.asEntry(): NavKeyEntry {
-    return (T::class as KClass<NavKey>) to (this as KSerializer<NavKey>)
-}
+inline fun <reified T : NavKey> KSerializer<T>.asEntry(): NavKeyEntry =
+    (T::class as KClass<NavKey>) to (this as KSerializer<NavKey>)

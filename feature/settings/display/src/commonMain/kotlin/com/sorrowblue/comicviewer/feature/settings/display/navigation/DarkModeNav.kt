@@ -6,12 +6,11 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.ScreenKey
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data object DarkModeNavKey : ScreenKey
+internal data object DarkModeNavKey : NavKey
 
 context(factory: DarkModeScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.darkModeNavEntry(navigator: Navigator) {
