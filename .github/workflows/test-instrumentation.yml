@@ -93,7 +93,7 @@ jobs:
             -PsmbPath="/testshare/testfolder/"
 
       - if: cancelled() != true
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         with:
           name: 'Instrumentation Test'
           path: '**/build/outputs/*Test-results/**/TEST-*.xml'
