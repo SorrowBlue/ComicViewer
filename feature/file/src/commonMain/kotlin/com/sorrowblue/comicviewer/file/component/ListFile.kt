@@ -125,7 +125,7 @@ fun ListFile(
                         LinearProgressIndicator(
                             modifier = Modifier.fillMaxWidth(),
                             progress = { file.lastPageRead.toFloat() / file.totalPageCount },
-                            strokeCap = StrokeCap.Butt,
+                            strokeCap = StrokeCap.Round,
                             gapSize = 0.dp,
                             drawStopIndicator = {
                                 drawStopIndicator(
@@ -196,7 +196,7 @@ private fun FileListPreview(@PreviewParameter(BooleanProvider::class) showThumbn
     PreviewTheme {
         Column {
             ListFile(
-                file = fakeBookFile(name = "Fake book name"),
+                file = fakeBookFile(),
                 onInfoClick = {},
                 showThumbnail = showThumbnail,
                 fontSize = FolderDisplaySettingsDefaults.FontSize,
@@ -222,7 +222,7 @@ private fun FileListCardPreview(@PreviewParameter(BooleanProvider::class) showTh
     PreviewTheme {
         Column {
             ListFileCard(
-                file = fakeBookFile(name = "Fake book name"),
+                file = fakeBookFile(),
                 onClick = {},
                 onInfoClick = {},
                 showThumbnail = showThumbnail,

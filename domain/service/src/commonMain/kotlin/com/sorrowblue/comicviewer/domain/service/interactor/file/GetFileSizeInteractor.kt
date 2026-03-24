@@ -17,12 +17,12 @@ internal class GetFileSizeInteractor(
         bookshelfLocalDataSource.flow(request.bookshelfId).map { bookshelf ->
             if (bookshelf != null) {
                 runCatching {
-                        remoteDataSourceFactory.create(bookshelf).getFileSize(request.path)
-                    }.fold({ size ->
-                        Resource.Success(size)
-                    }, {
-                        Resource.Error(Error.System)
-                    })
+                    remoteDataSourceFactory.create(bookshelf).getFileSize(request.path)
+                }.fold({ size ->
+                    Resource.Success(size)
+                }, {
+                    Resource.Error(Error.System)
+                })
             } else {
                 Resource.Error(Error.NotFound)
             }

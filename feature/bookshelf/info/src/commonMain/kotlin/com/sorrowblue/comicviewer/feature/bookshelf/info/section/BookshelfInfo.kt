@@ -152,7 +152,7 @@ private fun BookshelfInfoListItem(
         overlineContent = overlineContent,
         headlineContent = headlineContent,
         modifier = modifier
-            .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+            .padding(horizontal = ExtraPaneScaffoldDefaults.Padding),
     )
 }
 

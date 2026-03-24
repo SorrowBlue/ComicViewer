@@ -76,8 +76,8 @@ internal fun BookshelfListItem(
                         drawRect(
                             brush = Brush.verticalGradient(
                                 0f to colors.containerColor.copy(alpha = 1f),
-                                0.1f to colors.containerColor.copy(alpha = 0.70f),
-                                0.2f to colors.containerColor.copy(alpha = 0.4f),
+                                0.2f to colors.containerColor.copy(alpha = 0.8f),
+                                0.5f to colors.containerColor.copy(alpha = 0.5f),
                                 1f to colors.containerColor.copy(alpha = 0.0f),
                             ),
                             blendMode = BlendMode.DstIn,
@@ -87,7 +87,7 @@ internal fun BookshelfListItem(
                     .background(ComicTheme.colorScheme.imageBackground(colors.containerColor)),
             )
             Column(modifier = Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.Top) {
                     Card(modifier = Modifier.size(60.dp)) {
                         Spacer(Modifier.weight(1f))
                         Icon(
@@ -97,7 +97,7 @@ internal fun BookshelfListItem(
                         )
                         Spacer(Modifier.weight(1f))
                     }
-                    Spacer(Modifier.size(8.dp))
+                    Spacer(Modifier.size(ComicTheme.dimension.padding))
                     Column {
                         Row {
                             AssistChip(
@@ -132,6 +132,7 @@ internal fun BookshelfListItem(
                         Text(
                             text = bookshelfFolder.displayName,
                             maxLines = 2,
+                            minLines = 2,
                             style = ComicTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.Bold,
                             ),
@@ -193,7 +194,11 @@ private val BookshelfFolder.displayName
 @Preview
 @Preview(uiMode = AndroidUiModes.UI_MODE_NIGHT_YES)
 @Composable
-private fun BookshelfCardPreview(@PreviewParameter(BookshelfFolderProvider::class) bookshelfFolder: BookshelfFolder) {
+private fun BookshelfCardPreview(
+    @PreviewParameter(
+        BookshelfFolderProvider::class,
+    ) bookshelfFolder: BookshelfFolder,
+) {
     PreviewTheme {
         BookshelfListItem(
             bookshelfFolder = bookshelfFolder,
@@ -206,10 +211,8 @@ private fun BookshelfCardPreview(@PreviewParameter(BookshelfFolderProvider::clas
 private class BookshelfFolderProvider : PreviewParameterProvider<BookshelfFolder> {
     override val values = sequenceOf(
         BookshelfFolder(fakeSmbServer(), fakeFolder()),
-        BookshelfFolder(fakeInternalStorage(), fakeFolder())
+        BookshelfFolder(fakeInternalStorage(), fakeFolder()),
     )
 
-    override fun getDisplayName(index: Int): String? {
-        return values.toList()[index].bookshelf.type?.name
-    }
+    override fun getDisplayName(index: Int): String? = values.toList()[index].bookshelf.type?.name
 }

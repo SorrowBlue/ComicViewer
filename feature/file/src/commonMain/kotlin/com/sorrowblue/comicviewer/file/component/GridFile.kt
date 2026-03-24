@@ -201,7 +201,7 @@ fun GridFile(
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = "${(file.lastPageRead + 1)} / ${file.totalPageCount}",
+                    text = "${if (file.lastPageRead == 0) "-" else file.lastPageRead + 1} / ${file.totalPageCount}",
                     style = ComicTheme.typography.labelSmall.copy(),
                     color = ComicTheme.colorScheme.onSurface,
                 )

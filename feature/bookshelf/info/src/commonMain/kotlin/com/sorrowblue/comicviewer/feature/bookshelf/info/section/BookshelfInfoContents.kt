@@ -71,7 +71,7 @@ internal fun BookshelfInfoContents(
                 .only(PaddingValuesSides.Horizontal + PaddingValuesSides.Top)
                 .plus(
                     PaddingValues(
-                        horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding,
+                        horizontal = ExtraPaneScaffoldDefaults.Padding,
                         vertical = ComicTheme.dimension.padding,
                     ),
                 ),
@@ -85,7 +85,7 @@ internal fun BookshelfInfoContents(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(contentPadding.only(PaddingValuesSides.Horizontal))
-                .padding(horizontal = ExtraPaneScaffoldDefaults.HorizontalPadding),
+                .padding(horizontal = ExtraPaneScaffoldDefaults.Padding),
         )
         BookshelfInfo(
             bookshelf = uiState.bookshelf,

@@ -23,8 +23,4 @@ val LoremIpsum = listOf(
     "Nam ac nisl ac tellus pellentesque",
 )
 
-fun nextLoremIpsum() = LoremIpsum[loremIpsumIndex++].also {
-    if (loremIpsumIndex >= LoremIpsum.size) loremIpsumIndex = 0
-}
-
-private var loremIpsumIndex = 0
+fun nextLoremIpsum(index: Int = 0) = LoremIpsum[index]

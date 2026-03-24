@@ -23,7 +23,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnails
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
-import com.sorrowblue.comicviewer.file.section.SheetActionButtonsUiState
+import com.sorrowblue.comicviewer.file.section.FileInfoButtonsUiState
 import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 internal data class FileInfoScreenUiState(
     val file: File,
     val attribute: FileAttribute? = null,
-    val sheetActionButtonsUiState: SheetActionButtonsUiState = SheetActionButtonsUiState(),
+    val fileInfoButtonsUiState: FileInfoButtonsUiState = FileInfoButtonsUiState(),
 )
 
 @Composable
@@ -96,7 +96,7 @@ private class FileInfoScreenStateImpl(
     override var uiState by mutableStateOf(
         FileInfoScreenUiState(
             file = file,
-            sheetActionButtonsUiState = SheetActionButtonsUiState(
+            fileInfoButtonsUiState = FileInfoButtonsUiState(
                 isOpenFolderEnabled = isOpenFolderEnabled,
             ),
         ),
@@ -109,7 +109,7 @@ private class FileInfoScreenStateImpl(
             resource.onSuccess {
                 updateFileInfoSheetUiStateFile {
                     copy(
-                        sheetActionButtonsUiState = sheetActionButtonsUiState.copy(
+                        fileInfoButtonsUiState = fileInfoButtonsUiState.copy(
                             readLaterChecked = it,
                             readLaterLoading = false,
                         ),
@@ -144,13 +144,13 @@ private class FileInfoScreenStateImpl(
 
     override fun onReadLaterClick() {
         uiState = uiState.copy(
-            sheetActionButtonsUiState = uiState.sheetActionButtonsUiState.copy(
+            fileInfoButtonsUiState = uiState.fileInfoButtonsUiState.copy(
                 readLaterLoading = true,
             ),
         )
         coroutineScope.launch {
             delay(300)
-            if (uiState.sheetActionButtonsUiState.readLaterChecked) {
+            if (uiState.fileInfoButtonsUiState.readLaterChecked) {
                 deleteReadLaterUseCase(DeleteReadLaterUseCase.Request(file.bookshelfId, file.path))
             } else {
                 addReadLaterUseCase(AddReadLaterUseCase.Request(file.bookshelfId, file.path))

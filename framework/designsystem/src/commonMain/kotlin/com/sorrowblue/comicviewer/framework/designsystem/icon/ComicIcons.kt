@@ -24,6 +24,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.CollectionsBookmark
+import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DisplaySettings
@@ -51,6 +52,7 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.OpenInBrowser
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.RemoveRedEye
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.RocketLaunch
@@ -78,6 +80,7 @@ object ComicIcons {
     val LibraryBooks = Icons.AutoMirrored.Rounded.LibraryBooks
     val WatchLater = Icons.Rounded.WatchLater
     val Favorite = Icons.Rounded.Favorite
+    val Refresh = Icons.Rounded.Refresh
     val FavoriteBorder = Icons.Rounded.FavoriteBorder
     val RocketLaunch = Icons.Rounded.RocketLaunch
     val History = Icons.Rounded.History
@@ -123,6 +126,7 @@ object ComicIcons {
     val Book = Icons.Rounded.Book
     val BrokenImage = Icons.Rounded.BrokenImage
     val Folder = Icons.Rounded.Folder
+    val ContentCopy = Icons.Rounded.ContentCopy
     val RemoveRedEye = Icons.Rounded.RemoveRedEye
     val InsertDriveFile = Icons.AutoMirrored.Rounded.InsertDriveFile
     val Storage = Icons.Rounded.Storage

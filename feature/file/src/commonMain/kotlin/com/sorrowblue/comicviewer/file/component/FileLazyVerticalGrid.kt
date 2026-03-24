@@ -184,11 +184,13 @@ fun rememberLazyPagingColumnType(
 @PreviewMultiplatform
 @Composable
 private fun GridFileLazyGridPreview() {
-    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
+    val lazyPagingItems = PagingData.flowData<File> {
+        fakeBookFile(bookshelfId = it, index = it)
+    }.collectAsLazyPagingItems()
     PreviewTheme {
         Scaffold {
             FileLazyVerticalGrid(
-                uiState = FileLazyVerticalGridUiState(),
+                uiState = FileLazyVerticalGridUiState(imageScale = ImageScale.Crop),
                 lazyPagingItems = lazyPagingItems,
                 onItemClick = {},
                 onItemInfoClick = {},
@@ -207,6 +209,7 @@ private fun GridFileLazyListPreview() {
             FileLazyVerticalGrid(
                 uiState = FileLazyVerticalGridUiState(
                     fileListDisplay = FileListDisplay.List,
+                    imageScale = ImageScale.Crop
                 ),
                 lazyPagingItems = lazyPagingItems,
                 onItemClick = {},

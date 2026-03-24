@@ -113,5 +113,5 @@ fun ExtraPaneScaffold(
 }
 
 object ExtraPaneScaffoldDefaults {
-    val HorizontalPadding = 24.dp
+    val Padding = 24.dp
 }
