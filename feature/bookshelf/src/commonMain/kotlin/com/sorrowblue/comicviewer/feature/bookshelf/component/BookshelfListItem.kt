@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +12,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
@@ -31,8 +31,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.AndroidUiModes
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
@@ -45,6 +46,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_device
@@ -59,25 +61,8 @@ internal fun BookshelfListItem(
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-//    BoxWithConstraints {
-//        if (this.maxWidth > 360.dp) {
-//            BookshelfRowItem(bookshelfFolder, onClick, onInfoClick, modifier)
-//        } else {
-    BookshelfColumnItem(bookshelfFolder, onClick, onInfoClick, modifier)
-//        }
-//    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun BookshelfColumnItem(
-    bookshelfFolder: BookshelfFolder,
-    onClick: () -> Unit,
-    onInfoClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val colors = CardDefaults.cardColors()
-    Card(onClick = onClick, modifier = modifier, colors = colors) {
+    val colors = CardDefaults.elevatedCardColors()
+    ElevatedCard(onClick = onClick, modifier = modifier, colors = colors) {
         Box {
             FileThumbnailAsyncImage(
                 fileThumbnail = FolderThumbnail.from(bookshelfFolder.folder),
@@ -133,8 +118,8 @@ private fun BookshelfColumnItem(
                                     )
                                 },
                                 colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = ComicTheme.colorScheme.secondaryContainer,
-                                    labelColor = ComicTheme.colorScheme.secondary,
+                                    containerColor = ComicTheme.colorScheme.primaryContainer,
+                                    labelColor = ComicTheme.colorScheme.primary,
                                 ),
                             )
                             Spacer(Modifier.weight(1f))
@@ -205,21 +190,26 @@ private val BookshelfFolder.displayName
         ShareContents -> bookshelf.displayName.ifEmpty { bookshelf.displayName }
     }
 
-@Preview(widthDp = 360, apiLevel = 35, device = Devices.PIXEL_7)
-@Preview(
-    widthDp = 360,
-    uiMode = AndroidUiModes.UI_MODE_NIGHT_YES,
-    apiLevel = 35,
-    device = Devices.PIXEL_7,
-)
+@Preview
+@Preview(uiMode = AndroidUiModes.UI_MODE_NIGHT_YES)
 @Composable
-private fun BookshelfCardPreview() {
+private fun BookshelfCardPreview(@PreviewParameter(BookshelfFolderProvider::class) bookshelfFolder: BookshelfFolder) {
     PreviewTheme {
-        val bookshelfFolder = BookshelfFolder(fakeSmbServer(), fakeFolder())
         BookshelfListItem(
             bookshelfFolder = bookshelfFolder,
             onClick = {},
             onInfoClick = {},
         )
+    }
+}
+
+private class BookshelfFolderProvider : PreviewParameterProvider<BookshelfFolder> {
+    override val values = sequenceOf(
+        BookshelfFolder(fakeSmbServer(), fakeFolder()),
+        BookshelfFolder(fakeInternalStorage(), fakeFolder())
+    )
+
+    override fun getDisplayName(index: Int): String? {
+        return values.toList()[index].bookshelf.type?.name
     }
 }
