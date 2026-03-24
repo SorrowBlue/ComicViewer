@@ -54,6 +54,8 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
     actual override suspend fun attribute(path: String): FileAttribute =
         iosSmbFileClient.attribute(path)
 
+    actual override suspend fun fileSize(path: String): Long = iosSmbFileClient.fileSize(path)
+
     private suspend fun IosSmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
         if (resolveImageFolder && isDirectory && runCatching {
                 iosSmbFileClient.listDirectory(path)

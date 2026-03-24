@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.file
 
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileSizeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
@@ -20,6 +21,7 @@ interface FileInfoScreenContext : ScreenContext {
     val getFileUseCase: GetFileUseCase
     val getFileAttributeUseCase: GetFileAttributeUseCase
     val existsReadlaterUseCase: ExistsReadlaterUseCase
+    val getFileSizeUseCase: GetFileSizeUseCase
     val pagingFolderBookThumbnailsUseCase: PagingFolderBookThumbnailsUseCase
     val addReadLaterUseCase: AddReadLaterUseCase
     val deleteReadLaterUseCase: DeleteReadLaterUseCase

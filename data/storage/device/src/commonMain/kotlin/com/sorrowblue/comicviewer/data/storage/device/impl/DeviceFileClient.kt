@@ -27,4 +27,6 @@ internal expect class DeviceFileClient : FileClient<DeviceStorage> {
     override suspend fun connect(path: String)
 
     override suspend fun attribute(path: String): FileAttribute
+
+    override suspend fun fileSize(path: String): Long
 }

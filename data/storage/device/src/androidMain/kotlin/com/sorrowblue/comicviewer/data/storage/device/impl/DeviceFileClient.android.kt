@@ -52,6 +52,14 @@ internal actual class DeviceFileClient(
 
     actual override suspend fun attribute(path: String): FileAttribute = FileAttribute()
 
+    actual override suspend fun fileSize(path: String): Long = kotlin
+        .runCatching {
+            val file = documentFile(path)
+            file.listFiles().sumOf { fileSize(it.uri.toString()) }
+        }.getOrElse {
+            0
+        }
+
     actual override suspend fun connect(path: String) {
         kotlin
             .runCatching {

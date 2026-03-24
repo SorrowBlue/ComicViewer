@@ -138,6 +138,17 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
         }
     }
 
+    actual override suspend fun fileSize(path: String): Long {
+        return runCommand {
+            val smbFile = smbFile(path)
+            if (smbFile.isDirectory) {
+                return smbFile.listFiles().sumOf { fileSize(it.url.path) }
+            } else {
+                smbFile.length()
+            }
+        }
+    }
+
     private fun SmbFile.hasAttributes(attribute: Int): Boolean =
         attributes and attribute == attribute
 
@@ -205,7 +216,7 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
                 parent = Path(url.path).parent.toString() + "/",
-                size = 0,
+                size = -1,
                 lastModifier = lastModified,
                 isHidden = isHidden,
             )
@@ -220,7 +231,7 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
                     ?.toString()
                     .orEmpty()
                     .removeSuffix("/") + "/",
-                size = 0,
+                size = -1,
                 lastModifier = lastModified,
                 isHidden = isHidden,
             )

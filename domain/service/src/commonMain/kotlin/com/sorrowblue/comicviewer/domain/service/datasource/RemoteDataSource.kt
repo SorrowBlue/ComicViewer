@@ -31,4 +31,6 @@ interface RemoteDataSource {
     suspend fun fileReader(book: Book): FileReader?
 
     suspend fun getAttribute(path: String): FileAttribute?
+
+    suspend fun getFileSize(path: String): Long
 }

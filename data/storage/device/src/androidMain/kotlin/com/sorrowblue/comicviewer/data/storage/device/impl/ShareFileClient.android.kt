@@ -115,6 +115,8 @@ internal actual class ShareFileClient(
             }
         }
 
+    actual override suspend fun fileSize(path: String): Long = 0
+
     private fun DocumentFile.toFileModel(): File = BookFile(
         path = uri.toString(),
         bookshelfId = ShareContents.id,

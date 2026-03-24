@@ -35,4 +35,6 @@ interface FileClient<T : Bookshelf> {
     suspend fun connect(path: String)
 
     suspend fun attribute(path: String): FileAttribute
+
+    suspend fun fileSize(path: String): Long
 }

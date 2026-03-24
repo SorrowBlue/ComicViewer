@@ -10,11 +10,15 @@ import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileSizeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
@@ -60,6 +64,7 @@ internal fun rememberFileInfoScreenState(
             isOpenFolderEnabled = isOpenFolderEnabled,
             getFileAttributeUseCase = context.getFileAttributeUseCase,
             existsReadlaterUseCase = context.existsReadlaterUseCase,
+            getFileSizeUseCase = context.getFileSizeUseCase,
             addReadLaterUseCase = context.addReadLaterUseCase,
             deleteReadLaterUseCase = context.deleteReadLaterUseCase,
             lazyPagingItems = lazyPagingItems,
@@ -80,6 +85,7 @@ private class FileInfoScreenStateImpl(
     private val isOpenFolderEnabled: Boolean,
     getFileAttributeUseCase: GetFileAttributeUseCase,
     existsReadlaterUseCase: ExistsReadlaterUseCase,
+    getFileSizeUseCase: GetFileSizeUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
     private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
     override val lazyPagingItems: LazyPagingItems<BookThumbnail>?,
@@ -119,6 +125,20 @@ private class FileInfoScreenStateImpl(
                 copy(attribute = it.dataOrNull())
             }
         }.launchIn(coroutineScope)
+            .let(runningJob::add)
+
+        getFileSizeUseCase(GetFileSizeUseCase.Request(file.bookshelfId, file.path))
+            .onEach {
+                val size = it.dataOrNull() ?: -1
+                uiState = uiState.copy(
+                    file = when (val ufile = uiState.file) {
+                        is BookFile -> ufile.copy(size = size)
+                        is BookFolder -> ufile.copy(size = size)
+                        is Folder -> ufile.copy(size = size)
+                    },
+                )
+            }
+            .launchIn(coroutineScope)
             .let(runningJob::add)
     }
 

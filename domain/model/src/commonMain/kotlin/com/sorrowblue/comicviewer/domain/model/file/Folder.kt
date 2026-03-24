@@ -15,9 +15,14 @@ data class Folder private constructor(
     override val cacheKey: String,
     override val count: Int,
 ) : IFolder {
-    fun copy(parent: String = this.parent, sortIndex: Int = this.sortIndex) = copy(
+    fun copy(
+        parent: String = this.parent,
+        sortIndex: Int = this.sortIndex,
+        size: Long = this.size,
+    ) = copy(
         bookshelfId = bookshelfId,
         parent = parent,
+        size = size,
         sortIndex = sortIndex,
     )
 

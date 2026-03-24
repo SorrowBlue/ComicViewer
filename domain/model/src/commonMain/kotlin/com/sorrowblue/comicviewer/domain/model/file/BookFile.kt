@@ -20,8 +20,13 @@ data class BookFile private constructor(
 ) : Book {
     val extension get() = name.extension
 
-    fun copy(sortIndex: Int = this.sortIndex, totalPageCount: Int = this.totalPageCount) = copy(
+    fun copy(
+        size: Long = this.size,
+        sortIndex: Int = this.sortIndex,
+        totalPageCount: Int = this.totalPageCount,
+    ) = copy(
         bookshelfId = bookshelfId,
+        size = size,
         totalPageCount = totalPageCount,
         sortIndex = sortIndex,
     )

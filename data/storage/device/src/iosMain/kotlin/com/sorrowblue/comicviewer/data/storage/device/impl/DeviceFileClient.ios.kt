@@ -139,6 +139,17 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
         )
     }
 
+    actual override suspend fun fileSize(path: String): Long {
+        val file =
+            FileUtils.fromString(input = path, isDirectory = !NSURL(fileURLWithPath = path).fileURL)
+                ?: throw FileClientException.InvalidPath()
+        return if (!NSURL(fileURLWithPath = path).fileURL) {
+            file.listFiles()?.sumOf { fileSize(it.getAbsolutePath()) } ?: 0
+        } else {
+            file.getLength()
+        }
+    }
+
     private fun IPlatformFile.toFileModel(resolveImageFolder: Boolean = false): File {
         val path = getAbsolutePath()
         val name = getName()

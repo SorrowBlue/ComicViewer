@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -22,6 +23,8 @@ import kotlin.io.path.fileSize
 import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
@@ -31,8 +34,10 @@ import okio.Path.Companion.toPath
 import okio.buffer
 
 @AssistedInject
-internal actual class DeviceFileClient(@Assisted actual override val bookshelf: DeviceStorage) :
-    FileClient<DeviceStorage> {
+internal actual class DeviceFileClient(
+    @Assisted actual override val bookshelf: DeviceStorage,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+) : FileClient<DeviceStorage> {
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<DeviceStorage> {
         actual override fun create(bookshelf: DeviceStorage): DeviceFileClient
@@ -89,8 +94,17 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
         }
     }
 
-    actual override suspend fun attribute(path: String): FileAttribute {
-        TODO("Not yet implemented")
+    actual override suspend fun attribute(path: String): FileAttribute = FileAttribute()
+
+    actual override suspend fun fileSize(path: String): Long {
+        val ioPath = path.toPath().toNioPath()
+        return if (ioPath.isDirectory()) {
+            withContext(dispatcher) { Files.list(ioPath) }
+                .toList()
+                .sumOf { fileSize(it.absolutePathString()) }
+        } else {
+            ioPath.fileSize()
+        }
     }
 
     private fun Path.toFileModel(resolveImageFolder: Boolean = false): File =

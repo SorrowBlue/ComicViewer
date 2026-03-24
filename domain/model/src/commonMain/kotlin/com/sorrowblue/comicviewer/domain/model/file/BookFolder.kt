@@ -21,11 +21,13 @@ data class BookFolder private constructor(
     IFolder {
     fun copy(
         parent: String = this.parent,
-        sortIndex: Int = this.sortIndex,
+        size: Long = this.size,
         totalPageCount: Int = this.totalPageCount,
+        sortIndex: Int = this.sortIndex,
     ) = copy(
         bookshelfId = bookshelfId,
         parent = parent,
+        size = size,
         totalPageCount = totalPageCount,
         sortIndex = sortIndex,
     )

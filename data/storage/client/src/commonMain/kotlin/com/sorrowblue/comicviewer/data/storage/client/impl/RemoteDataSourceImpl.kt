@@ -181,4 +181,10 @@ internal class RemoteDataSourceImpl(
             else -> RemoteException.Unknown()
         }
     }
+
+    override suspend fun getFileSize(path: String): Long = kotlin.runCatching {
+        withContext(dispatcher) {
+            fileClient.fileSize(path = path)
+        }
+    }.getOrDefault(-1)
 }

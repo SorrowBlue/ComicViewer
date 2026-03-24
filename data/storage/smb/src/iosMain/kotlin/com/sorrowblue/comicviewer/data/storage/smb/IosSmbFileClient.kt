@@ -16,6 +16,7 @@ interface IosSmbFileClient {
     suspend fun seekableInputStream(file: File): SeekableInputStream
     suspend fun bufferedSource(file: File): BufferedSource
     suspend fun attribute(path: String): FileAttribute
+    suspend fun fileSize(path: String): Long
 
     interface Factory {
         fun create(bookshelf: SmbServer): IosSmbFileClient

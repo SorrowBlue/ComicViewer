@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.domain.service.interactor.file.ClearAllHistory
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileAttributeInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileInteractor
+import com.sorrowblue.comicviewer.domain.service.interactor.file.GetFileSizeInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetIntentBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.GetNextBookInteractor
 import com.sorrowblue.comicviewer.domain.service.interactor.file.PagingBookshelfBookInteractor
@@ -74,6 +75,7 @@ import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseC
 import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
+import com.sorrowblue.comicviewer.domain.usecase.file.GetFileSizeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
@@ -165,6 +167,9 @@ interface ServiceProviders {
 
     @Binds
     private val GetFileAttributeInteractor.bind: GetFileAttributeUseCase get() = this
+
+    @Binds
+    private val GetFileSizeInteractor.bind: GetFileSizeUseCase get() = this
 
     @Binds
     private val GetFileInteractor.bind: GetFileUseCase get() = this

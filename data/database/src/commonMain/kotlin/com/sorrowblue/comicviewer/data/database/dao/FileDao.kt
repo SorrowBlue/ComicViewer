@@ -54,7 +54,7 @@ internal interface FileDao {
     suspend fun updateSimple2(list: List<UpdateFileEntityMinimumWithSortIndexWithoutFileType>)
 
     @Transaction
-    suspend fun updateSimpleGet(entity: UpdateFileEntityMinimum): FileEntity? {
+    suspend fun updateSimpleGet(entity: UpdateFileEntityMinimum): QueryFileWithCountEntity? {
         updateSimple(entity)
         return find(entity.bookshelfId.value, entity.path)
     }
@@ -93,8 +93,20 @@ internal interface FileDao {
     @Delete
     suspend fun deleteAll(list: List<FileEntity>)
 
-    @Query("SELECT * FROM file WHERE bookshelf_id = :bookshelfId AND path = :path")
-    suspend fun find(bookshelfId: Int, path: String): FileEntity?
+    @Query(
+        """
+        SELECT
+          *,
+          CASE
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+            else 0
+          END count
+        FROM
+          file
+        WHERE
+          bookshelf_id = :bookshelfId AND path = :path""",
+    )
+    suspend fun find(bookshelfId: Int, path: String): QueryFileWithCountEntity?
 
     @Query("SELECT * FROM file WHERE bookshelf_id= :bookshelfId AND path = :path")
     fun flow(bookshelfId: Int, path: String): Flow<FileEntity?>

@@ -45,4 +45,8 @@ internal actual class ShareFileClient(@Assisted actual override val bookshelf: S
     actual override suspend fun attribute(path: String): FileAttribute {
         TODO("Not yet implemented")
     }
+
+    actual override suspend fun fileSize(path: String): Long {
+        TODO("Not yet implemented")
+    }
 }
