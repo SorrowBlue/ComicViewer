@@ -209,7 +209,7 @@ private fun GridFileLazyListPreview() {
             FileLazyVerticalGrid(
                 uiState = FileLazyVerticalGridUiState(
                     fileListDisplay = FileListDisplay.List,
-                    imageScale = ImageScale.Crop
+                    imageScale = ImageScale.Crop,
                 ),
                 lazyPagingItems = lazyPagingItems,
                 onItemClick = {},

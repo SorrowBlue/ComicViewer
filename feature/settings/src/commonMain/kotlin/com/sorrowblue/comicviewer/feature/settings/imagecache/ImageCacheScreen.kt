@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_image_cache
 import kotlin.math.floor
@@ -72,7 +72,7 @@ private fun ImageCacheScreenPreview() {
         uiState = ThumbnailScreenUiState(
             imageCacheInfos = listOf(
                 BookshelfImageCacheInfo(
-                    fakeInternalStorage(),
+                    fakeDeviceStorage(),
                     ThumbnailImageCache(50 * Byte * Byte, 100 * Byte * Byte),
                     BookPageImageCache(50 * Byte * Byte, 100 * Byte * Byte),
                 ),

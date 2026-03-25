@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
-internal fun FileInfoCardTitle(
+fun FileInfoCardTitle(
     icon: ImageVector,
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,

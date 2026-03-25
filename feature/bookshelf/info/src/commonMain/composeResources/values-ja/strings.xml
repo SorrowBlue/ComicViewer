@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bookshelf_info_title">本棚情報</string>
-    <string name="bookshelf_info_label_display_name">表示名</string>
     <string name="bookshelf_info_label_host">IP/ホスト名</string>
     <string name="bookshelf_info_label_path">ファイルパス</string>
     <string name="bookshelf_info_label_internal_storage">内部ストレージ</string>
@@ -21,7 +20,8 @@
     <string name="bookshelf_info_delete_text_null">本棚を削除しますか？</string>
     <string name="bookshelf_info_delete_btn_delete">Delete</string>
     <string name="bookshelf_info_btn_delete">削除</string>
-
+    <string name="bookshelf_info_label_connection_details">接続の詳細</string>
+    <string name="bookshelf_info_label_storage_details">ストレージ詳細</string>
     <!--<editor-fold desc="Bookshelf info sheet">-->
     <string name="bookshelf_info_label_scanning_file">ファイルをスキャン中</string>
     <string name="bookshelf_info_label_scanning_thumbnails">サムネイルをスキャン中</string>

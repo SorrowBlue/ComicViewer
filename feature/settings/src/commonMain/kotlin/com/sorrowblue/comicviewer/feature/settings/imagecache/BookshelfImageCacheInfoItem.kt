@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_imagecache_label_page
 import comicviewer.feature.settings.generated.resources.settings_imagecache_label_thumbnail
@@ -138,7 +138,7 @@ private fun BookshelfImageCacheInfoItemPreview() {
     PreviewTheme {
         BookshelfImageCacheInfoItem(
             imageCacheInfo = BookshelfImageCacheInfo(
-                fakeInternalStorage(),
+                fakeDeviceStorage(),
                 ThumbnailImageCache(123456, 1234567),
                 BookPageImageCache(1234, 12345),
             ),

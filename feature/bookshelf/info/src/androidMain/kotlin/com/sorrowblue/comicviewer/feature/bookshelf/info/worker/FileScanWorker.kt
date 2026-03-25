@@ -13,7 +13,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.Operation
 import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -38,6 +40,8 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import kotlin.random.Random
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
@@ -124,6 +128,7 @@ class FileScanWorker(
             ) {
                 notificationManager.notify(Random.nextInt(), notification)
             }
+            delay(5000)
             Result.success()
         }, {
             Result.failure()
@@ -158,7 +163,7 @@ class FileScanWorker(
                     // サイレント通知
                     setSilent(!init)
                     // 即時表示
-                    setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+                    foregroundServiceBehavior = NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
                 }.build()
 
         return ForegroundInfo(
@@ -169,9 +174,16 @@ class FileScanWorker(
     }
 
     companion object {
-        const val BOOKSHELF_ID = "BOOKSHELF_ID"
+        private const val BOOKSHELF_ID = "BOOKSHELF_ID"
+        private const val UNIQUE_WORK_NAME_PREFIX =
+            "com.sorrowblue.comicviewer.feature.bookshelf.info.worker.FileScanWorker:"
 
-        fun enqueueUniqueWork(workManager: WorkManager, bookshelfId: BookshelfId) {
+        private fun uniqueWorkName(id: BookshelfId) = "$UNIQUE_WORK_NAME_PREFIX$id"
+
+        fun getWorkInfosFlow(workManager: WorkManager, id: BookshelfId): Flow<List<WorkInfo>> =
+            workManager.getWorkInfosForUniqueWorkFlow(uniqueWorkName(id))
+
+        fun enqueueUniqueWork(workManager: WorkManager, bookshelfId: BookshelfId): Operation {
             val constraints = Constraints
                 .Builder()
                 .apply {
@@ -180,13 +192,16 @@ class FileScanWorker(
                     // ユーザーのデバイスの保存容量が少なすぎる場合以外
                     setRequiresStorageNotLow(true)
                 }.build()
-            val myWorkRequest = OneTimeWorkRequest
-                .Builder(FileScanWorker::class.java)
+            val myWorkRequest = OneTimeWorkRequest.Builder(FileScanWorker::class.java)
                 .setConstraints(constraints)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .setInputData(workDataOf(BOOKSHELF_ID to bookshelfId.value))
                 .build()
-            workManager.enqueueUniqueWork("scan", ExistingWorkPolicy.KEEP, myWorkRequest)
+            return workManager.enqueueUniqueWork(
+                uniqueWorkName(bookshelfId),
+                ExistingWorkPolicy.KEEP,
+                myWorkRequest,
+            )
         }
     }
 

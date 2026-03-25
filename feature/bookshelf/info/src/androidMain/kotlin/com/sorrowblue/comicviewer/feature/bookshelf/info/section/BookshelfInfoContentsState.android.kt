@@ -38,6 +38,8 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_lab
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_file_no_notification
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails_no_notification
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
@@ -101,6 +103,17 @@ private class BookshelfInfoMainContentsStateImpl(
         ),
     )
         private set
+
+    init {
+        FileScanWorker.getWorkInfosFlow(workManager, bookshelfFolder.bookshelf.id)
+            .onEach { workInfos ->
+                uiState = uiState.copy(isScanningFile = workInfos.any { !it.state.isFinished })
+            }.launchIn(appState.coroutineScope)
+        ThumbnailScanWorker.getWorkInfosFlow(workManager, bookshelfFolder.bookshelf.id)
+            .onEach { workInfos ->
+                uiState = uiState.copy(isScanningThumbnail = workInfos.any { !it.state.isFinished })
+            }.launchIn(appState.coroutineScope)
+    }
 
     override fun onScanFileClick() {
         currentScanType = ScanType.File

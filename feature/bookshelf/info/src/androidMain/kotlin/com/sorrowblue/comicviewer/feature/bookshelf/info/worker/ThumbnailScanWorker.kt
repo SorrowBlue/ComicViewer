@@ -13,7 +13,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.Operation
 import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -37,6 +39,8 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import kotlin.random.Random
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
@@ -119,6 +123,7 @@ class ThumbnailScanWorker(
             ) {
                 notificationManager.notify(Random.nextInt(), notification)
             }
+            delay(5000)
             Result.success()
         }, {
             Result.failure()
@@ -155,7 +160,7 @@ class ThumbnailScanWorker(
                     // サイレント通知
                     setSilent(!init)
                     // 即時表示
-                    setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+                    foregroundServiceBehavior = NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
                 }.build()
 
         return ForegroundInfo(
@@ -174,9 +179,16 @@ class ThumbnailScanWorker(
     fun interface Factory : MetroWorkerFactory.WorkerInstanceFactory<ThumbnailScanWorker>
 
     companion object {
-        const val BOOKSHELF_ID = "BOOKSHELF_ID"
+        private const val BOOKSHELF_ID = "BOOKSHELF_ID"
+        private const val UNIQUE_WORK_NAME_PREFIX =
+            "com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ThumbnailScanWorker:"
 
-        fun enqueueUniqueWork(context: Context, bookshelfId: BookshelfId) {
+        private fun uniqueWorkName(id: BookshelfId) = "$UNIQUE_WORK_NAME_PREFIX$id"
+
+        fun getWorkInfosFlow(workManager: WorkManager, id: BookshelfId): Flow<List<WorkInfo>> =
+            workManager.getWorkInfosForUniqueWorkFlow(uniqueWorkName(id))
+
+        fun enqueueUniqueWork(context: Context, bookshelfId: BookshelfId): Operation {
             val constraints = Constraints
                 .Builder()
                 .apply {
@@ -191,9 +203,13 @@ class ThumbnailScanWorker(
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .setInputData(workDataOf(BOOKSHELF_ID to bookshelfId.value))
                 .build()
-            WorkManager
+            return WorkManager
                 .getInstance(context)
-                .enqueueUniqueWork("scan2", ExistingWorkPolicy.KEEP, myWorkRequest)
+                .enqueueUniqueWork(
+                    uniqueWorkName(bookshelfId),
+                    ExistingWorkPolicy.KEEP,
+                    myWorkRequest,
+                )
         }
     }
 }

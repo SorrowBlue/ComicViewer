@@ -16,17 +16,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContentsUiState
-import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BottomActions
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
@@ -51,59 +53,26 @@ internal sealed interface BookshelfInfoSheetUiState {
 
 @Composable
 internal fun BookshelfInfoScreen(
-    uiState: BookshelfInfoSheetUiState,
     onBackClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onRemoveClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     ExtraPaneScaffold(
         title = { Text(text = stringResource(Res.string.bookshelf_info_title)) },
         onCloseClick = onBackClick,
-        actions = {
-            BottomActions(
-                onEditClick = onEditClick,
-                onRemoveClick = onRemoveClick,
-                enabled = uiState is BookshelfInfoSheetUiState.Loaded,
-            )
-        },
         modifier = modifier,
         content = content,
     )
 }
 
-@Preview(locale = "en")
-@Preview(locale = "ja")
-@Composable
-private fun BookshelfInfoScreenPreview() {
-    PreviewTheme(true) {
-        ExtraPaneScaffold(
-            title = { Text(text = stringResource(Res.string.bookshelf_info_title)) },
-            onCloseClick = { },
-            actions = {
-                BottomActions(
-                    onEditClick = {},
-                    onRemoveClick = {},
-                    enabled = true,
-                )
-            },
-        ) { contentPadding ->
-            BookshelfInfoContents(
-                uiState = BookshelfInfoContentsUiState(fakeSmbServer(), fakeFolder()),
-                lazyPagingItems = PagingData.flowData { FileThumbnail.from(fakeBookFile()) }
-                    .collectAsLazyPagingItems(),
-                onScanFileClick = {},
-                onScanThumbnailClick = { },
-                contentPadding = contentPadding,
-            )
-        }
-    }
-}
-
+@Preview
 @Preview(device = Devices.TABLET, locale = "en")
 @Composable
-private fun BookshelfInfoScreenPreview2() {
+private fun BookshelfInfoScreenPreview(
+    @PreviewParameter(
+        BookshelfProvider::class,
+    ) bookshelfFolder: BookshelfFolder,
+) {
     val scaffoldNavigator = rememberSupportingPaneScaffoldNavigator(
         initialDestinationHistory = listOf(
             ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Main),
@@ -123,24 +92,30 @@ private fun BookshelfInfoScreenPreview2() {
                 ExtraPaneScaffold(
                     title = { Text(text = stringResource(Res.string.bookshelf_info_title)) },
                     onCloseClick = { },
-                    actions = {
-                        BottomActions(
-                            onEditClick = {},
-                            onRemoveClick = {},
-                            enabled = true,
-                        )
-                    },
                 ) { contentPadding ->
                     BookshelfInfoContents(
-                        uiState = BookshelfInfoContentsUiState(fakeSmbServer(), fakeFolder()),
+                        uiState = BookshelfInfoContentsUiState(
+                            bookshelfFolder.bookshelf,
+                            bookshelfFolder.folder,
+                        ),
                         lazyPagingItems = PagingData.flowData { FileThumbnail.from(fakeBookFile()) }
                             .collectAsLazyPagingItems(),
                         onScanFileClick = {},
-                        onScanThumbnailClick = { },
+                        onScanThumbnailClick = {},
+                        onEditClick = {},
+                        onDeleteClick = {},
                         contentPadding = contentPadding,
                     )
                 }
             },
         )
     }
+}
+
+private class BookshelfProvider : PreviewParameterProvider<BookshelfFolder> {
+    override val values: Sequence<BookshelfFolder>
+        get() = sequenceOf(
+            BookshelfFolder(fakeSmbServer(), fakeFolder()),
+            BookshelfFolder(fakeDeviceStorage(), fakeFolder()),
+        )
 }

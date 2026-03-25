@@ -30,7 +30,11 @@ import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PreviewTheme(show: Boolean = false, content: @Composable () -> Unit) {
+fun PreviewTheme(
+    showDeviceUi: Boolean = false,
+    showInsetsBorder: Boolean = false,
+    content: @Composable () -> Unit,
+) {
     val movableContent = remember {
         movableContentOf {
             SharedTransitionLayout {
@@ -54,14 +58,14 @@ fun PreviewTheme(show: Boolean = false, content: @Composable () -> Unit) {
             }
         }
     }
-    if (show) {
+    if (showDeviceUi) {
         EdgeToEdgeTemplate(
             navMode = NavigationMode.Gesture,
             navigationBarMode = InsetMode.Visible,
             statusBarMode = InsetMode.Visible,
             cameraCutoutMode = CameraCutoutMode.Middle,
-            showInsetsBorder = show,
-            useHiddenApiHack = show,
+            showInsetsBorder = showInsetsBorder,
+            useHiddenApiHack = false,
         ) {
             movableContent()
         }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bookshelf_info_title">Bookshelf info</string>
-    <string name="bookshelf_info_label_display_name">Display name</string>
     <string name="bookshelf_info_label_host">IP/Host</string>
     <string name="bookshelf_info_label_path">Path</string>
     <string name="bookshelf_info_label_internal_storage">Internal storage</string>
@@ -15,6 +14,8 @@
     <string name="bookshelf_info_label_bookshelf_type">Bookshelf type</string>
     <string name="bookshelf_info_msg_remove">You deleted the bookshelf</string>
 
+    <string name="bookshelf_info_label_connection_details">Connection Details</string>
+    <string name="bookshelf_info_label_storage_details">Storage Details</string>
     <string name="bookshelf_info_label_auth_method">Authentication method</string>
     <string name="bookshelf_info_label_guest">Guest</string>
     <string name="bookshelf_info_label_Id_password">ID / Password</string>

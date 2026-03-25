@@ -45,8 +45,8 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeInternalStorage
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_device
@@ -211,7 +211,7 @@ private fun BookshelfCardPreview(
 private class BookshelfFolderProvider : PreviewParameterProvider<BookshelfFolder> {
     override val values = sequenceOf(
         BookshelfFolder(fakeSmbServer(), fakeFolder()),
-        BookshelfFolder(fakeInternalStorage(), fakeFolder()),
+        BookshelfFolder(fakeDeviceStorage(), fakeFolder()),
     )
 
     override fun getDisplayName(index: Int): String? = values.toList()[index].bookshelf.type?.name

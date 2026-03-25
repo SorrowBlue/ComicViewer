@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import okio.Path.Companion.toPath
 
 @OptIn(InternalDataApi::class)
-fun fakeInternalStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()) = DeviceStorage(
+fun fakeDeviceStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()) = DeviceStorage(
     id = BookshelfId(bookshelfId),
     displayName = name,
     fileCount = 999,

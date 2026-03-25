@@ -26,19 +26,7 @@ internal fun BookshelfInfoScreenRoot(
     val state = rememberBookshelfInfoScreenState(bookshelfId = bookshelfId)
     val scrollState: ScrollState = rememberScrollState()
     BookshelfInfoScreen(
-        uiState = state.uiState,
         onBackClick = onBackClick,
-        onRemoveClick = onRemoveClick,
-        onEditClick = {
-            if (state.uiState is BookshelfInfoSheetUiState.Loaded) {
-                onEditClick(
-                    bookshelfId,
-                    requireNotNull(
-                        (state.uiState as BookshelfInfoSheetUiState.Loaded).bookshelfFolder.bookshelf.type,
-                    ),
-                )
-            }
-        },
         modifier = Modifier.testTag("BookshelfInfoScreenRoot"),
     ) { contentPadding ->
         when (val uiState = state.uiState) {
@@ -46,6 +34,17 @@ internal fun BookshelfInfoScreenRoot(
                 BookshelfInfoContents(
                     bookshelfFolder = uiState.bookshelfFolder,
                     showNotificationPermissionRationale = showNotificationPermissionRationale,
+                    onEditClick = {
+                        if (state.uiState is BookshelfInfoSheetUiState.Loaded) {
+                            onEditClick(
+                                bookshelfId,
+                                requireNotNull(
+                                    (state.uiState as BookshelfInfoSheetUiState.Loaded).bookshelfFolder.bookshelf.type,
+                                ),
+                            )
+                        }
+                    },
+                    onDeleteClick = onRemoveClick,
                     contentPadding = contentPadding,
                     modifier = Modifier.verticalScroll(scrollState),
                 )
