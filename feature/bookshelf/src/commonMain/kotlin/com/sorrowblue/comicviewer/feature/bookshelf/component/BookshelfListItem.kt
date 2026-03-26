@@ -66,7 +66,7 @@ internal fun BookshelfListItem(
     ElevatedCard(
         onClick = onClick,
         colors = colors,
-        modifier = modifier.testTag("BookshelfListItem")
+        modifier = modifier.testTag("BookshelfListItem"),
     ) {
         Box {
             FileThumbnailAsyncImage(
