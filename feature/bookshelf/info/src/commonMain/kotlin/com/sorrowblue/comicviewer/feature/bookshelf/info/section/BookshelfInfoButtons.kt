@@ -45,7 +45,7 @@ internal fun BookshelfInfoButtons(
             shape = ButtonDefaults.mediumPressedShape,
             modifier = Modifier.fillMaxWidth()
                 .heightIn(min = ButtonDefaults.MediumContainerHeight)
-                .testTag("EditButton")
+                .testTag("EditButton"),
         ) {
             Icon(
                 imageVector = ComicIcons.Edit,

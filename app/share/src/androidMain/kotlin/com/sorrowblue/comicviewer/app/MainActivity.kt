@@ -26,7 +26,7 @@ import dev.zacsweers.metrox.android.ActivityKey
  * Main activity
  */
 @ContributesIntoMap(AppScope::class, binding<Activity>())
-@ActivityKey(MainActivity::class)
+@ActivityKey
 class MainActivity(private val appGraph: AppGraph) : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
