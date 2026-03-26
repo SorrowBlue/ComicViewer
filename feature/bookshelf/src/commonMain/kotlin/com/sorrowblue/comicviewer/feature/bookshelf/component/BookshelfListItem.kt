@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,7 +63,11 @@ internal fun BookshelfListItem(
     modifier: Modifier = Modifier,
 ) {
     val colors = CardDefaults.elevatedCardColors()
-    ElevatedCard(onClick = onClick, modifier = modifier, colors = colors) {
+    ElevatedCard(
+        onClick = onClick,
+        colors = colors,
+        modifier = modifier.testTag("BookshelfListItem")
+    ) {
         Box {
             FileThumbnailAsyncImage(
                 fileThumbnail = FolderThumbnail.from(bookshelfFolder.folder),
@@ -125,6 +130,7 @@ internal fun BookshelfListItem(
                             Spacer(Modifier.weight(1f))
                             OutlinedIconButton(
                                 onClick = onInfoClick,
+                                modifier = Modifier.testTag("BookshelfListItemMenu"),
                             ) {
                                 Icon(ComicIcons.MoreVert, null)
                             }

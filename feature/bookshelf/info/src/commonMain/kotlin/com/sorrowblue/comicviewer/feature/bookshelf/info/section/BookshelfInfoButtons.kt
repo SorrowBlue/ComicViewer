@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.ImageSync
@@ -42,7 +43,9 @@ internal fun BookshelfInfoButtons(
         Button(
             onClick = onEditClick,
             shape = ButtonDefaults.mediumPressedShape,
-            modifier = Modifier.fillMaxWidth().heightIn(min = ButtonDefaults.MediumContainerHeight),
+            modifier = Modifier.fillMaxWidth()
+                .heightIn(min = ButtonDefaults.MediumContainerHeight)
+                .testTag("EditButton")
         ) {
             Icon(
                 imageVector = ComicIcons.Edit,
@@ -104,7 +107,10 @@ internal fun BookshelfInfoButtons(
         OutlinedButton(
             onClick = onDeleteClick,
             shape = ButtonDefaults.mediumPressedShape,
-            modifier = Modifier.fillMaxWidth().heightIn(min = ButtonDefaults.MediumContainerHeight),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = ButtonDefaults.MediumContainerHeight)
+                .testTag("DeleteButton"),
         ) {
             Icon(
                 imageVector = ComicIcons.Delete,

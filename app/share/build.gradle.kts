@@ -78,13 +78,14 @@ kotlin {
                 implementation(libs.androidx.testRunner)
                 implementation(libs.compose.uiTestJunit4)
                 implementation(libs.compose.uiTestManifest)
+                implementation(libs.androidx.test.espressoCore)
             }
         }
     }
 }
 
 dependencies {
-    androidTestUtil("androidx.test:orchestrator:1.6.1")
+    androidTestUtil(libs.androidx.testOrchestrator)
 }
 
 metro {

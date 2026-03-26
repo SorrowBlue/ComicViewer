@@ -306,6 +306,9 @@ class ComposeNavigation3Test {
 
         composeTestRule.onAllNodesWithTag("BookshelfListItemMenu").onFirst().performClick()
         composeTestRule.onNodeWithTag("BookshelfInfoScreenRoot").assertIsDisplayed()
+        composeTestRule.waitUntil(5000) {
+            composeTestRule.onNodeWithTag("EditButton").isDisplayed()
+        }
         composeTestRule.onNodeWithTag("EditButton").performClick()
         composeTestRule.onNodeWithTag("BookshelfEditorContents").assertIsDisplayed()
         composeTestRule.onAllNodesWithTag("BackButton").onLast().performClick()
