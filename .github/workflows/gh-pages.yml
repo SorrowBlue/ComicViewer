@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Setup Java
         uses: ./.github/actions/setup-java-gradle
       - name: Generage Dokka
@@ -57,7 +57,7 @@ jobs:
           rm -rf docs
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
