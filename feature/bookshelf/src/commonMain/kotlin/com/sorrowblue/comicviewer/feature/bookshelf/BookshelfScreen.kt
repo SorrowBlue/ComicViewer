@@ -11,8 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfAppBar
@@ -23,7 +27,12 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteS
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButton
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
 import org.jetbrains.compose.resources.stringResource
@@ -77,5 +86,24 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
                 contentPadding = contentPadding + additionalPaddings,
             )
         }
+    }
+}
+
+@Preview
+@Preview(device = Devices.FOLDABLE)
+@Preview(device = Devices.TABLET)
+@Composable
+internal fun BookshelfScreenPreview() {
+    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+    PreviewTheme {
+        scaffoldState.BookshelfScreen(
+            lazyPagingItems = PagingData.flowData {
+                BookshelfFolder(fakeSmbServer(), fakeFolder())
+            }.collectAsLazyPagingItems(),
+            onFabClick = {},
+            onSettingsClick = {},
+            onBookshelfClick = { _, _ -> },
+            onBookshelfInfoClick = {},
+        )
     }
 }

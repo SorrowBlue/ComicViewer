@@ -153,7 +153,7 @@ private fun AdaptiveNavigationSuiteScaffoldPreview(
             ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, ""),
         ),
     )
-    PreviewTheme(false) {
+    PreviewTheme {
         SupportingPaneScaffold(
             modifier = Modifier.background(ComicTheme.colorScheme.background),
             directive = scaffoldNavigator.scaffoldDirective,

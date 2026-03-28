@@ -9,18 +9,26 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import okio.Path.Companion.toPath
 
+val dummyBookshelfNames = listOf(
+    "Technical documents, documents, and PDFs",
+    "Shonen and Seinen Manga",
+    "Science Fiction, Fantasy, Another World",
+    "Doujinshi / self-cooked book",
+    "Unread Archive",
+)
+
 @OptIn(InternalDataApi::class)
-fun fakeDeviceStorage(bookshelfId: Int = 0, name: String = nextLoremIpsum()) = DeviceStorage(
+fun fakeDeviceStorage(bookshelfId: Int = 0, @IntRange(0, 4) index: Int = 0) = DeviceStorage(
     id = BookshelfId(bookshelfId),
-    displayName = name,
+    displayName = dummyBookshelfNames[index],
     fileCount = 999,
     isDeleted = false,
 )
 
 @OptIn(InternalDataApi::class)
-fun fakeSmbServer(bookshelfId: Int = 0, name: String = nextLoremIpsum()) = SmbServer(
+fun fakeSmbServer(bookshelfId: Int = 0, @IntRange(0, 4) index: Int = 0) = SmbServer(
     id = BookshelfId(bookshelfId),
-    displayName = name,
+    displayName = dummyBookshelfNames[index],
     host = "198.51.100.254",
     port = 455,
     auth = SmbServer.Auth.UsernamePassword("example.com", nextLoremIpsum(), nextLoremIpsum()),

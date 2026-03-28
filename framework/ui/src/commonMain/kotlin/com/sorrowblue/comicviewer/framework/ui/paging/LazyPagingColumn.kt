@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.framework.ui.paging
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,16 +19,20 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.composables.core.ScrollArea
 import com.composables.core.Thumb
+import com.composables.core.ThumbVisibility
 import com.composables.core.VerticalScrollbar
 import com.composables.core.rememberScrollAreaState
+import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
+import com.sorrowblue.comicviewer.framework.ui.layout.only
+import kotlin.time.Duration.Companion.seconds
 
 sealed class LazyPagingColumn {
     abstract val columns: GridCells
@@ -86,14 +92,16 @@ fun <T : Any> LazyPagingColumn(
         VerticalScrollbar(
             modifier = Modifier.align(Alignment.TopEnd)
                 .fillMaxHeight()
-                .width(24.dp)
-                .padding(
-                    top = contentPadding.calculateTopPadding(),
-                    bottom = contentPadding.calculateBottomPadding(),
-                ).windowInsetsPadding(WindowInsets.safeGestures.only(WindowInsetsSides.End)),
+                .padding(contentPadding.only(PaddingValuesSides.Vertical))
+                .windowInsetsPadding(WindowInsets.safeGestures.only(WindowInsetsSides.End))
+                .width(16.dp),
         ) {
             Thumb(
-                modifier = Modifier.background(Color.Black.copy(0.78f), RoundedCornerShape(100)),
+                thumbVisibility = ThumbVisibility.HideWhileIdle(fadeIn(), fadeOut(), 1.5.seconds),
+                modifier = Modifier.background(
+                    LocalContentColor.current.copy(0.25f),
+                    RoundedCornerShape(100),
+                ),
             )
         }
     }

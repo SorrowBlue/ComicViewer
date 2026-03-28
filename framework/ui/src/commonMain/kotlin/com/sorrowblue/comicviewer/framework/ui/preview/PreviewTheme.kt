@@ -4,8 +4,11 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
@@ -16,12 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import coil3.annotation.ExperimentalCoilApi
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalNavigationItems
+import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationItems
 import de.drick.compose.edgetoedgepreviewlib.CameraCutoutMode
 import de.drick.compose.edgetoedgepreviewlib.EdgeToEdgeTemplate
 import de.drick.compose.edgetoedgepreviewlib.InsetMode
@@ -31,6 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun PreviewTheme(
+    modifier: Modifier = Modifier,
     showDeviceUi: Boolean = false,
     showInsetsBorder: Boolean = false,
     content: @Composable () -> Unit,
@@ -38,18 +46,17 @@ fun PreviewTheme(
     val movableContent = remember {
         movableContentOf {
             SharedTransitionLayout {
-                CompositionLocalProvider(LocalSharedTransitionScope provides this) {
-                    AnimatedContent(true) {
+                CompositionLocalProvider(
+                    ProvidesAppState,
+                    provideAsyncImagePreviewHandler,
+                    ProvidesPreviewNavigationItems,
+                    LocalSharedTransitionScope provides this,
+                ) {
+                    AnimatedContent(true, modifier = modifier) {
                         if (it) {
-                            CompositionLocalProvider(
-                                ProvidesAppState,
-                                LocalNavAnimatedContentScope provides this,
-                            ) {
+                            CompositionLocalProvider(LocalNavAnimatedContentScope provides this) {
                                 ComicTheme {
-                                    CompositionLocalProvider(
-                                        provideAsyncImagePreviewHandler,
-                                        content,
-                                    )
+                                    content()
                                 }
                             }
                         }
@@ -71,6 +78,28 @@ fun PreviewTheme(
         }
     } else {
         movableContent()
+    }
+}
+
+private val ProvidesPreviewNavigationItems
+    @Composable
+    get() = LocalNavigationItems provides PreviewNavigationItems
+
+private val PreviewNavigationItems = object : NavigationItems {
+    @Composable
+    override fun Content(onNavigationReSelect: () -> Unit) {
+        repeat(4) {
+            NavigationSuiteItem(
+                selected = true,
+                onClick = {},
+                icon = {
+                    Icon(ComicIcons.Favorite, null)
+                },
+                label = {
+                    Text("label")
+                },
+            )
+        }
     }
 }
 

@@ -5,8 +5,9 @@
     <string name="bookshelf_label_no_bookshelf">まだ本棚は追加されていません</string>
 
     <!--BookshelfListItem-->
-    <string name="bookshelf_label_smb">Smb</string>
-    <string name="bookshelf_label_device">Device</string>
+    <string name="bookshelf_label_smb">LAN/SMB</string>
+    <string name="bookshelf_label_device">DEVICE</string>
+    <string name="bookshelf_label_files">ファイル</string>
 
     <string name="bookshelf_btn_add">追加</string>
 </resources>

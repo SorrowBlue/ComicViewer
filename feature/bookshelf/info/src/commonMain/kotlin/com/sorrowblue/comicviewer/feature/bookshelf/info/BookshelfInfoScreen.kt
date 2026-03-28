@@ -79,7 +79,7 @@ private fun BookshelfInfoScreenPreview(
             ThreePaneScaffoldDestinationItem(SupportingPaneScaffoldRole.Extra, ""),
         ),
     )
-    PreviewTheme(true) {
+    PreviewTheme(showDeviceUi = true) {
         SupportingPaneScaffold(
             modifier = Modifier.background(ComicTheme.colorScheme.background),
             directive = scaffoldNavigator.scaffoldDirective,
