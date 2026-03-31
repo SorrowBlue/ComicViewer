@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWiz
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Shelves
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
@@ -27,7 +28,7 @@ data object BookshelfNavKey : NavigationKey {
         @Composable
         get() = stringResource(Res.string.bookshelf_label_bookshelf)
 
-    override val icon get() = ComicIcons.LibraryBooks
+    override val icon get() = ComicIcons.Shelves
 
     override val order get() = 1
 }

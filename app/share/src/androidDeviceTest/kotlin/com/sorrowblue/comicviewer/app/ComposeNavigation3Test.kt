@@ -25,6 +25,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -32,10 +33,8 @@ class ComposeNavigation3Test {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun tabTest() {
-        // Start the app
+    @Before
+    fun setup() {
         composeTestRule.setContent {
             with(InstrumentationRegistry.getInstrumentation().context) {
                 val state = with(rememberComicViewerUIContext()) {
@@ -46,68 +45,30 @@ class ComposeNavigation3Test {
                 }
             }
         }
-
         tutorial()
+    }
 
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun tabTest() {
         tab()
     }
 
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun bookshelfTest() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-        tutorial()
-
         bookshelf()
     }
 
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun collectionTest() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
         navigationCollection()
     }
 
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun settingsTest() {
-        // Start the app
-        composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
-                val state = with(rememberComicViewerUIContext()) {
-                    rememberComicViewerUIState(allowNavigationRestored = false)
-                }
-                with(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
-                }
-            }
-        }
-
-        tutorial()
-
         settings()
     }
 
@@ -179,7 +140,6 @@ class ComposeNavigation3Test {
         composeTestRule.waitForIdle()
     }
 
-    @OptIn(ExperimentalTestApi::class)
     private fun navigationCollection() {
         composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
@@ -288,15 +248,17 @@ class ComposeNavigation3Test {
         }
 
         composeTestRule.onNodeWithTag("DisplayNameField").performTextInput("SMBBookshelf")
-        composeTestRule.onNodeWithTag("HostField").performTextInput(BuildTestConfig.smbHost)
+        composeTestRule.onNodeWithTag("HostField").performTextInput(BuildConfig.SMB_HOST)
         composeTestRule.onNodeWithTag("PortField").performTextClearance()
         composeTestRule.onNodeWithTag("PortField")
-            .performTextInput(BuildTestConfig.smbPort.toString())
-        composeTestRule.onNodeWithTag("PathField").performTextInput(BuildTestConfig.smbPath)
+            .performTextInput(BuildConfig.SMB_PORT.toString())
+        composeTestRule.onNodeWithTag("PathField").performTextInput(BuildConfig.SMB_PATH)
         composeTestRule.onNodeWithTag("AuthUserPass").performClick()
-        composeTestRule.onNodeWithTag("DomainField").performTextInput(BuildTestConfig.smbDomain)
-        composeTestRule.onNodeWithTag("UsernameField").performTextInput(BuildTestConfig.smbUsername)
-        composeTestRule.onNodeWithTag("PasswordField").performTextInput(BuildTestConfig.smbPassword)
+        composeTestRule.onNodeWithTag("DomainField").performTextInput(BuildConfig.SMB_DOMAIN)
+        composeTestRule.onNodeWithTag("UsernameField")
+            .performTextInput(BuildConfig.SMB_USERNAME)
+        composeTestRule.onNodeWithTag("PasswordField")
+            .performTextInput(BuildConfig.SMB_PASSWORD)
         composeTestRule.onNodeWithTag("SaveButton").performClick()
 
         composeTestRule.waitUntil(5000) {

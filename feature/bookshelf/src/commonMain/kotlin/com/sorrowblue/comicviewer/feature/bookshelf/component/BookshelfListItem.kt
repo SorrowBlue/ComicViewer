@@ -13,7 +13,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -88,13 +88,17 @@ internal fun BookshelfListItem(
             )
             Column(modifier = Modifier.padding(CardDefaults.ContentPadding)) {
                 Row(verticalAlignment = Alignment.Top) {
-                    Surface(shape = ButtonDefaults.mediumPressedShape) {
+                    Surface(
+                        shape = ButtonDefaults.mediumPressedShape,
+                        color = colors.containerColor,
+                        contentColor = colors.contentColor,
+                    ) {
                         Icon(
-                            imageVector = if (bookshelfFolder.bookshelf is SmbServer) ComicIcons.Dns else ComicIcons.SdStorage,
+                            imageVector = if (bookshelfFolder.bookshelf is SmbServer) ComicIcons.Lan else ComicIcons.SdStorage,
                             contentDescription = null,
                             modifier = Modifier
-                                .padding(ButtonDefaults.LargeIconSpacing)
-                                .size(ButtonDefaults.LargeIconSize),
+                                .padding(ButtonDefaults.MediumIconSpacing)
+                                .size(ButtonDefaults.MediumIconSize),
                         )
                     }
                     Spacer(Modifier.size(8.dp))
@@ -104,7 +108,7 @@ internal fun BookshelfListItem(
                                 BookshelfTypeChip(it)
                             }
                             Spacer(Modifier.weight(1f))
-                            IconButton(
+                            OutlinedIconButton(
                                 onClick = onInfoClick,
                                 modifier = Modifier.testTag("BookshelfListItemMenu"),
                             ) {
@@ -119,13 +123,11 @@ internal fun BookshelfListItem(
                                 fontWeight = FontWeight.Bold,
                             ),
                             color = colors.contentColor,
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                 }
                 Spacer(Modifier.size(16.dp))
-
                 Row {
                     Spacer(Modifier.weight(1f))
                     Column {
@@ -165,8 +167,8 @@ private fun BookshelfTypeChip(type: BookshelfType) {
             )
         },
         colors = AssistChipDefaults.assistChipColors(
-            containerColor = ComicTheme.colorScheme.primaryContainer,
-            labelColor = ComicTheme.colorScheme.onPrimaryContainer,
+            containerColor = ComicTheme.colorScheme.secondaryContainer,
+            labelColor = ComicTheme.colorScheme.onSecondaryContainer,
         ),
     )
 }

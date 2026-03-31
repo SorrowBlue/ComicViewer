@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ internal fun ActionButton(
     loading: Boolean = false,
 ) {
     val colors = CardDefaults.cardColors()
-    OutlinedButton(
+    FilledTonalButton(
         enabled = enabled,
         onClick = onClick,
         shapes = ButtonDefaults.shapes(

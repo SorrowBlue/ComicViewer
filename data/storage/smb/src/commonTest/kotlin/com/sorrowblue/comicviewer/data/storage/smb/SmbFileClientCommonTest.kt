@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.smb.BuildTestConfig
+import com.sorrowblue.comicviewer.data.smb.BuildConfig
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientType
@@ -26,12 +26,12 @@ class SmbFileClientCommonTest {
     private val server
         get() = SmbServer(
             displayName = "Test",
-            host = BuildTestConfig.smbHost,
-            port = BuildTestConfig.smbPort,
+            host = BuildConfig.SMB_HOST,
+            port = BuildConfig.SMB_PORT,
             auth = SmbServer.Auth.UsernamePassword(
-                domain = BuildTestConfig.smbDomain,
-                username = BuildTestConfig.smbUsername,
-                password = BuildTestConfig.smbPassword,
+                domain = BuildConfig.SMB_DOMAIN,
+                username = BuildConfig.SMB_USERNAME,
+                password = BuildConfig.SMB_PASSWORD,
             ),
         )
 
@@ -50,16 +50,16 @@ class SmbFileClientCommonTest {
     fun testExists() = runTest {
         val client = createClient()
         assertTrue(
-            BuildTestConfig.smbPath.isNotEmpty(),
-            "BuildTestConfig.smbPath must be provided for tests",
+            BuildConfig.SMB_PATH.isNotEmpty(),
+            "BuildConfig.smbPath must be provided for tests",
         )
-        assertTrue(client.exists(BuildTestConfig.smbPath))
+        assertTrue(client.exists(BuildConfig.SMB_PATH))
     }
 
     @Test
     fun testConnect() = runTest {
         val client = createClient()
-        client.connect(BuildTestConfig.smbPath)
+        client.connect(BuildConfig.SMB_PATH)
 
         val bad = "/nope-nope-12345/"
         val ex = assertFailsWith<Throwable> { client.connect(bad) }
@@ -69,11 +69,11 @@ class SmbFileClientCommonTest {
     @Test
     fun testCurrentAndAttribute() = runTest {
         val client = createClient()
-        val f = client.current(BuildTestConfig.smbPath)
+        val f = client.current(BuildConfig.SMB_PATH)
         assertNotNull(f)
-        assertTrue(f.path.contains(BuildTestConfig.smbPath.removeSuffix("/")))
+        assertTrue(f.path.contains(BuildConfig.SMB_PATH.removeSuffix("/")))
 
-        val attr = client.attribute(BuildTestConfig.smbPath)
+        val attr = client.attribute(BuildConfig.SMB_PATH)
         assertNotNull(attr)
         if (f !is Folder) {
             assertFalse(attr.directory)
@@ -83,7 +83,7 @@ class SmbFileClientCommonTest {
     @Test
     fun testListFiles() = runTest {
         val client = createClient()
-        val path = BuildTestConfig.smbPath
+        val path = BuildConfig.SMB_PATH
         val parent = path.trimEnd('/').substringBeforeLast('/', "")
         val dir = if (parent.isEmpty()) "/" else "$parent/"
         val file = Folder(
@@ -99,8 +99,8 @@ class SmbFileClientCommonTest {
         assertTrue(list.isNotEmpty(), "listFiles should return entries for $dir")
         assertTrue(
             list.any {
-                it.path == BuildTestConfig.smbPath || it.path.contains(
-                    BuildTestConfig.smbPath.trimEnd(
+                it.path == BuildConfig.SMB_PATH || it.path.contains(
+                    BuildConfig.SMB_PATH.trimEnd(
                         '/',
                     ),
                 )
@@ -112,9 +112,9 @@ class SmbFileClientCommonTest {
     fun testBufferedSource() = runTest {
         val client = createClient()
         val file = Folder(
-            path = BuildTestConfig.smbPath,
+            path = BuildConfig.SMB_PATH,
             bookshelfId = server.id,
-            name = BuildTestConfig.smbPath.trimEnd('/'),
+            name = BuildConfig.SMB_PATH.trimEnd('/'),
             parent = "",
             size = 0,
             lastModifier = 0,
@@ -135,9 +135,9 @@ class SmbFileClientCommonTest {
     fun testSeekableInputStream() = runTest {
         val client = createClient()
         val file = Folder(
-            path = BuildTestConfig.smbPath,
+            path = BuildConfig.SMB_PATH,
             bookshelfId = server.id,
-            name = BuildTestConfig.smbPath.trimEnd('/'),
+            name = BuildConfig.SMB_PATH.trimEnd('/'),
             parent = "",
             size = 0,
             lastModifier = 0,

@@ -16,7 +16,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
-import om.sorrowblue.comicviewer.feature.settings.BuildKonfig
+import om.sorrowblue.comicviewer.feature.settings.BuildConfig
 
 internal interface AppInfoSettingsScreenState {
     var uiState: SettingsAppInfoScreenUiState
@@ -37,9 +37,9 @@ private class AppInfoSettingsScreenStateImpl(private val urlHandler: UriHandler)
     @OptIn(ExperimentalTime::class)
     override var uiState: SettingsAppInfoScreenUiState by mutableStateOf(
         SettingsAppInfoScreenUiState(
-            versionName = BuildKonfig.VERSION_NAME,
+            versionName = BuildConfig.VERSION_NAME,
             buildAt = Instant
-                .fromEpochMilliseconds(BuildKonfig.TIMESTAMP)
+                .fromEpochMilliseconds(BuildConfig.TIMESTAMP)
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .format(
                     LocalDateTime.Format {

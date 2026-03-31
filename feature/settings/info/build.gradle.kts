@@ -1,8 +1,6 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec
-
 plugins {
     alias(libs.plugins.comicviewer.multiplatformFeature)
-    alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.buildconfig)
 }
 
 kotlin {
@@ -27,20 +25,14 @@ kotlin {
 
 val gitTagProvider = providers.of(GitTagValueSource::class) {}
 
-buildkonfig {
+buildConfig {
     packageName = "om.sorrowblue.comicviewer.feature.settings"
-    defaultConfigs {
-        buildConfigField(
-            type = FieldSpec.Type.STRING,
-            name = "VERSION_NAME",
-            value = gitTagProvider.orElse("unknown").get(),
-            const = true
-        )
-        buildConfigField(
-            FieldSpec.Type.LONG,
-            "TIMESTAMP",
-            System.currentTimeMillis().toString(),
-            const = true
-        )
-    }
+    buildConfigField(
+        "VERSION_NAME",
+        gitTagProvider.orElse("unknown").get(),
+    )
+    buildConfigField(
+        "TIMESTAMP",
+        System.currentTimeMillis(),
+    )
 }

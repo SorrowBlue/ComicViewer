@@ -52,7 +52,7 @@ internal fun SmbConnectionCard(
     OutlinedCard(modifier = modifier) {
         Column(modifier = Modifier.padding(32.dp)) {
             FileInfoCardTitle(
-                ComicIcons.Dns,
+                ComicIcons.Lan,
                 title = {
                     Text(stringResource(Res.string.bookshelf_info_label_connection_details))
                 },

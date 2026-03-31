@@ -24,7 +24,7 @@ androidx-testRules = "1.7.0"
 androidx-testRunner = "1.7.0"
 androidx-window = "1.5.1"
 androidx-work = "2.11.2"
-buildkonfig = "0.17.1"
+buildconfig = "6.0.9"
 coil = "3.4.0"
 composables = "1.49.6"
 compose-animationGraphics = "1.10.6"
@@ -187,7 +187,7 @@ androidApplication = { id = "com.android.application", version.ref = "android-gr
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidMultiplatform = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 androidxRoom3 = { id = "androidx.room3", version.ref = "androidx-room3" }
-buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
+buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 comicviewer-androidApplication = { id = "comicviewer.convention.android-application" }
 comicviewer-androidLibrary = { id = "comicviewer.convention.android-library" }
 comicviewer-di = { id = "comicviewer.primitive.metro" }

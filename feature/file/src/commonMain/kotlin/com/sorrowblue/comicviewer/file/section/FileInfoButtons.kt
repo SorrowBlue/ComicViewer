@@ -67,14 +67,14 @@ internal fun FileInfoButtons(
                 },
             )
         }
-        ActionButton(
-            modifier = Modifier.testTag("RefreshButton").fillMaxWidth(),
-            onClick = {},
-            icon = ComicIcons.Refresh,
-            text = {
-                Text(text = "Regenerate Thumbnail")
-            },
-            enabled = false,
-        )
+//        ActionButton(
+//            modifier = Modifier.testTag("RefreshButton").fillMaxWidth(),
+//            onClick = {},
+//            icon = ComicIcons.Refresh,
+//            text = {
+//                Text(text = "Regenerate Thumbnail")
+//            },
+//            enabled = false,
+//        )
     }
 }

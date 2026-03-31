@@ -1,14 +1,12 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec
-
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.buildconfig)
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.sorrowblue.comicviewer.app.share"
         androidResources.enable = true
         withDeviceTest {
@@ -33,7 +31,7 @@ kotlin {
             dependencies {
                 rootProject.subprojects.filterNot {
                     it.path == project.path || it.path.startsWith(projects.app.path)
-                        || it.path == projects.data.reader.document.android.path
+                            || it.path == projects.data.reader.document.android.path
                             || it.path == projects.data.storage.smb.path
                 }.forEach {
                     val hasSource = it.projectDir.resolve("src").exists()
@@ -92,39 +90,12 @@ metro {
     reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
 }
 
-buildkonfig {
+buildConfig {
     packageName = "com.sorrowblue.comicviewer.app"
-    objectName = "BuildTestConfig"
-    defaultConfigs {
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "smbHost",
-            project.findProperty("smbHost")?.toString().orEmpty()
-        )
-        buildConfigField(
-            FieldSpec.Type.INT,
-            "smbPort",
-            project.findProperty("smbPort")?.toString()?.toIntOrNull()?.toString() ?: "445"
-        )
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "smbUsername",
-            project.findProperty("smbUsername")?.toString().orEmpty()
-        )
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "smbDomain",
-            project.findProperty("smbDomain")?.toString().orEmpty()
-        )
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "smbPassword",
-            project.findProperty("smbPassword")?.toString().orEmpty()
-        )
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "smbPath",
-            project.findProperty("smbPath")?.toString().orEmpty()
-        )
-    }
+    buildConfigField("SMB_HOST", project.findProperty("smbHost")?.toString().orEmpty())
+    buildConfigField("SMB_PORT", project.findProperty("smbPort")?.toString()?.toIntOrNull() ?: 445)
+    buildConfigField("SMB_USERNAME", project.findProperty("smbUsername")?.toString().orEmpty())
+    buildConfigField("SMB_DOMAIN", project.findProperty("smbDomain")?.toString().orEmpty())
+    buildConfigField("SMB_PASSWORD", project.findProperty("smbPassword")?.toString().orEmpty())
+    buildConfigField("SMB_PATH", project.findProperty("smbPath")?.toString().orEmpty())
 }

@@ -143,7 +143,7 @@ internal fun BookshelfInfoContents(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     when (uiState.bookshelf.type) {
                         BookshelfType.SMB -> {
-                            Icon(ComicIcons.Dns, null)
+                            Icon(ComicIcons.Lan, null)
                             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                             Text(
                                 text = stringResource(Res.string.bookshelf_info_label_smb),

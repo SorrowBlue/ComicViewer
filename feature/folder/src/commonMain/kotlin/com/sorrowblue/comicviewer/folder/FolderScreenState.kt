@@ -121,7 +121,7 @@ internal fun rememberFolderScreenState(
     }
 
     LaunchedEffect(state) {
-        snapshotFlow { state.lazyPagingItems }.collect {
+        snapshotFlow { state.lazyPagingItems.loadState }.collect {
             state.onLoadStateChange(state.lazyPagingItems)
         }
     }
@@ -199,8 +199,10 @@ private class FolderScreenStateImpl(
     }
 
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
+        logcat { "onLoadStateChange $isRestored $restorePath ${lazyPagingItems.itemCount}" }
         if (!isRestored && restorePath != null && 0 < lazyPagingItems.itemCount) {
             val index = lazyPagingItems.indexOf { it?.path == restorePath }
+            logcat { "onLoadStateChange $index $restorePath" }
             if (0 <= index) {
                 isRestored = true
                 runCatching {

@@ -1,140 +1,108 @@
 package com.sorrowblue.comicviewer.framework.designsystem.icon
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowLeft
-import androidx.compose.material.icons.automirrored.rounded.ArrowRight
-import androidx.compose.material.icons.automirrored.rounded.InsertDriveFile
-import androidx.compose.material.icons.automirrored.rounded.LastPage
-import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
-import androidx.compose.material.icons.automirrored.rounded.Logout
-import androidx.compose.material.icons.automirrored.rounded.MenuOpen
-import androidx.compose.material.icons.automirrored.rounded.Sort
-import androidx.compose.material.icons.automirrored.rounded.ViewList
-import androidx.compose.material.icons.automirrored.rounded.VolumeUp
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowDownward
-import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.ArrowUpward
-import androidx.compose.material.icons.rounded.Book
-import androidx.compose.material.icons.rounded.BrokenImage
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.ClearAll
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.CollectionsBookmark
-import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.DarkMode
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.DisplaySettings
-import androidx.compose.material.icons.rounded.Dns
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.ErrorOutline
-import androidx.compose.material.icons.rounded.Extension
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.FirstPage
-import androidx.compose.material.icons.rounded.Folder
-import androidx.compose.material.icons.rounded.FolderOff
-import androidx.compose.material.icons.rounded.FolderOpen
-import androidx.compose.material.icons.rounded.Grid4x4
-import androidx.compose.material.icons.rounded.GridView
-import androidx.compose.material.icons.rounded.History
-import androidx.compose.material.icons.rounded.Image
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.InstallMobile
-import androidx.compose.material.icons.rounded.Key
-import androidx.compose.material.icons.rounded.Language
-import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.Notifications
-import androidx.compose.material.icons.rounded.OpenInBrowser
-import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material.icons.rounded.RemoveRedEye
-import androidx.compose.material.icons.rounded.RestartAlt
-import androidx.compose.material.icons.rounded.RocketLaunch
-import androidx.compose.material.icons.rounded.Save
-import androidx.compose.material.icons.rounded.ScreenRotationAlt
-import androidx.compose.material.icons.rounded.SdStorage
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material.icons.rounded.SortByAlpha
-import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material.icons.rounded.Start
-import androidx.compose.material.icons.rounded.Storage
-import androidx.compose.material.icons.rounded.Visibility
-import androidx.compose.material.icons.rounded.VisibilityOff
-import androidx.compose.material.icons.rounded.WatchLater
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowLeft
+import androidx.compose.material.icons.automirrored.outlined.ArrowRight
+import androidx.compose.material.icons.automirrored.outlined.LastPage
+import androidx.compose.material.icons.automirrored.outlined.Sort
+import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.BrokenImage
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ClearAll
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.CollectionsBookmark
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DisplaySettings
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Extension
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FirstPage
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.FolderOff
+import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.Grid4x4
+import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.InstallMobile
+import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material.icons.outlined.Lan
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.OpenInBrowser
+import androidx.compose.material.icons.outlined.RemoveRedEye
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.outlined.SdStorage
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.Start
+import androidx.compose.material.icons.outlined.Storage
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material.icons.outlined.WatchLater
 
 object ComicIcons {
-    val Extension = Icons.Rounded.Extension
-    val ScreenRotationAlt = Icons.Rounded.ScreenRotationAlt
-    val AccountCircle = Icons.Rounded.AccountCircle
-    val Visibility = Icons.Rounded.Visibility
-    val VisibilityOff = Icons.Rounded.VisibilityOff
-    val FolderOff = Icons.Rounded.FolderOff
-    val Logout = Icons.AutoMirrored.Rounded.Logout
-    val LibraryBooks = Icons.AutoMirrored.Rounded.LibraryBooks
-    val WatchLater = Icons.Rounded.WatchLater
-    val Favorite = Icons.Rounded.Favorite
-    val Refresh = Icons.Rounded.Refresh
-    val FavoriteBorder = Icons.Rounded.FavoriteBorder
-    val RocketLaunch = Icons.Rounded.RocketLaunch
-    val History = Icons.Rounded.History
-    val ErrorOutline = Icons.Rounded.ErrorOutline
-    val RestartAlt = Icons.Rounded.RestartAlt
-    val SortByAlpha = Icons.Rounded.SortByAlpha
-    val Sort = Icons.AutoMirrored.Rounded.Sort
-    val Search = Icons.Rounded.Search
-    val Delete = Icons.Rounded.Delete
-    val ViewList = Icons.AutoMirrored.Rounded.ViewList
-    val GridView = Icons.Rounded.GridView
-    val Add = Icons.Rounded.Add
-    val SdStorage = Icons.Rounded.SdStorage
-    val Dns = Icons.Rounded.Dns
-    val Close = Icons.Rounded.Close
-    val Save = Icons.Rounded.Save
-    val ArrowDropDown = Icons.Rounded.ArrowDropDown
-    val Key = Icons.Rounded.Key
-    val DarkMode = Icons.Rounded.DarkMode
-    val Star = Icons.Rounded.Star
-    val Check = Icons.Rounded.Check
-    val CheckCircle = Icons.Rounded.CheckCircle
-    val Edit = Icons.Rounded.Edit
-    val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
-    val MusicNote = Icons.Rounded.MusicNote
-    val VolumeUp = Icons.AutoMirrored.Rounded.VolumeUp
-    val ArrowUpward = Icons.Rounded.ArrowUpward
-    val ArrowDownward = Icons.Rounded.ArrowDownward
-    val Start = Icons.Rounded.Start
-    val Language = Icons.Rounded.Language
-    val Info = Icons.Rounded.Info
-    val Lock = Icons.Rounded.Lock
-    val Image = Icons.Rounded.Image
-    val FolderOpen = Icons.Rounded.FolderOpen
-    val DisplaySettings = Icons.Rounded.DisplaySettings
-    val InstallMobile = Icons.Rounded.InstallMobile
-    val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
-    val ArrowLeft = Icons.AutoMirrored.Rounded.ArrowLeft
-    val Settings = Icons.Rounded.Settings
-    val MoreVert = Icons.Rounded.MoreVert
-    val ClearAll = Icons.Rounded.ClearAll
-    val Grid4x4 = Icons.Rounded.Grid4x4
-    val Book = Icons.Rounded.Book
-    val BrokenImage = Icons.Rounded.BrokenImage
-    val Folder = Icons.Rounded.Folder
-    val ContentCopy = Icons.Rounded.ContentCopy
-    val RemoveRedEye = Icons.Rounded.RemoveRedEye
-    val InsertDriveFile = Icons.AutoMirrored.Rounded.InsertDriveFile
-    val Storage = Icons.Rounded.Storage
-    val Notifications = Icons.Rounded.Notifications
-    val CollectionsBookmark = Icons.Rounded.CollectionsBookmark
-    val Menu = Icons.Rounded.Menu
-    val MenuOpen = Icons.AutoMirrored.Rounded.MenuOpen
-    val OpenInBrowser = Icons.Rounded.OpenInBrowser
-    val FirstPage = Icons.Rounded.FirstPage
-    val LastPage = Icons.AutoMirrored.Rounded.LastPage
+    val Lan = Icons.Outlined.Lan
+    val History = Icons.Outlined.History
+    val WatchLater = Icons.Outlined.WatchLater
+    val Extension = Icons.Outlined.Extension
+    val Visibility = Icons.Outlined.Visibility
+    val VisibilityOff = Icons.Outlined.VisibilityOff
+    val FolderOff = Icons.Outlined.FolderOff
+    val Favorite = Icons.Outlined.Favorite
+    val Sort = Icons.AutoMirrored.Outlined.Sort
+    val Search = Icons.Outlined.Search
+    val Delete = Icons.Outlined.Delete
+    val ViewList = Icons.AutoMirrored.Outlined.ViewList
+    val GridView = Icons.Outlined.GridView
+    val Add = Icons.Outlined.Add
+    val SdStorage = Icons.Outlined.SdStorage
+    val Close = Icons.Outlined.Close
+    val Save = Icons.Outlined.Save
+    val ArrowDropDown = Icons.Outlined.ArrowDropDown
+    val Key = Icons.Outlined.Key
+    val DarkMode = Icons.Outlined.DarkMode
+    val Star = Icons.Outlined.Star
+    val Check = Icons.Outlined.Check
+    val Edit = Icons.Outlined.Edit
+    val ArrowBack = Icons.AutoMirrored.Outlined.ArrowBack
+    val ArrowUpward = Icons.Outlined.ArrowUpward
+    val ArrowDownward = Icons.Outlined.ArrowDownward
+    val Start = Icons.Outlined.Start
+    val Language = Icons.Outlined.Language
+    val Info = Icons.Outlined.Info
+    val Lock = Icons.Outlined.Lock
+    val Image = Icons.Outlined.Image
+    val FolderOpen = Icons.Outlined.FolderOpen
+    val DisplaySettings = Icons.Outlined.DisplaySettings
+    val InstallMobile = Icons.Outlined.InstallMobile
+    val ArrowRight = Icons.AutoMirrored.Outlined.ArrowRight
+    val ArrowLeft = Icons.AutoMirrored.Outlined.ArrowLeft
+    val Settings = Icons.Outlined.Settings
+    val MoreVert = Icons.Outlined.MoreVert
+    val ClearAll = Icons.Outlined.ClearAll
+    val Grid4x4 = Icons.Outlined.Grid4x4
+    val Book = Icons.Outlined.Book
+    val BrokenImage = Icons.Outlined.BrokenImage
+    val Folder = Icons.Outlined.Folder
+    val ContentCopy = Icons.Outlined.ContentCopy
+    val RemoveRedEye = Icons.Outlined.RemoveRedEye
+    val Storage = Icons.Outlined.Storage
+    val Notifications = Icons.Outlined.Notifications
+    val CollectionsBookmark = Icons.Outlined.CollectionsBookmark
+    val OpenInBrowser = Icons.Outlined.OpenInBrowser
+    val FirstPage = Icons.Outlined.FirstPage
+    val LastPage = Icons.AutoMirrored.Outlined.LastPage
 }
