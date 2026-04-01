@@ -1,8 +1,9 @@
 # ComicViewer
 
-[![Lint, Test, and Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml/badge.svg?event=push)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml)
-[![Deploy Dokka and static content to Pages](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml)
+[![Lint, Test, and Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml)
 [![Release](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml)
+[![Deploy Dokka](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml)
+
 
 ## Developer Guide
 
