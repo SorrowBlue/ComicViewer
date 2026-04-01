@@ -27,7 +27,8 @@ jobs:
       - name: Setup Java
         uses: ./.github/actions/setup-java-gradle
       - name: Generage Dokka
-        run: ./gradlew dokkaGenerate
+        timeout-minutes: 30
+        run: ./gradlew dokkaGenerate --no-daemon
       - uses: actions/upload-artifact@v7
         id: artifact-upload-step
         with:
