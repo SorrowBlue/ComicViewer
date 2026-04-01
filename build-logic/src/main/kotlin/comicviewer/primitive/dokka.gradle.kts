@@ -12,6 +12,6 @@ dokka {
         documentedVisibilities(VisibilityModifier.Public)
     }
     dokkaGeneratorIsolation = ProcessIsolation {
-        maxHeapSize = "4g"
+        maxHeapSize = "2g"
     }
 }
