@@ -1,8 +1,8 @@
 # ComicViewer
 
-[![Detekt & Lint & Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml/badge.svg?branch=main)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/detekt-lint-build.yml)
-[![Qodana](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml/badge.svg?branch=main)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/qodana.yml)
-
+[![Lint, Test, and Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml)
+[![Release](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml)
+[![Deploy Dokka](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml)
 
 [Privacy Policy](privacy_policy.md)  
 [Terms & Conditions ](teams_conditions.md)
