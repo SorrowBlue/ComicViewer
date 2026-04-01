@@ -11,9 +11,5 @@ dokka {
         suppressedFiles.setFrom(layout.buildDirectory.dir("generated"))
         documentedVisibilities(VisibilityModifier.Public)
     }
-    dokkaGeneratorIsolation.set(
-        ProcessIsolation {
-            maxHeapSize.set("6g")
-        },
-    )
+    dokkaGeneratorIsolation.set(ClassLoaderIsolation())
 }
