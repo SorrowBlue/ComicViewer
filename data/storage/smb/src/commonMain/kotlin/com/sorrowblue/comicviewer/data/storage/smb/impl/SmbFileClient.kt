@@ -12,8 +12,6 @@ internal expect class SmbFileClient : FileClient<SmbServer> {
         override fun create(bookshelf: SmbServer): SmbFileClient
     }
 
-    override val bookshelf: SmbServer
-
     override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File>
 
     override suspend fun exists(path: String): Boolean

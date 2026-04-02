@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
@@ -11,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -24,6 +27,7 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
+import kotlinx.coroutines.CoroutineDispatcher
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
@@ -38,8 +42,11 @@ import platform.Foundation.NSURLIsHiddenKey
 import platform.Foundation.NSURLIsVolumeKey
 
 @AssistedInject
-internal actual class DeviceFileClient(@Assisted actual override val bookshelf: DeviceStorage) :
-    FileClient<DeviceStorage> {
+internal actual class DeviceFileClient(
+    @Assisted bookshelf: DeviceStorage,
+    fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
+    @IoDispatcher dispatcher: CoroutineDispatcher,
+) : FileClient<DeviceStorage>(bookshelf, fileReaderFactoryMap, dispatcher) {
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<DeviceStorage> {
         actual override fun create(bookshelf: DeviceStorage): DeviceFileClient
@@ -119,9 +126,9 @@ internal actual class DeviceFileClient(@Assisted actual override val bookshelf: 
         val isTemporary = path.contains(NSTemporaryDirectory())
 
         val isSystem = path.startsWith("/System") ||
-            path.startsWith("/usr") ||
-            path.startsWith("/bin") ||
-            path.startsWith("/sbin")
+                path.startsWith("/usr") ||
+                path.startsWith("/bin") ||
+                path.startsWith("/sbin")
 
         val isNormal = !isDirectory && !isSystem && !isHidden && !isReadonly
 

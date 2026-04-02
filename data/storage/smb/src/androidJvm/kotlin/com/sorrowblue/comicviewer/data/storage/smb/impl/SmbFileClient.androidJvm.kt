@@ -2,6 +2,8 @@ package com.sorrowblue.comicviewer.data.storage.smb.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.smb.ntStatusString
 import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
@@ -12,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.service.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -21,6 +24,7 @@ import java.net.URLDecoder
 import java.net.UnknownHostException
 import java.util.Properties
 import kotlin.io.path.Path
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
@@ -46,8 +50,11 @@ private var rootSmbFile: SmbFile? = null
 private val mutex = Mutex()
 
 @AssistedInject
-internal actual class SmbFileClient(@Assisted actual override val bookshelf: SmbServer) :
-    FileClient<SmbServer> {
+internal actual class SmbFileClient(
+    @Assisted bookshelf: SmbServer,
+    fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
+    @IoDispatcher dispatcher: CoroutineDispatcher,
+) : FileClient<SmbServer>(bookshelf, fileReaderFactoryMap, dispatcher) {
     @AssistedFactory
     actual interface Factory : FileClient.Factory<SmbServer> {
         actual override fun create(bookshelf: SmbServer): SmbFileClient
@@ -284,9 +291,9 @@ internal actual class SmbFileClient(@Assisted actual override val bookshelf: Smb
             }
         }
         return sameAuth &&
-            server == this@SmbFileClient.bookshelf.host &&
-            share == this@SmbFileClient.bookshelf.smbFile(path).share &&
-            url.port == this@SmbFileClient.bookshelf.port
+                server == this@SmbFileClient.bookshelf.host &&
+                share == this@SmbFileClient.bookshelf.smbFile(path).share &&
+                url.port == this@SmbFileClient.bookshelf.port
     }
 
     private suspend fun smbFile(path: String): SmbFile = mutex.withLock {

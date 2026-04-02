@@ -12,8 +12,6 @@ internal expect class ShareFileClient : FileClient<ShareContents> {
         override fun create(bookshelf: ShareContents): ShareFileClient
     }
 
-    override val bookshelf: ShareContents
-
     override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File>
 
     override suspend fun exists(path: String): Boolean

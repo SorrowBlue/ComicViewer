@@ -12,8 +12,6 @@ internal expect class DeviceFileClient : FileClient<DeviceStorage> {
         override fun create(bookshelf: DeviceStorage): DeviceFileClient
     }
 
-    override val bookshelf: DeviceStorage
-
     override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File>
 
     override suspend fun exists(path: String): Boolean
