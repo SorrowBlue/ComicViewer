@@ -11,7 +11,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.data.storage.client)
+                implementation(projects.data.storage)
                 implementation(libs.kotlinx.coroutinesCore)
                 implementation(libs.filekit.compose)
                 implementation(libs.okio)

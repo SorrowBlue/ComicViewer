@@ -40,7 +40,7 @@ dependencies {
     dokka(projects.data.reader.document.android)
     dokka(projects.data.reader.document)
     dokka(projects.data.reader.zip)
-    dokka(projects.data.storage.client)
+    dokka(projects.data.storage)
     dokka(projects.data.storage.device)
     dokka(projects.data.storage.smb)
     dokka(projects.domain.model)

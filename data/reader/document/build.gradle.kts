@@ -9,7 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.data.storage.client)
+                implementation(projects.data.storage)
             }
         }
         androidMain {

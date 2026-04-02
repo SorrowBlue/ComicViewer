@@ -24,7 +24,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.data.storage.client)
+    implementation(projects.data.storage)
     implementation(projects.framework.common)
     implementation(libs.androidx.coreKtx)
     implementation(libs.androidx.startupRuntime)
