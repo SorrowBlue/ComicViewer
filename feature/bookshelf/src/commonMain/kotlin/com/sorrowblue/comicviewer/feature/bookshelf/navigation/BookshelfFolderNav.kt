@@ -17,13 +17,14 @@ import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class BookshelfFolderNavKey(
     override val bookshelfId: BookshelfId,
     override val path: String,
     override val restorePath: String? = null,
-    override val onRestoreComplete: (() -> Unit)? = null,
+    @Transient override val onRestoreComplete: (() -> Unit)? = null,
 ) : FolderNavKey {
     override val showSearch = true
 }
