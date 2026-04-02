@@ -6,4 +6,5 @@ jobs:
   clear:
     runs-on: ubuntu-latest
     steps:
-      - uses: snnaplab/delete-branch-cache-action@v1
+      - name: Delete Branch Cache
+        uses: snnaplab/delete-branch-cache-action@v1

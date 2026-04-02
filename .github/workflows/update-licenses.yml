@@ -14,11 +14,11 @@ jobs:
         uses: actions/checkout@v6
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
-      - name: 🤖 ExportLibraryDefinitions for android
+      - name: Export Library Definitions for Android
         run: ./gradlew :app:android:exportLibraryDefinitions
-      - name: 🖥️ ExportLibraryDefinitions for jvm
+      - name: Export Library Definitions for JVM
         run: ./gradlew :app:jvm:exportLibraryDefinitions
-      - name: 🍎 ExportLibraryDefinitions for ios
+      - name: Export Library Definitions for iOS
         run: ./gradlew :app:ios:exportLibraryDefinitions
 
       - name: Create Pull Request
