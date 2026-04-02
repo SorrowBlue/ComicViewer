@@ -1,4 +1,4 @@
-name: Deploy Dokka and static content to Pages
+name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
@@ -24,9 +24,9 @@ jobs:
         uses: actions/checkout@v6
       - name: Setup Pages
         uses: actions/configure-pages@v6
-      - name: Setup Java
+      - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
-      - name: Generage Dokka
+      - name: Generate Dokka
         timeout-minutes: 30
         run: ./gradlew dokkaGenerate --max-workers=1
       - uses: actions/upload-artifact@v7

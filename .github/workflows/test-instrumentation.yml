@@ -92,7 +92,8 @@ jobs:
             -PsmbPassword=testpass
             -PsmbPath="/testshare/testfolder/"
 
-      - if: cancelled() != true
+      - name: Upload Test Report
+        if: cancelled() != true
         uses: dorny/test-reporter@v3
         with:
           name: 'Instrumentation Test'
