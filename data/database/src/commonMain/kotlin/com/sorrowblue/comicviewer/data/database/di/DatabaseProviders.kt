@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.data.database.impl.CollectionLocalDataSourceIm
 import com.sorrowblue.comicviewer.data.database.impl.FileLocalDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.FileRemoteDataSourceImpl
 import com.sorrowblue.comicviewer.data.database.impl.ReadLaterFileLocalDataSourceImpl
-import com.sorrowblue.comicviewer.domain.service.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource

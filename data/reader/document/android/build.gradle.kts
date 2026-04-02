@@ -24,6 +24,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(projects.domain.service)
     implementation(projects.data.storage)
     implementation(projects.framework.common)
     implementation(libs.androidx.coreKtx)

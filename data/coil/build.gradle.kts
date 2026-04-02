@@ -11,6 +11,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.domain.service)
+                implementation(projects.data.storage)
                 implementation(libs.coil3)
                 implementation(libs.kotlinx.serializationJson)
             }

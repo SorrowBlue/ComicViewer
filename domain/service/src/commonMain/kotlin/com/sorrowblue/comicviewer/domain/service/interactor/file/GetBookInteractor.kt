@@ -79,19 +79,15 @@ internal class GetBookInteractor(
         logcat { "updateTotalPageCount()" }
         return kotlin
             .runCatching {
-                datSource
-                    .fileReader(book)
-                    ?.use {
-                        it.pageCount()
-                    }?.let { totalPageCount ->
-                        logcat { "totalPageCount: $totalPageCount" }
-                        when (book) {
-                            is BookFile -> book.copy(totalPageCount = totalPageCount)
-                            is BookFolder -> book.copy(totalPageCount = totalPageCount)
-                        }.also {
-                            fileLocalDataSource.addUpdate(it)
-                        }
+                datSource.pageCount(book).let { totalPageCount ->
+                    logcat { "totalPageCount: $totalPageCount" }
+                    when (book) {
+                        is BookFile -> book.copy(totalPageCount = totalPageCount)
+                        is BookFolder -> book.copy(totalPageCount = totalPageCount)
+                    }.also {
+                        fileLocalDataSource.addUpdate(it)
                     }
+                }
             }.fold(
                 onSuccess = {
                     if (it != null) {

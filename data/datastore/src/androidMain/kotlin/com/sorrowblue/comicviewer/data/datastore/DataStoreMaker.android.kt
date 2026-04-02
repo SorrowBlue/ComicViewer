@@ -5,7 +5,7 @@ import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioStorage
 import androidx.datastore.dataStoreFile
 import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
-import com.sorrowblue.comicviewer.domain.service.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineDispatcher

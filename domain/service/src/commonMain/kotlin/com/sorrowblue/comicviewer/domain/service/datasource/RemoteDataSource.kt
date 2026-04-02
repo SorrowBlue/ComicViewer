@@ -4,7 +4,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.domain.service.FileReader
 import kotlin.coroutines.cancellation.CancellationException
 
 interface RemoteDataSource {
@@ -28,7 +27,7 @@ interface RemoteDataSource {
     @Throws(RemoteException::class, CancellationException::class)
     suspend fun file(path: String, resolveImageFolder: Boolean = false): File
 
-    suspend fun fileReader(book: Book): FileReader?
+    suspend fun pageCount(book: Book): Int
 
     suspend fun getAttribute(path: String): FileAttribute?
 

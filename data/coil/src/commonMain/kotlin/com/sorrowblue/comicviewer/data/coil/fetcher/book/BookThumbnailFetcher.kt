@@ -7,13 +7,18 @@ import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
-import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.fetcher.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.resizeImage
+import com.sorrowblue.comicviewer.data.storage.client.FileClient
+import com.sorrowblue.comicviewer.data.storage.client.FileClientType
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
@@ -36,6 +41,7 @@ internal class BookThumbnailFetcher(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
+    private val fileClientFactory: Map<FileClientType, FileClient.Factory<*>>,
 ) : FileFetcher<BookThumbnailMetadata>(options, diskCacheLazy) {
 
     @ClassKey(BookThumbnail::class)
@@ -53,6 +59,7 @@ internal class BookThumbnailFetcher(
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val fileModelLocalDataSource: FileLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,
+        private val fileClientFactory: Map<FileClientType, FileClient.Factory<*>>,
     ) : Fetcher.Factory<BookThumbnail> {
         override fun create(
             data: BookThumbnail,
@@ -70,11 +77,27 @@ internal class BookThumbnailFetcher(
             bookshelfLocalDataSource = bookshelfLocalDataSource,
             fileLocalDataSource = fileModelLocalDataSource,
             datastoreDataSource = datastoreDataSource,
+            fileClientFactory = fileClientFactory,
         )
     }
 
     override val diskCacheKey
         get() = options.diskCacheKey ?: "book:${data.bookshelfId.value}:${data.path}"
+
+    @Suppress("UNCHECKED_CAST")
+    private fun fileClient(bookshelf: Bookshelf) = when (bookshelf) {
+        is DeviceStorage -> fileClientFactory.getValue(
+            FileClientType.Device,
+        ) as FileClient.Factory<Bookshelf>
+
+        is SmbServer -> fileClientFactory.getValue(
+            FileClientType.Smb,
+        ) as FileClient.Factory<Bookshelf>
+
+        ShareContents -> fileClientFactory.getValue(
+            FileClientType.Share,
+        ) as FileClient.Factory<Bookshelf>
+    }.create(bookshelf)
 
     override suspend fun metadata() = BookThumbnailMetadata(data)
 
@@ -101,7 +124,7 @@ internal class BookThumbnailFetcher(
             checkNotNull(fileLocalDataSource.flow(data.bookshelfId, data.path).first() as? Book) {
                 "Book not found. id: ${data.bookshelfId}, path: ${data.path}"
             }
-        return dataSource.fileReader(book)?.use { fileReader ->
+        return fileClient(bookshelf).fileReader(book).use { fileReader ->
             check(fileReader.pageCount() != 0) {
                 "Only 0 pages"
             }
@@ -138,6 +161,6 @@ internal class BookThumbnailFetcher(
                     )
                 }
             }
-        } ?: throw CoilRuntimeException("FileReaderが取得できない")
+        }
     }
 }

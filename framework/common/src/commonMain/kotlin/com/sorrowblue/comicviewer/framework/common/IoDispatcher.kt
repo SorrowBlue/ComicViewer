@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.domain.service
+package com.sorrowblue.comicviewer.framework.common
 
 import dev.zacsweers.metro.Qualifier
 

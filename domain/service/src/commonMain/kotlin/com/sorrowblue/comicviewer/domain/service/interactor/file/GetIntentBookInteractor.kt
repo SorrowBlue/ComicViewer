@@ -22,7 +22,7 @@ internal class GetIntentBookInteractor(
             var book = remoteDataSource.file(request.data)
             logcat { "book=$book" }
             book = book as BookFile
-            book = book.copy(totalPageCount = remoteDataSource.fileReader(book)?.pageCount() ?: 0)
+            book = book.copy(totalPageCount = remoteDataSource.pageCount(book))
             val resource = Resource.Success(book)
             emit(resource)
         }

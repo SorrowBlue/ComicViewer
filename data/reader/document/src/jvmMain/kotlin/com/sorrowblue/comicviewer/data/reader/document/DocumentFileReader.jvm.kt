@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.domain.service.FileReader
+import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.plugin.pdf.PdfFileReader
 import dev.zacsweers.metro.Assisted
