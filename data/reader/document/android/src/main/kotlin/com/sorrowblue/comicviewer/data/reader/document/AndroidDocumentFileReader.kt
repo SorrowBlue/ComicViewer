@@ -59,7 +59,9 @@ class AndroidDocumentFileReader(
             } catch (e: SecurityException) {
                 logcat(LogPriority.ERROR, "DocumentFileReader") { e.asLog() }
                 context.unbindService(this)
-                throw FileReaderException.NotSupport(message = "PDFプラグインの読み込みに失敗しました。\nPDFプラグインを最新Verに更新してください。")
+                throw FileReaderException.NotSupport(
+                    message = "PDFプラグインの読み込みに失敗しました。\nPDFプラグインを最新Verに更新してください。",
+                )
             }
         }
 

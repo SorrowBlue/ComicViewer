@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.fetcher.FileFetcher
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientType
+import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -21,7 +22,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dev.zacsweers.metro.ClassKey
@@ -71,7 +71,7 @@ internal class BookPageImageFetcher(
                 data,
                 remoteDataSourceFactory,
                 bookshelfLocalDataSource,
-                fileClientFactory
+                fileClientFactory,
             )
     }
 

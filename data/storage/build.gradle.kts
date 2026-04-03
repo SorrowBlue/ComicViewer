@@ -9,8 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(projects.domain.model)
-                implementation(projects.domain.service)
+                api(projects.domain.service)
                 implementation(libs.kotlinx.coroutinesCore)
                 api(libs.okio)
             }

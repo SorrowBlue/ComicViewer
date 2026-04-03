@@ -18,8 +18,8 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
+import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

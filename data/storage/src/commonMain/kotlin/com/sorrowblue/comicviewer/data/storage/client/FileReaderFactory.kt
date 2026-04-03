@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import dev.zacsweers.metro.MapKey
 
 interface FileReaderFactory {

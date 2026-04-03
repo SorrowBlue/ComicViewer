@@ -45,6 +45,7 @@ kotlin {
         getByName("androidHostTest") {
             dependsOn(androidJvmTest)
             dependencies {
+                implementation(projects.data.reader.zip)
                 implementation(libs.robolectric)
             }
         }
@@ -56,6 +57,9 @@ kotlin {
         }
         jvmTest {
             dependsOn(androidJvmTest)
+            dependencies {
+                implementation(projects.data.reader.zip)
+            }
         }
         iosMain {
             dependencies {

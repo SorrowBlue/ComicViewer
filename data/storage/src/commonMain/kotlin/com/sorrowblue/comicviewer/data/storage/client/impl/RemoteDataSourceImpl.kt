@@ -10,9 +10,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
+import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -123,8 +123,8 @@ internal class RemoteDataSourceImpl(
         }
     }
 
-    override suspend fun pageCount(book: Book): Int {
-        return fileClient.fileReader(book).use { it.pageCount() }
+    override suspend fun pageCount(book: Book): Int = fileClient.fileReader(book).use {
+        it.pageCount()
     }
 
     override suspend fun getAttribute(path: String): FileAttribute = kotlin.runCatching {

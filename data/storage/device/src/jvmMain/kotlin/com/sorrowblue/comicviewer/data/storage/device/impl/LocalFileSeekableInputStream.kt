@@ -11,9 +11,9 @@ internal class LocalFileSeekableInputStream(path: Path) : SeekableInputStream {
 
     override fun seek(offset: Long, whence: Int): Long {
         when (whence) {
-            SeekableInputStream.Companion.SEEK_SET -> file.seek(offset)
-            SeekableInputStream.Companion.SEEK_CUR -> file.seek(file.filePointer + offset)
-            SeekableInputStream.Companion.SEEK_END -> file.seek(file.length() + offset)
+            SeekableInputStream.SEEK_SET -> file.seek(offset)
+            SeekableInputStream.SEEK_CUR -> file.seek(file.filePointer + offset)
+            SeekableInputStream.SEEK_END -> file.seek(file.length() + offset)
         }
         return file.filePointer
     }
