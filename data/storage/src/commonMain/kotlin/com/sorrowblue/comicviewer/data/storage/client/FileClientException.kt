@@ -11,5 +11,5 @@ sealed class FileClientException : RuntimeException() {
 }
 
 sealed class FileReaderException : RuntimeException() {
-    class NotSupport : FileReaderException()
+    class NotSupport(override val message: String) : FileReaderException()
 }

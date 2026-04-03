@@ -10,6 +10,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.data.storage)
+                implementation(libs.okio)
             }
         }
         androidMain {
