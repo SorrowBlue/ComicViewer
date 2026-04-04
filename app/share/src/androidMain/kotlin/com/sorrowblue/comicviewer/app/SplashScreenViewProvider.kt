@@ -16,8 +16,7 @@ internal fun SplashScreenViewProvider.startShrinkingAnimation() {
                 doOnEnd { remove() }
                 duration =
                     if (iconAnimationDurationMillis - System.currentTimeMillis() +
-                        iconAnimationStartMillis <
-                        0
+                        iconAnimationStartMillis < 0
                     ) {
                         300
                     } else {
@@ -32,8 +31,7 @@ internal fun SplashScreenViewProvider.startShrinkingAnimation() {
                 doOnEnd { remove() }
                 duration =
                     if (iconAnimationDurationMillis - System.currentTimeMillis() +
-                        iconAnimationStartMillis <
-                        0
+                        iconAnimationStartMillis < 0
                     ) {
                         300
                     } else {

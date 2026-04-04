@@ -18,8 +18,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:width="128dp"
     android:height="128dp"
-    android:viewportHeight="128.0"
-    android:viewportWidth="128.0">
+    android:viewportWidth="128.0"
+    android:viewportHeight="128.0">
     <path
         android:fillColor="#FFCC80"
         android:pathData="M41.6 123.8s.1,-.2.2,-.3c-.1.2,-.1.2,-.2.3z" />

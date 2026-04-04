@@ -12,9 +12,9 @@ import comicviewer.framework.designsystem.generated.resources.locales
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import java.util.Locale as JavaLocale
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
+import java.util.Locale as JavaLocale
 
 @SingleIn(AppScope::class)
 @Inject

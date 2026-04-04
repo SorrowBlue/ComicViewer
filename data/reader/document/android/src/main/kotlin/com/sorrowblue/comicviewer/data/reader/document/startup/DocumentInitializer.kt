@@ -24,7 +24,8 @@ internal class DocumentInitializer : Initializer<Unit> {
         runBlocking {
             runCatching {
                 with(
-                    context.require<DocumentInitializerContext.Factory>().createReaderDocumentContext(),
+                    context.require<DocumentInitializerContext.Factory>()
+                        .createReaderDocumentContext(),
                 ) {
                     updatePdfPluginSupport(context)
                 }
@@ -76,8 +77,7 @@ internal class DocumentInitializer : Initializer<Unit> {
             datastoreDataSource.updateFolderSettings { settings ->
                 settings.copy(
                     supportExtension = settings.supportExtension.filterNot {
-                        it in
-                            Document.entries
+                        it in Document.entries
                     },
                 )
             }

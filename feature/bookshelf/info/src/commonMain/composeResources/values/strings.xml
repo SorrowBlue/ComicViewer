@@ -52,4 +52,4 @@
     <string name="bookshelf_info_notification_title_thumbnail_scan">Thumbnail scanning</string>
     <string name="bookshelf_info_notification_title_thumbnail_scan_completed">Thumbnail e scan completed</string>
     <string name="bookshelf_info_notification_description_thumbnail_scan_cancelled">Thumbnail scan cancelled</string>
- </resources>
+</resources>

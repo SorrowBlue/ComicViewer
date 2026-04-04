@@ -1,5 +1,9 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream.Companion.SEEK_CUR
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream.Companion.SEEK_END
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream.Companion.SEEK_SET
+
 /**
  * An interface representing a data stream that supports seeking to different positions.
  * It extends [AutoCloseable] to ensure resources are properly released after use.

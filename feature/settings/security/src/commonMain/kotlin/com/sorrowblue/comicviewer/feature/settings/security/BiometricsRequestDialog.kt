@@ -9,9 +9,9 @@ import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_to_settings
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_dialog_desc
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_device_settings_required
-import comicviewer.framework.ui.generated.resources.Res as UiRes
 import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
+import comicviewer.framework.ui.generated.resources.Res as UiRes
 
 @Composable
 internal fun BiometricsRequestDialog(onConfirmClick: () -> Unit, onDismissRequest: () -> Unit) {

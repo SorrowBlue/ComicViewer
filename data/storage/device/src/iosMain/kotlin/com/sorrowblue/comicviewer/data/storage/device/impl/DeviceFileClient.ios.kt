@@ -126,9 +126,9 @@ internal actual class DeviceFileClient(
         val isTemporary = path.contains(NSTemporaryDirectory())
 
         val isSystem = path.startsWith("/System") ||
-                path.startsWith("/usr") ||
-                path.startsWith("/bin") ||
-                path.startsWith("/sbin")
+            path.startsWith("/usr") ||
+            path.startsWith("/bin") ||
+            path.startsWith("/sbin")
 
         val isNormal = !isDirectory && !isSystem && !isHidden && !isReadonly
 

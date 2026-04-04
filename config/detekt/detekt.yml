@@ -73,7 +73,7 @@ style:
   active: true
   MagicNumber:
     active: false
-    ignoreNumbers: ['-1', '-0.5', '0', '0.01', '0.5', '1', '2']
+    ignoreNumbers: [ '-1', '-0.5', '0', '0.01', '0.5', '1', '2' ]
     ignoreAnnotation: true
     ignoreEnums: true
     ignoreRanges: true

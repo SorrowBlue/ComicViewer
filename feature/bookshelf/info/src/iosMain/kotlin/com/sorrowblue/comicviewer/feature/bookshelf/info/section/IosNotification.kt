@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionCarPlay
@@ -48,7 +48,7 @@ internal class NotificationPermissionDelegate {
 
     private suspend fun getPermissionStatus(): UNAuthorizationStatus {
         val currentCenter = UNUserNotificationCenter.currentNotificationCenter()
-        return suspendCoroutine { continuation ->
+        return suspendCancellableCoroutine { continuation ->
             currentCenter.getNotificationSettingsWithCompletionHandler(
                 mainContinuation { settings: UNNotificationSettings? ->
                     continuation.resumeWith(
@@ -73,7 +73,7 @@ internal class NotificationPermissionDelegate {
             // 未確認
             UNAuthorizationStatusNotDetermined -> {
                 // User has not yet chosen permission, request permission
-                val newStatus = suspendCoroutine { continuation ->
+                val newStatus = suspendCancellableCoroutine { continuation ->
                     UNUserNotificationCenter.currentNotificationCenter()
                         .requestAuthorizationWithOptions(
                             UNAuthorizationOptionSound

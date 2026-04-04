@@ -45,7 +45,7 @@ internal fun FolderSettingsScreenRoot(
 
     NavigationResultEffect(SortTypeScreenResultKey, state::onFileSortChange)
     NavigationResultEffect(ImageScaleScreenResultKey, state::onImageScaleChange)
-    NavigationResultEffect(ImageFilterQualityScreenResultKey, state::onImageFilterQualityChange)
+    NavigationResultEffect(ImageFilterQualityResultKey, state::onImageFilterQualityChange)
     NavigationResultEffect(ImageFormatScreenResultKey, state::onImageFormatChange)
     NavigationResultEffect(FolderThumbnailOrderScreenResultKey, state::onFolderThumbnailOrderChange)
 }

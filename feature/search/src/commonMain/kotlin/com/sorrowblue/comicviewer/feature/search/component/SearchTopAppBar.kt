@@ -37,7 +37,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
-import comicviewer.feature.folder.generated.resources.Res as FolderRes
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_asc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_desc
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_name_asc
@@ -55,6 +54,7 @@ import comicviewer.feature.search.generated.resources.search_label_show_hidden_f
 import comicviewer.feature.search.generated.resources.search_label_sub_folder
 import comicviewer.feature.search.generated.resources.search_label_week1
 import org.jetbrains.compose.resources.stringResource
+import comicviewer.feature.folder.generated.resources.Res as FolderRes
 
 @Composable
 internal fun SearchTopAppBar(

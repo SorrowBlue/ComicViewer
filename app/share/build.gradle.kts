@@ -31,8 +31,8 @@ kotlin {
             dependencies {
                 rootProject.subprojects.filterNot {
                     it.path == project.path || it.path.startsWith(projects.app.path)
-                            || it.path == projects.data.reader.document.android.path
-                            || it.path == projects.data.storage.smb.path
+                        || it.path == projects.data.reader.document.android.path
+                        || it.path == projects.data.storage.smb.path
                 }.forEach {
                     val hasSource = it.projectDir.resolve("src").exists()
                     if (hasSource) {

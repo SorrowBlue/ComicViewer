@@ -53,9 +53,11 @@ internal class DocumentInitializer(private val platformContext: PlatformContext)
                     updateSupportExtension(false)
                     updatePdfPluginState(false)
                     logcat {
-                        "Initialized document-reader. Plugin not found. path=${runBlocking {
-                            datastoreDataSource.pdfPluginSettings.first().pluginRootPath
-                        }}"
+                        "Initialized document-reader. Plugin not found. path=${
+                            runBlocking {
+                                datastoreDataSource.pdfPluginSettings.first().pluginRootPath
+                            }
+                        }"
                     }
                 }
             }

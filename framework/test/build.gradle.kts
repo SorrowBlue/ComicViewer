@@ -7,7 +7,7 @@ kotlin {
         namespace = "com.sorrowblue.comicviewer.framework.test"
     }
     sourceSets {
-        androidMain{
+        androidMain {
             dependencies {
                 api(libs.androidx.testExtJunitKtx)
             }

@@ -16,14 +16,14 @@ internal fun ImageFilterQualityScreenRoot(
     ImageFilterQualityScreen(
         currentImageFilterQuality = imageFilterQuality,
         onImageFilterQualityChange = {
-            resultProducer.setResult(Json, ImageFilterQualityScreenResultKey, it)
+            resultProducer.setResult(Json, ImageFilterQualityResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,
     )
 }
 
-internal val ImageFilterQualityScreenResultKey: SerializableNavigationResultKey<ImageFilterQuality> =
+internal val ImageFilterQualityResultKey: SerializableNavigationResultKey<ImageFilterQuality> =
     SerializableNavigationResultKey(
         serializer = ImageFilterQuality.serializer(),
         resultKey = "ImageFilterQualityScreenResultKey",

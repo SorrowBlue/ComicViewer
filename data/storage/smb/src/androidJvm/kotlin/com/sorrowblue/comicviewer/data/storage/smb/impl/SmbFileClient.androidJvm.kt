@@ -291,9 +291,9 @@ internal actual class SmbFileClient(
             }
         }
         return sameAuth &&
-                server == this@SmbFileClient.bookshelf.host &&
-                share == this@SmbFileClient.bookshelf.smbFile(path).share &&
-                url.port == this@SmbFileClient.bookshelf.port
+            server == this@SmbFileClient.bookshelf.host &&
+            share == this@SmbFileClient.bookshelf.smbFile(path).share &&
+            url.port == this@SmbFileClient.bookshelf.port
     }
 
     private suspend fun smbFile(path: String): SmbFile = mutex.withLock {

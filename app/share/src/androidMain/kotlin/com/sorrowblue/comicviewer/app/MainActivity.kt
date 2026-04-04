@@ -41,13 +41,7 @@ class MainActivity(private val appGraph: AppGraph) : AppCompatActivity() {
         }
 
         val receivedBookData = if (intent.action == Intent.ACTION_VIEW &&
-            (
-                intent.categories == null || intent.hasCategory(
-                    Intent.CATEGORY_BROWSABLE,
-                ) || intent.hasCategory(
-                    Intent.CATEGORY_DEFAULT,
-                )
-                ) &&
+            intent.isAllowedCategory() &&
             intent.scheme in listOf("file", "content") &&
             intent.type in listOf("application/pdf", "application/zip")
         ) {
@@ -74,4 +68,9 @@ class MainActivity(private val appGraph: AppGraph) : AppCompatActivity() {
             }
         }
     }
+
+    private fun Intent.isAllowedCategory() =
+        categories == null || allowedCategories.any { hasCategory(it) }
+
+    private val allowedCategories = listOf(Intent.CATEGORY_BROWSABLE, Intent.CATEGORY_DEFAULT)
 }

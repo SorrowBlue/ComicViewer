@@ -30,12 +30,14 @@ AGENTS.mdには以下の重要な情報が含まれています：
 ## クイックリファレンス
 
 ### コードスタイル
+
 - トレーリングカンマを必ず使用
 - Material3コンポーネントを優先
 - パッケージは `com.sorrowblue.comicviewer.*` プレフィックスを使用
 - 詳細: [AGENTS.md - コードスタイルガイドライン](/AGENTS.md#コードスタイルガイドライン)
 
 ### ビルドコマンド
+
 ```bash
 # Detekt（静的コード解析）
 ./gradlew reportMerge
@@ -50,6 +52,7 @@ AGENTS.mdには以下の重要な情報が含まれています：
 詳細: [AGENTS.md - ビルドおよびテストコマンド](/AGENTS.md#ビルドおよびテストコマンド)
 
 ### アーキテクチャ
+
 - **feature**: UI機能モジュール
 - **domain**: ビジネスロジック層
 - **data**: データアクセス層
@@ -59,10 +62,12 @@ AGENTS.mdには以下の重要な情報が含まれています：
 
 ## その他のドキュメント
 
-- [copilot-workspace-custom-instructions.md](/copilot-workspace-custom-instructions.md) - GitHub Copilot Workspace用の詳細な指示
+- [copilot-workspace-custom-instructions.md](/copilot-workspace-custom-instructions.md) - GitHub
+  Copilot Workspace用の詳細な指示
 - [README.md](/README.md) - プロジェクト概要とモジュール依存関係図
 - [docs/release-automation.md](/docs/release-automation.md) - リリースプロセス詳細
 
 ---
 
-**注意**: このファイルは、GitHub Copilotがプロジェクト固有の指示を取得するための標準的な場所です。このファイルを変更する際は、AGENTS.mdの内容と一貫性を保ってください。
+**注意**: このファイルは、GitHub
+Copilotがプロジェクト固有の指示を取得するための標準的な場所です。このファイルを変更する際は、AGENTS.mdの内容と一貫性を保ってください。

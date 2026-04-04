@@ -7,7 +7,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderThumbnailOrderScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.ImageFilterQualityScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.ImageFilterQualityResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageFormatScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenResultKey
@@ -28,7 +28,7 @@ internal fun EntryProviderScope<NavKey>.folderSettingsNavEntry(navigator: Naviga
             NavigationResultMetadata.resultConsumer(
                 SortTypeScreenResultKey,
                 ImageScaleScreenResultKey,
-                ImageFilterQualityScreenResultKey,
+                ImageFilterQualityResultKey,
                 ImageFormatScreenResultKey,
                 FolderThumbnailOrderScreenResultKey,
             ) + NavDisplay.transitionMaterialSharedAxisZ(),

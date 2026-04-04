@@ -19,11 +19,8 @@ fun AsyncImage3(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     error: @Composable (SubcomposeAsyncImageScope.(State.Error) -> Unit)? = null,
-    loading: @Composable (
-        SubcomposeAsyncImageScope.(
-            State.Loading,
-        ) -> Unit
-    )? = AsyncImage3Default.loading,
+    loading:
+    @Composable (SubcomposeAsyncImageScope.(State.Loading) -> Unit)? = AsyncImage3Default.loading,
     onError: ((State.Error) -> Unit)? = null,
     onSuccess: ((State.Success) -> Unit)? = null,
     filterQuality: FilterQuality = FilterQuality.None,
