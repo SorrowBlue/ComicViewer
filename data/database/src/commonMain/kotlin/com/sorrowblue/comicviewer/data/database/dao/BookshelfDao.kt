@@ -61,7 +61,12 @@ internal abstract class BookshelfDao(val database: ComicViewerDatabase) {
      * @return PagingSource for EmbeddedBookshelfFileCountEntity.
      */
     @Query(
-        "SELECT bookshelf.*, file.*, (SELECT COUNT(*) FROM file file2 WHERE bookshelf.id = file2.bookshelf_id AND file2.file_type = 'FILE') file_count FROM (SELECT * FROM bookshelf WHERE bookshelf.deleted = 0) bookshelf LEFT OUTER JOIN file ON bookshelf.id = file.bookshelf_id AND file.parent = '' ORDER BY bookshelf.id",
+        """
+        SELECT bookshelf.*, file.*, (SELECT COUNT(*) FROM file file2 WHERE bookshelf.id = file2.bookshelf_id AND file2.file_type = 'FILE') file_count
+        FROM (SELECT * FROM bookshelf WHERE bookshelf.deleted = 0) bookshelf 
+        LEFT OUTER JOIN file ON bookshelf.id = file.bookshelf_id AND file.parent = '' 
+        ORDER BY bookshelf.id
+        """
     )
     abstract fun pagingSourceNoDeleted(): PagingSource<Int, EmbeddedBookshelfFileCountEntity>
 

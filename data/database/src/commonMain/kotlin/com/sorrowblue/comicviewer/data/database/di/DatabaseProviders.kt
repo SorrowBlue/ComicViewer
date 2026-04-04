@@ -43,6 +43,7 @@ interface DatabaseProviders {
         .addMigrations(
             ComicViewerDatabase.ManualMigration7to8(),
             ComicViewerDatabase.ManualMigration8to9(),
+            ComicViewerDatabase.ManualMigration9to10(),
         )
         .addTypeConverter(decryptedPasswordConverters)
         .setQueryCoroutineContext(dispatcher)

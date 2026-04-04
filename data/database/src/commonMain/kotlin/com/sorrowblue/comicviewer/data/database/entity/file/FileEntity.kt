@@ -23,17 +23,21 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index(value = [FileEntity.BookshelfId, FileEntity.PATH])],
+    indices = [
+        Index(value = [FileEntity.BookshelfId, FileEntity.PATH]),
+        Index(value = [FileEntity.BookshelfId, FileEntity.PARENT]),
+        Index(value = [FileEntity.BookshelfId, FileEntity.FILE_TYPE]),
+    ],
 )
 internal data class FileEntity(
     @ColumnInfo(PATH) val path: String,
     @ColumnInfo(BookshelfId) val bookshelfId: Int,
     val name: String,
-    val parent: String,
+    @ColumnInfo(PARENT) val parent: String,
     val size: Long,
     @ColumnInfo(name = "last_modified") val lastModified: Long,
     @ColumnInfo(name = "hidden", defaultValue = "false") val isHidden: Boolean,
-    @ColumnInfo(name = "file_type") val fileType: Type,
+    @ColumnInfo(name = FILE_TYPE) val fileType: Type,
     @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileType.order,
     @ColumnInfo(name = "sort_index") val sortIndex: Int,
     @Embedded val info: EmbeddedFileInfoEntity = EmbeddedFileInfoEntity(),
@@ -41,6 +45,8 @@ internal data class FileEntity(
 ) {
     companion object {
         const val PATH = "path"
+        const val PARENT = "parent"
+        const val FILE_TYPE = "file_type"
         const val BookshelfId = "bookshelf_id"
 
         fun fromModel(model: File) = when (model) {

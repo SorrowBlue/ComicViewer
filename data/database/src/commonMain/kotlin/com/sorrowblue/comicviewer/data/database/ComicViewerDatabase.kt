@@ -23,7 +23,7 @@ import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFile
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEntity
 
-internal const val DatabaseVersion = 9
+internal const val DatabaseVersion = 10
 internal const val DatabaseName = "comic_viewer_database"
 
 @Database(
@@ -44,6 +44,7 @@ internal const val DatabaseName = "comic_viewer_database"
         AutoMigration(6, 7),
         AutoMigration(7, 8, ComicViewerDatabase.AutoMigration7to8::class),
         AutoMigration(8, 9),
+        AutoMigration(9, 10),
     ],
     exportSchema = true,
 )
@@ -111,6 +112,14 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
     class ManualMigration8to9 : Migration(8, 9) {
         override suspend fun migrate(connection: SQLiteConnection) {
             connection.execSQL("UPDATE bookshelf SET type = 'DEVICE' WHERE type = 'INTERNAL'")
+        }
+    }
+
+    class ManualMigration9to10 : Migration(9, 10) {
+        override suspend fun migrate(connection: SQLiteConnection) {
+            connection.execSQL("CREATE INDEX IF NOT EXISTS `index_bookshelf_deleted_id` ON bookshelf (`deleted`, `id`)")
+            connection.execSQL("CREATE INDEX IF NOT EXISTS `index_file_bookshelf_id_parent` ON file (`bookshelf_id`, `parent`)")
+            connection.execSQL("CREATE INDEX IF NOT EXISTS `index_file_bookshelf_id_file_type` ON file (`bookshelf_id`, `file_type`)")
         }
     }
 }

@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
+import androidx.room3.Index
 import androidx.room3.PrimaryKey
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -9,7 +10,10 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 
-@Entity(tableName = "bookshelf")
+@Entity(
+    tableName = "bookshelf",
+    indices = [Index(value = ["deleted", "id"])]
+)
 internal data class BookshelfEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(ID) val id: BookshelfId,
