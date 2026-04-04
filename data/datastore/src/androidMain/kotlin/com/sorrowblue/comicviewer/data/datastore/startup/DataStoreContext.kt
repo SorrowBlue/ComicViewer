@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.data.datastore.di
+package com.sorrowblue.comicviewer.data.datastore.startup
 
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import dev.zacsweers.metro.AppScope

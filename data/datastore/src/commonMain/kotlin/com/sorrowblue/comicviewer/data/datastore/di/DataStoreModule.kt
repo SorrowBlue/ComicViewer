@@ -42,7 +42,7 @@ import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
 @ContributesTo(DataScope::class)
-interface DataStoreProviders {
+interface DataStoreModule {
     @Book
     @SingleIn(DataScope::class)
     @Provides

@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.datastore.startup
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.startup.Initializer
-import com.sorrowblue.comicviewer.data.datastore.di.DataStoreContext
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
 import com.sorrowblue.comicviewer.framework.common.require
