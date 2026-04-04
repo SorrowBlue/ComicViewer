@@ -16,9 +16,9 @@ internal class DocumentReaderDataSourceImpl : DocumentReaderDataSource {
 
     override fun initializePdfPlugin(rootPath: String): DocumentReaderState {
         val jarPaths = findPluginJarPaths(rootPath)
-        if (jarPaths.isNotEmpty() && this.jarPaths == jarPaths) {
+        return if (jarPaths.isNotEmpty() && this.jarPaths == jarPaths) {
             // 同じパス
-            return DocumentReaderState.Success
+            DocumentReaderState.Success
         } else if (jarPaths.isNotEmpty()) {
             val plugin = getPlugin(jarPaths)
             if (plugin != null) {
@@ -33,18 +33,18 @@ internal class DocumentReaderDataSourceImpl : DocumentReaderDataSource {
                     this.jarPaths = jarPaths
                     OutsideDocumentFileReader.plugin = plugin
                     // 拡張子更新
-                    return DocumentReaderState.Success
+                    DocumentReaderState.Success
                 } else {
                     // Version NG
-                    return DocumentReaderState.InvalidVersion(plugin.version)
+                    DocumentReaderState.InvalidVersion(plugin.version)
                 }
             } else {
                 // PDFプラグイン読み込みエラー
-                return DocumentReaderState.Error
+                DocumentReaderState.Error
             }
         } else {
             // プラグインが見つからなかった
-            return DocumentReaderState.NotFound
+            DocumentReaderState.NotFound
         }
     }
 

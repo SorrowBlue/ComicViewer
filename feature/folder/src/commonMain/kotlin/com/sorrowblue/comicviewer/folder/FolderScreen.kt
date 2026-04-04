@@ -12,16 +12,9 @@ import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.folder.section.FolderAppBar
-import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderList
-import com.sorrowblue.comicviewer.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-
-internal data class FolderScreenUiState(
-    val folderAppBarUiState: FolderAppBarUiState = FolderAppBarUiState(),
-    val folderListUiState: FolderListUiState = FolderListUiState(),
-)
 
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(

@@ -25,10 +25,6 @@ import io.github.takahirom.rin.rememberRetained
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-internal data class DocumentSheetOptionUiState(
-    val pluginState: PdfPluginState = PdfPluginState.NotInstalled,
-)
-
 @Composable
 internal actual fun DocumentSheetOption(modifier: Modifier) {
     val context = LocalPlatformContext.current

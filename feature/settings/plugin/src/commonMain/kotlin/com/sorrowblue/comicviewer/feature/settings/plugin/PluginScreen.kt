@@ -23,8 +23,6 @@ import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_t
 import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_title_pdf
 import org.jetbrains.compose.resources.stringResource
 
-internal data class PluginScreenUiState(val isPdfPluginEnable: Boolean = false)
-
 @Composable
 internal fun PluginScreen(
     uiState: PluginScreenUiState,

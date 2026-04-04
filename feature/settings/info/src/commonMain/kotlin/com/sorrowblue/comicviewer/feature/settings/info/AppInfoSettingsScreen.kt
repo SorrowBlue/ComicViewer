@@ -15,8 +15,6 @@ import comicviewer.feature.settings.info.generated.resources.settings_info_rate_
 import comicviewer.feature.settings.info.generated.resources.settings_info_title
 import org.jetbrains.compose.resources.stringResource
 
-internal data class SettingsAppInfoScreenUiState(val versionName: String = "", val buildAt: String)
-
 @Composable
 internal fun AppInfoSettingsScreen(
     uiState: SettingsAppInfoScreenUiState,

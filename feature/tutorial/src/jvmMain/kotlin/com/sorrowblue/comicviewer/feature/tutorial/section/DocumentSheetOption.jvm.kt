@@ -23,13 +23,6 @@ import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_document_btn_download
 import org.jetbrains.compose.resources.stringResource
 
-data class DocumentSheetUiState(
-    val folderPath: String = "",
-    val checking: Boolean = false,
-    val error: String = "",
-    val info: String = "",
-)
-
 @Composable
 internal actual fun DocumentSheetOption(modifier: Modifier) {
     val state = with(LocalPlatformContext.current.rememberDocumentSheetContext()) {

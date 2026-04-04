@@ -23,10 +23,10 @@ dependencies {
 }
 
 detekt {
-    buildUponDefaultConfig.set(true)
-    autoCorrect.set(true)
-    basePath.set(rootProject.projectDir)
+    parallel = true
     config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+    basePath.set(rootProject.projectDir)
 }
 
 tasks.withType<Detekt>().configureEach {

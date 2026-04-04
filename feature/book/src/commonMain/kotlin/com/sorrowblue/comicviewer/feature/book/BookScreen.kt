@@ -11,29 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import coil3.Bitmap
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 import com.sorrowblue.comicviewer.feature.book.section.BookAppBar
 import com.sorrowblue.comicviewer.feature.book.section.BookBottomBar
 import com.sorrowblue.comicviewer.feature.book.section.BookSheet
-import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
-import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
-
-internal sealed interface BookScreenUiState {
-    data class Loading(val name: String) : BookScreenUiState
-
-    data class Error(val name: String) : BookScreenUiState
-
-    data class PluginError(val name: String, val error: String) : BookScreenUiState
-
-    data class Loaded(
-        val book: BookFile,
-        val collectionId: CollectionId,
-        val bookSheetUiState: BookSheetUiState,
-        val isVisibleTooltip: Boolean = true,
-    ) : BookScreenUiState
-}
 
 @Composable
 internal fun BookScreen(

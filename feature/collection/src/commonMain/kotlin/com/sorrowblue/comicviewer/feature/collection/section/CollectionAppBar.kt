@@ -18,8 +18,6 @@ import comicviewer.feature.collection.generated.resources.collection_label_delet
 import comicviewer.feature.collection.generated.resources.collection_label_edit
 import org.jetbrains.compose.resources.stringResource
 
-internal data class CollectionAppBarUiState(val title: String = "")
-
 @Composable
 internal fun CollectionAppBar(
     uiState: CollectionAppBarUiState,

@@ -22,7 +22,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
@@ -34,17 +33,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class FileLazyVerticalGridUiState(
-    val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
-    val columnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
-    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.SavedThumbnail,
-    val fontSize: Int = FolderDisplaySettingsDefaults.FontSize,
-    val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
-    val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
-)
 
 @Composable
 fun <T : File> FileLazyVerticalGrid(

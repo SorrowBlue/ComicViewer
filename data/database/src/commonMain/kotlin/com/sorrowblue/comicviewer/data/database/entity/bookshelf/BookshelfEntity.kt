@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 
 @Entity(
     tableName = "bookshelf",
-    indices = [Index(value = ["deleted", "id"])]
+    indices = [Index(value = ["deleted", "id"])],
 )
 internal data class BookshelfEntity(
     @PrimaryKey(autoGenerate = true)

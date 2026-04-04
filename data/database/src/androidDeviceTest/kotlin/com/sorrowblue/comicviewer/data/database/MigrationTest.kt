@@ -20,6 +20,10 @@ private val ALL_MIGRATIONS = listOf(
     ComicViewerDatabase_AutoMigration_6_7_Impl(),
     ComicViewerDatabase.ManualMigration7to8(),
     ComicViewerDatabase_AutoMigration_7_8_Impl(),
+    ComicViewerDatabase.ManualMigration8to9(),
+    ComicViewerDatabase_AutoMigration_8_9_Impl(),
+    ComicViewerDatabase.ManualMigration9to10(),
+    ComicViewerDatabase_AutoMigration_9_10_Impl(),
 )
 private const val TEST_DB = "migration-test"
 

@@ -57,21 +57,4 @@ internal class CollectionDaoTest : DatabaseTest() {
         assertEquals(entity.searchCondition, dbEntity?.searchCondition)
         assertEquals(entity.createdAt, dbEntity?.createdAt)
     }
-    /*
-        @Test
-        fun updateSmart() = runTest {
-            var entity = CollectionEntity.fromModel(SmartCollection("name", null, SearchCondition()))
-            val inserted = collectionDao.insert(entity)
-            var collection = collectionDao.flow(CollectionId(inserted.toInt())).first()?.toModel()
-            assertIs<SmartCollection>(collection)
-            collection.copy(
-                name = "",
-                bookshelfId = null,
-                searchCondition = SearchCondition(),
-            )
-            entity = collection!!.copy(name = "updated")
-            collectionDao.update(entity)
-            collection = collectionDao.flow(entity.id).first()?.entity
-            assertEquals(entity, collection)
-        } */
 }

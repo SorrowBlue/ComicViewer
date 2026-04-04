@@ -18,16 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.collection.add.generated.resources.Res
-import comicviewer.feature.collection.add.generated.resources.collection_add_label_created
-import comicviewer.feature.collection.add.generated.resources.collection_add_label_recent
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_sort
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-
-internal enum class CollectionSort(val labelRes: StringResource) {
-    Recent(Res.string.collection_add_label_recent),
-    Created(Res.string.collection_add_label_created),
-}
 
 @Composable
 internal fun CollectionSortDropdownMenu(

@@ -35,7 +35,7 @@ internal fun PreAppScreen(
 
     LaunchedEffect(state.tutorialRequired, state.authStatus, isInitialized) {
         logcat(tag = TAG) {
-            "tutorialRequired=${state.tutorialRequired}, authStatus=${state.authStatus}, isInitialized=$isInitialized"
+            """tutorialRequired=${state.tutorialRequired}, authStatus=${state.authStatus}, isInitialized=$isInitialized"""
         }
     }
     if (state.tutorialRequired) {

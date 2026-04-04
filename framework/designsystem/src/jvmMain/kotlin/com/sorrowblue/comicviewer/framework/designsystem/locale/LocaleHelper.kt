@@ -4,12 +4,12 @@ import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import java.util.Locale as JavaLocale
 import java.util.Properties
 import kotlin.io.path.createFile
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
-import java.util.Locale as JavaLocale
 
 @SingleIn(AppScope::class)
 @Inject

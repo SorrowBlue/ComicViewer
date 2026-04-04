@@ -43,11 +43,6 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_t
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.rememberForm
 
-data class BookshelfWizardScreenUiState(
-    val title: String = "",
-    val showDiscardDialog: Boolean = false,
-)
-
 @Composable
 internal fun BookshelfWizardScreen(
     uiState: BookshelfWizardScreenUiState,

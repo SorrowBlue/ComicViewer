@@ -16,11 +16,6 @@ import comicviewer.feature.book.generated.resources.book_label_display_format
 import comicviewer.feature.book.generated.resources.book_label_scale
 import org.jetbrains.compose.resources.stringResource
 
-internal data class BookMenuScreenUiState(
-    val pageFormat2: PageFormat2 = PageFormat2.Default,
-    val pageScale: PageScale = PageScale.Fit,
-)
-
 @Composable
 internal fun BookMenuScreen(
     uiState: BookMenuScreenUiState,

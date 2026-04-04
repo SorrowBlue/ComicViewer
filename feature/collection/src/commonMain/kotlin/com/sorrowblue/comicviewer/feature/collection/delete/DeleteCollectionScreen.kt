@@ -18,8 +18,6 @@ import comicviewer.feature.collection.generated.resources.collection_title_delet
 import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
 
-data class DeleteCollectionScreenUiState(val name: String = "")
-
 @Composable
 internal fun DeleteCollectionScreen(
     uiState: DeleteCollectionScreenUiState,

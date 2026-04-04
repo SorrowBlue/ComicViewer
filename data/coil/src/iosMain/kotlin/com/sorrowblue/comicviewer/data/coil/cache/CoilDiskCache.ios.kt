@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.data.coil.cache
 
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.Inject
 import kotlinx.cinterop.ExperimentalForeignApi
 import okio.Path
@@ -11,7 +10,7 @@ import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
 @Inject
-internal actual class CoilDiskCache actual constructor(context: PlatformContext) {
+internal actual class CoilDiskCache {
     actual fun resolve(folder: String): Path {
         @OptIn(ExperimentalForeignApi::class)
         val documentDirectory: NSURL? = NSFileManager.defaultManager.URLForDirectory(

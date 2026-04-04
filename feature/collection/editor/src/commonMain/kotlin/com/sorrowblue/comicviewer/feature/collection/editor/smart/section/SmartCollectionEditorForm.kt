@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditorScreenUiState
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.BookshelfField
@@ -17,15 +16,7 @@ import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.Rang
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.ShowHiddenFilesField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.SortTypeField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import kotlinx.serialization.Serializable
 import soil.form.compose.Form
-
-@Serializable
-internal data class SmartCollectionForm(
-    val name: String = "",
-    val bookshelfId: BookshelfId? = null,
-    val searchCondition: SearchCondition = SearchCondition(),
-)
 
 @Composable
 internal fun SmartCollectionEditorForm(

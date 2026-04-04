@@ -29,13 +29,6 @@ import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_l
 import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_title_pdf
 import org.jetbrains.compose.resources.stringResource
 
-data class PdfPluginScreenUiState(
-    val folderPath: String = "",
-    val checking: Boolean = false,
-    val error: String = "",
-    val info: String = "",
-)
-
 @Composable
 internal fun PdfPluginScreen(uiState: PdfPluginScreenUiState, onOpenFolderClick: () -> Unit) {
     AlertDialog(

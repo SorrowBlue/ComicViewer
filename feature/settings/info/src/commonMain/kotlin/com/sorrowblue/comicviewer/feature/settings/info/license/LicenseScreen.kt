@@ -8,7 +8,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
@@ -18,8 +17,6 @@ import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import comicviewer.feature.settings.info.generated.resources.Res
 import comicviewer.feature.settings.info.generated.resources.settings_info_title_license
 import org.jetbrains.compose.resources.stringResource
-
-internal data class LicenseScreenUiState(val libs: Libs? = null, val openDialog: Library? = null)
 
 @Composable
 internal fun LicenseScreen(

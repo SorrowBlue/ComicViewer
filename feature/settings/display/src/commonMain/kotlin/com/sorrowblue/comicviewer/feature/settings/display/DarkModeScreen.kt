@@ -18,14 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.display.generated.resources.Res
 import comicviewer.feature.settings.display.generated.resources.settings_display_label_appearance
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
-
-internal data class DarkModeScreenUiState(
-    val list: ImmutableList<DarkMode> = DarkMode.entries.toImmutableList(),
-    val darkMode: DarkMode = DarkMode.DEVICE,
-)
 
 @Composable
 internal fun DarkModeScreen(

@@ -1,13 +1,12 @@
 package com.sorrowblue.comicviewer.data.coil.cache
 
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.Inject
 import java.io.File
 import okio.Path
 import okio.Path.Companion.toOkioPath
 
 @Inject
-internal actual class CoilDiskCache actual constructor(context: PlatformContext) {
+internal actual class CoilDiskCache {
     actual fun resolve(folder: String): Path =
         File(System.getProperty("java.io.tmpdir"), folder).toOkioPath()
 }

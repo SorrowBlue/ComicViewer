@@ -3,12 +3,7 @@ package com.sorrowblue.comicviewer.feature.settings.folder
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
-import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
-import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
-import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
@@ -34,21 +29,6 @@ import comicviewer.feature.settings.folder.generated.resources.settings_folder_l
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_webp_summary
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_title
 import org.jetbrains.compose.resources.stringResource
-
-internal data class FolderSettingsScreenUiState(
-    val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.DisplayHiddenFile,
-    val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.DisplayFileExtension,
-    val fileSort: SortType = FolderDisplaySettingsDefaults.sortType,
-    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.DisplayThumbnail,
-    val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
-    val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
-    val imageFormat: ImageFormat = FolderDisplaySettingsDefaults.imageFormat,
-    val thumbnailQuality: Int = FolderDisplaySettingsDefaults.ThumbnailQuality,
-    val isSavedThumbnail: Boolean = FolderDisplaySettingsDefaults.SavedThumbnail,
-    val isOpenImageFolder: Boolean = false,
-    val fontSize: Int = FolderDisplaySettingsDefaults.FontSize,
-    val folderThumbnailOrder: FolderThumbnailOrder = FolderDisplaySettingsDefaults.folderThumbnailOrder,
-)
 
 @Composable
 internal fun FolderSettingsScreen(

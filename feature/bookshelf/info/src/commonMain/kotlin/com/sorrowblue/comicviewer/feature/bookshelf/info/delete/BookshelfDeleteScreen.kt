@@ -22,11 +22,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_del
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_title
 import org.jetbrains.compose.resources.stringResource
 
-internal data class BookshelfDeleteScreenUiState(
-    val title: String? = null,
-    val isProcessing: Boolean = false,
-)
-
 @Composable
 internal fun BookshelfDeleteScreen(
     uiState: BookshelfDeleteScreenUiState,

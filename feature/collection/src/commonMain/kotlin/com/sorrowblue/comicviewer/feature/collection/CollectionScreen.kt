@@ -19,7 +19,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiState
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
-import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
@@ -30,11 +29,6 @@ import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-
-internal data class CollectionScreenUiState(
-    val appBarUiState: CollectionAppBarUiState = CollectionAppBarUiState(),
-    val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
-)
 
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(

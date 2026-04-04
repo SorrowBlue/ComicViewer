@@ -33,13 +33,6 @@ import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_label_search
 import org.jetbrains.compose.resources.stringResource
 
-internal data class FolderAppBarUiState(
-    val title: String = "",
-    val folderScopeOnly: Boolean = false,
-    val sortType: SortType = SortType.Name(true),
-    val showSearch: Boolean = false,
-)
-
 @Composable
 internal fun FolderAppBar(
     uiState: FolderAppBarUiState,

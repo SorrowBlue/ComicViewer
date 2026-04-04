@@ -56,7 +56,7 @@ internal class GetBookInteractor(
                 when (it) {
                     is BookFile -> updateTotalPageCount(remoteDataSource, it)
                     is BookFolder -> updateTotalPageCount(remoteDataSource, it)
-                    is Folder -> return Resource.Error(Error.NotFound)
+                    is Folder -> Resource.Error(Error.NotFound)
                 }
             },
             onError = {

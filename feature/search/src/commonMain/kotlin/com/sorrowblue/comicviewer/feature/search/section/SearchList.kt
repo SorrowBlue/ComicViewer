@@ -18,14 +18,7 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.search.generated.resources.Res
 import comicviewer.feature.search.generated.resources.search_label_not_found
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-
-@Serializable
-internal data class SearchListUiState(
-    val query: String = "",
-    val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
-)
 
 @Composable
 internal fun SearchList(

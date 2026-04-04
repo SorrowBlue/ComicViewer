@@ -1,12 +1,8 @@
 package com.sorrowblue.comicviewer.folder.section
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,27 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
-import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawResumeFolder
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
-import com.sorrowblue.comicviewer.framework.ui.layout.asWindowInsets
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import com.sorrowblue.comicviewer.framework.ui.layout.union
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import comicviewer.feature.folder.generated.resources.Res
 import comicviewer.feature.folder.generated.resources.folder_text_nothing_in_folder
 import org.jetbrains.compose.resources.stringResource
-
-internal data class FolderListUiState(
-    val title: String = "",
-    val fileLazyVerticalGridUiState: FileLazyVerticalGridUiState = FileLazyVerticalGridUiState(),
-    val emphasisPath: String = "",
-)
 
 @Composable
 internal fun FolderList(
@@ -99,11 +86,3 @@ internal fun FolderList(
         }
     }
 }
-
-@Composable
-private fun scrollbarWindowInsets(contentPadding: PaddingValues): WindowInsets =
-    WindowInsets.safeDrawing.only(
-        WindowInsetsSides.Vertical + WindowInsetsSides.End,
-    ) union contentPadding
-        .asWindowInsets()
-        .only(WindowInsetsSides.Vertical)

@@ -11,7 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.ImageCache
-import com.sorrowblue.comicviewer.domain.model.OtherImageCache
 import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
@@ -21,11 +20,6 @@ import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_label_image_cache
 import kotlin.math.floor
 import org.jetbrains.compose.resources.stringResource
-
-internal data class ThumbnailScreenUiState(
-    val imageCacheInfos: List<BookshelfImageCacheInfo> = emptyList(),
-    val otherImageCache: OtherImageCache? = null,
-)
 
 @Composable
 internal fun ImageCacheScreen(

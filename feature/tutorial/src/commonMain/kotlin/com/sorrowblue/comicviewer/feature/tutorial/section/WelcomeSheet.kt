@@ -29,9 +29,9 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.tutorial.generated.resources.Res
 import comicviewer.feature.tutorial.generated.resources.tutorial_message_welcome
 import comicviewer.feature.tutorial.generated.resources.tutorial_title_welcome
+import comicviewer.framework.ui.generated.resources.Res as FrameworkUiRes
 import comicviewer.framework.ui.generated.resources.app_name
 import org.jetbrains.compose.resources.stringResource
-import comicviewer.framework.ui.generated.resources.Res as FrameworkUiRes
 
 @Composable
 internal fun WelcomeSheet(contentPadding: PaddingValues) {

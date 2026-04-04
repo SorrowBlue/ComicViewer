@@ -50,10 +50,6 @@ import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_add
 import org.jetbrains.compose.resources.stringResource
 
-internal data class BasicCollectionAddScreenUiState(
-    val collectionSort: CollectionSort = CollectionSort.Recent,
-)
-
 @Composable
 internal fun BasicCollectionAddScreen(
     uiState: BasicCollectionAddScreenUiState,

@@ -14,14 +14,7 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_not
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_text_scan_file
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_text_scan_thumbnail
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-
-@Serializable
-enum class ScanType {
-    File,
-    Thumbnail,
-}
 
 @Composable
 internal fun NotificationRequestScreen(

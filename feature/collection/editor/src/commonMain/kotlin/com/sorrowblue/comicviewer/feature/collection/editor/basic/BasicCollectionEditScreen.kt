@@ -37,12 +37,8 @@ import com.sorrowblue.comicviewer.framework.ui.material3.dialogPaddingHorizonal
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_basic_edit
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
-
-@Serializable
-internal data class BasicCollectionEditScreenUiState(val isLoading: Boolean = false)
 
 @Composable
 internal fun BasicCollectionEditScreen(

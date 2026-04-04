@@ -15,17 +15,9 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBar
 import com.sorrowblue.comicviewer.feature.search.section.SearchList
-import com.sorrowblue.comicviewer.feature.search.section.SearchListUiState
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import kotlinx.serialization.Serializable
-
-@Serializable
-internal data class SearchScreenUiState(
-    val searchCondition: SearchCondition = SearchCondition(),
-    val searchContentsUiState: SearchListUiState = SearchListUiState(),
-)
 
 @Composable
 internal fun SearchScreen(

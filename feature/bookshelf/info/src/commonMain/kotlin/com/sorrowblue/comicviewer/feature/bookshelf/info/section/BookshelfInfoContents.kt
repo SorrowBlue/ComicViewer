@@ -25,13 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
@@ -47,13 +45,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_internal_storage
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_smb
 import org.jetbrains.compose.resources.stringResource
-
-internal data class BookshelfInfoContentsUiState(
-    val bookshelf: Bookshelf,
-    val folder: Folder,
-    val isScanningFile: Boolean = false,
-    val isScanningThumbnail: Boolean = false,
-)
 
 @Composable
 context(context: BookshelfInfoScreenContext)

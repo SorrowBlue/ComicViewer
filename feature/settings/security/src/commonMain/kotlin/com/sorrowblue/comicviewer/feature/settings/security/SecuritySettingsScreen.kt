@@ -18,14 +18,6 @@ import comicviewer.feature.settings.security.generated.resources.settings_securi
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_use_biometric_auth
 import org.jetbrains.compose.resources.stringResource
 
-internal data class SecuritySettingsScreenUiState(
-    val isAuthEnabled: Boolean = false,
-    val isBiometricCanBeUsed: Boolean = false,
-    val isBiometricEnabled: Boolean = false,
-    val isBackgroundLockEnabled: Boolean = false,
-    val isBiometricsDialogShow: Boolean = false,
-)
-
 @Composable
 internal fun SecuritySettingsScreen(
     uiState: SecuritySettingsScreenUiState,

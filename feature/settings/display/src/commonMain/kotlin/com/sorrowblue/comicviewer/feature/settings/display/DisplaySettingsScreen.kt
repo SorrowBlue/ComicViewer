@@ -19,11 +19,6 @@ import comicviewer.feature.settings.display.generated.resources.settings_display
 import comicviewer.feature.settings.display.generated.resources.settings_display_title
 import org.jetbrains.compose.resources.stringResource
 
-internal data class SettingsDisplayScreenUiState(
-    val darkMode: DarkMode = DarkMode.DEVICE,
-    val restoreOnLaunch: Boolean = false,
-)
-
 @Composable
 internal fun DisplaySettingsScreen(
     uiState: SettingsDisplayScreenUiState,

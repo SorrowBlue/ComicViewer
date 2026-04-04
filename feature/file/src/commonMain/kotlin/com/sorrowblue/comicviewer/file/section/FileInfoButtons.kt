@@ -17,12 +17,6 @@ import comicviewer.feature.file.generated.resources.file_info_label_open_folder
 import comicviewer.feature.file.generated.resources.file_info_label_remove_read_later
 import org.jetbrains.compose.resources.stringResource
 
-internal data class FileInfoButtonsUiState(
-    val readLaterChecked: Boolean = false,
-    val readLaterLoading: Boolean = false,
-    val isOpenFolderEnabled: Boolean = false,
-)
-
 @Composable
 internal fun FileInfoButtons(
     uiState: FileInfoButtonsUiState,

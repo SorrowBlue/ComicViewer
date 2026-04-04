@@ -33,8 +33,6 @@ import comicviewer.feature.tutorial.generated.resources.tutorial_label_direction
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_direction
 import org.jetbrains.compose.resources.stringResource
 
-internal data class DirectionSheetUiState(val direction: BindingDirection = BindingDirection.RTL)
-
 @Composable
 internal fun DirectionSheet(
     uiState: DirectionSheetUiState,
