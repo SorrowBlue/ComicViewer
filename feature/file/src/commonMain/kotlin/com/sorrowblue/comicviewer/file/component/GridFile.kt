@@ -261,7 +261,7 @@ private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
 @Preview(widthDp = 180, showBackground = true)
 @Preview(widthDp = 200, showBackground = true)
 @Composable
-internal fun PreviewFileGrid() {
+internal fun FileGridPreview() {
     PreviewTheme {
         GridFile(
             file = fakeBookFile(),
@@ -280,7 +280,7 @@ internal fun PreviewFileGrid() {
 @Preview(widthDp = 180, showBackground = true)
 @Preview(widthDp = 200, showBackground = true)
 @Composable
-internal fun PreviewFileGridFolder() {
+internal fun FileGridFolderPreview() {
     PreviewTheme {
         GridFile(
             file = fakeFolder(),

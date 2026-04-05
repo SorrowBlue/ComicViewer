@@ -40,8 +40,6 @@ complexity:
 
 coroutines:
   active: true
-  RedundantSuspendModifier:
-    active: false
 
 empty-blocks:
   active: true
@@ -51,45 +49,42 @@ exceptions:
 
 naming:
   active: true
+  # Configuration for Compose
   FunctionNaming:
     active: true
-    functionPattern: '[a-z][a-zA-Z0-9]*'
-    ignoreAnnotated: [ 'Composable' ]
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+  # Configuration for Compose
   TopLevelPropertyNaming:
     active: true
     constantPattern: '[A-Z][_A-Za-z0-9]*'
   MatchingDeclarationName:
-    active: false
+    active: true
+    multiplatformTargets: [ 'android','jvm','ios','iosArm64','androidJvm' ]
 
 performance:
   active: true
 
 potential-bugs:
   active: true
-  UnsafeCast:
-    active: false
 
 style:
   active: true
   MagicNumber:
-    active: false
-    ignoreNumbers: [ '-1', '-0.5', '0', '0.01', '0.5', '1', '2' ]
-    ignoreAnnotation: true
-    ignoreEnums: true
-    ignoreRanges: true
-    ignorePropertyDeclaration: true
+    active: false # TODO
+    ignoreCompanionObjectPropertyDeclaration: true
   UnusedPrivateFunction:
-    active: false
-    ignoreAnnotated: [ 'Preview', 'PreviewMultiplatform', 'Provides' ]
-  ReturnCount:
-    active: false
+    active: true
+    ignoreAnnotated: [ 'Preview', 'Provides', 'PreviewMultiplatform' ]
   UnusedPrivateProperty:
     active: false # TODO バグ？
     allowedNames: 'ignored|expected|serialVersionUID|bind'
+  ReturnCount:
+    active: true
+    max: 3
   MaxLineLength:
     active: false
-  VarCouldBeVal:
-    active: false
+    maxLineLength: 100
+    excludeRawStrings: true
 
 Compose:
   ComposableAnnotationNaming:
@@ -101,24 +96,22 @@ Compose:
   CompositionLocalAllowlist:
     active: true
     allowedCompositionLocals: [
-      'LocalPlatformContext',
-      'LocalDimension',
-      'LocalContainerColor',
-      'LocalCanonicalScaffoldBound',
-      'LocalNavigator',
-      'LocalAppState',
-      'LocalSharedTransitionScope',
-      'LocalComposeEffectErrorHandler',
       'LocalAppLocaleIsoInternal',
+      'LocalAppState',
+      'LocalComposeEffectErrorHandler',
+      'LocalDimension',
       'LocalNavigationItems',
+      'LocalNavigator',
+      'LocalPlatformContext',
+      'LocalSharedTransitionScope',
     ]
   CompositionLocalNaming:
     active: true
   ContentEmitterReturningValues:
     active: true
-  ContentSlotReused:
-    active: true
   ContentTrailingLambda:
+    active: true
+  ContentSlotReused:
     active: true
   DefaultsVisibility:
     active: true
@@ -127,7 +120,7 @@ Compose:
   LambdaParameterInRestartableEffect:
     active: true
   Material2:
-    active: false
+    active: true # Opt-in, disabled by default. Turn on if you want to disallow Material 2 usages.
   ModifierClickableOrder:
     active: true
   ModifierComposed:
@@ -155,12 +148,13 @@ Compose:
   PreviewAnnotationNaming:
     active: true
   PreviewNaming:
-    active: false
+    active: true
+    previewNamingStrategy: suffix
   PreviewPublic:
     active: true
-  RememberContentMissing:
-    active: true
   RememberMissing:
+    active: true
+  RememberContentMissing:
     active: true
   UnstableCollections:
     active: false
@@ -172,17 +166,16 @@ Compose:
 ktlint:
   active: true
   code_style: 'android_studio'
-  autoCorrect: true
-
-  ImportOrdering:
-    active: false
-  ChainMethodContinuation:
-    active: false
+  autoCorrect: false
   MaximumLineLength:
+    # See [style.MaxLineLength]
     active: false
   PropertyName:
+    # See [naming.PropertyName]
     active: false
   TrailingCommaOnCallSite:
+    active: true
     useTrailingCommaOnCallSite: true
   TrailingCommaOnDeclarationSite:
+    active: true
     useTrailingCommaOnDeclarationSite: true

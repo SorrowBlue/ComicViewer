@@ -139,7 +139,7 @@ private fun FileInfoThumbnailPreview() {
 @OptIn(InternalDataApi::class)
 @Composable
 @Preview
-private fun FileInfoThumbnailPreview2() {
+private fun FileInfoThumbnail2Preview() {
     ComicTheme {
         Scaffold {
             FileInfoThumbnail(

@@ -139,7 +139,7 @@ internal fun PinTextField(
 
 @Preview
 @Composable
-private fun PreviewPinTextField() {
+private fun PinTextFieldPreview() {
     PreviewTheme {
         Column {
             var pin by remember { mutableStateOf("1111") }

@@ -63,7 +63,7 @@ internal fun PluginScreen(
 
 @Preview
 @Composable
-private fun PreviewPluginScreen() {
+private fun PluginScreenPreview() {
     PreviewTheme {
         PluginScreen(
             uiState = PluginScreenUiState(),
