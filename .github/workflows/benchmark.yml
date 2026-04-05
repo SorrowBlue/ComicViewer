@@ -1,0 +1,81 @@
+name: Startup Benchmark
+
+on:
+  # 毎週月曜日の午前2時（UTC）に定期実行
+  schedule:
+    - cron: '0 2 * * 1'
+  # 手動実行も可能
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: Startup Benchmark
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: Build app (benchmark variant)
+        run: ./gradlew :app:android:assembleBenchmark
+
+      - name: Build benchmark test APK
+        run: ./gradlew :benchmark:assembleBenchmark
+
+      - name: AVD cache
+        uses: actions/cache@v5
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-benchmark-35
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: aosp_atd
+          arch: x86_64
+          profile: pixel_7_pro
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run startup benchmark
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: aosp_atd
+          arch: x86_64
+          profile: pixel_7_pro
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            adb install -r app/android/build/outputs/apk/benchmark/android-benchmark.apk
+            ./gradlew :benchmark:connectedBenchmarkAndroidTest
+
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-results-${{ github.run_id }}
+          path: |
+            benchmark/build/outputs/connected_android_test_additional_output/
+            benchmark/build/outputs/androidTest-results/
+          retention-days: 90
