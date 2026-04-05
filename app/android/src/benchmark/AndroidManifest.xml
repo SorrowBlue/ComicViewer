@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!--
+            Enable profileable to allow Macrobenchmark to profile the app.
+            This is only included in the 'benchmark' build type.
+        -->
+        <profileable
+            android:shell="true"
+            android:enabled="true" />
+    </application>
+</manifest>

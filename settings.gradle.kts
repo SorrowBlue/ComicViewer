@@ -68,6 +68,8 @@ include(":app:ios")
 include(":app:jvm")
 include(":app:share")
 
+include(":benchmark")
+
 include(":framework:common")
 include(":framework:notification")
 include(":framework:designsystem")
