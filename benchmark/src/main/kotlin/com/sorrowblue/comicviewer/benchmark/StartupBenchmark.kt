@@ -30,7 +30,7 @@ class StartupBenchmark {
      */
     @Test
     fun startupCold() = benchmarkRule.measureRepeated(
-        packageName = "com.sorrowblue.comicviewer",
+        packageName = BuildConfig.TARGET_PACKAGE,
         metrics = listOf(StartupTimingMetric()),
         compilationMode = CompilationMode.Full(),
         startupMode = StartupMode.COLD,
@@ -46,7 +46,7 @@ class StartupBenchmark {
      */
     @Test
     fun startupWarm() = benchmarkRule.measureRepeated(
-        packageName = "com.sorrowblue.comicviewer",
+        packageName = BuildConfig.TARGET_PACKAGE,
         metrics = listOf(StartupTimingMetric()),
         compilationMode = CompilationMode.Full(),
         startupMode = StartupMode.WARM,
@@ -61,7 +61,7 @@ class StartupBenchmark {
      */
     @Test
     fun startupHot() = benchmarkRule.measureRepeated(
-        packageName = "com.sorrowblue.comicviewer",
+        packageName = BuildConfig.TARGET_PACKAGE,
         metrics = listOf(StartupTimingMetric()),
         compilationMode = CompilationMode.Full(),
         startupMode = StartupMode.HOT,

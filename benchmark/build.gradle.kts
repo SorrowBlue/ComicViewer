@@ -13,11 +13,16 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
         create("benchmark") {
             isDebuggable = true
             signingConfig = getByName("debug").signingConfig
             matchingFallbacks += listOf("release")
+            buildConfigField("String", "TARGET_PACKAGE", "\"com.sorrowblue.comicviewer\"")
         }
     }
 
