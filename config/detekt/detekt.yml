@@ -166,7 +166,7 @@ Compose:
 ktlint:
   active: true
   code_style: 'android_studio'
-  autoCorrect: false
+  autoCorrect: true
   MaximumLineLength:
     # See [style.MaxLineLength]
     active: false

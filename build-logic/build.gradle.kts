@@ -28,9 +28,10 @@ dependencies {
 }
 
 detekt {
-    buildUponDefaultConfig = true
-    autoCorrect = true
+    parallel = true
     config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+    basePath.set(projectDir)
 }
 
 tasks.withType<Detekt>().configureEach {
@@ -39,6 +40,9 @@ tasks.withType<Detekt>().configureEach {
         markdown.required.set(false)
         sarif.required.set(true)
         checkstyle.required.set(false)
+    }
+    exclude {
+        it.file.path.run { contains("generated-sources") }
     }
 }
 

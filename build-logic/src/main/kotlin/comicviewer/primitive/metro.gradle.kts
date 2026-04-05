@@ -3,7 +3,7 @@ package comicviewer.primitive
 val kotlinPluginIds = listOf(
     "org.jetbrains.kotlin.jvm",
     "org.jetbrains.kotlin.android",
-    "org.jetbrains.kotlin.multiplatform"
+    "org.jetbrains.kotlin.multiplatform",
 )
 
 if (kotlinPluginIds.any(pluginManager::hasPlugin)) {

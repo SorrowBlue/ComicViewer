@@ -24,7 +24,6 @@ dependencies {
 
 detekt {
     parallel = true
-    debug = true
     config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
     buildUponDefaultConfig = true
     basePath.set(rootProject.projectDir)
