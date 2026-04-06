@@ -67,11 +67,10 @@ dependencyResolutionManagement {
 rootProject.name = "comicviewer"
 
 include(":app:android")
+include(":app:android:benchmark")
 include(":app:ios")
 include(":app:jvm")
 include(":app:share")
-
-include(":benchmark")
 
 include(":framework:common")
 include(":framework:notification")

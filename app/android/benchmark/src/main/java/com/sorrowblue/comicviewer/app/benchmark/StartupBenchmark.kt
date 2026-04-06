@@ -1,6 +1,5 @@
-package com.sorrowblue.comicviewer.benchmark
+package com.sorrowblue.comicviewer.app.benchmark
 
-import androidx.benchmark.macro.CompilationMode
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
@@ -12,15 +11,10 @@ import org.junit.runner.RunWith
 /**
  * Measures the startup time of the ComicViewer app.
  *
- * Run via: `./gradlew :benchmark:connectedBenchmarkAndroidTest`
- *
- * Results include:
- * - `timeToInitialDisplayMs`: time until the first frame is displayed (TTID)
- * - `timeToFullDisplayMs`: time until the app reports fully drawn (TTFD)
+ * Run via: `./gradlew :android:app:benchmark:connectedBenchmarkAndroidTest`
  */
 @RunWith(AndroidJUnit4::class)
 class StartupBenchmark {
-
     @get:Rule
     val benchmarkRule = MacrobenchmarkRule()
 
@@ -30,9 +24,8 @@ class StartupBenchmark {
      */
     @Test
     fun startupCold() = benchmarkRule.measureRepeated(
-        packageName = BuildConfig.TARGET_PACKAGE,
+        packageName = BuildConfig.targetPackage,
         metrics = listOf(StartupTimingMetric()),
-        compilationMode = CompilationMode.Full(),
         startupMode = StartupMode.COLD,
         iterations = 5,
     ) {
@@ -46,12 +39,12 @@ class StartupBenchmark {
      */
     @Test
     fun startupWarm() = benchmarkRule.measureRepeated(
-        packageName = BuildConfig.TARGET_PACKAGE,
+        packageName = BuildConfig.targetPackage,
         metrics = listOf(StartupTimingMetric()),
-        compilationMode = CompilationMode.Full(),
         startupMode = StartupMode.WARM,
         iterations = 5,
     ) {
+        pressHome()
         startActivityAndWait()
     }
 
@@ -61,12 +54,12 @@ class StartupBenchmark {
      */
     @Test
     fun startupHot() = benchmarkRule.measureRepeated(
-        packageName = BuildConfig.TARGET_PACKAGE,
+        packageName = BuildConfig.targetPackage,
         metrics = listOf(StartupTimingMetric()),
-        compilationMode = CompilationMode.Full(),
         startupMode = StartupMode.HOT,
         iterations = 5,
     ) {
+        pressHome()
         startActivityAndWait()
     }
 }
