@@ -118,11 +118,13 @@ internal abstract class ComicViewerDatabase : RoomDatabase() {
     class ManualMigration9to10 : Migration(9, 10) {
         override suspend fun migrate(connection: SQLiteConnection) {
             connection.execSQL(
-                """
-                CREATE INDEX IF NOT EXISTS `index_bookshelf_deleted_id` ON bookshelf (`deleted`, `id`);
-                CREATE INDEX IF NOT EXISTS `index_file_bookshelf_id_parent` ON file (`bookshelf_id`, `parent`);
-                CREATE INDEX IF NOT EXISTS `index_file_bookshelf_id_file_type` ON file (`bookshelf_id`, `file_type`);
-                """.trimIndent(),
+                """CREATE INDEX IF NOT EXISTS `index_bookshelf_deleted_id` ON bookshelf (`deleted`, `id`)""",
+            )
+            connection.execSQL(
+                """CREATE INDEX IF NOT EXISTS `index_file_bookshelf_id_parent` ON file (`bookshelf_id`, `parent`)""",
+            )
+            connection.execSQL(
+                """CREATE INDEX IF NOT EXISTS `index_file_bookshelf_id_file_type` ON file (`bookshelf_id`, `file_type`)""",
             )
         }
     }

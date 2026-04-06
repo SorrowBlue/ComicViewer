@@ -23,6 +23,7 @@ dependencies {
 }
 
 detekt {
+    autoCorrect = true
     parallel = true
     config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
     buildUponDefaultConfig = true
