@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ComicViewer"
         tools:targetApi="tiramisu">
-        <profileable android:shell="true" />
 
         <activity
             android:name=".MainActivity"

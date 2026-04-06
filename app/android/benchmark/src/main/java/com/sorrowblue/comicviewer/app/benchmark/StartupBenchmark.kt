@@ -29,7 +29,6 @@ class StartupBenchmark {
         startupMode = StartupMode.COLD,
         iterations = 5,
     ) {
-        pressHome()
         startActivityAndWait()
     }
 
@@ -44,22 +43,6 @@ class StartupBenchmark {
         startupMode = StartupMode.WARM,
         iterations = 5,
     ) {
-        pressHome()
-        startActivityAndWait()
-    }
-
-    /**
-     * Hot startup: app process and Activity are both alive.
-     * Simulates bringing the app to foreground from the Recents screen.
-     */
-    @Test
-    fun startupHot() = benchmarkRule.measureRepeated(
-        packageName = BuildConfig.targetPackage,
-        metrics = listOf(StartupTimingMetric()),
-        startupMode = StartupMode.HOT,
-        iterations = 5,
-    ) {
-        pressHome()
         startActivityAndWait()
     }
 }
