@@ -152,8 +152,7 @@ fun GridFile(
             }
             IconButton(
                 onClick = onInfoClick,
-                modifier = Modifier.align(Alignment.TopEnd)
-                    .testTag("FileListItemMenu"),
+                modifier = Modifier.testTag("FileListItemMenu").align(Alignment.TopEnd),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = ComicTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
                     contentColor = ComicTheme.colorScheme.surfaceVariant,

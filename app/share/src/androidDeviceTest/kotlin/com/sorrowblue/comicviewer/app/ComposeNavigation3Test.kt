@@ -288,6 +288,9 @@ class ComposeNavigation3Test {
             }
         composeTestRule.onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
 
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithTag("FileListItemMenu").onFirst().isDisplayed()
+        }
         composeTestRule.onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
         composeTestRule.onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
 
@@ -306,7 +309,11 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("SearchButton").performClick()
         composeTestRule.onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
 
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithTag("FileListItemMenu").onFirst().isDisplayed()
+        }
         composeTestRule.onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
+
         composeTestRule.onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("OpenFolderButton").performClick()
