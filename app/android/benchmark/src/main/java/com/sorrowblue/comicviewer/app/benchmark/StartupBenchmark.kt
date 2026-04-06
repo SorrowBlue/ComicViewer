@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 /**
  * Measures the startup time of the ComicViewer app.
  *
- * Run via: `./gradlew :android:app:benchmark:connectedBenchmarkAndroidTest`
+ * Run via: `./gradlew :app:android:benchmark:connectedBenchmarkAndroidTest`
  */
 @RunWith(AndroidJUnit4::class)
 class StartupBenchmark {
@@ -24,7 +24,7 @@ class StartupBenchmark {
      */
     @Test
     fun startupCold() = benchmarkRule.measureRepeated(
-        packageName = BuildConfig.targetPackage,
+        packageName = BuildConfig.TARGET_PACKAGE,
         metrics = listOf(StartupTimingMetric()),
         startupMode = StartupMode.COLD,
         iterations = 5,
@@ -38,7 +38,7 @@ class StartupBenchmark {
      */
     @Test
     fun startupWarm() = benchmarkRule.measureRepeated(
-        packageName = BuildConfig.targetPackage,
+        packageName = BuildConfig.TARGET_PACKAGE,
         metrics = listOf(StartupTimingMetric()),
         startupMode = StartupMode.WARM,
         iterations = 5,

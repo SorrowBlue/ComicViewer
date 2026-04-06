@@ -72,6 +72,7 @@ aboutlibraries-gradlePlugin = { group = "com.mikepenz.aboutlibraries.plugin", na
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
 androidx-activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-benchmarkMacroJunit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "androidx-biometric" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
 androidx-coreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -96,7 +97,6 @@ androidx-room3SqliteWrapper = { group = "androidx.room3", name = "room3-sqlite-w
 androidx-room3Testing = { group = "androidx.room3", name = "room3-testing", version.ref = "androidx-room3" }
 androidx-sqliteBundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-startupRuntime = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx-startup" }
-androidx-benchmarkMacroJunit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 androidx-test-espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
 androidx-testCoreKtx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx-testCore" }
 androidx-testExtJunitKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-testExtJunit" }

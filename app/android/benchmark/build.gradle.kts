@@ -17,7 +17,7 @@ android {
             isDebuggable = true
             signingConfig = getByName("debug").signingConfig
             matchingFallbacks += listOf("release")
-            buildConfigField("String", "targetPackage", "\"${getBenchmarkApplicationId()}\"")
+            buildConfigField("String", "TARGET_PACKAGE", "\"${getBenchmarkApplicationId()}\"")
         }
     }
 
