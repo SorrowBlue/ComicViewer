@@ -28,7 +28,6 @@ internal actual class SmbFileClient(
     fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
     @IoDispatcher dispatcher: CoroutineDispatcher,
 ) : FileClient<SmbServer>(bookshelf, fileReaderFactoryMap, dispatcher) {
-
     @AssistedFactory
     actual interface Factory : FileClient.Factory<SmbServer> {
         actual override fun create(bookshelf: SmbServer): SmbFileClient

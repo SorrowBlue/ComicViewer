@@ -4,10 +4,11 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolderUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class PagingBookshelfFolderInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : PagingBookshelfFolderUseCase() {

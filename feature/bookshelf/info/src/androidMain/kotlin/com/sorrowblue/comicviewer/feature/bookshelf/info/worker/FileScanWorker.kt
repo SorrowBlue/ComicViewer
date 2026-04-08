@@ -27,18 +27,16 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
+import com.sorrowblue.comicviewer.framework.background.MetroWorkerInstanceFactory
 import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_description_file_scan_cancelled
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan_completed
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.binding
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -48,13 +46,17 @@ import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
 @AssistedInject
-class FileScanWorker(
+internal class FileScanWorker(
     context: Context,
     @Assisted params: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
     private val notificationManager: NotificationManagerCompat,
 ) : CoroutineWorker(context, params) {
+
+    @AssistedFactory
+    fun interface Factory : MetroWorkerInstanceFactory<FileScanWorker>
+
     private val notificationID = Random.nextInt()
 
     override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo("", "")
@@ -204,12 +206,4 @@ class FileScanWorker(
             )
         }
     }
-
-    @WorkerKey(FileScanWorker::class)
-    @ContributesIntoMap(
-        AppScope::class,
-        binding = binding<MetroWorkerFactory.WorkerInstanceFactory<*>>(),
-    )
-    @AssistedFactory
-    fun interface Factory : MetroWorkerFactory.WorkerInstanceFactory<FileScanWorker>
 }

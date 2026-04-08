@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.storage.client.FileClient
-import com.sorrowblue.comicviewer.data.storage.client.FileClientType
+import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.DependencyGraph
@@ -13,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 @DependencyGraph(scope = DataScope::class)
 actual interface SmbTestGraph {
     @Multibinds(allowEmpty = true)
-    actual val fileClientFactory: Map<FileClientType, FileClient.Factory<*>>
+    actual val fileClientFactory: FileClientFactory
 
     @Suppress("InjectDispatcher")
     @IoDispatcher

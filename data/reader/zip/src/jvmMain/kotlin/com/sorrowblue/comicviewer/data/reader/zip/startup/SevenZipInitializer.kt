@@ -1,14 +1,15 @@
 package com.sorrowblue.comicviewer.data.reader.zip.startup
 
 import com.sorrowblue.comicviewer.framework.common.Initializer
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import com.sorrowblue.comicviewer.framework.common.starup.LogcatInitializer
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.ContributesIntoSet
 import kotlin.reflect.KClass
 import logcat.LogPriority
 import logcat.logcat
 import net.sf.sevenzipjbinding.SevenZip
 
-@Inject
+@ContributesIntoSet(DataScope::class)
 internal class SevenZipInitializer : Initializer<Unit> {
     override fun create() {
         SevenZip.initSevenZipFromPlatformJAR()

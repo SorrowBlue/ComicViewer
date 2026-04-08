@@ -73,6 +73,7 @@ include(":app:jvm")
 include(":app:share")
 
 include(":framework:common")
+include(":framework:background")
 include(":framework:notification")
 include(":framework:designsystem")
 include(":framework:test")

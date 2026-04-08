@@ -6,12 +6,13 @@ import com.sorrowblue.comicviewer.domain.service.datasource.DocumentReaderDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DocumentReaderState
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManagePdfPluginSettingsUseCase
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import com.sorrowblue.scomicviewer.domain.usecase.RegisterPdfPluginUseCase
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class RegisterPdfPluginInteractor(
     private val managePdfPluginSettingsUseCase: ManagePdfPluginSettingsUseCase,
     private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,

@@ -10,23 +10,23 @@ import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
 import io.github.takahirom.rin.rememberRetained
 
-expect class AppLocaleIso {
+abstract class AppLocaleIso {
     /**
      * 現在の[Locale]。nullの場合はシステムデフォルト。
      */
-    val current: Locale? @Composable get
+    abstract val current: Locale? @Composable get
 
     /**
      * アプリがサポートしている[Locale]のリスト
      */
-    val locales: List<Locale>
+    abstract val locales: List<Locale>
 
     /**
      * アプリの[Locale]を設定する。
      *
      * @param locale [Locale]。nullの場合はシステムデフォルト。
      */
-    fun set(locale: Locale?)
+    abstract fun set(locale: Locale?)
 
     /**
      * [languageTag]を適用する。
@@ -35,7 +35,7 @@ expect class AppLocaleIso {
      * @return
      */
     @Composable
-    internal infix fun provides(languageTag: String?): ProvidedValue<*>
+    internal abstract infix fun provides(languageTag: String?): ProvidedValue<*>
 }
 
 /**

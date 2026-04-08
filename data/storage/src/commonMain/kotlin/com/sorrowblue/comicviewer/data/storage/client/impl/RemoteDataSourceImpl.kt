@@ -2,11 +2,9 @@ package com.sorrowblue.comicviewer.data.storage.client.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
-import com.sorrowblue.comicviewer.data.storage.client.FileClientType
+import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.fileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
-import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
-import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
@@ -25,47 +23,35 @@ import logcat.logcat
 internal class RemoteDataSourceImpl(
     @Assisted private val bookshelf: Bookshelf,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    fileClientFactory: Map<FileClientType, FileClient.Factory<*>>,
+    fileClientFactory: FileClientFactory,
 ) : RemoteDataSource {
+
     @AssistedFactory
-    fun interface Factory : RemoteDataSource.Factory {
+    interface Factory : RemoteDataSource.Factory {
         override fun create(bookshelf: Bookshelf): RemoteDataSourceImpl
     }
 
     @Suppress("UNCHECKED_CAST")
-    private val fileClient = when (bookshelf) {
-        is DeviceStorage -> fileClientFactory.getValue(
-            FileClientType.Device,
-        ) as FileClient.Factory<Bookshelf>
-
-        is SmbServer -> fileClientFactory.getValue(
-            FileClientType.Smb,
-        ) as FileClient.Factory<Bookshelf>
-
-        ShareContents -> fileClientFactory.getValue(
-            FileClientType.Share,
-        ) as FileClient.Factory<Bookshelf>
-    }.create(bookshelf)
+    private val fileClient: FileClient<out Bookshelf> by fileClientFactory.fileClient(bookshelf)
 
     override suspend fun connect(path: String) {
-        kotlin
-            .runCatching {
-                withContext(dispatcher) {
-                    fileClient.connect(path)
-                }
-            }.getOrElse {
-                logcat { it.asLog() }
-                throw when (it) {
-                    is FileClientException -> when (it) {
-                        is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                        is FileClientException.InvalidPath -> RemoteException.NotFound()
-                        is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                        is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                    }
-
-                    else -> RemoteException.Unknown()
-                }
+        runCatching {
+            withContext(dispatcher) {
+                fileClient.connect(path)
             }
+        }.getOrElse {
+            logcat { it.asLog() }
+            throw when (it) {
+                is FileClientException -> when (it) {
+                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+                    is FileClientException.InvalidPath -> RemoteException.NotFound()
+                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
+                }
+
+                else -> RemoteException.Unknown()
+            }
+        }
     }
 
     override suspend fun exists(path: String): Boolean = runCatching {
@@ -127,7 +113,7 @@ internal class RemoteDataSourceImpl(
         it.pageCount()
     }
 
-    override suspend fun getAttribute(path: String): FileAttribute = kotlin.runCatching {
+    override suspend fun getAttribute(path: String): FileAttribute = runCatching {
         withContext(dispatcher) {
             fileClient.attribute(path = path)
         }
@@ -144,7 +130,7 @@ internal class RemoteDataSourceImpl(
         }
     }
 
-    override suspend fun getFileSize(path: String): Long = kotlin.runCatching {
+    override suspend fun getFileSize(path: String): Long = runCatching {
         withContext(dispatcher) {
             fileClient.fileSize(path = path)
         }

@@ -5,7 +5,7 @@ import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import platform.Foundation.NSLocale
 import platform.Foundation.NSUserDefaults
@@ -14,8 +14,8 @@ import platform.Foundation.preferredLanguages
 private const val LangKey = "AppleLanguages"
 
 @SingleIn(AppScope::class)
-@Inject
-actual class AppLocaleIso {
+@ContributesBinding(AppScope::class)
+internal class IosAppLocaleIso : AppLocaleIso() {
     private val default = NSLocale.preferredLanguages.first() as String
 
     @Suppress("VariableNaming")
@@ -24,14 +24,14 @@ actual class AppLocaleIso {
     /**
      * 現在の[Locale]。nullの場合はシステムデフォルト。
      */
-    actual val current: Locale?
+    override val current: Locale
         @Composable get() = Locale(LocalAppLocaleIsoInternal.current)
 
-    actual val locales: List<Locale>
+    override val locales: List<Locale>
         get() = NSLocale.preferredLanguages.filterIsInstance<String>().map(::Locale)
 
     @Composable
-    actual infix fun provides(languageTag: String?): ProvidedValue<*> {
+    override infix fun provides(languageTag: String?): ProvidedValue<*> {
         val new = languageTag ?: default
         if (languageTag == null) {
             NSUserDefaults.standardUserDefaults.removeObjectForKey(LangKey)
@@ -46,7 +46,7 @@ actual class AppLocaleIso {
      *
      * @param locale [Locale]。nullの場合はシステムデフォルト。
      */
-    actual fun set(locale: Locale?) {
+    override fun set(locale: Locale?) {
         val new = locale?.toLanguageTag()
         if (new == null) {
             NSUserDefaults.standardUserDefaults.removeObjectForKey(LangKey)

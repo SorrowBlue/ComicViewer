@@ -10,10 +10,11 @@ import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.first
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class ScanBookshelfInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,

@@ -40,7 +40,6 @@ private fun Lint.configure() {
     checkAllWarnings = true
     checkDependencies = true
     disable += listOf(
-        "InvalidPackage",
         "NewerVersionAvailable",
         "GradleDependency",
         "AppLinksAutoVerify",

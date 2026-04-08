@@ -10,15 +10,15 @@ import androidx.compose.ui.text.intl.Locale
 import comicviewer.framework.designsystem.generated.resources.Res
 import comicviewer.framework.designsystem.generated.resources.locales
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import java.util.Locale as JavaLocale
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 
 @SingleIn(AppScope::class)
-@Inject
-actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
+@ContributesBinding(AppScope::class)
+internal class JvmAppLocaleIso(private val localeHelper: LocaleHelper) : AppLocaleIso() {
     @Suppress("VariableNaming", "PrivatePropertyName")
     private val LocalAppLocaleIsoInternal =
         staticCompositionLocalOf { JavaLocale.getDefault().toString() }
@@ -29,7 +29,7 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
     @Suppress("ConstantLocale")
     private val systemDefault = JavaLocale.getDefault()
 
-    actual val current: Locale?
+    override val current: Locale?
         @Composable get() = if (currentLanguageTag.isNullOrEmpty()) {
             null
         } else {
@@ -38,12 +38,12 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
             )
         }
 
-    actual val locales: List<Locale>
+    override val locales: List<Locale>
         get() = runBlocking { getString(Res.string.locales) }.split(",").map {
             Locale(it)
         }
 
-    actual fun set(locale: Locale?) {
+    override fun set(locale: Locale?) {
         localeHelper.save(locale?.platformLocale)
         currentLanguageTag = locale?.toLanguageTag()
         // Uiに反映させる
@@ -51,7 +51,7 @@ actual class AppLocaleIso(private val localeHelper: LocaleHelper) {
     }
 
     @Composable
-    actual infix fun provides(languageTag: String?): ProvidedValue<*> {
+    override infix fun provides(languageTag: String?): ProvidedValue<*> {
         val locale = if (languageTag == null) {
             // 初回またはシステムデフォルト
             if (currentLanguageTag == null) {

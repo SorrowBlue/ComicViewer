@@ -51,7 +51,7 @@ fun main() {
         ) {
             window.minimumSize = Dimension(400, 600)
             val viewModel = viewModel { MainViewModel() }
-            with(context) {
+            with(appGraph.context) {
                 with(appGraph) {
                     Application(finishApp = ::exitApplication)
                 }

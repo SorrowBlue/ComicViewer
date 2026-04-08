@@ -3,9 +3,10 @@ package com.sorrowblue.comicviewer.domain.service.interactor.settings
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class ManageSecuritySettingsInteractor(
     private val datastoreDataSource: DatastoreDataSource,
 ) : ManageSecuritySettingsUseCase {

@@ -11,11 +11,12 @@ import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 import logcat.asLog
 import logcat.logcat
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class RegisterBookshelfInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,

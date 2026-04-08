@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.storage.smb
 import com.sorrowblue.comicviewer.data.smb.BuildConfig
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
-import com.sorrowblue.comicviewer.data.storage.client.FileClientType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.data.storage.client.getFileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
@@ -38,12 +38,7 @@ class SmbFileClientCommonTest {
     private fun createClient(): FileClient<Bookshelf> {
         val graph = createGraph<SmbTestGraph>()
         @Suppress("UNCHECKED_CAST")
-        return (
-            graph.fileClientFactory.getValue(
-                FileClientType.Smb,
-            ) as FileClient.Factory<Bookshelf>
-            )
-            .create(server)
+        return graph.fileClientFactory.getFileClient(server)
     }
 
     @Test

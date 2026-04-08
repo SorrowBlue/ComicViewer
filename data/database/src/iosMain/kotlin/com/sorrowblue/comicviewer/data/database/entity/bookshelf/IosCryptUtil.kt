@@ -1,8 +1,9 @@
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class IosCryptUtil : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String = encryptedText
 

@@ -4,11 +4,12 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class GetFileInteractor(private val fileLocalDataSource: FileLocalDataSource) :
     GetFileUseCase() {
     override fun run(request: Request): Flow<Resource<File, Error>> = flow {

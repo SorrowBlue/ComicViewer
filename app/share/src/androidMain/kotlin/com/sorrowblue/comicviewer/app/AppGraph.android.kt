@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.app
 
 import android.content.Context
 import androidx.work.WorkManager
-import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.MetroWorkerFactory
+import androidx.work.WorkerFactory
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
@@ -21,7 +21,7 @@ actual interface AppGraph :
     MetroAppComponentProviders {
     actual val context: PlatformContext
 
-    val workerFactory: MetroWorkerFactory
+    val workerFactory: WorkerFactory
 
     @Provides
     fun providesWorkManager(application: Context): WorkManager =

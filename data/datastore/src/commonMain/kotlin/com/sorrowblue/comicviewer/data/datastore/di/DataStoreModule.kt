@@ -2,7 +2,6 @@ package com.sorrowblue.comicviewer.data.datastore.di
 
 import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.data.datastore.DataStoreMaker
-import com.sorrowblue.comicviewer.data.datastore.impl.DatastoreDataSourceImpl
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Book
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Collection
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
@@ -33,10 +32,8 @@ import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Binds
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -110,7 +107,4 @@ interface DataStoreModule {
     private fun pdfPluginSettingsDataStore(
         dataStoreMaker: DataStoreMaker,
     ): DataStore<PdfPluginSettings> = dataStoreMaker.createDataStore(PdfPluginSettingsSerializer)
-
-    @Binds
-    private val DatastoreDataSourceImpl.bind: DatastoreDataSource get() = this
 }

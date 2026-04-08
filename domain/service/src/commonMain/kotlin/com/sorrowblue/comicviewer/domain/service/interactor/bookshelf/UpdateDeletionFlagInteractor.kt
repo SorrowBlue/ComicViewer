@@ -3,9 +3,10 @@ package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class UpdateDeletionFlagInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : UpdateDeletionFlagUseCase() {

@@ -15,22 +15,22 @@ import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import comicviewer.framework.designsystem.generated.resources.Res
 import comicviewer.framework.designsystem.generated.resources.locales
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import java.util.Locale as JavaLocale
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 
 @SingleIn(AppScope::class)
-@Inject
-actual class AppLocaleIso(private val context: PlatformContext) {
+@ContributesBinding(AppScope::class)
+internal class AndroidAppLocaleIso(private val context: PlatformContext) : AppLocaleIso() {
     @Suppress("VarCouldBeVal")
     private var currentLocale by mutableStateOf(resolveLocale())
 
     /**
      * アプリがサポートしている[Locale]のリスト
      */
-    actual val locales: List<Locale>
+    override val locales: List<Locale>
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             LocaleConfig(context)
                 .supportedLocales
@@ -46,7 +46,7 @@ actual class AppLocaleIso(private val context: PlatformContext) {
     /**
      * 現在の[JavaLocale]。nullの場合はシステムデフォルト。
      */
-    actual val current: Locale?
+    override val current: Locale?
         @Composable
         get() = currentLocale
 
@@ -55,7 +55,7 @@ actual class AppLocaleIso(private val context: PlatformContext) {
      *
      * @param locale [JavaLocale]。nullの場合はシステムデフォルト。
      */
-    actual fun set(locale: Locale?) {
+    override fun set(locale: Locale?) {
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(locale?.toLanguageTag()),
         )
@@ -69,7 +69,7 @@ actual class AppLocaleIso(private val context: PlatformContext) {
      * @return
      */
     @Composable
-    actual infix fun provides(languageTag: String?): ProvidedValue<*> =
+    override infix fun provides(languageTag: String?): ProvidedValue<*> =
         LocalConfiguration provides LocalConfiguration.current
 
     private fun resolveLocale() = AppCompatDelegate

@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.bookshelf.info.worker
+package com.sorrowblue.comicviewer.framework.background
 
 import androidx.work.ListenableWorker
 import dev.zacsweers.metro.MapKey

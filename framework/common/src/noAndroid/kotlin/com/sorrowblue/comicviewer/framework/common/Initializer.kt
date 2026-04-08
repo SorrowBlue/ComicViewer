@@ -1,7 +1,11 @@
 package com.sorrowblue.comicviewer.framework.common
 
+import dev.zacsweers.metro.DefaultBinding
+import dev.zacsweers.metro.ExperimentalMetroApi
 import kotlin.reflect.KClass
 
+@OptIn(ExperimentalMetroApi::class)
+@DefaultBinding<Initializer<*>>
 interface Initializer<T> {
     fun create(): T
 

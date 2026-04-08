@@ -27,7 +27,7 @@ import dev.zacsweers.metrox.android.ActivityKey
  */
 @ContributesIntoMap(AppScope::class, binding<Activity>())
 @ActivityKey
-class MainActivity(private val appGraph: AppGraph) : AppCompatActivity() {
+internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

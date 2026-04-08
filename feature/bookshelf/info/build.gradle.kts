@@ -9,6 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.background)
                 implementation(projects.framework.notification)
                 implementation(projects.feature.bookshelf.edit)
                 implementation(projects.feature.file)

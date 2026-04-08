@@ -8,21 +8,8 @@ import com.sorrowblue.comicviewer.data.database.dao.CollectionFileDao
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPasswordConverters
-import com.sorrowblue.comicviewer.data.database.impl.BookshelfLocalDataSourceImpl
-import com.sorrowblue.comicviewer.data.database.impl.CollectionFileLocalDataSourceImpl
-import com.sorrowblue.comicviewer.data.database.impl.CollectionLocalDataSourceImpl
-import com.sorrowblue.comicviewer.data.database.impl.FileLocalDataSourceImpl
-import com.sorrowblue.comicviewer.data.database.impl.FileRemoteDataSourceImpl
-import com.sorrowblue.comicviewer.data.database.impl.ReadLaterFileLocalDataSourceImpl
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.framework.common.scope.DataScope
-import dev.zacsweers.metro.Binds
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -79,22 +66,4 @@ interface DatabaseProviders {
     @Provides
     @Suppress("InjectDispatcher")
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-    @Binds
-    private val BookshelfLocalDataSourceImpl.bind: BookshelfLocalDataSource get() = this
-
-    @Binds
-    private val CollectionFileLocalDataSourceImpl.bind: CollectionFileLocalDataSource get() = this
-
-    @Binds
-    private val CollectionLocalDataSourceImpl.bind: CollectionLocalDataSource get() = this
-
-    @Binds
-    private val FileLocalDataSourceImpl.bind: FileLocalDataSource get() = this
-
-    @Binds
-    private val FileRemoteDataSourceImpl.bind: FileRemoteDataSource get() = this
-
-    @Binds
-    private val ReadLaterFileLocalDataSourceImpl.bind: ReadLaterFileLocalDataSource get() = this
 }

@@ -11,21 +11,22 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQueryError
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.domain.service.interactor.settings.ManageFolderSettingsInteractor
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import logcat.asLog
 import logcat.logcat
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class GetBookInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val folderSettingsInteractor: ManageFolderSettingsInteractor,
+    private val folderSettingsInteractor: ManageFolderSettingsUseCase,
 ) : GetBookUseCase() {
     override fun run(request: Request): Flow<Resource<Book, Error>> =
         bookshelfLocalDataSource.flow(request.bookshelfId).map {
@@ -90,11 +91,7 @@ internal class GetBookInteractor(
                 }
             }.fold(
                 onSuccess = {
-                    if (it != null) {
-                        Resource.Success(it)
-                    } else {
-                        Resource.Error(Error.NotFound)
-                    }
+                    Resource.Success(it)
                 },
                 onFailure = {
                     logcat { it.asLog() }

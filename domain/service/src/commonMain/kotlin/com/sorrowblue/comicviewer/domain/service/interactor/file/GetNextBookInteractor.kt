@@ -10,10 +10,11 @@ import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalD
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
-import dev.zacsweers.metro.Inject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.first
 
-@Inject
+@ContributesBinding(DataScope::class)
 internal class GetNextBookInteractor(
     private val datastoreDataSource: DatastoreDataSource,
     private val fileLocalDataSource: FileLocalDataSource,

@@ -88,6 +88,7 @@ dependencies {
 
 metro {
     reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
+    this.enableGraphImplClassAsReturnType
 }
 
 buildConfig {

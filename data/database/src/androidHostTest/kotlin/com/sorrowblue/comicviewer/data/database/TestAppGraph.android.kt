@@ -16,7 +16,6 @@ internal actual fun createPlatformContext(): PlatformContext =
 )
 internal actual interface TestAppGraph {
     actual val database: ComicViewerDatabase
-    actual val platformContext: PlatformContext
 
     @DependencyGraph.Factory
     actual fun interface Factory {

@@ -26,18 +26,16 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
+import com.sorrowblue.comicviewer.framework.background.MetroWorkerInstanceFactory
 import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
 import com.sorrowblue.comicviewer.framework.notification.R
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_description_thumbnail_scan_cancelled
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_thumbnail_scan
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_thumbnail_scan_completed
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.binding
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -47,13 +45,16 @@ import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
 @AssistedInject
-class ThumbnailScanWorker(
+internal class ThumbnailScanWorker(
     appContext: Context,
     @Assisted params: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
     private val notificationManager: NotificationManagerCompat,
 ) : CoroutineWorker(appContext, params) {
+    @AssistedFactory
+    fun interface Factory : MetroWorkerInstanceFactory<ThumbnailScanWorker>
+
     private val notificationID = Random.nextInt()
 
     override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo("", 0, 0, true)
@@ -169,14 +170,6 @@ class ThumbnailScanWorker(
             ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
         )
     }
-
-    @WorkerKey(ThumbnailScanWorker::class)
-    @ContributesIntoMap(
-        AppScope::class,
-        binding = binding<MetroWorkerFactory.WorkerInstanceFactory<*>>(),
-    )
-    @AssistedFactory
-    fun interface Factory : MetroWorkerFactory.WorkerInstanceFactory<ThumbnailScanWorker>
 
     companion object {
         private const val BOOKSHELF_ID = "BOOKSHELF_ID"

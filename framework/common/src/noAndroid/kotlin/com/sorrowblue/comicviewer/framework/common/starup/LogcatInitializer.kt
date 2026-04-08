@@ -1,18 +1,15 @@
 package com.sorrowblue.comicviewer.framework.common.starup
 
 import com.sorrowblue.comicviewer.framework.common.Initializer
-import dev.zacsweers.metro.AppScope
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.ContributesIntoSet
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.binding
 import kotlin.reflect.KClass
 import logcat.LogPriority
 import logcat.LogcatLogger
 import logcat.PrintLogger
 import logcat.logcat
 
-@ContributesIntoSet(scope = AppScope::class, binding = binding<Initializer<*>>())
-@Inject
+@ContributesIntoSet(DataScope::class)
 class LogcatInitializer : Initializer<LogcatLogger.Companion> {
     override fun create(): LogcatLogger.Companion {
         if (!LogcatLogger.isInstalled) {

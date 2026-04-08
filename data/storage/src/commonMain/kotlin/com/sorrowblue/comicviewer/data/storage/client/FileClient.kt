@@ -2,13 +2,20 @@ package com.sorrowblue.comicviewer.data.storage.client
 
 import com.sorrowblue.comicviewer.data.storage.client.impl.ImageFolderFileReader
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
+import dev.zacsweers.metro.DefaultBinding
+import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.MapKey
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import logcat.asLog
@@ -16,12 +23,31 @@ import logcat.logcat
 import okio.BufferedSource
 
 @MapKey
-annotation class FileClientKey(val value: FileClientType)
+annotation class FileClientKey(val value: KClass<out Bookshelf>)
 
-enum class FileClientType {
-    Smb,
-    Device,
-    Share,
+typealias FileClientFactory = Map<KClass<out Bookshelf>, FileClient.Factory<*>>
+
+@Suppress("UNCHECKED_CAST")
+fun FileClientFactory.fileClient(
+    bookshelf: Bookshelf,
+): ReadOnlyProperty<Any, FileClient<out Bookshelf>> =
+    ReadOnlyProperty<Any, FileClient<out Bookshelf>> { thisRef, property ->
+        val factory = when (bookshelf) {
+            is DeviceStorage -> getValue(DeviceStorage::class)
+            is SmbServer -> getValue(SmbServer::class)
+            ShareContents -> getValue(ShareContents::class)
+        } as FileClient.Factory<Bookshelf>
+        factory.create(bookshelf)
+    }
+
+@Suppress("UNCHECKED_CAST")
+fun FileClientFactory.getFileClient(bookshelf: Bookshelf): FileClient<Bookshelf> {
+    val factory = when (bookshelf) {
+        is DeviceStorage -> getValue(DeviceStorage::class)
+        is SmbServer -> getValue(SmbServer::class)
+        ShareContents -> getValue(ShareContents::class)
+    } as FileClient.Factory<Bookshelf>
+    return factory.create(bookshelf)
 }
 
 abstract class FileClient<T : Bookshelf>(
@@ -29,7 +55,10 @@ abstract class FileClient<T : Bookshelf>(
     val fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
     val dispatcher: CoroutineDispatcher,
 ) {
-    interface Factory<T : Bookshelf> {
+    @Suppress("RemoveRedundantQualifierName")
+    @OptIn(ExperimentalMetroApi::class)
+    @DefaultBinding<FileClient.Factory<*>>()
+    fun interface Factory<T : Bookshelf> {
         fun create(bookshelf: T): FileClient<T>
     }
 

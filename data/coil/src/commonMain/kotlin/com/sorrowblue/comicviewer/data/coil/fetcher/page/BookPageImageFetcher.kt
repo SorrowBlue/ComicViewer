@@ -12,15 +12,12 @@ import com.sorrowblue.comicviewer.data.coil.cache.pageDiskCache
 import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.fetcher.FileFetcher
-import com.sorrowblue.comicviewer.data.storage.client.FileClient
-import com.sorrowblue.comicviewer.data.storage.client.FileClientType
+import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
+import com.sorrowblue.comicviewer.data.storage.client.getFileClient
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
-import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
@@ -46,7 +43,7 @@ internal class BookPageImageFetcher(
     private val data: BookPageImage,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-    private val fileClientFactory: Map<FileClientType, FileClient.Factory<*>>,
+    private val fileClientFactory: FileClientFactory,
 ) : FileFetcher<BookPageImageMetadata>(options, diskCacheLazy) {
 
     @ClassKey(BookPageImage::class)
@@ -62,7 +59,7 @@ internal class BookPageImageFetcher(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
-        private val fileClientFactory: Map<FileClientType, FileClient.Factory<*>>,
+        private val fileClientFactory: FileClientFactory,
     ) : Fetcher.Factory<BookPageImage> {
         override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
             BookPageImageFetcher(
@@ -74,21 +71,6 @@ internal class BookPageImageFetcher(
                 fileClientFactory,
             )
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun fileClient(bookshelf: Bookshelf) = when (bookshelf) {
-        is DeviceStorage -> fileClientFactory.getValue(
-            FileClientType.Device,
-        ) as FileClient.Factory<Bookshelf>
-
-        is SmbServer -> fileClientFactory.getValue(
-            FileClientType.Smb,
-        ) as FileClient.Factory<Bookshelf>
-
-        ShareContents -> fileClientFactory.getValue(
-            FileClientType.Share,
-        ) as FileClient.Factory<Bookshelf>
-    }.create(bookshelf)
 
     override val diskCacheKey
         get() = options.diskCacheKey
@@ -110,10 +92,12 @@ internal class BookPageImageFetcher(
         check(dataSource.exists(data.book.path)) {
             "File not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
         }
-        val fileReader = findFileReader() ?: fileClient(bookshelf).fileReader(data.book).also {
-            book = data.book
-            fileReader = it
-        }
+        val fileReader =
+            findFileReader() ?: fileClientFactory.getFileClient(bookshelf).fileReader(data.book)
+                .also {
+                    book = data.book
+                    fileReader = it
+                }
         return runCatching {
             // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
             writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
