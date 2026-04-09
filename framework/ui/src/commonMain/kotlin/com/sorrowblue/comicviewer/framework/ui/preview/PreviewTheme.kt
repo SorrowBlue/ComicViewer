@@ -72,7 +72,6 @@ fun PreviewTheme(
             statusBarMode = InsetMode.Visible,
             cameraCutoutMode = CameraCutoutMode.Middle,
             showInsetsBorder = showInsetsBorder,
-            useHiddenApiHack = false,
         ) {
             movableContent()
         }
