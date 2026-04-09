@@ -521,19 +521,20 @@ Fixed #123
 ComicViewerは以下のレイヤー構造を採用しています:
 
 ```
-├── app/                  # メインアプリケーション（Android/Desktop/iOS エントリポイント）
+├── app/                  # メインアプリケーション（Android/JVM/iOS エントリポイント）
 │   ├── android/          # Android アプリケーション
-│   ├── desktop/          # Desktop アプリケーション
+│   ├── android/benchmark/ # Android ベンチマークモジュール
+│   ├── jvm/              # JVM (Desktop) アプリケーション
 │   ├── ios/              # iOS アプリケーション
 │   └── share/            # 共有コード
 ├── feature/              # UI機能モジュール（画面とナビゲーション）
 │   ├── authentication/   # ログイン・認証画面
 │   ├── book/             # コミックビューワーと管理
 │   ├── bookshelf/        # ライブラリとコレクションビュー
-│   ├── favorite/         # お気に入り管理
+│   ├── collection/       # コレクション管理
 │   ├── file/             # ファイルブラウザと管理
 │   ├── folder/           # フォルダナビゲーション
-│   ├── library/          # 外部ライブラリ統合
+│   ├── history/          # 閲覧履歴
 │   ├── readlater/        # 後で読む機能
 │   ├── search/           # 検索と発見
 │   ├── settings/         # アプリケーション設定
@@ -545,6 +546,7 @@ ComicViewerは以下のレイヤー構造を採用しています:
 ├── data/                 # データアクセス層
 │   ├── coil/             # 画像読み込み設定
 │   ├── database/         # Roomデータベースセットアップ
+│   ├── datastore/        # 設定・状態の永続化
 │   ├── reader/           # ファイル読み込み実装
 │   └── storage/          # ストレージクライアント実装
 └── framework/            # 共有フレームワークコンポーネント
