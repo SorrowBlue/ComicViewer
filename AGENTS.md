@@ -4,17 +4,40 @@
 
 ## 目次
 
+- [指示ファイルの役割分担](#指示ファイルの役割分担)
 - [プロジェクト概要](#プロジェクト概要)
 - [技術スタック](#技術スタック)
 - [環境構築](#環境構築)
-- [ビルドおよびテストコマンド](#ビルドおよびテストコマンド)
-- [コードスタイルガイドライン](#コードスタイルガイドライン)
-- [テスト手順](#テスト手順)
+- [コマンド](#コマンド)
+- [テスト](#テスト)
+- [プロジェクト構造](#プロジェクト構造)
+- [コードスタイル](#コードスタイル)
+- [Gitワークフロー](#gitワークフロー)
+- [境界線](#境界線)
 - [セキュリティに関する考慮事項](#セキュリティに関する考慮事項)
-- [Pull Requestポリシー](#pull-requestポリシー)
-- [アーキテクチャ](#アーキテクチャ)
 - [リリースプロセス](#リリースプロセス)
 - [トラブルシューティング](#トラブルシューティング)
+
+---
+
+## 指示ファイルの役割分担
+
+このリポジトリでは、指示ファイルを以下のように分担します。
+
+- **`.github/copilot-instructions.md`**: 方針・規約・制約（What）
+- **`AGENTS.md`**: 実行手順・コマンド・運用ルール・境界線（How）
+
+### 運用ルール
+
+1. 同じ内容を両方のファイルに重複記載しない
+2. 2つのファイルは併用時にマージされる前提で、矛盾する記述を作らない
+3. 方針（〜すべき、〜を使う、〜は禁止）は`.github/copilot-instructions.md`に記載
+4. 手順（コマンド、チェック手順、PR運用、Always/Ask First/Never）は`AGENTS.md`に記載
+
+### 迷ったときの判断
+
+- Chat/Code Reviewでも常に効かせたい「方針」なら`.github/copilot-instructions.md`
+- 実装・検証時の「具体手順」なら`AGENTS.md`
 
 ---
 
@@ -82,7 +105,9 @@ chmod +x gradlew
 
 ---
 
-## ビルドおよびテストコマンド
+## コマンド
+
+英語名: Commands
 
 ### 基本ビルドコマンド
 
@@ -159,7 +184,9 @@ chmod +x gradlew
 
 ---
 
-## コードスタイルガイドライン
+## コードスタイル
+
+英語名: Code Style
 
 ### 基本ルール
 
@@ -236,7 +263,9 @@ fun fetchUser(userId: String): User {
 
 ---
 
-## テスト手順
+## テスト
+
+英語名: Testing
 
 ### テスト標準
 
@@ -318,7 +347,9 @@ src/
 
 ---
 
-## Pull Requestポリシー
+## Gitワークフロー
+
+英語名: Git Workflow
 
 ### ブランチ命名規則
 
@@ -455,7 +486,35 @@ Fixed #123
 
 ---
 
-## アーキテクチャ
+## 境界線
+
+英語名: Boundaries
+
+このセクションは、実装時の意思決定を早くするための境界条件です。
+
+### Always
+
+- 変更したコードに対応するテストを追加または更新する
+- `AGENTS.md`記載の品質チェック（detekt/lint/test）を実行してからPRを作成する
+- モジュール依存ルール（feature/domain/data/framework）を守る
+
+### Ask First
+
+- 新しい依存ライブラリやプラグインを追加する
+- 公開API・データベーススキーマ・CI設定に影響する変更を行う
+- 大規模なリファクタリングやモジュール再編を行う
+
+### Never
+
+- シークレット（鍵、トークン、パスワード）をソースコードへコミットしない
+- 既存テストを理由なく削除したままマージしない
+- featureモジュール間の直接依存を追加しない
+
+---
+
+## プロジェクト構造
+
+英語名: Project Structure
 
 ### モジュール構成
 
@@ -700,9 +759,7 @@ ComicViewerは完全自動化されたリリースプロセスを採用してい
 - [README.md](./README.md) - プロジェクト概要とモジュール依存関係図
 - [docs/release-automation.md](./docs/release-automation.md) - リリースプロセス詳細
 - [docs/screen_transition.svg](./docs/screen_transition.svg) - 画面遷移図
-- [copilot-workspace-custom-instructions.md](./copilot-workspace-custom-instructions.md) -
-  追加のコーディングガイドライン
-- [.github/copilot-instructions.md](./.github/copilot-instructions.md) - GitHub Copilot用の詳細なガイドライン
+- [.github/copilot-instructions.md](./.github/copilot-instructions.md) - GitHub Copilot向けの全体方針（What）
 
 ### 設定ファイル
 
