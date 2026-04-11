@@ -22,8 +22,10 @@ jobs:
         run: ./gradlew :app:ios:exportLibraryDefinitions
 
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ secrets.PAT }}
           title: 'Update aboutlibraries.json'
           body: 'This PR updates the aboutlibraries.json'
           base: main
@@ -32,3 +34,11 @@ jobs:
           reviewers: 'SorrowBlue,Copilot'
           labels: ':robot:create-pull-request'
           commit-message: 'Update aboutlibraries.json'
+
+      - name: Enable Auto Merge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.PAT }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
