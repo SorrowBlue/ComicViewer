@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.MetadataScope
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
@@ -52,6 +53,18 @@ fun NavDisplay.transitionMaterialFadeThrough(): Map<String, Any> = NavDisplay.tr
     NavDisplay.popTransitionSpec { materialFadeThrough() } +
     NavDisplay.predictivePopTransitionSpec { materialFadeThrough() }
 
+fun MetadataScope.transitionMaterialFadeThrough() {
+    put(NavDisplay.TransitionKey) {
+        materialFadeThrough()
+    }
+    put(NavDisplay.PopTransitionKey) {
+        materialFadeThrough()
+    }
+    put(NavDisplay.PredictivePopTransitionKey) {
+        materialFadeThrough()
+    }
+}
+
 fun NavDisplay.transitionMaterialSharedAxisX(): Map<String, Any> = NavDisplay.transitionSpec {
     materialSharedAxisX(true)
 } +
@@ -63,6 +76,18 @@ fun NavDisplay.transitionMaterialSharedAxisZ(): Map<String, Any> = NavDisplay.tr
 } +
     NavDisplay.popTransitionSpec { materialSharedAxisZ() } +
     NavDisplay.predictivePopTransitionSpec { materialSharedAxisZ() }
+
+fun MetadataScope.transitionMaterialSharedAxisZ() {
+    put(NavDisplay.TransitionKey) {
+        materialSharedAxisZ()
+    }
+    put(NavDisplay.PopTransitionKey) {
+        materialSharedAxisZ()
+    }
+    put(NavDisplay.PredictivePopTransitionKey) {
+        materialSharedAxisZ()
+    }
+}
 
 @Composable
 fun materialFadeThroughIn(initialAlpha: Float = 0.0f): EnterTransition =

@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.folder.navigation
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.PathString
@@ -37,9 +37,13 @@ inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
 ) {
     entry<T>(
         clazzContentKey = { it.toString() },
-        metadata = SupportingPaneSceneStrategy.mainPane(sceneKey) +
-            NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey) +
-            NavDisplay.transitionMaterialSharedAxisZ(),
+        metadata = metadata {
+            put(
+                NavigationResultMetadata.ResultConsumerKey,
+                NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey)
+            )
+            transitionMaterialSharedAxisZ()
+        } + SupportingPaneSceneStrategy.mainPane(sceneKey),
     ) {
         with(rememberRetained { factory.createFolderScreenContext() }) {
             FolderScreenRoot(
