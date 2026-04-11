@@ -10,7 +10,6 @@ aboutLibraries {
     collect {
         includePlatform.set(true)
         fetchRemoteLicense.set(true)
-        fetchRemoteFunding.set(true)
         val githubApiToken: String? by project
         gitHubApiToken.set(githubApiToken)
     }
