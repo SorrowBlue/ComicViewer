@@ -10,7 +10,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultConsumer
 import io.github.irgaly.navigation3.resultstate.SerializedNavigationResult
 import io.github.irgaly.navigation3.resultstate.getResultState
-import kotlinx.serialization.json.Json
 
 @Composable
 context(context: HistoryScreenContext)
@@ -34,7 +33,7 @@ internal fun HistoryScreenRoot(
     val navigationResult: SerializedNavigationResult<ClearAllHistoryScreenResult>? by remember(
         resultConsumer,
     ) {
-        resultConsumer.getResultState(Json, ClearAllHistoryScreenResultKey)
+        resultConsumer.getResultState(ClearAllHistoryScreenResultKey)
     }
 
     LaunchedEffect(navigationResult) {

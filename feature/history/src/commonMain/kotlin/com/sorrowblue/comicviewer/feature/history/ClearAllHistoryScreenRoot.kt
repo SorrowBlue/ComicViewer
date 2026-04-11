@@ -7,7 +7,6 @@ import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 internal val ClearAllHistoryScreenResultKey = SerializableNavigationResultKey(
     serializer = ClearAllHistoryScreenResult.serializer(),
@@ -23,7 +22,6 @@ internal fun ClearAllHistoryScreenRoot(onClose: () -> Unit) {
     ClearAllHistoryScreen(
         onDismissRequest = {
             resultProducer.setResult(
-                Json,
                 ClearAllHistoryScreenResultKey,
                 ClearAllHistoryScreenResult(confirmed = false),
             )
@@ -31,7 +29,6 @@ internal fun ClearAllHistoryScreenRoot(onClose: () -> Unit) {
         },
         onConfirm = {
             resultProducer.setResult(
-                Json,
                 ClearAllHistoryScreenResultKey,
                 ClearAllHistoryScreenResult(confirmed = true),
             )

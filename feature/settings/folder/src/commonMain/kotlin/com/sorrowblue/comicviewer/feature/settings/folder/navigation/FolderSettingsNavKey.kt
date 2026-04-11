@@ -3,7 +3,7 @@ package com.sorrowblue.comicviewer.feature.settings.folder.navigation
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderThumbnailOrderScreenResultKey
@@ -24,14 +24,20 @@ data object FolderSettingsNavKey : NavKey
 context(factory: FolderSettingsScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.folderSettingsNavEntry(navigator: Navigator) {
     entry<FolderSettingsNavKey>(
-        metadata = ListDetailSceneStrategy.detailPane("Settings") +
-            NavigationResultMetadata.resultConsumer(
-                SortTypeScreenResultKey,
-                ImageScaleScreenResultKey,
-                ImageFilterQualityResultKey,
-                ImageFormatScreenResultKey,
-                FolderThumbnailOrderScreenResultKey,
-            ) + NavDisplay.transitionMaterialSharedAxisZ(),
+        metadata = metadata {
+            put(
+                NavigationResultMetadata.ResultConsumerKey,
+                NavigationResultMetadata.resultConsumer(
+                    SortTypeScreenResultKey,
+                    ImageScaleScreenResultKey,
+                    ImageFilterQualityResultKey,
+                    ImageFormatScreenResultKey,
+                    FolderThumbnailOrderScreenResultKey,
+                )
+            )
+
+            transitionMaterialSharedAxisZ()
+        } + ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         with(rememberRetained { factory.createFolderSettingsScreenContext() }) {
             FolderSettingsScreenRoot(

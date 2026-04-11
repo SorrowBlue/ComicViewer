@@ -4,7 +4,7 @@ import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrate
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.history.ClearAllHistoryScreenResultKey
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenContext
@@ -37,9 +37,13 @@ internal data object HistoryNavKey : NavigationKey {
 context(factory: HistoryScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.historyNavEntry(navigator: Navigator) {
     entry<HistoryNavKey>(
-        metadata = SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>("History") +
-            NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey) +
-            NavDisplay.transitionMaterialFadeThrough(),
+        metadata = metadata {
+            put(
+                NavigationResultMetadata.ResultConsumerKey,
+                NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey)
+            )
+            transitionMaterialFadeThrough()
+        } + SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>("History"),
     ) {
         with(rememberRetained { factory.createHistoryScreenContext() }) {
             HistoryScreenRoot(
