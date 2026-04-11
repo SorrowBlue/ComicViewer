@@ -31,7 +31,7 @@ jobs:
           base: main
           branch: chore/update-licenses
           assignees: 'SorrowBlue'
-          reviewers: 'SorrowBlue,Copilot'
+          reviewers: 'Copilot'
           labels: ':robot:create-pull-request'
           commit-message: 'Update aboutlibraries.json'
 
