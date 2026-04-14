@@ -13,4 +13,7 @@ enum class ImageFormat {
 
     /** PNG image format. */
     PNG,
+
+    /** Original image format. */
+    ORIGINAL,
 }

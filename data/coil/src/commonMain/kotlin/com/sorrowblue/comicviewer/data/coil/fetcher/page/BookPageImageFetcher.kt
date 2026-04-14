@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.data.coil.cache.pageDiskCache
 import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.fetcher.FileFetcher
+import com.sorrowblue.comicviewer.data.coil.resizeImage
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.getFileClient
@@ -19,7 +20,9 @@ import com.sorrowblue.comicviewer.domain.model.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
@@ -31,6 +34,7 @@ import logcat.asLog
 import logcat.logcat
 import okio.Buffer
 import okio.BufferedSource
+import okio.use
 
 private var fileReader: FileReader? = null
 private var book: Book? = null
@@ -43,6 +47,7 @@ internal class BookPageImageFetcher(
     private val data: BookPageImage,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val datastoreDataSource: DatastoreDataSource,
     private val fileClientFactory: FileClientFactory,
 ) : FileFetcher<BookPageImageMetadata>(options, diskCacheLazy) {
 
@@ -59,6 +64,7 @@ internal class BookPageImageFetcher(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+        private val datastoreDataSource: DatastoreDataSource,
         private val fileClientFactory: FileClientFactory,
     ) : Fetcher.Factory<BookPageImage> {
         override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
@@ -68,6 +74,7 @@ internal class BookPageImageFetcher(
                 data,
                 remoteDataSourceFactory,
                 bookshelfLocalDataSource,
+                datastoreDataSource,
                 fileClientFactory,
             )
     }
@@ -98,10 +105,20 @@ internal class BookPageImageFetcher(
                     book = data.book
                     fileReader = it
                 }
+        val viewerSettings = datastoreDataSource.viewerSettings.first()
+        val quality = viewerSettings.imageQuality
+        val compressFormat = viewerSettings.imageFormat
         return runCatching {
             // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
             writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
-                fileReader.copyTo(data.pageIndex, sink)
+                if (compressFormat == ImageFormat.ORIGINAL) {
+                    fileReader.copyTo(data.pageIndex, sink)
+                } else {
+                    Buffer().use { buffer ->
+                        fileReader.copyTo(data.pageIndex, buffer)
+                        resizeImage(buffer, sink, compressFormat, quality)
+                    }
+                }
             }?.let { snapshot1 ->
                 SourceFetchResult(
                     source = snapshot1.toImageSource(),

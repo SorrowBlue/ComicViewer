@@ -10,8 +10,10 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -36,6 +38,7 @@ internal fun rememberBookScreenWrapperState(
             collectionId = collectionId,
             coroutineScope = coroutineScope,
             getBookUseCase = context.getBookUseCase,
+            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
         )
     }
 }
@@ -47,6 +50,7 @@ private class BookScreenWrapperStateImpl(
     collectionId: CollectionId,
     coroutineScope: CoroutineScope,
     getBookUseCase: GetBookUseCase,
+    manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
 ) : BookScreenWrapperState {
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(name))
         private set
@@ -59,6 +63,7 @@ private class BookScreenWrapperStateImpl(
                         book = res.data,
                         collectionId = collectionId,
                         bookSheetUiState = BookSheetUiState(res.data),
+                        alwaysOpenFromFirstPage = manageViewerSettingsUseCase.settings.first().alwaysOpenFromFirstPage,
                     )
 
                 is Resource.Error -> when (res.error) {

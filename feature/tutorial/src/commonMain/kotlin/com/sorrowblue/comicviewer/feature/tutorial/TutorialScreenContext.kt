@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.feature.tutorial
 
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -12,7 +12,7 @@ annotation class TutorialScreenScope
 
 @GraphExtension(TutorialScreenScope::class)
 interface TutorialScreenContext : ScreenContext {
-    val manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase
+    val manageViewerSettingsUseCase: ManageViewerSettingsUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

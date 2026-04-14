@@ -67,7 +67,19 @@ fun AlertDialog(
                         }
                     }
                 }
-                content(PaddingValues(start = 24.dp, end = 24.dp, bottom = 24.dp))
+                val textStyle = ComicTheme.typography.bodyMedium
+                ProvideContentColorTextStyle(
+                    contentColor = AlertDialogDefaults.textContentColor,
+                    textStyle = textStyle,
+                ) {
+                    Box(
+                        Modifier.weight(weight = 1f, fill = false)
+                            .padding(TextPadding)
+                            .align(Alignment.Start),
+                    ) {
+                        content(PaddingValues(start = 24.dp, end = 24.dp, bottom = 24.dp))
+                    }
+                }
             }
         }
     }
@@ -226,9 +238,9 @@ private fun AlertDialogContent(
                         HorizontalDivider()
                     }
                 }
-                Spacer(Modifier.padding(TextPadding))
             }
             buttons?.let {
+                Spacer(Modifier.padding(TextPadding))
                 Box(modifier = Modifier.padding(DialogPaddingHorizonal).align(Alignment.End)) {
                     val textStyle = ComicTheme.typography.labelLarge
                     ProvideContentColorTextStyle(

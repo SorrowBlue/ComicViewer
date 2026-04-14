@@ -6,7 +6,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
-import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
@@ -44,12 +43,6 @@ interface DatastoreDataSource {
     suspend fun updateFolderSettings(
         transform: suspend (FolderSettings) -> FolderSettings,
     ): FolderSettings
-
-    val viewerOperationSettings: Flow<ViewerOperationSettings>
-
-    suspend fun updateViewerOperationSettings(
-        transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings,
-    ): ViewerOperationSettings
 
     val securitySettings: Flow<SecuritySettings>
 

@@ -64,7 +64,6 @@ fun SortTypeSelectScreenRoot(
         onFolderScopeOnlyClick = { currentFolderScopeOnly = !currentFolderScopeOnly },
         onDismissRequest = {
             resultProducer.setResult(
-                Json,
                 SortTypeSelectScreenResultKey,
                 SortTypeSelectScreenResult(sortType, currentFolderScopeOnly),
             )
@@ -72,7 +71,6 @@ fun SortTypeSelectScreenRoot(
         },
         onClick = {
             resultProducer.setResult(
-                Json,
                 SortTypeSelectScreenResultKey,
                 SortTypeSelectScreenResult(it, currentFolderScopeOnly),
             )

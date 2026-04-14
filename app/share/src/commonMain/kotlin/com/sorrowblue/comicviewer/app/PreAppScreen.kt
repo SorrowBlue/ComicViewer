@@ -13,8 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
@@ -48,7 +46,6 @@ internal fun PreAppScreen(
             viewModel.shouldKeepSplash.value = false
         }
     } else {
-        LifecycleEventEffect(Lifecycle.Event.ON_STOP, onEvent = state::onStop)
         if (isInitialized || state.authStatus is AuthStatus.NoAuthRequired ||
             (
                 state.authStatus is AuthStatus.AuthRequired &&

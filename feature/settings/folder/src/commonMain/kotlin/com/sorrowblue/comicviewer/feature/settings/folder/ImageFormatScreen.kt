@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_imageformat_label_jpeg_explanation
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_imageformat_label_original_explanation
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_imageformat_label_png_explanation
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_imageformat_label_webp_explanation
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_imageformat_title
@@ -59,4 +60,5 @@ private val ImageFormat.explanatoryText
         ImageFormat.WEBP -> Res.string.settings_folder_imageformat_label_webp_explanation
         ImageFormat.JPEG -> Res.string.settings_folder_imageformat_label_jpeg_explanation
         ImageFormat.PNG -> Res.string.settings_folder_imageformat_label_png_explanation
+        ImageFormat.ORIGINAL -> Res.string.settings_folder_imageformat_label_original_explanation
     }

@@ -6,15 +6,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
-import dev.zacsweers.metro.Scope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed interface AuthStatus {
@@ -25,20 +29,19 @@ sealed interface AuthStatus {
     data object NoAuthRequired : AuthStatus
 }
 
-@Scope
-annotation class RootScreenWrapperScope
-
 @Composable
 context(context: PreAppScreenContext)
 internal fun rememberPreAppScreenState(): PreAppScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val state = remember {
         PreAppScreenStateImpl(
             scope = coroutineScope,
             loadSettingsUseCase = context.loadSettingsUseCase,
             manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase,
         )
     }
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE, onEvent = state::onPause)
+    return state
 }
 
 internal interface PreAppScreenState {
@@ -46,16 +49,13 @@ internal interface PreAppScreenState {
     val tutorialRequired: Boolean
 
     fun onAuthComplete()
-
-    fun onStop()
-
     fun onTutorialComplete()
 }
 
-@Suppress("OPT_IN_USAGE")
+@OptIn(ExperimentalCoroutinesApi::class)
 private class PreAppScreenStateImpl(
     private val scope: CoroutineScope,
-    private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
+    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
 ) : PreAppScreenState {
     override var authStatus by mutableStateOf<AuthStatus>(AuthStatus.Unknown)
@@ -63,6 +63,10 @@ private class PreAppScreenStateImpl(
 
     override var tutorialRequired by mutableStateOf(false)
         private set
+
+    private val lockOnBackground = manageSecuritySettingsUseCase.settings
+        .map { it.lockOnBackground }
+        .stateIn(scope, SharingStarted.Eagerly, false)
 
     init {
         // Initialize tutorial status and listen for changes
@@ -93,19 +97,15 @@ private class PreAppScreenStateImpl(
         authStatus = AuthStatus.AuthRequired(authed = true)
     }
 
-    override fun onStop() {
-        scope.launch {
-            if (authStatus is AuthStatus.AuthRequired &&
-                manageSecuritySettingsUseCase.settings.first().lockOnBackground
-            ) {
-                authStatus = AuthStatus.AuthRequired(authed = false)
-            }
-        }
-    }
-
     override fun onTutorialComplete() {
         scope.launch {
             loadSettingsUseCase.edit { it.copy(doneTutorial = true) }
+        }
+    }
+
+    fun onPause() {
+        if (authStatus is AuthStatus.AuthRequired && lockOnBackground.value) {
+            authStatus = AuthStatus.AuthRequired(authed = false)
         }
     }
 }

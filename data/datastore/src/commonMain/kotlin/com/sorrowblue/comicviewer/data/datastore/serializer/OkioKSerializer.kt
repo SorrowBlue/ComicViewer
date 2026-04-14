@@ -19,7 +19,9 @@ internal abstract class OkioKSerializer<T>(
     abstract val fileName: String
 
     override suspend fun readFrom(source: BufferedSource) = withContext(coroutineDispatcher) {
-        ProtoBuf.decodeFromByteArray(serializer, source.readByteArray())
+        runCatching {
+            ProtoBuf.decodeFromByteArray(serializer, source.readByteArray())
+        }.getOrElse { defaultValue }
     }
 
     override suspend fun writeTo(t: T, sink: BufferedSink) {

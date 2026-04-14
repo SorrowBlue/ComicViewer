@@ -45,7 +45,7 @@ internal fun DarkModeScreen(
                         onClick = null,
                     )
                     Spacer(modifier = Modifier.size(24.dp))
-                    Text(text = stringResource(darkMode.label))
+                    Text(text = darkMode.label)
                 }
             }
         }

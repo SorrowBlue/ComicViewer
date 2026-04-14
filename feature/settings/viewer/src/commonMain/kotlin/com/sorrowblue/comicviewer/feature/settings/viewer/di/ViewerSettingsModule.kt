@@ -1,7 +1,9 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer.di
 
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettingsScreenContext
+import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.BindingDirectionNavKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.bindingDirectionNavEntry
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.viewerSettingsNavEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
@@ -16,8 +18,10 @@ import dev.zacsweers.metro.Provides
 interface ViewerSettingsModule {
     @Provides
     @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> =
-        setOf(ViewerSettingsNavKey.serializer().asEntry())
+    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
+        ViewerSettingsNavKey.serializer().asEntry(),
+        BindingDirectionNavKey.serializer().asEntry(),
+    )
 
     @Provides
     @IntoSet
@@ -27,5 +31,11 @@ interface ViewerSettingsModule {
         with(factory) {
             viewerSettingsNavEntry(navigator)
         }
+    }
+
+    @Provides
+    @IntoSet
+    private fun provideBindingDirectionEntry(): ScreenEntryProvider = { navigator ->
+        bindingDirectionNavEntry(navigator)
     }
 }

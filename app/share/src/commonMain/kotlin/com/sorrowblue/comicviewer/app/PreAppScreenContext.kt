@@ -7,6 +7,10 @@ import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
+import dev.zacsweers.metro.Scope
+
+@Scope
+annotation class RootScreenWrapperScope
 
 @GraphExtension(RootScreenWrapperScope::class)
 interface PreAppScreenContext {

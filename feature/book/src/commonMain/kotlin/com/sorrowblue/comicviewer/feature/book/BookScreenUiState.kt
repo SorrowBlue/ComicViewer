@@ -16,5 +16,6 @@ internal sealed interface BookScreenUiState {
         val collectionId: CollectionId,
         val bookSheetUiState: BookSheetUiState,
         val isVisibleTooltip: Boolean = true,
+        val alwaysOpenFromFirstPage: Boolean,
     ) : BookScreenUiState
 }

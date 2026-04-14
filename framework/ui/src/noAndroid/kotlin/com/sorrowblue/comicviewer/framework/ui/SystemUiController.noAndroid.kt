@@ -12,4 +12,6 @@ private object UnSupportSystemUiController : SystemUiController {
     override var systemBarsBehavior = -1
     override var isStatusBarVisible = true
     override var isNavigationBarVisible = true
+    override var keepScreenOn = false
+    override var screenBrightness = 0f
 }

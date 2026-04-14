@@ -33,7 +33,7 @@ internal fun EntryProviderScope<NavKey>.folderSettingsNavEntry(navigator: Naviga
                     ImageFilterQualityResultKey,
                     ImageFormatScreenResultKey,
                     FolderThumbnailOrderScreenResultKey,
-                )
+                ),
             )
 
             transitionMaterialSharedAxisZ()

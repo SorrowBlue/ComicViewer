@@ -1,20 +1,31 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.viewer.generated.resources.Res
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_binding_direction_each
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_cache_images
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_binding_direction
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_display_first_page
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_preload_pages
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_binding_direction
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_brightness_control
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_brightness_level
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_cut_whitespace
@@ -32,7 +43,7 @@ internal fun ViewerSettingsScreen(
     onNavigationBarShowChange: (Boolean) -> Unit,
     onTurnOnScreenChange: (Boolean) -> Unit,
     onCutWhitespaceChange: (Boolean) -> Unit,
-    onCacheImageChange: (Boolean) -> Unit,
+    onBindingDirectionClick: () -> Unit,
     onDisplayFirstPageChange: (Boolean) -> Unit,
     onPreloadPagesChange: (Float) -> Unit,
     onImageQualityChange: (Float) -> Unit,
@@ -40,71 +51,134 @@ internal fun ViewerSettingsScreen(
     onScreenBrightnessChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val snackbar = remember { SnackbarHostState() }
     SettingsDetailPane(
         title = { Text(text = stringResource(Res.string.settings_viewer_title)) },
         onBackClick = onBackClick,
+        snackbarHost = {
+            SnackbarHost(snackbar)
+        },
         modifier = modifier,
     ) {
         SwitchSetting(
-            title = Res.string.settings_viewer_title_show_status_bar,
+            title = {
+                Text(stringResource(Res.string.settings_viewer_title_show_status_bar))
+            },
             checked = uiState.isStatusBarShow,
             onCheckedChange = onStatusBarShowChange,
         )
         SwitchSetting(
-            title = Res.string.settings_viewer_title_show_navigation_bar,
+            title = {
+                Text(stringResource(Res.string.settings_viewer_title_show_navigation_bar))
+            },
             checked = uiState.isNavigationBarShow,
             onCheckedChange = onNavigationBarShowChange,
         )
         SwitchSetting(
-            title = Res.string.settings_viewer_title_not_turn_off_screen,
+            title = {
+                Text(stringResource(Res.string.settings_viewer_title_not_turn_off_screen))
+            },
             checked = uiState.isTurnOnScreen,
             onCheckedChange = onTurnOnScreenChange,
         )
         SwitchSetting(
-            title = Res.string.settings_viewer_title_cut_whitespace,
+            title = {
+                Text(stringResource(Res.string.settings_viewer_title_cut_whitespace))
+            },
             checked = uiState.isCutWhitespace,
             onCheckedChange = onCutWhitespaceChange,
         )
-        SwitchSetting(
-            title = Res.string.settings_viewer_label_cache_images,
-            checked = uiState.isCacheImage,
-            onCheckedChange = onCacheImageChange,
+        Setting(
+            title = {
+                Text(stringResource(Res.string.settings_viewer_label_binding_direction))
+            },
+            summary = {
+                Text(uiState.bindingDirection.displayName)
+            },
+            onClick = onBindingDirectionClick,
         )
-        Setting(title = Res.string.settings_viewer_title_binding_direction, onClick = {})
-        Setting(title = Res.string.settings_viewer_label_binding_direction_each, onClick = {})
         SwitchSetting(
-            title = Res.string.settings_viewer_label_display_first_page,
+            title = {
+                Text(stringResource(Res.string.settings_viewer_label_display_first_page))
+            },
             checked = uiState.isDisplayFirstPage,
             onCheckedChange = onDisplayFirstPageChange,
         )
         SliderSetting(
-            title = Res.string.settings_viewer_label_preload_pages,
+            title = {
+                Text(stringResource(Res.string.settings_viewer_label_preload_pages))
+            },
             value = uiState.preloadPages,
             onValueChange = onPreloadPagesChange,
-            valueRange = 1f..10f,
+            valueRange = 0f..10f,
             steps = 8,
         )
         SliderSetting(
-            title = Res.string.settings_viewer_title_image_quality,
+            title = {
+                Text(stringResource(Res.string.settings_viewer_title_image_quality))
+            },
             value = uiState.imageQuality,
             onValueChange = onImageQualityChange,
             valueRange = 1f..100f,
             steps = 50,
         )
-        SettingsCategory(title = Res.string.settings_viewer_title_brightness_control) {
+        SettingsCategory(title = {
+            Text(stringResource(Res.string.settings_viewer_title_brightness_control))
+        }) {
             SwitchSetting(
-                title = Res.string.settings_viewer_title_brightness_control,
+                title = {
+                    Text(stringResource(Res.string.settings_viewer_title_brightness_control))
+                },
                 checked = uiState.isFixScreenBrightness,
                 onCheckedChange = onFixScreenBrightnessChange,
             )
+            SliderSetting(
+                title = {
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Text(stringResource(Res.string.settings_viewer_title_brightness_level))
+                        if (uiState.screenBrightnessPreview) {
+                            Spacer(Modifier.size(ComicTheme.dimension.padding))
+                            Text(
+                                "Reverting in ${uiState.screenBrightnessPreviewTime}s...",
+                                style = ComicTheme.typography.labelMedium,
+                            )
+                        }
+                    }
+                },
+                thumbText = { value ->
+                    Text(
+                        text = (value * 100).toInt().toString(),
+                        modifier = Modifier.widthIn(min = 40.dp),
+                        textAlign = TextAlign.Center,
+                    )
+                },
+                value = uiState.screenBrightness,
+                onValueChange = onScreenBrightnessChange,
+                valueRange = 0f..1f,
+                enabled = uiState.isFixScreenBrightness,
+            )
         }
-        SliderSetting(
-            title = Res.string.settings_viewer_title_brightness_level,
-            value = uiState.screenBrightness,
-            onValueChange = onScreenBrightnessChange,
-            valueRange = 1f..100f,
-            steps = 98,
-            enabled = uiState.isFixScreenBrightness,
+    }
+}
+
+@Preview
+@Preview(locale = "ja")
+@Composable
+private fun ViewerSettingsScreenPreview() {
+    PreviewTheme {
+        ViewerSettingsScreen(
+            uiState = SettingsViewerScreenUiState(),
+            onBackClick = {},
+            onStatusBarShowChange = {},
+            onNavigationBarShowChange = {},
+            onTurnOnScreenChange = {},
+            onCutWhitespaceChange = {},
+            onBindingDirectionClick = {},
+            onDisplayFirstPageChange = {},
+            onPreloadPagesChange = {},
+            onImageQualityChange = {},
+            onFixScreenBrightnessChange = {},
+            onScreenBrightnessChange = {},
         )
     }
 }

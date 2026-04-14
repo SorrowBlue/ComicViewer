@@ -40,7 +40,7 @@ inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
         metadata = metadata {
             put(
                 NavigationResultMetadata.ResultConsumerKey,
-                NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey)
+                NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey),
             )
             transitionMaterialSharedAxisZ()
         } + SupportingPaneSceneStrategy.mainPane(sceneKey),

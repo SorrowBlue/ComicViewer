@@ -4,6 +4,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -19,6 +20,7 @@ interface BookScreenContext : ScreenContext {
     val getNextBookUseCase: GetNextBookUseCase
     val updateLastReadPageUseCase: UpdateLastReadPageUseCase
     val manageBookSettingsUseCase: ManageBookSettingsUseCase
+    val manageViewerSettingsUseCase: ManageViewerSettingsUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

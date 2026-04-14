@@ -10,14 +10,12 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.GlobalSettings
 import com.sorrowblue.comicviewer.data.datastore.qualifier.PdfPlugin
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
-import com.sorrowblue.comicviewer.data.datastore.qualifier.ViewerOperation
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
-import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
@@ -37,8 +35,6 @@ internal class DatastoreDataSourceImpl(
     @param:FolderDisplay private val folderDisplaySettingsDataStore:
     DataStore<FolderDisplaySettings>,
     @param:Folder private val folderSettingsDataStore: DataStore<FolderSettings>,
-    @param:ViewerOperation private val viewerOperationSettingsDataStore:
-    DataStore<ViewerOperationSettings>,
     @param:Collection private val collectionSettingsDataStore: DataStore<CollectionSettings>,
     @param:Security private val securitySettingsDataStore: DataStore<SecuritySettings>,
     @param:PdfPlugin private val pdfPluginSettingsDataStore: DataStore<PdfPluginSettings>,
@@ -76,12 +72,6 @@ internal class DatastoreDataSourceImpl(
     override suspend fun updateFolderSettings(
         transform: suspend (FolderSettings) -> FolderSettings,
     ) = folderSettingsDataStore.updateData(transform)
-
-    override val viewerOperationSettings = viewerOperationSettingsDataStore.data
-
-    override suspend fun updateViewerOperationSettings(
-        transform: suspend (ViewerOperationSettings) -> ViewerOperationSettings,
-    ) = viewerOperationSettingsDataStore.updateData(transform)
 
     override val securitySettings: Flow<SecuritySettings> = securitySettingsDataStore.data
 

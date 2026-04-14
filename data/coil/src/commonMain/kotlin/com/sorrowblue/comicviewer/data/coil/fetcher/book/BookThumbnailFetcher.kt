@@ -14,9 +14,11 @@ import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.fetcher.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.resizeImage
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.getFileClient
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
@@ -110,29 +112,9 @@ internal class BookThumbnailFetcher(
                 "Only 0 pages"
             }
             val displaySettings = datastoreDataSource.folderDisplaySettings.first()
-            val quality = displaySettings.thumbnailQuality
-            val compressFormat = displaySettings.imageFormat
-            // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-            writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
-                Buffer().use { buffer ->
-                    fileReader.copyTo(0, buffer)
-                    resizeImage(buffer, sink, compressFormat, quality)
-                }
-            }?.let { diskSnapshot ->
-                // DISKキャッシュキーとページ数を更新する。
-                fileLocalDataSource.updateAdditionalInfo(
-                    data.path,
-                    data.bookshelfId,
-                    diskCacheKey,
-                    fileReader.pageCount(),
-                )
-                SourceFetchResult(
-                    source = diskSnapshot.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.NETWORK,
-                )
-            } ?: run {
-                // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
+            if (displaySettings.isSavedThumbnail) {
+                saveSnapshot(snapshot, fileReader, displaySettings)
+            } else {
                 Buffer().let {
                     fileReader.copyTo(0, it)
                     SourceFetchResult(
@@ -141,6 +123,45 @@ internal class BookThumbnailFetcher(
                         dataSource = DataSource.NETWORK,
                     )
                 }
+            }
+        }
+    }
+
+    private suspend fun saveSnapshot(
+        snapshot: DiskCache.Snapshot?,
+        fileReader: FileReader,
+        displaySettings: FolderDisplaySettings,
+    ): SourceFetchResult {
+        val quality = displaySettings.thumbnailQuality
+        val compressFormat = displaySettings.imageFormat
+        // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
+        return writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
+            Buffer().use { buffer ->
+                fileReader.copyTo(0, buffer)
+                resizeImage(buffer, sink, compressFormat, quality)
+            }
+        }?.let { diskSnapshot ->
+            // DISKキャッシュキーとページ数を更新する。
+            fileLocalDataSource.updateAdditionalInfo(
+                data.path,
+                data.bookshelfId,
+                diskCacheKey,
+                fileReader.pageCount(),
+            )
+            SourceFetchResult(
+                source = diskSnapshot.toImageSource(),
+                mimeType = null,
+                dataSource = DataSource.NETWORK,
+            )
+        } ?: run {
+            // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
+            Buffer().let {
+                fileReader.copyTo(0, it)
+                SourceFetchResult(
+                    source = it.toImageSource(),
+                    mimeType = null,
+                    dataSource = DataSource.NETWORK,
+                )
             }
         }
     }

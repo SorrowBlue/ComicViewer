@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_viewer_label_binding_direction_each">Set different closing directions for each book</string>
     <string name="settings_viewer_label_cache_images">Cache images</string>
     <string name="settings_viewer_label_display_first_page">Always display first page</string>
     <string name="settings_viewer_label_preload_pages">Number of pages to preload</string>
     <string name="settings_viewer_title">Viewer settings</string>
-    <string name="settings_viewer_title_binding_direction">Binding direction</string>
     <string name="settings_viewer_title_brightness_control">brightness control</string>
     <string name="settings_viewer_title_brightness_level">brightness level</string>
     <string name="settings_viewer_title_cut_whitespace">Cut whitespace</string>
@@ -13,4 +11,10 @@
     <string name="settings_viewer_title_not_turn_off_screen">Do not turn off screen</string>
     <string name="settings_viewer_title_show_navigation_bar">Show navigation bar</string>
     <string name="settings_viewer_title_show_status_bar">Show status bar</string>
+
+    <string name="settings_viewer_title_binding_direction">Book Reading Direction</string>
+    <string name="settings_viewer_label_binding_direction">Book Binding &amp; Direction</string>
+    <string name="settings_viewer_label_binding_direction_rtl">Right-to-Left</string>
+    <string name="settings_viewer_label_binding_direction_ltr">Left-to-Right</string>
+    <string name="settings_viewer_desc_binding_direction">Set the binding side of the book. Select "Right-to-Left" for manga or vertical text books, and "Left-to-Right" for magazines or horizontal text books.</string>
 </resources>

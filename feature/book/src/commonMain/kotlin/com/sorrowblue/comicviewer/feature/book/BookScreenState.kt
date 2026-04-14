@@ -3,6 +3,7 @@ package com.sorrowblue.comicviewer.feature.book
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +18,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.NextBook
 import com.sorrowblue.comicviewer.feature.book.section.NextPage
@@ -28,6 +30,7 @@ import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -43,9 +46,21 @@ internal fun rememberBookScreenState(initialUiState: BookScreenUiState.Loaded): 
     val systemUiController = rememberSystemUiController()
     val currentList = remember { mutableStateListOf<PageItem>() }
     val pagerState = rememberPagerState(
-        initialPage = initialUiState.book.lastPageRead + 1,
+        initialPage = if (initialUiState.alwaysOpenFromFirstPage) {
+            1
+        } else {
+            initialUiState.book.lastPageRead +
+                1
+        },
         pageCount = { currentList.size },
     )
+
+    DisposableEffect(Unit) {
+        onDispose {
+            systemUiController.keepScreenOn = false
+            systemUiController.screenBrightness = SystemUiController.BRIGHTNESS_OVERRIDE_NONE
+        }
+    }
 
     return remember(isCompactWindowClass) {
         BookScreenStateImpl(
@@ -58,6 +73,7 @@ internal fun rememberBookScreenState(initialUiState: BookScreenUiState.Loaded): 
             getNextBookUseCase = context.getNextBookUseCase,
             manageBookSettingsUseCase = context.manageBookSettingsUseCase,
             updateLastReadPageUseCase = context.updateLastReadPageUseCase,
+            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
         )
     }
 }
@@ -87,6 +103,7 @@ private class BookScreenStateImpl(
     private val systemUiController: SystemUiController,
     private val getNextBookUseCase: GetNextBookUseCase,
     manageBookSettingsUseCase: ManageBookSettingsUseCase,
+    private val manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
     private val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
 ) : BookScreenState {
     override var uiState by mutableStateOf(initialUiState)
@@ -169,6 +186,30 @@ private class BookScreenStateImpl(
                     ),
                 )
             }.launchIn(coroutineScope)
+        manageViewerSettingsUseCase.settings
+            .onEach { settings ->
+                systemUiController.keepScreenOn = settings.keepOnScreen
+                if (settings.enableBrightnessControl) {
+                    systemUiController.screenBrightness = settings.screenBrightness
+                }
+                uiState = uiState.copy(
+                    bookSheetUiState = uiState.bookSheetUiState.copy(
+                        cutWhitespace = settings.cutWhitespace,
+                        beyondViewportPageCount = settings.readAheadPageCount,
+                    ),
+                )
+            }.launchIn(coroutineScope)
+        coroutineScope.launch {
+            if (!uiState.isVisibleTooltip) {
+                val settings = manageViewerSettingsUseCase.settings.first()
+                if (!settings.showStatusBar) {
+                    systemUiController.isStatusBarVisible = false
+                }
+                if (!settings.showNavigationBar) {
+                    systemUiController.isNavigationBarVisible = false
+                }
+            }
+        }
         // Save the initial page position when screen opens
         coroutineScope.launch {
             updateLastReadPage()
@@ -194,8 +235,21 @@ private class BookScreenStateImpl(
     }
 
     override fun toggleTooltip() {
-        uiState = uiState.copy(isVisibleTooltip = !systemUiController.isSystemBarsVisible)
-        systemUiController.isSystemBarsVisible = !systemUiController.isSystemBarsVisible
+        val currentVisibleTooltip = uiState.isVisibleTooltip
+        uiState = uiState.copy(isVisibleTooltip = !currentVisibleTooltip)
+        if (currentVisibleTooltip) {
+            coroutineScope.launch {
+                val settings = manageViewerSettingsUseCase.settings.first()
+                if (!settings.showStatusBar) {
+                    systemUiController.isStatusBarVisible = false
+                }
+                if (!settings.showNavigationBar) {
+                    systemUiController.isNavigationBarVisible = false
+                }
+            }
+        } else {
+            systemUiController.isSystemBarsVisible = true
+        }
     }
 
     override fun onScreenDispose() {

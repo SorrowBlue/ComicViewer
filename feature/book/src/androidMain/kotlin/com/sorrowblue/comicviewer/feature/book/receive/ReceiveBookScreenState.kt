@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
@@ -27,6 +28,7 @@ import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import comicviewer.feature.book.generated.resources.Res
 import comicviewer.feature.book.generated.resources.book_error_file_not_opened
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -63,6 +65,7 @@ internal fun rememberReceiveBookScreenState(uri: String?): ReceiveBookScreenStat
             systemUiController = systemUiController,
             currentList = currentList,
             getIntentBookUseCase = context.getIntentBookUseCase,
+            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
         )
     }
 }
@@ -75,6 +78,8 @@ private class ReceiveBookScreenStateImpl(
     override val systemUiController: SystemUiController,
     override val currentList: SnapshotStateList<PageItem>,
     private val getIntentBookUseCase: GetIntentBookUseCase,
+    manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
+
 ) : ReceiveBookScreenState {
     init {
         if (uri == null) {
@@ -97,6 +102,7 @@ private class ReceiveBookScreenStateImpl(
                                 resource.data,
                                 CollectionId(),
                                 BookSheetUiState(resource.data),
+                                alwaysOpenFromFirstPage = manageViewerSettingsUseCase.settings.first().alwaysOpenFromFirstPage,
                             )
                             currentList.clear()
                             currentList.addAll(

@@ -42,6 +42,13 @@ interface SystemUiController {
             isStatusBarVisible = value
             isNavigationBarVisible = value
         }
+
+    var keepScreenOn: Boolean
+    var screenBrightness: Float
+
+    companion object {
+        val BRIGHTNESS_OVERRIDE_NONE = -1f
+    }
 }
 
 @Composable

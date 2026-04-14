@@ -71,6 +71,17 @@ fun NavDisplay.transitionMaterialSharedAxisX(): Map<String, Any> = NavDisplay.tr
     NavDisplay.popTransitionSpec { materialSharedAxisX(false) } +
     NavDisplay.predictivePopTransitionSpec { materialSharedAxisX(false) }
 
+fun MetadataScope.transitionMaterialSharedAxisX() {
+    put(NavDisplay.TransitionKey) {
+        materialSharedAxisX(true)
+    }
+    put(NavDisplay.PopTransitionKey) {
+        materialSharedAxisX(false)
+    }
+    put(NavDisplay.PredictivePopTransitionKey) {
+        materialSharedAxisX(false)
+    }
+}
 fun NavDisplay.transitionMaterialSharedAxisZ(): Map<String, Any> = NavDisplay.transitionSpec {
     materialSharedAxisZ()
 } +

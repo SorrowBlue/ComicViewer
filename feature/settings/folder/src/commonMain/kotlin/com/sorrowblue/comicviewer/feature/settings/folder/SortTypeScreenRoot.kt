@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
-import kotlinx.serialization.json.Json
 
 @Composable
 internal fun SortTypeScreenRoot(sortType: SortType, onDismissRequest: () -> Unit) {
@@ -13,7 +12,7 @@ internal fun SortTypeScreenRoot(sortType: SortType, onDismissRequest: () -> Unit
     SortTypeScreen(
         currentSortType = sortType,
         onFileSortChange = {
-            resultProducer.setResult(Json, SortTypeScreenResultKey, it)
+            resultProducer.setResult(SortTypeScreenResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,

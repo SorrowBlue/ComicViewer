@@ -9,7 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerOperationSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,7 +35,7 @@ internal fun rememberTutorialScreenState(): TutorialScreenState {
     return remember {
         TutorialScreenStateImpl(
             scope = scope,
-            manageViewerOperationSettingsUseCase = context.manageViewerOperationSettingsUseCase,
+            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
             pageState = pageState,
         )
     }
@@ -43,14 +43,14 @@ internal fun rememberTutorialScreenState(): TutorialScreenState {
 
 private class TutorialScreenStateImpl(
     private val scope: CoroutineScope,
-    private val manageViewerOperationSettingsUseCase: ManageViewerOperationSettingsUseCase,
+    private val manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
     override val pageState: PagerState,
 ) : TutorialScreenState {
     override val enabledBack: Boolean get() = pageState.currentPage != 0
     override var uiState by mutableStateOf(TutorialScreenUiState())
 
     init {
-        manageViewerOperationSettingsUseCase.settings
+        manageViewerSettingsUseCase.settings
             .onEach {
                 uiState = uiState.copy(
                     bindingDirection = it.bindingDirection,
@@ -60,7 +60,7 @@ private class TutorialScreenStateImpl(
 
     override fun updateReadingDirection(bindingDirection: BindingDirection) {
         scope.launch {
-            manageViewerOperationSettingsUseCase.edit {
+            manageViewerSettingsUseCase.edit {
                 it.copy(
                     bindingDirection = bindingDirection,
                 )

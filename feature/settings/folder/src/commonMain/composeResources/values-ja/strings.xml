@@ -10,10 +10,12 @@
     <string name="settings_folder_label_image_quality">画像の品質</string>
     <string name="settings_folder_imageformat_label_webp_explanation">推奨画質：高、圧縮率：高 (推奨)</string>
     <string name="settings_folder_imageformat_label_jpeg_explanation">画質：中、圧縮率：中</string>
+    <string name="settings_folder_imageformat_label_original_explanation">元の画質、元の圧縮率</string>
     <string name="settings_folder_imageformat_label_png_explanation">画質：高、圧縮率：低</string>
     <string name="settings_folder_label_webp_summary">WebP (推奨)</string>
     <string name="settings_folder_label_jpeg_summary">JPEG</string>
     <string name="settings_folder_label_png_summary">PNG</string>
+    <string name="settings_folder_label_original_summary">オリジナル(元の形式)</string>
     <string name="settings_folder_filesort_label_file_sort_name_asc">名前 (昇順)</string>
     <string name="settings_folder_filesort_label_file_sort_name_desc">名前 (降順)</string>
     <string name="settings_folder_filesort_label_file_sort_date_asc">更新日時 (昇順)</string>

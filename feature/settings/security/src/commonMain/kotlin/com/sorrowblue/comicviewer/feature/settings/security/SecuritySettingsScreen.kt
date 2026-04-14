@@ -36,27 +36,39 @@ internal fun SecuritySettingsScreen(
         modifier = modifier,
     ) {
         SwitchSetting(
-            title = Res.string.settings_security_title_password_lock,
+            title = {
+                Text(stringResource(Res.string.settings_security_title_password_lock))
+            },
+            summary = {
+                Text(stringResource(Res.string.settings_security_summary_password_lock))
+            },
             checked = uiState.isAuthEnabled,
             onCheckedChange = onChangeAuthEnable,
-            summary = Res.string.settings_security_summary_password_lock,
         )
         Setting(
-            title = Res.string.settings_security_title_change_password,
+            title = {
+                Text(stringResource(Res.string.settings_security_title_change_password))
+            },
             onClick = onPasswordChangeClick,
             enabled = uiState.isAuthEnabled,
         )
         if (uiState.isBiometricCanBeUsed) {
             SwitchSetting(
-                title = Res.string.settings_security_title_use_biometric_auth,
+                title = {
+                    Text(stringResource(Res.string.settings_security_title_use_biometric_auth))
+                },
+                summary = {
+                    Text(stringResource(Res.string.settings_security_summary_use_biometric_auth))
+                },
                 checked = uiState.isBiometricEnabled,
                 onCheckedChange = onChangeBiometricEnable,
-                summary = Res.string.settings_security_summary_use_biometric_auth,
                 enabled = uiState.isAuthEnabled,
             )
         }
         SwitchSetting(
-            title = Res.string.settings_security_label_background_lock,
+            title = {
+                Text(stringResource(Res.string.settings_security_label_background_lock))
+            },
             checked = uiState.isBackgroundLockEnabled,
             onCheckedChange = onChangeBackgroundLockEnable,
             enabled = uiState.isAuthEnabled,

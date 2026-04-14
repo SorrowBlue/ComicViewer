@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
-import kotlinx.serialization.json.Json
 
 @Composable
 internal fun ImageFormatScreenRoot(imageFormat: ImageFormat, onDismissRequest: () -> Unit) {
@@ -13,7 +12,7 @@ internal fun ImageFormatScreenRoot(imageFormat: ImageFormat, onDismissRequest: (
     ImageFormatScreen(
         currentImageFormat = imageFormat,
         onImageFormatChange = {
-            resultProducer.setResult(Json, ImageFormatScreenResultKey, it)
+            resultProducer.setResult(ImageFormatScreenResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,

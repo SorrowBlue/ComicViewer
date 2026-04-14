@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
-import kotlinx.serialization.json.Json
 
 @Composable
 internal fun ImageScaleScreenRoot(imageScale: ImageScale, onDismissRequest: () -> Unit) {
@@ -13,7 +12,7 @@ internal fun ImageScaleScreenRoot(imageScale: ImageScale, onDismissRequest: () -
     ImageScaleScreen(
         currentImageScale = imageScale,
         onImageScaleChange = {
-            resultProducer.setResult(Json, ImageScaleScreenResultKey, it)
+            resultProducer.setResult(ImageScaleScreenResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,

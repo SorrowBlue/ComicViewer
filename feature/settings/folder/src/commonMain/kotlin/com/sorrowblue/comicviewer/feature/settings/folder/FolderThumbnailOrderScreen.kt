@@ -37,7 +37,7 @@ internal fun FolderThumbnailOrderScreen(
                         RadioButton(selected = order == currentFolderThumbnailOrder, onClick = null)
                     },
                     headlineContent = {
-                        Text(text = stringResource(order.displayText))
+                        Text(text = order.displayText)
                     },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
@@ -47,8 +47,9 @@ internal fun FolderThumbnailOrderScreen(
 }
 
 internal val FolderThumbnailOrder.displayText
+    @Composable
     get() = when (this) {
         FolderThumbnailOrder.NAME -> Res.string.settings_folder_folderthumbnail_label_name
         FolderThumbnailOrder.MODIFIED -> Res.string.settings_folder_folderthumbnail_label_modified
         FolderThumbnailOrder.LAST_READ -> Res.string.settings_folder_folderthumbnail_label_last_read
-    }
+    }.let { stringResource(it) }

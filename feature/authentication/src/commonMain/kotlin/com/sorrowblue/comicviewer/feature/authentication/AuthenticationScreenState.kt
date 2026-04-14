@@ -7,12 +7,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.saveable.decodeTo
 import com.sorrowblue.comicviewer.framework.ui.saveable.encodeToByteArray
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import logcat.logcat
 
 internal sealed interface AuthenticationScreenEvent {
     data object Complete : AuthenticationScreenEvent
@@ -26,6 +31,7 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
     val biometricManager = rememberBiometricManager()
     val pinFlowManager = remember { PinFlowManager(context.securitySettingsUseCase) }
     val pinInputFlowStateHolder = remember { PinInputFlowStateHolder() }
+    val lifecycleOwner = LocalLifecycleOwner.current
     return rememberListSaveable(
         screenType,
         save = {
@@ -46,6 +52,7 @@ internal fun rememberAuthenticationScreenState(screenType: ScreenType): Authenti
             biometricManager = biometricManager,
             pinFlowManager = pinFlowManager,
             pinInputFlowStateHolder = pinInputFlowStateHolder,
+            lifecycleOwner = lifecycleOwner,
         )
     }
 }
@@ -92,6 +99,7 @@ private class AuthenticationScreenStateImpl(
     private val biometricManager: BiometricManager,
     private val pinFlowManager: PinFlowManager,
     val pinInputFlowStateHolder: PinInputFlowStateHolder,
+    private val lifecycleOwner: LifecycleOwner,
 ) : AuthenticationScreenState {
     override val events = EventFlow<AuthenticationScreenEvent>()
 
@@ -115,9 +123,12 @@ private class AuthenticationScreenStateImpl(
     }
 
     private suspend fun handleBiometricAuthentication() {
-        when (val result = biometricManager.authenticate()) {
-            is AuthenticationResult.Error -> snackbarHostState.showSnackbar(result.message)
-            AuthenticationResult.Success -> events.tryEmit(AuthenticationScreenEvent.Complete)
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            logcat { "#handleBiometricAuthentication" }
+            when (val result = biometricManager.authenticate()) {
+                is AuthenticationResult.Error -> snackbarHostState.showSnackbar(result.message)
+                AuthenticationResult.Success -> events.tryEmit(AuthenticationScreenEvent.Complete)
+            }
         }
     }
 

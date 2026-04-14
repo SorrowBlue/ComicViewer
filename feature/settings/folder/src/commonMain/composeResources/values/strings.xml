@@ -11,6 +11,7 @@
     <string name="settings_folder_label_webp_summary">WebP (Recommend)</string>
     <string name="settings_folder_label_jpeg_summary">JPEG</string>
     <string name="settings_folder_label_png_summary">PNG</string>
+    <string name="settings_folder_label_original_summary">Original (original form)</string>
     <string name="settings_folder_label_show_hidden_files">Show hidden files</string>
     <string name="settings_folder_label_show_files_extension">Show files extension</string>
     <string name="settings_folder_label_file_sort">File sort</string>
@@ -37,6 +38,7 @@
     <string name="settings_folder_imageformat_title">Thumbnail image format</string>
     <string name="settings_folder_imageformat_label_webp_explanation">Image quality: high, compression rate: high (Recommend)</string>
     <string name="settings_folder_imageformat_label_jpeg_explanation">Image quality: medium, compression rate: medium</string>
+    <string name="settings_folder_imageformat_label_original_explanation">Original image quality, original compression ratio</string>
     <string name="settings_folder_imageformat_label_png_explanation">Image quality: high, compression rate: low</string>
 
     <!--ImageScaleDialog-->

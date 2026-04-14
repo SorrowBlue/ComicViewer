@@ -6,7 +6,6 @@ import dev.zacsweers.metro.Inject
 
 @Inject
 internal actual class TestDatabaseHelper {
-    actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {
-        return Room.inMemoryDatabaseBuilder<ComicViewerDatabase>()
-    }
+    actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> =
+        Room.inMemoryDatabaseBuilder<ComicViewerDatabase>()
 }

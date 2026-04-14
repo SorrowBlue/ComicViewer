@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.book.receive
 
 import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
 import com.sorrowblue.comicviewer.framework.ui.ScreenContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -13,6 +14,7 @@ annotation class ReceiveBookScreenScope
 @GraphExtension(ReceiveBookScreenScope::class)
 interface ReceiveBookScreenContext : ScreenContext {
     val getIntentBookUseCase: GetIntentBookUseCase
+    val manageViewerSettingsUseCase: ManageViewerSettingsUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

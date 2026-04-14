@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOr
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
-import kotlinx.serialization.json.Json
 
 @Composable
 internal fun FolderThumbnailOrderScreenRoot(
@@ -16,11 +15,7 @@ internal fun FolderThumbnailOrderScreenRoot(
     FolderThumbnailOrderScreen(
         currentFolderThumbnailOrder = folderThumbnailOrder,
         onFolderThumbnailOrderChange = {
-            resultProducer.setResult(
-                Json,
-                FolderThumbnailOrderScreenResultKey,
-                it,
-            )
+            resultProducer.setResult(FolderThumbnailOrderScreenResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,

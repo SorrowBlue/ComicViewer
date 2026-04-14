@@ -36,7 +36,7 @@ internal fun ImageScaleScreen(
                         RadioButton(selected = currentImageScale == imageScale, onClick = null)
                     },
                     headlineContent = {
-                        Text(text = stringResource(imageScale.displayText))
+                        Text(text = imageScale.displayText)
                     },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
@@ -46,7 +46,10 @@ internal fun ImageScaleScreen(
 }
 
 internal val ImageScale.displayText
+    @Composable
     get() = when (this) {
         ImageScale.Crop -> Res.string.settings_folder_imagescale_label_crop
         ImageScale.Fit -> Res.string.settings_folder_imagescale_label_fit
+    }.let {
+        stringResource(it)
     }

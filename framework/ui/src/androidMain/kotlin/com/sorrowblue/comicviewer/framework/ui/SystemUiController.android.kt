@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalView
@@ -55,7 +56,7 @@ private tailrec fun Context.findWindow(): Window? = when (this) {
  * Typically you would use [rememberSystemUiController] to remember an
  * instance of this.
  */
-internal class AndroidSystemUiController(window: Window?, private val view: View) :
+internal class AndroidSystemUiController(private val window: Window?, private val view: View) :
     SystemUiController {
     private val windowInsetsController = window?.let {
         WindowCompat.getInsetsController(it, view)
@@ -92,6 +93,31 @@ internal class AndroidSystemUiController(window: Window?, private val view: View
                 windowInsetsController?.show(WindowInsetsCompat.Type.navigationBars())
             } else {
                 windowInsetsController?.hide(WindowInsetsCompat.Type.navigationBars())
+            }
+        }
+
+    override var keepScreenOn: Boolean
+        get() {
+            val flags = window?.attributes?.flags ?: return false
+            return (flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0
+        }
+        set(value) {
+            if (value) {
+                window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
+
+    override var screenBrightness: Float
+        get() {
+            return window?.attributes?.screenBrightness ?: -1.0f
+        }
+        set(value) {
+            window?.let { window ->
+                val layoutParams = window.attributes
+                layoutParams.screenBrightness = value
+                window.attributes = layoutParams
             }
         }
 }

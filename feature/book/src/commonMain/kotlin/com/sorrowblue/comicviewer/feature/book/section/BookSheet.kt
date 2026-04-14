@@ -30,7 +30,7 @@ internal fun BookSheet(
         val scope = rememberCoroutineScope()
         HorizontalPager(
             state = pagerState,
-            beyondViewportPageCount = 3,
+            beyondViewportPageCount = uiState.beyondViewportPageCount,
             pageSize = PageSize.Fill,
             reverseLayout = true,
             key = { pages[it].key },
@@ -61,6 +61,7 @@ internal fun BookSheet(
                     book = uiState.book,
                     page = item,
                     pageScale = uiState.pageScale,
+                    cutWhitespace = uiState.cutWhitespace,
                     onPageLoad = onPageLoad,
                 )
             }
@@ -68,4 +69,9 @@ internal fun BookSheet(
     }
 }
 
-internal data class BookSheetUiState(val book: Book, val pageScale: PageScale = PageScale.Fit)
+internal data class BookSheetUiState(
+    val book: Book,
+    val pageScale: PageScale = PageScale.Fit,
+    val cutWhitespace: Boolean = false,
+    val beyondViewportPageCount: Int = 3,
+)

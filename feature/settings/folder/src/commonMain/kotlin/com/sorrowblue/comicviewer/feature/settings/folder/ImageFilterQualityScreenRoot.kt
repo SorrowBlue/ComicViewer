@@ -5,7 +5,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQualit
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
-import kotlinx.serialization.json.Json
 
 @Composable
 internal fun ImageFilterQualityScreenRoot(
@@ -16,7 +15,7 @@ internal fun ImageFilterQualityScreenRoot(
     ImageFilterQualityScreen(
         currentImageFilterQuality = imageFilterQuality,
         onImageFilterQualityChange = {
-            resultProducer.setResult(Json, ImageFilterQualityResultKey, it)
+            resultProducer.setResult(ImageFilterQualityResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,

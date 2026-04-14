@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.GlobalSettings
 import com.sorrowblue.comicviewer.data.datastore.qualifier.PdfPlugin
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
-import com.sorrowblue.comicviewer.data.datastore.qualifier.ViewerOperation
 import com.sorrowblue.comicviewer.data.datastore.serializer.BookSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.CollectionSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
@@ -20,7 +19,6 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerial
 import com.sorrowblue.comicviewer.data.datastore.serializer.PdfPluginSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerOperationSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerializer
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
@@ -28,7 +26,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
-import com.sorrowblue.comicviewer.domain.model.settings.ViewerOperationSettings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
@@ -79,14 +76,6 @@ interface DataStoreModule {
     @Provides
     private fun provideSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<Settings> =
         dataStoreMaker.createDataStore(SettingsSerializer)
-
-    @ViewerOperation
-    @SingleIn(DataScope::class)
-    @Provides
-    private fun viewerOperationSettingsDataStore(
-        dataStoreMaker: DataStoreMaker,
-    ): DataStore<ViewerOperationSettings> =
-        dataStoreMaker.createDataStore(ViewerOperationSettingsSerializer)
 
     @Viewer
     @SingleIn(DataScope::class)

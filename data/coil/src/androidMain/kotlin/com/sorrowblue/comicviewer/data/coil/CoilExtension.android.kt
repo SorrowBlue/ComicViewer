@@ -22,4 +22,5 @@ private fun ImageFormat.toCompressFormat() = when (this) {
     ImageFormat.WEBP -> Bitmap.CompressFormat.WEBP_LOSSY
     ImageFormat.JPEG -> Bitmap.CompressFormat.JPEG
     ImageFormat.PNG -> Bitmap.CompressFormat.PNG
+    ImageFormat.ORIGINAL -> Bitmap.CompressFormat.WEBP_LOSSY
 }

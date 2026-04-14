@@ -73,12 +73,12 @@ fun SettingsDetailPane(
         snackbarHost = snackbarHost,
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
+    ) { contentPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(innerPadding),
+                .padding(contentPadding),
             content = content,
         )
     }

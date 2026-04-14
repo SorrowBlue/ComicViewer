@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.book
 
 import android.graphics.Bitmap
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 
@@ -22,3 +23,6 @@ internal actual val Bitmap.imageWidth: Int
 
 internal actual val Bitmap.imageHeight: Int
     get() = height
+
+internal actual fun coil3.Bitmap.trimBorders(color: Color): coil3.Bitmap =
+    trimBorders(android.graphics.Color.WHITE)

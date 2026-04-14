@@ -40,7 +40,7 @@ internal fun SortTypeScreen(
                         RadioButton(selected = currentSortType == sortType, onClick = null)
                     },
                     headlineContent = {
-                        Text(text = stringResource(sortType.displayText))
+                        Text(text = sortType.displayText)
                     },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 )
@@ -50,8 +50,11 @@ internal fun SortTypeScreen(
 }
 
 internal val SortType.displayText
+    @Composable
     get() = when (this) {
         is SortType.Name -> if (isAsc) Res.string.settings_folder_filesort_label_file_sort_name_asc else Res.string.settings_folder_filesort_label_file_sort_name_desc
         is SortType.Date -> if (isAsc) Res.string.settings_folder_filesort_label_file_sort_date_asc else Res.string.settings_folder_filesort_label_file_sort_date_desc
         is SortType.Size -> if (isAsc) Res.string.settings_folder_filesort_label_file_sort_size_asc else Res.string.settings_folder_filesort_label_file_sort_size_desc
+    }.let {
+        stringResource(it)
     }

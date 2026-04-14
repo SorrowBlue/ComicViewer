@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -32,11 +33,15 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import coil3.request.transformations
+import coil3.size.Size
 import coil3.toBitmap
+import coil3.transform.Transformation
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.feature.book.asImageBitmap
 import com.sorrowblue.comicviewer.feature.book.createSplitBitmap
+import com.sorrowblue.comicviewer.feature.book.trimBorders
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import comicviewer.feature.book.generated.resources.Res
@@ -49,10 +54,16 @@ internal fun BookPage(
     book: Book,
     page: BookPage,
     pageScale: PageScale,
+    cutWhitespace: Boolean,
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
 ) {
     when (page) {
-        is BookPage.Default -> DefaultBookPage(book = book, bookPage = page, pageScale = pageScale)
+        is BookPage.Default -> DefaultBookPage(
+            book = book,
+            bookPage = page,
+            pageScale = pageScale,
+            cutWhitespace = cutWhitespace,
+        )
 
         is BookPage.Spread -> SpreadBookPage(
             book = book,
@@ -70,20 +81,31 @@ internal fun BookPage(
     }
 }
 
+object WhiteTrimTransformation : Transformation() {
+    override val cacheKey = "${this::class.qualifiedName}"
+    override suspend fun transform(input: Bitmap, size: Size): Bitmap =
+        input.trimBorders(Color.White)
+}
+
 @Composable
 private fun DefaultBookPage(
     book: Book,
     bookPage: BookPage.Default,
     pageScale: PageScale,
+    cutWhitespace: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalPlatformContext.current
-    val request by remember(bookPage.index) {
+    val request by remember(bookPage.index, cutWhitespace) {
         mutableStateOf(
             ImageRequest
                 .Builder(context)
                 .data(BookPageImage(book to bookPage.index))
-                // TODO .transformations(WhiteTrimTransformation)
+                .apply {
+                    if (cutWhitespace) {
+                        transformations(WhiteTrimTransformation)
+                    }
+                }
                 .build(),
         )
     }

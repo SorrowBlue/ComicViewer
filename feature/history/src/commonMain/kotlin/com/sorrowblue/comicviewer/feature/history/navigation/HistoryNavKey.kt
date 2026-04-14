@@ -40,7 +40,7 @@ internal fun EntryProviderScope<NavKey>.historyNavEntry(navigator: Navigator) {
         metadata = metadata {
             put(
                 NavigationResultMetadata.ResultConsumerKey,
-                NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey)
+                NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey),
             )
             transitionMaterialFadeThrough()
         } + SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>("History"),
