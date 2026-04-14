@@ -108,7 +108,7 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -la ./artifacts/**
       - name: Upload Release Assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: github.event_name == 'release'
         with:
           files: |
