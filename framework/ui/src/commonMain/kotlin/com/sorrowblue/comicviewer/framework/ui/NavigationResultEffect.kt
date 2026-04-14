@@ -8,14 +8,13 @@ import androidx.compose.runtime.rememberUpdatedState
 import io.github.irgaly.navigation3.resultstate.LocalNavigationResultConsumer
 import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.getResultState
-import kotlinx.serialization.json.Json
 
 @Composable
 fun <T> NavigationResultEffect(key: SerializableNavigationResultKey<T>, onResult: (T) -> Unit) {
     val resultConsumer = LocalNavigationResultConsumer.current
     val currentOnResult by rememberUpdatedState(onResult)
     val navigationResult by remember(resultConsumer) {
-        resultConsumer.getResultState(Json, key)
+        resultConsumer.getResultState(key)
     }
     LaunchedEffect(navigationResult) {
         val result = navigationResult
