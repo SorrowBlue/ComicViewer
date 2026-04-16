@@ -54,20 +54,18 @@ internal fun EntryProviderScope<NavKey>.historyFolderFileInfoNavEntry(navigator:
                         }
 
                         is Folder -> {
-                            navigator.navigate<HistoryFolderFileInfoNavKey>(
+                            navigator.popNavigate<HistoryFolderFileInfoNavKey>(
                                 HistoryFolderNavKey(
                                     bookshelfId = file.bookshelfId,
                                     path = file.path,
                                 ),
-                                inclusive = true,
                             )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate<HistoryFolderFileInfoNavKey>(
+                    navigator.popNavigate<HistoryFolderFileInfoNavKey>(
                         HistoryFolderFileInfoNavKey(it.key()),
-                        inclusive = true,
                     )
                 },
                 onSettingsClick = {

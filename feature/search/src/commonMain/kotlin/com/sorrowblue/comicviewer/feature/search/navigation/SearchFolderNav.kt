@@ -56,20 +56,18 @@ internal fun EntryProviderScope<NavKey>.searchFolderFileInfoNavEntry(navigator: 
                         }
 
                         is Folder -> {
-                            navigator.navigate<SearchFolderFileInfoNavKey>(
+                            navigator.popNavigate<SearchFolderFileInfoNavKey>(
                                 SearchFolderNavKey(
                                     bookshelfId = file.bookshelfId,
                                     path = file.path,
                                 ),
-                                inclusive = true,
                             )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate<SearchFolderFileInfoNavKey>(
+                    navigator.popNavigate<SearchFolderFileInfoNavKey>(
                         SearchFolderFileInfoNavKey(it.key()),
-                        inclusive = true,
                     )
                 },
                 onSettingsClick = {

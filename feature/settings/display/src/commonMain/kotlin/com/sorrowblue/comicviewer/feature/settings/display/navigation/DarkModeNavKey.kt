@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.display.navigation
 
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -17,8 +18,8 @@ internal fun EntryProviderScope<NavKey>.darkModeNavEntry(navigator: Navigator) {
     entry<DarkModeNavKey>(metadata = DialogSceneStrategy.dialog()) {
         with(rememberRetained { factory.createDarkModeScreenContext() }) {
             DarkModeScreenRoot(
-                onDismissRequest = navigator::goBack,
-                onComplete = navigator::goBack,
+                onDismissRequest = dropUnlessResumed { navigator.goBack() },
+                onComplete = dropUnlessResumed { navigator.goBack() },
             )
         }
     }

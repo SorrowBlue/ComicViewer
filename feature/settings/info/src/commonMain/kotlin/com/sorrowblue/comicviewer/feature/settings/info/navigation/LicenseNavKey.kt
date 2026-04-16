@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.settings.info.navigation
 
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
@@ -17,7 +18,7 @@ context(factory: LicenseScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.pdfPluginNavEntry(navigator: Navigator) {
     entry<LicenseNavKey>(metadata = NavDisplay.transitionMaterialSharedAxisX()) {
         with(rememberRetained { factory.createLicenseScreenContext() }) {
-            LicenseScreenRoot(onBackClick = navigator::goBack)
+            LicenseScreenRoot(onBackClick = dropUnlessResumed { navigator.goBack() })
         }
     }
 }

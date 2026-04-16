@@ -51,9 +51,8 @@ internal fun EntryProviderScope<NavKey>.bookshelfNavEntry(navigator: Navigator) 
                     navigator.navigate(BookshelfFolderNavKey(id, path))
                 },
                 onBookshelfInfoClick = {
-                    navigator.navigate<BookshelfInfoNavKey>(
+                    navigator.popNavigate<BookshelfInfoNavKey>(
                         BookshelfInfoNavKey(it.bookshelf.id),
-                        inclusive = true,
                     )
                 },
             )

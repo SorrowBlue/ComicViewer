@@ -8,6 +8,11 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQualit
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.FilterQualityResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.SortOrderScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
 
 @Composable
@@ -43,9 +48,9 @@ internal fun FolderSettingsScreenRoot(
         modifier = Modifier.testTag("FolderSettingsRoot"),
     )
 
-    NavigationResultEffect(SortTypeScreenResultKey, state::onFileSortChange)
-    NavigationResultEffect(ImageScaleScreenResultKey, state::onImageScaleChange)
-    NavigationResultEffect(ImageFilterQualityResultKey, state::onImageFilterQualityChange)
-    NavigationResultEffect(ImageFormatScreenResultKey, state::onImageFormatChange)
+    NavigationResultEffect(SortOrderScreenResultKey, state::onFileSortChange)
+    NavigationResultEffect(ThumbnailScaleScreenResultKey, state::onImageScaleChange)
+    NavigationResultEffect(FilterQualityResultKey, state::onImageFilterQualityChange)
+    NavigationResultEffect(ThumbnailFormatScreenResultKey, state::onImageFormatChange)
     NavigationResultEffect(FolderThumbnailOrderScreenResultKey, state::onFolderThumbnailOrderChange)
 }

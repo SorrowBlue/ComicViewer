@@ -18,7 +18,6 @@ kotlin {
                 implementation(projects.feature.settings.plugin)
                 implementation(projects.feature.settings.viewer)
                 implementation(projects.feature.authentication)
-                implementation(projects.feature.tutorial)
                 implementation(libs.androidx.coreUri)
             }
         }

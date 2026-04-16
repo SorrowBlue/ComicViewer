@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,15 +12,15 @@ import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.folder.generated.resources.Res
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagefilterquality_label_high
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagefilterquality_label_low
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagefilterquality_label_medium
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagefilterquality_label_none
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagefilterquality_title
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_label_high
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_label_low
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_label_medium
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_label_none
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun ImageFilterQualityScreen(
+internal fun FilterQualityScreen(
     currentImageFilterQuality: ImageFilterQuality,
     onImageFilterQualityChange: (ImageFilterQuality) -> Unit,
     onDismissRequest: () -> Unit,
@@ -29,7 +29,7 @@ internal fun ImageFilterQualityScreen(
         onDismissRequest = onDismissRequest,
         title = {
             Text(
-                text = stringResource(Res.string.settings_folder_imagefilterquality_title),
+                text = stringResource(Res.string.settings_folder_filterquality_title),
             )
         },
     ) {
@@ -56,8 +56,8 @@ internal fun ImageFilterQualityScreen(
 
 internal val ImageFilterQuality.displayText
     get() = when (this) {
-        ImageFilterQuality.None -> Res.string.settings_folder_imagefilterquality_label_none
-        ImageFilterQuality.Low -> Res.string.settings_folder_imagefilterquality_label_low
-        ImageFilterQuality.Medium -> Res.string.settings_folder_imagefilterquality_label_medium
-        ImageFilterQuality.High -> Res.string.settings_folder_imagefilterquality_label_high
+        ImageFilterQuality.None -> Res.string.settings_folder_filterquality_label_none
+        ImageFilterQuality.Low -> Res.string.settings_folder_filterquality_label_low
+        ImageFilterQuality.Medium -> Res.string.settings_folder_filterquality_label_medium
+        ImageFilterQuality.High -> Res.string.settings_folder_filterquality_label_high
     }

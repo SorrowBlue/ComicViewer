@@ -11,12 +11,12 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.settings.display.generated.resources.Res
-import comicviewer.feature.settings.display.generated.resources.settings_display_desc_show_last_folder
-import comicviewer.feature.settings.display.generated.resources.settings_display_label_appearance
-import comicviewer.feature.settings.display.generated.resources.settings_display_label_dark_mode
-import comicviewer.feature.settings.display.generated.resources.settings_display_label_light_mode
 import comicviewer.feature.settings.display.generated.resources.settings_display_label_show_last_folder
-import comicviewer.feature.settings.display.generated.resources.settings_display_label_system_default
+import comicviewer.feature.settings.display.generated.resources.settings_display_label_theme
+import comicviewer.feature.settings.display.generated.resources.settings_display_label_theme_dark
+import comicviewer.feature.settings.display.generated.resources.settings_display_label_theme_light
+import comicviewer.feature.settings.display.generated.resources.settings_display_label_theme_system
+import comicviewer.feature.settings.display.generated.resources.settings_display_summary_show_last_folder
 import comicviewer.feature.settings.display.generated.resources.settings_display_title
 import org.jetbrains.compose.resources.stringResource
 
@@ -36,7 +36,7 @@ internal fun DisplaySettingsScreen(
     ) {
         Setting(
             title = {
-                Text(stringResource(Res.string.settings_display_label_appearance))
+                Text(stringResource(Res.string.settings_display_label_theme))
             },
             summary = {
                 Text(uiState.darkMode.label)
@@ -51,7 +51,7 @@ internal fun DisplaySettingsScreen(
                 Text(stringResource(Res.string.settings_display_label_show_last_folder))
             },
             summary = {
-                Text(stringResource(Res.string.settings_display_desc_show_last_folder))
+                Text(stringResource(Res.string.settings_display_summary_show_last_folder))
             },
             checked = uiState.restoreOnLaunch,
             onCheckedChange = onRestoreOnLaunchChange,
@@ -62,9 +62,9 @@ internal fun DisplaySettingsScreen(
 internal val DarkMode.label
     @Composable
     get() = when (this) {
-        DarkMode.DEVICE -> Res.string.settings_display_label_system_default
-        DarkMode.DARK -> Res.string.settings_display_label_dark_mode
-        DarkMode.LIGHT -> Res.string.settings_display_label_light_mode
+        DarkMode.DEVICE -> Res.string.settings_display_label_theme_system
+        DarkMode.DARK -> Res.string.settings_display_label_theme_dark
+        DarkMode.LIGHT -> Res.string.settings_display_label_theme_light
     }.let {
         stringResource(it)
     }

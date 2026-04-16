@@ -9,13 +9,13 @@ import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import comicviewer.feature.settings.security.generated.resources.Res
-import comicviewer.feature.settings.security.generated.resources.settings_security_label_background_lock
-import comicviewer.feature.settings.security.generated.resources.settings_security_summary_password_lock
-import comicviewer.feature.settings.security.generated.resources.settings_security_summary_use_biometric_auth
+import comicviewer.feature.settings.security.generated.resources.settings_security_label_app_lock
+import comicviewer.feature.settings.security.generated.resources.settings_security_label_change_password
+import comicviewer.feature.settings.security.generated.resources.settings_security_label_lock_background
+import comicviewer.feature.settings.security.generated.resources.settings_security_summary_app_lock
 import comicviewer.feature.settings.security.generated.resources.settings_security_title
-import comicviewer.feature.settings.security.generated.resources.settings_security_title_change_password
-import comicviewer.feature.settings.security.generated.resources.settings_security_title_password_lock
-import comicviewer.feature.settings.security.generated.resources.settings_security_title_use_biometric_auth
+import comicviewer.feature.settings.security.generated.resources.settings_security_label_biometric_auth
+import comicviewer.feature.settings.security.generated.resources.settings_security_summary_biometric_auth
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -37,17 +37,17 @@ internal fun SecuritySettingsScreen(
     ) {
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_security_title_password_lock))
+                Text(stringResource(Res.string.settings_security_label_app_lock))
             },
             summary = {
-                Text(stringResource(Res.string.settings_security_summary_password_lock))
+                Text(stringResource(Res.string.settings_security_summary_app_lock))
             },
             checked = uiState.isAuthEnabled,
             onCheckedChange = onChangeAuthEnable,
         )
         Setting(
             title = {
-                Text(stringResource(Res.string.settings_security_title_change_password))
+                Text(stringResource(Res.string.settings_security_label_change_password))
             },
             onClick = onPasswordChangeClick,
             enabled = uiState.isAuthEnabled,
@@ -55,10 +55,10 @@ internal fun SecuritySettingsScreen(
         if (uiState.isBiometricCanBeUsed) {
             SwitchSetting(
                 title = {
-                    Text(stringResource(Res.string.settings_security_title_use_biometric_auth))
+                    Text(stringResource(Res.string.settings_security_label_biometric_auth))
                 },
                 summary = {
-                    Text(stringResource(Res.string.settings_security_summary_use_biometric_auth))
+                    Text(stringResource(Res.string.settings_security_summary_biometric_auth))
                 },
                 checked = uiState.isBiometricEnabled,
                 onCheckedChange = onChangeBiometricEnable,
@@ -67,7 +67,7 @@ internal fun SecuritySettingsScreen(
         }
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_security_label_background_lock))
+                Text(stringResource(Res.string.settings_security_label_lock_background))
             },
             checked = uiState.isBackgroundLockEnabled,
             onCheckedChange = onChangeBackgroundLockEnable,

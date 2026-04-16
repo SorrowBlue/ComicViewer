@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_viewer_label_cache_images">画像をキャッシュする</string>
-    <string name="settings_viewer_label_display_first_page">常に最初のページを表示する</string>
-    <string name="settings_viewer_label_preload_pages">事前に読み込むページ数</string>
-    <string name="settings_viewer_title">Viewer設定</string>
-    <string name="settings_viewer_title_brightness_control">明るさの制御</string>
-    <string name="settings_viewer_title_brightness_level">明るさのレベル</string>
-    <string name="settings_viewer_title_cut_whitespace">ページの余白を切り取る</string>
-    <string name="settings_viewer_title_image_quality">画像の品質</string>
-    <string name="settings_viewer_title_not_turn_off_screen">画面をオフにしない</string>
-    <string name="settings_viewer_title_show_navigation_bar">ナビゲーションバーを表示する</string>
-    <string name="settings_viewer_title_show_status_bar">ステータスバーを表示する</string>
+    <!-- ViewerSettingsScreen -->
+    <string name="settings_viewer_title">Viewer Settings</string>
+    <string name="settings_viewer_label_show_status_bar">ステータスバーを表示する</string>
+    <string name="settings_viewer_label_show_navigation_bar">ナビゲーションバーを表示する</string>
+    <string name="settings_viewer_label_keep_screen_on">画面をスリープしない</string>
+    <string name="settings_viewer_label_trim_margin">ページ余白をトリミングする</string>
+    <string name="settings_viewer_label_reading_direction">開き方向</string>
+    <string name="settings_viewer_label_start_first_page">先頭ページから開く</string>
+    <string name="settings_viewer_label_preload_page">先読みページ数</string>
+    <string name="settings_viewer_label_image_quality">画像品質</string>
+    <string name="settings_viewer_label_override_brightness">明るさを上書きする</string>
+    <string name="settings_viewer_label_brightness_level">明るさレベル</string>
 
-    <string name="settings_viewer_title_binding_direction">本の綴じ・開き方の設定</string>
-    <string name="settings_viewer_label_binding_direction">本の開く方向</string>
-    <string name="settings_viewer_label_binding_direction_rtl">右開き (縦書きの本・マンガ)</string>
-    <string name="settings_viewer_label_binding_direction_ltr">左開き (横書きの本・洋書)</string>
-    <string name="settings_viewer_desc_binding_direction">本の綴じ目（ページをめくる方向）を設定します。マンガや縦書きの小説は「右開き」、雑誌や洋書などの横書きの本は「左開き」に設定してください。</string>
+    <!-- ReadingDirectionScreen -->
+    <string name="settings_viewer_reading_direction_title">開き方向の選択</string>
+    <string name="settings_viewer_reading_direction_desc">本の綴じ目（ページをめくる方向）を設定します。マンガや縦書きの小説は「右開き」、雑誌や洋書などの横書きの本は「左開き」に設定してください。</string>
+    <string name="settings_viewer_reading_direction_label_rtl">右開き (縦書きの本・マンガ)</string>
+    <string name="settings_viewer_reading_direction_label_ltr">左開き (横書きの本・洋書)</string>
 </resources>

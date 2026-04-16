@@ -54,22 +54,20 @@ internal fun EntryProviderScope<NavKey>.readLaterFolderFileInfoNavEntry(navigato
                         }
 
                         is Folder -> {
-                            navigator.navigate<ReadLaterFolderFileInfoNavKey>(
+                            navigator.popNavigate<ReadLaterFolderFileInfoNavKey>(
                                 ReadLaterFolderNavKey(
                                     bookshelfId = file.bookshelfId,
                                     path = file.path,
                                 ),
-                                inclusive = true,
                             )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate<ReadLaterFolderFileInfoNavKey>(
+                    navigator.popNavigate<ReadLaterFolderFileInfoNavKey>(
                         ReadLaterFolderFileInfoNavKey(
                             it.key(),
                         ),
-                        inclusive = true,
                     )
                 },
                 onSettingsClick = {

@@ -3,8 +3,9 @@ package com.sorrowblue.comicviewer.feature.settings.viewer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
-import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.BindingDirectionScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.BindingDirectionScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
 
 @Composable
@@ -17,16 +18,16 @@ internal fun ViewerSettingsScreenRoot(
     ViewerSettingsScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
-        onStatusBarShowChange = state::onStatusBarShowChange,
-        onNavigationBarShowChange = state::onNavigationBarShowChange,
-        onTurnOnScreenChange = state::onTurnOnScreenChange,
-        onCutWhitespaceChange = state::onCutWhitespaceChange,
-        onDisplayFirstPageChange = state::onDisplayFirstPageChange,
+        onStatusBarShowChange = dropUnlessResumed(block = state::onStatusBarShowChange),
+        onNavigationBarShowChange = dropUnlessResumed(block = state::onNavigationBarShowChange),
+        onTurnOnScreenChange = dropUnlessResumed(block = state::onTurnOnScreenChange),
+        onCutWhitespaceChange = dropUnlessResumed(block = state::onCutWhitespaceChange),
+        onDisplayFirstPageChange = dropUnlessResumed(block = state::onDisplayFirstPageChange),
         onBindingDirectionClick = { onBindingDirectionClick(state.uiState.bindingDirection) },
-        onPreloadPagesChange = state::onPreloadPagesChange,
-        onImageQualityChange = state::onImageQualityChange,
-        onFixScreenBrightnessChange = state::onFixScreenBrightnessChange,
-        onScreenBrightnessChange = state::onScreenBrightnessChange,
+        onPreloadPagesChange = dropUnlessResumed(block = state::onPreloadPagesChange),
+        onImageQualityChange = dropUnlessResumed(block = state::onImageQualityChange),
+        onFixScreenBrightnessChange = dropUnlessResumed(block = state::onFixScreenBrightnessChange),
+        onScreenBrightnessChange = dropUnlessResumed(block = state::onScreenBrightnessChange),
         modifier = Modifier.testTag("ViewerSettingsRoot"),
     )
 

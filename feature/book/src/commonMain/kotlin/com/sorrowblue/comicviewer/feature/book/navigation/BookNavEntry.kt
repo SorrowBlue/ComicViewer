@@ -25,14 +25,13 @@ internal fun EntryProviderScope<NavKey>.bookNavEntry(navigator: Navigator) {
                 },
                 onSettingsClick = { navigator.navigate(SettingsNavKey) },
                 onNextBookClick = { book, collectionId ->
-                    navigator.navigate<BookNavKey>(
+                    navigator.popNavigate<BookNavKey>(
                         BookNavKey(
                             bookshelfId = book.bookshelfId,
                             path = book.path,
                             name = book.name,
                             collectionId = collectionId,
                         ),
-                        inclusive = true,
                     )
                 },
                 onContainerLongClick = {

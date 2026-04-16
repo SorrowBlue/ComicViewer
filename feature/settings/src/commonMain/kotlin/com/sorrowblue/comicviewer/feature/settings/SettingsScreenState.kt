@@ -30,6 +30,7 @@ private class SettingsScreenStateImpl(
     override var uiState by mutableStateOf(SettingsScreenUiState())
 
     override fun onSettingsClick(item: SettingsItem, onSettingsClick: (SettingsItem) -> Unit) {
+        uiState = uiState.copy(currentSettings = item)
         when (item) {
             SettingsItem.LANGUAGE -> appLocaleSettingsLauncher.launch {
                 onSettingsClick(item)

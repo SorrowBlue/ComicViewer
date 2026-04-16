@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_viewer_label_cache_images">Cache images</string>
-    <string name="settings_viewer_label_display_first_page">Always display first page</string>
-    <string name="settings_viewer_label_preload_pages">Number of pages to preload</string>
-    <string name="settings_viewer_title">Viewer settings</string>
-    <string name="settings_viewer_title_brightness_control">brightness control</string>
-    <string name="settings_viewer_title_brightness_level">brightness level</string>
-    <string name="settings_viewer_title_cut_whitespace">Cut whitespace</string>
-    <string name="settings_viewer_title_image_quality">Image quality</string>
-    <string name="settings_viewer_title_not_turn_off_screen">Do not turn off screen</string>
-    <string name="settings_viewer_title_show_navigation_bar">Show navigation bar</string>
-    <string name="settings_viewer_title_show_status_bar">Show status bar</string>
+    <!-- ViewerSettingsScreen -->
+    <string name="settings_viewer_title">Viewer Settings</string>
+    <string name="settings_viewer_label_show_status_bar">Show Status Bar</string>
+    <string name="settings_viewer_label_show_navigation_bar">Show Navigation Bar</string>
+    <string name="settings_viewer_label_keep_screen_on">Keep Screen On</string>
+    <string name="settings_viewer_label_trim_margin">Trim Page Margins</string>
+    <string name="settings_viewer_label_reading_direction">Reading Direction</string>
+    <string name="settings_viewer_label_start_first_page">Start from First Page</string>
+    <string name="settings_viewer_label_preload_page">Preload Page Count</string>
+    <string name="settings_viewer_label_image_quality">Viewing Image Quality</string>
+    <string name="settings_viewer_label_override_brightness">Override Brightness</string>
+    <string name="settings_viewer_label_brightness_level">Brightness Level</string>
 
-    <string name="settings_viewer_title_binding_direction">Book Reading Direction</string>
-    <string name="settings_viewer_label_binding_direction">Book Binding &amp; Direction</string>
-    <string name="settings_viewer_label_binding_direction_rtl">Right-to-Left</string>
-    <string name="settings_viewer_label_binding_direction_ltr">Left-to-Right</string>
-    <string name="settings_viewer_desc_binding_direction">Set the binding side of the book. Select "Right-to-Left" for manga or vertical text books, and "Left-to-Right" for magazines or horizontal text books.</string>
+    <!-- ReadingDirectionScreen -->
+    <string name="settings_viewer_reading_direction_title">Select reading direction</string>
+    <string name="settings_viewer_reading_direction_desc">Set the binding side of the book. Select "Right-to-Left" for manga or vertical text books, and "Left-to-Right" for magazines or horizontal text books.</string>
+    <string name="settings_viewer_reading_direction_label_rtl">Right-to-Left</string>
+    <string name="settings_viewer_reading_direction_label_ltr">Left-to-Right</string>
 </resources>

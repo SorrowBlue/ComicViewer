@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.viewer
+package com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,26 +18,27 @@ import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import com.sorrowblue.comicviewer.framework.ui.material3.ListItemRadioButton
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.viewer.generated.resources.Res
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_desc_binding_direction
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_binding_direction_ltr
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_binding_direction_rtl
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_binding_direction
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_reading_direction_desc
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_reading_direction_label_ltr
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_reading_direction_label_rtl
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_reading_direction_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun BindingDirectionScreen(
+internal fun ReadingDirectionScreen(
     bindingDirection: BindingDirection,
-    onClick: (BindingDirection) -> Unit,
+    onBindingDirectionChange: (BindingDirection) -> Unit,
+    onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
-        onDismissRequest = {},
+        onDismissRequest = onDismissRequest,
         title = {
-            Text(stringResource(Res.string.settings_viewer_title_binding_direction))
+            Text(stringResource(Res.string.settings_viewer_reading_direction_title))
         },
     ) { contentPadding ->
         Column {
             Text(
-                text = stringResource(Res.string.settings_viewer_desc_binding_direction),
+                text = stringResource(Res.string.settings_viewer_reading_direction_desc),
                 modifier = Modifier
                     .padding(contentPadding.only(PaddingValuesSides.Horizontal)),
             )
@@ -49,7 +50,7 @@ internal fun BindingDirectionScreen(
                 },
                 selected = bindingDirection == BindingDirection.RTL,
                 onCheckedChange = {
-                    onClick(BindingDirection.RTL)
+                    onBindingDirectionChange(BindingDirection.RTL)
                 },
             )
             ListItemRadioButton(
@@ -59,7 +60,7 @@ internal fun BindingDirectionScreen(
                 },
                 selected = bindingDirection == BindingDirection.LTR,
                 onCheckedChange = {
-                    onClick(BindingDirection.LTR)
+                    onBindingDirectionChange(BindingDirection.LTR)
                 },
             )
         }
@@ -70,21 +71,22 @@ internal val BindingDirection.displayName: String
     @Composable
     get() = when (this) {
         BindingDirection.LTR -> stringResource(
-            Res.string.settings_viewer_label_binding_direction_ltr,
+            Res.string.settings_viewer_reading_direction_label_ltr,
         )
 
         BindingDirection.RTL -> stringResource(
-            Res.string.settings_viewer_label_binding_direction_rtl,
+            Res.string.settings_viewer_reading_direction_label_rtl,
         )
     }
 
 @Preview
 @Composable
-private fun BindingDirectionScreenPreview() {
+private fun ReadingDirectionScreenPreview() {
     PreviewTheme {
-        BindingDirectionScreen(
+        ReadingDirectionScreen(
             bindingDirection = BindingDirection.RTL,
-            onClick = {},
+            onBindingDirectionChange = {},
+            onDismissRequest = {}
         )
     }
 }

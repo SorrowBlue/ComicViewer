@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,20 +12,20 @@ import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.folder.generated.resources.Res
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagescale_label_crop
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagescale_label_fit
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_imagescale_title
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_scale_label_crop
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_scale_label_fit
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_scale_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun ImageScaleScreen(
+internal fun ThumbnailScaleScreen(
     currentImageScale: ImageScale,
     onImageScaleChange: (ImageScale) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_imagescale_title)) },
+        title = { Text(text = stringResource(Res.string.settings_folder_thumbnail_scale_title)) },
     ) {
         Column {
             ImageScale.entries.forEach { imageScale ->
@@ -48,8 +48,8 @@ internal fun ImageScaleScreen(
 internal val ImageScale.displayText
     @Composable
     get() = when (this) {
-        ImageScale.Crop -> Res.string.settings_folder_imagescale_label_crop
-        ImageScale.Fit -> Res.string.settings_folder_imagescale_label_fit
+        ImageScale.Crop -> Res.string.settings_folder_thumbnail_scale_label_crop
+        ImageScale.Fit -> Res.string.settings_folder_thumbnail_scale_label_fit
     }.let {
         stringResource(it)
     }

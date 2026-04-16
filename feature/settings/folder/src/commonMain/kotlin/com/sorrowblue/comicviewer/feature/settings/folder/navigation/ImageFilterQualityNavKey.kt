@@ -4,7 +4,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
-import com.sorrowblue.comicviewer.feature.settings.folder.ImageFilterQualityScreenRoot
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.FilterQualityScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import kotlinx.serialization.Serializable
 
@@ -13,7 +13,7 @@ internal data class ImageFilterQualityNavKey(val imageFilterQuality: ImageFilter
 
 internal fun EntryProviderScope<NavKey>.imageFilterQualityNavEntry(navigator: Navigator) {
     entry<ImageFilterQualityNavKey>(metadata = DialogSceneStrategy.dialog()) {
-        ImageFilterQualityScreenRoot(
+        FilterQualityScreenRoot(
             imageFilterQuality = it.imageFilterQuality,
             onDismissRequest = navigator::goBack,
         )

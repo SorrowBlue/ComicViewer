@@ -58,21 +58,19 @@ internal fun EntryProviderScope<NavKey>.collectionFolderInfoNavEntry(navigator: 
                         }
 
                         is Folder -> {
-                            navigator.navigate<CollectionFolderFileInfoNavKey>(
+                            navigator.popNavigate<CollectionFolderFileInfoNavKey>(
                                 CollectionFolderNavKey(
                                     bookshelfId = file.bookshelfId,
                                     path = file.path,
                                     restorePath = null,
                                 ),
-                                inclusive = true,
                             )
                         }
                     }
                 },
                 onFileInfoClick = {
-                    navigator.navigate<CollectionFolderFileInfoNavKey>(
+                    navigator.popNavigate<CollectionFolderFileInfoNavKey>(
                         CollectionFolderFileInfoNavKey(it.key()),
-                        inclusive = true,
                     )
                 },
                 onSettingsClick = {

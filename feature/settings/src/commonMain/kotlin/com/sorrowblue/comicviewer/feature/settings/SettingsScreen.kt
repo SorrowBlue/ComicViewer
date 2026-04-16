@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,18 +27,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.feature.settings.section.NavigationDrawerItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.settings.generated.resources.Res
-import comicviewer.feature.settings.generated.resources.settings_label_app
 import comicviewer.feature.settings.generated.resources.settings_label_display
+import comicviewer.feature.settings.generated.resources.settings_label_extension
 import comicviewer.feature.settings.generated.resources.settings_label_folder
-import comicviewer.feature.settings.generated.resources.settings_label_image_cache
+import comicviewer.feature.settings.generated.resources.settings_label_info
 import comicviewer.feature.settings.generated.resources.settings_label_language
-import comicviewer.feature.settings.generated.resources.settings_label_plugin
 import comicviewer.feature.settings.generated.resources.settings_label_security
-import comicviewer.feature.settings.generated.resources.settings_label_tutorial
 import comicviewer.feature.settings.generated.resources.settings_label_viewer
 import comicviewer.feature.settings.generated.resources.settings_title
 import kotlinx.collections.immutable.ImmutableList
@@ -55,7 +53,6 @@ internal fun SettingsScreen(
     uiState: SettingsScreenUiState,
     onBackClick: () -> Unit,
     onSettingsClick: (SettingsItem) -> Unit,
-    onSettingsLongClick: (SettingsItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -92,7 +89,6 @@ internal fun SettingsScreen(
                         },
                         modifier = Modifier.combinedClickable(
                             onClick = { onSettingsClick(settings) },
-                            onLongClick = { onSettingsLongClick(settings) },
                         ).testTag(settings.testTag),
                     )
                 }
@@ -130,7 +126,6 @@ internal fun SettingsScreen(
                                 )
                             },
                             onClick = { onSettingsClick(settings2) },
-                            onLongClick = { onSettingsLongClick(settings2) },
                             selected = uiState.currentSettings == settings2,
                             modifier = Modifier
                                 .padding(horizontal = 16.dp),
@@ -147,10 +142,7 @@ enum class SettingsItem(val title: StringResource, val icon: ImageVector, val te
     FOLDER(Res.string.settings_label_folder, ComicIcons.FolderOpen, "FolderSettings"),
     VIEWER(Res.string.settings_label_viewer, ComicIcons.Image, "ViewerSettings"),
     SECURITY(Res.string.settings_label_security, ComicIcons.Lock, "SecuritySettings"),
-    APP(Res.string.settings_label_app, ComicIcons.Info, "InfoSettings"),
-    TUTORIAL(Res.string.settings_label_tutorial, ComicIcons.Start, "TutorialSettings"),
-
-    Thumbnail(Res.string.settings_label_image_cache, ComicIcons.Storage, "ImageCacheSettings"),
-    Plugin(Res.string.settings_label_plugin, ComicIcons.Extension, "PluginSettings"),
-    LANGUAGE(Res.string.settings_label_language, ComicIcons.Language, "InAppLanguageSettings"),
+    LANGUAGE(Res.string.settings_label_language, ComicIcons.Language, "LanguageSettings"),
+    EXTENSION(Res.string.settings_label_extension, ComicIcons.Dataset, "DataSettings"),
+    HELP(Res.string.settings_label_info, ComicIcons.Info, "HelpSettings"),
 }

@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.testTag
 internal fun SettingsScreenRoot(
     onBackClick: () -> Unit,
     onSettingsClick: (SettingsItem) -> Unit,
-    onSettingsLongClick: (SettingsItem) -> Unit,
 ) {
     val state = rememberSettingsScreenState()
     SettingsScreen(
@@ -17,7 +16,6 @@ internal fun SettingsScreenRoot(
         onSettingsClick = {
             state.onSettingsClick(it, onSettingsClick)
         },
-        onSettingsLongClick = onSettingsLongClick,
         modifier = Modifier.testTag("SettingsScreenRoot"),
     )
 }

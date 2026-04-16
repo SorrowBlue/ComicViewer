@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
+import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.LastPage
 import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.automirrored.outlined.ViewList
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.CollectionsBookmark
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Dataset
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DisplaySettings
 import androidx.compose.material.icons.outlined.Edit
@@ -30,6 +32,7 @@ import androidx.compose.material.icons.outlined.FolderOff
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Grid4x4
 import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Info
@@ -82,6 +85,8 @@ object ComicIcons {
     val ArrowDownward = Icons.Outlined.ArrowDownward
     val Start = Icons.Outlined.Start
     val Language = Icons.Outlined.Language
+    val Help = Icons.AutoMirrored.Outlined.Help
+    val Dataset = Icons.Outlined.Dataset
     val Info = Icons.Outlined.Info
     val Lock = Icons.Outlined.Lock
     val Image = Icons.Outlined.Image

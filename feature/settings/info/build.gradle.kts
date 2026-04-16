@@ -11,6 +11,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.settings.common)
+                implementation(projects.feature.tutorial)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.aboutlibraries.compose)
             }

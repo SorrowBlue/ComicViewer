@@ -4,7 +4,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
-import com.sorrowblue.comicviewer.feature.settings.folder.FolderThumbnailOrderScreenRoot
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import kotlinx.serialization.Serializable
 

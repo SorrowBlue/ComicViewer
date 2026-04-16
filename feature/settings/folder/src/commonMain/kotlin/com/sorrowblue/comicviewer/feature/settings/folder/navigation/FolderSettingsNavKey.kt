@@ -6,11 +6,11 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenRoot
-import com.sorrowblue.comicviewer.feature.settings.folder.FolderThumbnailOrderScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.ImageFilterQualityResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.ImageFormatScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.ImageScaleScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.SortTypeScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.FilterQualityResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.SortOrderScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
@@ -28,10 +28,10 @@ internal fun EntryProviderScope<NavKey>.folderSettingsNavEntry(navigator: Naviga
             put(
                 NavigationResultMetadata.ResultConsumerKey,
                 NavigationResultMetadata.resultConsumer(
-                    SortTypeScreenResultKey,
-                    ImageScaleScreenResultKey,
-                    ImageFilterQualityResultKey,
-                    ImageFormatScreenResultKey,
+                    SortOrderScreenResultKey,
+                    ThumbnailScaleScreenResultKey,
+                    FilterQualityResultKey,
+                    ThumbnailFormatScreenResultKey,
                     FolderThumbnailOrderScreenResultKey,
                 ),
             )

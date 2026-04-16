@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_display_desc_show_last_folder">前回開いていたフォルダを表示します</string>
-    <string name="settings_display_label_appearance">デザイン</string>
-    <string name="settings_display_label_dark_mode">ダークモード</string>
-    <string name="settings_display_label_light_mode">ライトモード</string>
-    <string name="settings_display_label_show_last_folder">最後のフォルダを表示する</string>
-    <string name="settings_display_label_system_default">デバイスのモードを使用する</string>
     <string name="settings_display_title">ディスプレイ</string>
+
+    <string name="settings_display_label_theme">デザイン</string>
+    <string name="settings_display_label_theme_dark">ダークモード</string>
+    <string name="settings_display_label_theme_light">ライトモード</string>
+    <string name="settings_display_label_theme_system">デバイスのモードを使用する</string>
+    <string name="settings_display_label_show_last_folder">前回の閲覧場所を復元する</string>
+    <string name="settings_display_summary_show_last_folder">アプリ起動時に前回表示していた本があるフォルダを表示します</string>
 </resources>

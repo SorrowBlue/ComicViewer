@@ -5,12 +5,17 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 
 @Composable
-internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher =
-    AppLocaleSettingsLauncher(LocalContext.current)
+internal actual fun rememberAppLocaleSettingsLauncher(): AppLocaleSettingsLauncher {
+    val context = LocalContext.current
+    return remember(context) {
+        AppLocaleSettingsLauncher(context)
+    }
+}
 
 internal actual class AppLocaleSettingsLauncher(private val context: Context) {
     actual fun launch(fallback: () -> Unit) {

@@ -12,25 +12,25 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.displayText
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.displayText
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.displayName
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.displayText
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.displayText
 import comicviewer.feature.settings.folder.generated.resources.Res
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_desc_image_folder
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_file_sort
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_folder_thumbnail_order
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_font_size
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_image_filter_quality
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_image_folder
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_image_format
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_image_quality
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_image_scale
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_jpeg_summary
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_original_summary
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_png_summary
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_save_thumbnail
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_show_files_extension
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_show_hidden_files
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_show_hidden_file
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_show_thumbnail
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_sort_order
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_thumbnail
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_webp_summary
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_thumbnail_filter_quality
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_thumbnail_format
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_thumbnail_order
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_thumbnail_quality
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_thumbnail_scale
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_title
 import org.jetbrains.compose.resources.stringResource
 
@@ -59,7 +59,7 @@ internal fun FolderSettingsScreen(
     ) {
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_folder_label_show_hidden_files))
+                Text(stringResource(Res.string.settings_folder_label_show_hidden_file))
             },
             checked = uiState.showHiddenFiles,
             onCheckedChange = onShowHiddenFilesChange,
@@ -73,7 +73,7 @@ internal fun FolderSettingsScreen(
         )
         Setting(
             title = {
-                Text(stringResource(Res.string.settings_folder_label_file_sort))
+                Text(stringResource(Res.string.settings_folder_label_sort_order))
             },
             summary = {
                 Text(uiState.fileSort.displayText)
@@ -83,9 +83,6 @@ internal fun FolderSettingsScreen(
         SwitchSetting(
             title = {
                 Text(stringResource(Res.string.settings_folder_label_image_folder))
-            },
-            summary = {
-                Text(stringResource(Res.string.settings_folder_desc_image_folder))
             },
             checked = uiState.isOpenImageFolder,
             onCheckedChange = onChangeOpenImageFolder,
@@ -119,37 +116,40 @@ internal fun FolderSettingsScreen(
             )
             Setting(
                 title = {
-                    Text(stringResource(Res.string.settings_folder_label_image_scale))
+                    Text(stringResource(Res.string.settings_folder_label_thumbnail_scale))
                 },
                 summary = {
                     Text(uiState.imageScale.displayText)
                 },
                 onClick = onImageScaleClick,
+                enabled = uiState.showThumbnails,
             )
             Setting(
                 title = {
-                    Text(stringResource(Res.string.settings_folder_label_image_filter_quality))
+                    Text(stringResource(Res.string.settings_folder_label_thumbnail_filter_quality))
                 },
                 summary = {
                     Text(stringResource(uiState.imageFilterQuality.displayText))
                 },
                 onClick = onImageFilterQualityClick,
+                enabled = uiState.showThumbnails,
             )
             Setting(
                 title = {
-                    Text(stringResource(Res.string.settings_folder_label_image_format))
+                    Text(stringResource(Res.string.settings_folder_label_thumbnail_format))
                 },
                 summary = {
-                    Text(uiState.imageFormat.summaryText)
+                    Text(uiState.imageFormat.displayName)
                 },
                 onClick = onImageFormatClick,
+                enabled = uiState.showThumbnails,
             )
             SliderSetting(
                 title = {
-                    Text(stringResource(Res.string.settings_folder_label_image_quality))
+                    Text(stringResource(Res.string.settings_folder_label_thumbnail_quality))
                 },
                 value = uiState.thumbnailQuality.toFloat(),
-                enabled = uiState.imageFormat != ImageFormat.ORIGINAL,
+                enabled = uiState.showThumbnails && uiState.imageFormat != ImageFormat.ORIGINAL,
                 thumbText = {
                     Text(
                         it.toInt().toString(),
@@ -166,27 +166,18 @@ internal fun FolderSettingsScreen(
                 },
                 checked = uiState.isSavedThumbnail,
                 onCheckedChange = onSavedThumbnailChange,
+                enabled = uiState.showThumbnails,
             )
             Setting(
                 title = {
-                    Text(stringResource(Res.string.settings_folder_label_folder_thumbnail_order))
+                    Text(stringResource(Res.string.settings_folder_label_thumbnail_order))
                 },
                 summary = {
                     Text(uiState.folderThumbnailOrder.displayText)
                 },
                 onClick = onFolderThumbnailOrderClick,
+                enabled = uiState.showThumbnails,
             )
         }
     }
 }
-
-private val ImageFormat.summaryText
-    @Composable
-    get() = when (this) {
-        ImageFormat.WEBP -> Res.string.settings_folder_label_webp_summary
-        ImageFormat.JPEG -> Res.string.settings_folder_label_jpeg_summary
-        ImageFormat.PNG -> Res.string.settings_folder_label_png_summary
-        ImageFormat.ORIGINAL -> Res.string.settings_folder_label_original_summary
-    }.let {
-        stringResource(it)
-    }

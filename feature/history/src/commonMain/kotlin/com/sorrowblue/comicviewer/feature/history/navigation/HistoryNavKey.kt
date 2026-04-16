@@ -63,9 +63,8 @@ internal fun EntryProviderScope<NavKey>.historyNavEntry(navigator: Navigator) {
                     )
                 },
                 onBookInfoClick = {
-                    navigator.navigate<HistoryFileInfoNavKey>(
+                    navigator.popNavigate<HistoryFileInfoNavKey>(
                         HistoryFileInfoNavKey(it.key()),
-                        inclusive = true,
                     )
                 },
             )

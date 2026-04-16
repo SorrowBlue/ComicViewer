@@ -5,13 +5,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 
 @Composable
-internal fun AppInfoSettingsScreenRoot(onBackClick: () -> Unit, onLicenceClick: () -> Unit) {
-    val state = rememberAppInfoSettingsScreenState()
-    AppInfoSettingsScreen(
+internal fun InfoSettingsScreenRoot(
+    onBackClick: () -> Unit,
+    onTutorialClick: () -> Unit,
+    onLicenceClick: () -> Unit,
+) {
+    val state = rememberInfoSettingsScreenState()
+    InfoSettingsScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
-        onRateAppClick = state::launchReview,
+        onTutorialClick = onTutorialClick,
         onLicenceClick = onLicenceClick,
+        onRateAppClick = state::launchReview,
         modifier = Modifier.testTag("InfoSettingsRoot"),
     )
 }

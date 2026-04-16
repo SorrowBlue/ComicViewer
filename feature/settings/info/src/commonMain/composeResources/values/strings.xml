@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_info_label_build">Build</string>
-    <string name="settings_info_label_license">License</string>
-    <string name="settings_info_label_rate">Rate the app</string>
+    <string name="settings_info_title">Help &amp; Information</string>
+
+    <string name="settings_info_label_tutorial">Restart Tutorial</string>
+    <string name="settings_info_label_license">Licenses</string>
+    <string name="settings_info_label_rate">Rate App</string>
     <string name="settings_info_label_version">Version</string>
+    <string name="settings_info_label_build">Build Information</string>
+
+    <string name="settings_info_title_license">Licenses</string>
+
     <string name="settings_info_label_close">Close</string>
-    <string name="settings_info_title">App Info</string>
-    <string name="settings_info_title_license">License</string>
-    <string name="settings_info_rate_app_summary">If you like Comic Viewer, please give us a ☆5 rating!</string>
+    <string name="settings_info_rate_app_summary">If you like Comic Viewer, please give us a rating!</string>
 </resources>

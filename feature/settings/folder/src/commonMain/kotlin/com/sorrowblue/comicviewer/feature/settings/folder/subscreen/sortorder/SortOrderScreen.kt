@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,24 +12,24 @@ import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.folder.generated.resources.Res
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_filesort_label_file_sort_date_asc
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_filesort_label_file_sort_date_desc
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_filesort_label_file_sort_name_asc
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_filesort_label_file_sort_name_desc
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_filesort_label_file_sort_size_asc
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_filesort_label_file_sort_size_desc
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_filesort_title
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_date_asc
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_date_desc
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_name_asc
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_name_desc
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_size_asc
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_size_desc
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun SortTypeScreen(
+internal fun SortOrderScreen(
     currentSortType: SortType,
     onFileSortChange: (SortType) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_filesort_title)) },
+        title = { Text(text = stringResource(Res.string.settings_folder_sort_order_title)) },
     ) {
         Column {
             SortType.entries.forEach { sortType ->
@@ -52,9 +52,9 @@ internal fun SortTypeScreen(
 internal val SortType.displayText
     @Composable
     get() = when (this) {
-        is SortType.Name -> if (isAsc) Res.string.settings_folder_filesort_label_file_sort_name_asc else Res.string.settings_folder_filesort_label_file_sort_name_desc
-        is SortType.Date -> if (isAsc) Res.string.settings_folder_filesort_label_file_sort_date_asc else Res.string.settings_folder_filesort_label_file_sort_date_desc
-        is SortType.Size -> if (isAsc) Res.string.settings_folder_filesort_label_file_sort_size_asc else Res.string.settings_folder_filesort_label_file_sort_size_desc
+        is SortType.Name -> if (isAsc) Res.string.settings_folder_sort_order_label_name_asc else Res.string.settings_folder_sort_order_label_name_desc
+        is SortType.Date -> if (isAsc) Res.string.settings_folder_sort_order_label_date_asc else Res.string.settings_folder_sort_order_label_date_desc
+        is SortType.Size -> if (isAsc) Res.string.settings_folder_sort_order_label_size_asc else Res.string.settings_folder_sort_order_label_size_desc
     }.let {
         stringResource(it)
     }

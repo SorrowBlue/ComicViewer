@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.feature.settings.display.navigation
 
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
@@ -22,8 +23,8 @@ internal fun EntryProviderScope<NavKey>.displaySettingsNavEntry(navigator: Navig
     ) {
         with(rememberRetained { factory.createDisplaySettingsScreenContext() }) {
             DisplaySettingsScreenRoot(
-                onBackClick = navigator::goBack,
-                onDarkModeClick = { navigator.navigate(DarkModeNavKey) },
+                onBackClick = dropUnlessResumed { navigator.goBack() },
+                onDarkModeClick = dropUnlessResumed { navigator.navigate(DarkModeNavKey) },
             )
         }
     }

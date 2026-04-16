@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.display.generated.resources.Res
-import comicviewer.feature.settings.display.generated.resources.settings_display_label_appearance
+import comicviewer.feature.settings.display.generated.resources.settings_display_label_theme
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -28,7 +28,7 @@ internal fun DarkModeScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_display_label_appearance)) },
+        title = { Text(text = stringResource(Res.string.settings_display_label_theme)) },
     ) {
         Column(Modifier.padding(it.copy(start = 0.dp, end = 0.dp))) {
             uiState.list.forEach { darkMode ->

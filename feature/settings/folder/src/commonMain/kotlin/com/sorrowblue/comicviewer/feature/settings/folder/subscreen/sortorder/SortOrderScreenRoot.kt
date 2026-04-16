@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder
 
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
@@ -7,19 +7,19 @@ import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
 
 @Composable
-internal fun SortTypeScreenRoot(sortType: SortType, onDismissRequest: () -> Unit) {
+internal fun SortOrderScreenRoot(sortType: SortType, onDismissRequest: () -> Unit) {
     val resultProducer = LocalNavigationResultProducer.current
-    SortTypeScreen(
+    SortOrderScreen(
         currentSortType = sortType,
         onFileSortChange = {
-            resultProducer.setResult(SortTypeScreenResultKey, it)
+            resultProducer.setResult(SortOrderScreenResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,
     )
 }
 
-internal val SortTypeScreenResultKey = SerializableNavigationResultKey(
+internal val SortOrderScreenResultKey = SerializableNavigationResultKey(
     serializer = SortType.serializer(),
-    resultKey = "SortTypeScreenResultKey",
+    resultKey = "SortOrderScreenResultKey",
 )

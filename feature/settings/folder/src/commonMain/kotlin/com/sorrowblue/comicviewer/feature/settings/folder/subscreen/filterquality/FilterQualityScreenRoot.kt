@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality
 
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
@@ -7,23 +7,23 @@ import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import io.github.irgaly.navigation3.resultstate.setResult
 
 @Composable
-internal fun ImageFilterQualityScreenRoot(
+internal fun FilterQualityScreenRoot(
     imageFilterQuality: ImageFilterQuality,
     onDismissRequest: () -> Unit,
 ) {
     val resultProducer = LocalNavigationResultProducer.current
-    ImageFilterQualityScreen(
+    FilterQualityScreen(
         currentImageFilterQuality = imageFilterQuality,
         onImageFilterQualityChange = {
-            resultProducer.setResult(ImageFilterQualityResultKey, it)
+            resultProducer.setResult(FilterQualityResultKey, it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,
     )
 }
 
-internal val ImageFilterQualityResultKey: SerializableNavigationResultKey<ImageFilterQuality> =
+internal val FilterQualityResultKey: SerializableNavigationResultKey<ImageFilterQuality> =
     SerializableNavigationResultKey(
         serializer = ImageFilterQuality.serializer(),
-        resultKey = "ImageFilterQualityScreenResultKey",
+        resultKey = "FilterQualityResultKey",
     )

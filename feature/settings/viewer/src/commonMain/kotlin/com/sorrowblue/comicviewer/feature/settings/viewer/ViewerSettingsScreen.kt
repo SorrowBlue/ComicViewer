@@ -19,20 +19,21 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.displayName
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.viewer.generated.resources.Res
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_binding_direction
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_display_first_page
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_preload_pages
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_brightness_level
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_image_quality
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_keep_screen_on
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_override_brightness
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_preload_page
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_reading_direction
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_show_navigation_bar
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_show_status_bar
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_start_first_page
+import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_label_trim_margin
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_brightness_control
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_brightness_level
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_cut_whitespace
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_image_quality
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_not_turn_off_screen
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_show_navigation_bar
-import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title_show_status_bar
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -62,35 +63,35 @@ internal fun ViewerSettingsScreen(
     ) {
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_title_show_status_bar))
+                Text(stringResource(Res.string.settings_viewer_label_show_status_bar))
             },
             checked = uiState.isStatusBarShow,
             onCheckedChange = onStatusBarShowChange,
         )
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_title_show_navigation_bar))
+                Text(stringResource(Res.string.settings_viewer_label_show_navigation_bar))
             },
             checked = uiState.isNavigationBarShow,
             onCheckedChange = onNavigationBarShowChange,
         )
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_title_not_turn_off_screen))
+                Text(stringResource(Res.string.settings_viewer_label_keep_screen_on))
             },
             checked = uiState.isTurnOnScreen,
             onCheckedChange = onTurnOnScreenChange,
         )
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_title_cut_whitespace))
+                Text(stringResource(Res.string.settings_viewer_label_trim_margin))
             },
             checked = uiState.isCutWhitespace,
             onCheckedChange = onCutWhitespaceChange,
         )
         Setting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_label_binding_direction))
+                Text(stringResource(Res.string.settings_viewer_label_reading_direction))
             },
             summary = {
                 Text(uiState.bindingDirection.displayName)
@@ -99,14 +100,14 @@ internal fun ViewerSettingsScreen(
         )
         SwitchSetting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_label_display_first_page))
+                Text(stringResource(Res.string.settings_viewer_label_start_first_page))
             },
             checked = uiState.isDisplayFirstPage,
             onCheckedChange = onDisplayFirstPageChange,
         )
         SliderSetting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_label_preload_pages))
+                Text(stringResource(Res.string.settings_viewer_label_preload_page))
             },
             value = uiState.preloadPages,
             onValueChange = onPreloadPagesChange,
@@ -115,7 +116,7 @@ internal fun ViewerSettingsScreen(
         )
         SliderSetting(
             title = {
-                Text(stringResource(Res.string.settings_viewer_title_image_quality))
+                Text(stringResource(Res.string.settings_viewer_label_image_quality))
             },
             value = uiState.imageQuality,
             onValueChange = onImageQualityChange,
@@ -123,11 +124,11 @@ internal fun ViewerSettingsScreen(
             steps = 50,
         )
         SettingsCategory(title = {
-            Text(stringResource(Res.string.settings_viewer_title_brightness_control))
+            Text(stringResource(Res.string.settings_viewer_label_override_brightness))
         }) {
             SwitchSetting(
                 title = {
-                    Text(stringResource(Res.string.settings_viewer_title_brightness_control))
+                    Text(stringResource(Res.string.settings_viewer_label_override_brightness))
                 },
                 checked = uiState.isFixScreenBrightness,
                 onCheckedChange = onFixScreenBrightnessChange,
@@ -135,7 +136,7 @@ internal fun ViewerSettingsScreen(
             SliderSetting(
                 title = {
                     Row(verticalAlignment = Alignment.Bottom) {
-                        Text(stringResource(Res.string.settings_viewer_title_brightness_level))
+                        Text(stringResource(Res.string.settings_viewer_label_brightness_level))
                         if (uiState.screenBrightnessPreview) {
                             Spacer(Modifier.size(ComicTheme.dimension.padding))
                             Text(

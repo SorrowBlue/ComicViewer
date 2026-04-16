@@ -17,7 +17,6 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage
 import comicviewer.feature.settings.generated.resources.Res
-import comicviewer.feature.settings.generated.resources.settings_label_image_cache
 import kotlin.math.floor
 import org.jetbrains.compose.resources.stringResource
 
@@ -30,7 +29,7 @@ internal fun ImageCacheScreen(
     modifier: Modifier = Modifier,
 ) {
     SettingsDetailPane(
-        title = { Text(text = stringResource(Res.string.settings_label_image_cache)) },
+        title = { Text(text = "stringResource(Res.string.settings_label_image_cache)") },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         onBackClick = onBackClick,
         modifier = modifier,

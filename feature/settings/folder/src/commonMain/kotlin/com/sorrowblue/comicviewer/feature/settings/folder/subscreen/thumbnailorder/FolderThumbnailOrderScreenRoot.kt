@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder
 
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder

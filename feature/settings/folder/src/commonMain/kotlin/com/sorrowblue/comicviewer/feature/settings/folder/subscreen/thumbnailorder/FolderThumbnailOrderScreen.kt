@@ -1,4 +1,4 @@
-package com.sorrowblue.comicviewer.feature.settings.folder
+package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,10 +12,10 @@ import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
 import comicviewer.feature.settings.folder.generated.resources.Res
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_folderthumbnail_label_last_read
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_folderthumbnail_label_modified
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_folderthumbnail_label_name
-import comicviewer.feature.settings.folder.generated.resources.settings_folder_folderthumbnail_title
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_order_label_last_read
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_order_label_modified
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_order_label_name
+import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_order_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -26,7 +26,7 @@ internal fun FolderThumbnailOrderScreen(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(Res.string.settings_folder_folderthumbnail_title)) },
+        title = { Text(text = stringResource(Res.string.settings_folder_thumbnail_order_title)) },
     ) {
         Column {
             FolderThumbnailOrder.entries.forEach { order ->
@@ -49,7 +49,7 @@ internal fun FolderThumbnailOrderScreen(
 internal val FolderThumbnailOrder.displayText
     @Composable
     get() = when (this) {
-        FolderThumbnailOrder.NAME -> Res.string.settings_folder_folderthumbnail_label_name
-        FolderThumbnailOrder.MODIFIED -> Res.string.settings_folder_folderthumbnail_label_modified
-        FolderThumbnailOrder.LAST_READ -> Res.string.settings_folder_folderthumbnail_label_last_read
+        FolderThumbnailOrder.NAME -> Res.string.settings_folder_thumbnail_order_label_name
+        FolderThumbnailOrder.MODIFIED -> Res.string.settings_folder_thumbnail_order_label_modified
+        FolderThumbnailOrder.LAST_READ -> Res.string.settings_folder_thumbnail_order_label_last_read
     }.let { stringResource(it) }
