@@ -14,6 +14,6 @@ internal fun ExtensionSettingsScreenRoot(
         onBackClick = onBackClick,
         onImageCacheClick = onImageCacheClick,
         onPluginClick = onPluginClick,
-        modifier = Modifier.testTag("ExtensionSettingsRoot")
+        modifier = Modifier.testTag("ExtensionSettingsRoot"),
     )
 }

@@ -86,7 +86,7 @@ private fun ReadingDirectionScreenPreview() {
         ReadingDirectionScreen(
             bindingDirection = BindingDirection.RTL,
             onBindingDirectionChange = {},
-            onDismissRequest = {}
+            onDismissRequest = {},
         )
     }
 }

@@ -9,8 +9,6 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.ReadingDirectionScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
-import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
 import kotlinx.serialization.Serializable
 
 @Serializable

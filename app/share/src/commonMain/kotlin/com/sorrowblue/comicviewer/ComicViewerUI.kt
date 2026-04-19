@@ -73,7 +73,7 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                 val listDetailSceneStrategy =
                     rememberListDetailSceneStrategy<NavKey>(
                         backNavigationBehavior = BackNavigationBehavior.PopUntilContentChange,
-                        directive = directive
+                        directive = directive,
                     )
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
                 val windowInsetsDecorator =

@@ -33,7 +33,9 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
     }
 
     LaunchedEffect(navigator.backStack.lastOrNull()) {
-        logcat("Navigator") { "SettingsScreenState: #LaunchedEffect: ${navigator.backStack.lastOrNull()}" }
+        logcat(
+            "Navigator",
+        ) { "SettingsScreenState: #LaunchedEffect: ${navigator.backStack.lastOrNull()}" }
         when (navigator.backStack.lastOrNull()) {
             is DisplaySettingsNavKey -> SettingsItem.DISPLAY
             is FolderSettingsNavKey -> SettingsItem.FOLDER

@@ -58,10 +58,14 @@ class Navigator(val state: NavigationState) {
             val fromIndex = currentStack.indexOfLast { it is T }
             if (0 <= fromIndex) {
                 if (fromIndex < currentStack.size) {
-                    logcat { "#popNavigate: pop: ${currentStack.lastOrNull()} -> ${currentStack[fromIndex - 1]}" }
+                    logcat {
+                        "#popNavigate: pop: ${currentStack.lastOrNull()} -> ${currentStack[fromIndex - 1]}"
+                    }
                     currentStack.subList(fromIndex, currentStack.size).clear()
                 } else {
-                    logcat { "#popNavigate: Could not pop ${T::class.simpleName}. It is top of backstack." }
+                    logcat {
+                        "#popNavigate: Could not pop ${T::class.simpleName}. It is top of backstack."
+                    }
                 }
             } else {
                 logcat { "#popNavigate: Not found route ${T::class.simpleName}" }
@@ -94,7 +98,9 @@ class Navigator(val state: NavigationState) {
         if (0 <= index) {
             val fromIndex = if (inclusive) index else index + 1
             if (fromIndex < currentStack.size) {
-                logcat { "#pop: inclusive=$inclusive, ${currentStack.lastOrNull()} -> ${currentStack[fromIndex - 1]}" }
+                logcat {
+                    "#pop: inclusive=$inclusive, ${currentStack.lastOrNull()} -> ${currentStack[fromIndex - 1]}"
+                }
                 currentStack.subList(fromIndex, currentStack.size).clear()
             } else {
                 logcat { "#pop: Could not pop ${T::class.simpleName}. It is top of backstack." }

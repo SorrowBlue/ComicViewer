@@ -47,11 +47,11 @@ internal fun ExtensionSettingsScreen(
                         modifier = Modifier
                             .size(12.dp)
                             .align(Alignment.TopEnd)
-                            .background(ListItemDefaults.colors().containerColor, CircleShape)
+                            .background(ListItemDefaults.colors().containerColor, CircleShape),
                     )
                 }
             },
-            onClick = onImageCacheClick
+            onClick = onImageCacheClick,
         )
         Setting(
             title = {
@@ -60,7 +60,7 @@ internal fun ExtensionSettingsScreen(
             icon = {
                 Icon(ComicIcons.Extension, null)
             },
-            onClick = onPluginClick
+            onClick = onPluginClick,
         )
     }
 }

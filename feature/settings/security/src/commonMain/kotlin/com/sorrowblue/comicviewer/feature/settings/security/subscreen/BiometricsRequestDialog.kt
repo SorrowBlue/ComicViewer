@@ -31,7 +31,11 @@ internal fun BiometricsRequestDialog(onConfirmClick: () -> Unit, onDismissReques
         text = { Text(text = stringResource(Res.string.settings_security_biometric_request_text)) },
         confirmButton = {
             FilledTonalButton(onClick = onConfirmClick) {
-                Text(text = stringResource(Res.string.settings_security_biometric_request_label_settings))
+                Text(
+                    text = stringResource(
+                        Res.string.settings_security_biometric_request_label_settings,
+                    ),
+                )
             }
         },
         dismissButton = {

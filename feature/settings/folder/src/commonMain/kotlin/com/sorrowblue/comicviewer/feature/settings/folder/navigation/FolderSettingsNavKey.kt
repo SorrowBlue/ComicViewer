@@ -6,13 +6,12 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenRoot
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.FilterQualityResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.SortOrderScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenResultKey
+import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
 import io.github.irgaly.navigation3.resultstate.resultConsumer

@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.settings.extension.subscreen.pdf
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -15,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.FilePdf
@@ -25,8 +25,8 @@ import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.extension.generated.resources.Res
-import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_label_select_install_folder
-import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_title_pdf
+import comicviewer.feature.settings.extension.generated.resources.settings_extension_label_select_install_folder
+import comicviewer.feature.settings.extension.generated.resources.settings_extension_title_pdf
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -34,7 +34,7 @@ internal fun PdfPluginScreen(uiState: PdfPluginScreenUiState, onOpenFolderClick:
     AlertDialog(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = stringResource(Res.string.settings_extension_plugin_title_pdf))
+                Text(text = stringResource(Res.string.settings_extension_title_pdf))
                 CloseIconButton(onClick = {})
             }
         },
@@ -47,7 +47,7 @@ internal fun PdfPluginScreen(uiState: PdfPluginScreenUiState, onOpenFolderClick:
         ) {
             OutlinedTextField(
                 label = {
-                    Text(stringResource(Res.string.settings_plugin_label_select_install_folder))
+                    Text(stringResource(Res.string.settings_extension_label_select_install_folder))
                 },
                 value = uiState.folderPath,
                 onValueChange = {},

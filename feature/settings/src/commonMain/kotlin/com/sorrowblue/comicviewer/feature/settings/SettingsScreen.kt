@@ -141,7 +141,7 @@ private fun SettingsScreenPreview() {
             },
             detailPane = {
                 Box(modifier = Modifier.fillMaxSize())
-            }
+            },
         )
     }
 }

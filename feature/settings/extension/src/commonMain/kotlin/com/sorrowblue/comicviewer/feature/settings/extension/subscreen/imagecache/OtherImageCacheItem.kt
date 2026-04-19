@@ -32,7 +32,11 @@ internal fun OtherImageCacheItem(
 ) {
     SettingsCategory(
         modifier = modifier,
-        title = { Text(text = stringResource(Res.string.settings_extension_imagecache_label_other)) },
+        title = {
+            Text(
+                text = stringResource(Res.string.settings_extension_imagecache_label_other),
+            )
+        },
     ) {
         Setting(title = {}, onClick = {}, widget = {
             IconButton(onClick = onClick) {

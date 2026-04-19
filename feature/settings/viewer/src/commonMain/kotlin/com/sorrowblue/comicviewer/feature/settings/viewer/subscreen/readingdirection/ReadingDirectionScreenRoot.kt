@@ -21,7 +21,7 @@ internal fun ReadingDirectionScreenRoot(
         },
         onDismissRequest = dropUnlessResumed {
             onDismissRequest()
-        }
+        },
     )
 }
 

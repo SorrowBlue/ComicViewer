@@ -10,9 +10,9 @@ import com.sorrowblue.comicviewer.domain.model.onError
 import com.sorrowblue.comicviewer.domain.model.onSuccess
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManagePdfPluginSettingsUseCase
 import com.sorrowblue.scomicviewer.domain.usecase.RegisterPdfPluginUseCase
-import comicviewer.feature.settings.plugin.generated.resources.Res
-import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_error_not_found
-import comicviewer.feature.settings.plugin.generated.resources.settings_plugin_error_not_supported_version
+import comicviewer.feature.settings.extension.generated.resources.Res
+import comicviewer.feature.settings.extension.generated.resources.settings_extension_error_not_found
+import comicviewer.feature.settings.extension.generated.resources.settings_extension_error_not_supported_version
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.compose.PickerResultLauncher
@@ -89,8 +89,8 @@ private class PdfPluginScreenStateImpl(
                 }
                 .onError {
                     val stringResource = when (it) {
-                        RegisterPdfPluginUseCase.Error.NotFound -> Res.string.settings_plugin_error_not_found
-                        RegisterPdfPluginUseCase.Error.NotSupportVersion -> Res.string.settings_plugin_error_not_supported_version
+                        RegisterPdfPluginUseCase.Error.NotFound -> Res.string.settings_extension_error_not_found
+                        RegisterPdfPluginUseCase.Error.NotSupportVersion -> Res.string.settings_extension_error_not_supported_version
                     }
                     uiState =
                         uiState.copy(checking = false, info = "", error = getString(stringResource))

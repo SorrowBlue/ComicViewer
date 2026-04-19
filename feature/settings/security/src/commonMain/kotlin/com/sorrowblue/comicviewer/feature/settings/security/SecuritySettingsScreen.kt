@@ -10,12 +10,12 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
 import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_app_lock
+import comicviewer.feature.settings.security.generated.resources.settings_security_label_biometric_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_change_password
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_lock_background
 import comicviewer.feature.settings.security.generated.resources.settings_security_summary_app_lock
-import comicviewer.feature.settings.security.generated.resources.settings_security_title
-import comicviewer.feature.settings.security.generated.resources.settings_security_label_biometric_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_summary_biometric_auth
+import comicviewer.feature.settings.security.generated.resources.settings_security_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
