@@ -11,7 +11,7 @@ import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data object DarkModeNavKey : NavKey
+data object DarkModeNavKey : NavKey
 
 context(factory: DarkModeScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.darkModeNavEntry(navigator: Navigator) {

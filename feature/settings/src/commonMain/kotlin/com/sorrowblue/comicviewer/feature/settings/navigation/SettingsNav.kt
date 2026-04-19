@@ -9,7 +9,9 @@ import com.sorrowblue.comicviewer.feature.settings.SettingsItem
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DarkModeNavKey
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ExtensionSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.InfoSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
@@ -26,8 +28,8 @@ internal fun EntryProviderScope<NavKey>.settingsNavEntry(navigator: Navigator) {
             detailPlaceholder = {
                 with(factory.createDisplaySettingsScreenContext()) {
                     DisplaySettingsScreenRoot(
-                        onBackClick = navigator::goBack,
-                        onDarkModeClick = {},
+                        onBackClick = dropUnlessResumed { navigator.goBack() },
+                        onDarkModeClick = dropUnlessResumed { navigator.navigate(DarkModeNavKey) },
                     )
                 }
             },
@@ -44,7 +46,7 @@ internal fun EntryProviderScope<NavKey>.settingsNavEntry(navigator: Navigator) {
                     SettingsItem.VIEWER -> navigator.navigate(ViewerSettingsNavKey)
                     SettingsItem.SECURITY -> navigator.navigate(SecuritySettingsNavKey)
                     SettingsItem.LANGUAGE -> navigator.navigate(InAppLanguagePickerNavKey)
-                    SettingsItem.EXTENSION -> TODO()
+                    SettingsItem.EXTENSION -> navigator.navigate(ExtensionSettingsNavKey)
                     SettingsItem.HELP -> navigator.navigate(InfoSettingsNavKey)
                 }
             },

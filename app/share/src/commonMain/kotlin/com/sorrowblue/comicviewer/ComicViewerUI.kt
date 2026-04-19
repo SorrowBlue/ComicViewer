@@ -32,6 +32,7 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
 import io.github.takahirom.rin.rememberRetained
+import logcat.logcat
 
 @Composable
 context(appGraph: AppGraph)
@@ -70,7 +71,10 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                         directive = directive,
                     )
                 val listDetailSceneStrategy =
-                    rememberListDetailSceneStrategy<NavKey>(directive = directive)
+                    rememberListDetailSceneStrategy<NavKey>(
+                        backNavigationBehavior = BackNavigationBehavior.PopUntilContentChange,
+                        directive = directive
+                    )
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
                 val windowInsetsDecorator =
                     rememberSupportingPaneWindowInsetsDecorator<NavKey>(directive = directive)
@@ -97,7 +101,10 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                         entryProvider = entryProvider,
                     ),
                     sceneStrategies = sceneStrategies,
-                    onBack = { navigator.goBack() },
+                    onBack = {
+                        logcat("Navigator") { "ComicViewerUI: #onBack" }
+                        navigator.goBack()
+                    },
                 )
             }
         }

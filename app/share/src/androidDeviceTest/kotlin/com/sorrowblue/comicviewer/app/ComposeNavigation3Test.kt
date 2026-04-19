@@ -123,9 +123,8 @@ class ComposeNavigation3Test {
         checkSettings("FolderSettings", "FolderSettingsRoot")
         checkSettings("ViewerSettings", "ViewerSettingsRoot")
         checkSettings("SecuritySettings", "SecuritySettingsRoot")
+        checkSettings("ExtensionSettings", "ExtensionSettingsRoot")
         checkSettings("InfoSettings", "InfoSettingsRoot")
-        checkSettings("ImageCacheSettings", "ImageCacheSettingsRoot")
-        checkSettings("PluginSettings", "PluginSettingsRoot")
 
         composeTestRule.onNodeWithTag("CloseButton").performClick()
         composeTestRule.waitForIdle()

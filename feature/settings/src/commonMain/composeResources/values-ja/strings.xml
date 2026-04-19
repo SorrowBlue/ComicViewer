@@ -6,7 +6,7 @@
     <string name="settings_label_folder">フォルダ</string>
     <string name="settings_label_viewer">ビューワー</string>
     <string name="settings_label_security">セキュリティ</string>
-    <string name="settings_label_language">言語</string>
+    <string name="settings_label_language">アプリの言語</string>
     <string name="settings_label_extension">データ・拡張</string>
     <string name="settings_label_info">ヘルプ・情報</string>
 
@@ -15,7 +15,4 @@
     <string name="settings_language_label_system_default">システムのデフォルト</string>
     <string name="settings_language_label_us">英語（アメリカ）</string>
     <string name="settings_language_title">アプリ言語</string>
-    <string name="settings_imagecache_label_thumbnail">サムネイル画像キャッシュ</string>
-    <string name="settings_imagecache_label_page">ページキャッシュ</string>
-    <string name="settings_imagecache_label_other">その他の画像キャッシュ</string>
 </resources>

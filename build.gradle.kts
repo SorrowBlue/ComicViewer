@@ -68,7 +68,7 @@ dependencies {
     dokka(projects.feature.settings.folder)
     dokka(projects.feature.settings.info)
     dokka(projects.feature.settings.nav)
-    dokka(projects.feature.settings.plugin)
+    dokka(projects.feature.settings.extension)
     dokka(projects.feature.settings.security)
     dokka(projects.feature.settings.viewer)
     dokka(projects.feature.tutorial)

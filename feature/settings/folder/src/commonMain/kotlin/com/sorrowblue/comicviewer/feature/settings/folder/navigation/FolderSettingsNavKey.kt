@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterqualit
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.SortOrderScreenResultKey
+import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
@@ -36,7 +37,7 @@ internal fun EntryProviderScope<NavKey>.folderSettingsNavEntry(navigator: Naviga
                 ),
             )
 
-            transitionMaterialSharedAxisZ()
+            transitionMaterialSharedAxisX()
         } + ListDetailSceneStrategy.detailPane("Settings"),
     ) {
         with(rememberRetained { factory.createFolderSettingsScreenContext() }) {

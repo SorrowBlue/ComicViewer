@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.BrokenImage
+import androidx.compose.material.icons.outlined.Cached
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ClearAll
 import androidx.compose.material.icons.outlined.Close
@@ -58,6 +59,7 @@ import androidx.compose.material.icons.outlined.WatchLater
 
 object ComicIcons {
     val Lan = Icons.Outlined.Lan
+    val Cached = Icons.Outlined.Cached
     val History = Icons.Outlined.History
     val WatchLater = Icons.Outlined.WatchLater
     val Extension = Icons.Outlined.Extension
