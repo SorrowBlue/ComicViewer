@@ -48,7 +48,9 @@ fun SettingsDetailPane(
 ) {
     Scaffold(
         topBar = {
-            val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
+            val paneScaffoldDirective = calculatePaneScaffoldDirective(
+                currentWindowAdaptiveInfoV2(),
+            )
             if (paneScaffoldDirective.maxHorizontalPartitions == 1) {
                 TopAppBar(
                     title = title,
