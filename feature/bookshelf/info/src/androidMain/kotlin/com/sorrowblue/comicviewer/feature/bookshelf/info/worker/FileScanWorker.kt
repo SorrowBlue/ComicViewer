@@ -28,15 +28,19 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.background.MetroWorkerInstanceFactory
+import com.sorrowblue.comicviewer.framework.background.WorkerKey
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_description_file_scan_cancelled
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan_completed
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -45,8 +49,9 @@ import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
+@VisibleForAssistedInject
 @AssistedInject
-internal class FileScanWorker(
+class FileScanWorker(
     context: Context,
     @Assisted params: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
@@ -54,6 +59,8 @@ internal class FileScanWorker(
     private val notificationManager: NotificationManagerCompat,
 ) : CoroutineWorker(context, params) {
 
+    @ContributesIntoMap(AppScope::class)
+    @WorkerKey(FileScanWorker::class)
     @AssistedFactory
     fun interface Factory : MetroWorkerInstanceFactory<FileScanWorker>
 

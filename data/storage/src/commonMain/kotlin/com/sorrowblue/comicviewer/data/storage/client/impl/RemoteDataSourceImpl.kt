@@ -11,21 +11,26 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
 
+@VisibleForAssistedInject
 @AssistedInject
-internal class RemoteDataSourceImpl(
+class RemoteDataSourceImpl(
     @Assisted private val bookshelf: Bookshelf,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     fileClientFactory: FileClientFactory,
 ) : RemoteDataSource {
 
+    @ContributesBinding(DataScope::class)
     @AssistedFactory
     interface Factory : RemoteDataSource.Factory {
         override fun create(bookshelf: Bookshelf): RemoteDataSourceImpl

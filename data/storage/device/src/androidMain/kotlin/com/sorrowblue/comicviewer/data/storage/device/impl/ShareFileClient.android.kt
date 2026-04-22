@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.data.storage.client.FileClientKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
@@ -14,21 +15,27 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
 import okio.BufferedSource
 import okio.buffer
 import okio.source
 
+@VisibleForAssistedInject
 @AssistedInject
-internal actual class ShareFileClient(
+actual class ShareFileClient(
     @Assisted bookshelf: ShareContents,
     private val context: Context,
     fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
     @IoDispatcher dispatcher: CoroutineDispatcher,
 ) : FileClient<ShareContents>(bookshelf, fileReaderFactoryMap, dispatcher) {
+    @ContributesIntoMap(DataScope::class)
+    @FileClientKey(ShareContents::class)
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<ShareContents> {
         actual override fun create(bookshelf: ShareContents): ShareFileClient

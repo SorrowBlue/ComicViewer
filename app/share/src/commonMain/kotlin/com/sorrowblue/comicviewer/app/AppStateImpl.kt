@@ -2,7 +2,7 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
@@ -22,7 +22,7 @@ fun rememberAppState(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ): AppState {
     val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
-        currentWindowAdaptiveInfo(),
+        currentWindowAdaptiveInfoV2(),
     )
     return remember(snackbarHostState) {
         AppStateImpl(

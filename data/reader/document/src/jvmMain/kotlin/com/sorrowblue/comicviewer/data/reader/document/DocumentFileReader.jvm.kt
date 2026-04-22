@@ -2,22 +2,30 @@ package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import com.sorrowblue.comicviewer.plugin.pdf.PdfFileReader
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okio.BufferedSink
 
+@VisibleForAssistedInject
 @AssistedInject
-internal actual class DocumentFileReader(
+actual class DocumentFileReader(
     @Assisted mimeType: String,
     @Assisted seekableInputStream: SeekableInputStream,
     private val dataSource: DatastoreDataSource,
 ) : FileReader {
+    @ContributesIntoMap(DataScope::class)
+    @FileReaderKey(FileReaderType.Document)
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(

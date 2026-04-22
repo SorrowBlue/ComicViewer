@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.data.storage.client.FileClientKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
@@ -14,9 +15,12 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
@@ -35,12 +39,15 @@ import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.buffer
 
+@VisibleForAssistedInject
 @AssistedInject
-internal actual class DeviceFileClient(
+actual class DeviceFileClient(
     @Assisted bookshelf: DeviceStorage,
     fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
     @IoDispatcher dispatcher: CoroutineDispatcher,
 ) : FileClient<DeviceStorage>(bookshelf, fileReaderFactoryMap, dispatcher) {
+    @ContributesIntoMap(DataScope::class)
+    @FileClientKey(DeviceStorage::class)
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<DeviceStorage> {
         actual override fun create(bookshelf: DeviceStorage): DeviceFileClient

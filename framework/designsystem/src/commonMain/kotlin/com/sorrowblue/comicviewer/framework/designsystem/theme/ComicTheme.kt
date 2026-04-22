@@ -8,7 +8,7 @@ import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.SegmentedButtonColors
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
@@ -56,7 +56,7 @@ fun ComicTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme = colorScheme(darkTheme, dynamicColor)
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val windowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
     val dimension by remember(windowSizeClass) {
         mutableStateOf(
             when {

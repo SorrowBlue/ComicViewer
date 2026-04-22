@@ -28,6 +28,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.NotificationPermissionR
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.FileScanWorker
 import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ThumbnailScanWorker
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
@@ -79,6 +80,7 @@ internal actual fun rememberBookshelfInfoContentsState(
     return stateImpl
 }
 
+@OptIn(VisibleForAssistedInject::class)
 private class BookshelfInfoMainContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
     override val activity: Activity,

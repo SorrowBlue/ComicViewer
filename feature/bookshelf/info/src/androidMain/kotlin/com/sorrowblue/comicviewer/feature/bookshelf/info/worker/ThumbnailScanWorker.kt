@@ -27,15 +27,19 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.framework.background.MetroWorkerInstanceFactory
+import com.sorrowblue.comicviewer.framework.background.WorkerKey
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
 import com.sorrowblue.comicviewer.framework.notification.R
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_description_thumbnail_scan_cancelled
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_thumbnail_scan
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_thumbnail_scan_completed
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -44,14 +48,17 @@ import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
+@VisibleForAssistedInject
 @AssistedInject
-internal class ThumbnailScanWorker(
+class ThumbnailScanWorker(
     appContext: Context,
     @Assisted params: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
     private val notificationManager: NotificationManagerCompat,
 ) : CoroutineWorker(appContext, params) {
+    @ContributesIntoMap(AppScope::class)
+    @WorkerKey(ThumbnailScanWorker::class)
     @AssistedFactory
     fun interface Factory : MetroWorkerInstanceFactory<ThumbnailScanWorker>
 

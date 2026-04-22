@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
@@ -64,7 +65,7 @@ private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEn
                     SnackbarHost(LocalAppState.current.snackbarHostState)
                 },
             ) {
-                val directive = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+                val directive = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
                 val supportingPaneSceneStrategy =
                     rememberSupportingPaneSceneStrategy<NavKey>(
                         backNavigationBehavior = BackNavigationBehavior.PopUntilContentChange,

@@ -2,6 +2,7 @@ package com.sorrowblue.comicviewer.data.storage.smb.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
+import com.sorrowblue.comicviewer.data.storage.client.FileClientKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
@@ -15,9 +16,12 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.URLDecoder
@@ -49,12 +53,15 @@ private var rootSmbFile: SmbFile? = null
 
 private val mutex = Mutex()
 
+@VisibleForAssistedInject
 @AssistedInject
-internal actual class SmbFileClient(
+actual class SmbFileClient(
     @Assisted bookshelf: SmbServer,
     fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
     @IoDispatcher dispatcher: CoroutineDispatcher,
 ) : FileClient<SmbServer>(bookshelf, fileReaderFactoryMap, dispatcher) {
+    @ContributesIntoMap(DataScope::class)
+    @FileClientKey(SmbServer::class)
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<SmbServer> {
         actual override fun create(bookshelf: SmbServer): SmbFileClient

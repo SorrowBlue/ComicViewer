@@ -3,9 +3,12 @@ package com.sorrowblue.comicviewer.data.reader.zip.impl
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import okio.BufferedSink
 
-internal expect class ZipFileReader : FileReader {
+@VisibleForAssistedInject
+expect class ZipFileReader : FileReader {
+
     fun interface Factory : FileReaderFactory {
         override fun create(
             mimeType: String,

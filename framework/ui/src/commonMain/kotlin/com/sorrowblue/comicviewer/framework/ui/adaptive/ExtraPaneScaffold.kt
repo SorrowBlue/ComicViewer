@@ -14,7 +14,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
@@ -37,7 +37,7 @@ fun ExtraPaneScaffold(
     modifier: Modifier = Modifier,
     actions: @Composable () -> Unit = {},
     scaffoldDirective: PaneScaffoldDirective =
-        calculatePaneScaffoldDirective(currentWindowAdaptiveInfo()),
+        calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2()),
     scrollState: ScrollState? = null,
     content: @Composable (PaddingValues) -> Unit,
 ) {

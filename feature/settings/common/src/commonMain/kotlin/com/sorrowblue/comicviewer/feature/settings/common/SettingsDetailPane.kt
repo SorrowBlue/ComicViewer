@@ -18,7 +18,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,7 +33,7 @@ fun SettingsDetailPane(
     modifier: Modifier = Modifier,
     snackbarHost: @Composable () -> Unit = {},
     actions: @Composable (RowScope.() -> Unit) = {},
-    windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
+    windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfoV2(),
     scrollBehavior: TopAppBarScrollBehavior =
         if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
                 WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
@@ -48,7 +48,7 @@ fun SettingsDetailPane(
 ) {
     Scaffold(
         topBar = {
-            val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+            val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
             if (paneScaffoldDirective.maxHorizontalPartitions == 1) {
                 TopAppBar(
                     title = title,

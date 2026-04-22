@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -90,7 +90,7 @@ internal fun BookshelfInfoContents(
 ) {
     Column(modifier = modifier) {
         val navigationSuiteType =
-            NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
+            NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfoV2())
         val color = if (navigationSuiteType.isNavigationBar) {
             ComicTheme.colorScheme.surfaceVariant
         } else {

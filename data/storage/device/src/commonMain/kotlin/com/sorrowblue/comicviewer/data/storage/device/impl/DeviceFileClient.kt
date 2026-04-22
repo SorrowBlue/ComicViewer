@@ -5,9 +5,11 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import okio.BufferedSource
 
-internal expect class DeviceFileClient : FileClient<DeviceStorage> {
+@VisibleForAssistedInject
+expect class DeviceFileClient : FileClient<DeviceStorage> {
     fun interface Factory : FileClient.Factory<DeviceStorage> {
         override fun create(bookshelf: DeviceStorage): DeviceFileClient
     }

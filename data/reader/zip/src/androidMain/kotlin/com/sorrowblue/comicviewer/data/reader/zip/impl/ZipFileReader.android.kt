@@ -4,12 +4,17 @@ import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
 import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
@@ -20,13 +25,17 @@ import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import okio.BufferedSink
 
+@VisibleForAssistedInject
 @AssistedInject
-internal actual class ZipFileReader(
+actual class ZipFileReader(
     @Assisted mimeType: String,
     @Assisted private val seekableInputStream: SeekableInputStream,
     @ImageExtension supportedException: Set<String>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
+
+    @ContributesIntoMap(DataScope::class)
+    @FileReaderKey(FileReaderType.Zip)
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(

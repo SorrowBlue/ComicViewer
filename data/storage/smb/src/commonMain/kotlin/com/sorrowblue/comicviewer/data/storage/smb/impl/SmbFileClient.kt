@@ -5,9 +5,11 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import okio.BufferedSource
 
-internal expect class SmbFileClient : FileClient<SmbServer> {
+@VisibleForAssistedInject
+expect class SmbFileClient : FileClient<SmbServer> {
     interface Factory : FileClient.Factory<SmbServer> {
         override fun create(bookshelf: SmbServer): SmbFileClient
     }

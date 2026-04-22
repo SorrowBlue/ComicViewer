@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.material3.WideNavigationRailState
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -37,7 +37,7 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(
         )
     }.apply {
         navigationSuiteType =
-            NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
+            NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfoV2())
     }
 }
 

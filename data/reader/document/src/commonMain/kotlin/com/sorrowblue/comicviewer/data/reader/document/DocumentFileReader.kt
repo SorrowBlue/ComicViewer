@@ -3,9 +3,11 @@ package com.sorrowblue.comicviewer.data.reader.document
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import okio.BufferedSink
 
-internal expect class DocumentFileReader : FileReader {
+@VisibleForAssistedInject
+expect class DocumentFileReader : FileReader {
     fun interface Factory : FileReaderFactory {
         override fun create(
             mimeType: String,

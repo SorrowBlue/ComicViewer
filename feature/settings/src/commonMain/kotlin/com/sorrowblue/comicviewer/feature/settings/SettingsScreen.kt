@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
@@ -58,7 +59,7 @@ internal fun SettingsScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+    val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
     val lazyListState = rememberLazyListState()
     Scaffold(
         topBar = {
@@ -126,7 +127,7 @@ internal enum class SettingsItem(
 @Composable
 private fun SettingsScreenPreview() {
     PreviewTheme {
-        val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+        val paneScaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
 
         val a = rememberListDetailPaneScaffoldNavigator()
         ListDetailPaneScaffold(

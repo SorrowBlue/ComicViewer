@@ -19,7 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun BottomActions(enabled: Boolean, onRemoveClick: () -> Unit, onEditClick: () -> Unit) {
-    val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfo())
+    val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
     val singlePane by remember(scaffoldDirective.maxHorizontalPartitions) {
         mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
     }
