@@ -15,6 +15,8 @@ fun Application(finishApp: () -> Unit) {
         ComicViewerUI(finishApp = finishApp, state = state)
     }
     LaunchedEffect(Unit) {
-        Initializer.initialize(context.require<AppContext>().initializer.toList())
+        Initializer.initialize(
+            context.require<AppContext.Factory>().createAppContext().initializer.toList()
+        )
     }
 }
