@@ -16,7 +16,7 @@ fun Application(finishApp: () -> Unit) {
     }
     LaunchedEffect(Unit) {
         Initializer.initialize(
-            context.require<AppContext.Factory>().createAppContext().initializer.toList()
+            context.require<AppContext.Factory>().createAppContext().initializer.toList(),
         )
     }
 }

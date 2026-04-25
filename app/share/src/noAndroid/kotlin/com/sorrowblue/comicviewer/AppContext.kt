@@ -13,7 +13,6 @@ annotation class AppContextScope
 interface AppContext {
     val initializer: Set<Initializer<*>>
 
-
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory
     fun interface Factory {

@@ -25,31 +25,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.composables.core.ScrollArea
 import com.composables.core.Thumb
 import com.composables.core.ThumbVisibility
 import com.composables.core.VerticalScrollbar
-import com.composables.core.rememberScrollAreaState
+import com.composeunstyled.UnstyledScrollArea
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import kotlin.time.Duration.Companion.seconds
 
-sealed class LazyPagingColumn {
-    abstract val columns: GridCells
+sealed interface LazyPagingColumn {
+    val columns: GridCells
 
-    data object List : LazyPagingColumn() {
+    data object List : LazyPagingColumn {
         override val columns = GridCells.Fixed(1)
     }
 
-    data object ListMedium : LazyPagingColumn() {
+    data object ListMedium : LazyPagingColumn {
         override val columns = GridCells.Adaptive(500.dp)
     }
 
-    data class Grid(val minSize: Int) : LazyPagingColumn() {
+    data class Grid(val minSize: Int) : LazyPagingColumn {
         override val columns = GridCells.Adaptive(minSize.dp)
     }
 
-    data class FixedGrid(val count: Int) : LazyPagingColumn() {
+    data class FixedGrid(val count: Int) : LazyPagingColumn {
         override val columns = GridCells.Fixed(count)
     }
 }
@@ -66,8 +65,8 @@ fun <T : Any> LazyPagingColumn(
     contentType: (index: Int) -> Any? = { type },
     itemContent: @Composable (LazyGridItemScope.(index: Int, item: T) -> Unit),
 ) {
-    val scrollAreaState = rememberScrollAreaState(state)
-    ScrollArea(state = scrollAreaState, modifier = modifier) {
+    val scrollAreaState = com.composeunstyled.rememberScrollAreaState(state)
+    UnstyledScrollArea(state = scrollAreaState, modifier = modifier, content = {
         LazyVerticalGrid(
             columns = type.columns,
             state = state,
@@ -104,5 +103,5 @@ fun <T : Any> LazyPagingColumn(
                 ),
             )
         }
-    }
+    })
 }
