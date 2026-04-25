@@ -1,20 +1,10 @@
-@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
-
 package comicviewer.primitive
 
 import com.sorrowblue.comicviewer.libs
 import dev.detekt.gradle.Detekt
-import dev.detekt.gradle.extensions.DetektExtension
-import dev.detekt.gradle.plugin.internal.DetektAndroidCompilations
 
 plugins {
     dev.detekt
-}
-
-plugins.withId("com.android.application") {
-    val extension = project.extensions.getByType<DetektExtension>()
-    DetektAndroidCompilations.registerTasks(project, extension)
-    DetektAndroidCompilations.linkTasks(project, extension)
 }
 
 dependencies {
