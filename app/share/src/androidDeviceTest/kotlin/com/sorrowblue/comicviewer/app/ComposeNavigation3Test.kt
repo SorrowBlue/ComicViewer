@@ -5,7 +5,9 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -139,6 +141,7 @@ class ComposeNavigation3Test {
         composeTestRule.waitForIdle()
     }
 
+    @OptIn(ExperimentalTestApi::class)
     private fun navigationCollection() {
         composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
@@ -149,11 +152,12 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("BasicCollectionCreateScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("CollectionNameField").requestFocus()
         composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
-        composeTestRule.onNodeWithTag("CollectionNameField").performKeyInput {
-            pressKey(Key.Enter, 1000)
-        }
+        composeTestRule.waitUntilAtLeastOneExists(
+            matcher = hasTestTag("CreateButton") and isEnabled(),
+            timeoutMillis = 5000L
+        )
         composeTestRule.onNodeWithTag("CreateButton").performClick()
-        composeTestRule.waitUntil(10000) {
+        composeTestRule.waitUntil(5000) {
             composeTestRule.onNodeWithTag("BasicCollectionCreateScreenRoot").isNotDisplayed()
         }
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
@@ -172,7 +176,7 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
         composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         composeTestRule.onNodeWithTag("ConfirmButton").performClick()
-        composeTestRule.waitUntil(10000) {
+        composeTestRule.waitUntil(5000) {
             composeTestRule.onNodeWithTag("DeleteCollectionScreenRoot").isNotDisplayed()
         }
         composeTestRule.onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()

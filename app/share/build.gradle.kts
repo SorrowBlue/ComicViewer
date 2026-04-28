@@ -25,6 +25,7 @@ kotlin {
                 }
             }
         }
+        withHostTest {  }
     }
     sourceSets {
         commonMain {

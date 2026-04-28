@@ -52,7 +52,7 @@ fun FileClientFactory.getFileClient(bookshelf: Bookshelf): FileClient<Bookshelf>
 
 abstract class FileClient<T : Bookshelf>(
     val bookshelf: T,
-    val fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
+    val fileReaderFactoryMap: FileReaderFactoryMap,
     val dispatcher: CoroutineDispatcher,
 ) {
     @Suppress("RemoveRedundantQualifierName")

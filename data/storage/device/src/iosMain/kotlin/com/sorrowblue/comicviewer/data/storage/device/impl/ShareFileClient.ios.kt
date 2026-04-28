@@ -2,8 +2,7 @@ package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientKey
-import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
-import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
+import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactoryMap
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -22,7 +21,7 @@ import okio.BufferedSource
 @AssistedInject
 actual class ShareFileClient(
     @Assisted bookshelf: ShareContents,
-    fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
+    fileReaderFactoryMap: FileReaderFactoryMap,
     @IoDispatcher dispatcher: CoroutineDispatcher,
 ) : FileClient<ShareContents>(bookshelf, fileReaderFactoryMap, dispatcher) {
     @ContributesIntoMap(AppScope::class)
