@@ -214,7 +214,7 @@ internal object MainRunDispatcher : CoroutineDispatcher() {
 }
 
 @Suppress("LESS_VISIBLE_TYPE_ACCESS_IN_INLINE_WARNING")
-inline fun <T1> mainContinuation(noinline block: (T1) -> Unit): (T1) -> Unit = { arg1 ->
+inline fun <T1> mainContinuation(crossinline block: (T1) -> Unit): (T1) -> Unit = { arg1 ->
     if (NSThread.isMainThread()) {
         block.invoke(arg1)
     } else {
@@ -225,7 +225,7 @@ inline fun <T1> mainContinuation(noinline block: (T1) -> Unit): (T1) -> Unit = {
 }
 
 @Suppress("LESS_VISIBLE_TYPE_ACCESS_IN_INLINE_WARNING")
-inline fun <T1, T2> mainContinuation(noinline block: (T1, T2) -> Unit): (T1, T2) -> Unit =
+inline fun <T1, T2> mainContinuation(crossinline block: (T1, T2) -> Unit): (T1, T2) -> Unit =
     { arg1, arg2 ->
         if (NSThread.isMainThread()) {
             block.invoke(arg1, arg2)

@@ -3,10 +3,10 @@ package com.sorrowblue.comicviewer.domain.service.interactor.collection
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class RemoveCollectionFileInteractor(
     private val dataSource: CollectionFileLocalDataSource,
 ) : RemoveCollectionFileUseCase() {

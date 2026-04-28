@@ -28,7 +28,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQueryError
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import logcat.logcat
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class FileLocalDataSourceImpl(
     private val dao: FileDao,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,

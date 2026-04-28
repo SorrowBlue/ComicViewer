@@ -1,12 +1,11 @@
 package com.sorrowblue.comicviewer.data.database
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 
-@DependencyGraph(AppScope::class, additionalScopes = [DataScope::class])
+@DependencyGraph(AppScope::class, additionalScopes = [AppScope::class])
 internal expect interface TestAppGraph {
     val database: ComicViewerDatabase
 

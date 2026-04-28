@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
 import com.sorrowblue.comicviewer.domain.service.limitedCoroutineScope
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.awaitAll
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class RegenerateThumbnailsInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,

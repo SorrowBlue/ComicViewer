@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.usecase.GetPdfPluginStateUseCase
 import com.sorrowblue.comicviewer.domain.usecase.PACKAGE_PDF_PLUGIN
 import com.sorrowblue.comicviewer.domain.usecase.PdfPluginState
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 import logcat.LogPriority
 import logcat.logcat
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class GetPdfPluginStateInteractor(private val context: Context) :
     GetPdfPluginStateUseCase() {
     override fun run(request: EmptyRequest): Flow<Resource<PdfPluginState, Resource.SystemError>> {

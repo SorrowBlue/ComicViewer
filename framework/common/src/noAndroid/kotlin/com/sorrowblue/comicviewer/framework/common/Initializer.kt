@@ -4,6 +4,9 @@ import dev.zacsweers.metro.DefaultBinding
 import dev.zacsweers.metro.ExperimentalMetroApi
 import kotlin.reflect.KClass
 
+@Suppress("AbstractClassCanBeInterface")
+abstract class InitializerScope
+
 @OptIn(ExperimentalMetroApi::class)
 @DefaultBinding<Initializer<*>>
 interface Initializer<T> {

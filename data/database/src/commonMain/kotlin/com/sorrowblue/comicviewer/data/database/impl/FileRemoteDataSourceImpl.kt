@@ -15,12 +15,12 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class FileRemoteDataSourceImpl(
     private val dao: FileDao,
     private val factory: FileModelRemoteMediator.Factory,

@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.data.database
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
@@ -10,7 +9,7 @@ internal actual fun createPlatformContext(): PlatformContext = TestJvmContext()
 
 @DependencyGraph(
     scope = AppScope::class,
-    additionalScopes = [DataScope::class],
+    additionalScopes = [AppScope::class],
 )
 internal actual interface TestAppGraph {
     actual val database: ComicViewerDatabase

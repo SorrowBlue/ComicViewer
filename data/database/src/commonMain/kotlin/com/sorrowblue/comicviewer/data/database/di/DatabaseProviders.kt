@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPasswordConverters
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -17,9 +17,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
-@ContributesTo(DataScope::class)
+@ContributesTo(AppScope::class)
 interface DatabaseProviders {
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun provideRoomDatabase(
         helper: DatabaseHelper,
@@ -37,32 +37,32 @@ interface DatabaseProviders {
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .build()
 
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun provideBookshelfDao(database: ComicViewerDatabase): BookshelfDao = database
         .bookshelfDao()
 
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun provideFileDao(database: ComicViewerDatabase): FileDao = database.fileDao()
 
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun provideCollectionDao(database: ComicViewerDatabase): CollectionDao = database
         .collectionDao()
 
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun provideCollectionFileDao(database: ComicViewerDatabase): CollectionFileDao =
         database.collectionFileDao()
 
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun provideReadLaterFileDao(database: ComicViewerDatabase): ReadLaterFileDao = database
         .readLaterFileDao()
 
     @IoDispatcher
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     @Suppress("InjectDispatcher")
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO

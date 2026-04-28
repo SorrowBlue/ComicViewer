@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQuery
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
 import logcat.asLog
 import logcat.logcat
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class GetBookInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,

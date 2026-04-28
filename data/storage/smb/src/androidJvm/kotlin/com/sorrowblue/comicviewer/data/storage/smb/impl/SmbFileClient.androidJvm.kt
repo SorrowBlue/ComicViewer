@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -60,7 +60,7 @@ actual class SmbFileClient(
     fileReaderFactoryMap: Map<FileReaderType, FileReaderFactory>,
     @IoDispatcher dispatcher: CoroutineDispatcher,
 ) : FileClient<SmbServer>(bookshelf, fileReaderFactoryMap, dispatcher) {
-    @ContributesIntoMap(DataScope::class)
+    @ContributesIntoMap(AppScope::class)
     @FileClientKey(SmbServer::class)
     @AssistedFactory
     actual fun interface Factory : FileClient.Factory<SmbServer> {

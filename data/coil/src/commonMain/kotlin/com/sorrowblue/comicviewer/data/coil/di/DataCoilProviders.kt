@@ -2,11 +2,11 @@ package com.sorrowblue.comicviewer.data.coil.di
 
 import coil3.disk.DiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 
-@ContributesTo(DataScope::class)
+@ContributesTo(AppScope::class)
 interface DataCoilProviders {
     @Provides
     private fun provideDiskCache(coilDiskCache: CoilDiskCache): DiskCache =

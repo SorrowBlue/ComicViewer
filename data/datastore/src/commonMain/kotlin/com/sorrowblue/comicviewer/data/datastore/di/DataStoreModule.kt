@@ -29,29 +29,28 @@ import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 
-@ContributesTo(DataScope::class)
+@ContributesTo(AppScope::class)
 interface DataStoreModule {
     @Book
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun bookSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<BookSettings> =
         dataStoreMaker.createDataStore(BookSettingsSerializer)
 
     @Display
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun provideDisplaySettingsDataStore(
         dataStoreMaker: DataStoreMaker,
     ): DataStore<DisplaySettings> = dataStoreMaker.createDataStore(DisplaySettingsSerializer)
 
     @FolderDisplay
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun folderDisplaySettingsDataStore(
         dataStoreMaker: DataStoreMaker,
@@ -59,13 +58,13 @@ interface DataStoreModule {
         dataStoreMaker.createDataStore(FolderDisplaySettingsSerializer)
 
     @Folder
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun folderSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<FolderSettings> =
         dataStoreMaker.createDataStore(FolderSettingsSerializer)
 
     @Security
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun securitySettingsDataStore(
         dataStoreMaker: DataStoreMaker,
@@ -78,20 +77,20 @@ interface DataStoreModule {
         dataStoreMaker.createDataStore(SettingsSerializer)
 
     @Viewer
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun viewerSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<ViewerSettings> =
         dataStoreMaker.createDataStore(ViewerSettingsSerializer)
 
     @Collection
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun collectionSettingsDataStore(
         dataStoreMaker: DataStoreMaker,
     ): DataStore<CollectionSettings> = dataStoreMaker.createDataStore(CollectionSettingsSerializer)
 
     @PdfPlugin
-    @SingleIn(DataScope::class)
+    @SingleIn(AppScope::class)
     @Provides
     private fun pdfPluginSettingsDataStore(
         dataStoreMaker: DataStoreMaker,

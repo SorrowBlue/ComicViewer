@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -20,7 +20,7 @@ import kotlin.io.path.outputStream
 private const val CipherTransformation = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class JvmCryptUtil(private val context: PlatformContext) : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String {
         val key = loadKeyStore(alias)

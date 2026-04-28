@@ -4,8 +4,8 @@ import com.sorrowblue.comicviewer.data.reader.document.SupportedMajorVersion
 import com.sorrowblue.comicviewer.domain.model.SupportExtension.Document
 import com.sorrowblue.comicviewer.domain.service.datasource.DocumentReaderState
 import com.sorrowblue.comicviewer.framework.common.Initializer
+import com.sorrowblue.comicviewer.framework.common.InitializerScope
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import com.sorrowblue.comicviewer.framework.common.starup.LogcatInitializer
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlin.reflect.KClass
@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 
-@ContributesIntoSet(DataScope::class)
+@ContributesIntoSet(InitializerScope::class)
 internal class DocumentInitializer(private val platformContext: PlatformContext) :
     Initializer<Unit> {
     override fun create() {

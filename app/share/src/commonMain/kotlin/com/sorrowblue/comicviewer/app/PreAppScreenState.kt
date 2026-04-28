@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +54,8 @@ internal interface PreAppScreenState {
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-private class PreAppScreenStateImpl(
+@VisibleForTesting
+internal class PreAppScreenStateImpl(
     private val scope: CoroutineScope,
     manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     private val loadSettingsUseCase: LoadSettingsUseCase,
@@ -84,8 +86,11 @@ private class PreAppScreenStateImpl(
                 authStatus = if (hasPassword) {
                     AuthStatus.AuthRequired(
                         authed =
-                            authStatus is AuthStatus.AuthRequired &&
-                                (authStatus as AuthStatus.AuthRequired).authed,
+                            (authStatus == AuthStatus.NoAuthRequired) ||
+                                (
+                                    authStatus is AuthStatus.AuthRequired &&
+                                        (authStatus as AuthStatus.AuthRequired).authed
+                                    ),
                     )
                 } else {
                     AuthStatus.NoAuthRequired

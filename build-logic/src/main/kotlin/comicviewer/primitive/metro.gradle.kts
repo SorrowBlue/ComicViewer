@@ -11,7 +11,6 @@ if (kotlinPluginIds.any(pluginManager::hasPlugin)) {
         dev.zacsweers.metro
     }
     configure<dev.zacsweers.metro.gradle.MetroPluginExtension> {
-        contributesAsInject = true
         generateContributionProviders = true
     }
 }

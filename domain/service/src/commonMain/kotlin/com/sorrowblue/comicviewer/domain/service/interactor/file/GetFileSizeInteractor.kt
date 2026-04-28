@@ -4,12 +4,12 @@ import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileSizeUseCase
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class GetFileSizeInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,

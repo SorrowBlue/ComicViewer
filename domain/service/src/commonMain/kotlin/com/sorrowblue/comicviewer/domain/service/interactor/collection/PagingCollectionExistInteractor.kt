@@ -6,13 +6,13 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class PagingCollectionExistInteractor(
     private val dataSource: CollectionLocalDataSource,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,

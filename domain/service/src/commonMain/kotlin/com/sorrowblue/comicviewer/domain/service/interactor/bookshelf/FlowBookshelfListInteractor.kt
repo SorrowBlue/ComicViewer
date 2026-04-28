@@ -6,13 +6,13 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class FlowBookshelfListInteractor(
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
 ) : FlowBookshelfListUseCase() {

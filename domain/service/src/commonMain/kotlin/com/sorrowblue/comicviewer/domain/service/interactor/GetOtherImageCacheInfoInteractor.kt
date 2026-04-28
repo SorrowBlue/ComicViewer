@@ -6,10 +6,10 @@ import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
-@ContributesBinding(DataScope::class)
+@ContributesBinding(AppScope::class)
 internal class GetOtherImageCacheInfoInteractor(
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,

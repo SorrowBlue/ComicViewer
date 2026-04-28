@@ -2,8 +2,8 @@ package com.sorrowblue.comicviewer.data.reader.document
 
 import com.sorrowblue.comicviewer.domain.service.datasource.DocumentReaderDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DocumentReaderState
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import com.sorrowblue.comicviewer.plugin.pdf.PdfPlugin
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import java.io.File
@@ -12,8 +12,8 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-@SingleIn(DataScope::class)
-@ContributesBinding(DataScope::class)
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 internal class DocumentReaderDataSourceImpl : DocumentReaderDataSource {
     private var jarPaths: List<String> = emptyList()
 

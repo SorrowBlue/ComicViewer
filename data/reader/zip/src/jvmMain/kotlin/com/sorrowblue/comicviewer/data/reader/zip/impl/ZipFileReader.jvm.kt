@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -33,7 +33,7 @@ actual class ZipFileReader(
     @ImageExtension supportedException: Set<String>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : FileReader {
-    @ContributesIntoMap(DataScope::class)
+    @ContributesIntoMap(AppScope::class)
     @FileReaderKey(FileReaderType.Zip)
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {

@@ -3,7 +3,6 @@ package com.sorrowblue.comicviewer.data.database
 import com.sorrowblue.comicviewer.data.database.di.DatabaseProviders
 import com.sorrowblue.comicviewer.framework.common.IosContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.scope.DataScope
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
@@ -14,7 +13,7 @@ class TestIosContext : IosContext()
 
 @DependencyGraph(
     scope = AppScope::class,
-    additionalScopes = [DataScope::class],
+    additionalScopes = [AppScope::class],
 )
 internal actual interface TestAppGraph : DatabaseProviders {
     actual val database: ComicViewerDatabase

@@ -63,6 +63,10 @@ kotlin {
                 implementation(libs.navigation3.resultstate)
             }
         }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutinesTest)
+        }
         androidMain.dependencies {
             api(projects.data.reader.document.android)
             implementation(libs.metro.android)

@@ -21,6 +21,7 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(projects.framework.test)
+                implementation(projects.data.reader.zip)
                 implementation(libs.kotlin.test)
                 implementation(libs.kotlinx.coroutinesTest)
             }
@@ -45,7 +46,6 @@ kotlin {
         getByName("androidHostTest") {
             dependsOn(androidJvmTest)
             dependencies {
-                implementation(projects.data.reader.zip)
                 implementation(libs.robolectric)
             }
         }
@@ -57,9 +57,6 @@ kotlin {
         }
         jvmTest {
             dependsOn(androidJvmTest)
-            dependencies {
-                implementation(projects.data.reader.zip)
-            }
         }
         iosMain {
             dependencies {
