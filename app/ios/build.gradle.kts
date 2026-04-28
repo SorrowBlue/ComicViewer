@@ -29,6 +29,7 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
+            export(projects.data.storage)
             export(projects.data.storage.smb)
             export(projects.data.storage.device)
             export(projects.data.reader.zip)

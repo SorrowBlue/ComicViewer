@@ -5,9 +5,9 @@ import SwiftZip
 
 class SmbZipSourceSeekable : ZipSourceSeekable {
     
-    let seekable: ClientSeekableInputStream
+    let seekable: SeekableInputStream
     
-    init(seekable: ClientSeekableInputStream) throws {
+    init(seekable: SeekableInputStream) throws {
         self.seekable = seekable
     }
     

@@ -3,9 +3,9 @@ import SwiftZip
 
 class ZipSourceSeekableImpl : ZipSourceSeekable {
     
-    private let seekableInputStream: ClientSeekableInputStream
+    private let seekableInputStream: SeekableInputStream
     
-    init(seekableInputStream: ClientSeekableInputStream) {
+    init(seekableInputStream: SeekableInputStream) {
         self.seekableInputStream = seekableInputStream
     }
     

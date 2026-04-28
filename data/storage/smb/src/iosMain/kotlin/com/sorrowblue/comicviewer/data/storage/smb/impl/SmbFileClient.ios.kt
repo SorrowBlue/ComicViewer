@@ -36,7 +36,7 @@ actual class SmbFileClient(
     @ContributesIntoMap(DataScope::class)
     @FileClientKey(SmbServer::class)
     @AssistedFactory
-    actual interface Factory : FileClient.Factory<SmbServer> {
+    actual fun interface Factory : FileClient.Factory<SmbServer> {
         actual override fun create(bookshelf: SmbServer): SmbFileClient
     }
 

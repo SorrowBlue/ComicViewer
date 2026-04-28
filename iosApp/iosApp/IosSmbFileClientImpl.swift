@@ -5,9 +5,32 @@ import SwiftZip
 @testable import AMSMB2
 
 class IosSmbFileClientImpl: IosSmbFileClient {
+    
+    func fileSize(path: String) async throws -> KotlinLong {
+        let client = try await connectShare(path: path)
+        let subPath = path.withoutShare()
+        let attributes = try await client.attributesOfItem(atPath: subPath)
+        if (attributes.isDirectory) {
+            let url = URL(fileURLWithPath: path)
+            let subPath = path.withoutShare()
+            let client = try await connectShare(path: path)
+            let files = try await client.contentsOfDirectory(atPath: subPath)
+            var size = Int64(0)
+            for file in files {
+                let path =
+                    url.path(percentEncoded: false) + file.name!
+                    + (file.isDirectory ? "/" : "")
+                size += try await fileSize(path: path).int64Value
+            }
+            return size.tokotlinLong()
+        } else {
+            return attributes.fileSize?.tokotlinLong() ?? 0
+        }
+    }
+    
 
     class Factory: IosSmbFileClientFactory {
-        func create(bookshelf: SmbServer) -> any IosSmbFileClient {
+        func create(bookshelf__ bookshelf: SmbServer) -> any IosSmbFileClient {
             return IosSmbFileClientImpl(bookshelf: bookshelf)
         }
     }
@@ -57,6 +80,7 @@ class IosSmbFileClientImpl: IosSmbFileClient {
         if share == currentShare() {
             return self.manager
         }
+        try await self.manager.disconnectShare()
         try await self.manager.connectShare(name: share)
         return self.manager
     }
@@ -92,7 +116,7 @@ class IosSmbFileClientImpl: IosSmbFileClient {
                 + (file.isDirectory ? "/" : "")
             let name = file.name!
             return IosSmbFile(
-                path: path.precomposedStringWithCanonicalMapping,
+                path: path.nfcString(),
                 name: name,
                 isDirectory: file.isDirectory,
                 fileSize: file.fileSize ?? 0,
@@ -111,7 +135,6 @@ class IosSmbFileClientImpl: IosSmbFileClient {
     }
 
     func attribute(path: String) async throws -> FileAttribute {
-
         let client = try await connectShare(path: path)
         let subPath = path.withoutShare()
         let attributes = try await client.attributesOfItem(atPath: subPath)
@@ -129,10 +152,9 @@ class IosSmbFileClientImpl: IosSmbFileClient {
         )
     }
 
-    func seekableInputStream(file: any File) async throws
-        -> any ClientSeekableInputStream
-    {
-        return try SmbSeekableInputStream(client: self.manager, path: file.path)
+    func seekableInputStream(file: any File) async throws -> any SeekableInputStream {
+        let client = try await connectShare(path: file.path)
+        return try SmbSeekableInputStream(client: client, path: file.path)
     }
 
 }

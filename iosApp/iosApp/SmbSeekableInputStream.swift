@@ -2,7 +2,7 @@ import AMSMB2
 import ComposeApp
 import SwiftZip
 
-class SmbSeekableInputStream : ClientSeekableInputStream {
+class SmbSeekableInputStream : SeekableInputStream {
     
     private var pos: Int = 0
     private let client: SMB2Manager
@@ -13,10 +13,12 @@ class SmbSeekableInputStream : ClientSeekableInputStream {
     init(client: SMB2Manager, path: String) throws {
         self.client = client
         let subPath = path.withoutShare()
+        print("#SmbSeekableInputStream$init path:\(path), subPath:\(subPath)")
         do {
             self.file = try SMB2FileHandle(forReadingAtPath: subPath, on: self.client.client.unwrap())
             self.fileSize = Int(try file.fstat().smb2_size)
         } catch {
+            print("#SmbSeekableInputStream$init error:" + error.localizedDescription)
             throw NSError(domain: "FileNotFound", code: 404, userInfo: nil)
         }
     }

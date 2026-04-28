@@ -1,6 +1,15 @@
 {
-  "originHash" : "4a927856726b0b464d2cd0965584b40b8ac8fcf11e58d8260daacacf17f0a77b",
+  "originHash" : "4f570b8894c80f73077a8f85746f55b39ce52f06fa49c7b65c97b30c0a00c2c3",
   "pins" : [
+    {
+      "identity" : "amsmb2",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SorrowBlue/AMSMB2.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4734dec35299266844dcfbb400e58a76bfc6307d"
+      }
+    },
     {
       "identity" : "swiftzip",
       "kind" : "remoteSourceControl",

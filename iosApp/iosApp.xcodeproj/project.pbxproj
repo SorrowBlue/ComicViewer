@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F20C7DD2FA049E3005D6FAB /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 5F20C7DC2FA049E3005D6FAB /* AMSMB2 */; };
 		5FDEE0362F2FE76000447DCE /* SwiftZip in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0352F2FE76000447DCE /* SwiftZip */; };
 		5FDEE0382F2FE76000447DCE /* SwiftZipUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0372F2FE76000447DCE /* SwiftZipUtils */; };
 		5FDEE03A2F2FE76000447DCE /* zip in Frameworks */ = {isa = PBXBuildFile; productRef = 5FDEE0392F2FE76000447DCE /* zip */; };
@@ -53,6 +54,7 @@
 				5FDEE0422F3296E000447DCE /* AMSMB2 in Frameworks */,
 				5FDEE0382F2FE76000447DCE /* SwiftZipUtils in Frameworks */,
 				5FDEE0362F2FE76000447DCE /* SwiftZip in Frameworks */,
+				5F20C7DD2FA049E3005D6FAB /* AMSMB2 in Frameworks */,
 				5FDEE03A2F2FE76000447DCE /* zip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -103,6 +105,7 @@
 				5FDEE0392F2FE76000447DCE /* zip */,
 				5FDEE0412F3296E000447DCE /* AMSMB2 */,
 				5FDEE0482F32CDB200447DCE /* AMSMB2 */,
+				5F20C7DC2FA049E3005D6FAB /* AMSMB2 */,
 			);
 			productName = iosApp;
 			productReference = AF9F6EF1A7C523ADBC61A850 /* ComicViewer.app */;
@@ -134,7 +137,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */,
-				5FDEE0472F32CDB200447DCE /* XCLocalSwiftPackageReference "../../AMSMB2" */,
+				5F20C7DB2FA049E3005D6FAB /* XCRemoteSwiftPackageReference "AMSMB2" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B1B0708EBC9DC268E16A9BC4 /* Products */;
@@ -391,14 +394,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		5FDEE0472F32CDB200447DCE /* XCLocalSwiftPackageReference "../../AMSMB2" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../AMSMB2;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		5F20C7DB2FA049E3005D6FAB /* XCRemoteSwiftPackageReference "AMSMB2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SorrowBlue/AMSMB2.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftZip/SwiftZip.git";
@@ -410,6 +414,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5F20C7DC2FA049E3005D6FAB /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5F20C7DB2FA049E3005D6FAB /* XCRemoteSwiftPackageReference "AMSMB2" */;
+			productName = AMSMB2;
+		};
 		5FDEE0352F2FE76000447DCE /* SwiftZip */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5FDEE0342F2FE76000447DCE /* XCRemoteSwiftPackageReference "SwiftZip" */;

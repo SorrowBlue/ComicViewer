@@ -6,7 +6,7 @@ class IosZipFileReaderImpl: IosZipFileReader {
 
     class Factory: IosZipFileReaderFactory {
         func create(
-            seekableInputStream: any ClientSeekableInputStream,
+            seekableInputStream: any SeekableInputStream,
             supportedExtension: Set<String>
         ) throws -> any IosZipFileReader {
             return try IosZipFileReaderImpl(
@@ -22,7 +22,7 @@ class IosZipFileReaderImpl: IosZipFileReader {
     private let entries: [ZipEntry]
 
     private init(
-        seekableInputStream: ClientSeekableInputStream,
+        seekableInputStream: SeekableInputStream,
         supportedExtension: Set<String>
     ) throws {
         self.adapter = try SmbZipSourceSeekable(seekable: seekableInputStream)
@@ -64,5 +64,11 @@ class IosZipFileReaderImpl: IosZipFileReader {
 
     func pageCount() async throws -> KotlinInt {
         return KotlinInt(integerLiteral: self.entries.count)
+    }
+}
+
+extension Int64 {
+    func tokotlinLong() -> KotlinLong {
+        return KotlinLong(value: self)
     }
 }
