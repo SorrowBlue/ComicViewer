@@ -11,10 +11,7 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.android.MetroAppComponentProviders
 
-@DependencyGraph(
-    scope = AppScope::class,
-    additionalScopes = [AppScope::class],
-)
+@DependencyGraph(scope = AppScope::class)
 actual interface AppGraph :
     PlatformGraph,
     MetroAppComponentProviders {

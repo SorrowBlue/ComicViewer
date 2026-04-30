@@ -302,16 +302,19 @@ actual class SmbFileClient(
             url.port == this@SmbFileClient.bookshelf.port
     }
 
-    private suspend fun smbFile(path: String): SmbFile = mutex.withLock {
-        rootSmbFile?.takeIf { it.isSame(path) }?.let { root ->
-            return@withLock root.resolveRelative(path)
+    @Suppress("RedundantSuspendModifier")
+    private suspend fun smbFile(path: String): SmbFile {
+        return mutex.withLock {
+            rootSmbFile?.takeIf { it.isSame(path) }?.let { root ->
+                return@withLock root.resolveRelative(path)
+            }
+            val file = bookshelf.smbFile(path)
+            val shareName = file.share ?: return@withLock file.also { rootSmbFile = it }
+            val root = bookshelf.smbFile("/$shareName/").also {
+                rootSmbFile = it
+            }
+            root.resolveRelative(path)
         }
-        val file = bookshelf.smbFile(path)
-        val shareName = file.share ?: return@withLock file.also { rootSmbFile = it }
-        val root = bookshelf.smbFile("/$shareName/").also {
-            rootSmbFile = it
-        }
-        root.resolveRelative(path)
     }
 
     private fun SmbFile.resolveRelative(fullPath: String): SmbFile {

@@ -7,10 +7,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 
-@DependencyGraph(
-    scope = AppScope::class,
-    additionalScopes = [AppScope::class],
-)
+@DependencyGraph(scope = AppScope::class)
 actual interface AppGraph : PlatformGraph {
     actual val context: PlatformContext
 

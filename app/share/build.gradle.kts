@@ -33,7 +33,6 @@ kotlin {
                 rootProject.subprojects.filterNot {
                     it.path == project.path || it.path.startsWith(projects.app.path)
                         || it.path == projects.data.reader.document.android.path
-                        || it.path == projects.data.storage.smb.path
                 }.forEach {
                     val hasSource = it.projectDir.resolve("src").exists()
                     if (hasSource) {
@@ -43,14 +42,8 @@ kotlin {
                     }
                 }
 
-
-                api(projects.data.storage.smb) {
-                    exclude(libs.jcifs.get().group, libs.jcifs.get().module.name)
-                }
-
                 // Required for metro dependency resolution
                 implementation(libs.androidx.datastore)
-                implementation(projects.data.reader.zip)
                 implementation(libs.coil3)
 
                 implementation(libs.androidx.lifecycleCompose)

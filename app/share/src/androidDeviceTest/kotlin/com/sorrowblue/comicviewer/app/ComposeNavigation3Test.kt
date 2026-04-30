@@ -154,7 +154,7 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
         composeTestRule.waitUntilAtLeastOneExists(
             matcher = hasTestTag("CreateButton") and isEnabled(),
-            timeoutMillis = 5000L
+            timeoutMillis = 5000L,
         )
         composeTestRule.onNodeWithTag("CreateButton").performClick()
         composeTestRule.waitUntil(5000) {
