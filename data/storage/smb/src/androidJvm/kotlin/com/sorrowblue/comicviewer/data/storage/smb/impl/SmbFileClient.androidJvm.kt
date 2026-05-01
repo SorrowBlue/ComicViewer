@@ -302,7 +302,7 @@ actual class SmbFileClient(
             url.port == this@SmbFileClient.bookshelf.port
     }
 
-    @Suppress("RedundantSuspendModifier")
+    @Suppress("RedundantSuspendModifier", "UnusedPrivateFunction")
     private suspend fun smbFile(path: String): SmbFile {
         return mutex.withLock {
             rootSmbFile?.takeIf { it.isSame(path) }?.let { root ->
