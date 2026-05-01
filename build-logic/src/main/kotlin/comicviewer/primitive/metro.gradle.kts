@@ -11,6 +11,7 @@ if (kotlinPluginIds.any(pluginManager::hasPlugin)) {
         dev.zacsweers.metro
     }
     configure<dev.zacsweers.metro.gradle.MetroPluginExtension> {
+        @Suppress("OPT_IN_USAGE")
         generateContributionProviders = true
     }
 }
