@@ -19,11 +19,11 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: 🖥️ ExportLibraryDefinitions for jvm
-        run: ./gradlew :app:jvm:exportLibraryDefinitions
+        run: ./gradlew :app:jvm:exportLibraryDefinitions --no-configure-on-demand
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: 🍎 ExportLibraryDefinitions for ios
-        run: ./gradlew :app:ios:exportLibraryDefinitions
+        run: ./gradlew :app:ios:exportLibraryDefinitions --no-configure-on-demand
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
 
