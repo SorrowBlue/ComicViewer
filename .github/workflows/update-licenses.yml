@@ -15,7 +15,7 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🤖 ExportLibraryDefinitions for android
-        run: ./gradlew :app:android:exportLibraryDefinitions
+        run: ./gradlew :app:android:exportLibraryDefinitions --no-configure-on-demand
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: 🖥️ ExportLibraryDefinitions for jvm
