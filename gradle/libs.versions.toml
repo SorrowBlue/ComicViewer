@@ -130,9 +130,8 @@ detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.r
 detekt-gradlePlugin = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 detekt-ktlintWrapper = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", version.ref = "detekt" }
 dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
-filekit = { group = "io.github.vinceglb", name = "filekit-dialogs", version.ref = "filekit" }
-filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "filekit" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
+filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "filekit" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
 kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
 kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
