@@ -21,11 +21,13 @@ import comicviewer.app.jvm.generated.resources.app_label_exit
 import comicviewer.app.jvm.generated.resources.app_label_show
 import comicviewer.framework.ui.generated.resources.app_name
 import dev.zacsweers.metro.createGraphFactory
+import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import org.jetbrains.compose.resources.stringResource
 
 fun main() {
-    val context = DesktopContext.invoke()
+    FileKit.init(appId = "com.sorrowblue.comicviewer")
+    val context = DesktopContext.Companion()
     val appGraph =
         createGraphFactory<AppGraph.Factory>().createAppGraph(context, LicenseeHelperImpl())
     getPlatformGraph = { appGraph }

@@ -24,14 +24,15 @@ tasks {
 dependencies {
     compileOnly(libs.bundles.plugins)
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
-    detektPlugins(libs.bundles.dokka)
+    detektPlugins(libs.bundles.detekt)
 }
 
 detekt {
-    parallel = true
-    config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
+    config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
     basePath.set(projectDir)
+    autoCorrect = true
+    parallel = true
 }
 
 tasks.withType<Detekt>().configureEach {
@@ -48,11 +49,3 @@ tasks.withType<Detekt>().configureEach {
 
 // Temporarily set to PushMode only
 private val currentLibs get() = libs
-
-private fun NamedDomainObjectContainer<PluginDeclaration>.register(
-    provider: Provider<PluginDependency>,
-    function: PluginDeclaration.() -> Unit,
-) = register(provider.get().pluginId) {
-    id = name
-    function()
-}

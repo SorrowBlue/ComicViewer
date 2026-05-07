@@ -75,6 +75,12 @@ kotlin {
                 implementation(libs.androidx.sqliteBundled)
             }
         }
+
+        jvmMain {
+            dependencies {
+                implementation(libs.filekit.core)
+            }
+        }
     }
 }
 

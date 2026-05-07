@@ -1,11 +1,12 @@
 package com.sorrowblue.comicviewer.data.database
 
+import com.sorrowblue.comicviewer.framework.common.DesktopContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 
-internal actual fun createPlatformContext(): PlatformContext = TestJvmContext()
+internal actual fun createPlatformContext(): PlatformContext = DesktopContext.Companion()
 
 @DependencyGraph(
     scope = AppScope::class,

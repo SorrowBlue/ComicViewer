@@ -17,7 +17,6 @@ plugins {
     alias(libs.plugins.kotlinSerialization) apply false
     alias(libs.plugins.aboutlibraries) apply false
     alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.licensee) apply false
     alias(libs.plugins.metro) apply false
     alias(libs.plugins.buildconfig) apply false
     alias(libs.plugins.versionCatalogLinter)

@@ -8,16 +8,15 @@ plugins {
 }
 
 dependencies {
-    detektPlugins(libs.detekt.compose)
-    detektPlugins(libs.detekt.ktlintWrapper)
+    detektPlugins(libs.bundles.detekt)
 }
 
 detekt {
+    buildUponDefaultConfig = true
+    config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
+    basePath.set(rootProject.projectDir)
     autoCorrect = true
     parallel = true
-    config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-    basePath.set(rootProject.projectDir)
 }
 
 tasks.withType<Detekt>().configureEach {

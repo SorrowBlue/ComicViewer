@@ -12,6 +12,7 @@ kotlin {
                 implementation(projects.domain.service)
                 implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastoreCoreOkio)
+                implementation(libs.filekit.core)
                 implementation(libs.kotlinx.serializationProtobuf)
             }
         }

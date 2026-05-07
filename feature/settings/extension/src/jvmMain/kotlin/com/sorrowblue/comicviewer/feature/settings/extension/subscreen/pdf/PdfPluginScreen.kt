@@ -30,15 +30,19 @@ import comicviewer.feature.settings.extension.generated.resources.settings_exten
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun PdfPluginScreen(uiState: PdfPluginScreenUiState, onOpenFolderClick: () -> Unit) {
+internal fun PdfPluginScreen(
+    uiState: PdfPluginScreenUiState,
+    onOpenFolderClick: () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
     AlertDialog(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = stringResource(Res.string.settings_extension_title_pdf))
-                CloseIconButton(onClick = {})
+                CloseIconButton(onClick = onDismissRequest)
             }
         },
-        onDismissRequest = {},
+        onDismissRequest = onDismissRequest,
     ) {
         AlertDialogContent(
             icon = {
@@ -92,6 +96,7 @@ private fun PdfPluginScreenPreview() {
         PdfPluginScreen(
             uiState = remember { PdfPluginScreenUiState() },
             onOpenFolderClick = {},
+            onDismissRequest = {},
         )
     }
 }

@@ -3,6 +3,9 @@ package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.resolve
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.Charset
@@ -16,6 +19,9 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
+import logcat.LogPriority
+import logcat.asLog
+import logcat.logcat
 
 private const val CipherTransformation = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
@@ -40,8 +46,8 @@ internal class JvmCryptUtil(private val context: PlatformContext) : CryptUtil {
 
     private fun loadKeyStore(alias: String): Key? {
         val keystoreFile =
-            context.filesDir
-                .resolve("keystore")
+            FileKit.filesDir
+                .resolve("keystore").file.toPath()
                 .also { it.createDirectories() }
                 .resolve("pass.dat")
         val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
@@ -72,11 +78,35 @@ internal class JvmCryptUtil(private val context: PlatformContext) : CryptUtil {
     }
 
     private fun macProductID(): String {
-        TODO("Not yet implemented")
+        var uuid = "unknown"
+        runCatching {
+            val command =
+                arrayOf("sh", "-c", "ioreg -rd1 -c IOPlatformExpertDevice | grep IOPlatformUUID")
+            val process = Runtime.getRuntime().exec(command)
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+            val line = reader.readLine()
+
+            if (line != null) {
+                uuid = line.split("=")[1].replace("\"", "").trim()
+            }
+            process.waitFor()
+        }.onFailure { e ->
+            logcat(priority = LogPriority.ERROR) { e.asLog() }
+        }
+        return uuid
     }
 
-    private fun linuxProductID(): String {
-        TODO("Not yet implemented")
+    private fun linuxProductID(): String = runCatching {
+        val file = java.io.File("/etc/machine-id")
+        if (file.exists()) {
+            file.readText().trim()
+        } else {
+            // fallback for older systems
+            java.io.File("/var/lib/dbus/machine-id").readText().trim()
+        }
+    }.getOrElse { e ->
+        logcat(priority = LogPriority.ERROR) { e.asLog() }
+        "unknown"
     }
 
     private fun windowsProductID(): String {

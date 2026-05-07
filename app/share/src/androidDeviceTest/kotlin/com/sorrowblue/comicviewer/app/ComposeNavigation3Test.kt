@@ -27,6 +27,8 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.rememberComicViewerUIContext
 import com.sorrowblue.comicviewer.rememberComicViewerUIState
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.manualFileKitCoreInitialization
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,6 +39,9 @@ class ComposeNavigation3Test {
 
     @Before
     fun setup() {
+        FileKit.manualFileKitCoreInitialization(
+            InstrumentationRegistry.getInstrumentation().context,
+        )
         composeTestRule.setContent {
             with(InstrumentationRegistry.getInstrumentation().context) {
                 val state = with(rememberComicViewerUIContext()) {

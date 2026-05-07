@@ -228,12 +228,13 @@ actual class SmbFileClient(
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent.toString() + "/",
+                parent = Path(url.path).parent.toString().replace("\\", "/") + "/",
                 size = -1,
                 lastModifier = lastModified,
                 isHidden = isHidden,
             )
         }
+        logcat { "url.path=${url.path}" }
         return if (isDirectory) {
             Folder(
                 path = url.path,
@@ -243,6 +244,7 @@ actual class SmbFileClient(
                     .parent
                     ?.toString()
                     .orEmpty()
+                    .replace("\\", "/")
                     .removeSuffix("/") + "/",
                 size = -1,
                 lastModifier = lastModified,
@@ -257,6 +259,7 @@ actual class SmbFileClient(
                     .parent
                     ?.toString()
                     .orEmpty()
+                    .replace("\\", "/")
                     .removeSuffix("/") + "/",
                 size = length(),
                 lastModifier = lastModified,

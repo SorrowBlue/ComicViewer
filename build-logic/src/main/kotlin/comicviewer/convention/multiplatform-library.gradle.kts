@@ -10,7 +10,6 @@ plugins {
     id("comicviewer.primitive.metro")
     id("comicviewer.primitive.dokka")
     id("comicviewer.primitive.aboutlibraries")
-    id("comicviewer.primitive.licensee")
 }
 
 kotlin {

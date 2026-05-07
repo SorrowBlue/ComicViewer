@@ -10,11 +10,10 @@ plugins {
     alias(libs.plugins.comicviewer.di)
     alias(libs.plugins.comicviewer.primitive.detekt)
     alias(libs.plugins.comicviewer.primitive.dokka)
-    alias(libs.plugins.comicviewer.primitive.licensee)
     alias(libs.plugins.comicviewer.primitive.aboutlibraries)
 }
 
-configure<AboutLibrariesExtension> {
+aboutLibraries {
     export {
         outputFile.set(file("src/jvmMain/composeResources/files/aboutlibraries.json"))
     }
@@ -36,6 +35,7 @@ kotlin {
 
             implementation(libs.androidx.lifecycleViewmodelCompose)
             implementation(libs.compose.material3)
+            implementation(libs.filekit.core)
             implementation(libs.jcifs)
             implementation(libs.compose.componentsAnimatedimage)
         }

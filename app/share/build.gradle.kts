@@ -75,6 +75,7 @@ kotlin {
                 implementation(libs.compose.uiTestJunit4)
                 implementation(libs.compose.uiTestManifest)
                 implementation(libs.androidx.test.espressoCore)
+                implementation(libs.filekit.core)
             }
         }
     }

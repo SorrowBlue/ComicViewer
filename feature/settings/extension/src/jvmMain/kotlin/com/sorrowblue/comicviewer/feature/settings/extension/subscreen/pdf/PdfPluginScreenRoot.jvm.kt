@@ -9,5 +9,6 @@ internal actual fun PdfPluginScreenRoot(onBackClick: () -> Unit) {
     PdfPluginScreen(
         uiState = state.uiState,
         onOpenFolderClick = state::onOpenFolderClick,
+        onDismissRequest = onBackClick,
     )
 }

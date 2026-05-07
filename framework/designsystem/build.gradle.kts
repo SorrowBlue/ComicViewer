@@ -26,5 +26,10 @@ kotlin {
                 implementation(projects.domain.usecase)
             }
         }
+        jvmMain {
+            dependencies {
+                implementation(libs.filekit.core)
+            }
+        }
     }
 }

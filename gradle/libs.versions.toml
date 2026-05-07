@@ -50,7 +50,6 @@ kotlinx-datetime = "0.7.1"
 kotlinx-serialization = "1.11.0"
 kotlinxKover = "0.9.8"
 ksp = "2.3.7"
-licensee = "1.14.1"
 metro = "1.0.0"
 modulegraph = "0.13.0"
 multiplatform-core = "1.1.0-alpha03"
@@ -132,6 +131,7 @@ detekt-gradlePlugin = { group = "dev.detekt", name = "detekt-gradle-plugin", ver
 detekt-ktlintWrapper = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", version.ref = "detekt" }
 dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 filekit = { group = "io.github.vinceglb", name = "filekit-dialogs", version.ref = "filekit" }
+filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "filekit" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
 kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
@@ -152,7 +152,6 @@ kotlinx-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-s
 kotlinx-serializationProtobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 kover-gradlePlugin = { group = "org.jetbrains.kotlinx.kover", name = "org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinxKover" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-licensee-gradlePlugin = { group = "app.cash.licensee", name = "licensee-gradle-plugin", version.ref = "licensee" }
 metro-android = { group = "dev.zacsweers.metro", name = "metrox-android", version.ref = "metro" }
 metro-gradlePlugin = { group = "dev.zacsweers.metro", name = "dev.zacsweers.metro.gradle.plugin", version.ref = "metro" }
 navigation3-resultstate = { group = "io.github.irgaly.navigation3.resultstate", name = "resultstate", version.ref = "navigation3-resultstate" }
@@ -166,7 +165,7 @@ slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version.ref =
 soil-form = { group = "com.soil-kt.soil", name = "form", version.ref = "soil" }
 
 [bundles]
-dokka = [
+detekt = [
     "detekt-compose",
     "detekt-ktlintWrapper"
 ]
@@ -181,7 +180,6 @@ plugins = [
     "kotlin-serializationGradlePlugin",
     "kover-gradlePlugin",
     "ksp-gradlePlugin",
-    "licensee-gradlePlugin",
     "metro-gradlePlugin"
 ]
 
@@ -202,7 +200,6 @@ comicviewer-multiplatformLibrary = { id = "comicviewer.convention.multiplatform-
 comicviewer-primitive-aboutlibraries = { id = "comicviewer.primitive.aboutlibraries" }
 comicviewer-primitive-detekt = { id = "comicviewer.primitive.detekt" }
 comicviewer-primitive-dokka = { id = "comicviewer.primitive.dokka" }
-comicviewer-primitive-licensee = { id = "comicviewer.primitive.licensee" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
@@ -212,7 +209,6 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinxKover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinxKover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-licensee = { id = "app.cash.licensee", version.ref = "licensee" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }
