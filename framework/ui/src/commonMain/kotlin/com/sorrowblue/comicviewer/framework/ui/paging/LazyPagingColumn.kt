@@ -4,10 +4,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -25,10 +27,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.composables.core.Thumb
-import com.composables.core.ThumbVisibility
-import com.composables.core.VerticalScrollbar
-import com.composeunstyled.UnstyledScrollArea
+import com.composeunstyled.Thumb
+import com.composeunstyled.ThumbVisibility
+import com.composeunstyled.UnstyledVerticalScrollbar
+import com.composeunstyled.rememberScrollbarState
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import kotlin.time.Duration.Companion.seconds
@@ -65,8 +67,8 @@ fun <T : Any> LazyPagingColumn(
     contentType: (index: Int) -> Any? = { type },
     itemContent: @Composable (LazyGridItemScope.(index: Int, item: T) -> Unit),
 ) {
-    val scrollAreaState = com.composeunstyled.rememberScrollAreaState(state)
-    UnstyledScrollArea(state = scrollAreaState, modifier = modifier, content = {
+    val scrollbarState = rememberScrollbarState(state)
+    Box(modifier = modifier) {
         LazyVerticalGrid(
             columns = type.columns,
             state = state,
@@ -88,7 +90,8 @@ fun <T : Any> LazyPagingColumn(
                 }
             }
         }
-        VerticalScrollbar(
+        UnstyledVerticalScrollbar(
+            scrollbarState = scrollbarState,
             modifier = Modifier.align(Alignment.TopEnd)
                 .fillMaxHeight()
                 .padding(contentPadding.only(PaddingValuesSides.Vertical))
@@ -100,8 +103,8 @@ fun <T : Any> LazyPagingColumn(
                 modifier = Modifier.background(
                     LocalContentColor.current.copy(0.25f),
                     RoundedCornerShape(100),
-                ),
+                ).fillMaxWidth(),
             )
         }
-    })
+    }
 }
