@@ -268,6 +268,7 @@ actual class SmbFileClient(
         }
     }
 
+    @Suppress("UnusedPrivateFunction")
     private fun SmbServer.smbFile(path: String): SmbFile = SmbFile(
         URI(
             "smb",
