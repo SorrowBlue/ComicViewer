@@ -18,7 +18,7 @@ kotlin {
                 implementation(libs.androidx.lifecycleViewmodelCompose)
                 implementation(libs.androidx.pagingCompose)
                 implementation(libs.coil3.compose)
-                implementation(libs.composables.composeunstyledPrimitive)
+                implementation(libs.composables.composeunstyledScrollbars)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material3Adaptive)
                 implementation(libs.compose.material3AdaptiveLayout)

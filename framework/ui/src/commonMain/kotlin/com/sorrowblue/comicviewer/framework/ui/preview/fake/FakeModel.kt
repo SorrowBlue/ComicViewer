@@ -1,6 +1,6 @@
 package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
-import com.composables.core.androidx.annotation.IntRange
+import androidx.annotation.IntRange
 import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
