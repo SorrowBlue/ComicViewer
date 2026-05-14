@@ -2,6 +2,7 @@ package comicviewer.primitive
 
 import com.sorrowblue.comicviewer.libs
 import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.report.ReportMergeTask
 
 plugins {
     dev.detekt
@@ -29,4 +30,10 @@ tasks.withType<Detekt>().configureEach {
     exclude {
         it.file.path.run { contains("generated") || contains("buildkonfig") }
     }
+}
+
+rootProject.tasks.withType<ReportMergeTask> {
+    input.from(
+        tasks.withType<Detekt>()
+            .map { it.reports.sarif.outputLocation })
 }
