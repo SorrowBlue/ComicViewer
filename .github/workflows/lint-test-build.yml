@@ -21,7 +21,6 @@ permissions:
 
 jobs:
 
-  # Check if this is a PR commit to main and skip if so
   check-commit:
     runs-on: ubuntu-latest
     outputs:
