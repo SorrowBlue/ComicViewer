@@ -1,5 +1,4 @@
----
-name: Lint, Test, and Build
+name:  Lint, Test, and Build (main PR/push)
 
 on:
   workflow_dispatch:
@@ -69,7 +68,24 @@ jobs:
   static-code-analysis:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/static-code-analysis.yml
+    uses: SorrowBlue/Actions/.github/workflows/static-code-analysis.yml@main
+    with:
+      analysis-matrix: >
+        [
+          {
+            "task": "reportMerge --continue",
+            "sarif_file": "build/reports/detekt/merge.sarif",
+            "category": "detekt"
+          },
+          {
+            "task": ":build-logic:detektMain",
+            "sarif_file": "build-logic/build/reports/detekt/main.sarif",
+            "category": "detekt"
+          },
+          {
+            "task": "checkVersionCatalog",
+          },
+        ]
 
   test-unit:
     needs: check-commit
