@@ -67,7 +67,7 @@ jobs:
   static-code-analysis:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analysis.yml@main
+    uses: SorrowBlue/github-actions/.github/workflows/static-code-analysis.yml@main
     with:
       analysis-matrix: >
         [
