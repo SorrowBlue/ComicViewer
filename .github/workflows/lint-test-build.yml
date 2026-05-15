@@ -59,16 +59,44 @@ jobs:
             echo "  - Other files changed: $OTHER_FILES_CHANGED"
           fi
 
-  lint:
+  lint-analysis:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/lint.yml
+    uses: SorrowBlue/github-actions/.github/workflows/static-code-analysis.yml@main
+    with:
+      java-version: 21
+      java-distribution: 'temurin'
+      analysis-matrix: >
+        [
+          {
+            "task": "app:android:lintDebug",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+          {
+            "task": "app:android:lintInternal",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+          {
+            "task": "app:android:lintPrerelease",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+          {
+            "task": "app:android:lintRelease",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+        ]
 
   static-code-analysis:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: SorrowBlue/github-actions/.github/workflows/static-code-analysis.yml@main
     with:
+      java-version: 21
+      java-distribution: 'temurin'
       analysis-matrix: >
         [
           {
