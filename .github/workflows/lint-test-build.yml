@@ -83,8 +83,8 @@ jobs:
             "category": "detekt"
           },
           {
-            "task": "checkVersionCatalog",
-          },
+            "task": "checkVersionCatalog"
+          }
         ]
 
   test-unit:
