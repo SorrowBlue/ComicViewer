@@ -27,7 +27,7 @@ jobs:
     with:
       environment: android
       fetch-depth: 0
-      tasks: bundleRelease
+      task: bundleRelease
       package-name: com.sorrowblue.comicviewer
       release-files: app/android/build/outputs/bundle/release/android-release.aab
       tracks: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}

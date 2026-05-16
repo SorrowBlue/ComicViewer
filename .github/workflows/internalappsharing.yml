@@ -23,7 +23,7 @@ jobs:
     with:
       environment: android
       fetch-depth: 0
-      tasks: bundleInternal
+      task: bundleInternal
       package-name: com.sorrowblue.comicviewer
       release-files: app/android/build/outputs/bundle/internal/android-internal.aab
       tracks: internalsharing
