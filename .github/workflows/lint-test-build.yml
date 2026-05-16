@@ -61,46 +61,6 @@ jobs:
   lint:
     name: ${{ matrix.name }}
     needs: check-commit
-    strategy:
-      matrix:
-        include:
-          - name: Detekt source
-            task: 'reportMerge --continue'
-            sarif_file: 'build/reports/detekt/merge.sarif'
-            category: 'detekt'
-          - name: Detekt build-logic
-            task: ':build-logic:detektMain'
-            sarif_file: 'build-logic/build/reports/detekt/main.sarif'
-            category: 'detekt'
-          - name: VersionCatalog
-            task: 'checkVersionCatalog'
-          - name: lintDebug
-            task: 'app:android:lintDebug'
-            sarif_file: 'build/reports/lint/lint-result.sarif'
-            category: 'android-lint'
-          - name: lintInternal
-            task: 'app:android:lintInternal'
-            sarif_file: 'build/reports/lint/lint-result.sarif'
-            category: 'android-lint'
-          - name: lintPrerelease
-            task: 'app:android:lintPrerelease'
-            sarif_file: 'build/reports/lint/lint-result.sarif'
-            category: 'android-lint'
-          - name: lintRelease
-            task: 'app:android:lintRelease'
-            sarif_file: 'build/reports/lint/lint-result.sarif'
-            category: 'android-lint'
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
-    with:
-      name: ${{ matrix.name }}
-      task: ${{ matrix.task }}
-      sarif_file: ${{ matrix.sarif_file }}
-      category: ${{ matrix.category }}
-
-  lint-matrix:
-    name: ${{ matrix.name }}
-    needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
     with:
