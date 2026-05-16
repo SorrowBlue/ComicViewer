@@ -1,4 +1,4 @@
-name: Lint, Test, and Build (main PR/push)
+name:  Lint, Test, and Build (main PR/push)
 
 on:
   workflow_dispatch:
@@ -61,38 +61,21 @@ jobs:
 
   lint-analysis:
     needs: check-commit
-    strategy:
-      matrix:
-        task: [ 'Debug', 'Internal', 'Prerelease', 'Release' ]
     if: needs.check-commit.outputs.should-run == 'true'
     uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     with:
       java-version: 21
       java-distribution: 'temurin'
-      task: 'app:android:lint${{ matrix.task }}'
-      sarif_file: 'build/reports/lint/lint-result.sarif'
-      category: 'android-lint'
+      matrix-json: '.github/lint-matrix.json'
 
   static-code-analysis:
     needs: check-commit
-    strategy:
-      matrix:
-        config:
-          - task: 'reportMerge --continue'
-            sarif_file: 'build/reports/detekt/merge.sarif'
-            category: 'detekt'
-          - task: ':build-logic:detektMain'
-            sarif_file: 'build-logic/build/reports/detekt/main.sarif'
-            category: 'detekt'
-          - task: 'checkVersionCatalog'
     if: needs.check-commit.outputs.should-run == 'true'
     uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     with:
       java-version: 21
       java-distribution: 'temurin'
-      task: ${{matrix.config.task}}
-      sarif_file: ${{matrix.config.sarif_file}}
-      category: ${{matrix.config.category}}
+      matrix-json: '.github/static-code-matrix.json'
 
   test-unit:
     needs: check-commit

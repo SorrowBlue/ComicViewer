@@ -1,0 +1,15 @@
+[
+  {
+    "task": "reportMerge --continue",
+    "sarif_file": "build/reports/detekt/merge.sarif",
+    "category": "detekt"
+  },
+  {
+    "task": ":build-logic:detektMain",
+    "sarif_file": "build-logic/build/reports/detekt/main.sarif",
+    "category": "detekt"
+  },
+  {
+    "task": "checkVersionCatalog"
+  }
+]
