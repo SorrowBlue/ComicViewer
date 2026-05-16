@@ -61,11 +61,11 @@ jobs:
 
   lint-analysis:
     needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     strategy:
       matrix:
         task: [ 'Debug', 'Internal', 'Prerelease', 'Release' ]
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     with:
       java-version: 21
       java-distribution: 'temurin'
@@ -75,8 +75,6 @@ jobs:
 
   static-code-analysis:
     needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     strategy:
       matrix:
         config:
@@ -89,6 +87,8 @@ jobs:
           - task: 'checkVersionCatalog'
             sarif_file: 'build-logic/build/reports/detekt/main.sarif'
             category: 'detekt'
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     with:
       java-version: 21
       java-distribution: 'temurin'
