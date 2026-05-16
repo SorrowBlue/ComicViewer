@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-    uses: SorrowBlue/github-actions/.github/workflows/android-build.yml@main
+    uses: SorrowBlue/github-actions/.github/workflows/jvm-build.yml@main
     with:
       runs-on: ${{ matrix.os }}
       task: packageDistributionForCurrentOS
