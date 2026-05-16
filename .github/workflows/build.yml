@@ -15,9 +15,17 @@ jobs:
   build-jvm:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            name: Ubuntu
+          - os: windows-latest
+            name: Windows
+          - os: macos-latest
+            name: Mac
     uses: SorrowBlue/github-actions/.github/workflows/jvm-build.yml@main
     with:
       runs-on: ${{ matrix.os }}
+      name: ${{ matrix.name }}
       task: packageDistributionForCurrentOS
+      output-name: jvm-${{ matrix.name }}
       output-path: app/jvm/build/compose/binaries/main/
