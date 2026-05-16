@@ -2,9 +2,9 @@ name:  Lint, Test, and Build (main PR/push)
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - 'main'
+#  pull_request:
+#    branches:
+#      - 'main'
   push:
     branches:
       - 'main'
