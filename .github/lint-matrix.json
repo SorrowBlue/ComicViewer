@@ -1,5 +1,21 @@
 [
   {
+    "name": "Detekt",
+    "task": "reportMerge --continue",
+    "sarif_file": "build/reports/detekt/merge.sarif",
+    "category": "detekt"
+  },
+  {
+    "name": "Detekt (build-logic)",
+    "task": ":build-logic:detektMain",
+    "sarif_file": "build-logic/build/reports/detekt/main.sarif",
+    "category": "detekt"
+  },
+  {
+    "name": "VersionCatalog",
+    "task": "checkVersionCatalog"
+  },
+  {
     "name": "lintDebug",
     "task": "app:android:lintDebug",
     "sarif_file": "build/reports/lint/lint-result.sarif",
