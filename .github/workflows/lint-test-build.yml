@@ -84,3 +84,4 @@ jobs:
       - uses: wechuli/allcheckspassed@v2
         with:
           poll: false
+          delay: 0
