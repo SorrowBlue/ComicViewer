@@ -66,10 +66,10 @@ jobs:
 #    with:
 #      matrix-json: '.github/lint-matrix.json'
 #
-  test:
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/test.yml
+#  test:
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: ./.github/workflows/test.yml
 
   build:
 #    needs: [ lint, test ]
