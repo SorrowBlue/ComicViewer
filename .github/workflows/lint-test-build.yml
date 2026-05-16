@@ -36,7 +36,6 @@ jobs:
         with:
           files_ignore: |
             aboutlibraries.json
-
       - name: Check if should run
         id: check
         run: |
@@ -59,20 +58,44 @@ jobs:
             echo "  - Other files changed: $OTHER_FILES_CHANGED"
           fi
 
-#  lint-analysis:
+  lint:
+    needs: check-commit
+    strategy:
+      matrix:
+        include:
+          - name: Detekt source
+            task: 'reportMerge --continue'
+            sarif_file: 'build/reports/detekt/merge.sarif'
+            category: 'detekt'
+          - name: Detekt build-logic
+            task: ':build-logic:detektMain'
+            sarif_file: 'build-logic/build/reports/detekt/main.sarif'
+            category: 'detekt'
+          - name: VersionCatalog
+            task: 'checkVersionCatalog'
+          - name: lintDebug
+            task: 'app:android:lintDebug'
+            sarif_file: 'build/reports/lint/lint-result.sarif'
+            category: 'android-lint'
+          - name: lintInternal
+            task: 'app:android:lintInternal'
+            sarif_file: 'build/reports/lint/lint-result.sarif'
+            category: 'android-lint'
+          - name: lintPrerelease
+            task: 'app:android:lintPrerelease'
+            sarif_file: 'build/reports/lint/lint-result.sarif'
+            category: 'android-lint'
+          - name: lintRelease
+            task: 'app:android:lintRelease'
+            sarif_file: 'build/reports/lint/lint-result.sarif'
+            category: 'android-lint'
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
+
+#  test:
 #    needs: check-commit
 #    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
-#    with:
-#      matrix-json: '.github/lint-matrix.json'
-#
-#  static-code-analysis:
-#    needs: check-commit
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
-#    with:
-#      matrix-json: '.github/static-code-matrix.json'
-#
+
 #  test-unit:
 #    needs: check-commit
 #    if: needs.check-commit.outputs.should-run == 'true'
@@ -83,19 +106,19 @@ jobs:
 #    if: needs.check-commit.outputs.should-run == 'true'
 #    uses: ./.github/workflows/test-instrumentation.yml
 
-  build:
+#  build:
 #    needs: [ lint-analysis, static-code-analysis, test-unit, test-instrumentation ]
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/build.yml
-    secrets: inherit
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: ./.github/workflows/build.yml
+#    secrets: inherit
 
   allchecks:
     name: All Checks Passed
     permissions:
       checks: read
       contents: read
-    needs: build
+    needs: lint
     if: needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:
