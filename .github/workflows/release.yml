@@ -13,12 +13,60 @@ permissions:
   security-events: write
 
 jobs:
-  # Step 1: Run quality checks (Android Lint, Detekt, Test, versioncatalog)
-  lint:
-    uses: ./.github/workflows/lint.yml
+  lint-analysis:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: SorrowBlue/github-actions/.github/workflows/static-code-analysis.yml@main
+    with:
+      java-version: 21
+      java-distribution: 'temurin'
+      analysis-matrix: >
+        [
+          {
+            "task": "app:android:lintDebug",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+          {
+            "task": "app:android:lintInternal",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+          {
+            "task": "app:android:lintPrerelease",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+          {
+            "task": "app:android:lintRelease",
+            "sarif_file": "build/reports/lint/lint-result.sarif",
+            "category": "android-lint"
+          },
+        ]
 
   static-code-analysis:
-    uses: ./.github/workflows/static-code-analysis.yml
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: SorrowBlue/github-actions/.github/workflows/static-code-analysis.yml@main
+    with:
+      java-version: 21
+      java-distribution: 'temurin'
+      analysis-matrix: >
+        [
+          {
+            "task": "reportMerge --continue",
+            "sarif_file": "build/reports/detekt/merge.sarif",
+            "category": "detekt"
+          },
+          {
+            "task": ":build-logic:detektMain",
+            "sarif_file": "build-logic/build/reports/detekt/main.sarif",
+            "category": "detekt"
+          },
+          {
+            "task": "checkVersionCatalog"
+          }
+        ]
 
   test-unit:
     uses: ./.github/workflows/test-unit.yml
@@ -26,10 +74,9 @@ jobs:
   test-instrumentation:
     uses: ./.github/workflows/test-instrumentation.yml
 
-  # Step 2: Build release artifacts after checks pass
   build-android-release:
     runs-on: ubuntu-latest
-    needs: [ lint, static-code-analysis, test-unit, test-instrumentation ]
+    needs: [ lint-analysis, static-code-analysis, test-unit, test-instrumentation ]
     environment: android
     outputs:
       upload-url: ${{ steps.upload.outputs.internalSharingDownloadUrl }}
