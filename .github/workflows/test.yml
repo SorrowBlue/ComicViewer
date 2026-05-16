@@ -1,4 +1,5 @@
 name: Test
+
 on:
   workflow_call:
 
@@ -53,7 +54,6 @@ jobs:
       samba: *samba_settings
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup samba
@@ -102,7 +102,6 @@ jobs:
             -PsmbUsername=testuser
             -PsmbPassword=testpass
             -PsmbPath="/testshare/testfolder/"
-
       - name: Upload Test Report
         if: cancelled() != true
         uses: dorny/test-reporter@v3

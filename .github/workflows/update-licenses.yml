@@ -1,19 +1,22 @@
 name: Update Licenses
+
 on:
   push:
     branches:
       - main
+
 permissions:
   contents: write
   pull-requests: write
+
 jobs:
   update-licenses:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
+      - name: Setup Java and Gradle
+        uses: SorrowBlue/github-actions/.github/actions/setup-java-gradle@main
       - name: 🤖 ExportLibraryDefinitions for android
         run: ./gradlew :app:android:exportLibraryDefinitions --no-configure-on-demand
         env:
