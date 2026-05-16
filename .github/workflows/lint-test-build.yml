@@ -69,7 +69,7 @@ jobs:
     with:
       java-version: 21
       java-distribution: 'temurin'
-      task: 'app:android:lint'${{matrix.task}}
+      task: 'app:android:lint${{ matrix.task }}'
       sarif_file: 'build/reports/lint/lint-result.sarif'
       category: 'android-lint'
 
