@@ -1,5 +1,4 @@
----
-name: Lint, Test, and Build
+name:  Lint, Test, and Build (main PR/push)
 
 on:
   workflow_dispatch:
@@ -21,8 +20,6 @@ permissions:
   security-events: write
 
 jobs:
-
-  # Check if this is a PR commit to main and skip if so
   check-commit:
     runs-on: ubuntu-latest
     outputs:
@@ -38,7 +35,6 @@ jobs:
         with:
           files_ignore: |
             aboutlibraries.json
-
       - name: Check if should run
         id: check
         run: |
@@ -64,36 +60,23 @@ jobs:
   lint:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/lint.yml
+    uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
+    with:
+      matrix-json: '.github/lint-matrix.json'
 
-  static-code-analysis:
+  test:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/static-code-analysis.yml
-
-  test-unit:
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/test-unit.yml
-
-  test-instrumentation:
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/test-instrumentation.yml
+    uses: ./.github/workflows/test.yml
 
   build:
-    needs: [ lint, static-code-analysis, test-unit, test-instrumentation ]
+    needs: [ lint, test ]
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
-    with:
-      environment: android
     secrets: inherit
 
   allchecks:
     name: All Checks Passed
-    permissions:
-      checks: read
-      contents: read
     needs: build
     if: needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
@@ -101,4 +84,4 @@ jobs:
       - uses: wechuli/allcheckspassed@v2
         with:
           poll: false
-          checks_exclude: 'generate'
+          delay: 0
