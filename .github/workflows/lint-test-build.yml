@@ -90,4 +90,3 @@ jobs:
       - uses: wechuli/allcheckspassed@v2
         with:
           poll: false
-          checks_exclude: 'generate'
