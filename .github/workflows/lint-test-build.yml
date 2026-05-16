@@ -83,9 +83,9 @@ jobs:
 #    if: needs.check-commit.outputs.should-run == 'true'
 #    uses: ./.github/workflows/test-instrumentation.yml
 
-
   build:
 #    needs: [ lint-analysis, static-code-analysis, test-unit, test-instrumentation ]
+    needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
     secrets: inherit
