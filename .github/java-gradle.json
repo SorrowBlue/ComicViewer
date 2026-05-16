@@ -1,4 +1,6 @@
 {
-  "java-version": 21,
-  "java-distribution": "temurin"
+  "java": {
+    "version": 21,
+    "distribution": "temurin"
+  }
 }
