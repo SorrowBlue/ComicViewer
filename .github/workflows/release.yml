@@ -13,94 +13,52 @@ permissions:
   security-events: write
 
 jobs:
-  lint-analysis:
+  lint:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
+    uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
     with:
       matrix-json: '.github/lint-matrix.json'
 
-  static-code-analysis:
+  test:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
-    with:
-      matrix-json: '.github/static-code-matrix.json'
+    uses: ./.github/workflows/test.yml
 
-  test-unit:
-    uses: ./.github/workflows/test-unit.yml
-
-  test-instrumentation:
-    uses: ./.github/workflows/test-instrumentation.yml
 
   build-android-release:
-    runs-on: ubuntu-latest
-    needs: [ lint-analysis, static-code-analysis, test-unit, test-instrumentation ]
-    environment: android
-    outputs:
-      upload-url: ${{ steps.upload.outputs.internalSharingDownloadUrl }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Decode android keystore file
-        id: android_keystore
-        uses: timheuer/base64-to-file@v2
-        with:
-          fileName: 'android_keystore.jks'
-          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
-      - name: Build Release Bundle
-        run: ./gradlew bundleRelease assembleRelease
-        env:
-          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: >-
-            ${{ steps.android_keystore.outputs.filePath }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: >-
-            ${{ secrets.ANDROID_STORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: >-
-            ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: >-
-            ${{ secrets.ANDROID_KEY_PASSWORD }}
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: >-
-            ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-      - name: Upload AAB to Play Console
-        id: upload
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
-          packageName: com.sorrowblue.comicviewer
-          releaseFiles: >-
-            app/android/build/outputs/bundle/release/android-release.aab
-          track: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
-          status: draft
-          mappingFile: app/android/build/outputs/mapping/release/mapping.txt
-          debugSymbols: >-
-            app/android/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+    needs: [ lint, test ]
+    uses: SorrowBlue/github-actions/.github/workflows/android-publish.yml@main
+    secrets: inherit
+    with:
+      environment: android
+      fetch-depth: 0
+      task: bundleInternal
+      package-name: com.sorrowblue.comicviewer
+      release-files: app/android/build/outputs/bundle/release/android-release.aab
+      tracks: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
+      status: draft
+      mapping-file: app/android/build/outputs/mapping/release/mapping.txt
+      debug-symbols: app/android/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
 
-  # Step 3: Build jvm releases for all platforms
   build-jvm-release:
+    needs: [ lint, test ]
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-    runs-on: ${{ matrix.os }}
-    needs: [ lint, static-code-analysis, test-unit, test-instrumentation ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Build JVM Release
-        run: ./gradlew packageDistributionForCurrentOS
-      - name: Upload JVM artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: jvm-release-${{ runner.os }}
-          path: app/jvm/build/compose/binaries/main/
+        include:
+          - os: ubuntu-latest
+            name: Ubuntu
+          - os: windows-latest
+            name: Windows
+          - os: macos-latest
+            name: Mac
+    uses: SorrowBlue/github-actions/.github/workflows/jvm-build.yml@main
+    with:
+      runs-on: ${{ matrix.os }}
+      name: ${{ matrix.name }}
+      task: packageDistributionForCurrentOS
+      output-name: jvm-${{ matrix.name }}
+      output-path: app/jvm/build/compose/binaries/main/
 
   # Step 4: Upload artifacts to GitHub Release and notify Discord
   upload-release-assets:
@@ -118,9 +76,9 @@ jobs:
         if: github.event_name == 'release'
         with:
           files: |
-            ./artifacts/jvm-release-Linux/deb/*
-            ./artifacts/jvm-release-Windows/msi/*
-            ./artifacts/jvm-release-macOS/dmg/*
+            ./artifacts/jvm-Ubuntu/deb/*
+            ./artifacts/jvm-Windows/msi/*
+            ./artifacts/jvm-Mac/dmg/*
       - name: Notify Discord - Release Success
         uses: sarisia/actions-status-discord@v1
         with:
@@ -133,9 +91,6 @@ jobs:
             :iphone: Android AAB uploaded to Play Console
             :jvm: JVM apps built for Windows, macOS, Linux
 
-            **Play Console URL**:
-              [Download here](${{
-                needs.build-android-release.outputs.upload-url }})
             **GitHub Release**:
               [View release](${{ github.event.release.html_url }})
           color: 0x00ff00

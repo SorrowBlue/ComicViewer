@@ -2,9 +2,9 @@ name:  Lint, Test, and Build (main PR/push)
 
 on:
   workflow_dispatch:
-#  pull_request:
-#    branches:
-#      - 'main'
+  pull_request:
+    branches:
+      - 'main'
   push:
     branches:
       - 'main'
@@ -59,7 +59,6 @@ jobs:
           fi
 
   lint:
-    name: ${{ matrix.name }}
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
@@ -79,9 +78,6 @@ jobs:
 
   allchecks:
     name: All Checks Passed
-    permissions:
-      checks: read
-      contents: read
     needs: build
     if: needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
