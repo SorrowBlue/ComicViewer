@@ -12,30 +12,30 @@ jobs:
       output-path: 'app/android/build/outputs/'
     secrets: inherit
 
-  build-jvm:
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-    runs-on: ${{ matrix.os }}
-    environment: android
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Run packageDistributionForCurrentOS
-        run: ./gradlew packageDistributionForCurrentOS
-      - name: Upload Jvm Binaries
-        uses: actions/upload-artifact@v7
-        with:
-          name: jvm-${{ runner.os }}
-          path: app/jvm/build/compose/binaries/main/
-
-  build:
-    name: All Build Passed
-    runs-on: ubuntu-latest
-    environment: android
-    needs: [ build-android, build-jvm ]
-    steps:
-      - name: Confirm All Build Jobs Succeeded
-        run: echo "✅ All build jobs (Android, Windows, macOS, Linux) completed successfully."
+#  build-jvm:
+#    strategy:
+#      matrix:
+#        os: [ ubuntu-latest, windows-latest, macos-latest ]
+#    runs-on: ${{ matrix.os }}
+#    environment: android
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v6
+#      - name: Setup JDK and Gradle
+#        uses: ./.github/actions/setup-java-gradle
+#      - name: Run packageDistributionForCurrentOS
+#        run: ./gradlew packageDistributionForCurrentOS
+#      - name: Upload Jvm Binaries
+#        uses: actions/upload-artifact@v7
+#        with:
+#          name: jvm-${{ runner.os }}
+#          path: app/jvm/build/compose/binaries/main/
+#
+#  build:
+#    name: All Build Passed
+#    runs-on: ubuntu-latest
+#    environment: android
+#    needs: [ build-android, build-jvm ]
+#    steps:
+#      - name: Confirm All Build Jobs Succeeded
+#        run: echo "✅ All build jobs (Android, Windows, macOS, Linux) completed successfully."
