@@ -1,48 +1,16 @@
 name: Build
 on:
   workflow_call:
-    inputs:
-      environment:
-        type: string
-        required: true
-    secrets:
-      ANDROID_STORE_FILE_BASE64:
-        required: true
-      ANDROID_STORE_PASSWORD:
-        required: true
-      ANDROID_KEY_ALIAS:
-        required: true
-      ANDROID_KEY_PASSWORD:
-        required: true
 
 jobs:
 
   build-android:
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Decode android keystore file
-        id: android_keystore
-        uses: timheuer/base64-to-file@v2
-        with:
-          fileName: 'android_keystore.jks'
-          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
-      - name: Run bundleRelease
-        run: ./gradlew bundlePrerelease assemblePrerelease
-        env:
-          ORG_GRADLE_PROJECT_androidSigningReleaseStoreFile: ${{ steps.android_keystore.outputs.filePath }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_androidSigningReleaseKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      - name: Upload AAB to Internal App Sharing
-        uses: actions/upload-artifact@v7
-        with:
-          name: android
-          path: app/android/build/outputs/
+    uses: SorrowBlue/github-actions/.github/workflows/android-build.yml@main
+    with:
+      environment: android
+      task: 'bundlePrerelease assemblePrerelease'
+      output-path: 'app/android/build/outputs/'
+    secrets: inherit
 
   build-jvm:
     strategy:

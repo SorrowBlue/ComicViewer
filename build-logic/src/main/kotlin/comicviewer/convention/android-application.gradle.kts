@@ -31,34 +31,23 @@ android {
         )
     }
     signingConfigs {
-        val androidSigningDebugStoreFile: String? by project
-        if (!androidSigningDebugStoreFile.isNullOrEmpty()) {
-            maybeCreate("debug").apply {
-                val androidSigningDebugStorePassword: String? by project
-                val androidSigningDebugKeyAlias: String? by project
-                val androidSigningDebugKeyPassword: String? by project
-                storeFile = file(requireNotNull(androidSigningDebugStoreFile))
-                storePassword = androidSigningDebugStorePassword
-                keyAlias = androidSigningDebugKeyAlias
-                keyPassword = androidSigningDebugKeyPassword
+        listOf("debug", "release").forEach { configName ->
+            val capitalizedName = configName.replaceFirstChar { it.uppercase() }
+            val storeFilePath = (project.findProperty("androidSigning${capitalizedName}StoreFile")
+                ?: project.findProperty("androidSigningStoreFile")) as String?
+            if (!storeFilePath.isNullOrEmpty()) {
+                maybeCreate(configName).apply {
+                    storeFile = file(storeFilePath)
+                    storePassword = (project.findProperty("androidSigning${capitalizedName}StorePassword")
+                        ?: project.findProperty("androidSigningStorePassword")) as String?
+                    keyAlias = (project.findProperty("androidSigning${capitalizedName}KeyAlias")
+                        ?: project.findProperty("androidSigningKeyAlias")) as String?
+                    keyPassword = (project.findProperty("androidSigning${capitalizedName}KeyPassword")
+                        ?: project.findProperty("androidSigningKeyPassword")) as String?
+                }
+            } else {
+                logger.warn("Store file is not found.(androidSigning${capitalizedName}StoreFile or androidSigningStoreFile)")
             }
-        } else {
-            logger.warn("androidSigningDebugStoreFile not found")
-        }
-
-        val androidSigningReleaseStoreFile: String? by project
-        if (!androidSigningReleaseStoreFile.isNullOrEmpty()) {
-            maybeCreate("release").apply {
-                val androidSigningReleaseStorePassword: String? by project
-                val androidSigningReleaseKeyAlias: String? by project
-                val androidSigningReleaseKeyPassword: String? by project
-                storeFile = file(requireNotNull(androidSigningReleaseStoreFile))
-                storePassword = androidSigningReleaseStorePassword
-                keyAlias = androidSigningReleaseKeyAlias
-                keyPassword = androidSigningReleaseKeyPassword
-            }
-        } else {
-            logger.warn("androidSigningReleaseStoreFile not found")
         }
     }
 }

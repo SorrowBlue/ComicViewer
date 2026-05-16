@@ -16,57 +16,16 @@ jobs:
   lint-analysis:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/static-code-analysis.yml@main
+    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     with:
-      java-version: 21
-      java-distribution: 'temurin'
-      analysis-matrix: >
-        [
-          {
-            "task": "app:android:lintDebug",
-            "sarif_file": "build/reports/lint/lint-result.sarif",
-            "category": "android-lint"
-          },
-          {
-            "task": "app:android:lintInternal",
-            "sarif_file": "build/reports/lint/lint-result.sarif",
-            "category": "android-lint"
-          },
-          {
-            "task": "app:android:lintPrerelease",
-            "sarif_file": "build/reports/lint/lint-result.sarif",
-            "category": "android-lint"
-          },
-          {
-            "task": "app:android:lintRelease",
-            "sarif_file": "build/reports/lint/lint-result.sarif",
-            "category": "android-lint"
-          },
-        ]
+      matrix-json: '.github/lint-matrix.json'
 
   static-code-analysis:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/static-code-analysis.yml@main
+    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     with:
-      java-version: 21
-      java-distribution: 'temurin'
-      analysis-matrix: >
-        [
-          {
-            "task": "reportMerge --continue",
-            "sarif_file": "build/reports/detekt/merge.sarif",
-            "category": "detekt"
-          },
-          {
-            "task": ":build-logic:detektMain",
-            "sarif_file": "build-logic/build/reports/detekt/main.sarif",
-            "category": "detekt"
-          },
-          {
-            "task": "checkVersionCatalog"
-          }
-        ]
+      matrix-json: '.github/static-code-matrix.json'
 
   test-unit:
     uses: ./.github/workflows/test-unit.yml

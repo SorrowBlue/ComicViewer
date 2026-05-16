@@ -59,40 +59,34 @@ jobs:
             echo "  - Other files changed: $OTHER_FILES_CHANGED"
           fi
 
-  lint-analysis:
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
-    with:
-      java-version: 21
-      java-distribution: 'temurin'
-      matrix-json: '.github/lint-matrix.json'
-
-  static-code-analysis:
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
-    with:
-      java-version: 21
-      java-distribution: 'temurin'
-      matrix-json: '.github/static-code-matrix.json'
-
-  test-unit:
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/test-unit.yml
-
-  test-instrumentation:
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: ./.github/workflows/test-instrumentation.yml
+#  lint-analysis:
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
+#    with:
+#      matrix-json: '.github/lint-matrix.json'
+#
+#  static-code-analysis:
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
+#    with:
+#      matrix-json: '.github/static-code-matrix.json'
+#
+#  test-unit:
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: ./.github/workflows/test-unit.yml
+#
+#  test-instrumentation:
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: ./.github/workflows/test-instrumentation.yml
 
   build:
-    needs: [ lint-analysis, static-code-analysis, test-unit, test-instrumentation ]
+#    needs: [ lint-analysis, static-code-analysis, test-unit, test-instrumentation ]
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
-    with:
-      environment: android
     secrets: inherit
 
   allchecks:
