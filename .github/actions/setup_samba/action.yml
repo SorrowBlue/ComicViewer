@@ -1,0 +1,23 @@
+name: Setup Samba files
+runs:
+  using: "composite"
+  steps:
+    - name: Create test file for SMB share
+      shell: bash
+      run: |
+        sudo mkdir -p ${{ github.workspace }}/../samba_share/testfolder/books
+        for i in {1..100}; do
+          FILENAME=$(printf "test%03d.txt" $i)
+          echo "Hello world. This is file $FILENAME" | sudo tee ${{ github.workspace }}/../samba_share/testfolder/books/$FILENAME
+        done
+
+    - name: Create test zip file
+      shell: bash
+      run: |
+        sudo zip -j ${{ github.workspace }}/../samba_share/testfolder/books/test_files.zip ${{ github.workspace }}/../samba_share/testfolder/books/*.txt
+
+#    - name: Upload test zip
+#      uses: actions/upload-artifact@v7
+#      with:
+#        name: smb-test-zip
+#        path: /home/runner/work/ComicViewer/samba_share
