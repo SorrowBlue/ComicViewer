@@ -59,6 +59,7 @@ jobs:
           fi
 
   lint:
+    name: ${{ matrix.name }}
     needs: check-commit
     strategy:
       matrix:
