@@ -85,8 +85,6 @@ jobs:
             sarif_file: 'build-logic/build/reports/detekt/main.sarif'
             category: 'detekt'
           - task: 'checkVersionCatalog'
-            sarif_file: 'build-logic/build/reports/detekt/main.sarif'
-            category: 'detekt'
     if: needs.check-commit.outputs.should-run == 'true'
     uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
     with:
