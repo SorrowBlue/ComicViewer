@@ -18,6 +18,6 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     uses: SorrowBlue/github-actions/.github/workflows/android-build.yml@main
     with:
-      run-on: ${{ matrix.os }}
+      runs-on: ${{ matrix.os }}
       task: packageDistributionForCurrentOS
       output-path: app/jvm/build/compose/binaries/main/
