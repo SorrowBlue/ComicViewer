@@ -43,5 +43,5 @@ jobs:
           nodetail: true
           title: ":sparkles: Uploaded to internal app share."
           description: |
-            Click [here](${{ jobs.build-upload.outputs.internalSharingDownloadUrl }}) to download!
+            Click [here](${{ needs.build-upload.outputs.internalSharingDownloadUrl }}) to download!
           color: 0xff91a4
