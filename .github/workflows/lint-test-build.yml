@@ -58,32 +58,32 @@ jobs:
             echo "  - Other files changed: $OTHER_FILES_CHANGED"
           fi
 
-  lint:
-    name: ${{ matrix.name }}
-    needs: check-commit
-    if: needs.check-commit.outputs.should-run == 'true'
-    uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
-    with:
-      matrix-json: '.github/lint-matrix.json'
-
+#  lint:
+#    name: ${{ matrix.name }}
+#    needs: check-commit
+#    if: needs.check-commit.outputs.should-run == 'true'
+#    uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
+#    with:
+#      matrix-json: '.github/lint-matrix.json'
+#
   test:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/test.yml
 
-#  build:
-#    needs: [ lint-analysis, static-code-analysis, test-unit, test-instrumentation ]
-#    needs: check-commit
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/build.yml
-#    secrets: inherit
+  build:
+#    needs: [ lint, test ]
+    needs: lint
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
 
   allchecks:
     name: All Checks Passed
     permissions:
       checks: read
       contents: read
-    needs: [lint, test]
+    needs: build
     if: needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:

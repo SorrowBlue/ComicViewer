@@ -4,13 +4,13 @@ on:
 
 jobs:
 
-  build-android:
+  android-build:
     uses: SorrowBlue/github-actions/.github/workflows/android-build.yml@main
+    secrets: inherit
     with:
       environment: android
-      task: 'bundlePrerelease assemblePrerelease'
-      output-path: 'app/android/build/outputs/'
-    secrets: inherit
+      task: bundlePrerelease assemblePrerelease
+      output-path: app/android/build/outputs/
 
 #  build-jvm:
 #    strategy:
