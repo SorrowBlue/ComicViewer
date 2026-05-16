@@ -91,6 +91,11 @@ jobs:
             category: 'android-lint'
     if: needs.check-commit.outputs.should-run == 'true'
     uses: SorrowBlue/github-actions/.github/workflows/analyze.yml@main
+    with:
+      name: ${{ matrix.name }}
+      task: ${{ matrix.task }}
+      sarif_file: ${{ matrix.sarif_file }}
+      category: ${{ matrix.category }}
 
 #  test:
 #    needs: check-commit
