@@ -13,6 +13,9 @@
         <item quantity="one">one page</item>
         <item quantity="other">%1$d pages</item>
     </plurals>
+    <plurals name="file_label_file_count">
+        <item quantity="other">%1$d Files</item>
+    </plurals>
     <string name="file_desc_open_file_info">Open file information</string>
     <string name="file_action_change_grid_size">Change Grid size</string>
     <string name="file_action_show_hidden">Show hidden files</string>
@@ -34,5 +37,7 @@
     <string name="file_attribute_temporary">Temporary</string>
     <string name="file_attribute_volume">Volume</string>
     <string name="file_info_label_remove_read_later">Remove from Read later</string>
+    <string name="file_label_read_completed">Completed</string>
+    <string name="file_label_read_percent">%1$d%% Read</string>
 
 </resources>

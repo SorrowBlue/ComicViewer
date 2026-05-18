@@ -10,6 +10,9 @@
     <plurals name="file_text_page_count">
         <item quantity="other">%1$d ページ</item>
     </plurals>
+    <plurals name="file_label_file_count">
+        <item quantity="other">%1$d個のファイル</item>
+    </plurals>
     <string name="file_desc_open_file_info">ファイル情報を見る</string>
     <string name="file_action_change_grid_size">グリッドサイズ</string>
     <string name="file_action_show_hidden">隠しファイルを表示</string>
@@ -31,4 +34,6 @@
     <string name="file_attribute_temporary">一時ファイル</string>
     <string name="file_attribute_volume">ボリューム</string>
     <string name="file_info_label_remove_read_later">後で読むから削除</string>
+    <string name="file_label_read_completed">読了</string>
+    <string name="file_label_read_percent">%1$d%% 既読</string>
 </resources>

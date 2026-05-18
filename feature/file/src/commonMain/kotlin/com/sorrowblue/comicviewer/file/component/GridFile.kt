@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.file.component
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.visible
 import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -41,6 +41,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
@@ -59,6 +61,11 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_desc_open_file_info
+import comicviewer.feature.file.generated.resources.file_label_file_count
+import comicviewer.feature.file.generated.resources.file_label_folder
+import comicviewer.feature.file.generated.resources.file_label_read_completed
+import comicviewer.feature.file.generated.resources.file_label_read_percent
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -70,7 +77,6 @@ import org.jetbrains.compose.resources.stringResource
  * @param showThumbnail サムネイル表示を有効にするか
  * @param modifier Modifier
  */
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun GridFile(
     file: File,
@@ -138,18 +144,17 @@ fun GridFile(
                     )
                 }
             }
-            if (file is Folder) {
-                AssistChip(
-                    onClick = {},
-                    label = { Text("Folder") },
-                    colors = AssistChipDefaults.assistChipColors(
-                        containerColor = ComicTheme.colorScheme.secondaryContainer.copy(
-                            alpha = 0.65f,
-                        ),
+            AssistChip(
+                onClick = {},
+                label = { Text(stringResource(Res.string.file_label_folder)) },
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = ComicTheme.colorScheme.secondaryContainer.copy(
+                        alpha = 0.65f,
                     ),
-                    modifier = Modifier.align(Alignment.BottomStart).padding(start = 8.dp),
-                )
-            }
+                ),
+                modifier = Modifier.align(Alignment.BottomStart).padding(start = 8.dp)
+                    .visible(file is Folder),
+            )
             IconButton(
                 onClick = onInfoClick,
                 modifier = Modifier.testTag("FileListItemMenu").align(Alignment.TopEnd),
@@ -180,7 +185,11 @@ fun GridFile(
         )
         if (file is Folder) {
             Text(
-                text = "${file.count} Items",
+                text = pluralStringResource(
+                    Res.plurals.file_label_file_count,
+                    file.count,
+                    file.count,
+                ),
                 style = ComicTheme.typography.labelSmall.copy(),
                 color = ComicTheme.colorScheme.onSurface,
             )
@@ -188,19 +197,26 @@ fun GridFile(
         if (file is Book) {
             Row {
                 Text(
-                    text = if ((file.lastPageRead + 1).toFloat() / file.totalPageCount ==
-                        1f
-                    ) {
-                        "Completed"
+                    text = if ((file.lastPageRead + 1).toFloat() / file.totalPageCount == 1f) {
+                        stringResource(Res.string.file_label_read_completed)
                     } else {
-                        "${((file.lastPageRead + 1).toFloat() / file.totalPageCount * 100).toInt()}% Read"
+                        stringResource(
+                            Res.string.file_label_read_percent,
+                            ((file.lastPageRead + 1).toFloat() / file.totalPageCount * 100).toInt(),
+                        )
                     },
                     style = ComicTheme.typography.labelSmall.copy(),
                     color = ComicTheme.colorScheme.onSurface,
+                    modifier = Modifier.visible(file.totalPageCount > 0),
                 )
                 Spacer(Modifier.weight(1f))
+                val text = if (file.totalPageCount == 0) {
+                    "- / -"
+                } else {
+                    "${if (file.lastPageRead == 0) "-" else file.lastPageRead + 1} / ${file.totalPageCount}"
+                }
                 Text(
-                    text = "${if (file.lastPageRead == 0) "-" else file.lastPageRead + 1} / ${file.totalPageCount}",
+                    text = text,
                     style = ComicTheme.typography.labelSmall.copy(),
                     color = ComicTheme.colorScheme.onSurface,
                 )
@@ -219,7 +235,8 @@ fun GridFile(
                     )
                 },
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .visible(file.totalPageCount > 0),
             )
         }
     }
@@ -260,7 +277,7 @@ private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
 @Preview(widthDp = 180, showBackground = true)
 @Preview(widthDp = 200, showBackground = true)
 @Composable
-internal fun FileGridPreview() {
+private fun FileGridPreview() {
     PreviewTheme {
         GridFile(
             file = fakeBookFile(),
@@ -279,7 +296,7 @@ internal fun FileGridPreview() {
 @Preview(widthDp = 180, showBackground = true)
 @Preview(widthDp = 200, showBackground = true)
 @Composable
-internal fun FileGridFolderPreview() {
+private fun FileGridFolderPreview() {
     PreviewTheme {
         GridFile(
             file = fakeFolder(),
@@ -291,4 +308,37 @@ internal fun FileGridFolderPreview() {
             filterQuality = FilterQuality.None,
         )
     }
+}
+
+@Preview(widthDp = 200, showBackground = true)
+@Composable
+private fun FileGridNoPreview(
+    @PreviewParameter(
+        PageCountProvider::class,
+    ) pageCount: Pair<Int, Int>,
+) {
+    PreviewTheme {
+        GridFile(
+            file = fakeBookFile()
+                .copy(
+                    lastPageRead = pageCount.first,
+                    totalPageCount = pageCount.second,
+                ),
+            onClick = {},
+            onInfoClick = {},
+            showThumbnail = true,
+            fontSize = FolderDisplaySettingsDefaults.FontSize,
+            contentScale = ContentScale.Crop,
+            filterQuality = FilterQuality.None,
+        )
+    }
+}
+
+internal class PageCountProvider : PreviewParameterProvider<Pair<Int, Int>> {
+    override val values = sequenceOf(
+        0 to 0,
+        0 to 999,
+        444 to 999,
+        999 to 999,
+    )
 }
