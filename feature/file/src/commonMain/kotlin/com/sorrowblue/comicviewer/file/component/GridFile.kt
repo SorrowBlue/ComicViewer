@@ -197,7 +197,7 @@ fun GridFile(
         if (file is Book) {
             Row {
                 Text(
-                    text = if ((file.lastPageRead + 1).toFloat() / file.totalPageCount == 1f) {
+                    text = if (file.totalPageCount == file.lastPageRead + 1) {
                         stringResource(Res.string.file_label_read_completed)
                     } else {
                         stringResource(
