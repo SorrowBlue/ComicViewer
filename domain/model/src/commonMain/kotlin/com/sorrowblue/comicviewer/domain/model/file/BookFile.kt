@@ -23,10 +23,12 @@ data class BookFile private constructor(
     fun copy(
         size: Long = this.size,
         sortIndex: Int = this.sortIndex,
+        lastPageRead: Int = this.lastPageRead,
         totalPageCount: Int = this.totalPageCount,
     ) = copy(
         bookshelfId = bookshelfId,
         size = size,
+        lastPageRead = lastPageRead,
         totalPageCount = totalPageCount,
         sortIndex = sortIndex,
     )

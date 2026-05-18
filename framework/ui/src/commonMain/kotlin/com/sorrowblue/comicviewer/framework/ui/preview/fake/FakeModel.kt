@@ -43,8 +43,8 @@ fun fakeBookFile(bookshelfId: Int = 0, @IntRange(0, 19) index: Int = 0) = BookFi
     size = FileNames[index].hashCode().toLong(),
     lastModifier = FileNames[index].hashCode().toLong(),
     isHidden = false,
-    totalPageCount = FileNames[index].hashCode(),
-    lastPageRead = FileNames[index].hashCode() / 2,
+    totalPageCount = 999,
+    lastPageRead = 444,
 )
 
 @OptIn(InternalDataApi::class)
