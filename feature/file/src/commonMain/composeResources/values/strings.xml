@@ -14,6 +14,7 @@
         <item quantity="other">%1$d pages</item>
     </plurals>
     <plurals name="file_label_file_count">
+        <item quantity="one">%1$d File</item>
         <item quantity="other">%1$d Files</item>
     </plurals>
     <string name="file_desc_open_file_info">Open file information</string>
