@@ -18,8 +18,6 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            isMinifyEnabled = false
-            isShrinkResources = false
             signingConfig = signingConfigs.findByName("debug")
         }
         val release by getting {
