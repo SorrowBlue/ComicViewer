@@ -5,7 +5,7 @@ import dev.zacsweers.metro.MapKey
 typealias FileReaderFactoryMap = Map<FileReaderType, FileReaderFactory>
 
 interface FileReaderFactory {
-    fun create(mimeType: String, seekableInputStream: SeekableInputStream): FileReader
+    fun create(seekableInputStream: SeekableInputStream): FileReader
 }
 
 @MapKey

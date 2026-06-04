@@ -127,11 +127,11 @@ class IosSmbFileClientImpl: IosSmbFileClient {
         return list
     }
 
-    func bufferedSource(file: any File) async throws -> any OkioBufferedSource {
+    func source(file: any File) async throws -> any kotlinxIoSource {
         let client = try await connectShare(path: file.path)
         let subPath = file.path.withoutShare()
         let data = try await client.contents(atPath: subPath)
-        return IosSmbFileClientKt.toBufferedSource(data)
+        return IosSmbFileClientKt.toSource(data)
     }
 
     func attribute(path: String) async throws -> FileAttribute {

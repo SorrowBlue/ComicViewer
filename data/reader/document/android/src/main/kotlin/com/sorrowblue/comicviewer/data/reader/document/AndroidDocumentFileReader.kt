@@ -18,10 +18,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.asSource
+import kotlinx.io.buffered
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import okio.BufferedSink
 
 internal const val PdfPluginPackage = "com.sorrowblue.comicviewer.plugin.pdf"
 internal const val PdfPluginService = "com.sorrowblue.comicviewer.plugin.pdf.PdfService"
@@ -84,11 +87,15 @@ class AndroidDocumentFileReader(
         }
     }
 
-    override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
-        mutex.withLock {
-            withContext(dispatcher) {
-                requireNotNull(fileReader).loadPage(pageIndex, bufferedSink)
-            }
+    override suspend fun source(pageIndex: Int): Source = mutex.withLock {
+        withContext(dispatcher) {
+            requireNotNull(fileReader).source(pageIndex)
+        }
+    }
+
+    override suspend fun extractTo(pageIndex: Int, sink: Sink) = mutex.withLock {
+        withContext(dispatcher) {
+            requireNotNull(fileReader).source(pageIndex).transferTo(sink)
         }
     }
 
@@ -105,14 +112,7 @@ class AndroidDocumentFileReader(
         }
     }
 
-    private fun PluginFileReader.loadPage(pageIndex: Int, bufferedSink: BufferedSink) {
-        loadPage(pageIndex)
-            .toUri()
-            .let(context.contentResolver::openInputStream)
-            ?.use { inputStream ->
-                bufferedSink.outputStream().use {
-                    inputStream.copyTo(it)
-                }
-            }
-    }
+    private fun PluginFileReader.source(pageIndex: Int): Source = loadPage(pageIndex)
+        .toUri()
+        .let(context.contentResolver::openInputStream)?.asSource()?.buffered()!!
 }

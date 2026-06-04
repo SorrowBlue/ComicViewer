@@ -37,6 +37,7 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.filekit.core)
             implementation(libs.jcifs)
+            implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.compose.componentsAnimatedimage)
         }
     }

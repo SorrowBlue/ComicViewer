@@ -57,11 +57,8 @@ multiplatform-navigation3 = "1.1.1"
 navigation3-resultstate = "1.2.0"
 rin = "0.4.0"
 robolectric = "4.16.1"
-sevenzipjbinding = "16.02-2.01"
-sevenzipjbinding-android = "16.02-2.03.1"
 slf4j-android = "2.0.17-0"
 soil = "1.0.0-alpha15"
-squareup-okio = "3.17.0"
 targetSdk = "37"
 versionCatalogLinter = "1.1.0"
 
@@ -145,6 +142,8 @@ kotlinx-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coro
 kotlinx-coroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version = "0.9.0" }
+kotlinx-ioOkio = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-okio", version = "0.9.0" }
 kotlinx-serializationCbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
 kotlinx-serializationCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
@@ -154,14 +153,12 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 metro-android = { group = "dev.zacsweers.metro", name = "metrox-android", version.ref = "metro" }
 metro-gradlePlugin = { group = "dev.zacsweers.metro", name = "dev.zacsweers.metro.gradle.plugin", version.ref = "metro" }
 navigation3-resultstate = { group = "io.github.irgaly.navigation3.resultstate", name = "resultstate", version.ref = "navigation3-resultstate" }
-okio = { group = "com.squareup.okio", name = "okio", version.ref = "squareup-okio" }
 rin = { group = "io.github.takahirom.rin", name = "rin", version.ref = "rin" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
-sevenzipjbinding = { group = "net.sf.sevenzipjbinding", name = "sevenzipjbinding", version.ref = "sevenzipjbinding" }
-sevenzipjbinding-allPlatforms = { group = "com.github.shayartzi.sevenzipjbinding", name = "sevenzipjbinding-all-platforms", version.ref = "sevenzipjbinding" }
-sevenzipjbinding-android = { group = "com.sorrowblue.sevenzipjbinding", name = "7-Zip-JBinding-4Android", version.ref = "sevenzipjbinding-android" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version.ref = "slf4j-android" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version.ref = "soil" }
+kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version = "0.3.0-beta.2" }
+kpdfium = { group = "com.sorrowblue.kpdfium", name = "kpdfium", version = "0.0.1-SNAPSHOT" }
 
 [bundles]
 detekt = [

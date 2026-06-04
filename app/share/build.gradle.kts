@@ -32,7 +32,6 @@ kotlin {
             dependencies {
                 rootProject.subprojects.filterNot {
                     it.path == project.path || it.path.startsWith(projects.app.path)
-                        || it.path == projects.data.reader.document.android.path
                 }.forEach {
                     val hasSource = it.projectDir.resolve("src").exists()
                     if (hasSource) {
@@ -62,7 +61,6 @@ kotlin {
             implementation(libs.kotlinx.coroutinesTest)
         }
         androidMain.dependencies {
-            api(projects.data.reader.document.android)
             implementation(libs.metro.android)
             implementation(libs.androidx.workRuntime)
             implementation(libs.androidx.appcompat)

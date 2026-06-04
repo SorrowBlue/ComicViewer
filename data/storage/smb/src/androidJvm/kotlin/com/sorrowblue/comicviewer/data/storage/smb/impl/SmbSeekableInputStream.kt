@@ -34,9 +34,19 @@ internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) : Seekab
         return file.filePointer
     }
 
+    override fun seek(position: Long): Long {
+        file.seek(position)
+        return file.filePointer
+    }
+
+    override fun length(): Long = file.length()
+
     override fun position(): Long = file.filePointer
 
     override fun read(buf: ByteArray): Int = file.read(buf)
+
+    override fun read(buf: ByteArray, offset: Int, length: Int): Int =
+        file.read(buf, offset, length)
 
     override fun close() {
         file.close()

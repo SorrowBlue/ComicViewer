@@ -16,7 +16,9 @@ import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import okio.BufferedSink
+import kotlinx.io.Source
+import kotlinx.io.buffered
+import kotlinx.io.okio.asKotlinxIoRawSource
 
 @VisibleForAssistedInject
 @AssistedInject
@@ -31,7 +33,6 @@ actual class ZipFileReader(
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
         actual override fun create(
-            mimeType: String,
             seekableInputStream: SeekableInputStream,
         ): ZipFileReader
     }
@@ -46,9 +47,11 @@ actual class ZipFileReader(
 
     actual override suspend fun pageCount(): Int = iosZipFileReader.pageCount()
 
-    actual override suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink) {
-        mutex.withLock {
-            iosZipFileReader.copyTo(pageIndex, bufferedSink)
+    actual override suspend fun source(pageIndex: Int): Source {
+        return mutex.withLock {
+            Buffer().also {
+                iosZipFileReader.copyTo(pageIndex, it)
+            }.asKotlinxIoRawSource().buffered()
         }
     }
 

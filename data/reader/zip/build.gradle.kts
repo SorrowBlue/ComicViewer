@@ -14,18 +14,12 @@ kotlin {
             dependencies {
                 implementation(projects.data.storage)
                 implementation(libs.kotlinx.coroutinesCore)
+                implementation(libs.kioarch)
             }
         }
         androidMain {
             dependencies {
                 implementation(libs.androidx.startupRuntime)
-                implementation(libs.sevenzipjbinding.android)
-            }
-        }
-        jvmMain {
-            dependencies {
-                implementation(libs.sevenzipjbinding)
-                implementation(libs.sevenzipjbinding.allPlatforms)
             }
         }
     }

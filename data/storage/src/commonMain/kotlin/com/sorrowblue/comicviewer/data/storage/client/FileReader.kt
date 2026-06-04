@@ -1,11 +1,14 @@
 package com.sorrowblue.comicviewer.data.storage.client
 
-import okio.BufferedSink
+import kotlinx.io.Sink
+import kotlinx.io.Source
 
 interface FileReader : AutoCloseable {
     suspend fun pageCount(): Int
 
-    suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink)
+    suspend fun source(pageIndex: Int): Source
+
+    suspend fun extractTo(pageIndex: Int, sink: Sink)
 
     suspend fun fileSize(pageIndex: Int): Long
 

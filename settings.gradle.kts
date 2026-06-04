@@ -42,7 +42,6 @@ kover {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        mavenLocal()
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -52,15 +51,14 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         maven {
-            name = "gitlab-maven"
-            url = uri("https://gitlab.com/api/v4/projects/59936705/packages/maven")
+            name = "Central Portal Snapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+
             content {
-                includeModule(
-                    "com.github.shayartzi.sevenzipjbinding",
-                    "sevenzipjbinding-all-platforms"
-                )
+                includeGroupByRegex("com.sorrowblue.*")
             }
         }
+        mavenLocal()
     }
 }
 
@@ -88,7 +86,6 @@ include(":data:database")
 include(":data:datastore")
 include(":data:reader:zip")
 include(":data:reader:document")
-include(":data:reader:document:android")
 include(":data:storage")
 include(":data:storage:smb")
 include(":data:storage:device")

@@ -1,9 +1,10 @@
 package com.sorrowblue.comicviewer.data.coil.fetcher.folder
 
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
+import kotlinx.io.Sink
+import kotlinx.io.writeString
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import okio.BufferedSink
 
 @Serializable
 internal data class FolderThumbnailMetadata(
@@ -12,7 +13,7 @@ internal data class FolderThumbnailMetadata(
     val lastModifier: Long,
     val thumbnails: String?,
 ) : CoilMetadata {
-    override fun writeTo(bufferedSink: BufferedSink) {
-        bufferedSink.writeUtf8(Json.encodeToString(this))
+    override fun writeTo(sink: Sink) {
+        sink.writeString(Json.encodeToString(this))
     }
 }

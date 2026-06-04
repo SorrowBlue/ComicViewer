@@ -10,12 +10,12 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.data.storage)
-                implementation(libs.okio)
+                implementation(libs.kpdfium)
             }
         }
         androidMain {
             dependencies {
-                implementation(projects.data.reader.document.android)
+//                implementation(projects.data.reader.document.android)
                 implementation(libs.kotlinx.coroutinesCore)
                 implementation(libs.androidx.coreKtx)
                 implementation(libs.androidx.startupRuntime)

@@ -9,9 +9,10 @@ import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.pageDiskCache
+import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.di.CoilScope
+import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
-import com.sorrowblue.comicviewer.data.coil.fetcher.FileFetcher
 import com.sorrowblue.comicviewer.data.coil.resizeImage
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
@@ -30,26 +31,103 @@ import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.io.Source
 import logcat.asLog
 import logcat.logcat
-import okio.Buffer
-import okio.BufferedSource
-import okio.use
 
 private var fileReader: FileReader? = null
 private var book: Book? = null
-
 private val mutex = Mutex()
 
 internal class BookPageImageFetcher(
+    private val data: BookPageImage,
     options: Options,
     diskCacheLazy: Lazy<DiskCache>,
-    private val data: BookPageImage,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
     private val fileClientFactory: FileClientFactory,
-) : FileFetcher<BookPageImageMetadata>(options, diskCacheLazy) {
+) : BaseFetcher<BookPageImage, BookPageImageMetadata>(data, options, diskCacheLazy) {
+
+    override val diskCacheKey
+        get() = options.diskCacheKey
+            ?: "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}"
+
+    override suspend fun doFetch(): FetchResult {
+        var snapshot = readFromDiskCache()
+        runCatching {
+            // Fast path: fetch the image from the disk cache without performing a network request.
+            val result = fastPath(snapshot)
+            if (result != null) {
+                return result
+            }
+            val bookshelf = if (data.book.bookshelfId == BookshelfId()) {
+                ShareContents
+            } else {
+                checkNotNull(bookshelfLocalDataSource.flow(data.book.bookshelfId).first()) {
+                    "Bookshelf not found. id: ${data.book.bookshelfId}"
+                }
+            }
+            val dataSource = remoteDataSourceFactory.create(bookshelf)
+            check(dataSource.exists(data.book.path)) {
+                "File not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
+            }
+            val fileReader =
+                findFileReader() ?: fileClientFactory.getFileClient(bookshelf).fileReader(data.book)
+                    .also {
+                        book = data.book
+                        fileReader = it
+                    }
+            val viewerSettings = datastoreDataSource.viewerSettings.first()
+            val quality = viewerSettings.imageQuality
+            val compressFormat = viewerSettings.imageFormat
+            return runCatching {
+                // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
+                snapshot = writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
+                    if (compressFormat == ImageFormat.ORIGINAL) {
+                        fileReader.extractTo(data.pageIndex, sink)
+                    } else {
+                        fileReader.source(data.pageIndex).use { inputSource ->
+                            resizeImage(
+                                inputSource,
+                                sink,
+                                compressFormat,
+                                quality,
+                            )
+                        }
+                    }
+                }
+                snapshot?.let {
+                    SourceFetchResult(
+                        source = it.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.NETWORK,
+                    )
+                }
+                // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
+                SourceFetchResult(
+                    source = fileReader.source(data.pageIndex).toImageSource(),
+                    mimeType = null,
+                    dataSource = DataSource.NETWORK,
+                )
+            }.onFailure {
+                logcat { it.asLog() }
+            }.getOrThrow()
+        }.onFailure {
+            snapshot?.closeQuietly()
+        }.getOrThrow()
+    }
+
+    override suspend fun metadata(): BookPageImageMetadata = BookPageImageMetadata(data)
+
+    override fun readFrom(source: Source): BookPageImageMetadata =
+        CoilMetadata.from<BookPageImageMetadata>(source)
+
+    private suspend fun findFileReader(): FileReader? = mutex.withLock {
+        fileReader?.takeIf { book == data.book }?.also {
+            logcat { "同じFileReaderを使う。${data.book.bookshelfId} ${data.book.path}" }
+        }
+    }
 
     @ClassKey(BookPageImage::class)
     @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
@@ -69,81 +147,13 @@ internal class BookPageImageFetcher(
     ) : Fetcher.Factory<BookPageImage> {
         override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
             BookPageImageFetcher(
+                data,
                 options,
                 lazy { coilDiskCacheLazy.value.pageDiskCache(data.book.bookshelfId) },
-                data,
                 remoteDataSourceFactory,
                 bookshelfLocalDataSource,
                 datastoreDataSource,
                 fileClientFactory,
             )
-    }
-
-    override val diskCacheKey
-        get() = options.diskCacheKey
-            ?: "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}"
-
-    override suspend fun metadata() = BookPageImageMetadata(data)
-
-    override fun BufferedSource.readMetadata() = CoilMetadata.from<BookPageImageMetadata>(this)
-
-    override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
-        val bookshelf = if (data.book.bookshelfId == BookshelfId()) {
-            ShareContents
-        } else {
-            checkNotNull(bookshelfLocalDataSource.flow(data.book.bookshelfId).first()) {
-                "Bookshelf not found. id: ${data.book.bookshelfId}"
-            }
-        }
-        val dataSource = remoteDataSourceFactory.create(bookshelf)
-        check(dataSource.exists(data.book.path)) {
-            "File not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
-        }
-        val fileReader =
-            findFileReader() ?: fileClientFactory.getFileClient(bookshelf).fileReader(data.book)
-                .also {
-                    book = data.book
-                    fileReader = it
-                }
-        val viewerSettings = datastoreDataSource.viewerSettings.first()
-        val quality = viewerSettings.imageQuality
-        val compressFormat = viewerSettings.imageFormat
-        return runCatching {
-            // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-            writeToDiskCache(snapshot = snapshot, metaData = metadata()) { sink ->
-                if (compressFormat == ImageFormat.ORIGINAL) {
-                    fileReader.copyTo(data.pageIndex, sink)
-                } else {
-                    Buffer().use { buffer ->
-                        fileReader.copyTo(data.pageIndex, buffer)
-                        resizeImage(buffer, sink, compressFormat, quality)
-                    }
-                }
-            }?.let { snapshot1 ->
-                SourceFetchResult(
-                    source = snapshot1.toImageSource(),
-                    mimeType = null,
-                    dataSource = DataSource.NETWORK,
-                )
-            } ?: run {
-                // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
-                Buffer().let {
-                    fileReader.copyTo(data.pageIndex, it)
-                    SourceFetchResult(
-                        source = it.toImageSource(),
-                        mimeType = null,
-                        dataSource = DataSource.NETWORK,
-                    )
-                }
-            }
-        }.onFailure {
-            logcat { it.asLog() }
-        }.getOrThrow()
-    }
-
-    private suspend fun findFileReader(): FileReader? = mutex.withLock {
-        fileReader?.takeIf { book == data.book }?.also {
-            logcat { "同じFileReaderを使う。${data.book.bookshelfId} ${data.book.path}" }
-        }
     }
 }

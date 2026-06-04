@@ -6,9 +6,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -69,7 +71,7 @@ internal fun BookshelfWizardScreen(
             ) { pageIndex ->
                 content(pages[pageIndex], contentPadding.plus(PaddingValues(top = 8.dp)))
             }
-            AnimatedVisibility(pages.size != 1, enter = fadeIn(), exit = fadeOut()) {
+            AnimatedVisibility(pages.size > 1, enter = fadeIn(), exit = fadeOut()) {
                 Row {
                     HorizontalPagerIndicator(
                         pagerState = pagerState,
@@ -88,7 +90,6 @@ internal fun BookshelfWizardScreen(
                 }
             }
             if (!isTouchable) {
-//                if (pagerState.canScrollBackward) {
                 FilledTonalIconButton(
                     onClick = onPrevClick,
                     modifier = Modifier.align(
@@ -100,8 +101,6 @@ internal fun BookshelfWizardScreen(
                 ) {
                     Icon(ComicIcons.ArrowLeft, null)
                 }
-//                }
-//                if (pagerState.canScrollForward) {
                 FilledTonalIconButton(
                     onClick = onNextClick,
                     modifier = Modifier.align(
@@ -114,7 +113,6 @@ internal fun BookshelfWizardScreen(
                 ) {
                     Icon(ComicIcons.ArrowRight, null)
                 }
-//                }
             }
         }
     }
@@ -125,6 +123,7 @@ internal fun BookshelfWizardScreen(
 @Composable
 private fun BookshelfWizardScreenSelectionPreview() {
     PreviewTheme {
+        Box(Modifier.fillMaxSize())
         BookshelfWizardScreen(
             uiState = BookshelfWizardScreenUiState(
                 title = stringResource(Res.string.bookshelf_wizard_title_register),
@@ -132,9 +131,10 @@ private fun BookshelfWizardScreenSelectionPreview() {
             pages = remember {
                 mutableStateListOf(
                     BookshelfWizardPage.Selection,
+                    BookshelfWizardPage.Edit(BookshelfEditType.Register(BookshelfType.DEVICE)),
                 )
             },
-            pagerState = remember { PagerState { 1 } },
+            pagerState = rememberPagerState(0) { 2 },
             onBack = {},
             onPrevClick = {},
             onNextClick = {},
@@ -154,9 +154,10 @@ private fun BookshelfWizardScreenSelectionPreview() {
 @Composable
 private fun BookshelfWizardScreenSmbEditorPreview() {
     PreviewTheme {
+        Box(Modifier.fillMaxSize())
         BookshelfWizardScreen(
             uiState = BookshelfWizardScreenUiState(
-                title = stringResource(Res.string.bookshelf_wizard_title_register),
+                title = "Register",
             ),
             pages = remember {
                 mutableStateListOf(
@@ -164,7 +165,7 @@ private fun BookshelfWizardScreenSmbEditorPreview() {
                     BookshelfWizardPage.Edit(BookshelfEditType.Register(BookshelfType.DEVICE)),
                 )
             },
-            pagerState = remember { PagerState(1) { 2 } },
+            pagerState = rememberPagerState(0) { 2 },
             onBack = {},
             onPrevClick = {},
             onNextClick = {},
@@ -190,9 +191,10 @@ private fun BookshelfWizardScreenSmbEditorPreview() {
 @Composable
 private fun BookshelfWizardScreenDeviceEditorPreview() {
     PreviewTheme {
+        Box(Modifier.fillMaxSize())
         BookshelfWizardScreen(
             uiState = BookshelfWizardScreenUiState(
-                title = stringResource(Res.string.bookshelf_wizard_title_register),
+                title = "Register",
             ),
             pages = remember {
                 mutableStateListOf(
@@ -200,7 +202,7 @@ private fun BookshelfWizardScreenDeviceEditorPreview() {
                     BookshelfWizardPage.Edit(BookshelfEditType.Register(BookshelfType.DEVICE)),
                 )
             },
-            pagerState = remember { PagerState(1) { 2 } },
+            pagerState = rememberPagerState(1) { 2 },
             onBack = {},
             onPrevClick = {},
             onNextClick = {},

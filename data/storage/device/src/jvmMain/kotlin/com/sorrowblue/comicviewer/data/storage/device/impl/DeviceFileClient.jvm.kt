@@ -20,8 +20,10 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
+import io.github.vinceglb.filekit.utils.toPath
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
@@ -30,13 +32,13 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.buffered
+import kotlinx.io.files.SystemFileSystem
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import okio.BufferedSource
-import okio.FileSystem
-import okio.Path.Companion.toPath
-import okio.buffer
 
 @VisibleForAssistedInject
 @AssistedInject
@@ -56,7 +58,7 @@ actual class DeviceFileClient(
         logcat { "listFiles(file.path=${file.path}, resolveImageFolder=$resolveImageFolder)" }
         return kotlin.runCatching {
             Files
-                .list(file.path.toPath().toNioPath())
+                .list(Path(file.path))
                 .map { it.toFileModel(resolveImageFolder) }
                 .toList()
         }.onFailure {
@@ -71,24 +73,28 @@ actual class DeviceFileClient(
 
     actual override suspend fun exists(path: String): Boolean {
         logcat { "exists(path=$path)" }
-        return path.toPath().toNioPath().exists()
+        return Path(path).exists()
     }
 
     actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         logcat { "current(path=$path, resolveImageFolder=$resolveImageFolder)" }
-        return path.toPath().toNioPath().toFileModel(resolveImageFolder)
+        return Path(path).toFileModel(resolveImageFolder)
     }
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource =
-        FileSystem.SYSTEM.source(file.path.toPath()).buffer()
+    actual override suspend fun source(file: File): Source =
+        SystemFileSystem.source(file.path.toPath()).buffered()
+
+    actual override suspend fun extractTo(file: File, sink: Sink) {
+        SystemFileSystem.source(file.path.toPath()).buffered().transferTo(sink)
+    }
 
     actual override suspend fun seekableInputStream(file: File): SeekableInputStream =
-        LocalFileSeekableInputStream(file.path.toPath().toNioPath())
+        LocalFileSeekableInputStream(Path(file.path))
 
     actual override suspend fun connect(path: String) {
         logcat { "connect(path=$path)" }
         kotlin.runCatching {
-            path.toPath().toNioPath().exists()
+            Path(path).exists()
         }.fold({
             if (!it) {
                 throw FileClientException.InvalidPath()
@@ -106,7 +112,7 @@ actual class DeviceFileClient(
     actual override suspend fun attribute(path: String): FileAttribute = FileAttribute()
 
     actual override suspend fun fileSize(path: String): Long {
-        val ioPath = path.toPath().toNioPath()
+        val ioPath = Path(path)
         return if (ioPath.isDirectory()) {
             withContext(dispatcher) { Files.list(ioPath) }
                 .toList()

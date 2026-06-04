@@ -22,8 +22,8 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.io.Source
 import kotlinx.io.files.Path
-import okio.BufferedSource
 
 @VisibleForAssistedInject
 @AssistedInject
@@ -53,8 +53,7 @@ actual class SmbFileClient(
     actual override suspend fun current(path: String, resolveImageFolder: Boolean): File =
         iosSmbFileClient.current(path).toFileModel(resolveImageFolder)
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource =
-        iosSmbFileClient.bufferedSource(file)
+    actual override suspend fun source(file: File): Source = iosSmbFileClient.source(file)
 
     actual override suspend fun seekableInputStream(file: File): SeekableInputStream =
         iosSmbFileClient.seekableInputStream(file)

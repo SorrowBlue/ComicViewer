@@ -3,8 +3,8 @@ package com.sorrowblue.comicviewer.data.coil
 import coil3.disk.DiskCache
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import kotlin.reflect.KProperty
-import okio.BufferedSink
-import okio.BufferedSource
+import kotlinx.io.Sink
+import kotlinx.io.Source
 
 internal operator fun <T> Lazy<T>.getValue(receiver: Any?, property: KProperty<*>): T = value
 
@@ -26,8 +26,8 @@ internal fun AutoCloseable.closeQuietly() {
 }
 
 internal expect suspend fun resizeImage(
-    source: BufferedSource,
-    sink: BufferedSink,
+    source: Source,
+    sink: Sink,
     imageFormat: ImageFormat,
     quality: Int,
 )

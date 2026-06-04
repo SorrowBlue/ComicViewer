@@ -19,6 +19,15 @@ internal class LocalFileSeekableInputStream(path: Path) : SeekableInputStream {
     }
 
     override fun position(): Long = file.filePointer
+    override fun read(buf: ByteArray, offset: Int, length: Int): Int {
+        return file.read(buf, offset, length)
+    }
+
+    override fun seek(position: Long): Long {
+        file.seek(position)
+        return file.filePointer
+    }
+    override fun length(): Long = file.length()
 
     private var isClosed = false
 

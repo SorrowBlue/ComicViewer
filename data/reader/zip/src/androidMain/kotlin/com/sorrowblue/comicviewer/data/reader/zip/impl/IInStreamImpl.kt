@@ -1,12 +1,19 @@
 package com.sorrowblue.comicviewer.data.reader.zip.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import net.sf.sevenzipjbinding.IInStream
 
-internal class IInStreamImpl(private val seekableInputStream: SeekableInputStream) : IInStream {
-    override fun read(data: ByteArray) = seekableInputStream.read(data)
+internal class IInStreamImpl(private val seekableInputStream: SeekableInputStream) :
+    com.sorrowblue.kioarch.SeekableSource {
 
-    override fun seek(offset: Long, seekOrigin: Int) = seekableInputStream.seek(offset, seekOrigin)
+    override fun read(buffer: ByteArray, offset: Int, length: Int): Int =
+        seekableInputStream.read(buffer, offset, length)
+    override fun seek(position: Long) {
+        seekableInputStream.seek(position)
+    }
+
+    override fun position(): Long = seekableInputStream.position()
+
+    override fun length(): Long = seekableInputStream.length()
 
     override fun close() = seekableInputStream.close()
 }

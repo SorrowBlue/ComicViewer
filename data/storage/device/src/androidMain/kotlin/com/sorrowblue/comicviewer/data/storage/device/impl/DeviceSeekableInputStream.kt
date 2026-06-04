@@ -23,9 +23,19 @@ internal class DeviceSeekableInputStream(context: Context, uri: Uri) : SeekableI
         return input.channel.position()
     }
 
+    override fun seek(position: Long): Long {
+        input.channel.position(position)
+        return input.channel.position()
+    }
+
     override fun position(): Long = input.channel.position()
 
+    override fun length(): Long = input.channel.size()
+
     override fun read(buf: ByteArray): Int = input.read(buf)
+
+    override fun read(buf: ByteArray, offset: Int, length: Int): Int =
+        input.read(buf, offset, length)
 
     override fun close() {
         input.close()

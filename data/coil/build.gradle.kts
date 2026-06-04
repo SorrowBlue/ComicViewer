@@ -13,6 +13,8 @@ kotlin {
                 implementation(projects.domain.service)
                 implementation(projects.data.storage)
                 implementation(libs.coil3)
+                implementation(libs.kotlinx.io)
+                implementation(libs.kotlinx.ioOkio)
                 implementation(libs.kotlinx.serializationJson)
             }
         }

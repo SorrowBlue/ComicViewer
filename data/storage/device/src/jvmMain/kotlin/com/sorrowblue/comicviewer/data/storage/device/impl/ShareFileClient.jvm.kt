@@ -15,7 +15,8 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
-import okio.BufferedSource
+import kotlinx.io.Sink
+import kotlinx.io.Source
 
 @VisibleForAssistedInject
 @AssistedInject
@@ -43,7 +44,11 @@ actual class ShareFileClient(
         TODO("Not yet implemented")
     }
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun source(file: File): Source {
+        TODO("Not yet implemented")
+    }
+
+    actual override suspend fun extractTo(file: File, sink: Sink) {
         TODO("Not yet implemented")
     }
 

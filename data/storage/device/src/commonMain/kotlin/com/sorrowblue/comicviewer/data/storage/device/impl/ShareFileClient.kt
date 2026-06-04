@@ -6,7 +6,8 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
-import okio.BufferedSource
+import kotlinx.io.Sink
+import kotlinx.io.Source
 
 @VisibleForAssistedInject
 expect class ShareFileClient : FileClient<ShareContents> {
@@ -20,7 +21,9 @@ expect class ShareFileClient : FileClient<ShareContents> {
 
     override suspend fun current(path: String, resolveImageFolder: Boolean): File
 
-    override suspend fun bufferedSource(file: File): BufferedSource
+    override suspend fun source(file: File): Source
+
+    override suspend fun extractTo(file: File, sink: Sink)
 
     override suspend fun seekableInputStream(file: File): SeekableInputStream
 

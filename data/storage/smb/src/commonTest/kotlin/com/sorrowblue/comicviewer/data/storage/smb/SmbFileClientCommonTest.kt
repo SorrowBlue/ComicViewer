@@ -19,7 +19,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
-import okio.use
+import kotlinx.io.readString
 
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 class SmbFileClientCommonTest {
@@ -116,9 +116,9 @@ class SmbFileClientCommonTest {
             isHidden = false,
         )
         client.listFiles(file).firstOrNull { it is BookFile }?.let {
-            client.bufferedSource(it).use { bufferedSource ->
+            client.source(it).use { bufferedSource ->
                 assertEquals(
-                    bufferedSource.readUtf8Line()?.isNotEmpty(),
+                    bufferedSource.readString().isNotEmpty(),
                     true,
                     "file should not be empty",
                 )

@@ -1,14 +1,15 @@
 package com.sorrowblue.comicviewer.data.coil.fetcher
 
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.readString
 import kotlinx.serialization.json.Json
-import okio.BufferedSink
-import okio.BufferedSource
 
 internal interface CoilMetadata {
-    fun writeTo(bufferedSink: BufferedSink)
+    fun writeTo(sink: Sink)
 
     companion object {
-        inline fun <reified T : CoilMetadata> from(bufferedSource: BufferedSource) =
-            Json.decodeFromString<T>(bufferedSource.readUtf8())
+        inline fun <reified T : CoilMetadata> from(source: Source) =
+            Json.decodeFromString<T>(source.readString())
     }
 }

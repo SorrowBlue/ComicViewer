@@ -2,7 +2,7 @@ import AMSMB2
 import ComposeApp
 import SwiftZip
 
-class SmbSeekableInputStream : SeekableInputStream {
+class SmbSeekableInputStream : IosSeekableInputStream {
     
     private var pos: Int = 0
     private let client: SMB2Manager

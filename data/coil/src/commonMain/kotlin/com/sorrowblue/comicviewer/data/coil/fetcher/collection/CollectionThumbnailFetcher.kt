@@ -12,51 +12,50 @@ import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.di.CoilScope
+import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
-import com.sorrowblue.comicviewer.data.coil.fetcher.FileFetcher
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
+import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.logcat
-import okio.BufferedSource
 
 internal class CollectionThumbnailFetcher(
+    private val data: Collection,
     options: Options,
     diskCache: Lazy<DiskCache>,
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-    private val data: Collection,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
-) : FileFetcher<CollectionThumbnailMetadata>(options, diskCache) {
+) : BaseFetcher<Collection, CollectionThumbnailMetadata>(data, options, diskCache) {
 
-    @ClassKey(Collection::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
-    class Keyer : coil3.key.Keyer<Collection> {
-        override fun key(data: Collection, options: Options) = "collection:${data.id.value}"
-    }
-
-    @ClassKey(Collection::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<Fetcher.Factory<*>>())
-    class Factory(
-        private val diskCache: Lazy<DiskCache>,
-        private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-        private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
-        private val fileModelLocalDataSource: FileLocalDataSource,
-    ) : Fetcher.Factory<Collection> {
-        override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
-            CollectionThumbnailFetcher(
-                options = options,
-                diskCache = diskCache,
-                coilDiskCacheLazy = coilDiskCacheLazy,
-                data = data,
-                collectionFileLocalDataSource = collectionFileLocalDataSource,
-                fileLocalDataSource = fileModelLocalDataSource,
-            )
+    override suspend fun doFetch(): FetchResult {
+        val snapshot = readFromDiskCache()
+        runCatching {
+            // Fast path: fetch the image from the disk cache without performing a network request.
+            val result = fastPath(snapshot)
+            if (result != null) {
+                return result
+            }
+            val thumbnailCache = getThumbnailCache()
+            if (thumbnailCache == null) {
+                throw CoilRuntimeException("No thumbnails were generated for this collection file.")
+            } else {
+                // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
+                return SourceFetchResult(
+                    source = thumbnailCache.second.toImageSource(),
+                    mimeType = null,
+                    dataSource = DataSource.DISK,
+                )
+            }
+        }.onFailure {
+            snapshot?.closeQuietly()
+        }.getOrThrow()
     }
 
     override val diskCacheKey get() = options.diskCacheKey ?: "collection:${data.id.value}"
@@ -67,22 +66,8 @@ internal class CollectionThumbnailFetcher(
         return CollectionThumbnailMetadata(data.id, thumbnails?.first)
     }
 
-    override fun BufferedSource.readMetadata() =
-        CoilMetadata.from<CollectionThumbnailMetadata>(this)
-
-    override suspend fun innerFetch(snapshot: DiskCache.Snapshot?): FetchResult {
-        val thumbnailCache = getThumbnailCache()
-        if (thumbnailCache == null) {
-            throw CoilRuntimeException("No thumbnails were generated for this collection file.")
-        } else {
-            // 応答をディスク キャッシュに書き込み、新しいスナップショットを開きます。
-            return SourceFetchResult(
-                source = thumbnailCache.second.toImageSource(),
-                mimeType = null,
-                dataSource = DataSource.DISK,
-            )
-        }
-    }
+    override fun readFrom(source: Source): CollectionThumbnailMetadata =
+        CoilMetadata.from<CollectionThumbnailMetadata>(source)
 
     private suspend fun getThumbnailCache(): CacheKeySnapshot? {
         val cacheKeyList = collectionFileLocalDataSource.getCacheKeyList(
@@ -101,6 +86,31 @@ internal class CollectionThumbnailFetcher(
                 null
             }
         } ?: getThumbnailCache()
+    }
+
+    @ClassKey(Collection::class)
+    @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
+    class Keyer : coil3.key.Keyer<Collection> {
+        override fun key(data: Collection, options: Options) = "collection:${data.id.value}"
+    }
+
+    @ClassKey(Collection::class)
+    @ContributesIntoMap(CoilScope::class, binding = binding<Fetcher.Factory<*>>())
+    class Factory(
+        private val diskCache: Lazy<DiskCache>,
+        private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
+        private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
+        private val fileModelLocalDataSource: FileLocalDataSource,
+    ) : Fetcher.Factory<Collection> {
+        override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
+            CollectionThumbnailFetcher(
+                data = data,
+                options = options,
+                diskCache = diskCache,
+                coilDiskCacheLazy = coilDiskCacheLazy,
+                collectionFileLocalDataSource = collectionFileLocalDataSource,
+                fileLocalDataSource = fileModelLocalDataSource,
+            )
     }
 }
 

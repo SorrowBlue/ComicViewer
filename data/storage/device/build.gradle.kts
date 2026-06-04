@@ -12,7 +12,6 @@ kotlin {
                 implementation(projects.data.storage)
                 implementation(libs.kotlinx.coroutinesCore)
                 implementation(libs.filekit.compose)
-                implementation(libs.okio)
                 implementation(libs.androidx.coreUri)
             }
         }

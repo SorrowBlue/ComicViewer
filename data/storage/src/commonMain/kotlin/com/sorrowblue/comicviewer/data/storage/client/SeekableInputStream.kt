@@ -7,4 +7,46 @@ package com.sorrowblue.comicviewer.data.storage.client
  * This interface provides a common abstraction for stream-based reading operations
  * where the current read pointer can be moved forward or backward.
  */
-expect interface SeekableInputStream : AutoCloseable
+interface SeekableInputStream : AutoCloseable {
+
+    fun read(buf: ByteArray): Int
+
+    fun read(buf: ByteArray, offset: Int, length: Int): Int
+
+    /**
+     * Sets the offset, measured from [whence], at which the next read or write occurs.
+     *
+     * @param offset the new position in the stream, interpreted according to [whence].
+     * @param whence the reference point for the offset: [SEEK_SET] (start of stream),
+     * [SEEK_CUR] (current position), or [SEEK_END] (end of stream).
+     * @return the new position within the stream.
+     */
+    fun seek(offset: Long, whence: Int): Long
+    fun seek(position: Long): Long
+
+    /**
+     * Returns the current position in the stream.
+     *
+     * @return the current offset from the beginning of the stream, in bytes.
+     */
+    fun position(): Long
+
+    fun length(): Long
+
+    companion object {
+        /**
+         * Seek from the beginning of the stream.
+         */
+        const val SEEK_SET = 0
+
+        /**
+         * A seek mode to set the position relative to the current position.
+         */
+        const val SEEK_CUR = 1
+
+        /**
+         * Seek relative to the end of the stream.
+         */
+        const val SEEK_END = 2
+    }
+}

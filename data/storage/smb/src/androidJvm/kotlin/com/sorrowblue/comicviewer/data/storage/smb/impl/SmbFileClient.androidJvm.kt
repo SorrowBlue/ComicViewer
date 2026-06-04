@@ -30,12 +30,15 @@ import kotlin.io.path.Path
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.asOutputStream
+import kotlinx.io.asSource
+import kotlinx.io.buffered
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import okio.BufferedSource
-import okio.buffer
-import okio.source
 import org.codelibs.jcifs.smb.CIFSContext
 import org.codelibs.jcifs.smb.DialectVersion
 import org.codelibs.jcifs.smb.SmbConstants
@@ -66,8 +69,14 @@ actual class SmbFileClient(
         actual override fun create(bookshelf: SmbServer): SmbFileClient
     }
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource = runCommand {
-        smbFile(file.path).openInputStream().source().buffer()
+    actual override suspend fun source(file: File): Source = runCommand {
+        smbFile(file.path).openInputStream().asSource().buffered()
+    }
+
+    actual override suspend fun extractTo(file: File, sink: Sink) {
+        withContext(dispatcher) {
+            smbFile(file.path).openInputStream().transferTo(sink.asOutputStream())
+        }
     }
 
     actual override suspend fun connect(path: String) {

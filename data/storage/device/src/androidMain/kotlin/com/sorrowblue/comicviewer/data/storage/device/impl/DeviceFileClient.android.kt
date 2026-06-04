@@ -25,9 +25,10 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
-import okio.BufferedSource
-import okio.buffer
-import okio.source
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.asSource
+import kotlinx.io.buffered
 
 @VisibleForAssistedInject
 @AssistedInject
@@ -46,13 +47,12 @@ actual class DeviceFileClient(
 
     private val contentResolver = context.contentResolver
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource = kotlin
+    actual override suspend fun source(file: File): Source = kotlin
         .runCatching {
             ParcelFileDescriptor
                 .AutoCloseInputStream(
                     contentResolver.openFileDescriptor(file.uri, "r"),
-                ).source()
-                .buffer()
+                ).asSource().buffered()
         }.getOrElse {
             it.printStackTrace()
             when (it) {
@@ -61,6 +61,23 @@ actual class DeviceFileClient(
                 else -> throw it
             }
         }
+
+    actual override suspend fun extractTo(file: File, sink: Sink) {
+        kotlin
+            .runCatching {
+                ParcelFileDescriptor
+                    .AutoCloseInputStream(
+                        contentResolver.openFileDescriptor(file.uri, "r"),
+                    ).asSource().buffered().transferTo(sink)
+            }.getOrElse {
+                it.printStackTrace()
+                throw when (it) {
+                    is SecurityException -> FileClientException.InvalidAuth()
+                    is IllegalArgumentException -> FileClientException.InvalidPath()
+                    else -> it
+                }
+            }
+    }
 
     actual override suspend fun attribute(path: String): FileAttribute = FileAttribute()
 

@@ -18,9 +18,10 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.io.Sink
+import kotlinx.io.Source
 import logcat.asLog
 import logcat.logcat
-import okio.BufferedSource
 
 @MapKey
 annotation class FileClientKey(val value: KClass<out Bookshelf>)
@@ -68,7 +69,9 @@ abstract class FileClient<T : Bookshelf>(
 
     abstract suspend fun current(path: String, resolveImageFolder: Boolean = false): File
 
-    abstract suspend fun bufferedSource(file: File): BufferedSource
+    abstract suspend fun source(file: File): Source
+
+    abstract suspend fun extractTo(file: File, sink: Sink)
 
     abstract suspend fun seekableInputStream(file: File): SeekableInputStream
 
@@ -88,7 +91,7 @@ abstract class FileClient<T : Bookshelf>(
                             fileReaderFactoryMap.getValue(FileReaderType.Document)
 
                         else -> fileReaderFactoryMap.getValue(FileReaderType.Zip)
-                    }.create(book.extension, seekableInputStream)
+                    }.create(seekableInputStream)
                 }
 
                 is BookFolder -> ImageFolderFileReader(dispatcher, this@FileClient, book)

@@ -22,7 +22,6 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zwander.kotlin.file.FileUtils
 import dev.zwander.kotlin.file.IPlatformFile
-import dev.zwander.kotlin.file.okio.toOkioSource
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCObjectVar
@@ -31,11 +30,10 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import okio.BufferedSource
-import okio.buffer
 import platform.Foundation.NSError
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSTemporaryDirectory
@@ -79,11 +77,11 @@ actual class DeviceFileClient(
         return file.toFileModel(resolveImageFolder)
     }
 
-    actual override suspend fun bufferedSource(file: File): BufferedSource {
+    actual override suspend fun source(file: File): Source {
         val iPlatformFile =
             FileUtils.fromString(input = file.path, !NSURL(fileURLWithPath = file.path).fileURL)
                 ?: throw FileClientException.InvalidPath()
-        return iPlatformFile.openInputStream()!!.toOkioSource().buffer()
+        return iPlatformFile.openInputStream()!!
     }
 
     actual override suspend fun seekableInputStream(file: File): SeekableInputStream =

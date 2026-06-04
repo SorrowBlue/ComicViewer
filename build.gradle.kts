@@ -37,7 +37,6 @@ dependencies {
     dokka(projects.data.coil)
     dokka(projects.data.database)
     dokka(projects.data.datastore)
-    dokka(projects.data.reader.document.android)
     dokka(projects.data.reader.document)
     dokka(projects.data.reader.zip)
     dokka(projects.data.storage)

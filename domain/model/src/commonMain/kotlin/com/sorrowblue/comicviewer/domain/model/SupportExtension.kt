@@ -18,6 +18,7 @@ sealed interface SupportExtension {
         TAR("tar"),
         WIM("wim"),
         ZIP("zip"),
+        PDF("pdf"),
     }
 
     enum class Document(override val extension: String) : SupportExtension {

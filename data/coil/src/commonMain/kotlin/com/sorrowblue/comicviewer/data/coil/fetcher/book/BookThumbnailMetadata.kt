@@ -2,9 +2,10 @@ package com.sorrowblue.comicviewer.data.coil.fetcher.book
 
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
+import kotlinx.io.Sink
+import kotlinx.io.writeString
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import okio.BufferedSink
 
 @Serializable
 internal data class BookThumbnailMetadata(
@@ -20,7 +21,7 @@ internal data class BookThumbnailMetadata(
         book.size,
     )
 
-    override fun writeTo(bufferedSink: BufferedSink) {
-        bufferedSink.writeUtf8(Json.encodeToString(this))
+    override fun writeTo(sink: Sink) {
+        sink.writeString(Json.encodeToString(this))
     }
 }

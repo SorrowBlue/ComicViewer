@@ -11,7 +11,7 @@ kotlin {
             dependencies {
                 api(projects.domain.service)
                 implementation(libs.kotlinx.coroutinesCore)
-                api(libs.okio)
+                api(libs.kotlinx.io)
             }
         }
         val androidJvm by creating {

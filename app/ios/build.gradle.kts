@@ -43,7 +43,6 @@ kotlin {
             api(projects.data.storage.device)
             api(projects.data.reader.zip)
             api(projects.domain.model)
-            api(libs.okio)
         }
     }
 }

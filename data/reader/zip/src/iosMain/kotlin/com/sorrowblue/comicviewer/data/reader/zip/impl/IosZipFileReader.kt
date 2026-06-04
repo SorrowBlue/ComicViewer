@@ -1,8 +1,10 @@
 package com.sorrowblue.comicviewer.data.reader.zip.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import okio.BufferedSink
-import okio.ByteString.Companion.toByteString
+import kotlinx.io.Sink
+import kotlinx.io.Source
+import kotlinx.io.bytestring.toByteString
+import kotlinx.io.write
 import platform.Foundation.NSData
 
 interface IosZipFileReader {
@@ -11,7 +13,7 @@ interface IosZipFileReader {
 
     suspend fun pageCount(): Int
 
-    suspend fun copyTo(pageIndex: Int, bufferedSink: BufferedSink)
+    suspend fun source(pageIndex: Int): Source
 
     suspend fun fileSize(pageIndex: Int): Long
 
@@ -30,6 +32,6 @@ interface IosZipFileReader {
     }
 }
 
-fun BufferedSink.writeData(data: NSData) {
+fun Sink.writeData(data: NSData) {
     this.write(data.toByteString())
 }
