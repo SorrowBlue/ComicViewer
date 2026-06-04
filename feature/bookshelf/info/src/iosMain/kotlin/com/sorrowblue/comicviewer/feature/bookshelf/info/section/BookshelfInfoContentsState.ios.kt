@@ -208,12 +208,11 @@ private class BookshelfInfoContentsStateImpl(
 
 private const val PageSize = 4
 
-internal object MainRunDispatcher : CoroutineDispatcher() {
+object MainRunDispatcher : CoroutineDispatcher() {
     override fun dispatch(context: CoroutineContext, block: Runnable) =
         NSRunLoop.mainRunLoop.performBlock { block.run() }
 }
 
-@Suppress("LESS_VISIBLE_TYPE_ACCESS_IN_INLINE_WARNING")
 inline fun <T1> mainContinuation(crossinline block: (T1) -> Unit): (T1) -> Unit = { arg1 ->
     if (NSThread.isMainThread()) {
         block.invoke(arg1)
