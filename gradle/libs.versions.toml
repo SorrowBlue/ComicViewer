@@ -130,6 +130,7 @@ dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugi
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
 filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "filekit" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
+kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version = "0.3.0-beta.2" }
 kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
 kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
 kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
@@ -149,6 +150,7 @@ kotlinx-serializationCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-s
 kotlinx-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serializationProtobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 kover-gradlePlugin = { group = "org.jetbrains.kotlinx.kover", name = "org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinxKover" }
+kpdfium = { group = "com.sorrowblue.kpdfium", name = "kpdfium", version = "0.0.1-SNAPSHOT" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 metro-android = { group = "dev.zacsweers.metro", name = "metrox-android", version.ref = "metro" }
 metro-gradlePlugin = { group = "dev.zacsweers.metro", name = "dev.zacsweers.metro.gradle.plugin", version.ref = "metro" }
@@ -157,8 +159,6 @@ rin = { group = "io.github.takahirom.rin", name = "rin", version.ref = "rin" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version.ref = "slf4j-android" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version.ref = "soil" }
-kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version = "0.3.0-beta.2" }
-kpdfium = { group = "com.sorrowblue.kpdfium", name = "kpdfium", version = "0.0.1-SNAPSHOT" }
 
 [bundles]
 detekt = [
