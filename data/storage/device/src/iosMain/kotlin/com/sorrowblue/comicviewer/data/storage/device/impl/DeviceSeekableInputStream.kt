@@ -1,9 +1,11 @@
 package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.usePinned
 import platform.posix.FILE
 import platform.posix.fclose
 import platform.posix.fopen
@@ -14,21 +16,38 @@ import platform.posix.ftell
 @OptIn(ExperimentalForeignApi::class)
 internal class DeviceSeekableInputStream(private val filePath: String) : SeekableInputStream {
 
-    private var file: CPointer<FILE>? = null
+    private var file: CPointer<FILE>? = fopen(filePath, "rb")
 
-    override fun open() {
-        if (file == null) {
-            file = fopen(filePath, "rb")
-            if (file == null) {
-                println("Failed to open file: $filePath")
-            }
+    override fun read(buf: ByteArray): Int {
+        return read(buf, 0, buf.size)
+    }
+
+    override fun read(buf: ByteArray, offset: Int, length: Int): Int {
+        if (offset < 0 || length < 0 || offset > buf.size || length > buf.size - offset) {
+            throw IndexOutOfBoundsException("offset=$offset, length=$length, size=${buf.size}")
+        }
+        if (length == 0) {
+            return 0
+        }
+
+        val currentFile = file ?: return -1
+        return buf.usePinned {
+            fread(it.addressOf(offset), 1u, length.toULong(), currentFile).toInt()
         }
     }
 
-    override fun read(pointer: COpaquePointer, count: Int): Int {
+    fun read(pointer: COpaquePointer, count: Int): Int {
         val currentFile = file ?: return -1
         val bytesRead = fread(pointer, 1u, count.toULong(), currentFile)
         return bytesRead.toInt()
+    }
+
+    override fun seek(position: Long): Long {
+        val currentFile = file ?: return -1
+        if (fseek(currentFile, position, SeekableInputStream.SEEK_SET) == 0) {
+            return position()
+        }
+        return -1
     }
 
     override fun seek(offset: Long, whence: Int): Long {
@@ -44,7 +63,7 @@ internal class DeviceSeekableInputStream(private val filePath: String) : Seekabl
         return ftell(currentFile)
     }
 
-    override fun size(): Long {
+    override fun length(): Long {
         val currentFile = file ?: return 0
         val currentPos = ftell(currentFile)
         fseek(currentFile, 0, SeekableInputStream.SEEK_END)

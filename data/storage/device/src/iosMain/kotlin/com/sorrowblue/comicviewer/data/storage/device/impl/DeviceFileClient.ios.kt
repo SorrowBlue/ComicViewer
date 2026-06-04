@@ -30,6 +30,7 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.io.Sink
 import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.asLog
@@ -82,6 +83,13 @@ actual class DeviceFileClient(
             FileUtils.fromString(input = file.path, !NSURL(fileURLWithPath = file.path).fileURL)
                 ?: throw FileClientException.InvalidPath()
         return iPlatformFile.openInputStream()!!
+    }
+
+    actual override suspend fun extractTo(file: File, sink: Sink) {
+        val iPlatformFile =
+            FileUtils.fromString(input = file.path, !NSURL(fileURLWithPath = file.path).fileURL)
+                ?: throw FileClientException.InvalidPath()
+        iPlatformFile.openInputStream()!!.transferTo(sink)
     }
 
     actual override suspend fun seekableInputStream(file: File): SeekableInputStream =

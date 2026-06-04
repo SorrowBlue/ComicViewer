@@ -16,14 +16,12 @@ import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.io.Sink
 import kotlinx.io.Source
-import kotlinx.io.buffered
-import kotlinx.io.okio.asKotlinxIoRawSource
 
 @VisibleForAssistedInject
 @AssistedInject
 actual class ZipFileReader(
-    @Assisted mimeType: String,
     @Assisted private val seekableInputStream: SeekableInputStream,
     @ImageExtension supportedException: Set<String>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
@@ -49,9 +47,15 @@ actual class ZipFileReader(
 
     actual override suspend fun source(pageIndex: Int): Source {
         return mutex.withLock {
-            Buffer().also {
-                iosZipFileReader.copyTo(pageIndex, it)
-            }.asKotlinxIoRawSource().buffered()
+            iosZipFileReader.source(pageIndex)
+        }
+    }
+
+    actual override suspend fun extractTo(pageIndex: Int, sink: Sink) {
+        mutex.withLock {
+            iosZipFileReader.source(pageIndex).use { source ->
+                sink.transferFrom(source)
+            }
         }
     }
 
