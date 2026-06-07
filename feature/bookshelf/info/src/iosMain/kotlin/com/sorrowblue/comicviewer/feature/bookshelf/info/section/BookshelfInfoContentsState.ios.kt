@@ -5,24 +5,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
-import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
+import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
-import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_file
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.suspendCoroutine
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
@@ -39,37 +48,33 @@ import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationRequest
 import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNUserNotificationCenter
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.suspendCoroutine
 
 @Composable
-context(context: BookshelfInfoScreenContext)
 internal actual fun rememberBookshelfInfoContentsState(
     bookshelfFolder: BookshelfFolder,
 ): BookshelfInfoContentsState {
+    val viewModel =
+        assistedMetroViewModel<BookshelfInfoContentViewModel, BookshelfInfoContentViewModelFactory> {
+            create(bookshelfFolder)
+        }
     val appState = LocalAppState.current
-    return remember(bookshelfFolder) {
+    return remember(bookshelfFolder, appState, viewModel) {
         BookshelfInfoContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
             appState = appState,
-            regenerateThumbnailsUseCase = context.regenerateThumbnailsUseCase,
-            scanBookshelfUseCase = context.scanBookshelfUseCase,
+            viewModel = viewModel,
         )
     }.apply {
-        lazyPagingItems = rememberPagingItems {
-            context.pagingBookshelfBookUseCase(
-                PagingBookshelfBookUseCase.Request(
-                    bookshelfFolder.bookshelf.id,
-                    PagingConfig(PageSize),
-                ),
-            )
-        }
+        lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     }
 }
 
 private class BookshelfInfoContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
     private val appState: AppState,
-    private val scanBookshelfUseCase: ScanBookshelfUseCase,
-    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
+    private val viewModel: BookshelfInfoContentViewModel
 ) : BookshelfInfoContentsState {
     override lateinit var lazyPagingItems: LazyPagingItems<BookThumbnail>
 
@@ -115,8 +120,8 @@ private class BookshelfInfoContentsStateImpl(
         val center = UNUserNotificationCenter.currentNotificationCenter()
         center.requestAuthorizationWithOptions(
             options = UNAuthorizationOptionAlert or
-                UNAuthorizationOptionSound or
-                UNAuthorizationOptionBadge,
+                    UNAuthorizationOptionSound or
+                    UNAuthorizationOptionBadge,
             completionHandler = { granted, _ ->
                 if (granted) {
                     notify()
@@ -150,24 +155,14 @@ private class BookshelfInfoContentsStateImpl(
     private fun scanFile() {
         showSnackbar()
         appState.coroutineScope.launch {
-            scanBookshelfUseCase.invoke(
-                ScanBookshelfUseCase.Request(
-                    bookshelfId = uiState.bookshelf.id,
-                ) { bookshelf, file ->
-                },
-            )
+            viewModel.scanFile()
         }
     }
 
     private fun scanThumbnail() {
         showSnackbar()
         appState.coroutineScope.launch {
-            regenerateThumbnailsUseCase.invoke(
-                RegenerateThumbnailsUseCase.Request(
-                    bookshelfId = uiState.bookshelf.id,
-                ) { bookshelf, progress, max ->
-                },
-            )
+            viewModel.scanThumbnail()
         }
     }
 
@@ -234,3 +229,40 @@ inline fun <T1, T2> mainContinuation(crossinline block: (T1, T2) -> Unit): (T1, 
             }
         }
     }
+
+@OptIn(VisibleForAssistedInject::class)
+@AssistedInject
+internal class BookshelfInfoContentViewModel(
+    @Assisted private val bookshelfFolder: BookshelfFolder,
+    private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
+    private val scanBookshelfUseCase: ScanBookshelfUseCase,
+    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
+) : ViewModel() {
+
+    val pagingDataFlow = pagingBookshelfBookUseCase(
+        PagingBookshelfBookUseCase.Request(
+            bookshelfFolder.bookshelf.id,
+            PagingConfig(PageSize),
+        ),
+    ).cachedIn(viewModelScope)
+
+    suspend fun scanFile() {
+        scanBookshelfUseCase.invoke(
+            ScanBookshelfUseCase.Request(bookshelfId = bookshelfFolder.bookshelf.id) { _, _ -> },
+        )
+    }
+
+    suspend fun scanThumbnail() {
+        val request =
+            RegenerateThumbnailsUseCase.Request(bookshelfId = bookshelfFolder.bookshelf.id) { _, _, _ ->
+            }
+        regenerateThumbnailsUseCase(request)
+    }
+}
+
+@AssistedFactory
+@ManualViewModelAssistedFactoryKey
+@ContributesIntoMap(AppScope::class)
+internal interface BookshelfInfoContentViewModelFactory : ManualViewModelAssistedFactory {
+    fun create(bookshelfFolder: BookshelfFolder): BookshelfInfoContentViewModel
+}
