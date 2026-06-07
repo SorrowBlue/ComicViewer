@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 
@@ -24,7 +23,6 @@ internal interface BookshelfInfoContentsState {
 }
 
 @Composable
-context(context: BookshelfInfoScreenContext)
 internal expect fun rememberBookshelfInfoContentsState(
     bookshelfFolder: BookshelfFolder,
 ): BookshelfInfoContentsState

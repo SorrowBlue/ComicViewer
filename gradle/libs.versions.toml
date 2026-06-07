@@ -154,6 +154,7 @@ kpdfium = { group = "com.sorrowblue.kpdfium", name = "kpdfium", version = "0.0.1
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 metro-android = { group = "dev.zacsweers.metro", name = "metrox-android", version.ref = "metro" }
 metro-gradlePlugin = { group = "dev.zacsweers.metro", name = "dev.zacsweers.metro.gradle.plugin", version.ref = "metro" }
+metro-viewmodelCompose = { group = "dev.zacsweers.metro", name = "metrox-viewmodel-compose", version.ref = "metro" }
 navigation3-resultstate = { group = "io.github.irgaly.navigation3.resultstate", name = "resultstate", version.ref = "navigation3-resultstate" }
 rin = { group = "io.github.takahirom.rin", name = "rin", version.ref = "rin" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }

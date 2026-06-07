@@ -1,6 +1,8 @@
 package comicviewer.convention
 
+import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.libs
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
     org.jetbrains.kotlin.multiplatform
@@ -48,17 +50,7 @@ kotlin {
         }
     }
 
-    jvmToolchain {
-        vendor.set(JvmVendorSpec.ADOPTIUM)
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
-    }
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-        freeCompilerArgs.add("-Xcontext-parameters")
-        freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
-        val warningsAsErrors: String? by project
-        allWarningsAsErrors.set(warningsAsErrors.toBoolean())
-    }
+    configureKotlin<KotlinMultiplatformExtension>()
     compilerOptions {
         if (project.path.startsWith(":data")) {
             freeCompilerArgs.add(

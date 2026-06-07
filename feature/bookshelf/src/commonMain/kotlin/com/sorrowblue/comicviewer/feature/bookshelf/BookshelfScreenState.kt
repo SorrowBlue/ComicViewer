@@ -5,13 +5,21 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
 interface BookshelfScreenState {
@@ -21,8 +29,9 @@ interface BookshelfScreenState {
 }
 
 @Composable
-context(context: BookshelfScreenContext)
-internal fun rememberBookshelfScreenState(): BookshelfScreenState {
+internal fun rememberBookshelfScreenState(
+    viewModel: BookshelfViewModel = metroViewModel(),
+): BookshelfScreenState {
     val lazyGridState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(onNavigationReSelect = {
@@ -32,14 +41,8 @@ internal fun rememberBookshelfScreenState(): BookshelfScreenState {
             }
         }
     })
-    val lazyPagingItems = rememberPagingItems {
-        context.pagingBookshelfFolderUseCase(
-            PagingBookshelfFolderUseCase.Request(
-                PagingConfig(PageSize),
-            ),
-        )
-    }
-    return remember {
+    val lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
+    return remember(viewModel) {
         BookshelfScreenStateImpl(
             lazyGridState = lazyGridState,
             scaffoldState = scaffoldState,
@@ -55,3 +58,14 @@ private class BookshelfScreenStateImpl(
 ) : BookshelfScreenState
 
 private const val PageSize = 20
+
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+internal class BookshelfViewModel(pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase) :
+    ViewModel() {
+    val bookshelfPagingFlow =
+        pagingBookshelfFolderUseCase(
+            PagingBookshelfFolderUseCase.Request(PagingConfig(PageSize)),
+        ).cachedIn(viewModelScope)
+}

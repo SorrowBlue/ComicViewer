@@ -1,6 +1,7 @@
 package comicviewer.convention
 
-import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.configureKotlin
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 plugins {
     com.android.library
@@ -11,18 +12,8 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain {
-        vendor.set(JvmVendorSpec.ADOPTIUM)
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
-    }
+    configureKotlin<KotlinAndroidProjectExtension>()
     compilerOptions {
-        freeCompilerArgs.add("-Xcontext-parameters")
-        freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
-
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-
-        val warningsAsErrors: String? by project
-        allWarningsAsErrors.set(warningsAsErrors.toBoolean())
         if (project.path.startsWith(":data")) {
             optIn.add("com.sorrowblue.comicviewer.domain.model.InternalDataApi")
         }

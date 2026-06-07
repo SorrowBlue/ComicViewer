@@ -45,5 +45,6 @@ kotlin {
 
         // Paging
         implementation(libs.androidx.pagingCompose)
+        implementation(libs.metro.viewmodelCompose)
     }
 }

@@ -1,6 +1,7 @@
 package comicviewer.convention
 
-import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.configureKotlin
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 plugins {
     com.android.application
@@ -11,16 +12,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain {
-        vendor.set(JvmVendorSpec.ADOPTIUM)
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
-    }
-    compilerOptions {
-        freeCompilerArgs.add("-Xcontext-parameters")
-        freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
-        val warningsAsErrors: String? by project
-        allWarningsAsErrors.set(warningsAsErrors.toBoolean())
-    }
+    configureKotlin<KotlinAndroidProjectExtension>()
 }
 
 android {

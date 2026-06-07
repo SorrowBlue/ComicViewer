@@ -30,6 +30,7 @@ import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
+import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
 import io.github.takahirom.rin.rememberRetained
 import logcat.logcat
@@ -38,6 +39,7 @@ import logcat.logcat
 context(appGraph: AppGraph)
 fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
     CompositionLocalProvider(
+        LocalMetroViewModelFactory provides appGraph.metroVmf,
         providePlatformContext(appGraph.context),
         LocalNavigator provides state.navigator,
         ProvidesAppState,

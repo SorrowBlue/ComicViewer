@@ -1,3 +1,5 @@
+import com.sorrowblue.comicviewer.libs
+
 plugins {
     alias(libs.plugins.comicviewer.androidApplication)
     alias(libs.plugins.composeCompiler)
@@ -78,6 +80,7 @@ dependencies {
     implementation(libs.androidx.navigation3UI)
     implementation(libs.compose.ui)
     implementation(libs.metro.android)
+    implementation(libs.metro.viewmodelCompose)
 
     debugImplementation(libs.compose.uiTooling)
 }

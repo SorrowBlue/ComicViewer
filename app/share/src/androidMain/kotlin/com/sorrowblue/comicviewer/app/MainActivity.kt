@@ -52,14 +52,11 @@ internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity(
 
         @OptIn(ExperimentalComposeUiApi::class)
         setContent {
-            val state = with(rememberComicViewerUIContext()) {
-                rememberComicViewerUIState(
-                    allowNavigationRestored = receivedBookData.isNullOrEmpty(),
-                )
-            }
-            with(appGraph) {
-                ComicViewerUI(finishApp = ::finish, state = state)
-            }
+            val state = rememberComicViewerUIState(
+                context = rememberComicViewerUIContext(),
+                allowNavigationRestored = receivedBookData.isNullOrEmpty(),
+            )
+            ComicViewerUI(appGraph = appGraph, finishApp = ::finish, state = state)
             LaunchedEffect(receivedBookData.isNullOrEmpty()) {
                 if (!receivedBookData.isNullOrEmpty()) {
                     state.navigator.navigate(ReceiveBookNavKey(receivedBookData))

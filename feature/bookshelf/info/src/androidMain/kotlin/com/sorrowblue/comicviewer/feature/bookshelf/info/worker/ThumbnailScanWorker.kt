@@ -188,7 +188,7 @@ class ThumbnailScanWorker(
         fun getWorkInfosFlow(workManager: WorkManager, id: BookshelfId): Flow<List<WorkInfo>> =
             workManager.getWorkInfosForUniqueWorkFlow(uniqueWorkName(id))
 
-        fun enqueueUniqueWork(context: Context, bookshelfId: BookshelfId): Operation {
+        fun enqueueUniqueWork(workManager: WorkManager, bookshelfId: BookshelfId): Operation {
             val constraints = Constraints
                 .Builder()
                 .apply {
@@ -203,13 +203,11 @@ class ThumbnailScanWorker(
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .setInputData(workDataOf(BOOKSHELF_ID to bookshelfId.value))
                 .build()
-            return WorkManager
-                .getInstance(context)
-                .enqueueUniqueWork(
-                    uniqueWorkName(bookshelfId),
-                    ExistingWorkPolicy.KEEP,
-                    myWorkRequest,
-                )
+            return workManager.enqueueUniqueWork(
+                uniqueWorkName(bookshelfId),
+                ExistingWorkPolicy.KEEP,
+                myWorkRequest,
+            )
         }
     }
 }

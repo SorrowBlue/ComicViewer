@@ -1,3 +1,5 @@
+import com.sorrowblue.comicviewer.libs
+
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
@@ -54,6 +56,7 @@ kotlin {
                 implementation(libs.compose.material3AdaptiveNavigationSuite)
                 implementation(libs.rin)
                 implementation(libs.navigation3.resultstate)
+                implementation(libs.metro.viewmodelCompose)
             }
         }
         commonTest.dependencies {

@@ -1,6 +1,8 @@
 package comicviewer.convention
 
+import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.libs
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
     org.jetbrains.kotlin.multiplatform
@@ -17,6 +19,7 @@ kotlin {
         }
     }
 
+    configureKotlin<KotlinMultiplatformExtension>()
     compilerOptions {
         freeCompilerArgs.addAll(
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
