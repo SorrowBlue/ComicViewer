@@ -12,7 +12,6 @@ internal class DocumentReaderDataSourceImpl : DocumentReaderDataSource {
 
     override val version: String get() = ""
 
-    override fun initializePdfPlugin(rootPath: String): DocumentReaderState {
-        return DocumentReaderState.Success
-    }
+    override fun initializePdfPlugin(rootPath: String): DocumentReaderState =
+        DocumentReaderState.Success
 }

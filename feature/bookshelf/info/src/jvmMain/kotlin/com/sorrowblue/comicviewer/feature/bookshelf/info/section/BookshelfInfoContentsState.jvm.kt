@@ -51,7 +51,7 @@ internal actual fun rememberBookshelfInfoContentsState(
         BookshelfInfoContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
             appState = appState,
-            viewModel = viewModel
+            viewModel = viewModel,
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -61,7 +61,7 @@ internal actual fun rememberBookshelfInfoContentsState(
 private class BookshelfInfoContentsStateImpl(
     private val bookshelfFolder: BookshelfFolder,
     private val appState: AppState,
-    private val viewModel: BookshelfInfoContentViewModel
+    private val viewModel: BookshelfInfoContentViewModel,
 ) : BookshelfInfoContentsState {
     override lateinit var lazyPagingItems: LazyPagingItems<BookThumbnail>
 
@@ -149,7 +149,9 @@ class BookshelfInfoContentViewModel(
 
     suspend fun scanThumbnail() {
         val request =
-            RegenerateThumbnailsUseCase.Request(bookshelfId = bookshelfFolder.bookshelf.id) { _, _, _ ->
+            RegenerateThumbnailsUseCase.Request(
+                bookshelfId = bookshelfFolder.bookshelf.id
+            ) { _, _, _ ->
             }
         regenerateThumbnailsUseCase(request)
     }

@@ -10,7 +10,9 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 
 @DependencyGraph(scope = AppScope::class)
-actual interface AppGraph : ViewModelGraph, PlatformGraph {
+actual interface AppGraph :
+    ViewModelGraph,
+    PlatformGraph {
     actual val context: PlatformContext
     actual val metroVmf: MetroViewModelFactory
 

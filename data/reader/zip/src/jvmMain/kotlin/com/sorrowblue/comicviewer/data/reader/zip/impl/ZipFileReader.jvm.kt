@@ -38,9 +38,7 @@ actual class ZipFileReader(
     @FileReaderKey(FileReaderType.Zip)
     @AssistedFactory
     actual fun interface Factory : FileReaderFactory {
-        actual override fun create(
-            seekableInputStream: SeekableInputStream,
-        ): ZipFileReader
+        actual override fun create(seekableInputStream: SeekableInputStream,): ZipFileReader
     }
 
     private val zipFile = KioArch.createReader(IInStreamImpl(seekableInputStream))
@@ -63,11 +61,9 @@ actual class ZipFileReader(
 
     actual override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].name
 
-    actual override suspend fun source(pageIndex: Int): Source {
-        return mutex.withLock {
-            Buffer().also {
-                zipFile.extractEntry(entries[pageIndex], sink = it)
-            }
+    actual override suspend fun source(pageIndex: Int): Source = mutex.withLock {
+        Buffer().also {
+            zipFile.extractEntry(entries[pageIndex], sink = it)
         }
     }
 
