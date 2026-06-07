@@ -15,7 +15,6 @@ kotlin {
         }
         androidMain {
             dependencies {
-//                implementation(projects.data.reader.document.android)
                 implementation(libs.kotlinx.coroutinesCore)
                 implementation(libs.androidx.coreKtx)
                 implementation(libs.androidx.startupRuntime)
