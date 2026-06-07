@@ -43,7 +43,7 @@ internal actual fun rememberBookshelfInfoContentsState(
     bookshelfFolder: BookshelfFolder,
 ): BookshelfInfoContentsState {
     val viewModel =
-        assistedMetroViewModel<BookshelfInfoContentViewModel, BookshelfInfoContentViewModelFactory> {
+        assistedMetroViewModel<BookshelfInfoContentViewModel, BookshelfInfoContentViewModel.Factory> {
             create(bookshelfFolder)
         }
     val appState = LocalAppState.current
@@ -127,7 +127,7 @@ private const val PageSize = 4
 
 @OptIn(VisibleForAssistedInject::class)
 @AssistedInject
-internal class BookshelfInfoContentViewModel(
+class BookshelfInfoContentViewModel(
     @Assisted private val bookshelfFolder: BookshelfFolder,
     private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,
@@ -153,11 +153,11 @@ internal class BookshelfInfoContentViewModel(
             }
         regenerateThumbnailsUseCase(request)
     }
-}
 
-@AssistedFactory
-@ManualViewModelAssistedFactoryKey
-@ContributesIntoMap(AppScope::class)
-internal interface BookshelfInfoContentViewModelFactory : ManualViewModelAssistedFactory {
-    fun create(bookshelfFolder: BookshelfFolder): BookshelfInfoContentViewModel
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(bookshelfFolder: BookshelfFolder): BookshelfInfoContentViewModel
+    }
 }

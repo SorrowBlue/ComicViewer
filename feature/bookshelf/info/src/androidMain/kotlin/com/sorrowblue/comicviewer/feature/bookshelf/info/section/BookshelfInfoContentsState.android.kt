@@ -17,22 +17,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.IntentLauncher
 import com.sorrowblue.comicviewer.feature.bookshelf.info.NotificationPermissionRequester
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.rememberNotificationPermissionRequester
-import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.FileScanWorker
-import com.sorrowblue.comicviewer.feature.bookshelf.info.worker.ThumbnailScanWorker
 import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
@@ -43,73 +35,19 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_lab
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_file_no_notification
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails_no_notification
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-
-@OptIn(VisibleForAssistedInject::class)
-@AssistedInject
-internal class BookshelfInfoContentViewModel(
-    @Assisted private val bookshelfFolder: BookshelfFolder,
-    private val workManager: WorkManager,
-    private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
-) : ViewModel() {
-
-    val pagingDataFlow = pagingBookshelfBookUseCase(
-        PagingBookshelfBookUseCase.Request(
-            bookshelfFolder.bookshelf.id,
-            PagingConfig(PageSize),
-        ),
-    ).cachedIn(viewModelScope)
-
-    val isScanningFile =
-        FileScanWorker.getWorkInfosFlow(workManager, bookshelfFolder.bookshelf.id)
-            .map { workInfos -> workInfos.any { !it.state.isFinished } }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.Eagerly,
-                false,
-            )
-    val isScanningThumbnail =
-        ThumbnailScanWorker.getWorkInfosFlow(workManager, bookshelfFolder.bookshelf.id)
-            .map { workInfos -> workInfos.any { !it.state.isFinished } }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
-    fun scanFile() {
-        FileScanWorker.enqueueUniqueWork(workManager, bookshelfFolder.bookshelf.id)
-    }
-
-    fun scanThumbnail() {
-        ThumbnailScanWorker.enqueueUniqueWork(workManager, bookshelfFolder.bookshelf.id)
-    }
-}
-
-@AssistedFactory
-@ManualViewModelAssistedFactoryKey
-@ContributesIntoMap(AppScope::class)
-internal interface BookshelfInfoContentViewModelFactory : ManualViewModelAssistedFactory {
-    fun create(bookshelfFolder: BookshelfFolder): BookshelfInfoContentViewModel
-}
 
 @Composable
 internal actual fun rememberBookshelfInfoContentsState(
     bookshelfFolder: BookshelfFolder,
 ): BookshelfInfoContentsState {
     val viewModel =
-        assistedMetroViewModel<BookshelfInfoContentViewModel, BookshelfInfoContentViewModelFactory> {
+        assistedMetroViewModel<BookshelfInfoContentViewModel, BookshelfInfoContentViewModel.Factory> {
             create(bookshelfFolder)
         }
 
@@ -257,5 +195,3 @@ private class BookshelfInfoMainContentsStateImpl(
         }
     }
 }
-
-private const val PageSize = 4
