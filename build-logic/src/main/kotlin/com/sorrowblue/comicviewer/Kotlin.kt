@@ -20,7 +20,6 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
     }
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
-        freeCompilerArgs.add("-Xcontext-parameters")
         freeCompilerArgs.add("-Xexplicit-context-arguments")
         freeCompilerArgs.add("-Xcollection-literals")
         freeCompilerArgs.add("-Xintrinsic-const-evaluation")

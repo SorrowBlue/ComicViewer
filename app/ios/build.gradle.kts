@@ -1,5 +1,6 @@
 import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
 import com.sorrowblue.comicviewer.configureKotlin
+import com.sorrowblue.comicviewer.libs
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
@@ -43,6 +44,7 @@ kotlin {
             api(projects.data.storage.device)
             api(projects.data.reader.zip)
             api(projects.domain.model)
+            api(libs.metro.viewmodelCompose)
         }
     }
 }
