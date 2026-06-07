@@ -31,8 +31,6 @@ internal class BookshelfInfoViewModel(
         ).mapNotNull { it.dataOrNull() }
             .shareIn(viewModelScope, started = SharingStarted.Eagerly)
 
-    //    @ManualViewModelAssistedFactoryKey
-//    @ContributesIntoMap(AppScope::class)
     @AssistedFactory
     interface Factory : ManualViewModelAssistedFactory {
         fun create(bookshelfId: BookshelfId): BookshelfInfoViewModel

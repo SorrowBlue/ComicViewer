@@ -59,8 +59,6 @@ internal class BookshelfInfoContentViewModel(
         ThumbnailScanWorker.enqueueUniqueWork(workManager, bookshelfFolder.bookshelf.id)
     }
 
-    //    @ManualViewModelAssistedFactoryKey
-//    @ContributesIntoMap(AppScope::class)
     @AssistedFactory
     interface Factory : ManualViewModelAssistedFactory {
         fun create(bookshelfFolder: BookshelfFolder): BookshelfInfoContentViewModel
