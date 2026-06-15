@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import coil3.Bitmap
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -49,6 +50,24 @@ internal fun BookSheet(
                         } else {
                             scope.launch {
                                 pagerState.scrollToPage(pagerState.currentPage + 1)
+                            }
+                        }
+                    }
+                }.pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            if (event.type == PointerEventType.Scroll) {
+                                val scrollDelta = event.changes.first().scrollDelta
+                                if (scrollDelta.y > 0) {
+                                    scope.launch {
+                                        pagerState.scrollToPage(pagerState.currentPage + 1)
+                                    }
+                                } else {
+                                    scope.launch {
+                                        pagerState.scrollToPage(pagerState.currentPage - 1)
+                                    }
+                                }
                             }
                         }
                     }

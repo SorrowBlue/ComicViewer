@@ -150,7 +150,7 @@ class BookshelfInfoContentViewModel(
     suspend fun scanThumbnail() {
         val request =
             RegenerateThumbnailsUseCase.Request(
-                bookshelfId = bookshelfFolder.bookshelf.id
+                bookshelfId = bookshelfFolder.bookshelf.id,
             ) { _, _, _ ->
             }
         regenerateThumbnailsUseCase(request)
