@@ -12,8 +12,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfDeleteNavKey
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_cancel
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_btn_delete
@@ -22,6 +27,7 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_del
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_delete_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(BookshelfDeleteNavKey::class)
 @Composable
 internal fun BookshelfDeleteScreen(
     uiState: BookshelfDeleteScreenUiState,
@@ -76,5 +82,17 @@ internal fun BookshelfDeleteScreen(
             DialogProperties()
         },
         modifier = modifier,
+    )
+}
+
+@NavPreview(BookshelfDeleteNavKey::class, primary = true)
+@Preview
+@Composable
+private fun BookshelfDeleteScreenPreview() = PreviewTheme {
+    BookshelfDeleteScreen(
+        uiState = BookshelfDeleteScreenUiState(title = "Test Title"),
+        onDismissRequest = {},
+        onConfirmClick = {},
+        onDismissClick = {},
     )
 }

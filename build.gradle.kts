@@ -19,6 +19,7 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.metro) apply false
     alias(libs.plugins.buildconfig) apply false
+    alias(libs.plugins.navgraph) apply false
     alias(libs.plugins.versionCatalogLinter)
     alias(libs.plugins.dokka)
     alias(libs.plugins.detekt)

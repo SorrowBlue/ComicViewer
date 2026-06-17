@@ -5,6 +5,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.history.navigation.HistoryClearAllNavKey
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_btn_clear_all
 import comicviewer.feature.history.generated.resources.history_text_clear_all
@@ -13,6 +18,7 @@ import comicviewer.framework.ui.generated.resources.Res as FrameworkUiRes
 import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(HistoryClearAllNavKey::class)
 @Composable
 internal fun ClearAllHistoryScreen(
     onDismissRequest: () -> Unit,
@@ -34,5 +40,15 @@ internal fun ClearAllHistoryScreen(
         title = { Text(text = stringResource(Res.string.history_title_clear_all)) },
         text = { Text(text = stringResource(Res.string.history_text_clear_all)) },
         modifier = modifier,
+    )
+}
+
+@NavPreview(HistoryClearAllNavKey::class)
+@Preview
+@Composable
+private fun ClearAllHistoryScreenPreview() = PreviewTheme {
+    ClearAllHistoryScreen(
+        onDismissRequest = {},
+        onConfirm = {},
     )
 }

@@ -5,15 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 
 @Composable
-internal fun ExtensionSettingsScreenRoot(
-    onBackClick: () -> Unit,
-    onImageCacheClick: () -> Unit,
-    onPluginClick: () -> Unit,
-) {
+internal fun ExtensionSettingsScreenRoot(onBackClick: () -> Unit, onImageCacheClick: () -> Unit) {
     ExtensionSettingsScreen(
         onBackClick = onBackClick,
         onImageCacheClick = onImageCacheClick,
-        onPluginClick = onPluginClick,
         modifier = Modifier.testTag("ExtensionSettingsRoot"),
     )
 }

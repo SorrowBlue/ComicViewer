@@ -9,8 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderThumbnailOrderNavKey
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_order_label_last_read
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_order_label_modified
@@ -18,6 +23,7 @@ import comicviewer.feature.settings.folder.generated.resources.settings_folder_t
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_order_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(FolderThumbnailOrderNavKey::class)
 @Composable
 internal fun FolderThumbnailOrderScreen(
     currentFolderThumbnailOrder: FolderThumbnailOrder,
@@ -53,3 +59,14 @@ internal val FolderThumbnailOrder.displayText
         FolderThumbnailOrder.MODIFIED -> Res.string.settings_folder_thumbnail_order_label_modified
         FolderThumbnailOrder.LAST_READ -> Res.string.settings_folder_thumbnail_order_label_last_read
     }.let { stringResource(it) }
+
+@NavPreview(FolderThumbnailOrderNavKey::class, primary = true)
+@Preview
+@Composable
+private fun FolderThumbnailOrderScreenPreview() = PreviewTheme {
+    FolderThumbnailOrderScreen(
+        currentFolderThumbnailOrder = FolderThumbnailOrder.NAME,
+        onFolderThumbnailOrderChange = {},
+        onDismissRequest = {},
+    )
+}

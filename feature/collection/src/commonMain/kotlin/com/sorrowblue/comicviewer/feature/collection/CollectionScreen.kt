@@ -15,10 +15,16 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavKey
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiState
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
+import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
+import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
@@ -30,6 +36,9 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
+@NavEdge(to = FileInfoNavKey::class)
+@NavEdge(to = FolderNavKey::class)
+@NavDestination(CollectionNavKey::class)
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
     uiState: CollectionScreenUiState,
@@ -67,6 +76,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
     }
 }
 
+@NavPreview(CollectionNavKey::class, primary = true)
 @Preview
 @Composable
 private fun CollectionScreenPreview() {

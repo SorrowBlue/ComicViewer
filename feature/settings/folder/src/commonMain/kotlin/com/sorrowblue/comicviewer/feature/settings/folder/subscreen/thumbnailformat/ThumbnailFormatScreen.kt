@@ -10,10 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageFormatNavKey
 import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_format_label_jpeg
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_format_label_original
@@ -26,6 +31,7 @@ import comicviewer.feature.settings.folder.generated.resources.settings_folder_t
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_format_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(ImageFormatNavKey::class)
 @Composable
 internal fun ThumbnailFormatScreen(
     currentImageFormat: ImageFormat,
@@ -76,3 +82,14 @@ private val ImageFormat.explanatoryText
     }.let {
         stringResource(it)
     }
+
+@NavPreview(ImageFormatNavKey::class, primary = true)
+@Preview
+@Composable
+private fun ThumbnailFormatScreenPreview() = PreviewTheme {
+    ThumbnailFormatScreen(
+        currentImageFormat = ImageFormat.WEBP,
+        onImageFormatChange = {},
+        onDismissRequest = {},
+    )
+}

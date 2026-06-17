@@ -1,10 +1,10 @@
-import com.sorrowblue.comicviewer.libs
-
 plugins {
     alias(libs.plugins.comicviewer.androidApplication)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.metro)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.navgraph)
 }
 
 android {
@@ -66,11 +66,23 @@ android {
 }
 
 dependencies {
+
+    rootProject.subprojects.filterNot {
+        it.path == project.path || it.path.startsWith(projects.app.path)
+    }.forEach {
+        val hasSource = it.projectDir.resolve("src").exists()
+        if (hasSource) {
+            api(it)
+        } else {
+            logger.lifecycle("Skipping empty or non-source module: ${it.path}")
+        }
+    }
+
     implementation(libs.jcifs)
     implementation(projects.app.share)
-    implementation(projects.feature.book)
-    implementation(projects.feature.settings.info)
-    implementation(projects.framework.ui)
+//    implementation(projects.feature.book)
+//    implementation(projects.feature.settings.info)
+//    implementation(projects.framework.ui)
 
     implementation(libs.androidx.activityCompose)
     implementation(libs.androidx.workRuntime)
@@ -79,6 +91,7 @@ dependencies {
     implementation(libs.androidx.lifecycleCommon)
     implementation(libs.androidx.navigation3UI)
     implementation(libs.compose.ui)
+    implementation(libs.compose.preview)
     implementation(libs.metro.android)
     implementation(libs.metro.viewmodelCompose)
 

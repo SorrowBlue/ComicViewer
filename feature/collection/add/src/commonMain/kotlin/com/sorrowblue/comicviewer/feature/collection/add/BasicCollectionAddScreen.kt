@@ -34,9 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSortDropdownMenu
+import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavKey
 import com.sorrowblue.comicviewer.feature.collection.add.section.BasicCollectionContent
 import com.sorrowblue.comicviewer.feature.collection.add.section.CollectionAddAppBar
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -50,6 +53,7 @@ import comicviewer.feature.collection.add.generated.resources.Res
 import comicviewer.feature.collection.add.generated.resources.collection_add_label_add
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(BasicCollectionAddNavKey::class)
 @Composable
 internal fun BasicCollectionAddScreen(
     uiState: BasicCollectionAddScreenUiState,
@@ -117,6 +121,7 @@ internal fun BasicCollectionAddScreen(
 
 private val FabSpacing = 16.dp
 
+@NavPreview(BasicCollectionAddNavKey::class, primary = true)
 @Preview
 @Composable
 private fun BasicCollectionAddScreenPreview() {

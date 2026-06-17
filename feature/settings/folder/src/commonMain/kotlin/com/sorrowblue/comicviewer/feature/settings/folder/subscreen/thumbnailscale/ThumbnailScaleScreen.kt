@@ -9,14 +9,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageScaleNavKey
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_scale_label_crop
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_scale_label_fit
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_thumbnail_scale_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(ImageScaleNavKey::class)
 @Composable
 internal fun ThumbnailScaleScreen(
     currentImageScale: ImageScale,
@@ -53,3 +59,14 @@ internal val ImageScale.displayText
     }.let {
         stringResource(it)
     }
+
+@NavPreview(ImageScaleNavKey::class, primary = true)
+@Preview
+@Composable
+private fun ThumbnailScaleScreenPreview() = PreviewTheme {
+    ThumbnailScaleScreen(
+        currentImageScale = ImageScale.Crop,
+        onImageScaleChange = {},
+        onDismissRequest = {},
+    )
+}

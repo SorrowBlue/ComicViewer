@@ -22,7 +22,6 @@ internal fun EntryProviderScope<NavKey>.extensionSettingsNavEntry(navigator: Nav
         ExtensionSettingsScreenRoot(
             onBackClick = dropUnlessResumed { navigator.goBack() },
             onImageCacheClick = dropUnlessResumed { navigator.navigate(ImageCacheNavKey) },
-            onPluginClick = dropUnlessResumed { navigator.navigate(PluginSettingsNavKey) },
         )
     }
 }

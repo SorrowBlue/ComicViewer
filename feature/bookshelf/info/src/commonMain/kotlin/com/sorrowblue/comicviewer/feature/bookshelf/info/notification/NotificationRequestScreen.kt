@@ -7,6 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfNotificationNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.bookshelf.info.generated.resources.Res
@@ -16,6 +19,7 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_not
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(BookshelfNotificationNavKey::class)
 @Composable
 internal fun NotificationRequestScreen(
     scanType: ScanType,
@@ -47,6 +51,7 @@ internal fun NotificationRequestScreen(
     )
 }
 
+@NavPreview(BookshelfNotificationNavKey::class, primary = true)
 @Preview
 @Composable
 private fun NotificationRequestScreenPreview() {

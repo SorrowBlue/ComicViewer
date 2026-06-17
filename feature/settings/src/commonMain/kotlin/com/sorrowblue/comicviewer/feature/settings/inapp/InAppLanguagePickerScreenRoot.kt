@@ -9,7 +9,8 @@ context(context: InAppLanguagePickerScreenContext)
 internal fun InAppLanguagePickerScreenRoot(onBackClick: () -> Unit) {
     val locales = remember { context.appLocaleIso.locales.toImmutableList() }
     InAppLanguagePickerScreen(
-        locales,
+        appLocaleIso = context.appLocaleIso,
+        localeList = locales,
         onBackClick = onBackClick,
     )
 }

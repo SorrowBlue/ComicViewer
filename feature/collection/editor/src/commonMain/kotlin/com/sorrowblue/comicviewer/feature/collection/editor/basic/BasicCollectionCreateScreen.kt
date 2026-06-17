@@ -6,14 +6,22 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionCreateNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
+import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_basic_create
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
+import soil.form.compose.rememberForm
+import soil.form.compose.rememberFormState
 
 @Serializable
 internal data class BasicCollectionsCreateScreenUiState(val isLoading: Boolean = false)
@@ -21,6 +29,7 @@ internal data class BasicCollectionsCreateScreenUiState(val isLoading: Boolean =
 @Serializable
 internal data class BasicCollectionForm(val name: String = "")
 
+@NavDestination(BasicCollectionCreateNavKey::class)
 @Composable
 internal fun BasicCollectionCreateScreen(
     uiState: BasicCollectionsCreateScreenUiState,
@@ -51,5 +60,19 @@ internal fun BasicCollectionCreateScreen(
             }
         },
         modifier = modifier,
+    )
+}
+
+@NavPreview(BasicCollectionCreateNavKey::class, primary = true)
+@Preview
+@Composable
+private fun BasicCollectionCreateScreenPreview() = PreviewTheme {
+    val formState =
+        rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
+    val form = rememberForm(state = formState, onSubmit = {})
+    BasicCollectionCreateScreen(
+        uiState = BasicCollectionsCreateScreenUiState(),
+        form = form,
+        onDismissRequest = {},
     )
 }

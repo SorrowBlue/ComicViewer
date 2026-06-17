@@ -20,8 +20,15 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfDeleteNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfNotificationNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContentsUiState
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -51,6 +58,10 @@ internal sealed interface BookshelfInfoSheetUiState {
     data class Loaded(val bookshelfFolder: BookshelfFolder) : BookshelfInfoSheetUiState
 }
 
+@NavEdge(to = BookshelfWizardNavKey.Edit::class)
+@NavEdge(to = BookshelfDeleteNavKey::class)
+@NavEdge(to = BookshelfNotificationNavKey::class)
+@NavDestination(route = BookshelfInfoNavKey::class)
 @Composable
 internal fun BookshelfInfoScreen(
     onBackClick: () -> Unit,
@@ -65,6 +76,7 @@ internal fun BookshelfInfoScreen(
     )
 }
 
+@NavPreview(BookshelfInfoNavKey::class, primary = true)
 @Preview
 @Preview(device = Devices.TABLET, locale = "en")
 @Composable

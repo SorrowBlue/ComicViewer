@@ -9,24 +9,42 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavGraphRoot
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavKey
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
+import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
+import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_label_nothing_to_read_later
 import org.jetbrains.compose.resources.stringResource
 
+@NavEdge(FolderNavKey::class)
+@NavEdge(FileInfoNavKey::class)
+@NavDestination(ReadLaterNavKey::class)
+@NavGraphRoot
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
@@ -88,6 +106,25 @@ private fun ReadLaterContents(
             state = lazyGridState,
             modifier = Modifier
                 .fillMaxSize(),
+        )
+    }
+}
+
+@NavPreview(ReadLaterNavKey::class, primary = true)
+@Preview
+@Composable
+private fun ReadLaterScreenPreview() {
+    PreviewTheme {
+        val state = rememberAdaptiveNavigationSuiteScaffoldState()
+        state.ReadLaterScreen(
+            lazyPagingItems = PagingData.flowData<File> {
+                fakeBookFile()
+            }.collectAsLazyPagingItems(),
+            lazyGridState = LazyGridState(),
+            onClearAllClick = {},
+            onSettingsClick = {},
+            onFileClick = {},
+            onFileInfoClick = {},
         )
     }
 }

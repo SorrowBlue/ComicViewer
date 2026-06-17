@@ -21,25 +21,38 @@ import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.section.BasicCollectionContent
+import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.dialogPaddingHorizonal
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
+import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_basic_edit
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
+import soil.form.compose.rememberForm
+import soil.form.compose.rememberFormState
 
+@NavDestination(BasicCollectionEditNavKey::class)
 @Composable
 internal fun BasicCollectionEditScreen(
     uiState: BasicCollectionEditScreenUiState,
@@ -133,5 +146,41 @@ internal fun BasicCollectionEditScreen(
                 )
             }
         }
+    }
+}
+
+@NavPreview(BasicCollectionEditNavKey::class, primary = true)
+@Preview
+@Composable
+internal fun BasicCollectionEditScreenPreview() = PreviewTheme {
+    val formState =
+        rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
+    val form = rememberForm(state = formState, onSubmit = {})
+    AlertDialogContent(
+        title = {
+            Text(stringResource(Res.string.collection_editor_title_basic_edit))
+        },
+        confirmButton = {
+            CreateButton(form = form)
+        },
+        dismissButton = {
+            TextButton(onClick = {}) {
+                Text(text = stringResource(Res.string.collection_editor_label_cancel))
+            }
+        },
+    ) { _ ->
+        BasicCollectionContent(
+            lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }
+                .collectAsLazyPagingItems(),
+            header = {
+                CollectionNameTextField(
+                    form = form,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                )
+            },
+            contentPadding = AlertDialogDefaults.dialogPaddingHorizonal,
+            onDeleteClick = {},
+        )
     }
 }

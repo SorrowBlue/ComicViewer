@@ -10,13 +10,4 @@
     <string name="settings_extension_imagecache_label_thumbnail">サムネイル画像キャッシュ</string>
     <string name="settings_extension_imagecache_label_page">ページキャッシュ</string>
     <string name="settings_extension_imagecache_label_other">その他の画像キャッシュ</string>
-
-
-    <string name="settings_extension_plugin_title">プラグイン</string>
-    <string name="settings_extension_title_pdf">PDFプラグイン</string>
-    <string name="settings_extension_label_enable">有効</string>
-    <string name="settings_extension_label_disable">無効</string>
-    <string name="settings_extension_error_not_found">PDFプラグインが見つかりません。インストールディレクトリを指定してください</string>
-    <string name="settings_extension_error_not_supported_version">サポートされていないPDFプラグインです</string>
-    <string name="settings_extension_label_select_install_folder">インストールフォルダを選択</string>
 </resources>

@@ -4,12 +4,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import com.github.skydoves.navgraph.annotations.NavDestination
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_smart_edit
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(SmartCollectionEditNavKey::class)
 @Composable
 context(context: SmartCollectionEditScreenContext)
 internal fun SmartCollectionEditScreenRoot(

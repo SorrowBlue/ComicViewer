@@ -10,12 +10,4 @@
     <string name="settings_extension_imagecache_label_thumbnail">Thumbnail image cache</string>
     <string name="settings_extension_imagecache_label_page">Page cache</string>
     <string name="settings_extension_imagecache_label_other">Other image cache</string>
-
-    <string name="settings_extension_plugin_title">Plugin</string>
-    <string name="settings_extension_title_pdf">PDF plugin</string>
-    <string name="settings_extension_label_enable">Enable</string>
-    <string name="settings_extension_label_disable">Disable</string>
-    <string name="settings_extension_error_not_found">PDF plugin not found. Please specify the installation directory</string>
-    <string name="settings_extension_error_not_supported_version">Unsupported PDF plugin</string>
-    <string name="settings_extension_label_select_install_folder">Select installation folder</string>
 </resources>

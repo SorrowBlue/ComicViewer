@@ -12,11 +12,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationNavKey
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationColumnContents
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.DetectOrientation
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.authentication.generated.resources.Res
 import comicviewer.feature.authentication.generated.resources.authentication_error_incorrect_pin
 import comicviewer.feature.authentication.generated.resources.authentication_error_pin_4_more
@@ -109,6 +114,7 @@ internal enum class ErrorType(val resource: StringResource) {
     PinNotMatch(Res.string.authentication_error_pin_not_match),
 }
 
+@NavDestination(AuthenticationNavKey::class)
 @Composable
 internal fun AuthenticationScreen(
     uiState: AuthenticationScreenUiState,
@@ -156,4 +162,17 @@ internal fun AuthenticationScreen(
             }
         }
     }
+}
+
+@NavPreview(AuthenticationNavKey::class)
+@Composable
+@Preview
+internal fun AuthenticationScreenPreview() = PreviewTheme {
+    AuthenticationScreen(
+        uiState = AuthenticationScreenUiState.Register.Input(pin = "1234"),
+        snackbarHostState = remember { SnackbarHostState() },
+        onBackClick = {},
+        onNextClick = {},
+        onPinChange = {},
+    )
 }

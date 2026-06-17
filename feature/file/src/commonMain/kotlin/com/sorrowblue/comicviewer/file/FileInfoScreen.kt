@@ -30,9 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.file.section.FileAttributeCard
 import com.sorrowblue.comicviewer.file.section.FileInfoButtons
 import com.sorrowblue.comicviewer.file.section.FileInfoButtonsUiState
@@ -60,6 +63,7 @@ internal fun LoadingContents() {
     CircularProgressIndicator()
 }
 
+@NavDestination(FileInfoNavKey::class)
 @Composable
 internal fun FileInfoScreen(
     uiState: FileInfoScreenUiState,
@@ -142,9 +146,10 @@ private fun Modifier.padding(
     return this.padding(start = start, end = end)
 }
 
+@NavPreview(FileInfoNavKey::class, primary = true)
 @Preview(heightDp = 1600)
 @Composable
-private fun AdaptiveNavigationSuiteScaffoldPreview(
+private fun FileInfoScreenPreview(
     @PreviewParameter(FileParameter::class) data: Pair<File, Flow<PagingData<BookThumbnail>>?>,
 ) {
     val scaffoldNavigator = rememberSupportingPaneScaffoldNavigator(

@@ -9,8 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.SortTypeNavKey
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_date_asc
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_label_date_desc
@@ -21,6 +26,7 @@ import comicviewer.feature.settings.folder.generated.resources.settings_folder_s
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_sort_order_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(SortTypeNavKey::class)
 @Composable
 internal fun SortOrderScreen(
     currentSortType: SortType,
@@ -58,3 +64,14 @@ internal val SortType.displayText
     }.let {
         stringResource(it)
     }
+
+@NavPreview(SortTypeNavKey::class, primary = true)
+@Preview
+@Composable
+internal fun SortOrderScreenPreview() = PreviewTheme {
+    SortOrderScreen(
+        currentSortType = SortType.Name(isAsc = true),
+        onFileSortChange = {},
+        onDismissRequest = {},
+    )
+}

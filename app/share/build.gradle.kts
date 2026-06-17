@@ -5,6 +5,15 @@ plugins {
     alias(libs.plugins.comicviewer.multiplatformCompose)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildconfig)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.navgraph)
+}
+
+tasks.configureEach {
+    if (name == "renderNavGraphGalleryLayoutlib" || name == "renderNavGraphLayoutlib") {
+        // navgraphのlayoutlib描画がandroidAppのマージ済みassetsを参照するため、実行順依存を明示する
+        dependsOn(":app:android:mergeDebugAssets")
+    }
 }
 
 kotlin {

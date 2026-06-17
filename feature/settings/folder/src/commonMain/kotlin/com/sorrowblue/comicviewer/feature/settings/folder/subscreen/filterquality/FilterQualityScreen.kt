@@ -9,8 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageFilterQualityNavKey
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_label_high
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_label_low
@@ -19,6 +24,7 @@ import comicviewer.feature.settings.folder.generated.resources.settings_folder_f
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_filterquality_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(ImageFilterQualityNavKey::class)
 @Composable
 internal fun FilterQualityScreen(
     currentImageFilterQuality: ImageFilterQuality,
@@ -61,3 +67,14 @@ internal val ImageFilterQuality.displayText
         ImageFilterQuality.Medium -> Res.string.settings_folder_filterquality_label_medium
         ImageFilterQuality.High -> Res.string.settings_folder_filterquality_label_high
     }
+
+@NavPreview(ImageFilterQualityNavKey::class, primary = true)
+@Preview
+@Composable
+private fun FilterQualityScreenPreview() = PreviewTheme {
+    FilterQualityScreen(
+        currentImageFilterQuality = ImageFilterQuality.Medium,
+        onImageFilterQualityChange = {},
+        onDismissRequest = {},
+    )
+}

@@ -8,6 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionDeleteNavKey
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBasicCollection
@@ -18,6 +21,7 @@ import comicviewer.feature.collection.generated.resources.collection_title_delet
 import comicviewer.framework.ui.generated.resources.cancel
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(CollectionDeleteNavKey::class)
 @Composable
 internal fun DeleteCollectionScreen(
     uiState: DeleteCollectionScreenUiState,
@@ -53,16 +57,15 @@ internal fun DeleteCollectionScreen(
     )
 }
 
+@NavPreview(CollectionDeleteNavKey::class, primary = true)
 @Preview
 @Composable
-private fun DeleteCollectionScreenPreview() {
-    PreviewTheme {
-        DeleteCollectionScreen(
-            uiState = DeleteCollectionScreenUiState(
-                name = fakeBasicCollection().name,
-            ),
-            onBackClick = {},
-            onConfirm = {},
-        )
-    }
+private fun DeleteCollectionScreenPreview() = PreviewTheme {
+    DeleteCollectionScreen(
+        uiState = DeleteCollectionScreenUiState(
+            name = fakeBasicCollection().name,
+        ),
+        onBackClick = {},
+        onConfirm = {},
+    )
 }

@@ -54,6 +54,7 @@ metro = "1.1.1"
 modulegraph = "0.13.0"
 multiplatform-core = "1.1.0-alpha03"
 multiplatform-navigation3 = "1.1.1"
+navgraph = "0.1.1"
 navigation3-resultstate = "1.2.0"
 rin = "0.4.0"
 robolectric = "4.16.1"
@@ -130,7 +131,7 @@ dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugi
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
 filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "filekit" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
-kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version = "0.3.0-beta.2" }
+kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version = "0.3.1-SNAPSHOT" }
 kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
 kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
 kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
@@ -160,6 +161,7 @@ rin = { group = "io.github.takahirom.rin", name = "rin", version.ref = "rin" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version.ref = "slf4j-android" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version.ref = "soil" }
+navgraph-gradlePlugin = { group = "com.github.skydoves", name = "compose-nav-graph-gradle", version.ref = "navgraph" }
 
 [bundles]
 detekt = [
@@ -177,7 +179,8 @@ plugins = [
     "kotlin-serializationGradlePlugin",
     "kover-gradlePlugin",
     "ksp-gradlePlugin",
-    "metro-gradlePlugin"
+    "metro-gradlePlugin",
+    "navgraph-gradlePlugin"
 ]
 
 [plugins]
@@ -208,4 +211,5 @@ kotlinxKover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinxKover
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
+navgraph = { id = "com.github.skydoves.navgraph", version.ref = "navgraph" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }

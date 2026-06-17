@@ -11,7 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
+import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.BindingDirectionNavKey
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
@@ -24,6 +27,7 @@ import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_r
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_reading_direction_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(BindingDirectionNavKey::class)
 @Composable
 internal fun ReadingDirectionScreen(
     bindingDirection: BindingDirection,
@@ -79,6 +83,7 @@ internal val BindingDirection.displayName: String
         )
     }
 
+@NavPreview(BindingDirectionNavKey::class, primary = true)
 @Preview
 @Composable
 private fun ReadingDirectionScreenPreview() {

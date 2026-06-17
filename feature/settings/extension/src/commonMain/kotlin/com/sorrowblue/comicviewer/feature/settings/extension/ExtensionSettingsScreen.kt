@@ -12,21 +12,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
+import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ExtensionSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ImageCacheNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.extension.generated.resources.Res
 import comicviewer.feature.settings.extension.generated.resources.settings_extension_label_image_cache
-import comicviewer.feature.settings.extension.generated.resources.settings_extension_label_plugin
 import comicviewer.feature.settings.extension.generated.resources.settings_extension_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavEdge(ImageCacheNavKey::class)
+@NavDestination(ExtensionSettingsNavKey::class)
 @Composable
 internal fun ExtensionSettingsScreen(
     onBackClick: () -> Unit,
     onImageCacheClick: () -> Unit,
-    onPluginClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SettingsDetailPane(
@@ -53,26 +58,17 @@ internal fun ExtensionSettingsScreen(
             },
             onClick = onImageCacheClick,
         )
-        Setting(
-            title = {
-                Text(stringResource(Res.string.settings_extension_label_plugin))
-            },
-            icon = {
-                Icon(ComicIcons.Extension, null)
-            },
-            onClick = onPluginClick,
-        )
     }
 }
 
-@Composable
+@NavPreview(ExtensionSettingsNavKey::class, primary = true)
 @Preview
+@Composable
 private fun ExtensionSettingsScreenPreview() {
     PreviewTheme {
         ExtensionSettingsScreen(
             onBackClick = {},
             onImageCacheClick = {},
-            onPluginClick = {},
         )
     }
 }

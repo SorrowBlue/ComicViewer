@@ -19,7 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
+import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionCreateNavKey
+import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionEditNavKey
+import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
+import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionDeleteNavKey
+import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionListNavKey
+import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavKey
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionList
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
@@ -41,6 +51,13 @@ import comicviewer.feature.collection.generated.resources.collection_label_smart
 import comicviewer.feature.collection.generated.resources.collection_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavEdge(to = CollectionNavKey::class)
+@NavEdge(to = BasicCollectionCreateNavKey::class)
+@NavEdge(to = SmartCollectionCreateNavKey::class)
+@NavEdge(to = BasicCollectionEditNavKey::class)
+@NavEdge(to = SmartCollectionEditNavKey::class)
+@NavEdge(to = CollectionDeleteNavKey::class)
+@NavDestination(CollectionListNavKey::class)
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
     lazyPagingItems: LazyPagingItems<Collection>,
@@ -125,9 +142,10 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionListScreen(
     }
 }
 
+@NavPreview(CollectionListNavKey::class, primary = true)
 @Preview
 @Composable
-private fun CollectionScreenPreview() {
+private fun CollectionScreenPreview() = PreviewTheme {
     CompositionLocalProvider(
         LocalNavigationItems provides object : NavigationItems {
             @Composable
@@ -167,19 +185,17 @@ private fun CollectionScreenPreview() {
             }
         },
     ) {
-        PreviewTheme {
-            val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-            scaffoldState.CollectionListScreen(
-                lazyPagingItems = PagingData.flowData<Collection> { fakeBasicCollection(it) }
-                    .collectAsLazyPagingItems(),
-                lazyListState = rememberLazyListState(),
-                onItemClick = {},
-                onEditClick = {},
-                onDeleteClick = { },
-                onSettingsClick = {},
-                onCreateBasicCollectionClick = {},
-                onCreateSmartCollectionClick = {},
-            )
-        }
+        val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+        scaffoldState.CollectionListScreen(
+            lazyPagingItems = PagingData.flowData<Collection> { fakeBasicCollection(it) }
+                .collectAsLazyPagingItems(),
+            lazyListState = rememberLazyListState(),
+            onItemClick = {},
+            onEditClick = {},
+            onDeleteClick = { },
+            onSettingsClick = {},
+            onCreateBasicCollectionClick = {},
+            onCreateSmartCollectionClick = {},
+        )
     }
 }

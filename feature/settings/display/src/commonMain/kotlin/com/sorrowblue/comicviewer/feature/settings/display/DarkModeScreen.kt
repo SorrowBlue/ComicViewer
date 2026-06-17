@@ -12,14 +12,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DarkModeNavKey
 import com.sorrowblue.comicviewer.framework.ui.layout.copy
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialog
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.display.generated.resources.Res
 import comicviewer.feature.settings.display.generated.resources.settings_display_label_theme
+import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
+@NavEdge(DarkModeNavKey::class)
+@NavDestination(DarkModeNavKey::class)
 @Composable
 internal fun DarkModeScreen(
     uiState: DarkModeScreenUiState,
@@ -50,4 +59,18 @@ internal fun DarkModeScreen(
             }
         }
     }
+}
+
+@NavPreview(DarkModeNavKey::class, primary = true)
+@Preview
+@Composable
+private fun DarkModeScreenPreview() = PreviewTheme {
+    DarkModeScreen(
+        uiState = DarkModeScreenUiState(
+            darkMode = DarkMode.DEVICE,
+            list = DarkMode.entries.toImmutableList(),
+        ),
+        onDismissRequest = {},
+        onDarkModeChange = {},
+    )
 }

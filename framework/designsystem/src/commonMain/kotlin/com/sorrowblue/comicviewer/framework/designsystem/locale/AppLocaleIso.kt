@@ -5,6 +5,7 @@ import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
 import com.sorrowblue.comicviewer.framework.common.require
@@ -52,6 +53,28 @@ val ProvideLocalAppLocaleIso: ProvidedValue<*>
         }
         return graph.appLocaleIso provides appLanguageTag
     }
+
+val fake = object : AppLocaleIso() {
+    private var _current: Locale? = null
+    override val current: Locale?
+        @Composable get() = _current
+    override val locales: List<Locale> = listOf(
+        Locale("en"),
+        Locale("ja"),
+        Locale("fr"),
+    )
+
+    override fun set(locale: Locale?) {
+        _current = locale
+    }
+
+    private val LocalAppLocaleIsoInternal =
+        staticCompositionLocalOf { "" }
+
+    @Composable
+    override infix fun provides(languageTag: String?): ProvidedValue<*> =
+        LocalAppLocaleIsoInternal.provides(languageTag.orEmpty())
+}
 
 /**
  * アプリの現在のETF BCP47準拠の言語タグ。nullの場合はシステムデフォルト。

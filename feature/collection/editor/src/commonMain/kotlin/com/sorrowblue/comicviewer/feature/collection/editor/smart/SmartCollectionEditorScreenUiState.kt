@@ -21,22 +21,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorForm
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
+import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.TextButtonWithIcon
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_save
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Form
+import soil.form.compose.rememberForm
+import soil.form.compose.rememberFormState
 
 @Serializable
 internal data class SmartCollectionEditorScreenUiState(
@@ -127,4 +136,50 @@ internal fun SmartCollectionEditorScreen(
             }
         }
     }
+}
+
+@OptIn(InternalDataApi::class)
+@NavPreview(SmartCollectionCreateNavKey::class, primary = true)
+@Preview
+@Composable
+private fun SmartCollectionCreateScreenPreview() = ComicTheme {
+    val formState =
+        rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
+    val form = rememberForm(formState, {})
+    SmartCollectionEditorScreen(
+        form = form,
+        uiState = SmartCollectionEditorScreenUiState(
+            enabledForm = true,
+            bookshelf = mapOf(
+                null to "All Books",
+                BookshelfId(1) to "Bookshelf 1",
+                BookshelfId(2) to "Bookshelf 2",
+            ),
+        ),
+        title = { Text(text = "Edit Smart Collection") },
+        onCancel = {},
+    )
+}
+
+@OptIn(InternalDataApi::class)
+@NavPreview(SmartCollectionEditNavKey::class, primary = true)
+@Preview
+@Composable
+private fun SmartCollectionEditScreenPreview() = PreviewTheme {
+    val formState =
+        rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
+    val form = rememberForm(formState, {})
+    SmartCollectionEditorScreen(
+        form = form,
+        uiState = SmartCollectionEditorScreenUiState(
+            enabledForm = true,
+            bookshelf = mapOf(
+                null to "All Books",
+                BookshelfId(1) to "Bookshelf 1",
+                BookshelfId(2) to "Bookshelf 2",
+            ),
+        ),
+        title = { Text(text = "Edit Smart Collection") },
+        onCancel = {},
+    )
 }

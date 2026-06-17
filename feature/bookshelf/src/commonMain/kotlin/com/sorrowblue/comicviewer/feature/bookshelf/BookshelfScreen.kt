@@ -17,10 +17,18 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavGraphRoot
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfAppBar
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
+import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
@@ -37,6 +45,12 @@ import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
 import org.jetbrains.compose.resources.stringResource
 
+@NavGraphRoot
+@NavDestination(route = BookshelfNavKey::class)
+@NavEdge(to = FolderNavKey::class)
+@NavEdge(to = BookshelfInfoNavKey::class)
+@NavEdge(to = BookshelfWizardNavKey.Edit::class)
+@NavEdge(to = BookshelfWizardNavKey.Selection::class)
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
@@ -89,6 +103,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
     }
 }
 
+@NavPreview(route = BookshelfNavKey::class, primary = true)
 @Preview
 @Preview(device = Devices.FOLDABLE)
 @Preview(device = Devices.TABLET)

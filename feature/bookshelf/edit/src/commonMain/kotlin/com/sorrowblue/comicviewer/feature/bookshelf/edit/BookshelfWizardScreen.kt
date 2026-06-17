@@ -25,8 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditScreenUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceEditorContents
@@ -45,6 +48,7 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_t
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.rememberForm
 
+@NavDestination(BookshelfWizardNavKey.Edit::class)
 @Composable
 internal fun BookshelfWizardScreen(
     uiState: BookshelfWizardScreenUiState,
@@ -118,6 +122,14 @@ internal fun BookshelfWizardScreen(
     }
 }
 
+@Suppress("unused")
+@NavDestination(BookshelfWizardNavKey.Selection::class)
+@Composable
+private fun BookshelfWizardSelectionScreen() {
+    // For NavGraph Preview
+}
+
+@NavPreview(BookshelfWizardNavKey.Selection::class, primary = true)
 @Preview(device = Devices.PIXEL_9, name = "Selection")
 @Preview(device = Devices.PIXEL_TABLET, name = "Selection")
 @Composable
@@ -149,6 +161,7 @@ private fun BookshelfWizardScreenSelectionPreview() {
     }
 }
 
+@NavPreview(BookshelfWizardNavKey.Edit::class, primary = true)
 @Preview(device = Devices.PIXEL_9, name = "SmbEditor")
 @Preview(device = Devices.PIXEL_TABLET, name = "SmbEditor")
 @Composable
@@ -186,6 +199,7 @@ private fun BookshelfWizardScreenSmbEditorPreview() {
     }
 }
 
+@NavPreview(BookshelfWizardNavKey.Edit::class)
 @Preview(device = Devices.PIXEL_9, name = "DeviceEditor")
 @Preview(device = Devices.PIXEL_TABLET, name = "DeviceEditor")
 @Composable

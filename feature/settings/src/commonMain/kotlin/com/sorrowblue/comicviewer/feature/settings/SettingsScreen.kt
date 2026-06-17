@@ -26,7 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ExtensionSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.info.navigation.InfoSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.navigation.InAppLanguagePickerNavKey
 import com.sorrowblue.comicviewer.feature.settings.section.SettingsListPane
+import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecuritySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
@@ -50,6 +61,14 @@ internal data class SettingsScreenUiState(
     val settingsList: ImmutableList<SettingsItem> = SettingsItem.entries.toImmutableList(),
 )
 
+@NavEdge(DisplaySettingsNavKey::class)
+@NavEdge(FolderSettingsNavKey::class)
+@NavEdge(ViewerSettingsNavKey::class)
+@NavEdge(SecuritySettingsNavKey::class)
+@NavEdge(InAppLanguagePickerNavKey::class)
+@NavEdge(ExtensionSettingsNavKey::class)
+@NavEdge(InfoSettingsNavKey::class)
+@NavDestination(SettingsNavKey::class)
 @Composable
 internal fun SettingsScreen(
     uiState: SettingsScreenUiState,
@@ -122,6 +141,7 @@ internal enum class SettingsItem(
     HELP(Res.string.settings_label_info, ComicIcons.Info, "InfoSettings"),
 }
 
+@NavPreview(SettingsNavKey::class, primary = true)
 @PreviewMultiplatform
 @Composable
 private fun SettingsScreenPreview() {

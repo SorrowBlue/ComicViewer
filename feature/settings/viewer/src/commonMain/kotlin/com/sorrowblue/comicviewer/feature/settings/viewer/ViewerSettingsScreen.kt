@@ -14,11 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.BindingDirectionNavKey
+import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.displayName
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -36,6 +41,8 @@ import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_l
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavEdge(BindingDirectionNavKey::class, label = "onBindingDirectionClick")
+@NavDestination(ViewerSettingsNavKey::class)
 @Composable
 internal fun ViewerSettingsScreen(
     uiState: SettingsViewerScreenUiState,
@@ -162,6 +169,7 @@ internal fun ViewerSettingsScreen(
     }
 }
 
+@NavPreview(ViewerSettingsNavKey::class, primary = true)
 @Preview
 @Preview(locale = "ja")
 @Composable

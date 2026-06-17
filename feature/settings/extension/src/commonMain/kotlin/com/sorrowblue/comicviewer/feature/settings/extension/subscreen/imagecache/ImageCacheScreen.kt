@@ -8,12 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.ImageCache
 import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
+import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ImageCacheNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage
 import comicviewer.feature.settings.extension.generated.resources.Res
@@ -21,6 +24,7 @@ import comicviewer.feature.settings.extension.generated.resources.settings_exten
 import kotlin.math.floor
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(ImageCacheNavKey::class)
 @Composable
 internal fun ImageCacheScreen(
     uiState: ThumbnailScreenUiState,
@@ -59,6 +63,7 @@ internal fun ImageCacheScreen(
 
 val Long.megaByte get() = floor(this / Byte / Byte * 100.0) / 100.0
 
+@NavPreview(ImageCacheNavKey::class, primary = true)
 @Preview
 @Composable
 private fun ImageCacheScreenPreview() {

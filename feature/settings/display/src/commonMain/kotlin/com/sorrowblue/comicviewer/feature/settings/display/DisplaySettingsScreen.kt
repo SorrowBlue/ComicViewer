@@ -5,11 +5,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.display.generated.resources.Res
 import comicviewer.feature.settings.display.generated.resources.settings_display_label_show_last_folder
 import comicviewer.feature.settings.display.generated.resources.settings_display_label_theme
@@ -20,6 +25,7 @@ import comicviewer.feature.settings.display.generated.resources.settings_display
 import comicviewer.feature.settings.display.generated.resources.settings_display_title
 import org.jetbrains.compose.resources.stringResource
 
+@NavDestination(DisplaySettingsNavKey::class)
 @Composable
 internal fun DisplaySettingsScreen(
     uiState: SettingsDisplayScreenUiState,
@@ -68,3 +74,18 @@ internal val DarkMode.label
     }.let {
         stringResource(it)
     }
+
+@NavPreview(DisplaySettingsNavKey::class, primary = true)
+@Preview
+@Composable
+private fun DisplaySettingsScreenPreview() = PreviewTheme {
+    DisplaySettingsScreen(
+        uiState = SettingsDisplayScreenUiState(
+            darkMode = DarkMode.DEVICE,
+            restoreOnLaunch = true,
+        ),
+        onBackClick = {},
+        onRestoreOnLaunchChange = {},
+        onDarkModeClick = {},
+    )
+}
