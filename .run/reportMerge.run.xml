@@ -11,6 +11,8 @@
       <option name="taskNames">
         <list>
           <option value="reportMerge" />
+          <option value=":build-logic:detektMain" />
+          <option value="checkVersionCatalog" />
         </list>
       </option>
       <option name="vmOptions" />
