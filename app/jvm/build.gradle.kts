@@ -52,8 +52,20 @@ compose.desktop {
         mainClass = "com.sorrowblue.comicviewer.app.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.sorrowblue.comicviewer.app"
-            packageVersion = extractPackageVersion(gitTagProvider.orElse("1.0.0").get())
+            vendor = "SorrowBlue"
+            packageName = "ComicViewer"
+            linux {
+                debMaintainer = "sorrowblue.dev@gmail.com"
+                menuGroup = "comicviewer"
+            }
+            windows {
+                installationPath = "ComicViewer"
+                dirChooser = true
+                menuGroup = "ComicViewer"
+                upgradeUuid = "F5DB26A2-175B-446C-9EDA-50ACACCB6F8C"
+                shortcut = true
+                iconFile.set(project.file("src/jvmMain/resources/icon.ico"))
+            }
         }
         jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
     }
