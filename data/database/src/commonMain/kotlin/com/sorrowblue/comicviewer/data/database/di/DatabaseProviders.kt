@@ -32,7 +32,7 @@ interface DatabaseProviders {
             ComicViewerDatabase.ManualMigration8to9(),
             ComicViewerDatabase.ManualMigration9to10(),
         )
-        .addTypeConverter(decryptedPasswordConverters)
+        .addColumnTypeConverter(decryptedPasswordConverters)
         .setQueryCoroutineContext(dispatcher)
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .build()
