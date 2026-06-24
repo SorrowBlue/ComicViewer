@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.data.database
 
 import androidx.room3.AutoMigration
+import androidx.room3.ColumnTypeConverters
 import androidx.room3.ConstructedBy
 import androidx.room3.Database
 import androidx.room3.DeleteTable
@@ -16,6 +17,7 @@ import com.sorrowblue.comicviewer.data.database.dao.CollectionFileDao
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
+import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPasswordConverters
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntity
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
@@ -47,6 +49,7 @@ internal const val DatabaseName = "comic_viewer_database"
     exportSchema = true,
 )
 @ConstructedBy(ComicViewerDatabaseConstructor::class)
+@ColumnTypeConverters(DecryptedPasswordConverters::class)
 internal abstract class ComicViewerDatabase : RoomDatabase() {
     abstract fun bookshelfDao(): BookshelfDao
 

@@ -44,7 +44,7 @@ internal open class DatabaseTest {
         ): ComicViewerDatabase = helper
             .getDatabaseBuilder()
             .addMigrations(ComicViewerDatabase.ManualMigration7to8())
-            .addTypeConverter(decryptedPasswordConverters)
+            .addColumnTypeConverter(decryptedPasswordConverters)
             .setQueryCoroutineContext(dispatcher)
             .fallbackToDestructiveMigrationOnDowngrade(true)
             .build()
