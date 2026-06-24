@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun LicenseScreen(
     uiState: LicenseScreenUiState,
     onBackClick: () -> Unit,
-    onLibraryClick: (Library) -> Unit,
+    onLibraryClick: (Library) -> Boolean,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -98,6 +98,8 @@ private fun LicenseScreenPreview() = PreviewTheme {
             ),
         ),
         onBackClick = {},
-        onLibraryClick = {},
+        onLibraryClick = {
+            true
+        },
     )
 }
