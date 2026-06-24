@@ -65,7 +65,6 @@ fun PaddingValues.copyWhenZero(
  * @param other
  * @return
  */
-@Composable
 operator fun PaddingValues.plus(other: PaddingValues): PaddingValues =
     AddedPaddingValues(this, other)
 

@@ -119,24 +119,22 @@ fun ListFile(
                 Text(text = file.name, fontSize = fontSize.sp)
             },
             supportingContent = {
-                Column {
-                    if (file is Book && 0 < file.lastPageRead) {
-                        val color = ProgressIndicatorDefaults.linearColor
-                        LinearProgressIndicator(
-                            modifier = Modifier.fillMaxWidth(),
-                            progress = { file.lastPageRead.toFloat() / file.totalPageCount },
-                            strokeCap = StrokeCap.Round,
-                            gapSize = 0.dp,
-                            drawStopIndicator = {
-                                drawStopIndicator(
-                                    drawScope = this,
-                                    stopSize = 0.dp,
-                                    color = color,
-                                    strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
-                                )
-                            },
-                        )
-                    }
+                if (file is Book && 0 < file.lastPageRead) {
+                    val color = ProgressIndicatorDefaults.linearColor
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        progress = { file.lastPageRead.toFloat() / file.totalPageCount },
+                        strokeCap = StrokeCap.Round,
+                        gapSize = 0.dp,
+                        drawStopIndicator = {
+                            drawStopIndicator(
+                                drawScope = this,
+                                stopSize = 0.dp,
+                                color = color,
+                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+                            )
+                        },
+                    )
                 }
             },
             trailingContent = {

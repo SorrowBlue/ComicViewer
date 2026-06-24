@@ -81,7 +81,6 @@ fun PreviewTheme(
 }
 
 private val ProvidesPreviewNavigationItems
-    @Composable
     get() = LocalNavigationItems provides PreviewNavigationItems
 
 private val PreviewNavigationItems = object : NavigationItems {
