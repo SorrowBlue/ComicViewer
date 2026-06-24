@@ -19,7 +19,7 @@ internal interface LicenseScreenState {
     val uiState: LicenseScreenUiState
     val libs: Libs?
 
-    fun onLibraryClick(library: Library)
+    fun onLibraryClick(library: Library): Boolean
 
     fun closeDialog()
 }
@@ -40,14 +40,16 @@ private class LicenseScreenStateImpl(override val libs: Libs?, val uriHandler: U
     LicenseScreenState {
     override var uiState by mutableStateOf(LicenseScreenUiState(libs))
 
-    override fun onLibraryClick(library: Library) {
+    override fun onLibraryClick(library: Library): Boolean {
         val license = library.licenses.firstOrNull()
         if (!license?.htmlReadyLicenseContent.isNullOrBlank()) {
             uiState = uiState.copy(openDialog = library)
+            return true
         } else if (!license?.url.isNullOrBlank()) {
             license.url?.also {
                 try {
                     uriHandler.openUri(it)
+                    return true
                 } catch (exception: IllegalArgumentException) {
                     logcat(
                         tag = "LibrariesContainerFixed",
@@ -56,6 +58,7 @@ private class LicenseScreenStateImpl(override val libs: Libs?, val uriHandler: U
                 }
             }
         }
+        return false
     }
 
     override fun closeDialog() {
