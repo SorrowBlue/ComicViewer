@@ -14,6 +14,7 @@
   "dependencyDashboardLabels": [
     ":robot:renovate"
   ],
+  "recreateWhen": "never",
   "packageRules": [
     {
       "groupName": "Android Gradle Plugin",
