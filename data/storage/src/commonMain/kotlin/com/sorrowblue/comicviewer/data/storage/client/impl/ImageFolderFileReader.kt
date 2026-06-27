@@ -32,7 +32,9 @@ internal class ImageFolderFileReader(
 
     override suspend fun extractTo(pageIndex: Int, sink: Sink) {
         withContext(dispatcher) {
-            fileClient.source(list()[pageIndex])
+            fileClient.source(list()[pageIndex]).use {
+                sink.transferFrom(it)
+            }
         }
     }
 

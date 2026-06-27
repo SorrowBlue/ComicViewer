@@ -46,7 +46,7 @@ internal class MigrationTest {
             ComicViewerDatabase::class.java,
             TEST_DB,
         )
-            .addTypeConverter(DecryptedPasswordConverters(AndroidCryptUtil())).apply {
+            .addColumnTypeConverter(DecryptedPasswordConverters(AndroidCryptUtil())).apply {
                 ALL_MIGRATIONS.forEach {
                     addMigrations(it)
                 }
