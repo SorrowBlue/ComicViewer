@@ -22,7 +22,7 @@ android {
             applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.findByName("debug")
         }
-        val release by getting {
+        val release = getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
             signingConfig = signingConfigs.findByName("release")
@@ -59,8 +59,7 @@ android {
         resources.excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
     }
     lint {
-        val androidLintCheckReleaseBuilds: Boolean? by project
-        checkReleaseBuilds = androidLintCheckReleaseBuilds ?: true
+        checkReleaseBuilds = project.findProperty("androidLintCheckReleaseBuilds") as? Boolean ?: true
         abortOnError = true
     }
 }

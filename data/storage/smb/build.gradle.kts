@@ -25,13 +25,13 @@ kotlin {
                 implementation(libs.kotlinx.coroutinesTest)
             }
         }
-        val androidJvm by creating {
+        val androidJvm = create("androidJvm") {
             dependsOn(commonMain.get())
             dependencies {
                 implementation(libs.jcifs)
             }
         }
-        val androidJvmTest by creating {
+        val androidJvmTest = create("androidJvmTest") {
             dependsOn(commonTest.get())
         }
         androidMain {

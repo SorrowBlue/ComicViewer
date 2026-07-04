@@ -14,7 +14,7 @@ kotlin {
                 api(libs.kotlinx.io)
             }
         }
-        val androidJvm by creating {
+        val androidJvm = create("androidJvm") {
             dependsOn(commonMain.get())
         }
         androidMain {

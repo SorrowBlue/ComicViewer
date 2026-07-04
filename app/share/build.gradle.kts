@@ -36,7 +36,7 @@ kotlin {
                 }
             }
         }
-        withHostTest {  }
+        withHostTest { }
     }
     sourceSets {
         commonMain {
@@ -78,7 +78,7 @@ kotlin {
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.coreSplashscreen)
         }
-        val androidDeviceTest by getting {
+        getByName("androidDeviceTest") {
             dependencies {
                 implementation(libs.jcifs)
                 implementation(libs.androidx.testRunner)
@@ -96,6 +96,7 @@ dependencies {
 }
 
 metro {
+    @Suppress("OPT_IN_USAGE")
     reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
 }
 
