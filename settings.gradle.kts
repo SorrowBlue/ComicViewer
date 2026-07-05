@@ -74,6 +74,7 @@ include(":framework:common")
 include(":framework:background")
 include(":framework:notification")
 include(":framework:designsystem")
+include(":framework:permission")
 include(":framework:test")
 include(":framework:ui")
 

@@ -9,6 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.permission)
                 implementation(projects.feature.file)
             }
         }

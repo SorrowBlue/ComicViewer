@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_localnetwork_title">ローカルネットワークへの接続</string>
+    <string name="permission_localnetwork_headline">PC内のマンガを、スマホで読みましょう</string>
+    <string name="permission_localnetwork_desc">ローカルネットワークへのアクセスを許可すると、同じWi‑Fiに接続されているPCやNAS内のマンガファイルを直接読み込むことができます。</string>
+    <string name="permission_localnetwork_privacy_title">プライバシー保護</string>
+    <string name="permission_localnetwork_privacy_desc">このアクセスは、お使いのネットワーク内のデバイスを検出するためだけに共有され、外部にデータが送信されることはありません。</string>
+    <string name="permission_localnetwork_action_continue">Continue</string>
+    <string name="permission_localnetwork_action_open_settings">Open Settings</string>
+    <string name="permission_localnetwork_action_cancel">キャンセル</string>
+</resources>

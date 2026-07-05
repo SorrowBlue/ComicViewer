@@ -64,6 +64,7 @@ fun AdaptiveAlertDialog(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     isFullScreenDialog: Boolean = isCompactWindowClass(),
+    navigationIcon: @Composable () -> Unit = { BackIconButton(onClick = onBackClick) },
     content: @Composable ((PaddingValues) -> Unit),
 ) {
     val movableContent = remember {
@@ -82,9 +83,7 @@ fun AdaptiveAlertDialog(
                     topBar = {
                         TopAppBar(
                             title = title,
-                            navigationIcon = {
-                                BackIconButton(onClick = onBackClick)
-                            },
+                            navigationIcon = navigationIcon,
                             windowInsets = WindowInsets.safeDrawing.only(AppBarWindowInsets),
                         )
                     },

@@ -1,5 +1,8 @@
 package com.sorrowblue.comicviewer.folder
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
@@ -24,6 +27,10 @@ import com.sorrowblue.comicviewer.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderList
 import com.sorrowblue.comicviewer.folder.section.FolderListUiState
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionScreen
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
@@ -38,6 +45,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     lazyGridState: LazyGridState,
+    localNetworkPermissionRequester: LocalNetworkPermissionRequester,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     onFileClick: (File) -> Unit,
@@ -49,6 +57,19 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
+    val permissionState = localNetworkPermissionRequester.state
+    AnimatedVisibility(
+        permissionState is LocalNetworkPermissionState.Rationale ||
+            permissionState is LocalNetworkPermissionState.DeniedPermanent,
+        enter = slideInVertically { it },
+        exit = slideOutVertically { it },
+    ) {
+        LocalNetworkAccessPermissionScreen(
+            isRationale = permissionState is LocalNetworkPermissionState.Rationale,
+            onConfirmClick = localNetworkPermissionRequester::onPermissionConfirmClick,
+            onDismissClick = onBackClick,
+        )
+    }
     AdaptiveNavigationSuiteScaffold(modifier = modifier) {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val scrollBehavior2 = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -100,6 +121,7 @@ private fun FolderScreenPreview() = PreviewTheme {
         ),
         lazyPagingItems = PagingData.flowData<File> { fakeBookFile() }.collectAsLazyPagingItems(),
         lazyGridState = rememberLazyGridState(),
+        localNetworkPermissionRequester = rememberLocalNetworkPermissionRequester(true),
         onBackClick = {},
         onSearchClick = {},
         onFileClick = {},

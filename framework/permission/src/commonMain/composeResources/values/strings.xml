@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_localnetwork_title">Access to local network</string>
+    <string name="permission_localnetwork_headline">Read comics from your PC on your phone</string>
+    <string name="permission_localnetwork_desc">Allow access to the local network to directly read comic files from PCs and NAS devices connected to the same Wi-Fi network.</string>
+    <string name="permission_localnetwork_privacy_title">Privacy protection</string>
+    <string name="permission_localnetwork_privacy_desc">This access is only used to discover devices on your network, and no data is sent externally.</string>
+    <string name="permission_localnetwork_action_continue">Continue</string>
+    <string name="permission_localnetwork_action_open_settings">Open Settings</string>
+    <string name="permission_localnetwork_action_cancel">Cancel</string>
+</resources>

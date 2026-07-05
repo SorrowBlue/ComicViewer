@@ -23,6 +23,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathFieldName
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditScreenUiState
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
@@ -70,6 +72,9 @@ internal sealed interface BookshelfEditScreenState : IBookshelfEditScreenState
 internal interface SmbEditScreenState : BookshelfEditScreenState {
     override val formState: FormState<SmbEditForm>
     override val form: Form<SmbEditForm>
+    val permissionRequester: LocalNetworkPermissionRequester
+
+    fun onPermissionConfirmClick()
 }
 
 internal interface LocalEditScreenState : BookshelfEditScreenState {
@@ -86,6 +91,7 @@ internal fun rememberBookshelfEditScreenState(
     editType: BookshelfEditType,
 ): BookshelfEditScreenState {
     val coroutineScope = rememberCoroutineScope()
+    val permissionRequester = rememberLocalNetworkPermissionRequester()
     val state = when (editType.bookshelfType) {
         BookshelfType.SMB -> {
             val formState =
@@ -113,6 +119,7 @@ internal fun rememberBookshelfEditScreenState(
                 )
             }.apply {
                 form = rememberForm(state = formState, onSubmit = ::onSubmit)
+                this.permissionRequester = permissionRequester
             }
         }
 
@@ -156,6 +163,12 @@ private class SmbEditScreenStateImpl(
 ),
     SmbEditScreenState {
     override lateinit var form: Form<SmbEditForm>
+
+    override lateinit var permissionRequester: LocalNetworkPermissionRequester
+
+    override fun onPermissionConfirmClick() {
+        permissionRequester.onPermissionConfirmClick()
+    }
 }
 
 private class LocalEditScreenStateImpl(

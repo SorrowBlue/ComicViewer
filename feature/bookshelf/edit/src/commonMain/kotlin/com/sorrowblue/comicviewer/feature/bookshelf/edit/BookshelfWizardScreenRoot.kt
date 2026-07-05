@@ -54,6 +54,11 @@ internal fun BookshelfWizardScreenRoot(key: BookshelfWizardNavKey, onBack: () ->
                 BookshelfEditorContents(
                     page = page,
                     contentPadding = contentPadding,
+                    onBack = {
+                        if (!state.onBack()) {
+                            onBack()
+                        }
+                    },
                     onComplete = onBack,
                     onChange = {
                         state.onFormChange(it)

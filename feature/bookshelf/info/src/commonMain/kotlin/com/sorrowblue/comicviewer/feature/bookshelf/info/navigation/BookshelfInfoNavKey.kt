@@ -6,17 +6,14 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
-import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class BookshelfInfoNavKey(val id: BookshelfId) : NavKey
 
-context(factory: BookshelfInfoScreenContext.Factory)
 internal fun EntryProviderScope<NavKey>.bookshelfInfoNavEntry(
     navigator: Navigator,
     sceneKey: String,
@@ -25,20 +22,18 @@ internal fun EntryProviderScope<NavKey>.bookshelfInfoNavEntry(
         metadata = SupportingPaneSceneStrategy.extraPane(sceneKey = sceneKey) +
             NavDisplay.transitionMaterialSharedAxisX(),
     ) {
-        with(rememberRetained { factory.createBookshelfInfoScreenContext() }) {
-            BookshelfInfoScreenRoot(
-                bookshelfId = it.id,
-                onBackClick = navigator::goBack,
-                onRemoveClick = {
-                    navigator.navigate(BookshelfDeleteNavKey(it.id))
-                },
-                showNotificationPermissionRationale = { scanType ->
-                    navigator.navigate(BookshelfNotificationNavKey(scanType))
-                },
-                onEditClick = { id, type ->
-                    navigator.navigate(BookshelfWizardNavKey.Edit(id, type))
-                },
-            )
-        }
+        BookshelfInfoScreenRoot(
+            bookshelfId = it.id,
+            onBackClick = navigator::goBack,
+            onRemoveClick = {
+                navigator.navigate(BookshelfDeleteNavKey(it.id))
+            },
+            showNotificationPermissionRationale = { scanType ->
+                navigator.navigate(BookshelfNotificationNavKey(scanType))
+            },
+            onEditClick = { id, type ->
+                navigator.navigate(BookshelfWizardNavKey.Edit(id, type))
+            },
+        )
     }
 }

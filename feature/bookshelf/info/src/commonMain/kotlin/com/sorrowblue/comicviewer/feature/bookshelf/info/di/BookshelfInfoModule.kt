@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.di
 
-import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDeleteScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfDeleteNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
@@ -30,12 +29,8 @@ interface BookshelfInfoModule {
 
     @Provides
     @IntoSet
-    private fun provideBookshelfInfoNavEntry(
-        factory: BookshelfInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            bookshelfInfoNavEntry(navigator, "Bookshelf")
-        }
+    private fun provideBookshelfInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        bookshelfInfoNavEntry(navigator, "Bookshelf")
     }
 
     @Provides

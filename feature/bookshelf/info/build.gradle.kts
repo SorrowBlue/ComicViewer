@@ -11,6 +11,7 @@ kotlin {
             dependencies {
                 implementation(projects.framework.background)
                 implementation(projects.framework.notification)
+                implementation(projects.framework.permission)
                 implementation(projects.feature.bookshelf.edit)
                 implementation(projects.feature.file)
                 implementation(libs.androidx.coreUri)

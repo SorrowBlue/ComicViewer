@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoCo
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfLoadingContents
 
 @Composable
-context(context: BookshelfInfoScreenContext)
 internal fun BookshelfInfoScreenRoot(
     bookshelfId: BookshelfId,
     onBackClick: () -> Unit,

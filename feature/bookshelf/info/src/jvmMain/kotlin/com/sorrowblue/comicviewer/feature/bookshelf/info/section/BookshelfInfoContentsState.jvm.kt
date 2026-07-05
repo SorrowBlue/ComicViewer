@@ -17,7 +17,6 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsU
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import com.sorrowblue.comicviewer.framework.notification.DesktopNotification
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
@@ -125,9 +124,8 @@ private class BookshelfInfoContentsStateImpl(
 
 private const val PageSize = 4
 
-@OptIn(VisibleForAssistedInject::class)
 @AssistedInject
-class BookshelfInfoContentViewModel(
+internal class BookshelfInfoContentViewModel(
     @Assisted private val bookshelfFolder: BookshelfFolder,
     private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
     private val scanBookshelfUseCase: ScanBookshelfUseCase,

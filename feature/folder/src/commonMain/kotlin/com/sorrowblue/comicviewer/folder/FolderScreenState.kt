@@ -20,15 +20,20 @@ import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.PagingException
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderScopeOnly
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResult
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
@@ -37,8 +42,12 @@ import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
 import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.asLog
@@ -56,6 +65,7 @@ internal interface FolderScreenState {
     val lazyGridState: LazyGridState
     val uiState: FolderScreenUiState
     val snackbarHostState: SnackbarHostState
+    val localNetworkPermissionRequester: LocalNetworkPermissionRequester
 
     fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>)
 
@@ -68,6 +78,7 @@ internal interface FolderScreenState {
     fun onRefresh()
 }
 
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 @Composable
 context(context: FolderScreenContext)
 internal fun rememberFolderScreenState(
@@ -79,14 +90,44 @@ internal fun rememberFolderScreenState(
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val permissionRequester = rememberLocalNetworkPermissionRequester(true)
     val lazyPagingItems = rememberPagingItems {
-        context.pagingFileUseCase(
-            PagingFileUseCase.Request(
-                PagingConfig(20),
-                bookshelfId,
-                path,
-            ),
-        )
+        val bookshelfFlow = context.getBookshelfInfoUseCase(
+            GetBookshelfInfoUseCase.Request(bookshelfId),
+        ).map { resource ->
+            if (resource is Resource.Success) resource.data.bookshelf else null
+        }.distinctUntilChanged()
+
+        val permissionStateFlow = snapshotFlow { permissionRequester.state }
+
+        combine(bookshelfFlow, permissionStateFlow) { bookshelf, permissionState ->
+            bookshelf to permissionState
+        }.flatMapLatest { (bookshelf, permissionState) ->
+            logcat("FolderScreenState") { "bookshelf=$bookshelf, permissionState=$permissionState" }
+            if (bookshelf == null) {
+                emptyFlow()
+            } else if (bookshelf.type == BookshelfType.SMB) {
+                if (permissionState == LocalNetworkPermissionState.Granted) {
+                    context.pagingFileUseCase(
+                        PagingFileUseCase.Request(
+                            PagingConfig(20),
+                            bookshelfId,
+                            path,
+                        ),
+                    )
+                } else {
+                    emptyFlow()
+                }
+            } else {
+                context.pagingFileUseCase(
+                    PagingFileUseCase.Request(
+                        PagingConfig(20),
+                        bookshelfId,
+                        path,
+                    ),
+                )
+            }
+        }
     }
     val state = rememberSaveable(
         saver = FolderScreenStateImpl.saver {
@@ -100,6 +141,7 @@ internal fun rememberFolderScreenState(
                 lazyGridState = lazyGridState,
                 snackbarHostState = snackbarHostState,
                 lazyPagingItems = lazyPagingItems,
+                localNetworkPermissionRequester = permissionRequester,
                 coroutineScope = coroutineScope,
             )
         },
@@ -114,6 +156,7 @@ internal fun rememberFolderScreenState(
             lazyGridState = lazyGridState,
             snackbarHostState = snackbarHostState,
             lazyPagingItems = lazyPagingItems,
+            localNetworkPermissionRequester = permissionRequester,
             coroutineScope = coroutineScope,
         )
     }.apply {
@@ -137,6 +180,7 @@ private class FolderScreenStateImpl(
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
     override val lazyPagingItems: LazyPagingItems<File>,
+    override val localNetworkPermissionRequester: LocalNetworkPermissionRequester,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
     var coroutineScope: CoroutineScope,
     getFileUseCase: GetFileUseCase,
@@ -199,10 +243,8 @@ private class FolderScreenStateImpl(
     }
 
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
-        logcat { "onLoadStateChange $isRestored $restorePath ${lazyPagingItems.itemCount}" }
         if (!isRestored && restorePath != null && 0 < lazyPagingItems.itemCount) {
             val index = lazyPagingItems.indexOf { it?.path == restorePath }
-            logcat { "onLoadStateChange $index $restorePath" }
             if (0 <= index) {
                 isRestored = true
                 runCatching {

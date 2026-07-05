@@ -20,12 +20,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
+import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
+import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.IntentLauncher
 import com.sorrowblue.comicviewer.feature.bookshelf.info.NotificationPermissionRequester
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.feature.bookshelf.info.rememberNotificationPermissionRequester
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
@@ -67,12 +71,12 @@ internal actual fun rememberBookshelfInfoContentsState(
     stateImpl.notificationPermissionRequester = rememberNotificationPermissionRequester(
         stateImpl::onNotificationResult,
     )
+    stateImpl.localNetworkPermissionRequester = rememberLocalNetworkPermissionRequester(false)
     stateImpl.intentLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     return stateImpl
 }
 
-@OptIn(VisibleForAssistedInject::class)
 private class BookshelfInfoMainContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
     private val viewModel: BookshelfInfoContentViewModel,
@@ -86,6 +90,7 @@ private class BookshelfInfoMainContentsStateImpl(
 
     override lateinit var intentLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
     lateinit var notificationPermissionRequester: NotificationPermissionRequester
+    override lateinit var localNetworkPermissionRequester: LocalNetworkPermissionRequester
 
     override val events = EventFlow<BookshelfInfoContentsEvent>()
 
@@ -107,6 +112,14 @@ private class BookshelfInfoMainContentsStateImpl(
     }
 
     override fun onScanFileClick() {
+        val a = when (uiState.bookshelf) {
+            is DeviceStorage -> true
+            ShareContents -> true
+            is SmbServer -> localNetworkPermissionRequester.checkPermission()
+        }
+        if (!a) {
+            return
+        }
         currentScanType = ScanType.File
         notificationPermissionRequester.requestPermission(
             action = ::scanFile,
@@ -121,6 +134,14 @@ private class BookshelfInfoMainContentsStateImpl(
     }
 
     override fun onScanThumbnailClick() {
+        val a = when (uiState.bookshelf) {
+            is DeviceStorage -> true
+            ShareContents -> true
+            is SmbServer -> localNetworkPermissionRequester.checkPermission()
+        }
+        if (!a) {
+            return
+        }
         currentScanType = ScanType.Thumbnail
         notificationPermissionRequester.requestPermission(
             action = ::scanThumbnail,

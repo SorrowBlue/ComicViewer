@@ -25,6 +25,8 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.LocalEditScreenState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.rememberBookshelfEditScreenState
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionDialog
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
@@ -38,6 +40,7 @@ context(context: BookshelfEditScreenContext)
 internal fun BookshelfEditorContents(
     page: BookshelfWizardPage.Edit,
     contentPadding: PaddingValues,
+    onBack: () -> Unit,
     onComplete: () -> Unit,
     onChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -88,6 +91,20 @@ internal fun BookshelfEditorContents(
             BookshelfEditScreenEvent.Complete -> {
                 onComplete()
             }
+        }
+    }
+
+    if (state is SmbEditScreenState) {
+        val permissionState = state.permissionRequester.state
+        if (
+            permissionState is LocalNetworkPermissionState.Rationale ||
+            permissionState is LocalNetworkPermissionState.DeniedPermanent
+        ) {
+            LocalNetworkAccessPermissionDialog(
+                isRationale = permissionState is LocalNetworkPermissionState.Rationale,
+                onConfirmClick = state::onPermissionConfirmClick,
+                onDismissClick = onBack,
+            )
         }
     }
 }

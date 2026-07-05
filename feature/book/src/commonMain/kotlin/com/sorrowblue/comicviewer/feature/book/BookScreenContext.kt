@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.feature.book
 
+import com.sorrowblue.comicviewer.domain.usecase.file.CloseBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
@@ -21,6 +22,7 @@ interface BookScreenContext : ScreenContext {
     val updateLastReadPageUseCase: UpdateLastReadPageUseCase
     val manageBookSettingsUseCase: ManageBookSettingsUseCase
     val manageViewerSettingsUseCase: ManageViewerSettingsUseCase
+    val closeBookUseCase: CloseBookUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

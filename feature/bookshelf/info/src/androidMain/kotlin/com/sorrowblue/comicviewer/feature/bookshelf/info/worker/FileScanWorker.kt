@@ -29,7 +29,6 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.background.MetroWorkerInstanceFactory
 import com.sorrowblue.comicviewer.framework.background.WorkerKey
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
 import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
@@ -42,6 +41,7 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -49,9 +49,8 @@ import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
-@VisibleForAssistedInject
 @AssistedInject
-class FileScanWorker(
+internal class FileScanWorker(
     context: Context,
     @Assisted params: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
@@ -137,7 +136,7 @@ class FileScanWorker(
             ) {
                 notificationManager.notify(Random.nextInt(), notification)
             }
-            delay(5000)
+            delay(5000.milliseconds)
             Result.success()
         }, {
             Result.failure()

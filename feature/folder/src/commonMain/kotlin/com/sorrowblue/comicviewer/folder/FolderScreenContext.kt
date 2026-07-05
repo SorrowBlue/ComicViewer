@@ -1,5 +1,6 @@
 package com.sorrowblue.comicviewer.folder
 
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
@@ -17,6 +18,7 @@ interface FolderScreenContext : ScreenContext {
     val getFileUseCase: GetFileUseCase
     val displaySettingsUseCase: ManageFolderDisplaySettingsUseCase
     val pagingFileUseCase: PagingFileUseCase
+    val getBookshelfInfoUseCase: GetBookshelfInfoUseCase
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

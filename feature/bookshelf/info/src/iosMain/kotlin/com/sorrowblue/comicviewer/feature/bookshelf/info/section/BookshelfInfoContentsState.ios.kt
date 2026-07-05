@@ -17,7 +17,8 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsU
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
@@ -32,6 +33,8 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
@@ -48,15 +51,13 @@ import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationRequest
 import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNUserNotificationCenter
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.suspendCoroutine
 
 @Composable
 internal actual fun rememberBookshelfInfoContentsState(
     bookshelfFolder: BookshelfFolder,
 ): BookshelfInfoContentsState {
     val viewModel =
-        assistedMetroViewModel<BookshelfInfoContentViewModel, BookshelfInfoContentViewModelFactory> {
+        assistedMetroViewModel<BookshelfInfoContentViewModel, BookshelfInfoContentViewModel.Factory> {
             create(bookshelfFolder)
         }
     val appState = LocalAppState.current
@@ -68,15 +69,17 @@ internal actual fun rememberBookshelfInfoContentsState(
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+        localNetworkPermissionRequester = rememberLocalNetworkPermissionRequester(false)
     }
 }
 
 private class BookshelfInfoContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
     private val appState: AppState,
-    private val viewModel: BookshelfInfoContentViewModel
+    private val viewModel: BookshelfInfoContentViewModel,
 ) : BookshelfInfoContentsState {
     override lateinit var lazyPagingItems: LazyPagingItems<BookThumbnail>
+    override lateinit var localNetworkPermissionRequester: LocalNetworkPermissionRequester
 
     private lateinit var currentScanType: ScanType
 
@@ -120,8 +123,8 @@ private class BookshelfInfoContentsStateImpl(
         val center = UNUserNotificationCenter.currentNotificationCenter()
         center.requestAuthorizationWithOptions(
             options = UNAuthorizationOptionAlert or
-                    UNAuthorizationOptionSound or
-                    UNAuthorizationOptionBadge,
+                UNAuthorizationOptionSound or
+                UNAuthorizationOptionBadge,
             completionHandler = { granted, _ ->
                 if (granted) {
                     notify()
@@ -230,7 +233,6 @@ inline fun <T1, T2> mainContinuation(crossinline block: (T1, T2) -> Unit): (T1, 
         }
     }
 
-@OptIn(VisibleForAssistedInject::class)
 @AssistedInject
 internal class BookshelfInfoContentViewModel(
     @Assisted private val bookshelfFolder: BookshelfFolder,
@@ -258,11 +260,11 @@ internal class BookshelfInfoContentViewModel(
             }
         regenerateThumbnailsUseCase(request)
     }
-}
 
-@AssistedFactory
-@ManualViewModelAssistedFactoryKey
-@ContributesIntoMap(AppScope::class)
-internal interface BookshelfInfoContentViewModelFactory : ManualViewModelAssistedFactory {
-    fun create(bookshelfFolder: BookshelfFolder): BookshelfInfoContentViewModel
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(bookshelfFolder: BookshelfFolder): BookshelfInfoContentViewModel
+    }
 }

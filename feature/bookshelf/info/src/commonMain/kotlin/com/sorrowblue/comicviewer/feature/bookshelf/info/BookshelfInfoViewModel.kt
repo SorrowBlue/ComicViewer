@@ -5,14 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.Binds
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoMap
+import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,20 +26,12 @@ internal class BookshelfInfoViewModel(
         getBookshelfInfoUseCase(
             GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId),
         ).mapNotNull { it.dataOrNull() }
-            .shareIn(viewModelScope, started = SharingStarted.Eagerly)
+            .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 
     @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
         fun create(bookshelfId: BookshelfId): BookshelfInfoViewModel
     }
-}
-
-@VisibleForAssistedInject
-@ContributesTo(AppScope::class)
-interface BookshelfInfoViewModelModule {
-
-    @IntoMap
-    @ManualViewModelAssistedFactoryKey
-    @Binds
-    private val BookshelfInfoViewModel.Factory.bind get(): ManualViewModelAssistedFactory = this
 }

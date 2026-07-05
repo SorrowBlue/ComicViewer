@@ -1,5 +1,8 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,11 +33,12 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionDialog
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
@@ -47,7 +51,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_lab
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-context(context: BookshelfInfoScreenContext)
 internal fun BookshelfInfoContents(
     bookshelfFolder: BookshelfFolder,
     showNotificationPermissionRationale: (ScanType) -> Unit,
@@ -67,6 +70,19 @@ internal fun BookshelfInfoContents(
         contentPadding = contentPadding,
         modifier = modifier,
     )
+
+    AnimatedVisibility(
+        state.localNetworkPermissionRequester.state is LocalNetworkPermissionState.Rationale ||
+            state.localNetworkPermissionRequester.state is LocalNetworkPermissionState.DeniedPermanent,
+        enter = slideInVertically { it },
+        exit = slideOutVertically { it },
+    ) {
+        LocalNetworkAccessPermissionDialog(
+            state.localNetworkPermissionRequester.state is LocalNetworkPermissionState.Rationale,
+            onConfirmClick = state.localNetworkPermissionRequester::onPermissionConfirmClick,
+            onDismissClick = state.localNetworkPermissionRequester::reset,
+        )
+    }
 
     EventEffect(state.events) {
         when (it) {
