@@ -4,7 +4,6 @@ import org.gradle.api.Project
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -25,7 +24,7 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
         freeCompilerArgs.add("-Xintrinsic-const-evaluation")
         freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
 
-        val warningsAsErrors: String? by project
+        val warningsAsErrors = project.findProperty("warningsAsErrors") as? String
         allWarningsAsErrors.set(warningsAsErrors.toBoolean())
     }
 }

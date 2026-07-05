@@ -30,7 +30,7 @@ kotlin {
 }
 
 composeCompiler {
-    val composeCompilerReports: String? by project
+    val composeCompilerReports = project.findProperty("composeCompilerReports") as? String
     if (composeCompilerReports.toBoolean()) {
         reportsDestination.set(layout.buildDirectory.dir("compose_compiler"))
         metricsDestination.set(layout.buildDirectory.dir("compose_compiler"))

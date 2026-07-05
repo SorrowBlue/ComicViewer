@@ -63,7 +63,6 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.test)
             }
-
         }
     }
 }

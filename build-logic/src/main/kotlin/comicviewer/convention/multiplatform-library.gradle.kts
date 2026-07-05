@@ -1,7 +1,6 @@
 package comicviewer.convention
 
 import com.sorrowblue.comicviewer.configureKotlin
-import com.sorrowblue.comicviewer.libs
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
@@ -30,10 +29,11 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-        val noAndroid by creating {
+
+        val noAndroid = create("noAndroid") {
             dependsOn(commonMain.get())
         }
-        val noAndroidTest by creating {
+        val noAndroidTest = create("noAndroidTest") {
             dependsOn(commonTest.get())
         }
         jvmMain {

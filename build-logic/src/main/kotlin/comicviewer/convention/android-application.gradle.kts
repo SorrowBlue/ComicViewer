@@ -25,20 +25,34 @@ android {
     signingConfigs {
         listOf("debug", "release").forEach { configName ->
             val capitalizedName = configName.replaceFirstChar { it.uppercase() }
-            val storeFilePath = (project.findProperty("androidSigning${capitalizedName}StoreFile")
-                ?: project.findProperty("androidSigningStoreFile")) as String?
+            val storeFilePath = (
+                project.findProperty("androidSigning${capitalizedName}StoreFile")
+                    ?: project.findProperty("androidSigningStoreFile")
+                ) as String?
             if (!storeFilePath.isNullOrEmpty()) {
                 maybeCreate(configName).apply {
                     storeFile = file(storeFilePath)
-                    storePassword = (project.findProperty("androidSigning${capitalizedName}StorePassword")
-                        ?: project.findProperty("androidSigningStorePassword")) as String?
-                    keyAlias = (project.findProperty("androidSigning${capitalizedName}KeyAlias")
-                        ?: project.findProperty("androidSigningKeyAlias")) as String?
-                    keyPassword = (project.findProperty("androidSigning${capitalizedName}KeyPassword")
-                        ?: project.findProperty("androidSigningKeyPassword")) as String?
+                    storePassword = (
+                        project.findProperty(
+                            "androidSigning${capitalizedName}StorePassword",
+                        )
+                            ?: project.findProperty("androidSigningStorePassword")
+                        ) as String?
+                    keyAlias = (
+                        project.findProperty("androidSigning${capitalizedName}KeyAlias")
+                            ?: project.findProperty("androidSigningKeyAlias")
+                        ) as String?
+                    keyPassword = (
+                        project.findProperty(
+                            "androidSigning${capitalizedName}KeyPassword",
+                        )
+                            ?: project.findProperty("androidSigningKeyPassword")
+                        ) as String?
                 }
             } else {
-                logger.warn("Store file is not found.(androidSigning${capitalizedName}StoreFile or androidSigningStoreFile)")
+                logger.warn(
+                    "Store file is not found.(androidSigning${capitalizedName}StoreFile or androidSigningStoreFile)",
+                )
             }
         }
     }

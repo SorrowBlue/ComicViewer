@@ -35,5 +35,6 @@ tasks.withType<Detekt>().configureEach {
 rootProject.tasks.withType<ReportMergeTask> {
     input.from(
         tasks.withType<Detekt>()
-            .map { it.reports.sarif.outputLocation })
+            .map { it.reports.sarif.outputLocation },
+    )
 }
