@@ -5,12 +5,10 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import kotlinx.io.Sink
 import kotlinx.io.Source
 
-@VisibleForAssistedInject
-expect class ShareFileClient : FileClient<ShareContents> {
+internal expect class ShareFileClient : FileClient<ShareContents> {
     fun interface Factory : FileClient.Factory<ShareContents> {
         override fun create(bookshelf: ShareContents): ShareFileClient
     }

@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
 abstract class GetBookshelfInfoUseCase :
     UseCase<GetBookshelfInfoUseCase.Request, BookshelfFolder, GetBookshelfInfoUseCase.Error>() {
-    class Request(val bookshelfId: BookshelfId) : UseCase.Request
+    data class Request(val bookshelfId: BookshelfId) : UseCase.Request
 
     sealed interface Error : Resource.AppError {
         data object NotFound : Error

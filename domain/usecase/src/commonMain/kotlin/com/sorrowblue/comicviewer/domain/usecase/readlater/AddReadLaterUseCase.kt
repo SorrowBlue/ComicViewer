@@ -6,7 +6,7 @@ import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class AddReadLaterUseCase :
     OneShotUseCase<AddReadLaterUseCase.Request, ReadLaterFile, Unit>() {
-    class Request private constructor(val readLaterFile: ReadLaterFile) :
+    data class Request private constructor(val readLaterFile: ReadLaterFile) :
         OneShotUseCase.Request {
         constructor(bookshelfId: BookshelfId, path: String) : this(ReadLaterFile(bookshelfId, path))
     }

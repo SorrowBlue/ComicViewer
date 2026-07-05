@@ -13,5 +13,5 @@ abstract class GetFileAttributeUseCase :
         data object System : Error
     }
 
-    class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+    data class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
 }

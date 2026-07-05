@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -27,9 +26,8 @@ import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 
-@VisibleForAssistedInject
 @AssistedInject
-actual class SmbFileClient(
+internal actual class SmbFileClient(
     @Assisted bookshelf: SmbServer,
     fileReaderFactoryMap: FileReaderFactoryMap,
     @IoDispatcher dispatcher: CoroutineDispatcher,

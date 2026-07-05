@@ -7,7 +7,7 @@ import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class RegenerateThumbnailsUseCase :
     OneShotUseCase<RegenerateThumbnailsUseCase.Request, Unit, RegenerateThumbnailsUseCase.Error>() {
-    class Request(
+    data class Request(
         val bookshelfId: BookshelfId,
         val process: suspend (Bookshelf, progress: Long, max: Long) -> Unit,
     ) : OneShotUseCase.Request

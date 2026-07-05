@@ -5,5 +5,5 @@ import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class DeleteCollectionUseCase :
     OneShotUseCase<DeleteCollectionUseCase.Request, Unit, Unit>() {
-    class Request(val id: CollectionId) : OneShotUseCase.Request
+    data class Request(val id: CollectionId) : OneShotUseCase.Request
 }

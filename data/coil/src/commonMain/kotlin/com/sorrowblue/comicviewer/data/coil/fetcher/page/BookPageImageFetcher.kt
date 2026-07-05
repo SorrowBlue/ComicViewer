@@ -14,13 +14,10 @@ import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.resizeImage
-import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
-import com.sorrowblue.comicviewer.data.storage.client.getFileClient
+import com.sorrowblue.comicviewer.data.storage.client.impl.BookFileReaderManagerImpl
 import com.sorrowblue.comicviewer.domain.model.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
@@ -29,15 +26,9 @@ import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.io.Source
 import logcat.asLog
 import logcat.logcat
-
-private var fileReader: FileReader? = null
-private var book: Book? = null
-private val mutex = Mutex()
 
 internal class BookPageImageFetcher(
     private val data: BookPageImage,
@@ -46,7 +37,7 @@ internal class BookPageImageFetcher(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfLocalDataSource: BookshelfLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
-    private val fileClientFactory: FileClientFactory,
+    private val bookFileReaderManager: BookFileReaderManagerImpl,
 ) : BaseFetcher<BookPageImage, BookPageImageMetadata>(data, options, diskCacheLazy) {
 
     override val diskCacheKey
@@ -72,12 +63,7 @@ internal class BookPageImageFetcher(
             check(dataSource.exists(data.book.path)) {
                 "File not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
             }
-            val fileReader =
-                findFileReader() ?: fileClientFactory.getFileClient(bookshelf).fileReader(data.book)
-                    .also {
-                        book = data.book
-                        fileReader = it
-                    }
+            val fileReader = bookFileReaderManager.get(bookshelf, data.book)
             val viewerSettings = datastoreDataSource.viewerSettings.first()
             val quality = viewerSettings.imageQuality
             val compressFormat = viewerSettings.imageFormat
@@ -123,12 +109,6 @@ internal class BookPageImageFetcher(
     override fun readFrom(source: Source): BookPageImageMetadata =
         CoilMetadata.from<BookPageImageMetadata>(source)
 
-    private suspend fun findFileReader(): FileReader? = mutex.withLock {
-        fileReader?.takeIf { book == data.book }?.also {
-            logcat { "同じFileReaderを使う。${data.book.bookshelfId} ${data.book.path}" }
-        }
-    }
-
     @ClassKey(BookPageImage::class)
     @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
     class Keyer : coil3.key.Keyer<BookPageImage> {
@@ -143,7 +123,7 @@ internal class BookPageImageFetcher(
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfLocalDataSource: BookshelfLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,
-        private val fileClientFactory: FileClientFactory,
+        private val bookFileReaderManager: BookFileReaderManagerImpl,
     ) : Fetcher.Factory<BookPageImage> {
         override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
             BookPageImageFetcher(
@@ -153,7 +133,7 @@ internal class BookPageImageFetcher(
                 remoteDataSourceFactory,
                 bookshelfLocalDataSource,
                 datastoreDataSource,
-                fileClientFactory,
+                bookFileReaderManager,
             )
     }
 }

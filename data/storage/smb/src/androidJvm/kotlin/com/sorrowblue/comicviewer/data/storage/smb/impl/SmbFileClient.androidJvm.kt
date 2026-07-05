@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -55,9 +54,8 @@ private var rootSmbFile: SmbFile? = null
 
 private val mutex = Mutex()
 
-@VisibleForAssistedInject
 @AssistedInject
-actual class SmbFileClient(
+internal actual class SmbFileClient(
     @Assisted bookshelf: SmbServer,
     fileReaderFactoryMap: FileReaderFactoryMap,
     @IoDispatcher dispatcher: CoroutineDispatcher,
@@ -243,7 +241,6 @@ actual class SmbFileClient(
                 isHidden = isHidden,
             )
         }
-        logcat { "url.path=${url.path}" }
         return if (isDirectory) {
             Folder(
                 path = url.path,

@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -18,9 +17,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.io.Sink
 import kotlinx.io.Source
 
-@VisibleForAssistedInject
 @AssistedInject
-actual class ShareFileClient(
+internal actual class ShareFileClient(
     @Assisted bookshelf: ShareContents,
     fileReaderFactoryMap: FileReaderFactoryMap,
     @IoDispatcher dispatcher: CoroutineDispatcher,

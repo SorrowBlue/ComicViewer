@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -22,9 +21,8 @@ import kotlinx.coroutines.withContext
 import logcat.asLog
 import logcat.logcat
 
-@VisibleForAssistedInject
 @AssistedInject
-class RemoteDataSourceImpl(
+internal class RemoteDataSourceImpl(
     @Assisted private val bookshelf: Bookshelf,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     fileClientFactory: FileClientFactory,

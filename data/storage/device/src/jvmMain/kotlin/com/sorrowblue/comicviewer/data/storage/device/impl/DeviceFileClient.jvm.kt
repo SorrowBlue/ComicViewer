@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -40,9 +39,8 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-@VisibleForAssistedInject
 @AssistedInject
-actual class DeviceFileClient(
+internal actual class DeviceFileClient(
     @Assisted bookshelf: DeviceStorage,
     fileReaderFactoryMap: FileReaderFactoryMap,
     @IoDispatcher dispatcher: CoroutineDispatcher,

@@ -8,8 +8,10 @@ import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class ScanBookshelfUseCase :
     OneShotUseCase<ScanBookshelfUseCase.Request, List<File>, ScanBookshelfUseCase.Error>() {
-    class Request(val bookshelfId: BookshelfId, val process: suspend (Bookshelf, File) -> Unit) :
-        OneShotUseCase.Request
+    data class Request(
+        val bookshelfId: BookshelfId,
+        val process: suspend (Bookshelf, File) -> Unit,
+    ) : OneShotUseCase.Request
 
     enum class Error : Resource.AppError {
         System,

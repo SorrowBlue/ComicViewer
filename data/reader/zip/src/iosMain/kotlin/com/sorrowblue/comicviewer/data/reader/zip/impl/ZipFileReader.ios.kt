@@ -7,7 +7,6 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import com.sorrowblue.comicviewer.framework.common.annotation.VisibleForAssistedInject
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -19,9 +18,8 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.io.Sink
 import kotlinx.io.Source
 
-@VisibleForAssistedInject
 @AssistedInject
-actual class ZipFileReader(
+internal actual class ZipFileReader(
     @Assisted private val seekableInputStream: SeekableInputStream,
     @ImageExtension supportedException: Set<String>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
