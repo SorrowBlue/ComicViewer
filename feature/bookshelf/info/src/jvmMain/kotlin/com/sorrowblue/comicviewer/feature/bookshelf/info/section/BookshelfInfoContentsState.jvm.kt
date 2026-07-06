@@ -18,6 +18,8 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.framework.notification.DesktopNotification
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
@@ -54,6 +56,7 @@ internal actual fun rememberBookshelfInfoContentsState(
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+        localNetworkPermissionRequester = rememberLocalNetworkPermissionRequester(false)
     }
 }
 
@@ -67,6 +70,7 @@ private class BookshelfInfoContentsStateImpl(
     private lateinit var currentScanType: ScanType
 
     override val events = EventFlow<BookshelfInfoContentsEvent>()
+    override lateinit var localNetworkPermissionRequester: LocalNetworkPermissionRequester
 
     override var uiState by mutableStateOf(
         BookshelfInfoContentsUiState(
