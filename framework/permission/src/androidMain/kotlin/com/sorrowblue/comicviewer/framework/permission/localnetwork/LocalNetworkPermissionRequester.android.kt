@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.framework.permission.localnetwork
 
 import android.Manifest.permission.ACCESS_LOCAL_NETWORK
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
