@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 @file:Suppress("detekt.all")
 
 package com.sorrowblue.comicviewer.framework.designsystem.icon.undraw

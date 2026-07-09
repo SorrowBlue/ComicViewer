@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.framework.ui.navigation3
 
 import androidx.compose.foundation.layout.Box

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.feature.bookshelf.info.delete
 
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase

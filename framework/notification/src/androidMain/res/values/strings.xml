@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2026 SorrowBlue. See LICENSE for details.
+  -->
+
 <resources>
     <string name="framework_notification_channel_name_bookshelf_scan">scan of bookshelf</string>
     <string name="framework_notification_channel_description_bookshelf_scan">Notifications for scanning bookshelves</string>

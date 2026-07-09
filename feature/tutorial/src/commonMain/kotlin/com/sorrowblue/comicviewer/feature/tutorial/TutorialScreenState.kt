@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.feature.tutorial
 
 import androidx.compose.foundation.pager.PagerState

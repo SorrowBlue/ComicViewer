@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.data.coil.cache
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext

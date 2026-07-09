@@ -127,6 +127,7 @@ google-services.json
 !.idea/encodings.xml
 !.idea/dictionaries/
 !.idea/inspectionProfiles/
+!.idea/copyright/
 *.aab
 /docs/*.bkp
 /docs/dokka

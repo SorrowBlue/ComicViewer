@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.feature.settings.extension.subscreen.imagecache
 
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase

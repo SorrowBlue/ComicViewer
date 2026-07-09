@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope

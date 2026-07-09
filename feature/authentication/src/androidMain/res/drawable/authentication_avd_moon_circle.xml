@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright 2026 SorrowBlue. See LICENSE for details.
+  -->
+
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">

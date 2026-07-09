@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 import org.gradle.api.provider.ValueSource

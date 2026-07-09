@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.data.reader.zip.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream

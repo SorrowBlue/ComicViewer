@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.domain.usecase
 
 abstract class SendFatalErrorUseCase : OneShotUseCase<SendFatalErrorUseCase.Request, Unit, Unit>() {

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.feature.settings.display.di
 
 import com.sorrowblue.comicviewer.feature.settings.display.DarkModeScreenContext

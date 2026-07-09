@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy

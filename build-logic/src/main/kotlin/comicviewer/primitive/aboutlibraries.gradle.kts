@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package comicviewer.primitive
 
 import com.mikepenz.aboutlibraries.plugin.StrictMode

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package androidx.lifecycle.compose
 
 import androidx.annotation.CheckResult

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.framework.designsystem.theme
 
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase

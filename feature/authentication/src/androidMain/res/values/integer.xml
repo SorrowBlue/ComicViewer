@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2026 SorrowBlue. See LICENSE for details.
+  -->
+
 <resources>
     <integer name="authentication_pin_transform_startOffset">150</integer>
     <integer name="authentication_pin_transform_duration">300</integer>

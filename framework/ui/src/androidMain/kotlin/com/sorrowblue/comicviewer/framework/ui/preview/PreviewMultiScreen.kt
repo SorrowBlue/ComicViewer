@@ -1,3 +1,7 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
 package com.sorrowblue.comicviewer.framework.ui.preview
 
 import androidx.compose.ui.tooling.preview.Preview
