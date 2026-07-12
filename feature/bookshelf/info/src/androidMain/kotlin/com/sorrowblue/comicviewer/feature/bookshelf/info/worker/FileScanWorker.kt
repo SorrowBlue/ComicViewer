@@ -34,6 +34,7 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import com.sorrowblue.comicviewer.framework.background.MetroWorkerInstanceFactory
 import com.sorrowblue.comicviewer.framework.background.WorkerKey
 import com.sorrowblue.comicviewer.framework.notification.AndroidNotificationChannel
+import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_description_file_scan_cancelled
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_notification_title_file_scan
@@ -51,7 +52,6 @@ import kotlinx.coroutines.flow.first
 import logcat.asLog
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-import com.sorrowblue.comicviewer.framework.notification.R as NotificationR
 
 @AssistedInject
 internal class FileScanWorker(

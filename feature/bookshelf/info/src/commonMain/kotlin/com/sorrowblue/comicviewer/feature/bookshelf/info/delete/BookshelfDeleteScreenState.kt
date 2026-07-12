@@ -10,13 +10,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -29,53 +40,80 @@ internal interface BookshelfDeleteScreenState {
 @Composable
 internal fun rememberBookshelfDeleteScreenState(
     bookshelfId: BookshelfId,
-    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
-    updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
 ): BookshelfDeleteScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(bookshelfId) {
+    val viewModel =
+        assistedMetroViewModel<BookshelfDeleteViewModel, BookshelfDeleteViewModel.Factory> {
+            create(bookshelfId)
+        }
+    return remember(viewModel) {
         BookshelfDeleteScreenStateImpl(
-            getBookshelfInfoUseCase = getBookshelfInfoUseCase,
             scope = coroutineScope,
-            bookshelfId = bookshelfId,
-            updateDeletionFlagUseCase = updateDeletionFlagUseCase,
+            viewModel = viewModel,
         )
     }
 }
 
 private class BookshelfDeleteScreenStateImpl(
-    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
-    private val scope: CoroutineScope,
-    private val bookshelfId: BookshelfId,
-    private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
+    scope: CoroutineScope,
+    private val viewModel: BookshelfDeleteViewModel,
 ) : BookshelfDeleteScreenState {
     override var uiState by mutableStateOf(BookshelfDeleteScreenUiState())
         private set
 
     init {
-        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
-            .onEach {
-                uiState = uiState.copy(title = it.dataOrNull()?.bookshelf?.displayName)
-            }.launchIn(scope)
+        viewModel.bookshelfFlow.onEach {
+            uiState = uiState.copy(title = it.displayName)
+        }.launchIn(scope)
     }
 
     override fun onConfirmClick(done: () -> Unit) {
         uiState = uiState.copy(isProcessing = true)
-        scope.launch {
+        viewModel.delete(
+            done = {
+                uiState = uiState.copy(isProcessing = false)
+                done()
+            },
+            error = {
+                uiState = uiState.copy(isProcessing = false)
+            },
+        )
+    }
+}
+
+@AssistedInject
+internal class BookshelfDeleteViewModel(
+    @Assisted private val bookshelfId: BookshelfId,
+    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    private val updateDeletionFlagUseCase: UpdateDeletionFlagUseCase,
+) : ViewModel() {
+
+    val bookshelfFlow =
+        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
+            .mapNotNull { it.dataOrNull()?.bookshelf }
+
+    fun delete(done: () -> Unit, error: () -> Unit) {
+        viewModelScope.launch {
             when (
                 updateDeletionFlagUseCase(
                     UpdateDeletionFlagUseCase.Request(bookshelfId, true),
                 )
             ) {
                 is Resource.Error -> {
-                    uiState = uiState.copy(isProcessing = false)
+                    error()
                 }
 
                 is Resource.Success -> {
                     done()
-                    uiState = uiState.copy(isProcessing = false)
                 }
             }
         }
+    }
+
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(bookshelfId: BookshelfId): BookshelfDeleteViewModel
     }
 }

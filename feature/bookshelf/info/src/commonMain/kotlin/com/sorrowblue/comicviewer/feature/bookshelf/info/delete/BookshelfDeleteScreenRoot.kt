@@ -10,17 +10,12 @@ import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
 @Composable
-context(context: BookshelfDeleteScreenContext)
 internal fun BookshelfDeleteScreenRoot(
     bookshelfId: BookshelfId,
     onBackClick: () -> Unit,
     onComplete: () -> Unit,
 ) {
-    val state = rememberBookshelfDeleteScreenState(
-        bookshelfId = bookshelfId,
-        getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
-        updateDeletionFlagUseCase = context.updateDeletionFlagUseCase,
-    )
+    val state = rememberBookshelfDeleteScreenState(bookshelfId = bookshelfId)
     BookshelfDeleteScreen(
         uiState = state.uiState,
         onDismissRequest = onBackClick,

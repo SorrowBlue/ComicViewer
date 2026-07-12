@@ -1,3 +1,4 @@
+import com.github.skydoves.navgraph.gradle.RenderBackend
 import com.sorrowblue.comicviewer.libs
 
 plugins {
@@ -108,4 +109,9 @@ buildConfig {
     buildConfigField("SMB_DOMAIN", project.findProperty("smbDomain")?.toString().orEmpty())
     buildConfigField("SMB_PASSWORD", project.findProperty("smbPassword")?.toString().orEmpty())
     buildConfigField("SMB_PATH", project.findProperty("smbPath")?.toString().orEmpty())
+}
+
+navgraph {
+    renderBackend.set(RenderBackend.LAYOUTLIB)
+    galleryRenderBackend.set(RenderBackend.LAYOUTLIB)
 }

@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.bookshelf.info.di
 
-import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDeleteScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfDeleteNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfNotificationNavKey
@@ -45,11 +44,7 @@ interface BookshelfInfoModule {
 
     @Provides
     @IntoSet
-    private fun provideBookshelfDeleteNavEntry(
-        factory: BookshelfDeleteScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            bookshelfDeleteNavEntry(navigator)
-        }
+    private fun provideBookshelfDeleteNavEntry(): ScreenEntryProvider = { navigator ->
+        bookshelfDeleteNavEntry(navigator)
     }
 }

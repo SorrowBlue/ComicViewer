@@ -1,3 +1,4 @@
+import com.github.skydoves.navgraph.gradle.RenderBackend
 import com.sorrowblue.comicviewer.calculateVersionCode
 import com.sorrowblue.comicviewer.gitTagProvider
 
@@ -110,4 +111,9 @@ androidComponents {
             logger.lifecycle("${variant.name} versionName=$versionName, versionCode=$versionCode")
         }
     }
+}
+
+navgraph {
+    renderBackend.set(RenderBackend.LAYOUTLIB)
+    galleryRenderBackend.set(RenderBackend.LAYOUTLIB)
 }

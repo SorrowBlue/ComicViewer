@@ -9,20 +9,11 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolderUseCase
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
@@ -60,16 +51,3 @@ private class BookshelfScreenStateImpl(
     override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
     override val lazyPagingItems: LazyPagingItems<BookshelfFolder>,
 ) : BookshelfScreenState
-
-private const val PageSize = 20
-
-@Inject
-@ViewModelKey
-@ContributesIntoMap(AppScope::class)
-internal class BookshelfViewModel(pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase) :
-    ViewModel() {
-    val bookshelfPagingFlow =
-        pagingBookshelfFolderUseCase(
-            PagingBookshelfFolderUseCase.Request(PagingConfig(PageSize)),
-        ).cachedIn(viewModelScope)
-}

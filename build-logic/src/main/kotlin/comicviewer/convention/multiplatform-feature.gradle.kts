@@ -4,6 +4,7 @@
 
 package comicviewer.convention
 
+import com.github.skydoves.navgraph.gradle.RenderBackend
 import com.sorrowblue.comicviewer.libs
 
 plugins {
@@ -69,4 +70,9 @@ kotlin {
             }
         }
     }
+}
+
+navgraph {
+    renderBackend.set(RenderBackend.LAYOUTLIB)
+    galleryRenderBackend.set(RenderBackend.LAYOUTLIB)
 }

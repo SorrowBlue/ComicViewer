@@ -19,13 +19,13 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 import com.sorrowblue.comicviewer.domain.usecase.file.CloseBookUseCase
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
 import kotlinx.coroutines.launch
-import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
 
 @Composable
 context(context: BookScreenContext)

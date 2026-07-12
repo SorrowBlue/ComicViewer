@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.bookshelf.di
 
-import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfFolderFileInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfFolderNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
@@ -36,12 +35,8 @@ interface BookshelfModule {
 
     @Provides
     @IntoSet
-    private fun provideBookshelfNavEntry(
-        factory: BookshelfScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            bookshelfNavEntry(navigator)
-        }
+    private fun provideBookshelfNavEntry(): ScreenEntryProvider = { navigator ->
+        bookshelfNavEntry(navigator)
     }
 
     @Provides
