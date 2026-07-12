@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.file
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail

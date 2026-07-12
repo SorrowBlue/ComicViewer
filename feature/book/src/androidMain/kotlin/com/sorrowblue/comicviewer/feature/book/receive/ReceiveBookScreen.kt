@@ -11,7 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionId.Companion.invoke
 import com.sorrowblue.comicviewer.feature.book.BookScreen
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey

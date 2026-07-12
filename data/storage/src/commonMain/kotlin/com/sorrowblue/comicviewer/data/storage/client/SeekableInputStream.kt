@@ -4,6 +4,11 @@
 
 package com.sorrowblue.comicviewer.data.storage.client
 
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream.Companion.SEEK_CUR
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream.Companion.SEEK_END
+import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream.Companion.SEEK_SET
+
+
 /**
  * An [AutoCloseable] input stream that supports random access by seeking to specific
  * positions within the data source.

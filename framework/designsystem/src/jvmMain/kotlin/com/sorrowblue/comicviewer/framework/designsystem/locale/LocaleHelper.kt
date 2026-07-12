@@ -11,8 +11,8 @@ import dev.zacsweers.metro.SingleIn
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.resolve
-import java.util.Locale as JavaLocale
 import java.util.Properties
+import java.util.Locale as JavaLocale
 
 @SingleIn(AppScope::class)
 @Inject

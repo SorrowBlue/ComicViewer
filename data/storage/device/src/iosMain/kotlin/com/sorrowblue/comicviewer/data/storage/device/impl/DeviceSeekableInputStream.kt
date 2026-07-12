@@ -5,10 +5,10 @@
 package com.sorrowblue.comicviewer.data.storage.device.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import platform.posix.FILE
 import platform.posix.fclose

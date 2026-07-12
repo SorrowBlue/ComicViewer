@@ -37,7 +37,6 @@ import androidx.compose.material.icons.outlined.FolderOff
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Grid4x4
 import androidx.compose.material.icons.outlined.GridView
-import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Info
