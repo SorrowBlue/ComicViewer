@@ -6,35 +6,12 @@ package com.sorrowblue.comicviewer.file
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.dataOrNull
-import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
-import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.onSuccess
-import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.GetFileSizeUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnailsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import com.sorrowblue.comicviewer.file.section.FileInfoButtonsUiState
-import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 internal data class FileInfoScreenUiState(
     val file: File,
@@ -43,38 +20,29 @@ internal data class FileInfoScreenUiState(
 )
 
 @Composable
-context(context: FileInfoScreenContext)
 internal fun rememberFileInfoScreenState(
+    lazyPagingItems: LazyPagingItems<BookThumbnail>?,
+    uiState: FileInfoUiState,
+    onReadLaterClick: () -> Unit,
     file: File,
-    isOpenFolderEnabled: Boolean,
-): FileInfoScreenState {
-    val coroutineScope = rememberCoroutineScope()
-    val lazyPagingItems = if (file is Book) {
-        null
-    } else {
-        rememberPagingItems {
-            context.pagingFolderBookThumbnailsUseCase(
-                PagingFolderBookThumbnailsUseCase.Request(
-                    file.bookshelfId,
-                    file.path,
-                    PagingConfig(10),
-                ),
-            )
-        }
-    }
-    return remember(file, isOpenFolderEnabled) {
-        FileInfoScreenStateImpl(
-            file = file,
-            isOpenFolderEnabled = isOpenFolderEnabled,
-            getFileAttributeUseCase = context.getFileAttributeUseCase,
-            existsReadlaterUseCase = context.existsReadlaterUseCase,
-            getFileSizeUseCase = context.getFileSizeUseCase,
-            addReadLaterUseCase = context.addReadLaterUseCase,
-            deleteReadLaterUseCase = context.deleteReadLaterUseCase,
-            lazyPagingItems = lazyPagingItems,
-            coroutineScope = coroutineScope,
-        )
-    }
+): FileInfoScreenState = remember(lazyPagingItems, uiState) {
+    FileInfoScreenStateImpl(
+        lazyPagingItems = lazyPagingItems,
+        uiStateProvider = {
+            when (uiState) {
+                is FileInfoUiState.Success -> FileInfoScreenUiState(
+                    file = uiState.file,
+                    attribute = uiState.attribute,
+                    fileInfoButtonsUiState = uiState.fileInfoButtonsUiState,
+                )
+
+                else -> FileInfoScreenUiState(
+                    file = file,
+                )
+            }
+        },
+        onReadLaterClickAction = onReadLaterClick,
+    )
 }
 
 internal interface FileInfoScreenState {
@@ -85,86 +53,14 @@ internal interface FileInfoScreenState {
 }
 
 private class FileInfoScreenStateImpl(
-    private val file: File,
-    private val isOpenFolderEnabled: Boolean,
-    getFileAttributeUseCase: GetFileAttributeUseCase,
-    existsReadlaterUseCase: ExistsReadlaterUseCase,
-    getFileSizeUseCase: GetFileSizeUseCase,
-    private val addReadLaterUseCase: AddReadLaterUseCase,
-    private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
     override val lazyPagingItems: LazyPagingItems<BookThumbnail>?,
-    private val coroutineScope: CoroutineScope,
+    private val uiStateProvider: () -> FileInfoScreenUiState,
+    private val onReadLaterClickAction: () -> Unit,
 ) : FileInfoScreenState {
-    private val runningJob = ArrayDeque<Job>()
 
-    override var uiState by mutableStateOf(
-        FileInfoScreenUiState(
-            file = file,
-            fileInfoButtonsUiState = FileInfoButtonsUiState(
-                isOpenFolderEnabled = isOpenFolderEnabled,
-            ),
-        ),
-    )
-
-    init {
-        existsReadlaterUseCase(
-            ExistsReadlaterUseCase.Request(file.bookshelfId, file.path),
-        ).onEach { resource ->
-            resource.onSuccess {
-                updateFileInfoSheetUiStateFile {
-                    copy(
-                        fileInfoButtonsUiState = fileInfoButtonsUiState.copy(
-                            readLaterChecked = it,
-                            readLaterLoading = false,
-                        ),
-                    )
-                }
-            }
-        }.launchIn(coroutineScope)
-            .let(runningJob::add)
-        getFileAttributeUseCase(
-            GetFileAttributeUseCase.Request(file.bookshelfId, file.path),
-        ).onEach {
-            updateFileInfoSheetUiStateFile {
-                copy(attribute = it.dataOrNull())
-            }
-        }.launchIn(coroutineScope)
-            .let(runningJob::add)
-
-        getFileSizeUseCase(GetFileSizeUseCase.Request(file.bookshelfId, file.path))
-            .onEach {
-                val size = it.dataOrNull() ?: -1
-                uiState = uiState.copy(
-                    file = when (val ufile = uiState.file) {
-                        is BookFile -> ufile.copy(size = size)
-                        is BookFolder -> ufile.copy(size = size)
-                        is Folder -> ufile.copy(size = size)
-                    },
-                )
-            }
-            .launchIn(coroutineScope)
-            .let(runningJob::add)
-    }
+    override val uiState: FileInfoScreenUiState get() = uiStateProvider()
 
     override fun onReadLaterClick() {
-        uiState = uiState.copy(
-            fileInfoButtonsUiState = uiState.fileInfoButtonsUiState.copy(
-                readLaterLoading = true,
-            ),
-        )
-        coroutineScope.launch {
-            delay(300)
-            if (uiState.fileInfoButtonsUiState.readLaterChecked) {
-                deleteReadLaterUseCase(DeleteReadLaterUseCase.Request(file.bookshelfId, file.path))
-            } else {
-                addReadLaterUseCase(AddReadLaterUseCase.Request(file.bookshelfId, file.path))
-            }
-        }
-    }
-
-    private fun updateFileInfoSheetUiStateFile(
-        update: FileInfoScreenUiState.() -> FileInfoScreenUiState,
-    ) {
-        uiState = uiState.update()
+        onReadLaterClickAction()
     }
 }

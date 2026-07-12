@@ -10,8 +10,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfFolderNa
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.bookshelfFolderFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.bookshelfNavEntry
-import com.sorrowblue.comicviewer.file.FileInfoScreenContext
-import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
@@ -48,14 +46,7 @@ interface BookshelfModule {
 
     @Provides
     @IntoSet
-    private fun provideBookshelfFolderFileInfoNavEntry(
-        factoryFolder: FolderScreenContext.Factory,
-        factoryFileInfo: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factoryFolder) {
-            with(factoryFileInfo) {
-                bookshelfFolderFileInfoNavEntry(navigator)
-            }
-        }
+    private fun provideBookshelfFolderFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        bookshelfFolderFileInfoNavEntry(navigator)
     }
 }

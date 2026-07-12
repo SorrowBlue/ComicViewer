@@ -9,31 +9,21 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.paging.LoadState
-import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.PagingException
-import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderScopeOnly
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
-import com.sorrowblue.comicviewer.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResult
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
@@ -43,16 +33,8 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteS
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
@@ -82,86 +64,42 @@ internal interface FolderScreenState {
     fun onRefresh()
 }
 
-@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 @Composable
-context(context: FolderScreenContext)
 internal fun rememberFolderScreenState(
-    bookshelfId: BookshelfId,
-    path: String,
+    lazyPagingItems: LazyPagingItems<File>,
+    uiState: FolderScreenUiState,
+    onPermissionChange: (Boolean) -> Unit,
+    onSortClick: suspend (SortType) -> Boolean,
+    onFolderScopeOnlyClick: suspend () -> Unit,
+    onSortTypeSelectScreenResult: suspend (SortTypeSelectScreenResult) -> Boolean,
     restorePath: String?,
-    showSearch: Boolean,
 ): FolderScreenState {
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
     val snackbarHostState = remember { SnackbarHostState() }
     val permissionRequester = rememberLocalNetworkPermissionRequester(true)
-    val lazyPagingItems = rememberPagingItems {
-        val bookshelfFlow = context.getBookshelfInfoUseCase(
-            GetBookshelfInfoUseCase.Request(bookshelfId),
-        ).map { resource ->
-            if (resource is Resource.Success) resource.data.bookshelf else null
-        }.distinctUntilChanged()
 
-        val permissionStateFlow = snapshotFlow { permissionRequester.state }
+    val isRestoredState = rememberSaveable { mutableStateOf(false) }
 
-        combine(bookshelfFlow, permissionStateFlow) { bookshelf, permissionState ->
-            bookshelf to permissionState
-        }.flatMapLatest { (bookshelf, permissionState) ->
-            logcat("FolderScreenState") { "bookshelf=$bookshelf, permissionState=$permissionState" }
-            if (bookshelf == null) {
-                emptyFlow()
-            } else if (bookshelf.type == BookshelfType.SMB) {
-                if (permissionState == LocalNetworkPermissionState.Granted) {
-                    context.pagingFileUseCase(
-                        PagingFileUseCase.Request(
-                            PagingConfig(20),
-                            bookshelfId,
-                            path,
-                        ),
-                    )
-                } else {
-                    emptyFlow()
-                }
-            } else {
-                context.pagingFileUseCase(
-                    PagingFileUseCase.Request(
-                        PagingConfig(20),
-                        bookshelfId,
-                        path,
-                    ),
-                )
-            }
-        }
+    val currentOnPermissionChange by rememberUpdatedState(onPermissionChange)
+
+    LaunchedEffect(permissionRequester.state) {
+        currentOnPermissionChange(permissionRequester.state == LocalNetworkPermissionState.Granted)
     }
-    val state = rememberSaveable(
-        saver = FolderScreenStateImpl.saver {
-            FolderScreenStateImpl(
-                bookshelfId = bookshelfId,
-                path = path,
-                restorePath = restorePath,
-                showSearch = showSearch,
-                folderDisplaySettingsUseCase = context.displaySettingsUseCase,
-                getFileUseCase = context.getFileUseCase,
-                lazyGridState = lazyGridState,
-                snackbarHostState = snackbarHostState,
-                lazyPagingItems = lazyPagingItems,
-                localNetworkPermissionRequester = permissionRequester,
-                coroutineScope = coroutineScope,
-            )
-        },
-    ) {
+
+    val state = remember(lazyPagingItems) {
         FolderScreenStateImpl(
-            bookshelfId = bookshelfId,
-            path = path,
             restorePath = restorePath,
-            showSearch = showSearch,
-            folderDisplaySettingsUseCase = context.displaySettingsUseCase,
-            getFileUseCase = context.getFileUseCase,
             lazyGridState = lazyGridState,
             snackbarHostState = snackbarHostState,
             lazyPagingItems = lazyPagingItems,
             localNetworkPermissionRequester = permissionRequester,
             coroutineScope = coroutineScope,
+            onSortClickAction = onSortClick,
+            onFolderScopeOnlyClickAction = onFolderScopeOnlyClick,
+            onSortTypeSelectScreenResultAction = onSortTypeSelectScreenResult,
+            uiStateProvider = { uiState },
+            isRestoredState = isRestoredState,
         )
     }.apply {
         scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
@@ -177,74 +115,24 @@ internal fun rememberFolderScreenState(
 }
 
 private class FolderScreenStateImpl(
-    private val bookshelfId: BookshelfId,
-    private val path: String,
     private val restorePath: String?,
-    showSearch: Boolean,
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
     override val lazyPagingItems: LazyPagingItems<File>,
     override val localNetworkPermissionRequester: LocalNetworkPermissionRequester,
-    private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    var coroutineScope: CoroutineScope,
-    getFileUseCase: GetFileUseCase,
+    private val coroutineScope: CoroutineScope,
+    private val onSortClickAction: suspend (SortType) -> Boolean,
+    private val onFolderScopeOnlyClickAction: suspend () -> Unit,
+    private val onSortTypeSelectScreenResultAction: suspend (SortTypeSelectScreenResult) -> Boolean,
+    private val uiStateProvider: () -> FolderScreenUiState,
+    isRestoredState: MutableState<Boolean>,
 ) : FolderScreenState {
     override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
     override val events = EventFlow<FolderScreenEvent>()
-    override var uiState by mutableStateOf(
-        FolderScreenUiState(
-            folderAppBarUiState = FolderAppBarUiState(showSearch = showSearch),
-            folderListUiState = FolderListUiState(emphasisPath = restorePath.orEmpty()),
-        ),
-    )
-        private set
+    override val uiState: FolderScreenUiState get() = uiStateProvider()
 
-    var isRestored by mutableStateOf(false)
-
-    init {
-        folderDisplaySettingsUseCase.settings
-            .distinctUntilChanged()
-            .onEach { folderDisplaySettings ->
-                uiState = uiState.copy(
-                    folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                        folderScopeOnly = folderDisplaySettings.folderScopeOnlyList.any { scope ->
-                            scope.bookshelfId == bookshelfId && scope.path == path
-                        },
-                        sortType = folderDisplaySettings.folderScopeOnlyList
-                            .find { scopeOnly ->
-                                scopeOnly.bookshelfId == bookshelfId && scopeOnly.path == path
-                            }?.sortType
-                            ?: folderDisplaySettings.sortType,
-                    ),
-                    folderListUiState = uiState.folderListUiState.copy(
-                        fileLazyVerticalGridUiState = uiState.folderListUiState.fileLazyVerticalGridUiState
-                            .copy(
-                                fileListDisplay = folderDisplaySettings.fileListDisplay,
-                                columnSize = folderDisplaySettings.gridColumnSize,
-                                imageScale = folderDisplaySettings.imageScale,
-                                imageFilterQuality = folderDisplaySettings.imageFilterQuality,
-                                fontSize = folderDisplaySettings.fontSize,
-                                showThumbnails = folderDisplaySettings.showThumbnails,
-                            ),
-                    ),
-                )
-            }.launchIn(coroutineScope)
-        getFileUseCase(GetFileUseCase.Request(bookshelfId, path))
-            .onEach {
-                when (it) {
-                    is Resource.Error -> Unit
-
-                    is Resource.Success -> {
-                        uiState = uiState.copy(
-                            folderAppBarUiState = uiState.folderAppBarUiState.copy(
-                                title = it.data.name,
-                            ),
-                        )
-                    }
-                }
-            }.launchIn(coroutineScope)
-    }
+    private var isRestored by isRestoredState
 
     override fun onLoadStateChange(lazyPagingItems: LazyPagingItems<File>) {
         if (!isRestored && restorePath != null && 0 < lazyPagingItems.itemCount) {
@@ -290,163 +178,27 @@ private class FolderScreenStateImpl(
 
     override fun onSortClick(sortType: SortType) {
         coroutineScope.launch {
-            var refresh = false
-            folderDisplaySettingsUseCase.edit { settings ->
-                val beforeFolderScopeOnly =
-                    settings.folderScopeOnlyList.find {
-                        it.bookshelfId == bookshelfId && it.path == path
-                    }
-                when {
-                    uiState.folderAppBarUiState.folderScopeOnly -> {
-                        if (beforeFolderScopeOnly == null) {
-                            refresh = true
-                            settings.copy(
-                                folderScopeOnlyList =
-                                    settings.folderScopeOnlyList + FolderScopeOnly(
-                                        bookshelfId,
-                                        path,
-                                        sortType,
-                                    ),
-                            )
-                        } else if (beforeFolderScopeOnly.sortType != sortType) {
-                            refresh = true
-                            val new = FolderScopeOnly(
-                                bookshelfId,
-                                path,
-                                sortType,
-                            )
-                            settings.copy(
-                                folderScopeOnlyList =
-                                    settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
-                            )
-                        } else {
-                            settings
-                        }
-                    }
-
-                    !uiState.folderAppBarUiState.folderScopeOnly && beforeFolderScopeOnly != null -> {
-                        refresh = true
-                        settings.copy(
-                            folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly,
-                        )
-                    }
-
-                    settings.sortType != sortType -> {
-                        refresh = true
-                        settings.copy(sortType = sortType)
-                    }
-
-                    else -> {
-                        settings
-                    }
-                }
-            }
-            if (refresh) {
-                refreshItems()
+            if (onSortClickAction(sortType)) {
+                lazyPagingItems.refresh()
             }
         }
     }
 
     override fun onFolderScopeOnlyClick() {
         coroutineScope.launch {
-            folderDisplaySettingsUseCase.edit { settings ->
-                val beforeFolderScopeOnly =
-                    settings.folderScopeOnlyList.find {
-                        it.bookshelfId == bookshelfId && it.path == path
-                    }
-                val folderScopeOnlyList = if (beforeFolderScopeOnly == null) {
-                    settings.folderScopeOnlyList + FolderScopeOnly(
-                        bookshelfId,
-                        path,
-                        settings.sortType,
-                    )
-                } else {
-                    settings.folderScopeOnlyList - beforeFolderScopeOnly
-                }
-                settings.copy(folderScopeOnlyList = folderScopeOnlyList)
-            }
+            onFolderScopeOnlyClickAction()
         }
     }
 
     override fun onSortTypeSelectScreenResult(result: SortTypeSelectScreenResult) {
         coroutineScope.launch {
-            var refresh = false
-            folderDisplaySettingsUseCase.edit { settings ->
-                val beforeFolderScopeOnly =
-                    settings.folderScopeOnlyList.find {
-                        it.bookshelfId == bookshelfId && it.path == path
-                    }
-                when {
-                    result.folderScopeOnly -> {
-                        if (beforeFolderScopeOnly == null) {
-                            refresh = true
-                            settings.copy(
-                                folderScopeOnlyList =
-                                    settings.folderScopeOnlyList + FolderScopeOnly(
-                                        bookshelfId,
-                                        path,
-                                        result.sortType,
-                                    ),
-                            )
-                        } else if (beforeFolderScopeOnly.sortType != result.sortType) {
-                            refresh = true
-                            val new = FolderScopeOnly(
-                                bookshelfId,
-                                path,
-                                result.sortType,
-                            )
-                            settings.copy(
-                                folderScopeOnlyList =
-                                    settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
-                            )
-                        } else {
-                            settings
-                        }
-                    }
-
-                    !result.folderScopeOnly && beforeFolderScopeOnly != null -> {
-                        refresh = true
-                        settings.copy(
-                            folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly,
-                        )
-                    }
-
-                    settings.sortType != result.sortType -> {
-                        refresh = true
-                        settings.copy(sortType = result.sortType)
-                    }
-
-                    else -> {
-                        settings
-                    }
-                }
-            }
-            if (refresh) {
-                refreshItems()
+            if (onSortTypeSelectScreenResultAction(result)) {
+                lazyPagingItems.refresh()
             }
         }
     }
 
     override fun onRefresh() {
         lazyPagingItems.refresh()
-    }
-
-    private fun refreshItems() {
-        lazyPagingItems.refresh()
-    }
-
-    companion object {
-        fun saver(init: () -> FolderScreenStateImpl) = Saver<FolderScreenStateImpl, Boolean>(
-            save = {
-                it.isRestored
-            },
-            restore = {
-                init().apply {
-                    isRestored = it
-                }
-            },
-        )
     }
 }

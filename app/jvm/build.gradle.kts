@@ -1,5 +1,7 @@
 import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
 import com.sorrowblue.comicviewer.configureKotlin
+import com.sorrowblue.comicviewer.extractPackageVersion
+import com.sorrowblue.comicviewer.gitTagProvider
 import com.sorrowblue.comicviewer.libs
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -12,6 +14,7 @@ plugins {
     alias(libs.plugins.comicviewer.primitive.detekt)
     alias(libs.plugins.comicviewer.primitive.dokka)
     alias(libs.plugins.comicviewer.primitive.aboutlibraries)
+    id("dev.hydraulic.conveyor") version "2.0"
 }
 
 aboutLibraries {
@@ -46,17 +49,42 @@ kotlin {
 }
 
 val gitTagProvider = providers.of(GitTagValueSource::class) {}
+version = extractPackageVersion(gitTagProvider.orElse("1.0.0").get())
 
 compose.desktop {
     application {
         mainClass = "com.sorrowblue.comicviewer.app.MainKt"
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(
+                TargetFormat.Dmg,
+                TargetFormat.Msi,
+                TargetFormat.Exe,
+                TargetFormat.Deb,
+            )
+
+            packageName = "com-sorrowblue-comicviewer"
+            packageVersion = extractPackageVersion(gitTagProvider.orElse("1.0.0").get())
             vendor = "SorrowBlue"
-            packageName = "ComicViewer"
+            description = "Multi-platform Comic Viewer"
+            copyright = "Copyright 2026 SorrowBlue."
+            licenseFile.set(rootProject.file("LICENSE"))
+
             linux {
                 debMaintainer = "sorrowblue.dev@gmail.com"
                 menuGroup = "comicviewer"
+                appCategory = "Utility;Viewer;"
+            }
+
+            macOS {
+                bundleID = "com.sorrowblue.comicviewer"
+                appCategory = "public.app-category.books"
+                dockName = "ComicViewer"
+                infoPlist {
+                    extraKeysRawXml = """
+                        <key>NSHighResolutionCapable</key>
+                        <true/>
+                    """.trimIndent()
+                }
             }
             windows {
                 installationPath = "ComicViewer"
@@ -64,48 +92,14 @@ compose.desktop {
                 menuGroup = "ComicViewer"
                 upgradeUuid = "F5DB26A2-175B-446C-9EDA-50ACACCB6F8C"
                 shortcut = true
+                perUserInstall = false
+                console = false
                 iconFile.set(project.file("src/jvmMain/resources/icon.ico"))
             }
         }
-        jvmArgs("-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
-    }
-}
-
-/**
- * Extract package version from git tag.
- * Converts git tags (e.g., "v1.2.3" or "1.2.3-beta.1") to package version format.
- * Format: MAJOR.MINOR.BUILD
- * - v1.2.3 → 1.2.3
- * - v1.2.3-beta.1 → 1.2.3
- * - 1.2.3-beta.1-1-gf13fe → 1.2.3
- * Falls back to "1.0.0" for invalid versions.
- */
-fun extractPackageVersion(versionName: String): String {
-    return try {
-        // Remove 'v' prefix if present
-        val withoutPrefix = if (versionName.startsWith("v")) {
-            versionName.substring(1)
-        } else {
-            versionName
-        }
-
-        // Split version and suffix (e.g., "1.2.3-beta.1" -> ["1.2.3", "beta.1"])
-        val versionParts = withoutPrefix.split("-", limit = 2)
-        val baseVersion = versionParts[0]
-
-        // Parse semantic version parts and validate format
-        val parts = baseVersion.split(".")
-        if (parts.size >= 3) {
-            val major = parts[0].toIntOrNull()?.coerceAtLeast(1) ?: 1
-            val minor = parts[1].toIntOrNull() ?: 0
-            val build = parts[2].toIntOrNull() ?: 0
-            "$major.$minor.$build"
-        } else {
-            logger.warn("Invalid version format: $versionName, using packageVersion 1.0.0")
-            "1.0.0"
-        }
-    } catch (e: Exception) {
-        logger.warn("Error parsing version $versionName: ${e.message}, using packageVersion 1.0.0")
-        "1.0.0"
+        jvmArgs(
+            "-Dsun.stdout.encoding=UTF-8",
+            "-Dsun.stderr.encoding=UTF-8",
+        )
     }
 }

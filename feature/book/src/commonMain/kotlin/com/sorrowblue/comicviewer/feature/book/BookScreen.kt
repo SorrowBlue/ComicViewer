@@ -4,18 +4,27 @@
 
 package com.sorrowblue.comicviewer.feature.book
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import coil3.Bitmap
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavEdge
@@ -30,6 +39,7 @@ import com.sorrowblue.comicviewer.feature.book.section.BookSheet
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.section.PageItem
 import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
+import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
@@ -51,16 +61,30 @@ internal fun BookScreen(
 ) {
     Scaffold(
         topBar = {
-            AnimatedVisibility(
-                visible = uiState.isVisibleTooltip,
-                enter = slideInVertically { -it },
-                exit = slideOutVertically { -it },
+            AnimatedContent(
+                targetState = uiState.isVisibleTooltip,
+                transitionSpec = {
+                    slideInVertically { -it } togetherWith slideOutVertically { -it }
+                },
             ) {
-                BookAppBar(
-                    title = uiState.book.name,
-                    onBackClick = onBackClick,
-                    onSettingsClick = onSettingsClick,
-                )
+                if (it) {
+                    BookAppBar(
+                        title = uiState.book.name,
+                        onBackClick = onBackClick,
+                        onSettingsClick = onSettingsClick,
+                    )
+                } else {
+                    IconButton(
+                        onClick = onBackClick,
+                        modifier = Modifier.windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(
+                                WindowInsetsSides.Start + WindowInsetsSides.Top,
+                            ),
+                        ).padding(start = 8.dp, top = 8.dp),
+                    ) {
+                        Icon(ComicIcons.ArrowBack, null)
+                    }
+                }
             }
         },
         bottomBar = {

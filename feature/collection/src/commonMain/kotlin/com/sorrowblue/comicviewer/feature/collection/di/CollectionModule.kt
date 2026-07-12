@@ -18,8 +18,6 @@ import com.sorrowblue.comicviewer.feature.collection.navigation.collectionFolder
 import com.sorrowblue.comicviewer.feature.collection.navigation.collectionListNavEntry
 import com.sorrowblue.comicviewer.feature.collection.navigation.collectionNavEntry
 import com.sorrowblue.comicviewer.feature.collection.navigation.deleteCollectionNavEntry
-import com.sorrowblue.comicviewer.file.FileInfoScreenContext
-import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
@@ -69,25 +67,14 @@ interface CollectionModule {
 
     @Provides
     @IntoSet
-    private fun provideCollectionFileInfoNavEntry(
-        factory: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            collectionFileInfoNavEntry(navigator)
-        }
+    private fun provideCollectionFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        collectionFileInfoNavEntry(navigator)
     }
 
     @Provides
     @IntoSet
-    private fun provideCollectionFolderInfoNavEntry(
-        factoryFolder: FolderScreenContext.Factory,
-        factoryFileInfo: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factoryFolder) {
-            with(factoryFileInfo) {
-                collectionFolderInfoNavEntry(navigator)
-            }
-        }
+    private fun provideCollectionFolderInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        collectionFolderInfoNavEntry(navigator)
     }
 
     @Provides

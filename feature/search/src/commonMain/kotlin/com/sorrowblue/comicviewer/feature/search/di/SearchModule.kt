@@ -12,8 +12,6 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavKey
 import com.sorrowblue.comicviewer.feature.search.navigation.searchFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.search.navigation.searchFolderFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.search.navigation.searchNavEntry
-import com.sorrowblue.comicviewer.file.FileInfoScreenContext
-import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
@@ -45,24 +43,13 @@ interface SearchModule {
 
     @Provides
     @IntoSet
-    private fun provideSearchFileInfoNavEntry(
-        factory: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            searchFileInfoNavEntry(navigator)
-        }
+    private fun provideSearchFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        searchFileInfoNavEntry(navigator)
     }
 
     @Provides
     @IntoSet
-    private fun provideSearchFolderFileInfoNavEntry(
-        factoryFolder: FolderScreenContext.Factory,
-        factoryFileInfo: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factoryFolder) {
-            with(factoryFileInfo) {
-                searchFolderFileInfoNavEntry(navigator)
-            }
-        }
+    private fun provideSearchFolderFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        searchFolderFileInfoNavEntry(navigator)
     }
 }

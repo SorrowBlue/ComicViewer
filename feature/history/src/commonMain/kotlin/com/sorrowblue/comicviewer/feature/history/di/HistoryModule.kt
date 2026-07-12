@@ -14,8 +14,6 @@ import com.sorrowblue.comicviewer.feature.history.navigation.historyClearAllNavE
 import com.sorrowblue.comicviewer.feature.history.navigation.historyFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.history.navigation.historyFolderFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.history.navigation.historyNavEntry
-import com.sorrowblue.comicviewer.file.FileInfoScreenContext
-import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
@@ -60,24 +58,13 @@ interface HistoryModule {
 
     @Provides
     @IntoSet
-    private fun provideHistoryFileInfoNavEntry(
-        factory: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            historyFileInfoNavEntry(navigator)
-        }
+    private fun provideHistoryFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        historyFileInfoNavEntry(navigator)
     }
 
     @Provides
     @IntoSet
-    private fun provideHistoryFolderFileInfoNavEntry(
-        factoryFolder: FolderScreenContext.Factory,
-        factoryFileInfo: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factoryFolder) {
-            with(factoryFileInfo) {
-                historyFolderFileInfoNavEntry(navigator)
-            }
-        }
+    private fun provideHistoryFolderFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        historyFolderFileInfoNavEntry(navigator)
     }
 }

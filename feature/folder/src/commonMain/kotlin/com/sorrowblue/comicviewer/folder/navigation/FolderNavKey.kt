@@ -11,16 +11,13 @@ import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.PathString
-import com.sorrowblue.comicviewer.file.FileInfoScreenContext
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry
-import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
 import io.github.irgaly.navigation3.resultstate.resultConsumer
-import io.github.takahirom.rin.rememberRetained
 
 interface FolderNavKey : NavKey {
     val bookshelfId: BookshelfId
@@ -30,7 +27,6 @@ interface FolderNavKey : NavKey {
     val onRestoreComplete: (() -> Unit)? get() = null
 }
 
-context(factory: FolderScreenContext.Factory)
 inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
     sceneKey: String,
     noinline onBackClick: () -> Unit,
@@ -49,26 +45,23 @@ inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
             transitionMaterialSharedAxisZ()
         } + SupportingPaneSceneStrategy.mainPane(sceneKey),
     ) {
-        with(rememberRetained { factory.createFolderScreenContext() }) {
-            FolderScreenRoot(
-                bookshelfId = it.bookshelfId,
-                path = it.path,
-                restorePath = it.restorePath,
-                showSearch = it.showSearch,
-                onBackClick = onBackClick,
-                onSearchClick = { onSearchClick(it.bookshelfId, it.path) },
-                onFileClick = onFileClick,
-                onFileInfoClick = onFileInfoClick,
-                onSettingsClick = onSettingsClick,
-                onRestoreComplete = {
-                    it.onRestoreComplete?.invoke()
-                },
-            )
-        }
+        FolderScreenRoot(
+            bookshelfId = it.bookshelfId,
+            path = it.path,
+            restorePath = it.restorePath,
+            showSearch = it.showSearch,
+            onBackClick = onBackClick,
+            onSearchClick = { onSearchClick(it.bookshelfId, it.path) },
+            onFileClick = onFileClick,
+            onFileInfoClick = onFileInfoClick,
+            onSettingsClick = onSettingsClick,
+            onRestoreComplete = {
+                it.onRestoreComplete?.invoke()
+            },
+        )
     }
 }
 
-context(factoryFolder: FolderScreenContext.Factory, factoryFileInfo: FileInfoScreenContext.Factory)
 inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> EntryProviderScope<NavKey>.folderFileInfoNavEntry(
     sceneKeyPrefix: String,
     noinline onBackClick: () -> Unit,

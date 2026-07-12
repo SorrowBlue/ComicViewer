@@ -1,3 +1,5 @@
+import com.sorrowblue.comicviewer.gitTagProvider
+
 plugins {
     alias(libs.plugins.comicviewer.multiplatformFeature)
     alias(libs.plugins.buildconfig)
@@ -24,7 +26,7 @@ kotlin {
     }
 }
 
-val gitTagProvider = providers.of(GitTagValueSource::class) {}
+
 
 buildConfig {
     packageName = "om.sorrowblue.comicviewer.feature.settings"

@@ -12,8 +12,6 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavKey
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readLaterFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readLaterFolderFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readLaterNavEntry
-import com.sorrowblue.comicviewer.file.FileInfoScreenContext
-import com.sorrowblue.comicviewer.folder.FolderScreenContext
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
@@ -51,24 +49,13 @@ interface ReadLaterModule {
 
     @Provides
     @IntoSet
-    private fun provideReadLaterFileInfoNavEntry(
-        factory: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            readLaterFileInfoNavEntry(navigator)
-        }
+    private fun provideReadLaterFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        readLaterFileInfoNavEntry(navigator)
     }
 
     @Provides
     @IntoSet
-    private fun provideReadLaterFolderFileInfoNavEntry(
-        factoryFolder: FolderScreenContext.Factory,
-        factoryFileInfo: FileInfoScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factoryFolder) {
-            with(factoryFileInfo) {
-                readLaterFolderFileInfoNavEntry(navigator)
-            }
-        }
+    private fun provideReadLaterFolderFileInfoNavEntry(): ScreenEntryProvider = { navigator ->
+        readLaterFolderFileInfoNavEntry(navigator)
     }
 }

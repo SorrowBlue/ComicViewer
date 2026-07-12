@@ -5,16 +5,19 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 
 @Composable
-context(context: FolderScreenContext)
 fun FolderScreenRoot(
     bookshelfId: BookshelfId,
     path: String,
@@ -28,12 +31,20 @@ fun FolderScreenRoot(
     onRestoreComplete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val viewModel = assistedMetroViewModel<FolderViewModel, FolderViewModel.Factory> {
+        create(bookshelfId, path, restorePath, showSearch)
+    }
+    val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val state =
         rememberFolderScreenState(
-            bookshelfId = bookshelfId,
-            path = path,
+            lazyPagingItems = lazyPagingItems,
+            uiState = uiState,
+            onPermissionChange = viewModel::updatePermission,
+            onSortClick = viewModel::onSortClick,
+            onFolderScopeOnlyClick = viewModel::onFolderScopeOnlyClick,
+            onSortTypeSelectScreenResult = viewModel::onSortTypeSelectScreenResult,
             restorePath = restorePath,
-            showSearch = showSearch,
         )
     state.scaffoldState.FolderScreen(
         uiState = state.uiState,
