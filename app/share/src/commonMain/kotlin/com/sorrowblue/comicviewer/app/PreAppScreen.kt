@@ -26,7 +26,6 @@ import logcat.logcat
 private const val TAG = "RootScreenWrapper"
 
 @Composable
-context(context: PreAppScreenContext)
 internal fun PreAppScreen(
     finishApp: () -> Unit,
     viewModel: MainViewModel = viewModel(),
@@ -34,56 +33,37 @@ internal fun PreAppScreen(
 ) {
     val isInitialized by viewModel.isInitialized.collectAsState()
     val state = rememberPreAppScreenState()
-
-    LaunchedEffect(state.tutorialRequired, state.authStatus, isInitialized) {
-        logcat(tag = TAG) {
-            """tutorialRequired=${state.tutorialRequired}, authStatus=${state.authStatus}, isInitialized=$isInitialized"""
-        }
+    LaunchedEffect(state.uiState) {
+        logcat(TAG) { "PreAppScreenState: ${state.uiState}" }
     }
-    if (state.tutorialRequired) {
-        with(context.tutorialScreenContext.createTutorialScreenContext()) {
-            TutorialScreenRoot(
-                onComplete = state::onTutorialComplete,
-            )
-        }
+    if (state.uiState == PreAppUiState.TutorialRequired) {
+        TutorialScreenRoot(onComplete = state::onTutorialComplete)
         SideEffect {
             viewModel.shouldKeepSplash.value = false
         }
     } else {
-        if (isInitialized || state.authStatus is AuthStatus.NoAuthRequired ||
-            (
-                state.authStatus is AuthStatus.AuthRequired &&
-                    (state.authStatus as AuthStatus.AuthRequired).authed
-                )
-        ) {
+        if (isInitialized || state.uiState == PreAppUiState.NoAuthRequired || (state.uiState as? PreAppUiState.AuthRequired)?.authed == true) {
             content()
         }
-        when (val authStatus = state.authStatus) {
-            is AuthStatus.AuthRequired -> {
-                AnimatedVisibility(
-                    visible = !authStatus.authed || !isInitialized,
-                    enter = slideInVertically { it },
-                    exit = slideOutVertically { it },
-                ) {
-                    with(context.authenticationScreenContext.createAuthenticationScreenContext()) {
-                        AuthenticationScreenRoot(
-                            screenType = ScreenType.Authenticate,
-                            onBackClick = finishApp,
-                            onComplete = state::onAuthComplete,
-                        )
-                        SideEffect {
-                            viewModel.shouldKeepSplash.value = false
-                        }
-                    }
+        if (state.uiState is PreAppUiState.AuthRequired) {
+            AnimatedVisibility(
+                visible = (!(state.uiState as PreAppUiState.AuthRequired).authed) || !isInitialized,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it },
+            ) {
+                AuthenticationScreenRoot(
+                    screenType = ScreenType.Authenticate,
+                    onBackClick = finishApp,
+                    onComplete = state::onAuthComplete,
+                )
+                SideEffect {
+                    viewModel.shouldKeepSplash.value = false
                 }
             }
-
-            AuthStatus.NoAuthRequired -> Unit
-
-            AuthStatus.Unknown -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
+        }
+        if (state.uiState == PreAppUiState.Loading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
             }
         }
     }

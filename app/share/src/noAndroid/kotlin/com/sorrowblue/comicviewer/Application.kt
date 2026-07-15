@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.framework.common.require
 @Composable
 context(context: PlatformContext, appGraph: AppGraph)
 fun Application(finishApp: () -> Unit) {
-    with(rememberComicViewerUIContext()) {
+    context(rememberComicViewerUIContext()) {
         val state = rememberComicViewerUIState()
         ComicViewerUI(finishApp = finishApp, state = state)
     }

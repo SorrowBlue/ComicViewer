@@ -36,7 +36,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
-import io.github.takahirom.rin.rememberRetained
 import logcat.logcat
 
 @Composable
@@ -49,13 +48,11 @@ fun ComicViewerUI(state: ComicViewerUIState, finishApp: () -> Unit) {
         ProvidesAppState,
     ) {
         ComicTheme {
-            with(rememberRetained { appGraph.createPreAppScreenContext() }) {
-                PreAppScreen(finishApp = finishApp) {
-                    ComicViewerUI(
-                        navigator = state.navigator,
-                        entryProvider = state.entryProvider,
-                    )
-                }
+            PreAppScreen(finishApp = finishApp) {
+                ComicViewerUI(
+                    navigator = state.navigator,
+                    entryProvider = state.entryProvider,
+                )
             }
         }
     }

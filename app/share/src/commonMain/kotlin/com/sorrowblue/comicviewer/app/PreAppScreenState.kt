@@ -13,36 +13,31 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import com.sorrowblue.comicviewer.domain.usecase.settings.LoadSettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
-sealed interface AuthStatus {
-    data object Unknown : AuthStatus
-
-    data class AuthRequired(val authed: Boolean) : AuthStatus
-
-    data object NoAuthRequired : AuthStatus
+sealed interface PreAppUiState {
+    data object Loading : PreAppUiState
+    data object TutorialRequired : PreAppUiState
+    data class AuthRequired(val authed: Boolean) : PreAppUiState
+    data object NoAuthRequired : PreAppUiState
 }
 
 @Composable
-context(context: PreAppScreenContext)
 internal fun rememberPreAppScreenState(): PreAppScreenState {
+    val viewModel = metroViewModel<PreAppViewModel>()
     val coroutineScope = rememberCoroutineScope()
-    val state = remember {
+    val state = remember(coroutineScope, viewModel) {
         PreAppScreenStateImpl(
             scope = coroutineScope,
-            loadSettingsUseCase = context.loadSettingsUseCase,
-            manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase,
+            tutorialRequired = viewModel.tutorialRequired,
+            authRequired = viewModel.authRequired,
+            lockOnBackground = viewModel.lockOnBackground,
+            tutorialComplete = viewModel::completeTutorial,
         )
     }
     LifecycleEventEffect(Lifecycle.Event.ON_PAUSE, onEvent = state::onPause)
@@ -50,71 +45,53 @@ internal fun rememberPreAppScreenState(): PreAppScreenState {
 }
 
 internal interface PreAppScreenState {
-    val authStatus: AuthStatus
-    val tutorialRequired: Boolean
+    val uiState: PreAppUiState
 
     fun onAuthComplete()
     fun onTutorialComplete()
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
-@VisibleForTesting
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 internal class PreAppScreenStateImpl(
-    private val scope: CoroutineScope,
-    manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
-    private val loadSettingsUseCase: LoadSettingsUseCase,
+    scope: CoroutineScope,
+    tutorialRequired: SharedFlow<Boolean>,
+    authRequired: SharedFlow<Boolean>,
+    private val lockOnBackground: StateFlow<Boolean>,
+    private val tutorialComplete: () -> Unit = {},
 ) : PreAppScreenState {
-    override var authStatus by mutableStateOf<AuthStatus>(AuthStatus.Unknown)
-        private set
 
-    override var tutorialRequired by mutableStateOf(false)
+    override var uiState: PreAppUiState by mutableStateOf(PreAppUiState.Loading)
         private set
-
-    private val lockOnBackground = manageSecuritySettingsUseCase.settings
-        .map { it.lockOnBackground }
-        .stateIn(scope, SharingStarted.Eagerly, false)
 
     init {
-        // Initialize tutorial status and listen for changes
-        loadSettingsUseCase.settings
-            .mapLatest { !it.doneTutorial }
-            .distinctUntilChanged()
-            .onEach { tutorialRequired = it }
-            .launchIn(scope)
-
-        // Initialize auth status and listen for changes
-        manageSecuritySettingsUseCase.settings
-            .mapLatest { !it.password.isNullOrEmpty() }
-            .distinctUntilChanged()
-            .onEach { hasPassword ->
-                authStatus = if (hasPassword) {
-                    AuthStatus.AuthRequired(
-                        authed =
-                            (authStatus == AuthStatus.NoAuthRequired) ||
-                                (
-                                    authStatus is AuthStatus.AuthRequired &&
-                                        (authStatus as AuthStatus.AuthRequired).authed
-                                    ),
-                    )
-                } else {
-                    AuthStatus.NoAuthRequired
+        combine(tutorialRequired, authRequired) { tutorialRequired, authRequired ->
+            uiState = when {
+                tutorialRequired -> PreAppUiState.TutorialRequired
+                authRequired -> {
+                    when (val uiState = uiState) {
+                        is PreAppUiState.AuthRequired -> PreAppUiState.AuthRequired(uiState.authed)
+                        PreAppUiState.Loading -> PreAppUiState.AuthRequired(false)
+                        PreAppUiState.NoAuthRequired -> PreAppUiState.AuthRequired(true)
+                        PreAppUiState.TutorialRequired -> PreAppUiState.AuthRequired(false)
+                    }
                 }
-            }.launchIn(scope)
+
+                else -> PreAppUiState.NoAuthRequired
+            }
+        }.launchIn(scope)
     }
 
     override fun onAuthComplete() {
-        authStatus = AuthStatus.AuthRequired(authed = true)
+        uiState = PreAppUiState.AuthRequired(true)
     }
 
     override fun onTutorialComplete() {
-        scope.launch {
-            loadSettingsUseCase.edit { it.copy(doneTutorial = true) }
-        }
+        tutorialComplete()
     }
 
     fun onPause() {
-        if (authStatus is AuthStatus.AuthRequired && lockOnBackground.value) {
-            authStatus = AuthStatus.AuthRequired(authed = false)
+        if (uiState is PreAppUiState.AuthRequired && lockOnBackground.value) {
+            uiState = PreAppUiState.AuthRequired(authed = false)
         }
     }
 }
