@@ -4,15 +4,18 @@
 
 package com.sorrowblue.comicviewer.app
 
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberTrayState
+import androidx.compose.ui.window.rememberWindowState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.Application
 import com.sorrowblue.comicviewer.framework.common.DesktopContext
@@ -20,9 +23,6 @@ import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
-import comicviewer.app.jvm.generated.resources.Res
-import comicviewer.app.jvm.generated.resources.app_label_exit
-import comicviewer.app.jvm.generated.resources.app_label_show
 import comicviewer.framework.ui.generated.resources.app_name
 import dev.zacsweers.metro.createGraphFactory
 import io.github.vinceglb.filekit.FileKit
@@ -37,32 +37,38 @@ fun main() {
     getPlatformGraph = { appGraph }
     application {
         val trayState = rememberTrayState()
-        var isOpen by remember { mutableStateOf(true) }
+        val windowState = rememberWindowState()
+        var composeWindow by remember { mutableStateOf<ComposeWindow?>(null) }
         Tray(
             state = trayState,
             icon = rememberVectorPainter(ComicIcons.Launcher),
             onAction = {
-                isOpen = true
-            },
-            menu = {
-                Item(stringResource(Res.string.app_label_show), onClick = { isOpen = true })
-                Item(stringResource(Res.string.app_label_exit), onClick = ::exitApplication)
+                windowState.isMinimized = false
+                composeWindow?.let { window ->
+                    if (window.isShowing) {
+                        window.toFront()
+                        window.requestFocus()
+                    }
+                }
             },
         )
         Window(
-            visible = isOpen,
-            onCloseRequest = { isOpen = false },
-            title = stringResource(FrameworkResString.app_name),
+            onCloseRequest = ::exitApplication,
+            state = windowState, title = stringResource(FrameworkResString.app_name),
             icon = rememberVectorPainter(ComicIcons.Launcher),
         ) {
-            window.minimumSize = Dimension(400, 600)
-            val viewModel = viewModel { MainViewModel() }
-            with(appGraph.context) {
-                with(appGraph) {
-                    Application(finishApp = ::exitApplication)
+            DisposableEffect(Unit) {
+                composeWindow = this@Window.window
+                onDispose {
+                    composeWindow = null
                 }
             }
-            SplashScreen(keepOnScreenCondition = viewModel.shouldKeepSplash::value)
+            window.minimumSize = Dimension(400, 600)
+            val viewModel = viewModel { MainViewModel() }
+            context(appGraph, appGraph.context) {
+                Application(finishApp = ::exitApplication)
+            }
+            SplashScreen(keepOnScreenCondition = { viewModel.shouldKeepSplash.value })
         }
     }
 }
