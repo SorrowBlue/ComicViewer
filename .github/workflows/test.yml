@@ -78,7 +78,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 37
-          system-image-api-level: 37.0
+          system-image-api-level: 37.1
           target: aosp_atd
           arch: x86_64
           profile: pixel_7_pro
@@ -90,7 +90,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 37
-          system-image-api-level: 37.0
+          system-image-api-level: 37.1
           target: aosp_atd
           arch: x86_64
           profile: pixel_7_pro
