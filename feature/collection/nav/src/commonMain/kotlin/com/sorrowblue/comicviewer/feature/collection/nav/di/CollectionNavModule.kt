@@ -5,14 +5,14 @@
 package com.sorrowblue.comicviewer.feature.collection.nav.di
 
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.Provides
 
-@ContributesTo(NavScope::class)
+@ContributesTo(AppScope::class)
 interface CollectionNavModule {
     @Provides
     @ElementsIntoSet

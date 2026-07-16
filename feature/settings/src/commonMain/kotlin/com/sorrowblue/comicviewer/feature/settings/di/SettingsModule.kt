@@ -10,16 +10,16 @@ import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.navigation.InAppLanguagePickerNavKey
 import com.sorrowblue.comicviewer.feature.settings.navigation.inAppLanguagePickerNavEntry
 import com.sorrowblue.comicviewer.feature.settings.navigation.settingsNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 
-@ContributesTo(NavScope::class)
+@ContributesTo(AppScope::class)
 interface SettingsModule {
     @Provides
     @ElementsIntoSet

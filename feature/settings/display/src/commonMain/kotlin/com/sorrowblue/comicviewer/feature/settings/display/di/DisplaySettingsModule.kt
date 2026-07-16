@@ -10,16 +10,16 @@ import com.sorrowblue.comicviewer.feature.settings.display.navigation.DarkModeNa
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.darkModeNavEntry
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.displaySettingsNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 
-@ContributesTo(NavScope::class)
+@ContributesTo(AppScope::class)
 interface DisplaySettingsModule {
     @Provides
     @ElementsIntoSet
