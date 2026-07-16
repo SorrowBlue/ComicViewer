@@ -14,7 +14,6 @@ import com.sorrowblue.comicviewer.feature.history.navigation.historyClearAllNavE
 import com.sorrowblue.comicviewer.feature.history.navigation.historyFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.history.navigation.historyFolderFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.history.navigation.historyNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry

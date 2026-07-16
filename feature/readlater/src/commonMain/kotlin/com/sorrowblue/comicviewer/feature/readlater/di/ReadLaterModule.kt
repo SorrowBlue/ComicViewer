@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavKey
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readLaterFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readLaterFolderFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.readlater.navigation.readLaterNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry

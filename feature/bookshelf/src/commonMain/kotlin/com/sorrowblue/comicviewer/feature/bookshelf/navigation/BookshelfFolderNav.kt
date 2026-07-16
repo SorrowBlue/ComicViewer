@@ -16,8 +16,11 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
-import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry
+import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry2
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -36,8 +39,18 @@ internal data class BookshelfFolderFileInfoNavKey(override val fileKey: File.Key
     override val isOpenFolderEnabled: Boolean = false
 }
 
-internal fun EntryProviderScope<NavKey>.bookshelfFolderFileInfoNavEntry(navigator: Navigator) {
-    folderFileInfoNavEntry<BookshelfFolderNavKey, BookshelfFolderFileInfoNavKey>(
+@ContributesIntoSet(AppScope::class)
+internal class BookshelfFolderFileInfoNavEntry : NavigationEntryProvider {
+
+    context(scope: EntryProviderScope<NavKey>)
+    override fun invoke(navigator: Navigator) {
+        bookshelfFolderFileInfoNavEntry(navigator)
+    }
+}
+
+context(scope: EntryProviderScope<NavKey>)
+private fun bookshelfFolderFileInfoNavEntry(navigator: Navigator) {
+    folderFileInfoNavEntry2<BookshelfFolderNavKey, BookshelfFolderFileInfoNavKey>(
         sceneKeyPrefix = "Bookshelf",
         onBackClick = {
             navigator.pop<BookshelfFolderNavKey>(inclusive = true)

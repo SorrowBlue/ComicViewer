@@ -18,9 +18,12 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Shelv
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
 import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
@@ -35,8 +38,18 @@ data object BookshelfNavKey : NavigationKey {
     override val order get() = 1
 }
 
-internal fun EntryProviderScope<NavKey>.bookshelfNavEntry(navigator: Navigator) {
-    entry<BookshelfNavKey>(
+@ContributesIntoSet(AppScope::class)
+internal class BookshelfNavEntry : NavigationEntryProvider {
+
+    context(scope: EntryProviderScope<NavKey>)
+    override fun invoke(navigator: Navigator) {
+        bookshelfNavEntry(navigator)
+    }
+}
+
+context(scope: EntryProviderScope<NavKey>)
+private fun bookshelfNavEntry(navigator: Navigator) {
+    scope.entry<BookshelfNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane<BookshelfInfoNavKey>("Bookshelf") +
             NavDisplay.transitionMaterialFadeThrough(),
     ) {
