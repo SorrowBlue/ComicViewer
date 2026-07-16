@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
 import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
 import com.sorrowblue.comicviewer.data.datastore.qualifier.GlobalSettings
-import com.sorrowblue.comicviewer.data.datastore.qualifier.PdfPlugin
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
@@ -22,7 +21,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -41,7 +39,6 @@ internal class DatastoreDataSourceImpl(
     @param:Folder private val folderSettingsDataStore: DataStore<FolderSettings>,
     @param:Collection private val collectionSettingsDataStore: DataStore<CollectionSettings>,
     @param:Security private val securitySettingsDataStore: DataStore<SecuritySettings>,
-    @param:PdfPlugin private val pdfPluginSettingsDataStore: DataStore<PdfPluginSettings>,
 ) : DatastoreDataSource {
     override val settings = settingsDataStore.data
 
@@ -88,10 +85,4 @@ internal class DatastoreDataSourceImpl(
     override suspend fun updateCollectionSettings(
         transform: suspend (CollectionSettings) -> CollectionSettings,
     ) = collectionSettingsDataStore.updateData(transform)
-
-    override val pdfPluginSettings = pdfPluginSettingsDataStore.data
-
-    override suspend fun updatePdfPluginSettings(
-        transform: suspend (PdfPluginSettings) -> PdfPluginSettings,
-    ) = pdfPluginSettingsDataStore.updateData(transform)
 }

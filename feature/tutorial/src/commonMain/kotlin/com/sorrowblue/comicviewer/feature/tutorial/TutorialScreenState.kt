@@ -13,8 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -32,14 +33,14 @@ internal interface TutorialScreenState {
 }
 
 @Composable
-context(context: TutorialScreenContext)
-internal fun rememberTutorialScreenState(): TutorialScreenState {
+internal fun rememberTutorialScreenState(viewModel: TutorialViewModel = metroViewModel<TutorialViewModel>()): TutorialScreenState {
     val scope = rememberCoroutineScope()
     val pageState = rememberPagerState { TutorialSheet.entries.size }
     return remember {
         TutorialScreenStateImpl(
             scope = scope,
-            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
+            bindingDirection = viewModel.bindingDirection,
+            updateBindingDirection = viewModel::updateBindingDirection,
             pageState = pageState,
         )
     }
@@ -47,29 +48,21 @@ internal fun rememberTutorialScreenState(): TutorialScreenState {
 
 private class TutorialScreenStateImpl(
     private val scope: CoroutineScope,
-    private val manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
+    bindingDirection: SharedFlow<BindingDirection>,
+    private val updateBindingDirection: (BindingDirection) -> Unit,
     override val pageState: PagerState,
 ) : TutorialScreenState {
     override val enabledBack: Boolean get() = pageState.currentPage != 0
     override var uiState by mutableStateOf(TutorialScreenUiState())
 
     init {
-        manageViewerSettingsUseCase.settings
-            .onEach {
-                uiState = uiState.copy(
-                    bindingDirection = it.bindingDirection,
-                )
-            }.launchIn(scope)
+        bindingDirection.onEach {
+            uiState = uiState.copy(bindingDirection = it)
+        }.launchIn(scope)
     }
 
     override fun updateReadingDirection(bindingDirection: BindingDirection) {
-        scope.launch {
-            manageViewerSettingsUseCase.edit {
-                it.copy(
-                    bindingDirection = bindingDirection,
-                )
-            }
-        }
+        updateBindingDirection(bindingDirection)
     }
 
     override fun onNextClick(onComplete: () -> Unit) {
@@ -91,5 +84,3 @@ private class TutorialScreenStateImpl(
 
 internal val PagerState.isLastPage: Boolean
     get() = currentPage == pageCount - 1
-
-internal expect val APP_DOWNLOAD_LINK: String

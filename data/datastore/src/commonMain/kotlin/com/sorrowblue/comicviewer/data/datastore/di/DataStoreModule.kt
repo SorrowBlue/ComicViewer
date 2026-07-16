@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
 import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
 import com.sorrowblue.comicviewer.data.datastore.qualifier.GlobalSettings
-import com.sorrowblue.comicviewer.data.datastore.qualifier.PdfPlugin
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
 import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
 import com.sorrowblue.comicviewer.data.datastore.serializer.BookSettingsSerializer
@@ -20,7 +19,6 @@ import com.sorrowblue.comicviewer.data.datastore.serializer.CollectionSettingsSe
 import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderDisplaySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.PdfPluginSettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
 import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerializer
@@ -32,7 +30,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
@@ -92,11 +89,4 @@ interface DataStoreModule {
     private fun collectionSettingsDataStore(
         dataStoreMaker: DataStoreMaker,
     ): DataStore<CollectionSettings> = dataStoreMaker.createDataStore(CollectionSettingsSerializer)
-
-    @PdfPlugin
-    @SingleIn(AppScope::class)
-    @Provides
-    private fun pdfPluginSettingsDataStore(
-        dataStoreMaker: DataStoreMaker,
-    ): DataStore<PdfPluginSettings> = dataStoreMaker.createDataStore(PdfPluginSettingsSerializer)
 }

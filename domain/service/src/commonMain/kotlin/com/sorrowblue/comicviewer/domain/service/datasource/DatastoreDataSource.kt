@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.plugin.PdfPluginSettings
 import kotlinx.coroutines.flow.Flow
 
 interface DatastoreDataSource {
@@ -59,10 +58,4 @@ interface DatastoreDataSource {
     suspend fun updateCollectionSettings(
         transform: suspend (CollectionSettings) -> CollectionSettings,
     ): CollectionSettings
-
-    val pdfPluginSettings: Flow<PdfPluginSettings>
-
-    suspend fun updatePdfPluginSettings(
-        transform: suspend (PdfPluginSettings) -> PdfPluginSettings,
-    ): PdfPluginSettings
 }
