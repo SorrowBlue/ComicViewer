@@ -72,23 +72,23 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-36
+          key: avd-36.0
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 36
+          api-level: 37.0
           target: google_apis_ps16k
           arch: x86_64
           profile: pixel_7_pro
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          disable-animations: true
           script: echo "Generated AVD snapshot for caching."
       - name: Run Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 36
+          api-level: 37.0
           target: google_apis_ps16k
           arch: x86_64
           profile: pixel_7_pro
