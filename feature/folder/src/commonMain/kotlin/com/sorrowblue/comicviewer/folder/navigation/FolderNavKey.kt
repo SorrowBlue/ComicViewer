@@ -37,7 +37,14 @@ inline fun <reified T : FolderNavKey> folderEntry2(
     noinline onFileInfoClick: (File) -> Unit,
     noinline onSettingsClick: () -> Unit,
 ) {
-    scope.folderEntry<T>(sceneKey, onBackClick, onSearchClick, onFileClick, onFileInfoClick, onSettingsClick)
+    scope.folderEntry<T>(
+        sceneKey,
+        onBackClick,
+        onSearchClick,
+        onFileClick,
+        onFileInfoClick,
+        onSettingsClick,
+    )
 }
 inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
     sceneKey: String,

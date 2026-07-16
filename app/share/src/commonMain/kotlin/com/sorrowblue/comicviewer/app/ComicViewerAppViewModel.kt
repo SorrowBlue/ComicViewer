@@ -107,7 +107,7 @@ class ComicViewerAppViewModel(
                 path = path,
                 restorePath = bookPath,
                 onRestoreComplete = ::onNavigationHistoryRestore,
-            )
+            ),
         )
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
             "bookshelf(${bookshelfId.value}) -> folder($path)"
@@ -125,7 +125,7 @@ class ComicViewerAppViewModel(
                 bookshelfId = bookshelfId,
                 path = folderList.first().path,
                 restorePath = null,
-            )
+            ),
         )
         restoreNavigation.emit(
             RestoreNavigation(

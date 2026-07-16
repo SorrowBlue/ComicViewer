@@ -7,7 +7,6 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit.di
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.bookshelfWizardNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider

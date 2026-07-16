@@ -33,7 +33,9 @@ internal interface TutorialScreenState {
 }
 
 @Composable
-internal fun rememberTutorialScreenState(viewModel: TutorialViewModel = metroViewModel<TutorialViewModel>()): TutorialScreenState {
+internal fun rememberTutorialScreenState(
+    viewModel: TutorialViewModel = metroViewModel<TutorialViewModel>(),
+): TutorialScreenState {
     val scope = rememberCoroutineScope()
     val pageState = rememberPagerState { TutorialSheet.entries.size }
     return remember {

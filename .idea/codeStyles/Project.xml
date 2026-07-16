@@ -2,6 +2,7 @@
   <code_scheme name="Project" version="173">
     <option name="AUTODETECT_INDENTS" value="false" />
     <option name="LINE_SEPARATOR" value="&#10;" />
+    <option name="RIGHT_MARGIN" value="100" />
     <JavaCodeStyleSettings>
       <option name="IMPORT_LAYOUT_TABLE">
         <value>

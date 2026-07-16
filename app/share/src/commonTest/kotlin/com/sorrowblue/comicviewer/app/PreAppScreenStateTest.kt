@@ -36,7 +36,7 @@ class PreAppScreenStateTest {
                 testScope.launch {
                     tutorialRequiredFlow.emit(false)
                 }
-            }
+            },
         )
     }
 

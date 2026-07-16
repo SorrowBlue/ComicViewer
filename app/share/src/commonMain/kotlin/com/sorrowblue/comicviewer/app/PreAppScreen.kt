@@ -42,7 +42,9 @@ internal fun PreAppScreen(
             viewModel.shouldKeepSplash.value = false
         }
     } else {
-        if (isInitialized || state.uiState == PreAppUiState.NoAuthRequired || (state.uiState as? PreAppUiState.AuthRequired)?.authed == true) {
+        if (isInitialized || state.uiState == PreAppUiState.NoAuthRequired ||
+            (state.uiState as? PreAppUiState.AuthRequired)?.authed == true
+        ) {
             content()
         }
         if (state.uiState is PreAppUiState.AuthRequired) {

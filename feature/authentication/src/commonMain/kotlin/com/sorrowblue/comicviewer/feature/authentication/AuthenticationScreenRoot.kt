@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
 @Composable
-context(context: AuthenticationScreenContext)
 fun AuthenticationScreenRoot(
     screenType: ScreenType,
     onBackClick: () -> Unit,

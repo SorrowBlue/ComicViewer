@@ -51,15 +51,16 @@ interface ComicViewerAppState {
 fun rememberComicViewerUIState(
     allowNavigationRestored: Boolean = true,
     mainViewModel: MainViewModel = viewModel { MainViewModel() },
-    viewModel: ComicViewerAppViewModel = assistedMetroViewModel<ComicViewerAppViewModel, ComicViewerAppViewModel.Factory> {
-        create(
-            allowNavigationRestored,
-            {
-                mainViewModel.shouldKeepSplash.value = false
-                mainViewModel.isInitialized.value = true
-            }
-        )
-    },
+    viewModel: ComicViewerAppViewModel =
+        assistedMetroViewModel<ComicViewerAppViewModel, ComicViewerAppViewModel.Factory> {
+            create(
+                allowNavigationRestored,
+                {
+                    mainViewModel.shouldKeepSplash.value = false
+                    mainViewModel.isInitialized.value = true
+                },
+            )
+        },
 ): ComicViewerAppState {
     val navigator = rememberNavigator(
         startKey = BookshelfNavKey,

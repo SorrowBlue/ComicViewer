@@ -20,11 +20,11 @@ import kotlinx.coroutines.launch
 @Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class)
-internal class TutorialViewModel(val manageViewerSettingsUseCase: ManageViewerSettingsUseCase) : ViewModel() {
+internal class TutorialViewModel(val manageViewerSettingsUseCase: ManageViewerSettingsUseCase) :
+    ViewModel() {
 
     val bindingDirection = manageViewerSettingsUseCase.settings
         .map { it.bindingDirection }.shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
-
 
     fun updateBindingDirection(bindingDirection: BindingDirection) {
         viewModelScope.launch {

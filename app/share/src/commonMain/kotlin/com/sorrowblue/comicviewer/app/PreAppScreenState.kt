@@ -28,8 +28,9 @@ sealed interface PreAppUiState {
 }
 
 @Composable
-internal fun rememberPreAppScreenState(): PreAppScreenState {
-    val viewModel = metroViewModel<PreAppViewModel>()
+internal fun rememberPreAppScreenState(
+    viewModel: PreAppViewModel = metroViewModel<PreAppViewModel>(),
+): PreAppScreenState {
     val coroutineScope = rememberCoroutineScope()
     val state = remember(coroutineScope, viewModel) {
         PreAppScreenStateImpl(
@@ -64,10 +65,11 @@ internal class PreAppScreenStateImpl(
         private set
 
     init {
-        combine(tutorialRequired, authRequired) { tutorialRequired, authRequired ->
+        combine(tutorialRequired, authRequired) { tutorialRequired1, authRequired1 ->
             uiState = when {
-                tutorialRequired -> PreAppUiState.TutorialRequired
-                authRequired -> {
+                tutorialRequired1 -> PreAppUiState.TutorialRequired
+
+                authRequired1 -> {
                     when (val uiState = uiState) {
                         is PreAppUiState.AuthRequired -> PreAppUiState.AuthRequired(uiState.authed)
                         PreAppUiState.Loading -> PreAppUiState.AuthRequired(false)

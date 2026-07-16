@@ -4,14 +4,20 @@
 
 package com.sorrowblue.comicviewer.feature.authentication
 
+import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.first
 
-/**
- * Manages PIN authentication flow business logic.
- * Handles PIN validation, comparison, and security settings updates.
- */
-internal class PinFlowManager(private val securitySettings: ManageSecuritySettingsUseCase) {
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+internal class AuthenticationViewModel(
+    private val securitySettings: ManageSecuritySettingsUseCase,
+) : ViewModel() {
     /**
      * Validates if the provided PIN meets minimum requirements.
      */

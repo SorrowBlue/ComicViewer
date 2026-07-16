@@ -40,7 +40,6 @@ internal class PreAppViewModel(
         .map { it.lockOnBackground }
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-
     fun completeTutorial() {
         viewModelScope.launch {
             loadSettingsUseCase.edit { it.copy(doneTutorial = true) }

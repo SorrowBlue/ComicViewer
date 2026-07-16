@@ -4,10 +4,8 @@
 
 package com.sorrowblue.comicviewer.feature.authentication.di
 
-import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenContext
 import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationNavKey
 import com.sorrowblue.comicviewer.feature.authentication.navigation.authenticationNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavScope
 import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
@@ -26,11 +24,7 @@ interface AuthenticationModule {
 
     @Provides
     @IntoSet
-    private fun provideAuthenticationNavEntry(
-        factory: AuthenticationScreenContext.Factory,
-    ): ScreenEntryProvider = { navigator ->
-        with(factory) {
-            authenticationNavEntry(navigator)
-        }
+    private fun provideAuthenticationNavEntry(): ScreenEntryProvider = { navigator ->
+        authenticationNavEntry(navigator)
     }
 }
