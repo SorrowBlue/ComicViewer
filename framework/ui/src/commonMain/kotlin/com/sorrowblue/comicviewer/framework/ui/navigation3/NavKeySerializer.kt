@@ -18,3 +18,9 @@ val NavKeyEntry.subclass: KClass<NavKey>
 
 val NavKeyEntry.serializer: KSerializer<NavKey>
     get() = second
+
+interface NavigationEntryProvider {
+
+    context(scope: EntryProviderScope<NavKey>)
+    operator fun invoke(navigator: Navigator)
+}

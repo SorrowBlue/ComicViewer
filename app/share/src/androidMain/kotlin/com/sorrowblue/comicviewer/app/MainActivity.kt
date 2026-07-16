@@ -13,18 +13,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import com.sorrowblue.comicviewer.ComicViewerUI
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
-import com.sorrowblue.comicviewer.rememberComicViewerUIContext
-import com.sorrowblue.comicviewer.rememberComicViewerUIState
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.android.ActivityKey
+import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 
 /**
  * Main activity
@@ -54,17 +52,19 @@ internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity(
             null
         }
 
-        @OptIn(ExperimentalComposeUiApi::class)
         setContent {
-            val state = rememberComicViewerUIState(
-                context = rememberComicViewerUIContext(),
-                allowNavigationRestored = receivedBookData.isNullOrEmpty(),
-            )
-            ComicViewerUI(appGraph = appGraph, finishApp = ::finish, state = state)
-            LaunchedEffect(receivedBookData.isNullOrEmpty()) {
-                if (!receivedBookData.isNullOrEmpty()) {
-                    state.navigator.navigate(ReceiveBookNavKey(receivedBookData))
-                    state.onNavigationHistoryRestore()
+            CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.metroVmf) {
+                val state = rememberComicViewerUIState(
+                    allowNavigationRestored = receivedBookData.isNullOrEmpty(),
+                )
+                context(appGraph) {
+                    ComicViewerUI(finishApp = ::finish, state = state)
+                }
+                LaunchedEffect(receivedBookData.isNullOrEmpty()) {
+                    if (!receivedBookData.isNullOrEmpty()) {
+                        state.navigator.navigate(ReceiveBookNavKey(receivedBookData))
+                        state.onNavigationHistoryRestore()
+                    }
                 }
             }
         }

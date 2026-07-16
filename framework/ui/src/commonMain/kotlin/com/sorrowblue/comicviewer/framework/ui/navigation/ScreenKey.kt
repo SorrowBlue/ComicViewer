@@ -11,8 +11,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
 
-annotation class NavScope
-
 interface NavigationKey : NavKey {
     val title: String
         @Composable
