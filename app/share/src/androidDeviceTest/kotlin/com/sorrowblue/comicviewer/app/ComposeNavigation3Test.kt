@@ -1,6 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
@@ -33,14 +34,18 @@ import io.github.vinceglb.filekit.manualFileKitCoreInitialization
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 
 class ComposeNavigation3Test {
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @get:Rule
-    val permissionRule: GrantPermissionRule =
+    val permissionRule: TestRule = if (Build.VERSION.SDK_INT >= 37) {
         GrantPermissionRule.grant(Manifest.permission.ACCESS_LOCAL_NETWORK)
+    } else {
+        TestRule { base, _ -> base }
+    }
 
     @Before
     fun setup() {
