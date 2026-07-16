@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
+import android.Manifest
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -22,8 +24,10 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
+import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.manualFileKitCoreInitialization
 import org.junit.Before
@@ -34,15 +38,20 @@ class ComposeNavigation3Test {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    @get:Rule
+    val permissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.ACCESS_LOCAL_NETWORK)
+
     @Before
     fun setup() {
         FileKit.manualFileKitCoreInitialization(
             InstrumentationRegistry.getInstrumentation().context,
         )
         composeTestRule.setContent {
-            with(InstrumentationRegistry.getInstrumentation().context) {
+            val appGraph = getPlatformGraph() as AppGraph
+            CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.metroVmf) {
                 val state = rememberComicViewerUIState(allowNavigationRestored = false)
-                with(getPlatformGraph() as AppGraph) {
+                context(getPlatformGraph() as AppGraph) {
                     ComicViewerUI(finishApp = {}, state = state)
                 }
             }
@@ -76,8 +85,6 @@ class ComposeNavigation3Test {
 
     private fun tutorial() {
         if (composeTestRule.onNodeWithTag("TutorialScreen").isNotDisplayed()) return
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("NextButton").performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("NextButton").performClick()
         composeTestRule.waitForIdle()

@@ -83,6 +83,7 @@ kotlin {
             dependencies {
                 implementation(libs.jcifs)
                 implementation(libs.androidx.testRunner)
+                implementation(libs.androidx.testRules)
                 implementation(libs.compose.uiTestJunit4)
                 implementation(libs.compose.uiTestManifest)
                 implementation(libs.androidx.test.espressoCore)
