@@ -18,25 +18,25 @@
   {
     "name": "lintDebug",
     "task": "app:android:lintDebug",
-    "sarif_file": "build/reports/lint/lint-result.sarif",
+    "sarif_file": "app/android/build/reports/lint-result-debug.sarif",
     "category": "android-lint"
   },
   {
     "name": "lintInternal",
     "task": "app:android:lintInternal",
-    "sarif_file": "build/reports/lint/lint-result.sarif",
+    "sarif_file": "app/android/build/reports/lint-result-internal.sarif",
     "category": "android-lint"
   },
   {
     "name": "lintPrerelease",
     "task": "app:android:lintPrerelease",
-    "sarif_file": "build/reports/lint/lint-result.sarif",
+    "sarif_file": "app/android/build/reports/lint-result-prerelease.sarif",
     "category": "android-lint"
   },
   {
     "name": "lintRelease",
     "task": "app:android:lintRelease",
-    "sarif_file": "build/reports/lint/lint-result.sarif",
+    "sarif_file": "app/android/build/reports/lint-result-release.sarif",
     "category": "android-lint"
   }
 ]
