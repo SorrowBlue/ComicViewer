@@ -36,31 +36,33 @@ internal interface TutorialScreenState {
 internal fun rememberTutorialScreenState(
     viewModel: TutorialViewModel = metroViewModel<TutorialViewModel>(),
 ): TutorialScreenState {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val pageState = rememberPagerState { TutorialSheet.entries.size }
     return remember {
         TutorialScreenStateImpl(
-            scope = scope,
+            coroutineScope = coroutineScope,
+            pageState = pageState,
             bindingDirection = viewModel.bindingDirection,
             updateBindingDirection = viewModel::updateBindingDirection,
-            pageState = pageState,
         )
     }
 }
 
 private class TutorialScreenStateImpl(
-    private val scope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
+    override val pageState: PagerState,
     bindingDirection: SharedFlow<BindingDirection>,
     private val updateBindingDirection: (BindingDirection) -> Unit,
-    override val pageState: PagerState,
 ) : TutorialScreenState {
-    override val enabledBack: Boolean get() = pageState.currentPage != 0
+
     override var uiState by mutableStateOf(TutorialScreenUiState())
+
+    override val enabledBack: Boolean get() = pageState.currentPage != 0
 
     init {
         bindingDirection.onEach {
             uiState = uiState.copy(bindingDirection = it)
-        }.launchIn(scope)
+        }.launchIn(coroutineScope)
     }
 
     override fun updateReadingDirection(bindingDirection: BindingDirection) {
@@ -71,14 +73,14 @@ private class TutorialScreenStateImpl(
         if (pageState.isLastPage) {
             onComplete()
         } else {
-            scope.launch {
+            coroutineScope.launch {
                 pageState.animateScrollToPage(pageState.currentPage + 1)
             }
         }
     }
 
     override fun onBack() {
-        scope.launch {
+        coroutineScope.launch {
             pageState.animateScrollToPage(pageState.currentPage - 1)
         }
     }
