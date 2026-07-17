@@ -9,15 +9,21 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingHistoryBookUseCase
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
-import kotlinx.coroutines.CoroutineScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
 internal interface HistoryScreenState {
@@ -28,16 +34,28 @@ internal interface HistoryScreenState {
     fun onNavResult(result: Boolean)
 }
 
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+internal class HistoryViewModel(
+    pagingHistoryBookUseCase: PagingHistoryBookUseCase,
+    private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
+) : ViewModel() {
+
+    val pagingDataFlow = pagingHistoryBookUseCase(
+        PagingHistoryBookUseCase.Request(PagingConfig(20)),
+    ).cachedIn(viewModelScope)
+
+    fun clearAll() {
+        viewModelScope.launch {
+            clearAllHistoryUseCase(ClearAllHistoryUseCase.Request)
+        }
+    }
+}
+
 @Composable
-context(context: HistoryScreenContext)
-internal fun rememberHistoryScreenState(): HistoryScreenState {
+internal fun rememberHistoryScreenState(viewModel: HistoryViewModel = metroViewModel()): HistoryScreenState {
     val lazyGridState = rememberLazyGridState()
     val scope = rememberCoroutineScope()
-    val lazyPagingItems = rememberPagingItems {
-        context.pagingHistoryBookUseCase(
-            PagingHistoryBookUseCase.Request(PagingConfig(20)),
-        )
-    }
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
         onNavigationReSelect = {
             if (lazyGridState.canScrollBackward) {
@@ -47,34 +65,28 @@ internal fun rememberHistoryScreenState(): HistoryScreenState {
             }
         },
     )
-
-    return remember(lazyGridState, lazyPagingItems, scaffoldState) {
+    return remember(lazyGridState, scaffoldState) {
         HistoryScreenStateImpl(
-            clearAllHistoryUseCase = context.clearAllHistoryUseCase,
             lazyGridState = lazyGridState,
-            lazyPagingItems = lazyPagingItems,
             scaffoldState = scaffoldState,
-            scope = scope,
+            clearAll = viewModel::clearAll
         )
+    }.apply {
+        lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     }
 }
 
 private class HistoryScreenStateImpl(
-    private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
     override val lazyGridState: LazyGridState,
-    override val lazyPagingItems: LazyPagingItems<Book>,
     override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
-    private val scope: CoroutineScope,
+    private var clearAll: () -> Unit,
 ) : HistoryScreenState {
+
+    override lateinit var lazyPagingItems: LazyPagingItems<Book>
+
     override fun onNavResult(result: Boolean) {
         if (result) {
             clearAll()
-        }
-    }
-
-    private fun clearAll() {
-        scope.launch {
-            clearAllHistoryUseCase(ClearAllHistoryUseCase.Request)
         }
     }
 }

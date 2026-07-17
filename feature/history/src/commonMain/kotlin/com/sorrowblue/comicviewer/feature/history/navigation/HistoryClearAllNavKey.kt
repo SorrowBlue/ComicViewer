@@ -9,13 +9,16 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.feature.history.ClearAllHistoryScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data object HistoryClearAllNavKey : NavKey
 
-internal fun EntryProviderScope<NavKey>.historyClearAllNavEntry(navigator: Navigator) {
-    entry<HistoryClearAllNavKey>(metadata = DialogSceneStrategy.dialog()) {
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun historyClearAllNavEntry(navigator: Navigator) {
+    scope.entry<HistoryClearAllNavKey>(metadata = DialogSceneStrategy.dialog()) {
         ClearAllHistoryScreenRoot(onClose = navigator::goBack)
     }
 }

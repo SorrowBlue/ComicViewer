@@ -16,7 +16,6 @@ import io.github.irgaly.navigation3.resultstate.SerializedNavigationResult
 import io.github.irgaly.navigation3.resultstate.getResultState
 
 @Composable
-context(context: HistoryScreenContext)
 internal fun HistoryScreenRoot(
     onDeleteAllClick: () -> Unit,
     onSettingsClick: () -> Unit,
