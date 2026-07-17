@@ -11,13 +11,16 @@ import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoo
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthenticationNavKey(val type: ScreenType) : NavKey
 
-internal fun EntryProviderScope<NavKey>.authenticationNavEntry(navigator: Navigator) {
-    entry<AuthenticationNavKey>(metadata = NavDisplay.transitionMaterialFadeThrough()) {
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun authenticationNavEntry(navigator: Navigator) {
+    scope.entry<AuthenticationNavKey>(metadata = NavDisplay.transitionMaterialFadeThrough()) {
         AuthenticationScreenRoot(
             screenType = it.type,
             onBackClick = navigator::goBack,
