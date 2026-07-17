@@ -13,8 +13,6 @@ internal sealed interface BookScreenUiState {
 
     data class Error(val name: String) : BookScreenUiState
 
-    data class PluginError(val name: String, val error: String) : BookScreenUiState
-
     data class Loaded(
         val book: Book,
         val collectionId: CollectionId,
