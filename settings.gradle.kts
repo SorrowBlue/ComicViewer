@@ -77,6 +77,7 @@ include(":framework:designsystem")
 include(":framework:permission")
 include(":framework:test")
 include(":framework:ui")
+include(":framework:navkey-processor")
 
 include(":domain:model")
 include(":domain:service")

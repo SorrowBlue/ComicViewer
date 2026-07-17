@@ -5,41 +5,18 @@
 package com.sorrowblue.comicviewer.feature.history.di
 
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenContext
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryClearAllNavKey
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFileInfoNavKey
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderFileInfoNavKey
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFolderNavKey
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavKey
 import com.sorrowblue.comicviewer.feature.history.navigation.historyClearAllNavEntry
 import com.sorrowblue.comicviewer.feature.history.navigation.historyFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.history.navigation.historyFolderFileInfoNavEntry
 import com.sorrowblue.comicviewer.feature.history.navigation.historyNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 
 @ContributesTo(AppScope::class)
 interface HistoryModule {
-    @Provides
-    @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
-        HistoryNavKey.serializer().asEntry(),
-        HistoryFileInfoNavKey.serializer().asEntry(),
-        HistoryFolderFileInfoNavKey.serializer().asEntry(),
-        HistoryClearAllNavKey.serializer().asEntry(),
-        HistoryFolderNavKey.serializer().asEntry(),
-    )
-
-    @Provides
-    @IntoSet
-    private fun provideNavigationKey(): NavigationKey = HistoryNavKey
-
     @Provides
     @IntoSet
     private fun provideHistoryNavEntry(

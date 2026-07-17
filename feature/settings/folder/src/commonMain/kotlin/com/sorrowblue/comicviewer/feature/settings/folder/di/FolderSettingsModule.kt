@@ -5,40 +5,20 @@
 package com.sorrowblue.comicviewer.feature.settings.folder.di
 
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenContext
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderThumbnailOrderNavKey
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageFilterQualityNavKey
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageFormatNavKey
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageScaleNavKey
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.SortTypeNavKey
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.folderSettingsNavEntry
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.folderThumbnailOrderNavEntry
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.imageFilterQualityNavEntry
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.imageFormatNavEntry
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.imageScaleNavEntry
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.sortTypeNavEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 
 @ContributesTo(AppScope::class)
 interface FolderSettingsModule {
-    @Provides
-    @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
-        FolderSettingsNavKey.serializer().asEntry(),
-        FolderThumbnailOrderNavKey.serializer().asEntry(),
-        ImageFilterQualityNavKey.serializer().asEntry(),
-        ImageFormatNavKey.serializer().asEntry(),
-        ImageScaleNavKey.serializer().asEntry(),
-        SortTypeNavKey.serializer().asEntry(),
-    )
-
     @Provides
     @IntoSet
     private fun provideFolderSettingsNavEntry(

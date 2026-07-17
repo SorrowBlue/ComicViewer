@@ -76,3 +76,14 @@ navgraph {
     renderBackend.set(RenderBackend.LAYOUTLIB)
     galleryRenderBackend.set(RenderBackend.LAYOUTLIB)
 }
+
+dependencies {
+    add("kspAndroid", project(":framework:navkey-processor"))
+    add("kspAndroidHostTest", project(":framework:navkey-processor"))
+    add("kspJvm", project(":framework:navkey-processor"))
+    add("kspJvmTest", project(":framework:navkey-processor"))
+    add("kspIosArm64", project(":framework:navkey-processor"))
+    add("kspIosArm64Test", project(":framework:navkey-processor"))
+    add("kspIosSimulatorArm64", project(":framework:navkey-processor"))
+    add("kspIosSimulatorArm64Test", project(":framework:navkey-processor"))
+}

@@ -6,34 +6,20 @@ package com.sorrowblue.comicviewer.feature.collection.editor.di
 
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionCreateScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionEditScreenContext
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionCreateNavKey
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionEditNavKey
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.basicCollectionCreateNavEntry
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.basicCollectionEditNavEntry
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.smartCollectionCreateNavEntry
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.smartCollectionEditNavEntry
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionCreateScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditScreenContext
-import com.sorrowblue.comicviewer.framework.ui.navigation.asEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.ElementsIntoSet
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 
 @ContributesTo(AppScope::class)
 interface CollectionEditModule {
-    @Provides
-    @ElementsIntoSet
-    private fun provideNavKeySubclassMap(): Set<NavKeyEntry> = setOf(
-        BasicCollectionCreateNavKey.serializer().asEntry(),
-        BasicCollectionEditNavKey.serializer().asEntry(),
-        SmartCollectionEditNavKey.serializer().asEntry(),
-    )
-
     @Provides
     @IntoSet
     private fun provideBasicCollectionCreateNavEntry(

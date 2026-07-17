@@ -27,6 +27,7 @@ import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
+@ContributesIntoSet(AppScope::class)
 @Serializable
 data object BookshelfNavKey : NavigationKey {
     override val title

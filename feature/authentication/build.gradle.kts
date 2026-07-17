@@ -5,7 +5,6 @@ plugins {
 kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.feature.authentication"
-        androidResources.enable = true
     }
     sourceSets {
         androidMain {

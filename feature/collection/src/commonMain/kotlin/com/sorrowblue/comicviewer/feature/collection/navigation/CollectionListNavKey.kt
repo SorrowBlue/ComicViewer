@@ -23,10 +23,13 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
+@ContributesIntoSet(AppScope::class)
 @Serializable
 internal data object CollectionListNavKey : NavigationKey {
     override val title
