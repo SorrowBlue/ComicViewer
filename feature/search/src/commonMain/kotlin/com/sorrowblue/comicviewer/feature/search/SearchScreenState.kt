@@ -14,17 +14,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.usecase.file.PagingQueryFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -49,117 +47,86 @@ internal interface SearchScreenState {
 }
 
 @Composable
-context(context: SearchScreenContext)
-internal fun rememberSearchScreenState(bookshelfId: BookshelfId, path: String): SearchScreenState {
+internal fun rememberSearchScreenState(
+    bookshelfId: BookshelfId,
+    path: String,
+    viewModel: SearchViewModel = assistedMetroViewModel<SearchViewModel, SearchViewModel.Factory> {
+        create(bookshelfId)
+    },
+): SearchScreenState {
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
-
-    // Create a reference that will hold the state holder
-    // This allows lazyPagingItems to access the state holder's uiState
-    val stateHolderRef = remember { mutableStateOf<SearchScreenStateImpl?>(null) }
-
-    // Create lazyPagingItems that accesses stateHolder via the reference
-    // The lambda is evaluated lazily when data is actually requested by the paging system,
-    // which happens after stateHolderRef is set. The fallback to SearchCondition() handles
-    // the unlikely case of early evaluation.
-    val lazyPagingItems = rememberPagingItems {
-        context.pagingQueryFileUseCase(
-            PagingQueryFileUseCase.Request(PagingConfig(100), bookshelfId) {
-                stateHolderRef.value?.uiState?.searchCondition ?: SearchCondition()
-            },
-        )
-    }
-
-    // Create state holder with all dependencies
-    return remember(lazyGridState, lazyPagingItems) {
+    val state = remember(lazyGridState) {
         SearchScreenStateImpl(
             path = path,
             lazyGridState = lazyGridState,
-            lazyPagingItems = lazyPagingItems,
             coroutineScope = coroutineScope,
-            manageFolderDisplaySettingsUseCase = context.manageFolderDisplaySettingsUseCase,
-        ).also {
-            stateHolderRef.value = it
-        }
+            searchConditionFlow = viewModel.searchConditionFlow,
+            updateSearchCondition = viewModel::updateSearchCondition,
+        )
     }
+    state.lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+    return state
 }
 
 @OptIn(SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
     private val path: String,
     override val lazyGridState: LazyGridState,
-    override val lazyPagingItems: LazyPagingItems<File>,
     coroutineScope: CoroutineScope,
-    manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
+    private val searchConditionFlow: StateFlow<SearchCondition>,
+    private val updateSearchCondition: (SearchCondition) -> Unit,
 ) : SearchScreenState {
+
+    override lateinit var lazyPagingItems: LazyPagingItems<File>
+
     override var uiState by mutableStateOf(SearchScreenUiState())
 
     override var isScrollableTop by mutableStateOf(false)
     override var isSkipFirstRefresh by mutableStateOf(true)
 
     init {
-        manageFolderDisplaySettingsUseCase.settings
-            .onEach {
-                uiState = uiState.copy(
-                    searchContentsUiState = uiState.searchContentsUiState.copy(
-                        fileLazyVerticalGridUiState = uiState.searchContentsUiState.fileLazyVerticalGridUiState
-                            .copy(
-                                fileListDisplay = FileListDisplay.List,
-                                showThumbnails = it.showThumbnails,
-                                fontSize = it.fontSize,
-                                imageScale = it.imageScale,
-                                imageFilterQuality = it.imageFilterQuality,
-                            ),
-                    ),
-                )
-            }.launchIn(coroutineScope)
+        searchConditionFlow.onEach {
+            uiState = uiState.copy(searchCondition = it)
+        }.launchIn(coroutineScope)
     }
 
     override fun onPeriodClick(period: SearchCondition.Period) {
-        uiState = copySearchCondition { it.copy(period = period) }
+        updateSearchCondition(searchConditionFlow.value.copy(period = period))
         update()
     }
 
     override fun onQueryChange(query: String) {
-        uiState = uiState.copy(
-            searchCondition = uiState.searchCondition.copy(query = query),
-            searchContentsUiState = uiState.searchContentsUiState.copy(query = query),
-        )
+        updateSearchCondition(searchConditionFlow.value.copy(query = query))
         update()
     }
 
     override fun onRangeClick(range: SearchCondition.Range) {
-        uiState = copySearchCondition {
-            it.copy(
+        updateSearchCondition(
+            searchConditionFlow.value.copy(
                 range = when (range) {
                     SearchCondition.Range.Bookshelf -> SearchCondition.Range.Bookshelf
                     is SearchCondition.Range.InFolder -> SearchCondition.Range.InFolder(path)
                     is SearchCondition.Range.SubFolder -> SearchCondition.Range.SubFolder(path)
                 },
-            )
-        }
+            ),
+        )
         update()
     }
 
     override fun onSortTypeClick(sortType: SortType) {
-        uiState = copySearchCondition { it.copy(sortType = sortType) }
+        updateSearchCondition(searchConditionFlow.value.copy(sortType = sortType))
         update()
     }
 
     override fun onShowHiddenClick() {
-        uiState = copySearchCondition { it.copy(showHidden = !it.showHidden) }
+        updateSearchCondition(
+            searchConditionFlow.value.copy(showHidden = !searchConditionFlow.value.showHidden),
+        )
         update()
     }
 
-    private fun copySearchCondition(
-        action: (SearchCondition) -> SearchCondition,
-    ): SearchScreenUiState = uiState.copy(searchCondition = action(uiState.searchCondition))
-
     private fun update() {
-        // Update state flags to trigger scroll and skip first refresh
-        // Note: lazyPagingItems.refresh() is intentionally handled in SearchScreenRoot
-        // via LaunchedEffect(state.uiState.searchCondition) to properly coordinate with
-        // the UI lifecycle and avoid calling refresh() during composition.
         isScrollableTop = true
         if (isSkipFirstRefresh) {
             isSkipFirstRefresh = false

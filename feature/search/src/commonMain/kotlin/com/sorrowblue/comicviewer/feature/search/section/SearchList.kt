@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
@@ -26,7 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SearchList(
-    uiState: SearchListUiState,
+    searchCondition: SearchCondition,
     lazyPagingItems: LazyPagingItems<File>,
     lazyListState: LazyGridState,
     onItemClick: (File) -> Unit,
@@ -36,7 +37,7 @@ internal fun SearchList(
     if (lazyPagingItems.isEmptyData) {
         EmptyContent(
             imageVector = ComicIcons.UndrawFileSearching,
-            text = stringResource(Res.string.search_label_not_found, uiState.query),
+            text = stringResource(Res.string.search_label_not_found, searchCondition.query),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)

@@ -26,7 +26,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBar
 import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavKey
 import com.sorrowblue.comicviewer.feature.search.section.SearchList
-import com.sorrowblue.comicviewer.feature.search.section.SearchListUiState
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -86,7 +85,7 @@ internal fun SearchScreen(
             )
         }
         SearchList(
-            uiState = uiState.searchContentsUiState,
+            searchCondition = uiState.searchCondition,
             lazyPagingItems = lazyPagingItems,
             lazyListState = lazyGridState,
             onItemClick = onItemClick,
@@ -103,7 +102,6 @@ private fun SearchScreenPreview() = PreviewTheme {
     SearchScreen(
         uiState = SearchScreenUiState(
             searchCondition = SearchCondition(),
-            searchContentsUiState = SearchListUiState(),
         ),
         lazyPagingItems = PagingData.flowData<File> { fakeBookFile() }
             .collectAsLazyPagingItems(),

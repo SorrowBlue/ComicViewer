@@ -14,64 +14,72 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
-import com.sorrowblue.comicviewer.feature.search.SearchScreenContext.Factory
 import com.sorrowblue.comicviewer.feature.search.SearchScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.takahirom.rin.rememberRetained
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchNavKey(val bookshelfId: BookshelfId, val path: PathString) : NavKey
 
-context(factory: Factory)
-internal fun EntryProviderScope<NavKey>.searchNavEntry(navigator: Navigator) {
-    entry<SearchNavKey>(
+@ContributesIntoSet(AppScope::class)
+internal class SearchNavEntry : NavigationEntryProvider {
+
+    context(scope: EntryProviderScope<NavKey>)
+    override fun invoke(navigator: Navigator) {
+        searchNavEntry(navigator)
+    }
+}
+
+context(scope: EntryProviderScope<NavKey>)
+private fun searchNavEntry(navigator: Navigator) {
+    scope.entry<SearchNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane("Search") +
             NavDisplay.transitionMaterialSharedAxisX(),
     ) { navKey ->
-        with(rememberRetained { factory.createSearchScreenContext() }) {
-            SearchScreenRoot(
-                bookshelfId = navKey.bookshelfId,
-                path = navKey.path,
-                onBackClick = {
-                    navigator.pop<SearchNavKey>(inclusive = true)
-                },
-                onSettingsClick = {
-                    navigator.navigate(SettingsNavKey)
-                },
-                onSmartCollectionClick = { id, condition ->
-                    navigator.navigate(SmartCollectionCreateNavKey(id, condition))
-                },
-                onFileClick = { file ->
-                    when (file) {
-                        is Book -> {
-                            navigator.navigate(
-                                BookNavKey(
-                                    bookshelfId = file.bookshelfId,
-                                    path = file.path,
-                                    name = file.name,
-                                ),
-                            )
-                        }
-
-                        is Folder -> {
-                            navigator.popNavigate<SearchFileInfoNavKey>(
-                                SearchFolderNavKey(
-                                    file.bookshelfId,
-                                    file.path,
-                                ),
-                            )
-                        }
+        SearchScreenRoot(
+            bookshelfId = navKey.bookshelfId,
+            path = navKey.path,
+            onBackClick = {
+                navigator.pop<SearchNavKey>(inclusive = true)
+            },
+            onSettingsClick = {
+                navigator.navigate(SettingsNavKey)
+            },
+            onSmartCollectionClick = { id, condition ->
+                navigator.navigate(SmartCollectionCreateNavKey(id, condition))
+            },
+            onFileClick = { file ->
+                when (file) {
+                    is Book -> {
+                        navigator.navigate(
+                            BookNavKey(
+                                bookshelfId = file.bookshelfId,
+                                path = file.path,
+                                name = file.name,
+                            ),
+                        )
                     }
-                },
-                onFileInfoClick = {
-                    navigator.popNavigate<SearchFileInfoNavKey>(
-                        SearchFileInfoNavKey(it.key()),
-                    )
-                },
-            )
-        }
+
+                    is Folder -> {
+                        navigator.popNavigate<SearchFileInfoNavKey>(
+                            SearchFolderNavKey(
+                                file.bookshelfId,
+                                file.path,
+                            ),
+                        )
+                    }
+                }
+            },
+            onFileInfoClick = {
+                navigator.popNavigate<SearchFileInfoNavKey>(
+                    SearchFileInfoNavKey(it.key()),
+                )
+            },
+        )
     }
 }

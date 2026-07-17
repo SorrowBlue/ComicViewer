@@ -13,10 +13,10 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoadedData
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 
 @Composable
-context(context: SearchScreenContext)
 internal fun SearchScreenRoot(
     bookshelfId: BookshelfId,
     path: PathString,
@@ -49,7 +49,7 @@ internal fun SearchScreenRoot(
 
     LaunchedEffect(state.uiState.searchCondition) {
         if (!state.isSkipFirstRefresh) {
-            delay(WaitLoadPage)
+            delay(WaitLoadPage.milliseconds)
             lazyPagingItems.refresh()
         }
     }
