@@ -9,20 +9,11 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.file.PagingHistoryBookUseCase
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
@@ -32,24 +23,6 @@ internal interface HistoryScreenState {
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
     fun onNavResult(result: Boolean)
-}
-
-@ViewModelKey
-@ContributesIntoMap(AppScope::class)
-internal class HistoryViewModel(
-    pagingHistoryBookUseCase: PagingHistoryBookUseCase,
-    private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
-) : ViewModel() {
-
-    val pagingDataFlow = pagingHistoryBookUseCase(
-        PagingHistoryBookUseCase.Request(PagingConfig(20)),
-    ).cachedIn(viewModelScope)
-
-    fun clearAll() {
-        viewModelScope.launch {
-            clearAllHistoryUseCase(ClearAllHistoryUseCase.Request)
-        }
-    }
 }
 
 @Composable
