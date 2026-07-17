@@ -13,7 +13,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry
-import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry2
 import com.sorrowblue.comicviewer.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
@@ -29,7 +28,7 @@ interface FolderNavKey : NavKey {
 }
 
 context(scope: EntryProviderScope<NavKey>)
-inline fun <reified T : FolderNavKey> folderEntry2(
+inline fun <reified T : FolderNavKey> folderEntry(
     sceneKey: String,
     noinline onBackClick: () -> Unit,
     noinline onSearchClick: (BookshelfId, PathString) -> Unit = { _, _ -> },
@@ -37,24 +36,7 @@ inline fun <reified T : FolderNavKey> folderEntry2(
     noinline onFileInfoClick: (File) -> Unit,
     noinline onSettingsClick: () -> Unit,
 ) {
-    scope.folderEntry<T>(
-        sceneKey,
-        onBackClick,
-        onSearchClick,
-        onFileClick,
-        onFileInfoClick,
-        onSettingsClick,
-    )
-}
-inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
-    sceneKey: String,
-    noinline onBackClick: () -> Unit,
-    noinline onSearchClick: (BookshelfId, PathString) -> Unit = { _, _ -> },
-    noinline onFileClick: (File) -> Unit,
-    noinline onFileInfoClick: (File) -> Unit,
-    noinline onSettingsClick: () -> Unit,
-) {
-    entry<T>(
+    scope.entry<T>(
         clazzContentKey = { it.toString() },
         metadata = metadata {
             put(
@@ -82,34 +64,7 @@ inline fun <reified T : FolderNavKey> EntryProviderScope<NavKey>.folderEntry(
 }
 
 context(scope: EntryProviderScope<NavKey>)
-inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> folderFileInfoNavEntry2(
-    sceneKeyPrefix: String,
-    noinline onBackClick: () -> Unit,
-    noinline onInfoBackClick: () -> Unit,
-    noinline onSearchClick: (BookshelfId, PathString) -> Unit = { _, _ -> },
-    noinline onFileClick: (File) -> Unit,
-    noinline onFileInfoClick: (File) -> Unit,
-    noinline onSettingsClick: () -> Unit,
-    noinline onCollectionClick: (File) -> Unit,
-    noinline onOpenFolderClick: (File) -> Unit = {},
-) {
-    folderEntry2<T>(
-        "${sceneKeyPrefix}Folder",
-        onBackClick = onBackClick,
-        onSearchClick = onSearchClick,
-        onFileClick = onFileClick,
-        onFileInfoClick = onFileInfoClick,
-        onSettingsClick = onSettingsClick,
-    )
-    fileInfoEntry2<V>(
-        "${sceneKeyPrefix}Folder",
-        onBackClick = onInfoBackClick,
-        onCollectionClick = onCollectionClick,
-        onOpenFolderClick = onOpenFolderClick,
-    )
-}
-
-inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> EntryProviderScope<NavKey>.folderFileInfoNavEntry(
+inline fun <reified T : FolderNavKey, reified V : FileInfoNavKey> folderFileInfoNavEntry(
     sceneKeyPrefix: String,
     noinline onBackClick: () -> Unit,
     noinline onInfoBackClick: () -> Unit,

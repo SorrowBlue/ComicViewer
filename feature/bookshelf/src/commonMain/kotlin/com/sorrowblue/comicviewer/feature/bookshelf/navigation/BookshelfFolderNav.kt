@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
-import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry2
+import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
@@ -40,7 +40,7 @@ internal data class BookshelfFolderFileInfoNavKey(override val fileKey: File.Key
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
 internal fun bookshelfFolderFileInfoNavEntry(navigator: Navigator) {
-    folderFileInfoNavEntry2<BookshelfFolderNavKey, BookshelfFolderFileInfoNavKey>(
+    folderFileInfoNavEntry<BookshelfFolderNavKey, BookshelfFolderFileInfoNavKey>(
         sceneKeyPrefix = "Bookshelf",
         onBackClick = {
             navigator.pop<BookshelfFolderNavKey>(inclusive = true)

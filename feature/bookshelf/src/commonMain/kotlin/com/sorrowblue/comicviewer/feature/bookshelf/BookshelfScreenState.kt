@@ -17,7 +17,7 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigati
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
-interface BookshelfScreenState {
+internal interface BookshelfScreenState {
     val lazyPagingItems: LazyPagingItems<BookshelfFolder>
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyGridState: LazyGridState
@@ -36,18 +36,19 @@ internal fun rememberBookshelfScreenState(
             }
         }
     })
-    val lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
     return remember(viewModel) {
         BookshelfScreenStateImpl(
             lazyGridState = lazyGridState,
             scaffoldState = scaffoldState,
-            lazyPagingItems = lazyPagingItems,
         )
+    }.apply {
+        lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
     }
 }
 
 private class BookshelfScreenStateImpl(
     override val lazyGridState: LazyGridState,
     override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
-    override val lazyPagingItems: LazyPagingItems<BookshelfFolder>,
-) : BookshelfScreenState
+) : BookshelfScreenState {
+    override lateinit var lazyPagingItems: LazyPagingItems<BookshelfFolder>
+}

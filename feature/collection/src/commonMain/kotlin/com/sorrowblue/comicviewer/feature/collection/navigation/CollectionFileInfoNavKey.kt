@@ -9,7 +9,7 @@ import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavKey
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
-import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry2
+import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
@@ -22,7 +22,7 @@ internal data class CollectionFileInfoNavKey(override val fileKey: File.Key) : F
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
 internal fun collectionFileInfoNavEntry(navigator: Navigator) {
-    fileInfoEntry2<CollectionFileInfoNavKey>(
+    fileInfoEntry<CollectionFileInfoNavKey>(
         sceneKey = "Collection",
         onBackClick = navigator::goBack,
         onCollectionClick = {

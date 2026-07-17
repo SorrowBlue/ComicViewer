@@ -18,22 +18,13 @@ interface FileInfoNavKey : NavKey {
 }
 
 context(scope: EntryProviderScope<NavKey>)
-inline fun <reified T : FileInfoNavKey> fileInfoEntry2(
+inline fun <reified T : FileInfoNavKey> fileInfoEntry(
     sceneKey: String,
     noinline onBackClick: () -> Unit,
     noinline onCollectionClick: (File) -> Unit,
     noinline onOpenFolderClick: (File) -> Unit,
 ) {
-    scope.fileInfoEntry<T>(sceneKey, onBackClick, onCollectionClick, onOpenFolderClick)
-}
-
-inline fun <reified T : FileInfoNavKey> EntryProviderScope<NavKey>.fileInfoEntry(
-    sceneKey: String,
-    noinline onBackClick: () -> Unit,
-    noinline onCollectionClick: (File) -> Unit,
-    noinline onOpenFolderClick: (File) -> Unit,
-) {
-    entry<T>(
+    scope.entry<T>(
         metadata = SupportingPaneSceneStrategy.extraPane(sceneKey) +
             NavDisplay.transitionMaterialSharedAxisX(),
     ) {
