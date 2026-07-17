@@ -44,7 +44,7 @@ internal fun rememberReadLaterScreenState(
         ReadLaterScreenStateImpl(
             lazyGridState = lazyGridState,
             scaffoldState = scaffoldState,
-            clearAll = viewModel::clearAll
+            clearAll = viewModel::clearAll,
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()

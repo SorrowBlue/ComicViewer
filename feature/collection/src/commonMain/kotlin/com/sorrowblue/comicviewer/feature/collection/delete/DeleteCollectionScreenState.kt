@@ -27,16 +27,17 @@ internal interface DeleteCollectionScreenState {
 @Composable
 internal fun rememberDeleteCollectionScreenState(
     id: CollectionId,
-    viewModel: DeleteCollectionViewModel = assistedMetroViewModel<DeleteCollectionViewModel, DeleteCollectionViewModel.Factory> {
-        create(id)
-    },
+    viewModel: DeleteCollectionViewModel =
+        assistedMetroViewModel<DeleteCollectionViewModel, DeleteCollectionViewModel.Factory> {
+            create(id)
+        },
 ): DeleteCollectionScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember(coroutineScope) {
         DeleteCollectionScreenStateImpl(
             coroutineScope = coroutineScope,
             collectionFlow = viewModel.collectionFlow,
-            deleteCollection = viewModel::delete
+            deleteCollection = viewModel::delete,
         )
     }
 }

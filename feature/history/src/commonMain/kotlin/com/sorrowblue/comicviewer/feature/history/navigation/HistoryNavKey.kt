@@ -68,9 +68,9 @@ internal fun historyNavEntry(navigator: Navigator) {
                     ),
                 )
             },
-            onBookInfoClick = {
+            onBookInfoClick = { book ->
                 navigator.popNavigate<HistoryFileInfoNavKey>(
-                    HistoryFileInfoNavKey(it.key()),
+                    HistoryFileInfoNavKey(book.key()),
                 )
             },
         )

@@ -31,7 +31,7 @@ internal class CollectionViewModel(
 ) : ViewModel() {
 
     val pagingDataFlow = pagingCollectionFileUseCase(
-        PagingCollectionFileUseCase.Request(PagingConfig(20), id)
+        PagingCollectionFileUseCase.Request(PagingConfig(20), id),
     ).cachedIn(viewModelScope)
 
     val collectionFlow =

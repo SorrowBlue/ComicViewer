@@ -10,13 +10,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
+import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -26,57 +27,50 @@ internal interface BookScreenWrapperState {
 }
 
 @Composable
-context(context: BookScreenContext)
 internal fun rememberBookScreenWrapperState(
     bookshelfId: BookshelfId,
     path: String,
     name: String,
     collectionId: CollectionId,
+    viewModel: BookWrapperViewModel =
+        assistedMetroViewModel<BookWrapperViewModel, BookWrapperViewModel.Factory> {
+            create(bookshelfId, path, collectionId)
+        },
 ): BookScreenWrapperState {
     val coroutineScope = rememberCoroutineScope()
     return remember {
         BookScreenWrapperStateImpl(
-            bookshelfId = bookshelfId,
-            path = path,
             name = name,
             collectionId = collectionId,
             coroutineScope = coroutineScope,
-            getBookUseCase = context.getBookUseCase,
-            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
+            bookFlow = viewModel.bookFlow,
+            viewerSettingsFlow = viewModel.viewerSettingsFlow,
         )
     }
 }
 
 private class BookScreenWrapperStateImpl(
-    bookshelfId: BookshelfId,
-    path: String,
     name: String,
     collectionId: CollectionId,
     coroutineScope: CoroutineScope,
-    getBookUseCase: GetBookUseCase,
-    manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
+    bookFlow: SharedFlow<Book?>,
+    viewerSettingsFlow: SharedFlow<ViewerSettings>,
 ) : BookScreenWrapperState {
+
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(name))
         private set
 
     init {
-        getBookUseCase(GetBookUseCase.Request(bookshelfId, path)).onEach { res ->
-            uiState = when (res) {
-                is Resource.Success ->
-                    BookScreenUiState.Loaded(
-                        book = res.data,
-                        collectionId = collectionId,
-                        bookSheetUiState = BookSheetUiState(res.data),
-                        alwaysOpenFromFirstPage = manageViewerSettingsUseCase.settings.first().alwaysOpenFromFirstPage,
-                    )
-
-                is Resource.Error -> when (res.error) {
-                    GetBookUseCase.Error.NotFound ->
-                        BookScreenUiState.Error(name)
-
-                    GetBookUseCase.Error.ReportedSystemError ->
-                        BookScreenUiState.Error(name)
-                }
+        bookFlow.onEach { book ->
+            uiState = if (book != null) {
+                BookScreenUiState.Loaded(
+                    book = book,
+                    collectionId = collectionId,
+                    bookSheetUiState = BookSheetUiState(book),
+                    alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
+                )
+            } else {
+                BookScreenUiState.Error(name)
             }
         }.launchIn(coroutineScope)
     }

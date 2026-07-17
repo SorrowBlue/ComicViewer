@@ -36,9 +36,10 @@ internal interface CollectionScreenState {
 @Composable
 internal fun rememberCollectionScreenState(
     id: CollectionId,
-    viewModel: CollectionViewModel = assistedMetroViewModel<CollectionViewModel, CollectionViewModel.Factory> {
-        create(id)
-    },
+    viewModel: CollectionViewModel =
+        assistedMetroViewModel<CollectionViewModel, CollectionViewModel.Factory> {
+            create(id)
+        },
 ): CollectionScreenState {
     val lazyGridState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()

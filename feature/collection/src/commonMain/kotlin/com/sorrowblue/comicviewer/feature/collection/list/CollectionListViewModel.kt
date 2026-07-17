@@ -15,9 +15,8 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 
 @ViewModelKey
 @ContributesIntoMap(AppScope::class)
-internal class CollectionListViewModel(
-    pagingCollectionUseCase: PagingCollectionUseCase,
-) : ViewModel() {
+internal class CollectionListViewModel(pagingCollectionUseCase: PagingCollectionUseCase) :
+    ViewModel() {
 
     val pagingDataFlow = pagingCollectionUseCase(
         PagingCollectionUseCase.Request(PagingConfig(20)),

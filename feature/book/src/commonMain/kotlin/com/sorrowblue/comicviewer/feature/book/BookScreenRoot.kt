@@ -8,27 +8,20 @@ import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.sca
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.ContentScale
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.Book as BookFile
-import com.sorrowblue.comicviewer.domain.usecase.file.CloseBookUseCase
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import kotlinx.coroutines.launch
 
 @Composable
-context(context: BookScreenContext)
 internal fun BookScreenRoot(
     bookshelfId: BookshelfId,
     path: String,
@@ -59,21 +52,10 @@ internal fun BookScreenRoot(
             onSettingsClick = onSettingsClick,
             onPageLoad = state::onPageLoad,
         )
-        val scope = rememberCoroutineScope()
-        DisposableEffect(Unit) {
-            onDispose {
-                state.onScreenDispose()
-                scope.launch {
-                    context.closeBookUseCase(CloseBookUseCase.Request(uiState.book))
-                }
-            }
-        }
-        LifecycleEventEffect(event = Lifecycle.Event.ON_PAUSE, onEvent = state::onStop)
     }
 }
 
 @Composable
-context(context: BookScreenContext)
 private fun BookScreenWrapper(
     bookshelfId: BookshelfId,
     path: String,

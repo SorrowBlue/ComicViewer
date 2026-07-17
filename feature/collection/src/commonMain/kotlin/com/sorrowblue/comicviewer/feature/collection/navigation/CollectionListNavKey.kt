@@ -45,20 +45,20 @@ context(scope: EntryProviderScope<NavKey>)
 internal fun collectionListNavEntry(navigator: Navigator) {
     scope.entry<CollectionListNavKey>(metadata = NavDisplay.transitionMaterialFadeThrough()) {
         CollectionListScreenRoot(
-            onItemClick = { navigator.navigate(CollectionNavKey(it.id)) },
-            onEditClick = {
+            onItemClick = { collection -> navigator.navigate(CollectionNavKey(collection.id)) },
+            onEditClick = { collection ->
                 navigator.navigate(
-                    when (it) {
+                    when (collection) {
                         is BasicCollection ->
-                            BasicCollectionEditNavKey(it.id)
+                            BasicCollectionEditNavKey(collection.id)
 
                         is SmartCollection ->
-                            SmartCollectionEditNavKey(it.id)
+                            SmartCollectionEditNavKey(collection.id)
                     },
                 )
             },
-            onDeleteClick = {
-                navigator.navigate(CollectionDeleteNavKey(it.id))
+            onDeleteClick = { collection ->
+                navigator.navigate(CollectionDeleteNavKey(collection.id))
             },
             onSettingsClick = {
                 navigator.navigate(SettingsNavKey)

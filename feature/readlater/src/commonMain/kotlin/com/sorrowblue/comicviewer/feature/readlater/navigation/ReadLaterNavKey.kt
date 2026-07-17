@@ -70,9 +70,9 @@ internal fun readLaterNavEntry(navigator: Navigator) {
                     }
                 }
             },
-            onFileInfoClick = {
+            onFileInfoClick = { file ->
                 navigator.popNavigate<ReadLaterFileInfoNavKey>(
-                    ReadLaterFileInfoNavKey(it.key()),
+                    ReadLaterFileInfoNavKey(file.key()),
                 )
             },
         )

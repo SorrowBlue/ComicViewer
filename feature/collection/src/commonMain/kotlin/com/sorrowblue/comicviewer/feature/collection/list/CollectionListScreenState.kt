@@ -28,7 +28,9 @@ internal interface CollectionListScreenState {
 }
 
 @Composable
-internal fun rememberCollectionListScreenState(viewModel: CollectionListViewModel = metroViewModel()): CollectionListScreenState {
+internal fun rememberCollectionListScreenState(
+    viewModel: CollectionListViewModel = metroViewModel(),
+): CollectionListScreenState {
     val lazyListState = rememberLazyListState()
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     val coroutineScope = rememberCoroutineScope()

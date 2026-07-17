@@ -26,7 +26,9 @@ internal interface HistoryScreenState {
 }
 
 @Composable
-internal fun rememberHistoryScreenState(viewModel: HistoryViewModel = metroViewModel()): HistoryScreenState {
+internal fun rememberHistoryScreenState(
+    viewModel: HistoryViewModel = metroViewModel(),
+): HistoryScreenState {
     val lazyGridState = rememberLazyGridState()
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
@@ -42,7 +44,7 @@ internal fun rememberHistoryScreenState(viewModel: HistoryViewModel = metroViewM
         HistoryScreenStateImpl(
             lazyGridState = lazyGridState,
             scaffoldState = scaffoldState,
-            clearAll = viewModel::clearAll
+            clearAll = viewModel::clearAll,
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
