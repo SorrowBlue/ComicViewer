@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 
 @Composable
-context(context: DeleteCollectionScreenContext)
 internal fun DeleteCollectionScreenRoot(
     id: CollectionId,
     onBackClick: () -> Unit,

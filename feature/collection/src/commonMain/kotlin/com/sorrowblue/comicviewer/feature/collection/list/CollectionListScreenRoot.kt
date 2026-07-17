@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 
 @Composable
-context(context: CollectionListScreenContext)
 internal fun CollectionListScreenRoot(
     onItemClick: (Collection) -> Unit,
     onEditClick: (Collection) -> Unit,

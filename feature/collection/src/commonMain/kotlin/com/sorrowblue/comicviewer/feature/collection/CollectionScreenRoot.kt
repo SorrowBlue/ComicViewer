@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.File
 
 @Composable
-context(context: CollectionScreenContext)
 internal fun CollectionScreenRoot(
     id: CollectionId,
     onBackClick: () -> Unit,

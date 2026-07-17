@@ -14,74 +14,72 @@ import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
-import com.sorrowblue.comicviewer.feature.collection.CollectionScreenContext
 import com.sorrowblue.comicviewer.feature.collection.CollectionScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.takahirom.rin.rememberRetained
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class CollectionNavKey(val id: CollectionId) : NavKey
 
-context(factory: CollectionScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.collectionNavEntry(navigator: Navigator) {
-    entry<CollectionNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun collectionNavEntry(navigator: Navigator) {
+    scope.entry<CollectionNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane("Collection") +
             NavDisplay.transitionMaterialSharedAxisZ(),
     ) { detail ->
-        with(rememberRetained { factory.createCollectionScreenContext() }) {
-            CollectionScreenRoot(
-                id = detail.id,
-                onBackClick = {
-                    navigator.pop<CollectionNavKey>(inclusive = true)
-                },
-                onFileClick = { file ->
-                    when (file) {
-                        is Book -> {
-                            navigator.navigate(
-                                BookNavKey(
-                                    bookshelfId = file.bookshelfId,
-                                    path = file.path,
-                                    name = file.name,
-                                    collectionId = detail.id,
-                                ),
-                            )
-                        }
-
-                        is Folder -> {
-                            navigator.popNavigate<CollectionFileInfoNavKey>(
-                                CollectionFolderNavKey(
-                                    bookshelfId = file.bookshelfId,
-                                    path = file.path,
-                                ),
-                            )
-                        }
+        CollectionScreenRoot(
+            id = detail.id,
+            onBackClick = {
+                navigator.pop<CollectionNavKey>(inclusive = true)
+            },
+            onFileClick = { file ->
+                when (file) {
+                    is Book -> {
+                        navigator.navigate(
+                            BookNavKey(
+                                bookshelfId = file.bookshelfId,
+                                path = file.path,
+                                name = file.name,
+                                collectionId = detail.id,
+                            ),
+                        )
                     }
-                },
-                onFileInfoClick = {
-                    navigator.popNavigate<CollectionFileInfoNavKey>(
-                        CollectionFileInfoNavKey(it.key()),
-                    )
-                },
-                onEditClick = {
-                    navigator.navigate(
-                        when (it) {
-                            is BasicCollection -> BasicCollectionEditNavKey(it.id)
-                            is SmartCollection -> SmartCollectionEditNavKey(it.id)
-                        },
-                    )
-                },
-                onDeleteClick = {
-                    navigator.navigate(CollectionDeleteNavKey(it))
-                },
-                onSettingsClick = {
-                    navigator.navigate(SettingsNavKey)
-                },
-            )
-        }
+
+                    is Folder -> {
+                        navigator.popNavigate<CollectionFileInfoNavKey>(
+                            CollectionFolderNavKey(
+                                bookshelfId = file.bookshelfId,
+                                path = file.path,
+                            ),
+                        )
+                    }
+                }
+            },
+            onFileInfoClick = {
+                navigator.popNavigate<CollectionFileInfoNavKey>(
+                    CollectionFileInfoNavKey(it.key()),
+                )
+            },
+            onEditClick = {
+                navigator.navigate(
+                    when (it) {
+                        is BasicCollection -> BasicCollectionEditNavKey(it.id)
+                        is SmartCollection -> SmartCollectionEditNavKey(it.id)
+                    },
+                )
+            },
+            onDeleteClick = {
+                navigator.navigate(CollectionDeleteNavKey(it))
+            },
+            onSettingsClick = {
+                navigator.navigate(SettingsNavKey)
+            },
+        )
     }
 }
