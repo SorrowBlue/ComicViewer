@@ -15,13 +15,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.PagingException
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResult
@@ -33,6 +35,7 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteS
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.paging.indexOf
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -66,43 +69,40 @@ internal interface FolderScreenState {
 
 @Composable
 internal fun rememberFolderScreenState(
-    lazyPagingItems: LazyPagingItems<File>,
-    uiState: FolderScreenUiState,
-    onPermissionChange: (Boolean) -> Unit,
-    onSortClick: suspend (SortType) -> Boolean,
-    onFolderScopeOnlyClick: suspend () -> Unit,
-    onSortTypeSelectScreenResult: suspend (SortTypeSelectScreenResult) -> Boolean,
+    bookshelfId: BookshelfId,
+    path: String,
     restorePath: String?,
+    showSearch: Boolean,
+    viewModel: FolderViewModel = assistedMetroViewModel<FolderViewModel, FolderViewModel.Factory> {
+        create(bookshelfId, path, restorePath, showSearch)
+    },
 ): FolderScreenState {
     val coroutineScope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
     val snackbarHostState = remember { SnackbarHostState() }
     val permissionRequester = rememberLocalNetworkPermissionRequester(true)
-
     val isRestoredState = rememberSaveable { mutableStateOf(false) }
-
-    val currentOnPermissionChange by rememberUpdatedState(onPermissionChange)
-
     LaunchedEffect(permissionRequester.state) {
-        currentOnPermissionChange(permissionRequester.state == LocalNetworkPermissionState.Granted)
+        viewModel.updatePermission(permissionRequester.state == LocalNetworkPermissionState.Granted)
     }
 
-    val state = remember(lazyPagingItems) {
+    val state = remember {
         FolderScreenStateImpl(
             restorePath = restorePath,
             lazyGridState = lazyGridState,
             snackbarHostState = snackbarHostState,
-            lazyPagingItems = lazyPagingItems,
             localNetworkPermissionRequester = permissionRequester,
             coroutineScope = coroutineScope,
-            onSortClickAction = onSortClick,
-            onFolderScopeOnlyClickAction = onFolderScopeOnlyClick,
-            onSortTypeSelectScreenResultAction = onSortTypeSelectScreenResult,
-            uiStateProvider = { uiState },
+            onSortClickAction = viewModel::onSortClick,
+            onFolderScopeOnlyClickAction = viewModel::onFolderScopeOnlyClick,
+            onSortTypeSelectScreenResultAction = viewModel::onSortTypeSelectScreenResult,
             isRestoredState = isRestoredState,
         )
     }.apply {
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        this.uiState = uiState
         scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+        lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
     }
 
     LaunchedEffect(state) {
@@ -118,19 +118,18 @@ private class FolderScreenStateImpl(
     private val restorePath: String?,
     override val lazyGridState: LazyGridState,
     override val snackbarHostState: SnackbarHostState,
-    override val lazyPagingItems: LazyPagingItems<File>,
     override val localNetworkPermissionRequester: LocalNetworkPermissionRequester,
     private val coroutineScope: CoroutineScope,
     private val onSortClickAction: suspend (SortType) -> Boolean,
     private val onFolderScopeOnlyClickAction: suspend () -> Unit,
     private val onSortTypeSelectScreenResultAction: suspend (SortTypeSelectScreenResult) -> Boolean,
-    private val uiStateProvider: () -> FolderScreenUiState,
     isRestoredState: MutableState<Boolean>,
 ) : FolderScreenState {
-    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
+    override lateinit var uiState: FolderScreenUiState
+    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
+    override lateinit var lazyPagingItems: LazyPagingItems<File>
     override val events = EventFlow<FolderScreenEvent>()
-    override val uiState: FolderScreenUiState get() = uiStateProvider()
 
     private var isRestored by isRestoredState
 
