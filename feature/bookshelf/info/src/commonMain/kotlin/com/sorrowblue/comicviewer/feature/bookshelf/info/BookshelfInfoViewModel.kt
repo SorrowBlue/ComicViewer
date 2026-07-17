@@ -17,7 +17,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 
 @AssistedInject
@@ -26,10 +26,9 @@ internal class BookshelfInfoViewModel(
     getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
 ) : ViewModel() {
 
-    val bookshelfInfo =
-        getBookshelfInfoUseCase(
-            GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId),
-        ).mapNotNull { it.dataOrNull() }
+    val bookshelfInfoFlow =
+        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
+            .map { it.dataOrNull() }
             .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 
     @AssistedFactory

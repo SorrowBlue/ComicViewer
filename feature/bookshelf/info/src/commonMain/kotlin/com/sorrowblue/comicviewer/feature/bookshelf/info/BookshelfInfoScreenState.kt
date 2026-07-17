@@ -10,9 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -21,22 +23,24 @@ internal interface BookshelfInfoScreenState {
 }
 
 @Composable
-internal fun rememberBookshelfInfoScreenState(bookshelfId: BookshelfId): BookshelfInfoScreenState {
-    val coroutineScope = rememberCoroutineScope()
-    val viewModel = assistedMetroViewModel<BookshelfInfoViewModel, BookshelfInfoViewModel.Factory> {
+internal fun rememberBookshelfInfoScreenState(
+    bookshelfId: BookshelfId,
+    viewModel: BookshelfInfoViewModel = assistedMetroViewModel<BookshelfInfoViewModel, BookshelfInfoViewModel.Factory> {
         create(bookshelfId)
-    }
-    return remember(viewModel) {
+    },
+): BookshelfInfoScreenState {
+    val coroutineScope = rememberCoroutineScope()
+    return remember {
         BookshelfInfoScreenStateImpl(
-            viewModel = viewModel,
             coroutineScope = coroutineScope,
+            bookshelfInfoFlow = viewModel.bookshelfInfoFlow,
         )
     }
 }
 
 private class BookshelfInfoScreenStateImpl(
-    viewModel: BookshelfInfoViewModel,
     coroutineScope: CoroutineScope,
+    bookshelfInfoFlow: SharedFlow<BookshelfFolder?>,
 ) : BookshelfInfoScreenState {
     override var uiState by mutableStateOf<BookshelfInfoSheetUiState>(
         BookshelfInfoSheetUiState.Loading,
@@ -44,8 +48,12 @@ private class BookshelfInfoScreenStateImpl(
         private set
 
     init {
-        viewModel.bookshelfInfo.onEach {
-            uiState = BookshelfInfoSheetUiState.Loaded(it)
+        bookshelfInfoFlow.onEach {
+            uiState = if (it != null) {
+                BookshelfInfoSheetUiState.Loaded(it)
+            } else {
+                BookshelfInfoSheetUiState.Error
+            }
         }.launchIn(coroutineScope)
     }
 }

@@ -10,13 +10,16 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDeleteScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class BookshelfDeleteNavKey(val id: BookshelfId) : NavKey
 
-internal fun EntryProviderScope<NavKey>.bookshelfDeleteNavEntry(navigator: Navigator) {
-    entry<BookshelfDeleteNavKey>(metadata = DialogSceneStrategy.dialog()) {
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun bookshelfDeleteNavEntry(navigator: Navigator) {
+    scope.entry<BookshelfDeleteNavKey>(metadata = DialogSceneStrategy.dialog()) {
         BookshelfDeleteScreenRoot(
             bookshelfId = it.id,
             onBackClick = navigator::goBack,

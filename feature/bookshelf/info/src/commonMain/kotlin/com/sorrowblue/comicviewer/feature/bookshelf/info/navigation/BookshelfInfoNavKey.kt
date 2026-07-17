@@ -13,18 +13,18 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWiz
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class BookshelfInfoNavKey(val id: BookshelfId) : NavKey
 
-internal fun EntryProviderScope<NavKey>.bookshelfInfoNavEntry(
-    navigator: Navigator,
-    sceneKey: String,
-) {
-    entry<BookshelfInfoNavKey>(
-        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey = sceneKey) +
-            NavDisplay.transitionMaterialSharedAxisX(),
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun bookshelfInfoNavEntry(navigator: Navigator) {
+    scope.entry<BookshelfInfoNavKey>(
+        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey = "Bookshelf")
+            + NavDisplay.transitionMaterialSharedAxisX()
     ) {
         BookshelfInfoScreenRoot(
             bookshelfId = it.id,
