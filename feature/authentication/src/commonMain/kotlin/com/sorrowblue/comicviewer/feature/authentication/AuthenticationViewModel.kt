@@ -8,11 +8,9 @@ import androidx.lifecycle.ViewModel
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.flow.first
 
-@Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class)
 internal class AuthenticationViewModel(

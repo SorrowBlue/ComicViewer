@@ -11,12 +11,10 @@ import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolderUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 
 private const val PageSize = 20
 
-@Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class)
 internal class BookshelfViewModel(pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase) :
