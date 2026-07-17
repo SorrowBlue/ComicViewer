@@ -23,8 +23,8 @@ data class BookshelfInfoNavKey(val id: BookshelfId) : NavKey
 context(scope: EntryProviderScope<NavKey>)
 internal fun bookshelfInfoNavEntry(navigator: Navigator) {
     scope.entry<BookshelfInfoNavKey>(
-        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey = "Bookshelf")
-            + NavDisplay.transitionMaterialSharedAxisX()
+        metadata = SupportingPaneSceneStrategy.extraPane(sceneKey = "Bookshelf") +
+            NavDisplay.transitionMaterialSharedAxisX(),
     ) {
         BookshelfInfoScreenRoot(
             bookshelfId = it.id,

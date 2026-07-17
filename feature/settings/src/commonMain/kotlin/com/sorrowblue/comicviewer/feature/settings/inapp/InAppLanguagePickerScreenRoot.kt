@@ -6,14 +6,17 @@ package com.sorrowblue.comicviewer.feature.settings.inapp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-context(context: InAppLanguagePickerScreenContext)
-internal fun InAppLanguagePickerScreenRoot(onBackClick: () -> Unit) {
-    val locales = remember { context.appLocaleIso.locales.toImmutableList() }
+internal fun InAppLanguagePickerScreenRoot(
+    onBackClick: () -> Unit,
+    viewModel: InAppLanguagePickerViewModel = metroViewModel<InAppLanguagePickerViewModel>(),
+) {
+    val locales = remember { viewModel.appLocaleIso.locales.toImmutableList() }
     InAppLanguagePickerScreen(
-        appLocaleIso = context.appLocaleIso,
+        appLocaleIso = viewModel.appLocaleIso,
         localeList = locales,
         onBackClick = onBackClick,
     )

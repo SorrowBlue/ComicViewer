@@ -64,9 +64,9 @@ internal fun rememberFileInfoPrepareState(
     fileKey: File.Key,
     isOpenFolderEnabled: Boolean,
     viewModel: FileInfoPrepareViewModel =
-    assistedMetroViewModel<FileInfoPrepareViewModel, FileInfoPrepareViewModel.Factory> {
-        create(fileKey = fileKey)
-    },
+        assistedMetroViewModel<FileInfoPrepareViewModel, FileInfoPrepareViewModel.Factory> {
+            create(fileKey = fileKey)
+        },
 ): FileInfoPrepareState {
     val coroutineScope = rememberCoroutineScope()
     return remember(isOpenFolderEnabled) {

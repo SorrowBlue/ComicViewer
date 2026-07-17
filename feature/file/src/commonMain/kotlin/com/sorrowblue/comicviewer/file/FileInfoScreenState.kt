@@ -37,9 +37,9 @@ internal fun rememberFileInfoScreenState(
     file: File,
     isOpenFolderEnabled: Boolean,
     viewModel: FileInfoViewModel =
-    assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> {
-        create(file)
-    },
+        assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> {
+            create(file)
+        },
 ): FileInfoScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember(file, isOpenFolderEnabled) {

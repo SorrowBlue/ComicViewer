@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.settings.display
+package com.sorrowblue.comicviewer.feature.settings.display.darkmode
 
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 

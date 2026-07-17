@@ -25,9 +25,10 @@ internal interface BookshelfInfoScreenState {
 @Composable
 internal fun rememberBookshelfInfoScreenState(
     bookshelfId: BookshelfId,
-    viewModel: BookshelfInfoViewModel = assistedMetroViewModel<BookshelfInfoViewModel, BookshelfInfoViewModel.Factory> {
-        create(bookshelfId)
-    },
+    viewModel: BookshelfInfoViewModel =
+        assistedMetroViewModel<BookshelfInfoViewModel, BookshelfInfoViewModel.Factory> {
+            create(bookshelfId)
+        },
 ): BookshelfInfoScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember {

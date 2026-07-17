@@ -11,7 +11,6 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.settings.SettingsItem
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenRoot
-import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DarkModeNavKey
 import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
@@ -23,19 +22,19 @@ import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecurityS
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 
-context(factory: DisplaySettingsScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.settingsNavEntry(navigator: Navigator) {
-    entry<SettingsNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun settingsNavEntry(navigator: Navigator) {
+    scope.entry<SettingsNavKey>(
         metadata = ListDetailSceneStrategy.listPane(
             "Settings",
             detailPlaceholder = {
-                with(factory.createDisplaySettingsScreenContext()) {
-                    DisplaySettingsScreenRoot(
-                        onBackClick = dropUnlessResumed { navigator.goBack() },
-                        onDarkModeClick = dropUnlessResumed { navigator.navigate(DarkModeNavKey) },
-                    )
-                }
+                DisplaySettingsScreenRoot(
+                    onBackClick = dropUnlessResumed { navigator.goBack() },
+                    onDarkModeClick = dropUnlessResumed { navigator.navigate(DarkModeNavKey) },
+                )
             },
         ) + NavDisplay.transitionMaterialFadeThrough(),
     ) {

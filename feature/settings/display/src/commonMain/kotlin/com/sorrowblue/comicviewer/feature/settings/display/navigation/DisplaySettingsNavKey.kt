@@ -9,27 +9,25 @@ import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
-import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.takahirom.rin.rememberRetained
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object DisplaySettingsNavKey : NavKey
 
-context(factory: DisplaySettingsScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.displaySettingsNavEntry(navigator: Navigator) {
-    entry<DisplaySettingsNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun displaySettingsNavEntry(navigator: Navigator) {
+    scope.entry<DisplaySettingsNavKey>(
         metadata = ListDetailSceneStrategy.detailPane("Settings") +
             NavDisplay.transitionMaterialSharedAxisX(),
     ) {
-        with(rememberRetained { factory.createDisplaySettingsScreenContext() }) {
-            DisplaySettingsScreenRoot(
-                onBackClick = dropUnlessResumed { navigator.goBack() },
-                onDarkModeClick = dropUnlessResumed { navigator.navigate(DarkModeNavKey) },
-            )
-        }
+        DisplaySettingsScreenRoot(
+            onBackClick = dropUnlessResumed { navigator.goBack() },
+            onDarkModeClick = dropUnlessResumed { navigator.navigate(DarkModeNavKey) },
+        )
     }
 }

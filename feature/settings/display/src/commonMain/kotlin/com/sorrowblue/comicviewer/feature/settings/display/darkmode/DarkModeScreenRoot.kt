@@ -2,12 +2,11 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.settings.display
+package com.sorrowblue.comicviewer.feature.settings.display.darkmode
 
 import androidx.compose.runtime.Composable
 
 @Composable
-context(context: DarkModeScreenContext)
 internal fun DarkModeScreenRoot(onDismissRequest: () -> Unit, onComplete: () -> Unit) {
     val state = rememberDarkModeScreenState()
     DarkModeScreen(

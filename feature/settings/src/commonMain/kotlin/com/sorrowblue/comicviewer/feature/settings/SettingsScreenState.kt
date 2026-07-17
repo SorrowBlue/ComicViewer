@@ -20,7 +20,6 @@ import com.sorrowblue.comicviewer.feature.settings.utils.AppLocaleSettingsLaunch
 import com.sorrowblue.comicviewer.feature.settings.utils.rememberAppLocaleSettingsLauncher
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
-import logcat.logcat
 
 internal interface SettingsScreenState {
     val uiState: SettingsScreenUiState
@@ -35,11 +34,7 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
     val state = remember(appLocaleSettingsLauncher) {
         SettingsScreenStateImpl(appLocaleSettingsLauncher = appLocaleSettingsLauncher)
     }
-
     LaunchedEffect(navigator.backStack.lastOrNull()) {
-        logcat(
-            "Navigator",
-        ) { "SettingsScreenState: #LaunchedEffect: ${navigator.backStack.lastOrNull()}" }
         when (navigator.backStack.lastOrNull()) {
             is DisplaySettingsNavKey -> SettingsItem.DISPLAY
             is FolderSettingsNavKey -> SettingsItem.FOLDER
@@ -53,7 +48,6 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
             state.uiState = state.uiState.copy(currentSettings = it)
         }
     }
-
     return state
 }
 

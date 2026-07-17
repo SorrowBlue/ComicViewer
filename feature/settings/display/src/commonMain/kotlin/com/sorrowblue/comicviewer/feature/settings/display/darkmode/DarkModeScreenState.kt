@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.settings.display
+package com.sorrowblue.comicviewer.feature.settings.display.darkmode
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,11 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 internal interface DarkModeScreenState {
     val uiState: DarkModeScreenUiState
@@ -24,38 +25,40 @@ internal interface DarkModeScreenState {
 }
 
 @Composable
-context(context: DarkModeScreenContext)
-internal fun rememberDarkModeScreenState(): DarkModeScreenState {
+internal fun rememberDarkModeScreenState(
+    viewModel: DarkModeViewModel = metroViewModel(),
+): DarkModeScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember(coroutineScope) {
         DarkModeScreenStateImpl(
-            displaySettingsUseCase = context.displaySettingsUseCase,
             coroutineScope = coroutineScope,
+            settingsFlow = viewModel.settingsFlow,
+            updateSettings = viewModel::updateSettings,
         )
     }
 }
 
 private class DarkModeScreenStateImpl(
-    private val displaySettingsUseCase: ManageDisplaySettingsUseCase,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
+    settingsFlow: SharedFlow<DisplaySettings>,
+    private val updateSettings: ((DisplaySettings) -> DisplaySettings, () -> Unit) -> Unit,
 ) : DarkModeScreenState {
     override var uiState by mutableStateOf(DarkModeScreenUiState())
 
     init {
-        displaySettingsUseCase.settings
-            .onEach {
-                uiState = uiState.copy(darkMode = it.darkMode)
-            }.launchIn(coroutineScope)
+        settingsFlow.onEach {
+            uiState = uiState.copy(darkMode = it.darkMode)
+        }.launchIn(coroutineScope)
     }
 
     override fun onDarkModeChange(darkMode: DarkMode, done: () -> Unit) {
-        coroutineScope.launch {
-            displaySettingsUseCase.edit {
-                it.copy(darkMode = darkMode)
-            }
-            updateDarkMode(darkMode)
-            done()
-        }
+        updateSettings(
+            { it.copy(darkMode = darkMode) },
+            {
+                updateDarkMode(darkMode)
+                done()
+            },
+        )
     }
 }
 

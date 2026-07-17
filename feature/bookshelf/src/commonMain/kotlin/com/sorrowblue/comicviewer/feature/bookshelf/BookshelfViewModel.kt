@@ -17,9 +17,8 @@ private const val PageSize = 20
 
 @ViewModelKey
 @ContributesIntoMap(AppScope::class)
-internal class BookshelfViewModel(
-    pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase,
-) : ViewModel() {
+internal class BookshelfViewModel(pagingBookshelfFolderUseCase: PagingBookshelfFolderUseCase) :
+    ViewModel() {
 
     val bookshelfPagingFlow =
         pagingBookshelfFolderUseCase(PagingBookshelfFolderUseCase.Request(PagingConfig(PageSize)))
