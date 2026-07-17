@@ -24,10 +24,11 @@ import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.binding
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
-@ContributesIntoSet(AppScope::class)
+@ContributesIntoSet(AppScope::class, binding = binding<NavigationKey>())
 @Serializable
 data object BookshelfNavKey : NavigationKey {
     override val title

@@ -23,12 +23,13 @@ import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_title
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.binding
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
 import io.github.irgaly.navigation3.resultstate.resultConsumer
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
-@ContributesIntoSet(AppScope::class)
+@ContributesIntoSet(AppScope::class, binding = binding<NavigationKey>())
 @Serializable
 internal data object HistoryNavKey : NavigationKey {
     override val title

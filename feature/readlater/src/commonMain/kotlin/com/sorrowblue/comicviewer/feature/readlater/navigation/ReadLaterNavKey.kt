@@ -23,10 +23,11 @@ import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_title
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.binding
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
-@ContributesIntoSet(AppScope::class)
+@ContributesIntoSet(AppScope::class, binding = binding<NavigationKey>())
 @Serializable
 internal data object ReadLaterNavKey : NavigationKey {
     override val title
