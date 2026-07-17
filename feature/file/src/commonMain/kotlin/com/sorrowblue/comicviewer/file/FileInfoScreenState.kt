@@ -5,12 +5,26 @@
 package com.sorrowblue.comicviewer.file
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.file.section.FileInfoButtonsUiState
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal data class FileInfoScreenUiState(
     val file: File,
@@ -20,28 +34,27 @@ internal data class FileInfoScreenUiState(
 
 @Composable
 internal fun rememberFileInfoScreenState(
-    lazyPagingItems: LazyPagingItems<BookThumbnail>?,
-    uiState: FileInfoUiState,
-    onReadLaterClick: () -> Unit,
     file: File,
-): FileInfoScreenState = remember(lazyPagingItems, uiState) {
-    FileInfoScreenStateImpl(
-        lazyPagingItems = lazyPagingItems,
-        uiStateProvider = {
-            when (uiState) {
-                is FileInfoUiState.Success -> FileInfoScreenUiState(
-                    file = uiState.file,
-                    attribute = uiState.attribute,
-                    fileInfoButtonsUiState = uiState.fileInfoButtonsUiState,
-                )
-
-                else -> FileInfoScreenUiState(
-                    file = file,
-                )
-            }
-        },
-        onReadLaterClickAction = onReadLaterClick,
-    )
+    isOpenFolderEnabled: Boolean,
+    viewModel: FileInfoViewModel =
+    assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> {
+        create(file)
+    },
+): FileInfoScreenState {
+    val coroutineScope = rememberCoroutineScope()
+    return remember(file, isOpenFolderEnabled) {
+        FileInfoScreenStateImpl(
+            file = file,
+            isOpenFolderEnabled = isOpenFolderEnabled,
+            coroutineScope = coroutineScope,
+            isReadLaterFlow = viewModel.isReadLaterFlow,
+            fileAttributeFlow = viewModel.fileAttributeFlow,
+            fileSizeFlow = viewModel.fileSizeFlow,
+            updateReadLater = viewModel::updateReadLater,
+        )
+    }.apply {
+        lazyPagingItems = viewModel.pagingFlow?.collectAsLazyPagingItems()
+    }
 }
 
 internal interface FileInfoScreenState {
@@ -52,14 +65,56 @@ internal interface FileInfoScreenState {
 }
 
 private class FileInfoScreenStateImpl(
-    override val lazyPagingItems: LazyPagingItems<BookThumbnail>?,
-    private val uiStateProvider: () -> FileInfoScreenUiState,
-    private val onReadLaterClickAction: () -> Unit,
+    private val file: File,
+    private val isOpenFolderEnabled: Boolean,
+    coroutineScope: CoroutineScope,
+    isReadLaterFlow: StateFlow<Boolean>,
+    fileAttributeFlow: SharedFlow<FileAttribute?>,
+    fileSizeFlow: SharedFlow<Long>,
+    private val updateReadLater: () -> Unit,
 ) : FileInfoScreenState {
 
-    override val uiState: FileInfoScreenUiState get() = uiStateProvider()
+    override var uiState by mutableStateOf(
+        FileInfoScreenUiState(
+            file = file,
+            fileInfoButtonsUiState = FileInfoButtonsUiState(
+                isOpenFolderEnabled = isOpenFolderEnabled,
+            ),
+        ),
+    )
+
+    override var lazyPagingItems: LazyPagingItems<BookThumbnail>? = null
+
+    init {
+        isReadLaterFlow.onEach {
+            uiState = uiState.copy(
+                fileInfoButtonsUiState = uiState.fileInfoButtonsUiState.copy(
+                    readLaterChecked = it,
+                    readLaterLoading = false,
+                ),
+            )
+        }.launchIn(coroutineScope)
+        fileAttributeFlow.onEach { fileAttribute ->
+            uiState = uiState.copy(attribute = fileAttribute)
+        }.launchIn(coroutineScope)
+
+        fileSizeFlow.onEach { fileSize ->
+            uiState = uiState.copy(
+                file = when (val ufile = uiState.file) {
+                    is BookFile -> ufile.copy(size = fileSize)
+                    is BookFolder -> ufile.copy(size = fileSize)
+                    is Folder -> ufile.copy(size = fileSize)
+                },
+            )
+        }.launchIn(coroutineScope)
+    }
 
     override fun onReadLaterClick() {
-        onReadLaterClickAction()
+        uiState = uiState.copy(
+            fileInfoButtonsUiState = uiState.fileInfoButtonsUiState.copy(
+                readLaterLoading = true,
+            ),
+        )
+        updateReadLater()
     }
 }

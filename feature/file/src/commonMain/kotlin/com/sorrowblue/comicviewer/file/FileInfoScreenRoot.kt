@@ -8,10 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
-import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 
 @Composable
 fun FileInfoScreenRoot(
@@ -22,28 +19,10 @@ fun FileInfoScreenRoot(
     onOpenFolderClick: (File) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel = assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> {
-        create(fileKey, isOpenFolderEnabled)
-    }
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
-
-    when (val current = uiState) {
-        FileInfoUiState.Loading -> {
-            LoadingContents()
-        }
-
-        FileInfoUiState.Error -> {
-            ErrorContents()
-        }
-
-        is FileInfoUiState.Success -> {
-            val state = rememberFileInfoScreenState(
-                lazyPagingItems = lazyPagingItems,
-                uiState = current,
-                onReadLaterClick = viewModel::onReadLaterClick,
-                file = current.file,
-            )
+    val prepareState = rememberFileInfoPrepareState(fileKey, isOpenFolderEnabled)
+    when (val uiState = prepareState.uiState) {
+        is FileInfoPrepareUiState.Success -> {
+            val state = rememberFileInfoScreenState(uiState.file, uiState.isOpenFolderEnabled)
             FileInfoScreen(
                 uiState = state.uiState,
                 lazyPagingItems = state.lazyPagingItems,
@@ -55,6 +34,14 @@ fun FileInfoScreenRoot(
                 },
                 modifier = modifier.testTag("FileInfoScreenRoot"),
             )
+        }
+
+        FileInfoPrepareUiState.Loading -> {
+            LoadingContents()
+        }
+
+        FileInfoPrepareUiState.Error -> {
+            ErrorContents()
         }
     }
 }
