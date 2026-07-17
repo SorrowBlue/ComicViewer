@@ -15,8 +15,9 @@ import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollect
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
-import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry
+import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry2
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,8 +32,10 @@ internal data class ReadLaterFolderFileInfoNavKey(override val fileKey: File.Key
     override val isOpenFolderEnabled: Boolean = false
 }
 
-internal fun EntryProviderScope<NavKey>.readLaterFolderFileInfoNavEntry(navigator: Navigator) {
-    folderFileInfoNavEntry<ReadLaterFolderNavKey, ReadLaterFolderFileInfoNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun readLaterFolderFileInfoNavEntry(navigator: Navigator) {
+    folderFileInfoNavEntry2<ReadLaterFolderNavKey, ReadLaterFolderFileInfoNavKey>(
         sceneKeyPrefix = "ReadLater",
         onBackClick = {
             navigator.pop<ReadLaterFolderNavKey>(inclusive = true)

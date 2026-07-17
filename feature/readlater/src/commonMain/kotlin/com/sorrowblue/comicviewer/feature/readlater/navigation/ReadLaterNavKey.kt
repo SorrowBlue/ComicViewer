@@ -12,18 +12,17 @@ import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
-import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenContext
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_title
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
-import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
@@ -38,45 +37,44 @@ internal data object ReadLaterNavKey : NavigationKey {
     override val order get() = 3
 }
 
-context(factory: ReadLaterScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.readLaterNavEntry(navigator: Navigator) {
-    entry<ReadLaterNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun readLaterNavEntry(navigator: Navigator) {
+    scope.entry<ReadLaterNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane("ReadLater") +
             NavDisplay.transitionMaterialFadeThrough(),
     ) {
-        with(rememberRetained { factory.createReadLaterScreenContext() }) {
-            ReadLaterScreenRoot(
-                onSettingsClick = {
-                    navigator.navigate(SettingsNavKey)
-                },
-                onFileClick = { file ->
-                    when (file) {
-                        is Book -> {
-                            navigator.navigate(
-                                BookNavKey(
-                                    bookshelfId = file.bookshelfId,
-                                    path = file.path,
-                                    name = file.name,
-                                ),
-                            )
-                        }
-
-                        is Folder -> {
-                            navigator.popNavigate<ReadLaterFileInfoNavKey>(
-                                ReadLaterFolderNavKey(
-                                    bookshelfId = file.bookshelfId,
-                                    path = file.path,
-                                ),
-                            )
-                        }
+        ReadLaterScreenRoot(
+            onSettingsClick = {
+                navigator.navigate(SettingsNavKey)
+            },
+            onFileClick = { file ->
+                when (file) {
+                    is Book -> {
+                        navigator.navigate(
+                            BookNavKey(
+                                bookshelfId = file.bookshelfId,
+                                path = file.path,
+                                name = file.name,
+                            ),
+                        )
                     }
-                },
-                onFileInfoClick = {
-                    navigator.popNavigate<ReadLaterFileInfoNavKey>(
-                        ReadLaterFileInfoNavKey(it.key()),
-                    )
-                },
-            )
-        }
+
+                    is Folder -> {
+                        navigator.popNavigate<ReadLaterFileInfoNavKey>(
+                            ReadLaterFolderNavKey(
+                                bookshelfId = file.bookshelfId,
+                                path = file.path,
+                            ),
+                        )
+                    }
+                }
+            },
+            onFileInfoClick = {
+                navigator.popNavigate<ReadLaterFileInfoNavKey>(
+                    ReadLaterFileInfoNavKey(it.key()),
+                )
+            },
+        )
     }
 }

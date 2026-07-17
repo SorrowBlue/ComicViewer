@@ -18,25 +18,15 @@ import com.sorrowblue.comicviewer.feature.search.SearchScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoSet
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchNavKey(val bookshelfId: BookshelfId, val path: PathString) : NavKey
 
-@ContributesIntoSet(AppScope::class)
-internal class SearchNavEntry : NavigationEntryProvider {
-
-    context(scope: EntryProviderScope<NavKey>)
-    override fun invoke(navigator: Navigator) {
-        searchNavEntry(navigator)
-    }
-}
-
+@NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
-private fun searchNavEntry(navigator: Navigator) {
+internal fun searchNavEntry(navigator: Navigator) {
     scope.entry<SearchNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane("Search") +
             NavDisplay.transitionMaterialSharedAxisX(),

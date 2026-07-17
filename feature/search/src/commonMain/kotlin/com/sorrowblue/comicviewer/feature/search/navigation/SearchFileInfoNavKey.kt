@@ -11,9 +11,7 @@ import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollect
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry2
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoSet
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -21,17 +19,9 @@ internal data class SearchFileInfoNavKey(override val fileKey: File.Key) : FileI
     override val isOpenFolderEnabled: Boolean = true
 }
 
-@ContributesIntoSet(AppScope::class)
-internal class SearchFileInfoNavEntry : NavigationEntryProvider {
-
-    context(scope: EntryProviderScope<NavKey>)
-    override fun invoke(navigator: Navigator) {
-        searchFileInfoNavEntry(navigator)
-    }
-}
-
+@NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
-private fun searchFileInfoNavEntry(navigator: Navigator) {
+internal fun searchFileInfoNavEntry(navigator: Navigator) {
     fileInfoEntry2<SearchFileInfoNavKey>(
         "Search",
         onBackClick = navigator::goBack,

@@ -18,9 +18,7 @@ import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
 import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry2
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoSet
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -39,17 +37,9 @@ internal data class BookshelfFolderFileInfoNavKey(override val fileKey: File.Key
     override val isOpenFolderEnabled: Boolean = false
 }
 
-@ContributesIntoSet(AppScope::class)
-internal class BookshelfFolderFileInfoNavEntry : NavigationEntryProvider {
-
-    context(scope: EntryProviderScope<NavKey>)
-    override fun invoke(navigator: Navigator) {
-        bookshelfFolderFileInfoNavEntry(navigator)
-    }
-}
-
+@NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
-private fun bookshelfFolderFileInfoNavEntry(navigator: Navigator) {
+internal fun bookshelfFolderFileInfoNavEntry(navigator: Navigator) {
     folderFileInfoNavEntry2<BookshelfFolderNavKey, BookshelfFolderFileInfoNavKey>(
         sceneKeyPrefix = "Bookshelf",
         onBackClick = {

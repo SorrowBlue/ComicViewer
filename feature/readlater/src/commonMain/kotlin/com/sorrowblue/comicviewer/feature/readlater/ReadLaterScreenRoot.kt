@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.file.File
 
 @Composable
-context(context: ReadLaterScreenContext)
 internal fun ReadLaterScreenRoot(
     onSettingsClick: () -> Unit,
     onFileClick: (File) -> Unit,

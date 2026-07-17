@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Shelv
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
@@ -39,17 +39,9 @@ data object BookshelfNavKey : NavigationKey {
     override val order get() = 1
 }
 
-@ContributesIntoSet(AppScope::class)
-internal class BookshelfNavEntry : NavigationEntryProvider {
-
-    context(scope: EntryProviderScope<NavKey>)
-    override fun invoke(navigator: Navigator) {
-        bookshelfNavEntry(navigator)
-    }
-}
-
+@NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
-private fun bookshelfNavEntry(navigator: Navigator) {
+internal fun bookshelfNavEntry(navigator: Navigator) {
     scope.entry<BookshelfNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane<BookshelfInfoNavKey>("Bookshelf") +
             NavDisplay.transitionMaterialFadeThrough(),
