@@ -15,6 +15,7 @@ import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.ui.compose.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
@@ -29,11 +30,8 @@ internal interface LicenseScreenState {
 }
 
 @Composable
-context(context: LicenseScreenContext)
-internal fun rememberLicenseScreenState(): LicenseScreenState {
-    val libs by produceLibraries {
-        context.licenseeHelper.loadLibraries().decodeToString()
-    }
+internal fun rememberLicenseScreenState(viewModel: LicenseViewModel = metroViewModel()): LicenseScreenState {
+    val libs by produceLibraries { viewModel.loadLibraries() }
     val uriHandler = LocalUriHandler.current
     return remember(libs, uriHandler) {
         LicenseScreenStateImpl(libs, uriHandler)

@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -38,7 +37,6 @@ internal fun rememberInfoSettingsScreenState(): InfoSettingsScreenState {
 
 private class InfoSettingsScreenStateImpl(private val urlHandler: UriHandler) :
     InfoSettingsScreenState {
-    @OptIn(ExperimentalTime::class)
     override var uiState: InfoSettingsScreenUiState by mutableStateOf(
         InfoSettingsScreenUiState(
             versionName = BuildConfig.VERSION_NAME,

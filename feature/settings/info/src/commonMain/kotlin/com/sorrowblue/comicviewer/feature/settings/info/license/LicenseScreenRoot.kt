@@ -7,7 +7,6 @@ package com.sorrowblue.comicviewer.feature.settings.info.license
 import androidx.compose.runtime.Composable
 
 @Composable
-context(context: LicenseScreenContext)
 internal fun LicenseScreenRoot(onBackClick: () -> Unit) {
     val state = rememberLicenseScreenState()
     LicenseScreen(

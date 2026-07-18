@@ -13,13 +13,16 @@ import com.sorrowblue.comicviewer.feature.settings.info.InfoSettingsScreenRoot
 import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object InfoSettingsNavKey : NavKey
 
-internal fun EntryProviderScope<NavKey>.infoSettingsNavEntry(navigator: Navigator) {
-    entry<InfoSettingsNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun infoSettingsNavEntry(navigator: Navigator) {
+    scope.entry<InfoSettingsNavKey>(
         metadata = ListDetailSceneStrategy.detailPane("Settings") +
             NavDisplay.transitionMaterialSharedAxisX(),
     ) {
