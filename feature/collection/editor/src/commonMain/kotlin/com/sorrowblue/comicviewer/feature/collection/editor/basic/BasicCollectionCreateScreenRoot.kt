@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
 @Composable
-context(context: BasicCollectionCreateScreenContext)
 internal fun BasicCollectionCreateScreenRoot(
     bookshelfId: BookshelfId,
     path: String,

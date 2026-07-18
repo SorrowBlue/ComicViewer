@@ -11,11 +11,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 
 @ViewModelKey
 @ContributesIntoMap(AppScope::class)
-internal class LicenseViewModel(
-    private val licenseeHelper: LicenseeHelper,
-) : ViewModel() {
+internal class LicenseViewModel(private val licenseeHelper: LicenseeHelper) : ViewModel() {
 
-    suspend fun loadLibraries(): String {
-        return licenseeHelper.loadLibraries().decodeToString()
-    }
+    suspend fun loadLibraries(): String = licenseeHelper.loadLibraries().decodeToString()
 }

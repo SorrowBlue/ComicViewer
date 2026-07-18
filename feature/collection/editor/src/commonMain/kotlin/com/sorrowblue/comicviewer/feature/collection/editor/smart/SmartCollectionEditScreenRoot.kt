@@ -18,7 +18,6 @@ import org.jetbrains.compose.resources.stringResource
 
 @NavDestination(SmartCollectionEditNavKey::class)
 @Composable
-context(context: SmartCollectionEditScreenContext)
 internal fun SmartCollectionEditScreenRoot(
     collectionId: CollectionId,
     onCancelClick: () -> Unit,

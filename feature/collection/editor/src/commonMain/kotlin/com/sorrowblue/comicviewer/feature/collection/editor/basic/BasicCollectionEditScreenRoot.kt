@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
 @Composable
-context(context: BasicCollectionEditScreenContext)
 internal fun BasicCollectionEditScreenRoot(
     collectionId: CollectionId,
     onBackClick: () -> Unit,

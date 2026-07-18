@@ -9,26 +9,24 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditScreenContext
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.takahirom.rin.rememberRetained
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SmartCollectionEditNavKey(val collectionId: CollectionId) : NavKey
 
-context(factory: SmartCollectionEditScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.smartCollectionEditNavEntry(navigator: Navigator) {
-    entry<SmartCollectionEditNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun smartCollectionEditNavEntry(navigator: Navigator) {
+    scope.entry<SmartCollectionEditNavKey>(
         metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
-        with(rememberRetained { factory.createSmartCollectionEditScreenContext() }) {
-            SmartCollectionEditScreenRoot(
-                collectionId = it.collectionId,
-                onCancelClick = navigator::goBack,
-                onComplete = navigator::goBack,
-            )
-        }
+        SmartCollectionEditScreenRoot(
+            collectionId = it.collectionId,
+            onCancelClick = navigator::goBack,
+            onComplete = navigator::goBack,
+        )
     }
 }

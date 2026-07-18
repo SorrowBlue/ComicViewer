@@ -30,7 +30,9 @@ internal interface LicenseScreenState {
 }
 
 @Composable
-internal fun rememberLicenseScreenState(viewModel: LicenseViewModel = metroViewModel()): LicenseScreenState {
+internal fun rememberLicenseScreenState(
+    viewModel: LicenseViewModel = metroViewModel(),
+): LicenseScreenState {
     val libs by produceLibraries { viewModel.loadLibraries() }
     val uriHandler = LocalUriHandler.current
     return remember(libs, uriHandler) {

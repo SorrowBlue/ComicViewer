@@ -19,7 +19,6 @@ import org.jetbrains.compose.resources.stringResource
 
 @NavDestination(SmartCollectionCreateNavKey::class)
 @Composable
-context(context: SmartCollectionCreateScreenContext)
 internal fun SmartCollectionCreateScreenRoot(
     bookshelfId: BookshelfId?,
     searchCondition: SearchCondition,

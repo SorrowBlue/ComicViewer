@@ -41,9 +41,10 @@ internal interface BasicCollectionAddScreenState {
 internal fun rememberBasicCollectionAddScreenState(
     bookshelfId: BookshelfId,
     path: String,
-    viewModel: BasicCollectionAddViewModel = assistedMetroViewModel<BasicCollectionAddViewModel, BasicCollectionAddViewModel.Factory> {
-        create(bookshelfId, path)
-    },
+    viewModel: BasicCollectionAddViewModel =
+        assistedMetroViewModel<BasicCollectionAddViewModel, BasicCollectionAddViewModel.Factory> {
+            create(bookshelfId, path)
+        },
 ): BasicCollectionAddScreenState {
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
@@ -54,7 +55,7 @@ internal fun rememberBasicCollectionAddScreenState(
             collectionSettingsFlow = viewModel.collectionSettingsFlow,
             updateCollectionSettings = viewModel::updateCollectionSettings,
             addCollection = viewModel::addCollection,
-            removeCollection = viewModel::removeCollection
+            removeCollection = viewModel::removeCollection,
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()

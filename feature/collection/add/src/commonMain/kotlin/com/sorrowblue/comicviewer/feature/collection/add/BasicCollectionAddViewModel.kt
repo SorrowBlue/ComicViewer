@@ -70,7 +70,7 @@ internal class BasicCollectionAddViewModel(
         viewModelScope.launch {
             removeCollectionFileUseCase(
                 RemoveCollectionFileUseCase.Request(
-                    CollectionFile(id, bookshelfId, path)
+                    CollectionFile(id, bookshelfId, path),
                 ),
             )
         }

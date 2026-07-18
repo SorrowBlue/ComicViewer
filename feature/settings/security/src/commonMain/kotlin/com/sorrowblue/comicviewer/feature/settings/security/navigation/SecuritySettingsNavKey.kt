@@ -28,8 +28,8 @@ internal fun securitySettingsNavEntry(navigator: Navigator) {
     ) {
         SecuritySettingsScreenRoot(
             onBackClick = navigator::goBack,
-            onChangeAuthEnable = {
-                if (it) {
+            onChangeAuthEnable = { enable ->
+                if (enable) {
                     navigator.navigate(AuthenticationNavKey(ScreenType.Register))
                 } else {
                     navigator.navigate(AuthenticationNavKey(ScreenType.Erase))

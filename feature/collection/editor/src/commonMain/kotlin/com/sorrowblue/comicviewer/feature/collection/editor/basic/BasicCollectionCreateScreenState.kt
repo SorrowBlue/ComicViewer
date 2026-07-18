@@ -10,12 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
-import com.sorrowblue.comicviewer.domain.model.collection.Collection
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
-import com.sorrowblue.comicviewer.domain.model.fold
-import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseCase
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
@@ -23,10 +17,11 @@ import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create_add
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.getString
 import soil.form.compose.Form
 import soil.form.compose.rememberForm
@@ -45,23 +40,24 @@ internal interface BasicCollectionCreateScreenState {
 }
 
 @Composable
-context(context: BasicCollectionCreateScreenContext)
 internal fun rememberBasicCollectionCreateScreenState(
     bookshelfId: BookshelfId,
     path: String,
+    viewModel: BasicCollectionCreateViewModel =
+        assistedMetroViewModel<BasicCollectionCreateViewModel, BasicCollectionCreateViewModel.Factory> {
+            create(bookshelfId, path)
+        },
 ): BasicCollectionCreateScreenState {
     val appState = LocalAppState.current
     val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
-    return remember {
+    return remember(viewModel) {
         BasicCollectionCreateScreenStateImpl(
-            bookshelfId = bookshelfId,
-            path = path,
-            createCollectionUseCase = context.createCollectionUseCase,
-            addCollectionFileUseCase = context.addCollectionFileUseCase,
             appState = appState,
             coroutineScope = coroutineScope,
+            eventFlow = viewModel.event,
+            submitForm = viewModel::submitForm,
         )
     }.apply {
         form = rememberForm(state = formState, onSubmit = ::onSubmit)
@@ -69,12 +65,10 @@ internal fun rememberBasicCollectionCreateScreenState(
 }
 
 private class BasicCollectionCreateScreenStateImpl(
-    private val bookshelfId: BookshelfId,
-    private val path: String,
-    private val createCollectionUseCase: CreateCollectionUseCase,
-    private val addCollectionFileUseCase: AddCollectionFileUseCase,
     private val appState: AppState,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
+    eventFlow: SharedFlow<BasicCollectionCreateViewModelEvent>,
+    private val submitForm: (BasicCollectionForm) -> Unit,
 ) : BasicCollectionCreateScreenState {
     override lateinit var form: Form<BasicCollectionForm>
 
@@ -82,52 +76,34 @@ private class BasicCollectionCreateScreenStateImpl(
 
     override val uiState by mutableStateOf(BasicCollectionsCreateScreenUiState())
 
-    override fun onSubmit(formData: BasicCollectionForm) {
-        coroutineScope.launch {
-            createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
-                .fold(
-                    onSuccess = { collection ->
-                        if (bookshelfId != BookshelfId() && path.isNotEmpty()) {
-                            addCollectionFile(
-                                collection = collection,
-                                bookshelfId = bookshelfId,
-                                path = path,
-                            )
-                        } else {
-                            appState.snackbarHostState.showSnackbar(
-                                getString(
-                                    Res.string.collection_editor_msg_success_create,
-                                    collection.name,
-                                ),
-                            )
-                            event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                        }
-                    },
-                    onError = {},
-                )
-        }
-    }
+    init {
+        eventFlow.onEach {
+            when (it) {
+                is BasicCollectionCreateViewModelEvent.CreateSuccess -> {
+                    appState.snackbarHostState.showSnackbar(
+                        getString(
+                            Res.string.collection_editor_msg_success_create,
+                            it.name,
+                        ),
+                    )
+                    event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
+                }
 
-    private suspend fun addCollectionFile(
-        collection: Collection,
-        bookshelfId: BookshelfId,
-        path: String,
-    ) {
-        addCollectionFileUseCase(
-            AddCollectionFileUseCase.Request(CollectionFile(collection.id, bookshelfId, path)),
-        ).fold(
-            onSuccess = {
-                event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                withContext(Dispatchers.Main) {
+                is BasicCollectionCreateViewModelEvent.CreateAddSuccess -> {
+                    event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                     appState.snackbarHostState.showSnackbar(
                         getString(
                             Res.string.collection_editor_msg_success_create_add,
-                            collection.name,
+                            it.name,
                         ),
                     )
                 }
-            },
-            onError = {},
-        )
+            }
+        }
+            .launchIn(coroutineScope)
+    }
+
+    override fun onSubmit(formData: BasicCollectionForm) {
+        submitForm(formData)
     }
 }

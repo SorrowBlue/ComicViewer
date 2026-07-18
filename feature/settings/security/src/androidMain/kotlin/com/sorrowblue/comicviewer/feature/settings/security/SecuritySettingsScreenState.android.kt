@@ -33,6 +33,7 @@ import comicviewer.feature.settings.security.generated.resources.settings_securi
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_bio_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_disable_bio_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_bio_auth
+import comicviewer.framework.ui.generated.resources.Res as UiRes
 import comicviewer.framework.ui.generated.resources.cancel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
@@ -41,7 +42,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
-import comicviewer.framework.ui.generated.resources.Res as UiRes
 
 @Composable
 internal actual fun rememberSecuritySettingsScreenState(
@@ -275,7 +275,11 @@ private class SecuritySettingsScreenStateImpl(
     @SuppressLint("RestrictedApi")
     override fun onResume() {
         if (settingsFlow.value.useBiometrics) {
-            when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
+            when (
+                biometricManager.canAuthenticate(
+                    BiometricManager.Authenticators.BIOMETRIC_WEAK,
+                )
+            ) {
                 BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED,
                 BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
                 BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,

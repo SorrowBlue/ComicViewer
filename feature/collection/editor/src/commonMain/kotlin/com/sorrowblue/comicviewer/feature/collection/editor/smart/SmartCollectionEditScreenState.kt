@@ -10,15 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.domain.EmptyRequest
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
-import com.sorrowblue.comicviewer.domain.model.dataOrNull
-import com.sorrowblue.comicviewer.domain.model.fold
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
-import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
-import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.BookshelfField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
@@ -26,8 +21,12 @@ import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_not_get_bookshelf
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_all_bookshelf
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import soil.form.FieldError
@@ -37,31 +36,34 @@ import soil.form.compose.rememberForm
 import soil.form.compose.rememberFormState
 
 @Composable
-context(context: SmartCollectionEditScreenContext)
 internal fun rememberSmartCollectionEditScreenState(
     collectionId: CollectionId,
+    viewModel: SmartCollectionEditViewModel =
+        assistedMetroViewModel<SmartCollectionEditViewModel, SmartCollectionEditViewModel.Factory> {
+            create(collectionId)
+        },
 ): SmartCollectionEditorScreenState {
     val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
     return rememberSaveable(
         saver = SmartCollectionEditScreenImpl.saver(
-            collectionId = collectionId,
-            scope = coroutineScope,
+            coroutineScope = coroutineScope,
             formState = formState,
-            flowBookshelfListUseCase = context.flowBookshelfListUseCase,
-            getCollectionUseCase = context.getCollectionUseCase,
-            updateCollectionUseCase = context.updateCollectionUseCase,
+            collectionFlow = viewModel.collectionFlow,
+            bookshelfListFlow = viewModel.bookshelfListFlow,
+            eventFlow = viewModel.event,
+            submit = viewModel::submit,
         ),
     ) {
         SmartCollectionEditScreenImpl(
             isDataLoaded = false,
-            collectionId = collectionId,
             coroutineScope = coroutineScope,
             formState = formState,
-            flowBookshelfListUseCase = context.flowBookshelfListUseCase,
-            updateCollectionUseCase = context.updateCollectionUseCase,
-            getCollectionUseCase = context.getCollectionUseCase,
+            collectionFlow = viewModel.collectionFlow,
+            bookshelfListFlow = viewModel.bookshelfListFlow,
+            eventFlow = viewModel.event,
+            submit = viewModel::submit,
         )
     }.apply {
         form = rememberForm(formState, ::onSubmit)
@@ -70,32 +72,32 @@ internal fun rememberSmartCollectionEditScreenState(
 
 private class SmartCollectionEditScreenImpl(
     var isDataLoaded: Boolean,
-    private val collectionId: CollectionId,
-    flowBookshelfListUseCase: FlowBookshelfListUseCase,
-    private val getCollectionUseCase: GetCollectionUseCase,
     private val coroutineScope: CoroutineScope,
     private val formState: FormState<SmartCollectionForm>,
-    private val updateCollectionUseCase: UpdateCollectionUseCase,
+    collectionFlow: SharedFlow<SmartCollection?>,
+    bookshelfListFlow: SharedFlow<List<Bookshelf>?>,
+    eventFlow: SharedFlow<SmartCollectionEditViewModelEvent>,
+    private val submit: (SmartCollectionForm) -> Unit,
 ) : SmartCollectionEditorScreenState {
     companion object {
         fun saver(
-            collectionId: CollectionId,
-            scope: CoroutineScope,
+            coroutineScope: CoroutineScope,
             formState: FormState<SmartCollectionForm>,
-            flowBookshelfListUseCase: FlowBookshelfListUseCase,
-            getCollectionUseCase: GetCollectionUseCase,
-            updateCollectionUseCase: UpdateCollectionUseCase,
+            collectionFlow: SharedFlow<SmartCollection?>,
+            bookshelfListFlow: SharedFlow<List<Bookshelf>?>,
+            eventFlow: SharedFlow<SmartCollectionEditViewModelEvent>,
+            submit: (SmartCollectionForm) -> Unit,
         ) = androidx.compose.runtime.saveable.Saver<SmartCollectionEditScreenImpl, Boolean>(
             save = { it.isDataLoaded },
             restore = {
                 SmartCollectionEditScreenImpl(
                     isDataLoaded = it,
-                    collectionId = collectionId,
-                    coroutineScope = scope,
-                    flowBookshelfListUseCase = flowBookshelfListUseCase,
-                    getCollectionUseCase = getCollectionUseCase,
-                    updateCollectionUseCase = updateCollectionUseCase,
+                    coroutineScope = coroutineScope,
                     formState = formState,
+                    collectionFlow = collectionFlow,
+                    bookshelfListFlow = bookshelfListFlow,
+                    eventFlow = eventFlow,
+                    submit = submit,
                 )
             },
         )
@@ -109,76 +111,49 @@ private class SmartCollectionEditScreenImpl(
 
     init {
         if (!isDataLoaded) {
+            uiState = uiState.copy(enabledForm = false)
             coroutineScope.launch {
-                uiState = uiState.copy(enabledForm = false)
-                getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
-                    .first()
-                    .fold(
-                        onSuccess = { collection ->
-                            require(collection is SmartCollection)
-                            isDataLoaded = true
-                            formState.reset(
-                                SmartCollectionForm(
-                                    name = collection.name,
-                                    bookshelfId = collection.bookshelfId ?: BookshelfId(),
-                                    searchCondition = collection.searchCondition,
-                                ),
-                            )
-                        },
-                        onError = {},
+                collectionFlow.first()?.let { collection ->
+                    isDataLoaded = true
+                    formState.reset(
+                        SmartCollectionForm(
+                            name = collection.name,
+                            bookshelfId = collection.bookshelfId ?: BookshelfId(),
+                            searchCondition = collection.searchCondition,
+                        ),
                     )
-                flowBookshelfListUseCase(EmptyRequest).first().fold(
-                    onSuccess = { list ->
-                        uiState = uiState.copy(
-                            bookshelf = buildMap {
-                                put(
-                                    null,
-                                    getString(Res.string.collection_editor_label_all_bookshelf),
-                                )
-                                putAll(list.map { it.id to it.displayName })
-                            },
-                        )
-                    },
-                    onError = {
-                        formState.setError(
-                            BookshelfField to FieldError(
-                                getString(Res.string.collection_editor_error_not_get_bookshelf),
-                            ),
-                        )
-                    },
-                )
+                }
+                bookshelfListFlow.first()?.let { list ->
+                    uiState = uiState.copy(
+                        bookshelf = buildMap {
+                            put(
+                                null,
+                                getString(Res.string.collection_editor_label_all_bookshelf),
+                            )
+                            putAll(list.map { it.id to it.displayName })
+                        },
+                    )
+                } ?: run {
+                    formState.setError(
+                        BookshelfField to FieldError(
+                            getString(Res.string.collection_editor_error_not_get_bookshelf),
+                        ),
+                    )
+                }
                 uiState = uiState.copy(enabledForm = true)
             }
         }
+        eventFlow.onEach { event ->
+            when (event) {
+                SmartCollectionEditViewModelEvent.Complete -> {
+                    this.event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+                }
+            }
+        }.launchIn(coroutineScope)
     }
 
     override fun onSubmit(formData: SmartCollectionForm) {
-        coroutineScope.launch {
-            uiState = uiState.copy(enabledForm = false)
-            val collection =
-                getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
-                    .first()
-                    .dataOrNull() as SmartCollection
-            updateCollectionUseCase(
-                UpdateCollectionUseCase.Request(
-                    collection.copy(
-                        name = formData.name,
-                        bookshelfId = if (formData.bookshelfId ==
-                            BookshelfId()
-                        ) {
-                            null
-                        } else {
-                            formData.bookshelfId
-                        },
-                        searchCondition = formData.searchCondition,
-                    ),
-                ),
-            ).fold(
-                onSuccess = {
-                    event.emit(SmartCollectionEditorScreenStateEvent.Complete)
-                },
-                onError = {},
-            )
-        }
+        uiState = uiState.copy(enabledForm = false)
+        submit(formData)
     }
 }
