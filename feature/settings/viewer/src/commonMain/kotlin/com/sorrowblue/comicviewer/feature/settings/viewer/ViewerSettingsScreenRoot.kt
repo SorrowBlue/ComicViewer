@@ -13,7 +13,6 @@ import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirec
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
 
 @Composable
-context(context: ViewerSettingsScreenContext)
 internal fun ViewerSettingsScreenRoot(
     onBackClick: () -> Unit,
     onBindingDirectionClick: (BindingDirection) -> Unit,

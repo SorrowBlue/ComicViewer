@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.feature.settings.viewer
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 
-internal data class SettingsViewerScreenUiState(
+internal data class ViewerSettingsScreenUiState(
     val isStatusBarShow: Boolean = false,
     val isNavigationBarShow: Boolean = false,
     val isTurnOnScreen: Boolean = false,

@@ -13,13 +13,16 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.ReadingDirectionScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class BindingDirectionNavKey(val bindingDirection: BindingDirection) : NavKey
 
-internal fun EntryProviderScope<NavKey>.bindingDirectionNavEntry(navigator: Navigator) {
-    entry<BindingDirectionNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun bindingDirectionNavEntry(navigator: Navigator) {
+    scope.entry<BindingDirectionNavKey>(
         metadata = metadata {
             put(DialogSceneStrategy.Companion.DialogKey, DialogProperties())
         },

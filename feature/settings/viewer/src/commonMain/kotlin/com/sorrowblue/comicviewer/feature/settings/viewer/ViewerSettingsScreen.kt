@@ -49,7 +49,7 @@ import org.jetbrains.compose.resources.stringResource
 @NavDestination(ViewerSettingsNavKey::class)
 @Composable
 internal fun ViewerSettingsScreen(
-    uiState: SettingsViewerScreenUiState,
+    uiState: ViewerSettingsScreenUiState,
     onBackClick: () -> Unit,
     onStatusBarShowChange: (Boolean) -> Unit,
     onNavigationBarShowChange: (Boolean) -> Unit,
@@ -180,7 +180,7 @@ internal fun ViewerSettingsScreen(
 private fun ViewerSettingsScreenPreview() {
     PreviewTheme {
         ViewerSettingsScreen(
-            uiState = SettingsViewerScreenUiState(),
+            uiState = ViewerSettingsScreenUiState(),
             onBackClick = {},
             onStatusBarShowChange = {},
             onNavigationBarShowChange = {},
