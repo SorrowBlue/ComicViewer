@@ -10,30 +10,28 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
-import com.sorrowblue.comicviewer.feature.collection.add.BasicCollectionAddScreenContext
 import com.sorrowblue.comicviewer.feature.collection.add.BasicCollectionAddScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionCreateNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.takahirom.rin.rememberRetained
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class BasicCollectionAddNavKey(val bookshelfId: BookshelfId, val path: PathString) : NavKey
 
-context(factory: BasicCollectionAddScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.basicCollectionAddNavEntry(navigator: Navigator) {
-    entry<BasicCollectionAddNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun basicCollectionAddNavEntry(navigator: Navigator) {
+    scope.entry<BasicCollectionAddNavKey>(
         metadata = DialogSceneStrategy.dialog(DialogProperties(usePlatformDefaultWidth = false)),
     ) {
-        with(rememberRetained { factory.createBasicCollectionAddScreenContext() }) {
-            BasicCollectionAddScreenRoot(
-                bookshelfId = it.bookshelfId,
-                path = it.path,
-                onBackClick = navigator::goBack,
-                onCollectionCreateClick = { id, path ->
-                    navigator.navigate(BasicCollectionCreateNavKey(id, path))
-                },
-            )
-        }
+        BasicCollectionAddScreenRoot(
+            bookshelfId = it.bookshelfId,
+            path = it.path,
+            onBackClick = navigator::goBack,
+            onCollectionCreateClick = { id, path ->
+                navigator.navigate(BasicCollectionCreateNavKey(id, path))
+            },
+        )
     }
 }

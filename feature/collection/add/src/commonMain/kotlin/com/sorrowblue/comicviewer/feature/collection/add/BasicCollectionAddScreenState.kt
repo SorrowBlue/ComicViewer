@@ -12,24 +12,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
-import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
-import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
-import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
-import com.sorrowblue.comicviewer.framework.ui.paging.rememberPagingItems
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 internal interface BasicCollectionAddScreenState {
     val uiState: BasicCollectionAddScreenUiState
@@ -42,54 +38,44 @@ internal interface BasicCollectionAddScreenState {
 }
 
 @Composable
-context(context: BasicCollectionAddScreenContext)
 internal fun rememberBasicCollectionAddScreenState(
     bookshelfId: BookshelfId,
     path: String,
+    viewModel: BasicCollectionAddViewModel = assistedMetroViewModel<BasicCollectionAddViewModel, BasicCollectionAddViewModel.Factory> {
+        create(bookshelfId, path)
+    },
 ): BasicCollectionAddScreenState {
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
-    val lazyPagingItems = rememberPagingItems {
-        context.pagingCollectionExistUseCase(
-            PagingCollectionExistUseCase.Request(
-                pagingConfig = PagingConfig(PageSize),
-                bookshelfId = bookshelfId,
-                path = path,
-                collectionType = CollectionType.Basic,
-            ),
-        )
-    }
-    return remember(bookshelfId, path) {
+    return remember(viewModel) {
         BasicCollectionAddScreenStateImpl(
-            bookshelfId = bookshelfId,
-            path = path,
             coroutineScope = coroutineScope,
-            removeCollectionFileUseCase = context.removeCollectionFileUseCase,
-            addCollectionFileUseCase = context.addCollectionFileUseCase,
-            collectionSettingsUseCase = context.collectionSettingsUseCase,
             lazyListState = lazyListState,
-            lazyPagingItems = lazyPagingItems,
+            collectionSettingsFlow = viewModel.collectionSettingsFlow,
+            updateCollectionSettings = viewModel::updateCollectionSettings,
+            addCollection = viewModel::addCollection,
+            removeCollection = viewModel::removeCollection
         )
+    }.apply {
+        lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     }
 }
 
-private const val PageSize = 20
-
 private class BasicCollectionAddScreenStateImpl(
-    private val bookshelfId: BookshelfId,
-    private val path: String,
-    private val coroutineScope: CoroutineScope,
-    private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
-    private val addCollectionFileUseCase: AddCollectionFileUseCase,
-    private val collectionSettingsUseCase: CollectionSettingsUseCase,
+    coroutineScope: CoroutineScope,
     override val lazyListState: LazyListState,
-    override val lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>,
+    collectionSettingsFlow: SharedFlow<CollectionSettings>,
+    private val updateCollectionSettings: ((CollectionSettings) -> CollectionSettings) -> Unit,
+    private val addCollection: (CollectionId) -> Unit,
+    private val removeCollection: (CollectionId) -> Unit,
 ) : BasicCollectionAddScreenState {
+
     override var uiState by mutableStateOf(BasicCollectionAddScreenUiState())
         private set
+    override lateinit var lazyPagingItems: LazyPagingItems<Pair<Collection, Boolean>>
 
     init {
-        collectionSettingsUseCase.settings
+        collectionSettingsFlow
             .map { it.recent }
             .distinctUntilChanged()
             .onEach {
@@ -101,37 +87,17 @@ private class BasicCollectionAddScreenStateImpl(
     }
 
     override fun onClickCollectionSort(sort: CollectionSort) {
-        coroutineScope.launch {
-            collectionSettingsUseCase.edit {
-                it.copy(recent = sort == CollectionSort.Recent)
-            }
-            lazyPagingItems.refresh()
+        updateCollectionSettings {
+            it.copy(recent = sort == CollectionSort.Recent)
         }
+        lazyPagingItems.refresh()
     }
 
     override fun onCollectionClick(collection: Collection, exist: Boolean) {
-        coroutineScope.launch {
-            if (exist) {
-                removeCollectionFileUseCase(
-                    RemoveCollectionFileUseCase.Request(
-                        CollectionFile(
-                            collection.id,
-                            bookshelfId,
-                            path,
-                        ),
-                    ),
-                )
-            } else {
-                addCollectionFileUseCase(
-                    AddCollectionFileUseCase.Request(
-                        CollectionFile(
-                            collection.id,
-                            bookshelfId,
-                            path,
-                        ),
-                    ),
-                )
-            }
+        if (exist) {
+            removeCollection(collection.id)
+        } else {
+            addCollection(collection.id)
         }
     }
 }

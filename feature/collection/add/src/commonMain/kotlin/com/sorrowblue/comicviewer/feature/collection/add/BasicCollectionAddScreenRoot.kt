@@ -11,7 +11,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
 
 @Composable
-context(context: BasicCollectionAddScreenContext)
 internal fun BasicCollectionAddScreenRoot(
     bookshelfId: BookshelfId,
     path: String,
