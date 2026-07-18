@@ -12,7 +12,6 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorrowblue.comicviewer.feature.settings.security.subscreen.BiometricsRequestDialog
 
 @Composable
-context(context: SecuritySettingsScreenContext)
 internal fun SecuritySettingsScreenRoot(
     onBackClick: () -> Unit,
     onChangeAuthEnable: (Boolean) -> Unit,

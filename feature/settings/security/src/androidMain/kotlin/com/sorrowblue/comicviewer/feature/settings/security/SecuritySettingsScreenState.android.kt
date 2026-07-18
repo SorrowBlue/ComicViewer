@@ -23,7 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
+import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_msg_desabled_bio_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_msg_disabled_bio_auth
@@ -33,28 +33,30 @@ import comicviewer.feature.settings.security.generated.resources.settings_securi
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_bio_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_text_disable_bio_auth
 import comicviewer.feature.settings.security.generated.resources.settings_security_title_bio_auth
-import comicviewer.framework.ui.generated.resources.Res as UiRes
 import comicviewer.framework.ui.generated.resources.cancel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
+import comicviewer.framework.ui.generated.resources.Res as UiRes
 
 @Composable
-context(context: SecuritySettingsScreenContext)
-internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScreenState {
+internal actual fun rememberSecuritySettingsScreenState(
+    viewModel: SecuritySettingsViewModel,
+): SecuritySettingsScreenState {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val androidContext = LocalContext.current
-    val state = remember(scope, snackbarHostState, androidContext, context) {
+    val state = remember(scope, snackbarHostState, androidContext, viewModel) {
         SecuritySettingsScreenStateImpl(
             context = androidContext,
             scope = scope,
-            manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase,
             snackbarHostState = snackbarHostState,
+            settingsFlow = viewModel.settingsFlow,
+            updateSettings = viewModel::updateSettings,
         )
     }
     state.resultLauncherState.value = rememberLauncherForActivityResult(
@@ -67,8 +69,9 @@ internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScree
 private class SecuritySettingsScreenStateImpl(
     private val context: Context,
     private val scope: CoroutineScope,
-    private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
     override val snackbarHostState: SnackbarHostState,
+    private val settingsFlow: StateFlow<SecuritySettings>,
+    private val updateSettings: ((SecuritySettings) -> SecuritySettings) -> Unit,
 ) : SecuritySettingsScreenState {
     private val biometricManager = BiometricManager.from(context)
 
@@ -83,14 +86,13 @@ private class SecuritySettingsScreenStateImpl(
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
     init {
-        manageSecuritySettingsUseCase.settings
-            .onEach {
-                uiState = uiState.copy(
-                    isAuthEnabled = it.password != null,
-                    isBackgroundLockEnabled = it.lockOnBackground,
-                    isBiometricEnabled = it.useBiometrics,
-                )
-            }.launchIn(scope)
+        settingsFlow.onEach {
+            uiState = uiState.copy(
+                isAuthEnabled = it.password != null,
+                isBackgroundLockEnabled = it.lockOnBackground,
+                isBiometricEnabled = it.useBiometrics,
+            )
+        }.launchIn(scope)
         val state = BiometricManager
             .from(
                 context,
@@ -166,11 +168,7 @@ private class SecuritySettingsScreenStateImpl(
                     super.onAuthenticationSucceeded(result)
                     logcat { "Authentication succeeded!" }
                     logcat { "整体認証を有効にする" }
-                    scope.launch {
-                        manageSecuritySettingsUseCase.edit {
-                            it.copy(useBiometrics = true)
-                        }
-                    }
+                    updateSettings { it.copy(useBiometrics = true) }
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             getString(Res.string.settings_security_msg_enabled_bio_auth),
@@ -192,11 +190,7 @@ private class SecuritySettingsScreenStateImpl(
     }
 
     override fun onChangeBackgroundLockEnabled(value: Boolean) {
-        scope.launch {
-            manageSecuritySettingsUseCase.edit {
-                it.copy(lockOnBackground = value)
-            }
-        }
+        updateSettings { it.copy(lockOnBackground = value) }
     }
 
     @SuppressLint("RestrictedApi")
@@ -256,11 +250,7 @@ private class SecuritySettingsScreenStateImpl(
                         super.onAuthenticationSucceeded(result)
                         logcat { "Authentication succeeded!" }
                         logcat { "整体認証を無効にする" }
-                        scope.launch {
-                            manageSecuritySettingsUseCase.edit {
-                                it.copy(useBiometrics = false)
-                            }
-                        }
+                        updateSettings { it.copy(useBiometrics = false) }
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 getString(Res.string.settings_security_msg_disabled_bio_auth),
@@ -284,28 +274,17 @@ private class SecuritySettingsScreenStateImpl(
 
     @SuppressLint("RestrictedApi")
     override fun onResume() {
-        scope.launch {
-            if (manageSecuritySettingsUseCase.settings.first().useBiometrics) {
-                when (
-                    biometricManager.canAuthenticate(
-                        BiometricManager.Authenticators.BIOMETRIC_WEAK,
-                    )
-                ) {
-                    BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED,
-                    BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
-                    BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
-                    BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
-                    BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
-                    BiometricManager.BIOMETRIC_ERROR_NOT_ENABLED_FOR_APPS,
-                    ->
-                        scope.launch {
-                            manageSecuritySettingsUseCase.edit {
-                                it.copy(useBiometrics = false)
-                            }
-                        }
+        if (settingsFlow.value.useBiometrics) {
+            when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
+                BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED,
+                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
+                BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED,
+                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
+                BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
+                BiometricManager.BIOMETRIC_ERROR_NOT_ENABLED_FOR_APPS,
+                -> updateSettings { it.copy(useBiometrics = false) }
 
-                    BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> Unit
-                }
+                BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> Unit
             }
         }
     }

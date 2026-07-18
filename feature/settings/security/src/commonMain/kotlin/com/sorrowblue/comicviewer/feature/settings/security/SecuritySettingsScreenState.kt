@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.feature.settings.security
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 
 internal interface SecuritySettingsScreenState {
     fun onChangeBackgroundLockEnabled(value: Boolean)
@@ -23,5 +24,6 @@ internal interface SecuritySettingsScreenState {
 }
 
 @Composable
-context(context: SecuritySettingsScreenContext)
-internal expect fun rememberSecuritySettingsScreenState(): SecuritySettingsScreenState
+internal expect fun rememberSecuritySettingsScreenState(
+    viewModel: SecuritySettingsViewModel = metroViewModel(),
+): SecuritySettingsScreenState

@@ -11,67 +11,66 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
+import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @Composable
-context(context: SecuritySettingsScreenContext)
-internal actual fun rememberSecuritySettingsScreenState(): SecuritySettingsScreenState {
+internal actual fun rememberSecuritySettingsScreenState(
+    viewModel: SecuritySettingsViewModel,
+): SecuritySettingsScreenState {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    val manageSecuritySettingsUseCase = context.manageSecuritySettingsUseCase
     return remember {
         SecuritySettingsScreenStateImpl(
             scope = scope,
-            manageSecuritySettingsUseCase = manageSecuritySettingsUseCase,
             snackbarHostState = snackbarHostState,
+            settingsFlow = viewModel.settingsFlow,
+            updateSettings = viewModel::updateSettings,
         )
     }
 }
 
 private class SecuritySettingsScreenStateImpl(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     override val snackbarHostState: SnackbarHostState,
-    private val manageSecuritySettingsUseCase: ManageSecuritySettingsUseCase,
+    settingsFlow: StateFlow<SecuritySettings>,
+    private val updateSettings: ((SecuritySettings) -> SecuritySettings) -> Unit,
 ) : SecuritySettingsScreenState {
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
     init {
         uiState = uiState.copy(isBiometricCanBeUsed = false)
-        manageSecuritySettingsUseCase.settings
-            .onEach {
-                uiState = uiState.copy(
-                    isAuthEnabled = it.password != null,
-                    isBackgroundLockEnabled = it.lockOnBackground,
-                    isBiometricEnabled = it.useBiometrics,
-                )
-            }.launchIn(scope)
+        settingsFlow.onEach {
+            uiState = uiState.copy(
+                isAuthEnabled = it.password != null,
+                isBackgroundLockEnabled = it.lockOnBackground,
+                isBiometricEnabled = it.useBiometrics,
+            )
+        }.launchIn(scope)
     }
 
     override fun onChangeBackgroundLockEnabled(value: Boolean) {
-        scope.launch {
-            manageSecuritySettingsUseCase.edit {
-                it.copy(lockOnBackground = value)
-            }
+        updateSettings {
+            it.copy(lockOnBackground = value)
         }
     }
 
     override fun onChangeBiometricEnabled(value: Boolean) {
-        // TODO()
+        // Do nothing.
     }
 
     override fun onResume() {
-        // TODO()
+        // Do nothing.
     }
 
     override fun onBiometricsDialogClick() {
-        // TODO()
+        // Do nothing.
     }
 
     override fun onBiometricsDialogDismissRequest() {
-        // TODO()
+        // Do nothing.
     }
 }
