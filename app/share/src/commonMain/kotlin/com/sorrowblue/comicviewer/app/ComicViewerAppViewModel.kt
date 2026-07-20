@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsU
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
-import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -39,7 +38,6 @@ class ComicViewerAppViewModel(
     val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
     val navKeySubclassMap: Set<NavKeyEntry>,
-    val screenEntryProviders: Set<ScreenEntryProvider>,
     val navigationEntryProvider: Set<NavigationEntryProvider>,
     val navigationKeys: Set<NavigationKey>,
 ) : ViewModel() {

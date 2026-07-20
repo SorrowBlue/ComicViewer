@@ -10,13 +10,16 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class ImageFormatNavKey(val imageFormat: ImageFormat) : NavKey
 
-internal fun EntryProviderScope<NavKey>.imageFormatNavEntry(navigator: Navigator) {
-    entry<ImageFormatNavKey>(metadata = DialogSceneStrategy.dialog()) {
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun imageFormatNavEntry(navigator: Navigator) {
+    scope.entry<ImageFormatNavKey>(metadata = DialogSceneStrategy.dialog()) {
         ThumbnailFormatScreenRoot(
             imageFormat = it.imageFormat,
             onDismissRequest = navigator::goBack,

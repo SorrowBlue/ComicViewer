@@ -8,7 +8,6 @@ import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
-import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenContext
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.FilterQualityResultKey
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.SortOrderScreenResultKey
@@ -17,17 +16,18 @@ import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailord
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
 import io.github.irgaly.navigation3.resultstate.resultConsumer
-import io.github.takahirom.rin.rememberRetained
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object FolderSettingsNavKey : NavKey
 
-context(factory: FolderSettingsScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.folderSettingsNavEntry(navigator: Navigator) {
-    entry<FolderSettingsNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun folderSettingsNavEntry(navigator: Navigator) {
+    scope.entry<FolderSettingsNavKey>(
         metadata = metadata {
             put(
                 NavigationResultMetadata.ResultConsumerKey,
@@ -43,23 +43,21 @@ internal fun EntryProviderScope<NavKey>.folderSettingsNavEntry(navigator: Naviga
             transitionMaterialSharedAxisX()
         } + ListDetailSceneStrategy.detailPane("Settings"),
     ) {
-        with(rememberRetained { factory.createFolderSettingsScreenContext() }) {
-            FolderSettingsScreenRoot(
-                onBackClick = navigator::goBack,
-                onSortTypeClick = { navigator.navigate(SortTypeNavKey(it)) },
-                onFolderThumbnailOrderClick = {
-                    navigator.navigate(
-                        FolderThumbnailOrderNavKey(it),
-                    )
-                },
-                onImageFormatClick = { navigator.navigate(ImageFormatNavKey(it)) },
-                onImageScaleClick = { navigator.navigate(ImageScaleNavKey(it)) },
-                onImageFilterQualityClick = {
-                    navigator.navigate(
-                        ImageFilterQualityNavKey(it),
-                    )
-                },
-            )
-        }
+        FolderSettingsScreenRoot(
+            onBackClick = navigator::goBack,
+            onSortTypeClick = { navigator.navigate(SortTypeNavKey(it)) },
+            onFolderThumbnailOrderClick = {
+                navigator.navigate(
+                    FolderThumbnailOrderNavKey(it),
+                )
+            },
+            onImageFormatClick = { navigator.navigate(ImageFormatNavKey(it)) },
+            onImageScaleClick = { navigator.navigate(ImageScaleNavKey(it)) },
+            onImageFilterQualityClick = {
+                navigator.navigate(
+                    ImageFilterQualityNavKey(it),
+                )
+            },
+        )
     }
 }

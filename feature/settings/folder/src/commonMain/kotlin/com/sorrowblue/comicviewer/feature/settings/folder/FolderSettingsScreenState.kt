@@ -10,18 +10,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 internal interface FolderSettingsScreenState {
     val uiState: FolderSettingsScreenUiState
@@ -52,22 +52,27 @@ internal interface FolderSettingsScreenState {
 }
 
 @Composable
-context(context: FolderSettingsScreenContext)
-internal fun rememberFolderSettingsScreenState(): FolderSettingsScreenState {
+internal fun rememberFolderSettingsScreenState(
+    viewModel: FolderSettingsViewModel = metroViewModel(),
+): FolderSettingsScreenState {
     val coroutineScope = rememberCoroutineScope()
     return remember(coroutineScope) {
         FolderSettingsScreenStateImpl(
-            manageFolderSettingsUseCase = context.manageFolderSettingsUseCase,
-            manageFolderDisplaySettingsUseCase = context.manageFolderDisplaySettingsUseCase,
             coroutineScope = coroutineScope,
+            folderSettingsFlow = viewModel.folderSettingsFlow,
+            folderDisplaySettingsFlow = viewModel.folderDisplaySettingsFlow,
+            updateFolderSettings = { viewModel.updateFolderSettings(it) },
+            updateFolderDisplaySettings = { viewModel.updateFolderDisplaySettings(it) }
         )
     }
 }
 
 private class FolderSettingsScreenStateImpl(
-    private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
-    private val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
+    folderSettingsFlow: SharedFlow<FolderSettings>,
+    folderDisplaySettingsFlow: SharedFlow<FolderDisplaySettings>,
+    private val updateFolderSettings: ((FolderSettings) -> FolderSettings) -> Unit,
+    private val updateFolderDisplaySettings: ((FolderDisplaySettings) -> FolderDisplaySettings) -> Unit,
 ) : FolderSettingsScreenState {
     override var uiState: FolderSettingsScreenUiState by mutableStateOf(
         FolderSettingsScreenUiState(),
@@ -75,76 +80,61 @@ private class FolderSettingsScreenStateImpl(
         private set
 
     init {
-        manageFolderSettingsUseCase.settings
-            .onEach {
-                uiState = uiState.copy(isOpenImageFolder = it.resolveImageFolder)
-            }.launchIn(coroutineScope)
-        manageFolderDisplaySettingsUseCase.settings
-            .onEach {
-                uiState = uiState.copy(
-                    showHiddenFiles = it.showHiddenFiles,
-                    showFilesExtension = it.showFilesExtension,
-                    fileSort = it.sortType,
-                    showThumbnails = it.showThumbnails,
-                    imageScale = it.imageScale,
-                    imageFilterQuality = it.imageFilterQuality,
-                    imageFormat = it.imageFormat,
-                    thumbnailQuality = it.thumbnailQuality,
-                    isSavedThumbnail = it.isSavedThumbnail,
-                    fontSize = it.fontSize,
-                    folderThumbnailOrder = it.folderThumbnailOrder,
-                )
-            }.launchIn(coroutineScope)
+        combine(
+            folderSettingsFlow,
+            folderDisplaySettingsFlow
+        ) { folderSettings, folderDisplaySettings ->
+            uiState = uiState.copy(
+                isOpenImageFolder = folderSettings.resolveImageFolder,
+                showHiddenFiles = folderDisplaySettings.showHiddenFiles,
+                showFilesExtension = folderDisplaySettings.showFilesExtension,
+                fileSort = folderDisplaySettings.sortType,
+                showThumbnails = folderDisplaySettings.showThumbnails,
+                imageScale = folderDisplaySettings.imageScale,
+                imageFilterQuality = folderDisplaySettings.imageFilterQuality,
+                imageFormat = folderDisplaySettings.imageFormat,
+                thumbnailQuality = folderDisplaySettings.thumbnailQuality,
+                isSavedThumbnail = folderDisplaySettings.isSavedThumbnail,
+                fontSize = folderDisplaySettings.fontSize,
+                folderThumbnailOrder = folderDisplaySettings.folderThumbnailOrder,
+            )
+        }.launchIn(coroutineScope)
     }
 
     override fun onChangeOpenImageFolder(value: Boolean) {
-        coroutineScope.launch {
-            manageFolderSettingsUseCase.edit {
-                it.copy(resolveImageFolder = value)
-            }
-        }
+        updateFolderSettings { it.copy(resolveImageFolder = value) }
     }
 
     override fun onShowFilesExtensionChange(value: Boolean) =
-        editFolderDisplaySettings { it.copy(showFilesExtension = value) }
+        updateFolderDisplaySettings { it.copy(showFilesExtension = value) }
 
     override fun onShowHiddenFilesChange(value: Boolean) =
-        editFolderDisplaySettings { it.copy(showHiddenFiles = value) }
+        updateFolderDisplaySettings { it.copy(showHiddenFiles = value) }
 
     override fun onShowThumbnailsChange(value: Boolean) =
-        editFolderDisplaySettings { it.copy(showThumbnails = value) }
+        updateFolderDisplaySettings { it.copy(showThumbnails = value) }
 
     override fun onSavedThumbnailChange(value: Boolean) =
-        editFolderDisplaySettings { it.copy(isSavedThumbnail = value) }
+        updateFolderDisplaySettings { it.copy(isSavedThumbnail = value) }
 
     override fun onFontSizeChange(size: Int) =
-        editFolderDisplaySettings { it.copy(fontSize = size) }
+        updateFolderDisplaySettings { it.copy(fontSize = size) }
 
     override fun onThumbnailQualityChange(value: Int) =
-        editFolderDisplaySettings { it.copy(thumbnailQuality = value) }
+        updateFolderDisplaySettings { it.copy(thumbnailQuality = value) }
 
     override fun onImageFormatChange(value: ImageFormat) =
-        editFolderDisplaySettings { it.copy(imageFormat = value) }
+        updateFolderDisplaySettings { it.copy(imageFormat = value) }
 
     override fun onFileSortChange(value: SortType) =
-        editFolderDisplaySettings { it.copy(sortType = value) }
+        updateFolderDisplaySettings { it.copy(sortType = value) }
 
     override fun onImageScaleChange(value: ImageScale) =
-        editFolderDisplaySettings { it.copy(imageScale = value) }
+        updateFolderDisplaySettings { it.copy(imageScale = value) }
 
     override fun onImageFilterQualityChange(value: ImageFilterQuality) =
-        editFolderDisplaySettings { it.copy(imageFilterQuality = value) }
+        updateFolderDisplaySettings { it.copy(imageFilterQuality = value) }
 
     override fun onFolderThumbnailOrderChange(value: FolderThumbnailOrder) =
-        editFolderDisplaySettings { it.copy(folderThumbnailOrder = value) }
-
-    private fun editFolderDisplaySettings(
-        onEdit: (FolderDisplaySettings) -> FolderDisplaySettings,
-    ) {
-        coroutineScope.launch {
-            manageFolderDisplaySettingsUseCase.edit {
-                onEdit(it)
-            }
-        }
-    }
+        updateFolderDisplaySettings { it.copy(folderThumbnailOrder = value) }
 }

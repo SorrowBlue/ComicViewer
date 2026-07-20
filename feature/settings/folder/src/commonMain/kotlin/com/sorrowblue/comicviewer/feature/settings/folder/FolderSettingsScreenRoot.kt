@@ -20,7 +20,6 @@ import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailsca
 import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
 
 @Composable
-context(context: FolderSettingsScreenContext)
 internal fun FolderSettingsScreenRoot(
     onBackClick: () -> Unit,
     onSortTypeClick: (SortType) -> Unit,

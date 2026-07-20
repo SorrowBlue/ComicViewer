@@ -12,13 +12,16 @@ import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.settings.extension.ExtensionSettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object ExtensionSettingsNavKey : NavKey
 
-internal fun EntryProviderScope<NavKey>.extensionSettingsNavEntry(navigator: Navigator) {
-    entry<ExtensionSettingsNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun extensionSettingsNavEntry(navigator: Navigator) {
+    scope.entry<ExtensionSettingsNavKey>(
         metadata = metadata {
             transitionMaterialSharedAxisX()
         } + ListDetailSceneStrategy.detailPane("Settings"),

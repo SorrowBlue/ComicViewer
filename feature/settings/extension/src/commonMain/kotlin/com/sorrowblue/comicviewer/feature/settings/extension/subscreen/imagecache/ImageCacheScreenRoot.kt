@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 
 @Composable
-context(context: ImageCacheScreenContext)
 internal fun ImageCacheScreenRoot(onBackClick: () -> Unit) {
     val state = rememberImageCacheScreenState()
     ImageCacheScreen(

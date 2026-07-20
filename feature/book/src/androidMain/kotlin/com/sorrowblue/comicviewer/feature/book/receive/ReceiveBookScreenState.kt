@@ -18,10 +18,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
-import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.usecase.file.GetIntentBookUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
+import com.sorrowblue.comicviewer.domain.model.file.BookFile
+import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
 import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
@@ -31,12 +30,15 @@ import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import comicviewer.feature.book.generated.resources.Res
 import comicviewer.feature.book.generated.resources.book_error_file_not_opened
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
 internal interface ReceiveBookScreenState {
@@ -53,8 +55,13 @@ internal interface ReceiveBookScreenState {
 }
 
 @Composable
-context(context: ReceiveBookScreenContext)
-internal fun rememberReceiveBookScreenState(uri: String?): ReceiveBookScreenState {
+internal fun rememberReceiveBookScreenState(
+    uri: String?,
+    viewModel: ReceiveBookViewModel =
+        assistedMetroViewModel<ReceiveBookViewModel, ReceiveBookViewModel.Factory> {
+            create(uri)
+        },
+): ReceiveBookScreenState {
     val appContext = LocalContext.current
     val scope = rememberCoroutineScope()
     val currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() }
@@ -62,67 +69,53 @@ internal fun rememberReceiveBookScreenState(uri: String?): ReceiveBookScreenStat
     val systemUiController = rememberSystemUiController()
     return remember {
         ReceiveBookScreenStateImpl(
-            uri = uri,
             context = appContext,
-            scope = scope,
+            coroutineScope = scope,
             pagerState = pagerState,
             systemUiController = systemUiController,
             currentList = currentList,
-            getIntentBookUseCase = context.getIntentBookUseCase,
-            manageViewerSettingsUseCase = context.manageViewerSettingsUseCase,
+            viewerSettingsFlow = viewModel.viewerSettingsFlow,
+            bookFlow = viewModel.bookFlow,
         )
     }
 }
 
 private class ReceiveBookScreenStateImpl(
-    uri: String?,
     context: Context,
-    private val scope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
     override val pagerState: PagerState,
     override val systemUiController: SystemUiController,
     override val currentList: SnapshotStateList<PageItem>,
-    private val getIntentBookUseCase: GetIntentBookUseCase,
-    manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
-
+    viewerSettingsFlow: SharedFlow<ViewerSettings>,
+    bookFlow: SharedFlow<BookFile?>,
 ) : ReceiveBookScreenState {
     init {
-        if (uri == null) {
-            scope.launch {
+        bookFlow.onEach { bookFile ->
+            if (bookFile != null) {
+                uiState = BookScreenUiState.Loaded(
+                    bookFile,
+                    CollectionId(),
+                    BookSheetUiState(bookFile),
+                    alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
+                )
+                currentList.clear()
+                currentList.addAll(
+                    buildList {
+                        addAll(
+                            (1..bookFile.totalPageCount).map {
+                                BookPage.Default(it - 1)
+                            },
+                        )
+                    },
+                )
+            } else {
                 Toast.makeText(
                     context,
                     getString(Res.string.book_error_file_not_opened),
                     Toast.LENGTH_SHORT,
                 ).show()
             }
-        } else {
-            scope.launch {
-                getIntentBookUseCase(GetIntentBookUseCase.Request(uri)).collect { resource ->
-                    when (resource) {
-                        is Resource.Error -> Unit
-
-                        is Resource.Success -> {
-                            logcat { "book=${resource.data}" }
-                            uiState = BookScreenUiState.Loaded(
-                                resource.data,
-                                CollectionId(),
-                                BookSheetUiState(resource.data),
-                                alwaysOpenFromFirstPage = manageViewerSettingsUseCase.settings.first().alwaysOpenFromFirstPage,
-                            )
-                            currentList.clear()
-                            currentList.addAll(
-                                buildList {
-                                    addAll(
-                                        (1..resource.data.totalPageCount).map {
-                                            BookPage.Default(it - 1)
-                                        },
-                                    )
-                                },
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        }.launchIn(coroutineScope)
     }
 
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(""))
@@ -138,7 +131,7 @@ private class ReceiveBookScreenStateImpl(
     }
 
     override fun onPageChange(page: Int) {
-        scope.launch {
+        coroutineScope.launch {
             pagerState.animateScrollToPage(page)
         }
     }
@@ -146,7 +139,7 @@ private class ReceiveBookScreenStateImpl(
     val mutex = Mutex()
 
     override fun onPageLoaded(unratedPage: UnratedPage, bitmap: Bitmap) {
-        scope.launch {
+        coroutineScope.launch {
             mutex.withLock {
                 when (unratedPage) {
                     is BookPage.Spread.Unrated -> {

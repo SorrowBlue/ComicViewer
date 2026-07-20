@@ -19,7 +19,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.rememberNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
-import com.sorrowblue.comicviewer.framework.ui.navigation3.ScreenEntryProvider
 import com.sorrowblue.comicviewer.framework.ui.navigation3.serializer
 import com.sorrowblue.comicviewer.framework.ui.navigation3.subclass
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -81,7 +80,6 @@ fun rememberComicViewerUIState(
             restoreNavigation = viewModel.restoreNavigation,
             navigationHistoryRestore = viewModel::onNavigationHistoryRestore,
             navigationEntryProvider = viewModel.navigationEntryProvider,
-            screenEntryProviders = viewModel.screenEntryProviders,
         )
     }
 }
@@ -91,7 +89,6 @@ private class ComicViewerAppStateImpl(
     restoreNavigation: SharedFlow<RestoreNavigation>,
     override val navigator: Navigator,
     private val navigationHistoryRestore: () -> Unit,
-    private val screenEntryProviders: Set<ScreenEntryProvider>,
     private val navigationEntryProvider: Set<NavigationEntryProvider>,
 ) : ComicViewerAppState {
 
@@ -109,7 +106,6 @@ private class ComicViewerAppStateImpl(
     }
 
     override val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
-        screenEntryProviders.forEach { entryProvider -> entryProvider(navigator) }
         navigationEntryProvider.forEach { provider ->
             provider(navigator = navigator)
         }

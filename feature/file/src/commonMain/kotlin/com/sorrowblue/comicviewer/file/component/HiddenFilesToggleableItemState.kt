@@ -17,10 +17,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.material3.toggleableItem
 import comicviewer.feature.file.generated.resources.Res
 import comicviewer.feature.file.generated.resources.file_action_show_hidden
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
-import dev.zacsweers.metro.Scope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -84,19 +80,5 @@ private class HiddenFilesToggleableItemStateImpl(
                 it.copy(showHiddenFiles = checked)
             }
         }
-    }
-}
-
-@Scope
-annotation class HiddenFilesToggleableItemScope
-
-@GraphExtension(HiddenFilesToggleableItemScope::class)
-interface HiddenFilesToggleableItemContext {
-    val manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
-
-    @ContributesTo(AppScope::class)
-    @GraphExtension.Factory
-    interface Factory {
-        fun createHiddenFilesToggleableItemContext(): HiddenFilesToggleableItemContext
     }
 }

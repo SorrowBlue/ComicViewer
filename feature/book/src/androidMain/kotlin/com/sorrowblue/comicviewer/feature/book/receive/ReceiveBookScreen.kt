@@ -20,8 +20,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
 @NavDestination(ReceiveBookNavKey::class)
 @Composable
-context(context: ReceiveBookScreenContext)
-fun ReceiveBookScreenRoot(uri: String, onBackClick: () -> Unit) {
+internal fun ReceiveBookScreenRoot(uri: String, onBackClick: () -> Unit) {
     val state: ReceiveBookScreenState = rememberReceiveBookScreenState(uri = uri)
     if (state.uiState is BookScreenUiState.Loaded) {
         val uiState = state.uiState as BookScreenUiState.Loaded

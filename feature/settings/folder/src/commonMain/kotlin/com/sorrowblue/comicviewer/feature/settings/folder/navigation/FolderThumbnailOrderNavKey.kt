@@ -10,14 +10,17 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class FolderThumbnailOrderNavKey(val folderThumbnailOrder: FolderThumbnailOrder) :
     NavKey
 
-internal fun EntryProviderScope<NavKey>.folderThumbnailOrderNavEntry(navigator: Navigator) {
-    entry<FolderThumbnailOrderNavKey>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun folderThumbnailOrderNavEntry(navigator: Navigator) {
+    scope.entry<FolderThumbnailOrderNavKey>(
         metadata = DialogSceneStrategy.dialog(),
     ) {
         FolderThumbnailOrderScreenRoot(
