@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,7 +26,6 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_dis
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-context(context: BookshelfEditScreenContext)
 internal fun BookshelfWizardScreenRoot(key: BookshelfWizardNavKey, onBack: () -> Unit) {
     val state = rememberBookshelfWizardScreenState(key)
     BookshelfWizardScreen(

@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -32,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.DeviceEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditScreenUiState

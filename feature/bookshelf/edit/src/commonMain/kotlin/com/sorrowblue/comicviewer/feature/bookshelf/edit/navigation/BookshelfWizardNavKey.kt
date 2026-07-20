@@ -10,10 +10,9 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenContext
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfWizardScreenRoot
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard.BookshelfWizardScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import io.github.takahirom.rin.rememberRetained
+import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -27,28 +26,25 @@ sealed interface BookshelfWizardNavKey : NavKey {
         BookshelfWizardNavKey
 }
 
-context(factory: BookshelfEditScreenContext.Factory)
-internal fun EntryProviderScope<NavKey>.bookshelfWizardNavEntry(navigator: Navigator) {
-    entry<BookshelfWizardNavKey.Selection>(
+@NavigationEntry
+context(scope: EntryProviderScope<NavKey>)
+internal fun bookshelfWizardNavEntry(navigator: Navigator) {
+    scope.entry<BookshelfWizardNavKey.Selection>(
         metadata = DialogSceneStrategy.dialog(
             dialogProperties = DialogProperties(
                 usePlatformDefaultWidth = false,
             ),
         ),
     ) {
-        with(rememberRetained { factory.createBookshelfEditScreenContext() }) {
-            BookshelfWizardScreenRoot(it, onBack = navigator::goBack)
-        }
+        BookshelfWizardScreenRoot(it, onBack = navigator::goBack)
     }
-    entry<BookshelfWizardNavKey.Edit>(
+    scope.entry<BookshelfWizardNavKey.Edit>(
         metadata = DialogSceneStrategy.dialog(
             dialogProperties = DialogProperties(
                 usePlatformDefaultWidth = false,
             ),
         ),
     ) {
-        with(rememberRetained { factory.createBookshelfEditScreenContext() }) {
-            BookshelfWizardScreenRoot(it, onBack = navigator::goBack)
-        }
+        BookshelfWizardScreenRoot(it, onBack = navigator::goBack)
     }
 }

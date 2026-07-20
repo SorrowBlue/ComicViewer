@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard
 
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.framework.ui.material3.animateScrollToPage
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
@@ -22,6 +23,7 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_sel
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_title_edit_of
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_title_register
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_title_register_of
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -177,7 +179,7 @@ private class BookshelfWizardScreenStateImpl(
                     )
                 }
                 coroutineScope.launch {
-                    delay(50)
+                    delay(50.milliseconds)
                     pagerState.animateScrollToPage(pages.lastIndex)
                 }
             }
@@ -198,7 +200,7 @@ private class BookshelfWizardScreenStateImpl(
                     )
                 }
                 coroutineScope.launch {
-                    delay(50)
+                    delay(50.milliseconds)
                     pagerState.animateScrollToPage(pages.lastIndex)
                 }
             }

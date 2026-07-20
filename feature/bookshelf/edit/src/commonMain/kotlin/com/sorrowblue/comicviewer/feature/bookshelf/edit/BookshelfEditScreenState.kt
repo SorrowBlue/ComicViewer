@@ -8,16 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
-import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
-import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.dataOrNull
-import com.sorrowblue.comicviewer.domain.model.fold
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectFieldName
@@ -38,12 +32,12 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_err
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_path
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_port
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_msg_cancelled_folder_selection
-import io.github.takahirom.rin.rememberRetained
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import logcat.logcat
 import org.jetbrains.compose.resources.getString
 import soil.form.FieldError
 import soil.form.FieldOptions
@@ -90,9 +84,12 @@ internal interface LocalEditScreenState : BookshelfEditScreenState {
 }
 
 @Composable
-context(context: BookshelfEditScreenContext)
 internal fun rememberBookshelfEditScreenState(
     editType: BookshelfEditType,
+    viewModel: BookshelfEditViewModel =
+        assistedMetroViewModel<BookshelfEditViewModel, BookshelfEditViewModel.Factory> {
+            create(editType)
+        },
 ): BookshelfEditScreenState {
     val coroutineScope = rememberCoroutineScope()
     val permissionRequester = rememberLocalNetworkPermissionRequester()
@@ -112,14 +109,23 @@ internal fun rememberBookshelfEditScreenState(
                         ),
                     ),
                 )
-            rememberRetained {
-                SmbEditScreenStateImpl(
-                    editType = editType,
-                    getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
-                    registerBookshelfUseCase = context.registerBookshelfUseCase,
+            rememberSaveable(
+                saver = SmbEditScreenStateImpl.saver(
                     coroutineScope = coroutineScope,
                     formState = formState,
                     initialForm = SmbEditForm(),
+                    eventFlow = viewModel.event,
+                    bookshelfEditFormFlow = viewModel.formFlow,
+                    submit = viewModel::submit,
+                ),
+            ) {
+                SmbEditScreenStateImpl(
+                    coroutineScope = coroutineScope,
+                    formState = formState,
+                    initialForm = SmbEditForm(),
+                    eventFlow = viewModel.event,
+                    bookshelfEditFormFlow = viewModel.formFlow,
+                    submit = viewModel::submit,
                 )
             }.apply {
                 form = rememberForm(state = formState, onSubmit = ::onSubmit)
@@ -129,14 +135,24 @@ internal fun rememberBookshelfEditScreenState(
 
         BookshelfType.DEVICE -> {
             val formState = rememberFormState(DeviceEditForm(), kSerializableSaver())
-            rememberRetained {
+
+            rememberSaveable(
+                saver = LocalEditScreenStateImpl.saver(
+                    coroutineScope = coroutineScope,
+                    formState = formState,
+                    initialForm = SmbEditForm(),
+                    eventFlow = viewModel.event,
+                    bookshelfEditFormFlow = viewModel.formFlow,
+                    submit = viewModel::submit,
+                ),
+            ) {
                 LocalEditScreenStateImpl(
-                    editType = editType,
-                    getBookshelfInfoUseCase = context.getBookshelfInfoUseCase,
-                    registerBookshelfUseCase = context.registerBookshelfUseCase,
                     coroutineScope = coroutineScope,
                     formState = formState,
                     initialForm = DeviceEditForm(),
+                    eventFlow = viewModel.event,
+                    bookshelfEditFormFlow = viewModel.formFlow,
+                    submit = viewModel::submit,
                 )
             }.apply {
                 form = rememberForm(state = formState, onSubmit = ::onSubmit)
@@ -151,19 +167,21 @@ internal fun rememberBookshelfEditScreenState(
 }
 
 private class SmbEditScreenStateImpl(
-    editType: BookshelfEditType,
-    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
-    registerBookshelfUseCase: RegisterBookshelfUseCase,
+    isInitialized: Boolean = false,
     coroutineScope: CoroutineScope,
     override val formState: FormState<SmbEditForm>,
     initialForm: BookshelfEditForm,
+    eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
+    bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
+    submit: (BookshelfEditForm) -> Unit,
 ) : BookshelfEditScreenStateImpl(
-    editType,
-    getBookshelfInfoUseCase,
-    registerBookshelfUseCase,
+    isInitialized,
     coroutineScope,
     formState,
     initialForm,
+    eventFlow,
+    bookshelfEditFormFlow,
+    submit,
 ),
     SmbEditScreenState {
     override lateinit var form: Form<SmbEditForm>
@@ -173,22 +191,48 @@ private class SmbEditScreenStateImpl(
     override fun onPermissionConfirmClick() {
         permissionRequester.onPermissionConfirmClick()
     }
+
+    companion object {
+        fun saver(
+            coroutineScope: CoroutineScope,
+            formState: FormState<SmbEditForm>,
+            initialForm: BookshelfEditForm,
+            eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
+            bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
+            submit: (BookshelfEditForm) -> Unit,
+        ): Saver<SmbEditScreenStateImpl, Boolean> = Saver(
+            save = { it.isInitialized },
+            restore = { isInitialized ->
+                SmbEditScreenStateImpl(
+                    isInitialized = isInitialized,
+                    coroutineScope = coroutineScope,
+                    formState = formState,
+                    initialForm = initialForm,
+                    eventFlow = eventFlow,
+                    bookshelfEditFormFlow = bookshelfEditFormFlow,
+                    submit = submit,
+                )
+            },
+        )
+    }
 }
 
 private class LocalEditScreenStateImpl(
-    editType: BookshelfEditType,
-    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
-    registerBookshelfUseCase: RegisterBookshelfUseCase,
+    isInitialized: Boolean = false,
     coroutineScope: CoroutineScope,
     override val formState: FormState<DeviceEditForm>,
     initialForm: BookshelfEditForm,
+    eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
+    bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
+    submit: (BookshelfEditForm) -> Unit,
 ) : BookshelfEditScreenStateImpl(
-    editType,
-    getBookshelfInfoUseCase,
-    registerBookshelfUseCase,
+    isInitialized,
     coroutineScope,
     formState,
     initialForm,
+    eventFlow,
+    bookshelfEditFormFlow,
+    submit,
 ),
     LocalEditScreenState {
     override lateinit var form: Form<DeviceEditForm>
@@ -203,151 +247,69 @@ private class LocalEditScreenStateImpl(
             )
         }
     }
+
+    companion object {
+        fun saver(
+            coroutineScope: CoroutineScope,
+            formState: FormState<DeviceEditForm>,
+            initialForm: BookshelfEditForm,
+            eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
+            bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
+            submit: (BookshelfEditForm) -> Unit,
+        ): Saver<LocalEditScreenStateImpl, Boolean> = Saver(
+            save = { it.isInitialized },
+            restore = { isInitialized ->
+                LocalEditScreenStateImpl(
+                    isInitialized = isInitialized,
+                    coroutineScope = coroutineScope,
+                    formState = formState,
+                    initialForm = initialForm,
+                    eventFlow = eventFlow,
+                    bookshelfEditFormFlow = bookshelfEditFormFlow,
+                    submit = submit,
+                )
+            },
+        )
+    }
 }
 
 private abstract class BookshelfEditScreenStateImpl(
-    private val editType: BookshelfEditType,
-    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
-    private val registerBookshelfUseCase: RegisterBookshelfUseCase,
+    protected var isInitialized: Boolean,
     var coroutineScope: CoroutineScope,
     override val formState: FormState<out BookshelfEditForm>,
     override var initialForm: BookshelfEditForm,
+    eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
+    bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
+    private val submit: (BookshelfEditForm) -> Unit,
 ) : IBookshelfEditScreenState {
     override val events: EventFlow<BookshelfEditScreenEvent> = EventFlow()
 
     override var uiState by mutableStateOf(BookshelfEditScreenUiState())
 
     init {
-        when (editType) {
-            is BookshelfEditType.Register -> {
-                uiState = uiState.copy(progress = false)
-            }
-
-            is BookshelfEditType.Edit -> {
-                uiState = uiState.copy(progress = true)
-                fetch(editType.bookshelfId)
-            }
-        }
-    }
-
-    fun fetch(bookshelfId: BookshelfId) {
-        coroutineScope.launch {
-            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId)).first().fold(
-                onSuccess = {
-                    val form: BookshelfEditForm
-                    when (val bookshelf = it.bookshelf) {
-                        is DeviceStorage -> {
-                            form = DeviceEditForm(
-                                displayName = bookshelf.displayName,
-                                path = it.folder.path,
-                            )
-                        }
-
-                        is SmbServer -> {
-                            form = SmbEditForm(
-                                displayName = bookshelf.displayName,
-                                host = bookshelf.host,
-                                port = bookshelf.port,
-                                path = it.folder.path
-                                    .removePrefix("/")
-                                    .removeSuffix("/"),
-                                auth = when (bookshelf.auth) {
-                                    is SmbServer.Auth.Guest -> SmbEditForm.Auth.Guest
-
-                                    is SmbServer.Auth.UsernamePassword ->
-                                        SmbEditForm.Auth.UserPass
-                                },
-                                domain = when (val auth = bookshelf.auth) {
-                                    is SmbServer.Auth.Guest -> ""
-                                    is SmbServer.Auth.UsernamePassword -> auth.domain
-                                },
-                                username = when (val auth = bookshelf.auth) {
-                                    is SmbServer.Auth.Guest -> ""
-                                    is SmbServer.Auth.UsernamePassword -> auth.username
-                                },
-                                password = when (val auth = bookshelf.auth) {
-                                    is SmbServer.Auth.Guest -> ""
-                                    is SmbServer.Auth.UsernamePassword -> auth.password
-                                },
-                            )
-                        }
-
-                        ShareContents -> return@launch
-                    }
+        if (isInitialized) {
+            uiState = uiState.copy(progress = false)
+        } else {
+            uiState = uiState.copy(progress = true)
+            bookshelfEditFormFlow.onEach { form ->
+                if (form != null) {
+                    isInitialized = true
                     initialForm = form
                     @Suppress("UNCHECKED_CAST")
                     (formState as FormState<BookshelfEditForm>).reset(form)
-                    uiState = uiState.copy(progress = false)
-                },
-                onError = {
-                },
-            )
+                }
+                uiState = uiState.copy(progress = false)
+            }.launchIn(coroutineScope)
         }
-    }
-
-    override fun onSubmit(form: BookshelfEditForm) {
-        coroutineScope.launch {
-            logcat { "onSubmit(form: $form)" }
-            uiState = uiState.copy(progress = true)
-            val bookshelf: Bookshelf
-            val path: String
-            when (form) {
-                is DeviceEditForm -> when (editType) {
-                    is BookshelfEditType.Edit -> {
-                        bookshelf = (getBookshelf(editType.bookshelfId) as DeviceStorage)
-                            .copy(displayName = form.displayName)
-                        path = requireNotNull(form.path)
-                    }
-
-                    is BookshelfEditType.Register -> {
-                        bookshelf = DeviceStorage(form.displayName)
-                        path = requireNotNull(form.path)
-                    }
-                }
-
-                is SmbEditForm -> {
-                    val paths = "/${form.path}/".replace("(/+)".toRegex(), "/")
-                    val auth = when (form.auth) {
-                        SmbEditForm.Auth.Guest -> SmbServer.Auth.Guest
-
-                        SmbEditForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
-                            domain = form.domain,
-                            username = form.username,
-                            password = form.password,
-                        )
-                    }
-                    when (editType) {
-                        is BookshelfEditType.Edit -> {
-                            bookshelf = (getBookshelf(editType.bookshelfId) as SmbServer)
-                                .copy(
-                                    displayName = form.displayName,
-                                    host = form.host,
-                                    port = form.port,
-                                    auth = auth,
-                                )
-                            path = paths
-                        }
-
-                        is BookshelfEditType.Register -> {
-                            bookshelf = SmbServer(
-                                displayName = form.displayName,
-                                host = form.host,
-                                port = form.port,
-                                auth = auth,
-                            )
-                            path = paths
-                        }
-                    }
-                }
-            }
-            delay(300)
-            registerBookshelfUseCase(RegisterBookshelfUseCase.Request(bookshelf, path)).fold(
-                onSuccess = {
+        eventFlow.onEach { event ->
+            when (event) {
+                BookshelfEditViewModelEvent.Complete -> {
                     events.tryEmit(BookshelfEditScreenEvent.Complete)
-                },
-                onError = {
+                }
+
+                is BookshelfEditViewModelEvent.RegisterError -> {
                     uiState = uiState.copy(progress = false)
-                    when (it) {
+                    when (event.error) {
                         RegisterBookshelfUseCase.Error.Auth -> {
                             formState.setError(
                                 AuthField to FieldError(
@@ -389,14 +351,12 @@ private abstract class BookshelfEditScreenStateImpl(
                             formState.setError("auth" to FieldError("unknown error"))
                         }
                     }
-                },
-            )
-        }
+                }
+            }
+        }.launchIn(coroutineScope)
     }
 
-    suspend fun getBookshelf(id: BookshelfId): Bookshelf = requireNotNull(
-        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(id))
-            .first()
-            .dataOrNull(),
-    ).bookshelf
+    override fun onSubmit(form: BookshelfEditForm) {
+        submit(form)
+    }
 }

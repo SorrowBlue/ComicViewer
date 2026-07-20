@@ -22,12 +22,11 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenContext
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenEvent
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfWizardPage
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.LocalEditScreenState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditScreenState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.rememberBookshelfEditScreenState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard.BookshelfWizardPage
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionDialog
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
@@ -40,7 +39,6 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_lab
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-context(context: BookshelfEditScreenContext)
 internal fun BookshelfEditorContents(
     page: BookshelfWizardPage.Edit,
     contentPadding: PaddingValues,

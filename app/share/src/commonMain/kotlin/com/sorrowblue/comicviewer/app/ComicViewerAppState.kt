@@ -53,13 +53,10 @@ fun rememberComicViewerUIState(
     mainViewModel: MainViewModel = viewModel { MainViewModel() },
     viewModel: ComicViewerAppViewModel =
         assistedMetroViewModel<ComicViewerAppViewModel, ComicViewerAppViewModel.Factory> {
-            create(
-                allowNavigationRestored,
-                {
-                    mainViewModel.shouldKeepSplash.value = false
-                    mainViewModel.isInitialized.value = true
-                },
-            )
+            create(allowNavigationRestored) {
+                mainViewModel.shouldKeepSplash.value = false
+                mainViewModel.isInitialized.value = true
+            }
         },
 ): ComicViewerAppState {
     val navigator = rememberNavigator(
@@ -114,7 +111,6 @@ private class ComicViewerAppStateImpl(
     override val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         screenEntryProviders.forEach { entryProvider -> entryProvider(navigator) }
         navigationEntryProvider.forEach { provider ->
-            logcat { "navigationEntryProvider: $provider" }
             provider(navigator = navigator)
         }
     }

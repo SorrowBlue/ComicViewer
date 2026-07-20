@@ -15,15 +15,14 @@ import logcat.logcat
 @OptIn(ExperimentalSerializationApi::class)
 inline fun <reified Original : Any> kSerializableSaver(): Saver<Original, Any> {
     return object : Saver<Original, Any> {
-        override fun restore(value: Any): Original? {
-            logcat { "restore, $value" }
-            return kotlin
-                .runCatching { Cbor.decodeFromByteArray<Original>(value as ByteArray) }
-                .getOrNull()
-        }
+        override fun restore(value: Any): Original? = kotlin
+            .runCatching { Cbor.decodeFromByteArray<Original>(value as ByteArray) }
+            .getOrNull().also {
+                logcat(Original::class.simpleName.orEmpty()) { "#restore $it" }
+            }
 
         override fun SaverScope.save(value: Original): ByteArray? {
-            logcat { "save, $value" }
+            logcat(Original::class.simpleName.orEmpty()) { "#save $value" }
             return kotlin.runCatching { Cbor.encodeToByteArray(value) }.getOrNull()
         }
     }
