@@ -62,7 +62,7 @@ internal fun rememberFolderSettingsScreenState(
             folderSettingsFlow = viewModel.folderSettingsFlow,
             folderDisplaySettingsFlow = viewModel.folderDisplaySettingsFlow,
             updateFolderSettings = { viewModel.updateFolderSettings(it) },
-            updateFolderDisplaySettings = { viewModel.updateFolderDisplaySettings(it) }
+            updateFolderDisplaySettings = { viewModel.updateFolderDisplaySettings(it) },
         )
     }
 }
@@ -72,7 +72,9 @@ private class FolderSettingsScreenStateImpl(
     folderSettingsFlow: SharedFlow<FolderSettings>,
     folderDisplaySettingsFlow: SharedFlow<FolderDisplaySettings>,
     private val updateFolderSettings: ((FolderSettings) -> FolderSettings) -> Unit,
-    private val updateFolderDisplaySettings: ((FolderDisplaySettings) -> FolderDisplaySettings) -> Unit,
+    private val updateFolderDisplaySettings: (
+        (FolderDisplaySettings) -> FolderDisplaySettings,
+    ) -> Unit,
 ) : FolderSettingsScreenState {
     override var uiState: FolderSettingsScreenUiState by mutableStateOf(
         FolderSettingsScreenUiState(),
@@ -82,7 +84,7 @@ private class FolderSettingsScreenStateImpl(
     init {
         combine(
             folderSettingsFlow,
-            folderDisplaySettingsFlow
+            folderDisplaySettingsFlow,
         ) { folderSettings, folderDisplaySettings ->
             uiState = uiState.copy(
                 isOpenImageFolder = folderSettings.resolveImageFolder,

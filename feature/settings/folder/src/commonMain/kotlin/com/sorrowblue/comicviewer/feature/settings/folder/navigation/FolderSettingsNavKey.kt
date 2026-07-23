@@ -42,7 +42,7 @@ internal fun folderSettingsNavEntry(navigator: Navigator) {
 
             transitionMaterialSharedAxisX()
         } + ListDetailSceneStrategy.detailPane("Settings"),
-    ) {
+    ) { _ ->
         FolderSettingsScreenRoot(
             onBackClick = navigator::goBack,
             onSortTypeClick = { navigator.navigate(SortTypeNavKey(it)) },

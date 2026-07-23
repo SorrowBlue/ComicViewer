@@ -70,17 +70,6 @@ android {
 
 dependencies {
 
-    rootProject.subprojects.filterNot {
-        it.path == project.path || it.path.startsWith(projects.app.path)
-    }.forEach {
-        val hasSource = it.projectDir.resolve("src").exists()
-        if (hasSource) {
-            api(it)
-        } else {
-            logger.lifecycle("Skipping empty or non-source module: ${it.path}")
-        }
-    }
-
     implementation(libs.jcifs)
     implementation(projects.app.share)
 //    implementation(projects.feature.book)

@@ -43,6 +43,7 @@ filekit = "0.14.2"
 java = "21"
 jcifs = "3.0.2"
 kmpfile = "0.8.0"
+konture = "0.7.0"
 kotlin = "2.4.0"
 kotlinx-collectionsImmutable = "0.5.1"
 kotlinx-coroutines = "1.11.0"
@@ -134,6 +135,7 @@ jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
 kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version = "0.3.1" }
 kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
 kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
+konture = { group = "io.github.baole" , name = "konture" , version.ref = "konture" }
 kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serializationGradlePlugin = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
@@ -206,6 +208,7 @@ composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "com
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+konture = { id = "io.github.baole.konture" , version.ref = "konture" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinxKover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinxKover" }

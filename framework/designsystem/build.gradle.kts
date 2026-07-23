@@ -23,7 +23,7 @@ kotlin {
         }
         noAndroid {
             dependencies {
-                implementation(projects.domain.usecase)
+                implementation(projects.domain.model)
             }
         }
         jvmMain {
