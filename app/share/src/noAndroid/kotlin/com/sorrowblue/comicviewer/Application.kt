@@ -19,8 +19,6 @@ import com.sorrowblue.comicviewer.framework.common.require
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDarkMode
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.metroViewModel
-import logcat.LogPriority
-import logcat.logcat
 
 @Composable
 context(context: PlatformContext, appGraph: AppGraph)
