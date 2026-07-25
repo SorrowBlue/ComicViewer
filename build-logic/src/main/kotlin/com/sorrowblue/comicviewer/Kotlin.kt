@@ -27,7 +27,6 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
         freeCompilerArgs.add("-Xcollection-literals")
         freeCompilerArgs.add("-Xintrinsic-const-evaluation")
         freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
-        freeCompilerArgs.add("-Xexplicit-backing-fields")
 
         val warningsAsErrors = project.findProperty("warningsAsErrors") as? String
         allWarningsAsErrors.set(warningsAsErrors.toBoolean())

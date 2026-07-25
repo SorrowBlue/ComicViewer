@@ -13,7 +13,8 @@ import dev.zacsweers.metrox.android.MetroApplication
 import logcat.LogPriority
 import logcat.logcat
 
-class MainApplication :
+@Suppress("Registered")
+internal class MainApplication :
     Application(),
     MetroApplication,
     Configuration.Provider {
