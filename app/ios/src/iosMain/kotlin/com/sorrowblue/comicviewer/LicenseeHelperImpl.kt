@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer
 
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import org.jetbrains.compose.resources.ExperimentalResourceApi

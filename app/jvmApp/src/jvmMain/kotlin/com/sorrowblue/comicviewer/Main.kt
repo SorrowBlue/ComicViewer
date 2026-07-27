@@ -17,6 +17,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sorrowblue.comicviewer.app.AppGraph
 import com.sorrowblue.comicviewer.app.MainViewModel
 import com.sorrowblue.comicviewer.framework.common.DesktopContext
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph

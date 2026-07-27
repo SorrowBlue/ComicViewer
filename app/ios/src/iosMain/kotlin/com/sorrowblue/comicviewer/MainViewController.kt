@@ -2,11 +2,10 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer
 
 import androidx.compose.ui.window.ComposeUIViewController
-import com.sorrowblue.comicviewer.AppGraph
-import com.sorrowblue.comicviewer.Application
+import com.sorrowblue.comicviewer.app.AppGraph
 import com.sorrowblue.comicviewer.framework.common.IosContext
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import dev.zacsweers.metro.createGraphFactory
