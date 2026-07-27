@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,6 +41,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -65,9 +67,11 @@ internal actual fun rememberBookshelfInfoContentsState(
             create(bookshelfFolder)
         }
     val appState = LocalAppState.current
+    val coroutineScope = rememberCoroutineScope()
     return remember(bookshelfFolder, appState, viewModel) {
         BookshelfInfoContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
+            coroutineScope = coroutineScope,
             appState = appState,
             viewModel = viewModel,
         )
@@ -79,6 +83,7 @@ internal actual fun rememberBookshelfInfoContentsState(
 
 private class BookshelfInfoContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
+    private val coroutineScope: CoroutineScope,
     private val appState: AppState,
     private val viewModel: BookshelfInfoContentViewModel,
 ) : BookshelfInfoContentsState {
@@ -99,7 +104,7 @@ private class BookshelfInfoContentsStateImpl(
 
     override fun onScanFileClick() {
         currentScanType = ScanType.File
-        appState.coroutineScope.launch {
+        coroutineScope.launch {
             val status = NotificationPermissionDelegate().providePermission()
             when (status) {
                 PermissionState.NotDetermined -> {
@@ -161,21 +166,21 @@ private class BookshelfInfoContentsStateImpl(
 
     private fun scanFile() {
         showSnackbar()
-        appState.coroutineScope.launch {
+        coroutineScope.launch {
             viewModel.scanFile()
         }
     }
 
     private fun scanThumbnail() {
         showSnackbar()
-        appState.coroutineScope.launch {
+        coroutineScope.launch {
             viewModel.scanThumbnail()
         }
     }
 
     private fun showSnackbar() {
-        appState.coroutineScope.launch {
-            appState.snackbarHostState.showSnackbar(
+        coroutineScope.launch {
+            appState.showSnackbar(
                 message = getString(
                     when (currentScanType) {
                         ScanType.File -> Res.string.bookshelf_info_label_scanning_file

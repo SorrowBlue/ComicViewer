@@ -5,21 +5,30 @@
 package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.staticCompositionLocalOf
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 
 val LocalAppState = staticCompositionLocalOf<AppState> {
     error("No AppState provided")
 }
 
-val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
-    error("No SharedTransitionScope provided")
-}
-
 @OptIn(ExperimentalSharedTransitionApi::class)
 interface AppState {
-    val snackbarHostState: SnackbarHostState
-    val coroutineScope: CoroutineScope
+    val snackbarEvents: SharedFlow<SnackbarEvent>
+    fun showSnackbar(
+        message: String,
+        actionLabel: String? = null,
+        duration: SnackbarDuration = SnackbarDuration.Short,
+        withDismissAction: Boolean = false,
+        onActionPerformed: (() -> Unit)? = null,
+    )
 }
+
+data class SnackbarEvent(
+    val message: String,
+    val actionLabel: String? = null,
+    val duration: SnackbarDuration = SnackbarDuration.Short,
+    val withDismissAction: Boolean = false,
+    val onActionPerformed: (() -> Unit)? = null,
+)

@@ -14,11 +14,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.paging.compose.LazyPagingItems
@@ -44,6 +44,7 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_lab
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails_no_notification
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -62,8 +63,10 @@ internal actual fun rememberBookshelfInfoContentsState(
     @SuppressLint("ContextCastToActivity")
     val activity = LocalContext.current as Activity
     val appState = LocalAppState.current
+    val coroutineScope = rememberCoroutineScope()
     val stateImpl = remember(bookshelfFolder, viewModel) {
         BookshelfInfoMainContentsStateImpl(
+            coroutineScope = coroutineScope,
             bookshelfFolder = bookshelfFolder,
             viewModel = viewModel,
             context = activity,
@@ -83,6 +86,7 @@ internal actual fun rememberBookshelfInfoContentsState(
 
 private class BookshelfInfoMainContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
+    private val coroutineScope: CoroutineScope,
     private val viewModel: BookshelfInfoContentViewModel,
     private val context: Context,
     private val appState: AppState,
@@ -109,10 +113,10 @@ private class BookshelfInfoMainContentsStateImpl(
     init {
         viewModel.isScanningFile.onEach {
             uiState = uiState.copy(isScanningFile = it)
-        }.launchIn(appState.coroutineScope)
+        }.launchIn(coroutineScope)
         viewModel.isScanningThumbnail.onEach {
             uiState = uiState.copy(isScanningThumbnail = it)
-        }.launchIn(appState.coroutineScope)
+        }.launchIn(coroutineScope)
     }
 
     override fun onScanFileClick() {
@@ -185,10 +189,10 @@ private class BookshelfInfoMainContentsStateImpl(
     }
 
     private fun showSnackbar() {
-        appState.coroutineScope.launch {
+        coroutineScope.launch {
             if (notificationPermissionRequester.checkNotificationPermission()) {
-                appState.snackbarHostState.showSnackbar(
-                    getString(
+                appState.showSnackbar(
+                    message = getString(
                         when (currentScanType) {
                             ScanType.File -> Res.string.bookshelf_info_label_scanning_file
                             ScanType.Thumbnail -> Res.string.bookshelf_info_label_scanning_thumbnails
@@ -196,7 +200,7 @@ private class BookshelfInfoMainContentsStateImpl(
                     ),
                 )
             } else {
-                val result = appState.snackbarHostState.showSnackbar(
+                appState.showSnackbar(
                     message = getString(
                         when (currentScanType) {
                             ScanType.File -> Res.string.bookshelf_info_label_scanning_file_no_notification
@@ -205,17 +209,13 @@ private class BookshelfInfoMainContentsStateImpl(
                     ),
                     actionLabel = getString(Res.string.bookshelf_info_label_notification_settings),
                     duration = SnackbarDuration.Long,
-                )
-                when (result) {
-                    SnackbarResult.Dismissed -> Unit
-
-                    SnackbarResult.ActionPerformed -> {
+                    onActionPerformed = {
                         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                             putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
                         }
                         launchIntent(intent)
-                    }
-                }
+                    },
+                )
             }
         }
     }

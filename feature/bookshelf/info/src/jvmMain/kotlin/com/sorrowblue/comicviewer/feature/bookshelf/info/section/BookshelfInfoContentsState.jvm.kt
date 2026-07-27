@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,6 +41,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
@@ -52,9 +54,11 @@ internal actual fun rememberBookshelfInfoContentsState(
             create(bookshelfFolder)
         }
     val appState = LocalAppState.current
+    val coroutineScope = rememberCoroutineScope()
     return remember(bookshelfFolder, appState, viewModel) {
         BookshelfInfoContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
+            coroutineScope = coroutineScope,
             appState = appState,
             viewModel = viewModel,
         )
@@ -66,6 +70,7 @@ internal actual fun rememberBookshelfInfoContentsState(
 
 private class BookshelfInfoContentsStateImpl(
     private val bookshelfFolder: BookshelfFolder,
+    private val coroutineScope: CoroutineScope,
     private val appState: AppState,
     private val viewModel: BookshelfInfoContentViewModel,
 ) : BookshelfInfoContentsState {
@@ -96,7 +101,7 @@ private class BookshelfInfoContentsStateImpl(
 
     private fun scanFile() {
         showSnackbar()
-        appState.coroutineScope.launch {
+        coroutineScope.launch {
             viewModel.scanFile()
             DesktopNotification().notify(
                 getString(Res.string.bookshelf_info_notification_title_file_scan_completed),
@@ -107,7 +112,7 @@ private class BookshelfInfoContentsStateImpl(
 
     private fun scanThumbnail() {
         showSnackbar()
-        appState.coroutineScope.launch {
+        coroutineScope.launch {
             viewModel.scanThumbnail()
             DesktopNotification().notify(
                 getString(Res.string.bookshelf_info_notification_title_thumbnail_scan_completed),
@@ -117,8 +122,8 @@ private class BookshelfInfoContentsStateImpl(
     }
 
     private fun showSnackbar() {
-        appState.coroutineScope.launch {
-            appState.snackbarHostState.showSnackbar(
+        coroutineScope.launch {
+            appState.showSnackbar(
                 message = getString(
                     when (currentScanType) {
                         ScanType.File -> Res.string.bookshelf_info_label_scanning_file

@@ -6,16 +6,14 @@ package com.sorrowblue.comicviewer.framework.ui.preview
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import coil3.annotation.ExperimentalCoilApi
@@ -23,14 +21,16 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
-import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
+import com.sorrowblue.comicviewer.framework.ui.SnackbarEvent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalNavigationItems
 import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationItems
+import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import de.drick.compose.edgetoedgepreviewlib.CameraCutoutMode
 import de.drick.compose.edgetoedgepreviewlib.EdgeToEdgeTemplate
 import de.drick.compose.edgetoedgepreviewlib.InsetMode
 import de.drick.compose.edgetoedgepreviewlib.NavigationMode
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -98,28 +98,37 @@ private val PreviewNavigationItems = object : NavigationItems {
     }
 }
 
-context(scope: SharedTransitionScope)
-internal val ProvidesAppState
+private val ProvidesAppState
     @Composable
-    get() = LocalAppState provides rememberAppState(scope)
-
-private class PreviewAppState(
-    sharedTransitionScope: SharedTransitionScope,
-    override var snackbarHostState: SnackbarHostState,
-) : AppState,
-    SharedTransitionScope by sharedTransitionScope {
-    override lateinit var coroutineScope: CoroutineScope
-}
+    get() = LocalAppState provides rememberPreviewAppState()
 
 @Composable
-fun rememberAppState(
-    sharedTransitionScope: SharedTransitionScope,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-): AppState {
+private fun rememberPreviewAppState(): AppState {
     val appState = remember {
-        PreviewAppState(sharedTransitionScope, snackbarHostState)
+        PreviewAppState()
     }
-    appState.snackbarHostState = snackbarHostState
-    appState.coroutineScope = rememberCoroutineScope()
     return appState
+}
+
+private class PreviewAppState : AppState {
+    override val snackbarEvents: SharedFlow<SnackbarEvent>
+        field = MutableSharedFlow<SnackbarEvent>(extraBufferCapacity = 16)
+
+    override fun showSnackbar(
+        message: String,
+        actionLabel: String?,
+        duration: SnackbarDuration,
+        withDismissAction: Boolean,
+        onActionPerformed: (() -> Unit)?,
+    ) {
+        snackbarEvents.tryEmit(
+            SnackbarEvent(
+                message = message,
+                actionLabel = actionLabel,
+                duration = duration,
+                withDismissAction = withDismissAction,
+                onActionPerformed = onActionPerformed,
+            ),
+        )
+    }
 }

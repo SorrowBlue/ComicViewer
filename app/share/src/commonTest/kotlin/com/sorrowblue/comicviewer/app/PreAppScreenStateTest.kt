@@ -1,5 +1,7 @@
 package com.sorrowblue.comicviewer.app
 
+import com.sorrowblue.comicviewer.app.wrapper.PreAppScreenStateImpl
+import com.sorrowblue.comicviewer.app.wrapper.PreAppUiState
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

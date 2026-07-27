@@ -81,7 +81,7 @@ private class BasicCollectionCreateScreenStateImpl(
             when (it) {
                 is BasicCollectionCreateViewModelEvent.CreateSuccess -> {
                     event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                    appState.snackbarHostState.showSnackbar(
+                    appState.showSnackbar(
                         getString(
                             Res.string.collection_editor_msg_success_create,
                             it.name,
@@ -91,7 +91,7 @@ private class BasicCollectionCreateScreenStateImpl(
 
                 is BasicCollectionCreateViewModelEvent.CreateAddSuccess -> {
                     event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                    appState.snackbarHostState.showSnackbar(
+                    appState.showSnackbar(
                         getString(
                             Res.string.collection_editor_msg_success_create_add,
                             it.name,

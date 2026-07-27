@@ -27,8 +27,8 @@ import com.sorrowblue.comicviewer.file.component.rememberGridSizeItemState
 import com.sorrowblue.comicviewer.file.component.rememberHiddenFilesToggleableItemState
 import com.sorrowblue.comicviewer.folder.component.SortTypeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
+import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import com.sorrowblue.comicviewer.framework.ui.material3.settingsItem

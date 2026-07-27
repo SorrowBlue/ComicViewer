@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer.app.wrapper
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sorrowblue.comicviewer.app.MainViewModel
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenRoot

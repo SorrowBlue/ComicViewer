@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.app
+package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.lifecycle.ViewModel
 import dev.zacsweers.metro.AppScope

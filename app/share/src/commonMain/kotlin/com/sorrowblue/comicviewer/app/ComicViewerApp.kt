@@ -8,6 +8,8 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
@@ -15,6 +17,7 @@ import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneSt
 import androidx.compose.material3.adaptive.navigation3.rememberSupportingPaneSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -23,10 +26,11 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
+import com.sorrowblue.comicviewer.app.wrapper.PreAppScreen
 import com.sorrowblue.comicviewer.framework.common.providePlatformContext
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
-import com.sorrowblue.comicviewer.framework.ui.LocalSharedTransitionScope
+import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
@@ -36,7 +40,7 @@ import logcat.logcat
 
 @Composable
 context(appGraph: AppGraph)
-fun ComicViewerUI(state: ComicViewerAppState, finishApp: () -> Unit) {
+internal fun ComicViewerApp(state: ComicViewerAppState, finishApp: () -> Unit) {
     CompositionLocalProvider(
         providePlatformContext(appGraph.context),
         LocalNavigator provides state.navigator,
@@ -44,7 +48,7 @@ fun ComicViewerUI(state: ComicViewerAppState, finishApp: () -> Unit) {
     ) {
         ComicTheme {
             PreAppScreen(finishApp = finishApp) {
-                ComicViewerUI(
+                ComicViewerApp(
                     navigator = state.navigator,
                     entryProvider = state.entryProvider,
                 )
@@ -54,12 +58,27 @@ fun ComicViewerUI(state: ComicViewerAppState, finishApp: () -> Unit) {
 }
 
 @Composable
-private fun ComicViewerUI(navigator: Navigator, entryProvider: (NavKey) -> NavEntry<NavKey>) {
+private fun ComicViewerApp(navigator: Navigator, entryProvider: (NavKey) -> NavEntry<NavKey>) {
+    val appState = LocalAppState.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(appState) {
+        appState.snackbarEvents.collect { event ->
+            val result = snackbarHostState.showSnackbar(
+                message = event.message,
+                actionLabel = event.actionLabel,
+                duration = event.duration,
+                withDismissAction = event.withDismissAction,
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                event.onActionPerformed?.invoke()
+            }
+        }
+    }
     SharedTransitionLayout(modifier = Modifier.background(ComicTheme.colorScheme.background)) {
         CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             Scaffold(
                 snackbarHost = {
-                    SnackbarHost(LocalAppState.current.snackbarHostState)
+                    SnackbarHost(snackbarHostState)
                 },
             ) {
                 val directive = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())

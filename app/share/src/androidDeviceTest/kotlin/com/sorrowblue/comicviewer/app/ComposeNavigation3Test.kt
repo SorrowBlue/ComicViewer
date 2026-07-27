@@ -57,7 +57,7 @@ class ComposeNavigation3Test {
             CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.viewModelFactory) {
                 val state = rememberComicViewerUIState(allowNavigationRestored = false)
                 context(getPlatformGraph() as AppGraph) {
-                    ComicViewerUI(finishApp = {}, state = state)
+                    ComicViewerApp(finishApp = {}, state = state)
                 }
             }
         }

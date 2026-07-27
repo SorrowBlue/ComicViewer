@@ -10,7 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sorrowblue.comicviewer.app.AppGraph
-import com.sorrowblue.comicviewer.app.ComicViewerUI
+import com.sorrowblue.comicviewer.app.ComicViewerApp
 import com.sorrowblue.comicviewer.app.rememberComicViewerUIState
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.framework.common.Initializer
@@ -28,7 +28,7 @@ fun Application(finishApp: () -> Unit) {
         val state = rememberComicViewerUIState()
         val darkMode by viewModel.displaySettings.collectAsStateWithLifecycle(DarkMode.DEVICE)
         CompositionLocalProvider(LocalDarkMode provides darkMode) {
-            ComicViewerUI(finishApp = finishApp, state = state)
+            ComicViewerApp(finishApp = finishApp, state = state)
         }
         LaunchedEffect(Unit) {
             Initializer.initialize(
