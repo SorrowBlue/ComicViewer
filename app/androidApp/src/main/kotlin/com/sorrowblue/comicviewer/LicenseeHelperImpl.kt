@@ -1,0 +1,13 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
+package com.sorrowblue.comicviewer
+
+import android.content.Context
+import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
+
+internal class LicenseeHelperImpl(private val context: Context) : LicenseeHelper {
+    override suspend fun loadLibraries(): ByteArray =
+        context.resources.openRawResource(R.raw.aboutlibraries).readBytes()
+}

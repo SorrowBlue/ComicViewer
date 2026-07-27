@@ -13,13 +13,13 @@ plugins {
 tasks.configureEach {
     if (name == "renderNavGraphGalleryLayoutlib" || name == "renderNavGraphLayoutlib") {
         // navgraphのlayoutlib描画がandroidAppのマージ済みassetsを参照するため、実行順依存を明示する
-        dependsOn(":app:android:mergeDebugAssets")
+        dependsOn(":app:androidApp:mergeDebugAssets")
     }
 }
 
 kotlin {
     android {
-        namespace = "com.sorrowblue.comicviewer.app.share"
+        namespace = "com.sorrowblue.comicviewer.app"
         androidResources.enable = true
         withDeviceTest {
             instrumentationRunner = "com.sorrowblue.comicviewer.app.InstrumentationTestRunner"

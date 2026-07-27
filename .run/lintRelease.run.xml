@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="app:android:lintRelease" />
+          <option value="app:androidApp:lintRelease" />
         </list>
       </option>
       <option name="vmOptions" />

@@ -18,11 +18,11 @@ jobs:
       - name: Setup Java and Gradle
         uses: SorrowBlue/github-actions/.github/actions/setup-java-gradle@main
       - name: 🤖 ExportLibraryDefinitions for android
-        run: ./gradlew :app:android:exportLibraryDefinitions --no-configure-on-demand
+        run: ./gradlew :app:androidApp:exportLibraryDefinitions --no-configure-on-demand
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: 🖥️ ExportLibraryDefinitions for jvm
-        run: ./gradlew :app:jvm:exportLibraryDefinitions --no-configure-on-demand
+        run: ./gradlew :app:jvmApp:exportLibraryDefinitions --no-configure-on-demand
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: 🍎 ExportLibraryDefinitions for ios

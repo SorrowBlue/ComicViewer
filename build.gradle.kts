@@ -37,9 +37,9 @@ versionCatalogUpdate {
     versionSelector(VersionSelectors.LATEST)
 }
 dependencies {
-    dokka(projects.app.android)
-    dokka(projects.app.jvm)
+    dokka(projects.app.androidApp)
     dokka(projects.app.ios)
+    dokka(projects.app.jvmApp)
     dokka(projects.app.share)
     dokka(projects.data.coil)
     dokka(projects.data.database)

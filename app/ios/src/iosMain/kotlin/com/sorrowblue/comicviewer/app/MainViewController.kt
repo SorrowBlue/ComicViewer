@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.ui.window.ComposeUIViewController
+import com.sorrowblue.comicviewer.AppGraph
 import com.sorrowblue.comicviewer.Application
 import com.sorrowblue.comicviewer.framework.common.IosContext
 import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
