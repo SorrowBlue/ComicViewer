@@ -53,7 +53,7 @@ internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity(
         }
 
         setContent {
-            CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.metroVmf) {
+            CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.viewModelFactory) {
                 val state = rememberComicViewerUIState(
                     allowNavigationRestored = receivedBookData.isNullOrEmpty(),
                 )

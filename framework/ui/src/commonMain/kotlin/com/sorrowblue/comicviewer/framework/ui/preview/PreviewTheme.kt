@@ -5,24 +5,17 @@
 package com.sorrowblue.comicviewer.framework.ui.preview
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import coil3.annotation.ExperimentalCoilApi
@@ -110,30 +103,22 @@ internal val ProvidesAppState
     @Composable
     get() = LocalAppState provides rememberAppState(scope)
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 private class PreviewAppState(
-    navigationSuiteType: NavigationSuiteType,
     sharedTransitionScope: SharedTransitionScope,
     override var snackbarHostState: SnackbarHostState,
 ) : AppState,
     SharedTransitionScope by sharedTransitionScope {
-    override var navigationSuiteType by mutableStateOf(navigationSuiteType)
     override lateinit var coroutineScope: CoroutineScope
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun rememberAppState(
     sharedTransitionScope: SharedTransitionScope,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ): AppState {
-    val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
-        currentWindowAdaptiveInfoV2(),
-    )
     val appState = remember {
-        PreviewAppState(navigationSuiteType, sharedTransitionScope, snackbarHostState)
+        PreviewAppState(sharedTransitionScope, snackbarHostState)
     }
-    appState.navigationSuiteType = navigationSuiteType
     appState.snackbarHostState = snackbarHostState
     appState.coroutineScope = rememberCoroutineScope()
     return appState

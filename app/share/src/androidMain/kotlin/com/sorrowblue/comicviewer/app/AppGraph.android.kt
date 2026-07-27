@@ -23,7 +23,7 @@ actual interface AppGraph :
     PlatformGraph,
     MetroAppComponentProviders {
     actual val context: PlatformContext
-    actual val metroVmf: MetroViewModelFactory
+    actual val viewModelFactory: MetroViewModelFactory
 
     val workerFactory: WorkerFactory
 

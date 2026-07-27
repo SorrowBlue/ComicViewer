@@ -18,7 +18,7 @@ actual interface AppGraph :
     ViewModelGraph,
     PlatformGraph {
     actual val context: PlatformContext
-    actual val metroVmf: MetroViewModelFactory
+    actual val viewModelFactory: MetroViewModelFactory
 
     @DependencyGraph.Factory
     actual fun interface Factory {

@@ -7,7 +7,6 @@ package com.sorrowblue.comicviewer.framework.ui
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.coroutines.CoroutineScope
 
@@ -21,7 +20,6 @@ val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope>
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 interface AppState {
-    var navigationSuiteType: NavigationSuiteType
     val snackbarHostState: SnackbarHostState
     val coroutineScope: CoroutineScope
 }

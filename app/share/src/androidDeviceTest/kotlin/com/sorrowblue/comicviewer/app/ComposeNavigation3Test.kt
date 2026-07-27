@@ -54,7 +54,7 @@ class ComposeNavigation3Test {
         )
         composeTestRule.setContent {
             val appGraph = getPlatformGraph() as AppGraph
-            CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.metroVmf) {
+            CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.viewModelFactory) {
                 val state = rememberComicViewerUIState(allowNavigationRestored = false)
                 context(getPlatformGraph() as AppGraph) {
                     ComicViewerUI(finishApp = {}, state = state)
