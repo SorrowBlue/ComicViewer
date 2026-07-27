@@ -80,13 +80,13 @@ private class BasicCollectionCreateScreenStateImpl(
         eventFlow.onEach {
             when (it) {
                 is BasicCollectionCreateViewModelEvent.CreateSuccess -> {
+                    event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                     appState.snackbarHostState.showSnackbar(
                         getString(
                             Res.string.collection_editor_msg_success_create,
                             it.name,
                         ),
                     )
-                    event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
                 }
 
                 is BasicCollectionCreateViewModelEvent.CreateAddSuccess -> {
