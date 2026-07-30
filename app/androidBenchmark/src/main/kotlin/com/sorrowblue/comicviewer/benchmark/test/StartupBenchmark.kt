@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 /**
  * Measures the startup time of the ComicViewer app.
  *
- * Run via: `./gradlew :app:android:benchmark:connectedBenchmarkAndroidTest`
+ * Run via: `./gradlew :app:androidApp:benchmark:connectedBenchmarkAndroidTest`
  */
 @RunWith(AndroidJUnit4::class)
 class StartupBenchmark {
