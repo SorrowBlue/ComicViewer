@@ -5,4 +5,4 @@
 package com.sorrowblue.comicviewer.framework.common
 
 @Suppress("AbstractClassCanBeInterface", "UtilityClassWithPublicConstructor")
-abstract class DesktopContext
+abstract class IosContext

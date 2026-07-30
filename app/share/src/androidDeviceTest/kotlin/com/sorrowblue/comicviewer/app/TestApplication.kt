@@ -1,10 +1,11 @@
 package com.sorrowblue.comicviewer.app
 
 import android.app.Application
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.Configuration
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
-import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
+import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
 import dev.zacsweers.metro.createGraphFactory
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
@@ -12,8 +13,11 @@ import logcat.LogcatLogger
 
 class TestApplication :
     Application(),
+    AppGraphProvider<AppGraph>,
     Configuration.Provider {
-    private val appGraph by lazy {
+
+    override val appGraph by lazy {
+        Log.d("***********", "TestApplicationappGraph")
         createGraphFactory<AppGraph.Factory>().createAppGraph(
             InstrumentationRegistry.getInstrumentation().context,
             object : LicenseeHelper {
@@ -25,7 +29,6 @@ class TestApplication :
     }
 
     init {
-        getPlatformGraph = { appGraph }
         LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
     }
 

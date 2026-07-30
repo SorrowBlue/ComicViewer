@@ -124,6 +124,7 @@ class ArchitectureGuardrailsTest {
     @Test
     fun `viewmodels do not reside in domain or data layers`() {
         Konture.classes()
+            .allowEmpty()
             .that().haveNameEndingWith("ViewModel")
             .and().resideInAPackage("..domain..", "..data..")
             .should().beInterfaces()

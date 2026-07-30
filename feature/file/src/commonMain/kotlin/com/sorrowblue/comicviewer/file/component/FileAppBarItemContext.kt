@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.common.appGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
@@ -50,7 +50,7 @@ fun rememberManageFolderDisplaySettingsUseCase(): ManageFolderDisplaySettingsUse
     } else {
         val context = LocalPlatformContext.current
         rememberRetained {
-            val factory = context.require<FileAppBarItemContext.Factory>()
+            val factory = context.appGraph<FileAppBarItemContext.Factory>()
             factory.createFileAppBarItemContext().manageFolderDisplaySettingsUseCase
         }
     }

@@ -17,25 +17,18 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sorrowblue.comicviewer.app.AppGraph
 import com.sorrowblue.comicviewer.app.MainViewModel
-import com.sorrowblue.comicviewer.framework.common.DesktopContext
-import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import comicviewer.framework.ui.generated.resources.app_name
-import dev.zacsweers.metro.createGraphFactory
 import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import org.jetbrains.compose.resources.stringResource
 
 fun main() {
     FileKit.init(appId = "com.sorrowblue.comicviewer")
-    val context = DesktopContext.Companion()
-    val appGraph =
-        createGraphFactory<AppGraph.Factory>().createAppGraph(context, LicenseeHelperImpl())
-    getPlatformGraph = { appGraph }
+    val jvmApplication = JvmApplication()
     application {
         val trayState = rememberTrayState()
         val windowState = rememberWindowState()
@@ -66,7 +59,7 @@ fun main() {
             }
             window.minimumSize = Dimension(400, 600)
             val viewModel = viewModel { MainViewModel() }
-            context(appGraph, appGraph.context) {
+            context(jvmApplication, jvmApplication.appGraph) {
                 Application(finishApp = ::exitApplication)
             }
             SplashScreen(keepOnScreenCondition = { viewModel.shouldKeepSplash.value })

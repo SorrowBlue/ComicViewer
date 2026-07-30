@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer
 import android.app.Application
 import androidx.work.Configuration
 import com.sorrowblue.comicviewer.app.AppGraph
-import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
+import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.android.MetroAppComponentProviders
 import dev.zacsweers.metrox.android.MetroApplication
@@ -18,16 +18,14 @@ import logcat.logcat
 internal class MainApplication :
     Application(),
     MetroApplication,
+    AppGraphProvider<AppGraph>,
     Configuration.Provider {
-    private val appGraph by lazy {
+
+    override val appGraph: AppGraph by lazy {
         createGraphFactory<AppGraph.Factory>().createAppGraph(
             this,
             LicenseeHelperImpl(this),
         )
-    }
-
-    init {
-        getPlatformGraph = { appGraph }
     }
 
     override val workManagerConfiguration: Configuration

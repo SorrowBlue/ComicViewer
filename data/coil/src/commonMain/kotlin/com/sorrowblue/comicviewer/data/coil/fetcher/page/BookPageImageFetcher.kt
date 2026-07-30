@@ -14,7 +14,6 @@ import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.pageDiskCache
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.resizeImage
@@ -26,6 +25,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -114,14 +114,14 @@ internal class BookPageImageFetcher(
         CoilMetadata.from<BookPageImageMetadata>(source)
 
     @ClassKey(BookPageImage::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<coil3.key.Keyer<*>>())
     class Keyer : coil3.key.Keyer<BookPageImage> {
         override fun key(data: BookPageImage, options: Options) =
             "id:${data.book.bookshelfId.value},path:${data.book.path},index:${data.pageIndex}"
     }
 
     @ClassKey(BookPageImage::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<Fetcher.Factory<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<Fetcher.Factory<*>>())
     class Factory(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,

@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
 import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.common.appGraph
 import io.github.takahirom.rin.rememberRetained
 
 abstract class AppLocaleIso {
@@ -53,7 +53,7 @@ val ProvideLocalAppLocaleIso: ProvidedValue<*>
     get() {
         val context = LocalPlatformContext.current
         val graph = rememberRetained {
-            context.require<AppLocaleIsoContext.Factory>().createAppLocaleIsoContext()
+            context.appGraph<AppLocaleIsoContext.Factory>().createAppLocaleIsoContext()
         }
         return graph.appLocaleIso provides appLanguageTag
     }

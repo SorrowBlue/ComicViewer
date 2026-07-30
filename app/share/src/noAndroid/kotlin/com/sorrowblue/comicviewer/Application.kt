@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.app.rememberComicViewerUIState
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.framework.common.Initializer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.require
+import com.sorrowblue.comicviewer.framework.common.appGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.LocalDarkMode
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.metroViewModel
@@ -32,7 +32,7 @@ fun Application(finishApp: () -> Unit) {
         }
         LaunchedEffect(Unit) {
             Initializer.initialize(
-                context.require<InitializerContext.Factory>()
+                context.appGraph<InitializerContext.Factory>()
                     .createInitializerContext().initializer.toList(),
             )
         }

@@ -4,6 +4,7 @@
 
 package com.sorrowblue.comicviewer.feature.book.section
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +12,18 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import coil3.Bitmap
@@ -33,6 +43,10 @@ internal fun BookSheet(
 ) {
     Box(modifier = modifier) {
         val scope = rememberCoroutineScope()
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
         HorizontalPager(
             state = pagerState,
             beyondViewportPageCount = uiState.beyondViewportPageCount,
@@ -40,6 +54,35 @@ internal fun BookSheet(
             reverseLayout = true,
             key = { pages[it].key },
             modifier = Modifier.fillMaxSize()
+                .focusRequester(focusRequester)
+                .focusable()
+                .onPreviewKeyEvent { event ->
+                    if (event.type == KeyEventType.KeyDown) {
+                        when (event.key) {
+                            Key.DirectionLeft -> {
+                                if (pagerState.currentPage > 0) {
+                                    scope.launch {
+                                        pagerState.scrollToPage(pagerState.currentPage - 1)
+                                    }
+                                }
+                                true
+                            }
+
+                            Key.DirectionRight -> {
+                                if (pagerState.currentPage < pagerState.pageCount - 1) {
+                                    scope.launch {
+                                        pagerState.scrollToPage(pagerState.currentPage + 1)
+                                    }
+                                }
+                                true
+                            }
+
+                            else -> false
+                        }
+                    } else {
+                        false
+                    }
+                }
                 .pointerInput(Unit) {
                     detectTapGestures(onLongPress = { onLongClick() }) {
                         val x = it.x

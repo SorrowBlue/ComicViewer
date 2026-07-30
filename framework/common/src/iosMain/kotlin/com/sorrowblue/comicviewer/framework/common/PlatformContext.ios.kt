@@ -6,13 +6,7 @@ package com.sorrowblue.comicviewer.framework.common
 
 actual typealias PlatformContext = IosContext
 
-@Suppress("UtilityClassWithPublicConstructor")
-abstract class IosContext {
-
-    companion object {
-        private val INSTANCE = IosContextImpl()
-        operator fun invoke(): IosContext = INSTANCE
-    }
+actual fun <T> PlatformContext.appGraph(): T {
+    @Suppress("UNCHECKED_CAST")
+    return (this as AppGraphProvider<T>).appGraph
 }
-
-private class IosContextImpl : IosContext()

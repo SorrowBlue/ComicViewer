@@ -27,7 +27,7 @@ import androidx.compose.ui.test.requestFocus
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.framework.common.getPlatformGraph
+import com.sorrowblue.comicviewer.framework.common.appGraph
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.manualFileKitCoreInitialization
@@ -53,10 +53,11 @@ class ComposeNavigation3Test {
             InstrumentationRegistry.getInstrumentation().context,
         )
         composeTestRule.setContent {
-            val appGraph = getPlatformGraph() as AppGraph
+            val context = InstrumentationRegistry.getInstrumentation().context
+            val appGraph = context.applicationContext.appGraph<AppGraph>()
             CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.viewModelFactory) {
                 val state = rememberComicViewerUIState(allowNavigationRestored = false)
-                context(getPlatformGraph() as AppGraph) {
+                context(appGraph) {
                     ComicViewerApp(finishApp = {}, state = state)
                 }
             }

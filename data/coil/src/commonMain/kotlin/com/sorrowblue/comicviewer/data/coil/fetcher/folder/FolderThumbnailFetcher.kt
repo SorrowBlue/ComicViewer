@@ -15,7 +15,6 @@ import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
@@ -26,6 +25,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -129,14 +129,14 @@ internal class FolderThumbnailFetcher(
     }
 
     @ClassKey(FolderThumbnail::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<coil3.key.Keyer<*>>())
     class Keyer : coil3.key.Keyer<FolderThumbnail> {
         override fun key(data: FolderThumbnail, options: Options) =
             "folder:${data.bookshelfId.value}:${data.path}"
     }
 
     @ClassKey(FolderThumbnail::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<Fetcher.Factory<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<Fetcher.Factory<*>>())
     class Factory(
         private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
         private val fileModelLocalDataSource: FileLocalDataSource,

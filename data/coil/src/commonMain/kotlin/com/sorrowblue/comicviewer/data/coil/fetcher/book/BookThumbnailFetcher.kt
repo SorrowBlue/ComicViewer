@@ -14,7 +14,6 @@ import coil3.request.Options
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.resizeImage
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
@@ -25,6 +24,7 @@ import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSo
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -146,14 +146,14 @@ internal class BookThumbnailFetcher(
     }
 
     @ClassKey(BookThumbnail::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<coil3.key.Keyer<*>>())
     class Keyer : coil3.key.Keyer<BookThumbnail> {
         override fun key(data: BookThumbnail, options: Options) =
             "book:${data.bookshelfId.value}:${data.path}"
     }
 
     @ClassKey(BookThumbnail::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<Fetcher.Factory<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<Fetcher.Factory<*>>())
     class Factory(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,

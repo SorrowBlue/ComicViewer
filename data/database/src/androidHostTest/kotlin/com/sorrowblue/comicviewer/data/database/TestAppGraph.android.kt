@@ -9,10 +9,7 @@ import dev.zacsweers.metro.Provides
 internal actual fun createPlatformContext(): PlatformContext =
     InstrumentationRegistry.getInstrumentation().context
 
-@DependencyGraph(
-    scope = AppScope::class,
-    additionalScopes = [AppScope::class],
-)
+@DependencyGraph(AppScope::class)
 internal actual interface TestAppGraph {
     actual val database: ComicViewerDatabase
 

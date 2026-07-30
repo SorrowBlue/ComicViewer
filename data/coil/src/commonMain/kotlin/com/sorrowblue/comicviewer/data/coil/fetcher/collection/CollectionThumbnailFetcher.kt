@@ -15,13 +15,13 @@ import com.sorrowblue.comicviewer.data.coil.CoilRuntimeException
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
-import com.sorrowblue.comicviewer.data.coil.di.CoilScope
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -93,13 +93,13 @@ internal class CollectionThumbnailFetcher(
     }
 
     @ClassKey(Collection::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<coil3.key.Keyer<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<coil3.key.Keyer<*>>())
     class Keyer : coil3.key.Keyer<Collection> {
         override fun key(data: Collection, options: Options) = "collection:${data.id.value}"
     }
 
     @ClassKey(Collection::class)
-    @ContributesIntoMap(CoilScope::class, binding = binding<Fetcher.Factory<*>>())
+    @ContributesIntoMap(AppScope::class, binding = binding<Fetcher.Factory<*>>())
     class Factory(
         private val diskCache: Lazy<DiskCache>,
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,

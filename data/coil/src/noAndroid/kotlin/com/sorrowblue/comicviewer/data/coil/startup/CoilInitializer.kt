@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.framework.common.InitializerScope
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.starup.LogcatInitializer
 import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.binding
 import kotlin.reflect.KClass
 
