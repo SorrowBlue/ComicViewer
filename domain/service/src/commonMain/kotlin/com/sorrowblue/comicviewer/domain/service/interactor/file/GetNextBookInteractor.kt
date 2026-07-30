@@ -6,23 +6,28 @@ package com.sorrowblue.comicviewer.domain.service.interactor.file
 
 import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.first
+import logcat.logcat
 
 @ContributesBinding(AppScope::class)
 internal class GetNextBookInteractor(
     private val datastoreDataSource: DatastoreDataSource,
     private val fileLocalDataSource: FileLocalDataSource,
     private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
+    private val collectionLocalDataSource: CollectionLocalDataSource,
 ) : GetNextBookUseCase() {
     override suspend fun run(request: Request): Resource<Book, Error> {
         val settings = datastoreDataSource.folderDisplaySettings.first()
@@ -73,29 +78,61 @@ internal class GetNextBookInteractor(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
-    ): Resource<Book, Error> = runCatching {
-        if (isNext) {
-            collectionFileLocalDataSource.flowNextCollectionFile(
-                CollectionFile(collectionId, bookshelfId, path),
-                sortType,
-            )
-        } else {
-            collectionFileLocalDataSource.flowPrevCollectionFile(
-                CollectionFile(collectionId, bookshelfId, path),
-                sortType,
-            )
-        }
-    }.fold({ modelFlow ->
-        modelFlow.first().let {
-            if (it is Book) {
-                Resource.Success(it)
-            } else {
-                Resource.Error(
-                    Error.NotFound,
-                )
+    ): Resource<Book, Error> {
+        logcat { "#collection $bookshelfId $collectionId" }
+        val collection = collectionLocalDataSource.flow(collectionId).first()
+            ?: return Resource.Error(Error.NotFound)
+
+        logcat { "collection: $collection" }
+
+        return runCatching {
+            when (collection) {
+                is BasicCollection -> {
+                    if (isNext) {
+                        collectionFileLocalDataSource.flowNextCollectionFile(
+                            CollectionFile(collectionId, bookshelfId, path),
+                            sortType,
+                        )
+                    } else {
+                        collectionFileLocalDataSource.flowPrevCollectionFile(
+                            CollectionFile(collectionId, bookshelfId, path),
+                            sortType,
+                        )
+                    }
+                }
+
+                is SmartCollection -> {
+                    if (isNext) {
+                        fileLocalDataSource.nextFileModel(
+                            bookshelfId,
+                            path,
+                            collection.searchCondition,
+                            sortType,
+                        )
+                    } else {
+                        fileLocalDataSource.prevFileModel(
+                            bookshelfId,
+                            path,
+                            collection.searchCondition,
+                            sortType,
+                        )
+                    }
+                }
             }
-        }
-    }, {
-        Resource.Error(Error.System)
-    })
+        }.onFailure {
+            logcat { "GetNextBookInteractor: $it" }
+        }.fold({ modelFlow ->
+            modelFlow.first().let {
+                logcat { "modelFlow.first(): $it" }
+                if (it is Book) {
+                    Resource.Success(it)
+                } else {
+                    Resource.Error(Error.NotFound)
+                }
+            }
+        }, {
+            logcat { "GetNextBookInteractor: $it" }
+            Resource.Error(Error.System)
+        })
+    }
 }

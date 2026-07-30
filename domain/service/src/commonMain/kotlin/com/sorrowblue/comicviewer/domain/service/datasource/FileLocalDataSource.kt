@@ -104,7 +104,21 @@ interface FileLocalDataSource {
 
     fun nextFileModel(bookshelfId: BookshelfId, path: String, sortType: SortType): Flow<File?>
 
+    fun nextFileModel(
+        bookshelfId: BookshelfId,
+        path: String,
+        searchCondition: SearchCondition,
+        sortType: SortType,
+    ): Flow<File?>
+
     fun prevFileModel(bookshelfId: BookshelfId, path: String, sortType: SortType): Flow<File?>
+
+    fun prevFileModel(
+        bookshelfId: BookshelfId,
+        path: String,
+        searchCondition: SearchCondition,
+        sortType: SortType,
+    ): Flow<File?>
 
     suspend fun getCacheKeys(
         bookshelfId: BookshelfId,

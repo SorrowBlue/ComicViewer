@@ -10,6 +10,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.room3.RoomRawQuery
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
+import com.sorrowblue.comicviewer.data.database.dao.flowPrevNextFile
 import com.sorrowblue.comicviewer.data.database.dao.pagingSourceFileSearch
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
@@ -183,11 +184,27 @@ internal class FileLocalDataSourceImpl(
     ): Flow<File?> = flowPrevNextFile(bookshelfId, path, true, sortType)
         .map { it.firstOrNull()?.toModel() }
 
+    override fun nextFileModel(
+        bookshelfId: BookshelfId,
+        path: String,
+        searchCondition: SearchCondition,
+        sortType: SortType,
+    ): Flow<File?> = dao.flowPrevNextFile(bookshelfId, path, searchCondition, true, sortType)
+        .map { it.firstOrNull()?.toModel() }
+
     override fun prevFileModel(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): Flow<File?> = flowPrevNextFile(bookshelfId, path, false, sortType)
+        .map { it.firstOrNull()?.toModel() }
+
+    override fun prevFileModel(
+        bookshelfId: BookshelfId,
+        path: String,
+        searchCondition: SearchCondition,
+        sortType: SortType,
+    ): Flow<File?> = dao.flowPrevNextFile(bookshelfId, path, searchCondition, false, sortType)
         .map { it.firstOrNull()?.toModel() }
 
     override suspend fun getCacheKeys(

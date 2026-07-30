@@ -142,8 +142,8 @@ internal fun CollectionFileDao.flowPrevNextCollectionFile(
         is SortType.Size -> "size"
     }
 
-    val comparison =
-        if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">=" else "<="
+    val op =
+        if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">" else "<"
     val order =
         if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) "ASC" else "DESC"
 
@@ -171,16 +171,16 @@ internal fun CollectionFileDao.flowPrevNextCollectionFile(
                 ON
                   collection_file.bookshelf_id = file.bookshelf_id AND collection_file.file_path = file.path
                 WHERE
-                  collection_file.collection_id = :collectionId AND file.bookshelf_id = :bookshelfId AND file.path = :path
+                  collection_file.collection_id = ? AND file.bookshelf_id = ? AND file.path = ?
               )
               WHERE
                 collection_file.collection_id = c_collection_id
                 AND file.bookshelf_id = c_bookshelf_id
                 AND file.file_type != 'FOLDER'
                 AND file.path != c_path
-                AND file.$column $comparison c_$column
+                AND (file.$column $op c_$column OR (file.$column = c_$column AND file.path $op c_path))
               ORDER BY
-                file.$column $order
+                file.$column $order, file.path $order
               LIMIT 1
               ;
             """.trimIndent(),
