@@ -29,4 +29,4 @@ jobs:
       name: ${{ matrix.name }}
       task: packageDistributionForCurrentOS
       output-name: jvm-${{ matrix.name }}
-      output-path: app/jvm/build/compose/binaries/main/
+      output-path: app/jvmApp/build/compose/binaries/main/

@@ -1,217 +1,195 @@
 # AGENTS.md
 
-このドキュメントは、ComicViewerリポジトリの概要と開発・運用に関するガイドラインを提供します。
+This document provides guidelines for the development and operation of the ComicViewer project (SSoT Master).
+General agent rules and codes of conduct are defined in the `.agent/` directory.
 
-## 目次
+## References
+- **Code of Conduct / Rules (What):** See `.agent/rules/`
+- **Workflows (How):** See `.agent/workflows/`
 
-- [指示ファイルの役割分担](#指示ファイルの役割分担)
-- [プロジェクト概要](#プロジェクト概要)
-- [技術スタック](#技術スタック)
-- [環境構築](#環境構築)
-- [コマンド](#コマンド)
-- [テスト](#テスト)
-- [プロジェクト構造](#プロジェクト構造)
-- [コードスタイル](#コードスタイル)
-- [Gitワークフロー](#gitワークフロー)
-- [境界線](#境界線)
-- [セキュリティに関する考慮事項](#セキュリティに関する考慮事項)
-- [リリースプロセス](#リリースプロセス)
-- [トラブルシューティング](#トラブルシューティング)
+## Table of Contents
 
----
-
-## 指示ファイルの役割分担
-
-このリポジトリでは、指示ファイルを以下のように分担します。
-
-- **`.github/copilot-instructions.md`**: 方針・規約・制約（What）
-- **`AGENTS.md`**: 実行手順・コマンド・運用ルール・境界線（How）
-
-### 運用ルール
-
-1. 同じ内容を両方のファイルに重複記載しない
-2. 2つのファイルは併用時にマージされる前提で、矛盾する記述を作らない
-3. 方針（〜すべき、〜を使う、〜は禁止）は`.github/copilot-instructions.md`に記載
-4. 手順（コマンド、チェック手順、PR運用、Always/Ask First/Never）は`AGENTS.md`に記載
-
-### 迷ったときの判断
-
-- Chat/Code Reviewでも常に効かせたい「方針」なら`.github/copilot-instructions.md`
-- 実装・検証時の「具体手順」なら`AGENTS.md`
+- [Project Overview](#project-overview)
+- [Technology Stack](#technology-stack)
+- [Environment Setup](#environment-setup)
+- [Commands](#commands)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Code Style](#code-style)
+- [Git Workflow](#git-workflow)
+- [Boundaries](#boundaries)
+- [Security Considerations](#security-considerations)
+- [Release Process](#release-process)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## プロジェクト概要
+## Project Overview
 
-ComicViewerは、Android、iOS、JVM(Desktop)をサポートするマルチプラットフォームコミックビューアアプリケーションです。Kotlin
-Multiplatformで開発され、Jetpack Composeを使用したモダンなUIを提供します。
+ComicViewer is a multi-platform comic viewer application supporting Android, iOS, and JVM (Desktop). It is developed using Kotlin Multiplatform and provides a modern UI using Jetpack Compose.
 
-### 主な機能
+### Key Features
 
-- マルチプラットフォーム対応（Android、iOS、JVM）
-- モジュラーアーキテクチャによる高い保守性
-- ローカルストレージおよびネットワークストレージ（SMB）のサポート
-- 複数のファイル形式に対応（アーカイブ、ドキュメント）
-
----
-
-## 技術スタック
-
-- **Kotlin Multiplatform**: メインプログラミング言語
-- **Jetpack Compose**: UI フレームワーク（Android、JVM、iOS）
-- **Kotlin**: 2.3.0
-- **Gradle**: 9.2.1
-- **Java**: 21（必須）
-- **Android SDK**: compileSdk 36、minSdk 30
-- **モジュラーアーキテクチャ**: feature/domain/data レイヤー構成
-- **Metro**: 依存性注入フレームワーク
-- **Room**: データベース（Android）
-- **Coil**: 画像読み込みライブラリ
+- Multi-platform support (Android, iOS, JVM)
+- High maintainability with modular architecture
+- Support for local storage and network storage (SMB)
+- Support for multiple file formats (archives, documents)
 
 ---
 
-## 環境構築
+## Technology Stack
 
-### 前提条件
+- **Kotlin Multiplatform**: Main programming language
+- **Jetpack Compose**: UI framework (Android, JVM, iOS)
+- **Kotlin**: 2.4.10
+- **Gradle**: 9.6.1
+- **Java**: 21 (Required)
+- **Android SDK**: compileSdk 37, minSdk 30
+- **Modular Architecture**: feature/domain/data layer structure
+- **Metro**: Dependency injection framework
+- **Room**: Database (Android)
+- **Coil**: Image loading library
 
-1. **Java 21のインストール（必須）**
-    - Java 17では動作しません
-    - `JAVA_HOME`環境変数をJava 21のインストール先に設定
-    - 確認コマンド: `java -version` でOpenJDK 21+が表示されること
+---
+
+## Environment Setup
+
+### Prerequisites
+
+1. **Install Java 21 (Required)**
+    - Will not work with Java 17.
+    - Set the `JAVA_HOME` environment variable to your Java 21 installation path.
+    - Verification command: `java -version` should display OpenJDK 21+.
 
 2. **Android SDK**
-    - API 36（compileSdk）
-    - 最小API 30（minSdk）
+    - API 37 (compileSdk)
+    - Minimum API 30 (minSdk)
     - Android SDK Build-Tools
 
-3. **ネットワークアクセス**
-    - Google Maven repository（dl.google.com）へのアクセスが必要
-    - Maven Central（repo1.maven.org）
-    - Gradle Plugin Portal（plugins.gradle.org）
+3. **Network Access**
+    - Access to Google Maven repository (dl.google.com) is required.
+    - Maven Central (repo1.maven.org)
+    - Gradle Plugin Portal (plugins.gradle.org)
 
-### 初期セットアップ
+### Initial Setup
 
 ```bash
-# Java 21が有効か確認
+# Check if Java 21 is active
 java -version
 
-# リポジトリをクローン
+# Clone the repository
 git clone https://github.com/SorrowBlue/ComicViewer.git
 cd ComicViewer
 
-# Gradleラッパーの権限を付与
+# Grant permissions to the Gradle wrapper
 chmod +x gradlew
 ```
 
 ---
 
-## コマンド
+## Commands
 
-英語名: Commands
-
-### 基本ビルドコマンド
+### Basic Build Commands
 
 ```bash
-# クリーンビルド（45-60分）
+# Clean build
 ./gradlew clean build
 
-# アプリのビルド（30-40分）
-./gradlew app:android:build app:jvm:build
+# Build applications
+./gradlew :app:androidApp:build :app:jvmApp:build
 
-# 全モジュールのチェック（25-35分）
+# Check all modules
 ./gradlew check
 ```
 
-### プラットフォーム別ビルド
+### Platform-Specific Builds
 
 ```bash
-# Android Debug（25-35分）
-./gradlew app:android:assembleDebug
+# Android Debug
+./gradlew :app:androidApp:assembleDebug
 
-# Android Release（30-40分）
-./gradlew app:android:assembleRelease
+# Android Release
+./gradlew :app:androidApp:assembleRelease
 
-# JVM（20-30分）
-./gradlew app:jvm:packageDistributionForCurrentOS
+# JVM
+./gradlew :app:jvmApp:packageDistributionForCurrentOS
 ```
 
-### テストコマンド
+### Test Commands
 
 ```bash
-# 全テストの実行（20-30分）
+# Run all tests
 ./gradlew allTests
 
-# Android Unitテストのみ（10-15分）
-./gradlew testDebugUnitTest
+# Android Unit tests only
+./gradlew :app:androidApp:testDebugUnitTest
 
-# JVM テスト（5-10分）
-./gradlew jvmTest
+# JVM Tests
+./gradlew :app:jvmApp:jvmTest
 
-# 特定のモジュールのテスト
+# Test specific modules
 ./gradlew :domain:model:test
 ./gradlew :data:database:test
 ```
 
-### 品質チェックコマンド
+### Quality Check Commands
 
 ```bash
-# Detekt（静的コード解析）全プラットフォーム（15-20分）
+# Detekt (Static code analysis) - All platforms
 ./gradlew reportMerge
 
-# build-logic の Detekt（3-5分）
+# Detekt for build-logic
 ./gradlew :build-logic:detektAll
 
-# コードフォーマット
+# Code formatting
 ./gradlew detektFormat
 
-# Android Lint - Debug（8-12分）
-./gradlew app:android:lintDebug
+# Android Lint - Debug
+./gradlew :app:androidApp:lintDebug
 
-# Android Lint - すべてのビルドバリアント
-./gradlew app:android:lintDebug
-./gradlew app:android:lintInternal
-./gradlew app:android:lintPrerelease
-./gradlew app:android:lintRelease
+# Android Lint - All build variants
+./gradlew :app:androidApp:lintDebug
+./gradlew :app:androidApp:lintInternal
+./gradlew :app:androidApp:lintPrerelease
+./gradlew :app:androidApp:lintRelease
 
-# Version Catalog チェック（2-3分）
+# Version Catalog Lint
 ./gradlew versionCatalogLint
 ```
 
-### 重要な注意事項
+### Important Notices
 
-- **ビルドを絶対にキャンセルしないでください**: フルビルドには30-45分かかります。タイムアウトは60分以上に設定してください。
-- **ネットワークアクセス**: Google Mavenリポジトリへのアクセスが必要です。制限された環境では失敗します。
+- **NEVER cancel builds**: Make sure the timeout is set sufficiently long.
+- **Network Access**: Access to Google Maven repositories is required. The build will fail in restricted environments.
 
 ---
 
-## コードスタイル
+## Code Style
 
-英語名: Code Style
-
-### 基本ルール
+### Basic Rules
 
 1. **Kotlin Style Guide**
-    - Androidの[Kotlin style guide](https://developer.android.com/kotlin/style-guide)に従う
-    - **トレーリングカンマ**を必ず使用する（配列、関数パラメータ、クラス宣言など）
-    - 関数名: キャメルケース（camelCase）
-    - クラス名: パスカルケース（PascalCase）
+    - Follow Android's [Kotlin style guide](https://developer.android.com/kotlin/style-guide).
+    - **Trailing commas** MUST always be used (arrays, function parameters, class declarations, etc.).
+    - Function names: camelCase
+    - Class names: PascalCase
 
-2. **パッケージ構造**
-    - すべてのパッケージは`com.sorrowblue.comicviewer.*`プレフィックスを使用
-    - ファイル末尾に改行を含める
-    - importsは`*`グループ、次に`^`グループの順序で整理（detekt強制）
+2. **Package Structure**
+    - All packages must use the `com.sorrowblue.comicviewer.*` prefix.
+    - Include a newline at the end of every file.
+    - Organize imports with `*` groups first, followed by `^` groups (enforced by detekt).
 
-### Compose固有のルール
+### Compose-Specific Rules
 
 ```kotlin
-// ✅ 正しい例
+// ✅ Correct Example
 @Composable
 fun ScreenContent(
     title: String,
     onAction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // Material3 コンポーネントを優先
+    // Prioritize Material3 components
     Button(
         onClick = onAction,
         modifier = modifier,
@@ -220,7 +198,7 @@ fun ScreenContent(
     }
 }
 
-// ❌ 避けるべき例（トレーリングカンマがない）
+// ❌ Avoid (No trailing commas)
 @Composable
 fun ScreenContent(
     title: String,
@@ -230,52 +208,50 @@ fun ScreenContent(
 }
 ```
 
-- `@Composable`関数は名前付きパラメータを使用
-- デフォルト引数とトレーリングラムダを活用
-- Material3コンポーネントを優先使用
-- `@Preview`アノテーションでUIコンポーネントのプレビューを提供
-- Compose命名規則に従う: `ScreenContent`, `ScreenState`など
-- Android向けにMaterial3 Adaptiveコンポーネントを使用
-- 適切な状態管理で再コンポーズを最小化
+- Use named parameters for `@Composable` functions.
+- Utilize default arguments and trailing lambdas.
+- Prioritize Material3 components.
+- Provide UI component previews using the `@Preview` annotation.
+- Follow Compose naming conventions: `ScreenContent`, `ScreenState`, etc.
+- Use Material3 Adaptive components for Android.
+- Minimize recompositions through proper state management.
 
-### ドキュメント要件
+### Documentation Requirements
 
 ```kotlin
 /**
- * 公開APIにはKDocコメントを追加
+ * Add KDoc comments to public APIs.
  *
- * @param userId ユーザーID
- * @return ユーザー情報
+ * @param userId User ID
+ * @return User information
  */
 fun fetchUser(userId: String): User {
-    // 複雑なロジックには日本語でのコメントを付ける
-    // データベースからユーザー情報を取得する
+    // Use Japanese or English comments for complex logic
+    // Retrieve user information from the database
     return database.getUser(userId)
 }
 
-// TODO(username): 実装予定の機能について担当者を明記
+// TODO(username): Clearly specify the owner for planned features
 ```
 
-- **公開API**: すべての公開関数とクラスにKDocコメントを追加
-- **複雑なロジック**: ビジネスロジックには日本語でのコメント
-- **TODO**: 担当者情報を含める
-- **アーキテクチャの決定**: マルチプラットフォームのexpect/actual実装を文書化
+- **Public APIs**: Add KDoc comments to all public functions and classes.
+- **Complex Logic**: Add explanatory comments for business logic.
+- **TODO**: Include owner information.
+- **Architectural Decisions**: Document multi-platform expect/actual implementations.
 
 ---
 
-## テスト
+## Testing
 
-英語名: Testing
+### Testing Standards
 
-### テスト標準
+1. **Unit tests must be included for all new features.**
+2. **Use Compose Testing Framework for UI tests.**
+3. **Place test files in the same package structure as source files.**
+4. **Use test doubles to mock external dependencies.**
+5. **Test multi-platform code across all target platforms.**
 
-1. **新機能には必ずユニットテストを含める**
-2. **UIテストにはCompose Testing Frameworkを使用**
-3. **テストファイルはソースファイルと同じパッケージ構造に配置**
-4. **テストダブルを使用して外部依存関係をモック**
-5. **マルチプラットフォームコードはすべてのターゲットプラットフォームでテスト**
-
-### テストファイル構造
+### Test File Structure
 
 ```
 src/
@@ -285,87 +261,85 @@ src/
     UserRepositoryTest.kt
 ```
 
-### 検証シナリオ
+### Verification Scenarios
 
-#### Android検証
+#### Android Verification
 
-1. `./gradlew app:android:assembleDebug app:android:testDebugUnitTest`
-2. `./gradlew app:android:lintDebug`
-3. UI変更がある場合は手動でコアユーザーフローをテスト
+1. Run `./gradlew :app:androidApp:assembleDebug :app:androidApp:testDebugUnitTest`
+2. Run `./gradlew :app:androidApp:lintDebug`
+3. If there are UI changes, manually test core user flows.
 
-#### JVM検証
+#### JVM Verification
 
-1. `./gradlew app:jvm:packageDistributionForCurrentOS`
-2. デスクトップ固有機能のテスト（ウィンドウ管理、ファイルシステムアクセス）
-3. マルチプラットフォームコードが全ターゲットで動作することを確認
+1. Run `./gradlew :app:jvmApp:packageDistributionForCurrentOS`
+2. Test desktop-specific features (window management, filesystem access).
+3. Verify multi-platform code works across all targets.
 
-#### クロスプラットフォーム検証
+#### Cross-Platform Verification
 
-1. `./gradlew reportMerge`
-2. `./gradlew :domain:model:test :data:database:test`
-3. expect/actual実装が正しく動作することを確認
-
----
-
-## セキュリティに関する考慮事項
-
-### 必須チェック項目
-
-1. **入力値の検証**
-    - すべてのユーザー入力に対してバリデーションを実装
-    - SQLインジェクション、XSS攻撃などを防ぐ
-
-2. **Null安全性**
-    - Kotlinのnull安全性機能を活用
-    - null可能性を考慮したコード設計
-
-3. **外部ライブラリ**
-    - 最新の安定版を使用
-    - 既知の脆弱性がないか定期的に確認
-
-4. **API通信**
-    - 適切なエラーハンドリングを含める
-    - 機密情報を含むデータの暗号化
-
-5. **ライフサイクル管理**
-    - Android向けに適切なライフサイクル管理を実装
-    - メモリリークを避ける
-
-6. **シークレット管理**
-    - ソースコードにシークレットをコミットしない
-    - 環境変数やGitHub Secretsを使用
-
-### GitHub Actionsで使用されるシークレット
-
-- `ANDROID_STORE_FILE_BASE64`: Android keystoreファイル
-- `ANDROID_STORE_PASSWORD`: keystoreパスワード
-- `ANDROID_KEY_ALIAS`: キーエイリアス
-- `ANDROID_KEY_PASSWORD`: 署名キーパスワード
-- `GOOGLE_WORKLOAD_IDENTITY_PROVIDER`: Google Cloudワークロードアイデンティティ
-- `GOOGLE_SERVICE_ACCOUNT`: Play Consoleアクセス用サービスアカウント
-- `DISCORD_WEBHOOK`: Discord通知用webhook URL
+1. Run `./gradlew reportMerge`
+2. Run `./gradlew :domain:model:test :data:database:test`
+3. Verify expect/actual implementations function correctly.
 
 ---
 
-## Gitワークフロー
+## Security Considerations
 
-英語名: Git Workflow
+### Mandatory Checklist
 
-### ブランチ命名規則
+1. **Input Validation**
+    - Implement validation for all user inputs.
+    - Prevent SQL Injection, XSS, and other attacks.
 
-命名規則: `[type]/[issue-number]-[Issueタイトルを簡略化した内容]`
+2. **Null Safety**
+    - Leverage Kotlin's null safety features.
+    - Design code with nullability in mind.
 
-**Type一覧:**
+3. **External Libraries**
+    - Use the latest stable versions.
+    - Periodically check for known vulnerabilities.
 
-- `feature/`: 新しい機能の提案や実装
-- `enhancement/`: 既存機能の改善
-- `refactor/`: コードの内部的な改善（機能変更なし）
-- `fix/`: バグ、予期しない動作
-- `doc/`: ドキュメントの作成、修正、追加
-- `dependencies/`: 依存関係更新
-- `chore/`: ビルド、CI/CD、依存関係更新など
+4. **API Communication**
+    - Include proper error handling.
+    - Encrypt sensitive data in transit.
 
-**例:**
+5. **Lifecycle Management**
+    - Implement appropriate lifecycle management for Android.
+    - Avoid memory leaks.
+
+6. **Secret Management**
+    - NEVER commit secrets (keys, tokens, passwords) to source code.
+    - Use environment variables or GitHub Secrets.
+
+### Secrets Used in GitHub Actions
+
+- `ANDROID_STORE_FILE_BASE64`: Android keystore file
+- `ANDROID_STORE_PASSWORD`: Keystore password
+- `ANDROID_KEY_ALIAS`: Key alias
+- `ANDROID_KEY_PASSWORD`: Key password
+- `GOOGLE_WORKLOAD_IDENTITY_PROVIDER`: Google Cloud Workload Identity
+- `GOOGLE_SERVICE_ACCOUNT`: Service account for Play Console access
+- `DISCORD_WEBHOOK`: Webhook URL for Discord notifications
+
+---
+
+## Git Workflow
+
+### Branch Naming Conventions
+
+Convention: `[type]/[issue-number]-[brief-description-of-issue]`
+
+**Types:**
+
+- `feature/`: New features
+- `enhancement/`: Improvements to existing features
+- `refactor/`: Code improvements (no functional changes)
+- `fix/`: Bug fixes
+- `doc/`: Documentation creation, modifications, or additions
+- `dependencies/`: Dependency updates
+- `chore/`: Build, CI/CD, utility changes, etc.
+
+**Examples:**
 
 ```
 feature/123-add-bookmark-feature
@@ -373,12 +347,12 @@ fix/456-crash-on-startup
 doc/789-update-readme
 ```
 
-### コミットメッセージ標準
+### Commit Message Standards
 
-- **英語で記述**
-- **Conventional Commits形式を推奨**
+- **Written in English**
+- **Conventional Commits format is recommended**
 
-**フォーマット:**
+**Format:**
 
 ```
 <type>: <subject>
@@ -388,17 +362,17 @@ doc/789-update-readme
 <footer>
 ```
 
-**Type一覧:**
+**Types:**
 
-- `feat`: 新機能
-- `fix`: バグ修正
-- `docs`: ドキュメント
-- `style`: コードスタイル（機能に影響しない）
-- `refactor`: リファクタリング
-- `test`: テストの追加・修正
-- `chore`: ビルドプロセスやツールの変更
+- `feat`: New features
+- `fix`: Bug fixes
+- `docs`: Documentation
+- `style`: Formatting, missing semi colons, etc. (no code changes)
+- `refactor`: Refactoring production code
+- `test`: Adding or refactoring tests
+- `chore`: Updating build tasks, package manager configs, etc.
 
-**例:**
+**Example:**
 
 ```
 feat: Add bookmark feature to comic viewer
@@ -409,364 +383,323 @@ their reading progress.
 Closes #123
 ```
 
-### Issue・PR言語ガイドライン
+### Issue & PR Language Guidelines
 
-- **Issueタイトル**: 英語で記述
-- **Issue説明・コメント**: 日本語で記述
-- **PRタイトル**: 英語で記述
-- **PR説明・コメント**: 日本語で記述
-- **会話・コミュニケーション**: 日本語で行う
+- **Issue Title**: Written in English
+- **Issue Description & Comments**: Written in Japanese
+- **PR Title**: Written in English
+- **PR Description & Comments**: Written in Japanese
+- **Conversations & Communication**: Conducted in Japanese
 
-### PR作成前チェックリスト
+### Pre-PR Checklist
 
-コミット前に以下を必ず実行してください:
+Execute the following before committing:
 
 ```bash
-# 1. コードフォーマット
+# 1. Code formatting
 ./gradlew detektFormat
 
-# 2. 静的コード解析
+# 2. Static code analysis
 ./gradlew reportMerge
 
-# 3. Lint チェック
-./gradlew app:android:lintDebug
+# 3. Lint check
+./gradlew :app:androidApp:lintDebug
 
-# 4. テスト実行
+# 4. Run tests
 ./gradlew allTests
 ```
 
-### PR説明の書き方
+### Writing PR Descriptions
 
-1. **変更内容の要約**を明確に記載
-2. **関連するIssue番号**を含める（`Fixed #123`）
-3. **テスト方法**を記載
-4. **スクリーンショット**（UI変更がある場合）
-5. **破壊的変更**がある場合は明記
+1. Clearly describe the **summary of changes**.
+2. Include the **related issue number** (`Fixed #123`).
+3. Describe the **testing method**.
+4. Include **screenshots** (if there are UI changes).
+5. Specify any **breaking changes**.
 
-**テンプレート例:**
+**Template Example:**
 
 ```markdown
-## 変更内容
-ブックマーク機能を実装しました。
+## Changes
+Implemented the bookmark feature.
 
-## 関連Issue
+## Related Issues
 Fixed #123
 
-## テスト方法
-1. アプリを起動
-2. コミックを開く
-3. ブックマークボタンをタップ
-4. ブックマークが保存されることを確認
+## Testing Method
+1. Launch the app
+2. Open a comic
+3. Tap the bookmark button
+4. Verify the bookmark is saved
 
-## スクリーンショット
-（該当する場合）
+## Screenshots
+(If applicable)
 
-## チェックリスト
-- [x] detekt実行済み
-- [x] lint実行済み
-- [x] テスト実行済み
-- [x] ドキュメント更新済み
+## Checklist
+- [x] Detekt executed
+- [x] Lint executed
+- [x] Tests executed
+- [x] Documentation updated
 ```
 
-### ラベル管理
+### Label Management
 
-- **Issue**: `.github/labels.yml`に定義されているラベルから適切なものを選択
-- **PR**: Release Drafterによって自動的に付与されるため、手動でつける必要はありません
+- **Issue**: Select appropriate labels from those defined in `.github/labels.yml`.
+- **PR**: Automatically assigned by Release Drafter, no manual intervention needed.
 
-### 品質ゲート
+### Quality Gates
 
-すべてのPRは以下をパスする必要があります:
+All PRs must pass:
 
-1. **Lint**: Android Lint チェック
-2. **Detekt**: 静的コード解析
-3. **Test**: ユニットテスト
-4. **Build**: ビルド成功
+1. **Lint**: Android Lint check
+2. **Detekt**: Static code analysis
+3. **Test**: Unit tests
+4. **Build**: Successful build
 
-これらは`.github/workflows/lint-test-build.yml`で自動実行されます。
+These are executed automatically via `.github/workflows/lint-test-build.yml`.
 
 ---
 
-## 境界線
+## Boundaries
 
-英語名: Boundaries
-
-このセクションは、実装時の意思決定を早くするための境界条件です。
+This section defines boundary conditions to accelerate decision-making during implementation.
 
 ### Always
 
-- 変更したコードに対応するテストを追加または更新する
-- `AGENTS.md`記載の品質チェック（detekt/lint/test）を実行してからPRを作成する
-- モジュール依存ルール（feature/domain/data/framework）を守る
+- Add or update tests corresponding to modified code.
+- Run quality checks (detekt/lint/test) listed in `AGENTS.md` before creating a PR.
+- Adhere to module dependency rules (feature/domain/data/framework).
 
 ### Ask First
 
-- 新しい依存ライブラリやプラグインを追加する
-- 公開API・データベーススキーマ・CI設定に影響する変更を行う
-- 大規模なリファクタリングやモジュール再編を行う
+- Add new dependency libraries or plugins.
+- Make changes affecting public APIs, database schemas, or CI configurations.
+- Undertake large-scale refactoring or module reorganization.
 
 ### Never
 
-- シークレット（鍵、トークン、パスワード）をソースコードへコミットしない
-- 既存テストを理由なく削除したままマージしない
-- featureモジュール間の直接依存を追加しない
+- Commit secrets (keys, tokens, passwords) to source code.
+- Merge without resolving deleted tests.
+- Add direct dependencies between feature modules.
 
 ---
 
-## プロジェクト構造
+## Project Structure
 
-英語名: Project Structure
+Detailed module configuration tables and Mermaid dependency diagrams are defined in the repository's **[README.md](./README.md#module-configuration)**.
+To prevent duplicate management of information, system architecture and module structure details are centralized (SSoT) in `README.md`.
 
-### モジュール構成
+### Dependency Rules
 
-ComicViewerは以下のレイヤー構造を採用しています:
+- **Upper layers can depend on lower layers.**
+- **Minimize dependencies between layers at the same level.**
+- **Avoid direct dependencies between feature modules.**
+- **Implement screen transitions using Compose Navigation.**
+- **Leverage the Destinations library.**
 
-```
-├── app/                  # メインアプリケーション（Android/JVM/iOS エントリポイント）
-│   ├── android/          # Android アプリケーション
-│   ├── android/benchmark/ # Android ベンチマークモジュール
-│   ├── jvm/              # JVM (Desktop) アプリケーション
-│   ├── ios/              # iOS アプリケーション
-│   └── share/            # 共有コード
-├── feature/              # UI機能モジュール（画面とナビゲーション）
-│   ├── authentication/   # ログイン・認証画面
-│   ├── book/             # コミックビューワーと管理
-│   ├── bookshelf/        # ライブラリとコレクションビュー
-│   ├── collection/       # コレクション管理
-│   ├── file/             # ファイルブラウザと管理
-│   ├── folder/           # フォルダナビゲーション
-│   ├── history/          # 閲覧履歴
-│   ├── readlater/        # 後で読む機能
-│   ├── search/           # 検索と発見
-│   ├── settings/         # アプリケーション設定
-│   └── tutorial/         # ユーザーオンボーディング
-├── domain/               # ビジネスロジック層
-│   ├── model/            # データモデルとエンティティ
-│   ├── service/          # ビジネスサービス
-│   └── usecase/          # ユースケース実装
-├── data/                 # データアクセス層
-│   ├── coil/             # 画像読み込み設定
-│   ├── database/         # Roomデータベースセットアップ
-│   ├── datastore/        # 設定・状態の永続化
-│   ├── reader/           # ファイル読み込み実装
-│   └── storage/          # ストレージクライアント実装
-└── framework/            # 共有フレームワークコンポーネント
-    ├── common/           # 共通ユーティリティ
-    ├── designsystem/     # デザインシステムコンポーネント
-    ├── notification/     # 通知処理
-    └── ui/               # 共通UIコンポーネント
-```
+Refer to [README.md](./README.md) for the detailed module dependency diagram.
 
-### 依存関係ルール
+### Common Development Tasks
 
-- **上位レイヤーは下位レイヤーに依存可能**
-- **同レベルレイヤー間の依存は最小限に**
-- **featureモジュール間の直接依存は避ける**
-- **Compose Navigationで画面遷移を実装**
-- **Destinationsライブラリを活用**
+#### Adding a New Feature
 
-詳細なモジュール依存関係図は[README.md](./README.md)を参照してください。
+1. Create a feature module in the `feature/` directory.
+2. Define domain models in `domain/model/`.
+3. Implement use cases in `domain/usecase/`.
+4. Add data layer components in `data/`.
+5. Always run `./gradlew detektAll` after making changes.
 
-### 一般的な開発タスク
+#### Modifying Existing Features
 
-#### 新機能の追加
+1. Check dependencies in the module dependency diagram in README.md.
+2. Update corresponding test files using the same package structure.
+3. Run lint and test commands for the affected modules.
+4. Verify compatibility for both Android and JVM.
 
-1. `feature/`ディレクトリに機能モジュールを作成
-2. `domain/model/`でドメインモデルを定義
-3. `domain/usecase/`でユースケースを実装
-4. `data/`にデータレイヤーコンポーネントを追加
-5. 変更後に必ず`./gradlew detektAll`を実行
+#### Database Modifications
 
-#### 既存機能の修正
+1. Room database files are located in `data/database/`.
+2. Always create a migration script for schema changes.
+3. Test migrations with `./gradlew :data:database:test`.
+4. Update the database version in configuration.
 
-1. README.mdのモジュール依存関係図で依存関係を確認
-2. 同じパッケージ構造で対応するテストファイルを更新
-3. 影響を受けるモジュールのlintとtestコマンドを実行
-4. AndroidとJVMの両方の互換性を確認
-
-#### データベース変更
-
-1. Roomデータベースファイルは`data/database/`にあります
-2. スキーマ変更には必ずマイグレーションスクリプトを作成
-3. `./gradlew :data:database:test`でマイグレーションをテスト
-4. データベース設定でバージョンを更新
-
-### プラットフォーム固有の考慮事項
+### Platform-Specific Considerations
 
 #### Android
 
-- すべての実装でAndroid Lifecycleを考慮
-- Material3 Adaptiveコンポーネントを使用
-- 適切な修飾子を使用したAndroidリソース命名規則に従う
-- ActivityとFragmentのライフサイクル管理を確実に実装
+- Account for Android Lifecycle in all implementations.
+- Use Material3 Adaptive components.
+- Adhere to Android resource naming conventions with appropriate modifiers.
+- Ensure proper lifecycle management of Activities and Fragments.
 
 #### iOS
 
-- プラットフォーム固有の実装にはexpect/actualパターンを使用
-- iOS Human Interface Guidelinesを考慮
-- すべてのexpect宣言に対応するactual実装があることを確認
+- Use the expect/actual pattern for platform-specific implementations.
+- Consider the iOS Human Interface Guidelines.
+- Ensure all expect declarations have corresponding actual implementations.
 
 #### JVM
 
-- デスクトップ固有のUIパターン（メニューバー、キーボードショートカット）を考慮
-- 適切なウィンドウ管理機能を実装
-- ファイルシステムアクセスなどのデスクトップ固有機能をテスト
+- Consider desktop-specific UI patterns (menu bars, keyboard shortcuts).
+- Implement appropriate window management.
+- Test desktop-specific features such as filesystem access.
 
 ---
 
-## リリースプロセス
+## Release Process
 
-### 自動リリースフロー
+### Automated Release Flow
 
-ComicViewerは完全自動化されたリリースプロセスを採用しています。
+ComicViewer employs a fully automated release process.
 
 #### 1. Release Drafter
 
-`.github/workflows/release-drafter.yml`が以下を自動実行:
+`.github/workflows/release-drafter.yml` automatically performs the following:
 
-- mainブランチへのPush時にドラフトリリースを作成・更新
-- マージされたPull Requestからリリースノートを自動生成
-- Pull Requestに適切なラベルを自動付与
+- Creates/updates a draft release upon pushing to the main branch.
+- Automatically generates release notes from merged Pull Requests.
+- Assigns appropriate labels to Pull Requests.
 
-#### 2. リリースワークフロー
+#### 2. Release Workflow
 
-`.github/workflows/release.yml`が以下を実行:
+`.github/workflows/release.yml` performs the following:
 
-- リリースが公開されたときに自動実行
-- 品質チェック（Detekt、Lint、Test）
-- AndroidリリースとJVMリリースの並行ビルド
-- Google Play Console（Internal App Sharing）へのAABアップロード
-- GitHub Releaseへの成果物アップロード
-- Discord通知の送信
+- Executes automatically when a release is published.
+- Quality checks (Detekt, Lint, Test).
+- Parallel builds for Android and JVM releases.
+- Uploads AAB to Google Play Console (Internal App Sharing).
+- Uploads artifacts to GitHub Release.
+- Sends Discord notifications.
 
-### バージョン管理
+### Version Control & Versioning
 
-#### 自動バージョン計算
+#### Automated Version Calculation
 
-- **versionName**: Gitタグから取得（例: `v0.1.0-beta.1`, `v0.1.0`）
-- **versionCode**: versionNameから自動計算
+- **versionName**: Retrieved from Git tags (e.g., `v0.1.0-beta.1`, `v0.1.0`).
+- **versionCode**: Automatically calculated from versionName.
 
-#### versionCodeの計算式
+#### versionCode Formula
 
-- **正式リリース**: `(major × 10000 + minor × 100 + patch) × 100 + 99`
-- **Betaリリース**: `(major × 10000 + minor × 100 + patch) × 100 + beta番号`
+- **Official Release**: `(major * 10000 + minor * 100 + patch) * 100 + 99`
+- **Beta Release**: `(major * 10000 + minor * 100 + patch) * 100 + beta_number`
 
-**例:**
+**Examples:**
 
-- `v0.1.0-beta.1` → versionCode: `10001`
-- `v0.1.0-beta.2` → versionCode: `10002`
-- `v0.1.0` → versionCode: `10099`
+- `v0.1.0-beta.1` ➔ versionCode: `10001`
+- `v0.1.0-beta.2` ➔ versionCode: `10002`
+- `v0.1.0` ➔ versionCode: `10099`
 
-### リリース手順
+### Release Procedure
 
-1. **開発とPull Request作成**
-2. **適切なGitタグを作成**（例: `v0.1.0-beta.1`）
-3. **ドラフトリリースを確認・編集**
-4. **GitHubでリリースをPublish**
-5. **自動ビルドと配布が実行される**
+1. **Development & PR Creation**
+2. **Create an appropriate Git tag** (e.g., `v0.1.0-beta.1`).
+3. **Verify and edit the draft release.**
+4. **Publish the release on GitHub.**
+5. **Automated builds and distribution will execute.**
 
-詳細は[docs/release-automation.md](./docs/release-automation.md)を参照してください。
+For details, refer to [docs/release-automation.md](./docs/release-automation.md).
 
 ---
 
-## トラブルシューティング
+## Troubleshooting
 
-### Detekt失敗
+### Detekt Failures
 
 ```bash
-# コードフォーマットの自動修正
+# Automatically fix code formatting issues
 ./gradlew detektFormat
 ```
 
-**一般的な問題:**
+**Common issues:**
 
-- **トレーリングカンマの欠落**: コレクションと関数の最後の要素/パラメータの後にカンマを追加
-- **import順序**: IDEツールまたはdetekt自動修正でimportを並べ替え
-- **複雑な関数**: 複雑性のしきい値を超える関数を分割
+- **Missing trailing commas**: Add a comma after the last element/parameter of collections and functions.
+- **Import ordering**: Reorder imports using IDE tools or detekt automatic fixes.
+- **Complex functions**: Break down functions exceeding complexity thresholds.
 
-### Android Lint失敗
+### Android Lint Failures
 
-**一般的な問題:**
+**Common issues:**
 
-- **APIレベルの問題**: 最小SDK（30）とターゲットSDK（36）の互換性を確認
-- **リソース命名**: drawable、string、layoutのAndroid命名規則に従う
-- **ハードコードされた文字列**: 文字列を適切なvaluesフォルダのリソースに抽出
-- **ライフサイクルの問題**: ActivityとFragmentで適切なライフサイクル管理を確保
+- **API Level Issues**: Check compatibility between minimum SDK (30) and target SDK (37).
+- **Resource Naming**: Adhere to Android naming conventions for drawables, strings, and layouts.
+- **Hardcoded Strings**: Extract strings to appropriate resources in the values folder.
+- **Lifecycle Issues**: Ensure proper lifecycle management in Activities and Fragments.
 
-### マルチプラットフォームの問題
+### Multiplatform Issues
 
-**一般的な問題:**
+**Common issues:**
 
-- **Expect/Actual不一致**: すべてのexpect宣言に対応するactual実装があることを確認
-- **プラットフォーム固有API**: プラットフォーム差異に適切なexpect/actualパターンを使用
-- **依存関係の競合**: 互換性のあるマルチプラットフォームライブラリバージョンのバージョンカタログを確認
-- **ビルドバリアントの問題**: AndroidとJVMの両方のターゲットで変更をテスト
+- **Expect/Actual Mismatch**: Ensure all expect declarations have corresponding actual implementations.
+- **Platform-Specific APIs**: Use appropriate expect/actual patterns for platform differences.
+- **Dependency Conflicts**: Check the Version Catalog for compatible multi-platform library versions.
+- **Build Variant Issues**: Test changes across both Android and JVM targets.
 
-### モジュール依存関係の問題
+### Module Dependency Issues
 
-**一般的な問題:**
+**Common issues:**
 
-- **循環依存**: README.mdのモジュール依存関係図を参照
-- **API変更**: 公開APIを変更する際はすべての依存モジュールを更新
-- **バージョン競合**: 一貫した依存関係バージョンを維持するためにバージョンカタログを使用
-- **依存関係の欠落**: 影響を受けるすべてのプラットフォームソースセットに必要な依存関係を追加
+- **Circular Dependencies**: Refer to the module dependency diagram in README.md.
+- **API Changes**: Update all dependent modules when changing public APIs.
+- **Version Conflicts**: Use Version Catalog to maintain consistent dependency versions.
+- **Missing Dependencies**: Add required dependencies to the source sets of all affected platforms.
 
-### パフォーマンスの問題
+### Performance Issues
 
-**一般的な問題:**
+**Common issues:**
 
-- **ビルド時間**: Gradleデーモン、設定キャッシュ、並列ビルドを使用（デフォルトで有効）
-- **メモリエラー**: OOMでビルドが失敗する場合、gradle.propertiesでヒープサイズを増やす
-- **キャッシュの問題**: 奇妙な動作が発生した場合は`./gradlew clean`でビルドキャッシュをクリア
-- **ネットワークタイムアウト**: リポジトリアクセスのための企業プロキシ設定を確認
+- **Build Times**: Use Gradle daemon, configuration cache, and parallel builds (enabled by default).
+- **Memory Errors**: If build fails with OOM, increase heap size in gradle.properties.
+- **Cache Issues**: Clear the build cache with `./gradlew clean` if unexpected behavior occurs.
+- **Network Timeouts**: Check corporate proxy settings for repository access.
 
-### ビルド環境の問題
+### Build Environment Issues
 
-#### ネットワーク要件
+#### Network Requirements
 
-- Google Mavenリポジトリ（dl.google.com）へのアクセスが必要
-- 制限された環境ではビルドが「Plugin not found」エラーで失敗します
-- 企業環境ではプロキシ設定が必要な場合があります
+- Access to Google Maven repository (dl.google.com) is required.
+- Builds will fail with "Plugin not found" errors in restricted environments.
+- Corporate environments may require proxy configuration.
 
-#### 制限された環境での代替検証
+#### Alternative Verification in Restricted Environments
 
-ネットワークアクセスが制限されている場合:
+If network access is restricted:
 
-- コードベースの既存パターンに対して手動でコード変更をレビュー
-- ローカルで利用可能な静的解析ツールを使用
-- 既存ファイルに合わせた一貫したコードスタイルに焦点を当てる
-- 可能な限り分離してロジック変更をテスト
-- README.mdに示されているモジュール依存関係ルールに対して検証
+- Review code changes manually against existing patterns in the codebase.
+- Use locally available static analysis tools.
+- Focus on consistent code style matching existing files.
+- Test logic changes in isolation as much as possible.
+- Validate against module dependency rules shown in README.md.
 
-#### 一般的なビルド失敗
+#### Common Build Failures
 
-- **ネットワーク接続**: 最も一般的な問題 - Google/Mavenリポジトリへのアクセスを確認
-- **Javaバージョンの不一致**: Java 17や他のバージョンではなくJava 21が有効であることを確認
-- **Android SDKの欠落**: API 36とビルドツールを含むAndroid SDKをインストール
-- **メモリの問題**: ビルドには十分なメモリが必要（gradle.propertiesで4GB+推奨）
-- **Gradleキャッシュの破損**: ビルドが予期しない動作をする場合は`./gradlew clean`でクリア
+- **Network Connectivity**: Most common issue - check access to Google/Maven repositories.
+- **Java Version Mismatch**: Ensure Java 21 is active rather than Java 17 or other versions.
+- **Missing Android SDK**: Install Android SDK including API 37 and build tools.
+- **Memory Issues**: Build requires sufficient memory (4GB+ recommended in gradle.properties).
+- **Corrupted Gradle Cache**: Run `./gradlew clean` if the build behaves unexpectedly.
 
 ---
 
-## 参考資料
+## References & Resources
 
-### 公式ドキュメント
+### Official Documentation
 
-- [Android Developers](https://developer.android.com/) - Android開発の公式ガイドライン
-- [Jetpack Compose](https://developer.android.com/jetpack/compose) - Compose開発ガイド
-- [Kotlin Multiplatform](https://kotlinlang.org/lp/multiplatform/) - KMP公式ドキュメント
-- [Material Design 3](https://m3.material.io/) - Material3デザインシステム
+- [Android Developers](https://developer.android.com/) - Official guidelines for Android development
+- [Jetpack Compose](https://developer.android.com/jetpack/compose) - Compose development guide
+- [Kotlin Multiplatform](https://kotlinlang.org/lp/multiplatform/) - KMP official documentation
+- [Material Design 3](https://m3.material.io/) - Material3 design system
 
-### プロジェクト固有ドキュメント
+### Project-Specific Documentation
 
-- [README.md](./README.md) - プロジェクト概要とモジュール依存関係図
-- [docs/release-automation.md](./docs/release-automation.md) - リリースプロセス詳細
-- [docs/screen_transition.svg](./docs/screen_transition.svg) - 画面遷移図
-- [.github/copilot-instructions.md](./.github/copilot-instructions.md) - GitHub Copilot向けの全体方針（What）
+- [README.md](./README.md) - Project overview and module dependency diagram
+- [docs/release-automation.md](./docs/release-automation.md) - Detailed release process
+- [docs/screen_transition.svg](./docs/screen_transition.svg) - Screen transition diagram
+- [.github/copilot-instructions.md](./.github/copilot-instructions.md) - General instructions for GitHub Copilot (What)
 
-### 設定ファイル
+### Configuration Files
 
-- `gradle/libs.versions.toml` - 一元化された依存関係バージョン
-- `gradle.properties` - Gradleとビルド設定
-- `settings.gradle.kts` - マルチモジュールプロジェクト設定
+- `gradle/libs.versions.toml` - Centralized dependency versions
+- `gradle.properties` - Gradle and build configuration
+- `settings.gradle.kts` - Multi-module project settings
 
 ---

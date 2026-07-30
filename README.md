@@ -6,7 +6,7 @@
 
 ## Developer Guide
 
-📘 **For comprehensive development guidelines, please refer to [AGENTS.md](AGENTS.md)**
+**For comprehensive development guidelines, please refer to [AGENTS.md](AGENTS.md)**
 
 AGENTS.md contains detailed information about:
 
@@ -57,138 +57,114 @@ graph LR
     KotlinMultiplatformFeatureConventionPlugin --> MultiplatformLibraryConventionPlugin
     KotlinMultiplatformFeatureConventionPlugin --> MultiplatformComposeConventionPlugin
     KotlinMultiplatformFeatureConventionPlugin --> DiConventionPlugin
-```
-
 ## Module configuration
 
 | Module  |                |              | Overview               |
 |---------|----------------|--------------|------------------------|
-| app     |                |              | Application            |
-| data    | coil           |              | サムネイル処理の実装             |
-| data    | database       |              | データベースの実装              |
-| data    | reader         | document     | ファイルリーダーのドキュメント形式実装    |
-| data    | reader         | zip          | ファイルリーダーのアーカイブ形式実装     |
-| data    | storage        | client       | ファイルクライアント             |
-| data    | storage        | device       | ファイルクライアントのローカルストレージ実装 |
-| data    | storage        | smb          | ファイルクライアントのSMBサーバー実装   |
-| di      |                |              |                        |
-| domain  | model          |              | ドメインモデル                |
-| domain  | reader         |              | ページリーダー                |
-| domain  | service        |              | ドメインサービス               |
-| domain  | usecase        |              | ドメインサービス               |
-| feature | authentication |              | 認証画面                   |
-| feature | book           |              | ビューワー画面                |
-| feature | bookshelf      |              | 本棚画面                   |
-| feature | bookshelf      | edit         | 本棚編集画面                 |
-| feature | bookshelf      | selection    | 登録可能本棚画面               |
-| feature | favorite       |              | お気に入り画面                |
-| feature | favorite       | add          | お気に入り追加画面              |
-| feature | favorite       | common       | お気に入り共通機能              |
-| feature | favorite       | create       | お気に入り作成画面              |
-| feature | favorite       | edit         | お気に入り編集画面              |
-| feature | file           |              | ファイル共通機能               |
-| feature | folder         |              | フォルダ画面                 |
-| feature | history        |              | 履歴機能                   |
-| feature | library        |              | ライブラリ機能                |
-| feature | library        | box          | Boxライブラリ機能             |
-| feature | library        | dropbox      | Dropboxライブラリ機能         |
-| feature | library        | googledrive  | GoogleDriveライブラリ機能     |
-| feature | library        | onedrive     | OneDriveライブラリ機能        |
-| feature | readlater      |              | 後で読む画面                 |
-| feature | search         |              | 検索画面                   |
-| feature | settings       |              | 設定画面                   |
-| feature | settings       | common       | 設定共通機能                 |
-| feature | settings       | display      | 画面設定画面                 |
-| feature | settings       | folder       | フォルダ設定画面               |
-| feature | settings       | info         | アプリ情報画面                |
-| feature | settings       | security     | セキュリティ設定画面             |
-| feature | settings       | viewer       | ビューワー設定画面              |
-| feature | tutorial       |              | チュートリアル画面              |
-| feature | framework      | common       | フレームワーク共通              |
-| feature | framework      | designsystem | デザインシステム               |
-| feature | framework      | notificaiton | 通知機能                   |
-| feature | framework      | ui           | UI共通機能                 |
+| app     | androidApp     |              | Android Application |
+| app     | androidBenchmark|             | Android Benchmark Module |
+| app     | jvmApp         |              | JVM (Desktop) Application |
+| app     | ios            |              | iOS Application |
+| app     | share          |              | Platform shared entry point |
+| domain  | model          |              | Domain models and entities |
+| domain  | service        |              | Domain service definitions |
+| domain  | usecase        |              | Usecase implementations |
+| data    | coil           |              | Thumbnail and image loading implementations |
+| data    | database       |              | Room database implementations |
+| data    | datastore      |              | Datastore for settings and status persistence |
+| data    | reader         | document     | PDF/Document file reader implementations |
+| data    | reader         | zip          | ZIP/Archive file reader implementations |
+| data    | storage        |              | File storage client abstractions |
+| data    | storage        | device       | Local device storage implementations |
+| data    | storage        | smb          | SMB network storage implementations |
+| feature | authentication |              | Login/Authentication screen |
+| feature | book           |              | Comic viewer screen |
+| feature | book           | nav          | Comic viewer navigation |
+| feature | bookshelf      |              | Bookshelf/Library screen |
+| feature | bookshelf      | edit         | Bookshelf editing screen |
+| feature | bookshelf      | info         | Bookshelf information screen |
+| feature | collection      |              | Collection screen |
+| feature | collection      | add          | Add collection screen |
+| feature | collection      | editor       | Edit collection screen |
+| feature | collection      | nav          | Collection navigation |
+| feature | file           |              | File browser and management screen |
+| feature | folder         |              | Folder navigation screen |
+| feature | history        |              | Reading history screen |
+| feature | readlater      |              | Read later screen |
+| feature | search         |              | Search and discovery screen |
+| feature | settings       |              | Settings top screen |
+| feature | settings       | common       | Common settings definitions |
+| feature | settings       | extension    | Extension settings screen |
+| feature | settings       | display      | Display/UI settings screen |
+| feature | settings       | folder       | Folder settings screen |
+| feature | settings       | info         | Application information screen |
+| feature | settings       | nav          | Settings navigation |
+| feature | settings       | security     | Security settings screen |
+| feature | settings       | viewer       | Viewer settings screen |
+| feature | tutorial       |              | User onboarding screen |
+| framework| common        |              | Common utilities |
+| framework| background    |              | Background task processing implementations |
+| framework| designsystem  |              | Design system components |
+| framework| notification  |              | Notification processing implementations |
+| framework| permission    |              | Permission management implementations |
+| framework| test          |              | Testing utilities |
+| framework| ui            |              | Shared UI components |
+| framework| navkey-processor|            | Navigation key processor |
 
 ## Module dependencies
 
 ```mermaid
-graph LR
-    :app --> :usecase
-    :app --> :authentication
-    :app --> :book
-    :app --> :bookshelf
-    :app --> :favorite
-    :app --> :favorite:add
-    :app --> :readlater
-    :app --> :search
-    :app --> settings
-    :app --> :settings:security
-    :app --> :tutorial
-    :app --> library
-    subgraph feature
-        direction LR
-        :authentication
-        :authentication
-        :book
-        :bookshelf --> :bookshelf:edit
-        :bookshelf --> :bookshelf:selection
-        :bookshelf --> :folder
-        :favorite --> :file
-        :favorite --> :folder
-        :favorite --> :favorite:edit
-        :favorite --> :favorite:common
-        :favorite:add --> :favorite:common
-        :favorite:edit --> :favorite:common
-        :folder --> :file
-        :history --> :file
+graph TD
+    subgraph app [app]
+        :app:androidApp --> :app:share
+        :app:jvmApp --> :app:share
+        :app:ios --> :app:share
+    end
 
-        subgraph library
-            direction RL
-            :library:box --> :library
-            :library:dropbox --> :library
-            :library:googledrive --> :library
-            :library:onedrive --> :library
-        end
-        :readlater --> :file
-        :readlater --> :folder
-        :search --> :file
-        :search --> :folder
-        subgraph settings
-            direction LR
-            :settings --> :settings:common
-            :settings --> :settings:display
-            :settings --> :settings:folder
-            :settings --> :settings:info
-            :settings --> :settings:security
-            :settings --> :settings:viewer
-            :settings:display --> :settings:common
-            :settings:folder --> :settings:common
-            :settings:info --> :settings:common
-            :settings:security --> :settings:common
-            :settings:viewer --> :settings:common
-        end
+    subgraph feature [feature]
+        :feature:book --> :feature:book:nav
+        :feature:bookshelf --> :feature:bookshelf:edit
+        :feature:bookshelf --> :feature:bookshelf:info
+        :feature:collection --> :feature:collection:add
+        :feature:collection --> :feature:collection:editor
+        :feature:collection --> :feature:collection:nav
+        :feature:settings --> :feature:settings:common
+        :feature:settings --> :feature:settings:nav
+        :feature:settings:display --> :feature:settings:common
+        :feature:settings:folder --> :feature:settings:common
+        :feature:settings:info --> :feature:settings:common
+        :feature:settings:security --> :feature:settings:common
+        :feature:settings:viewer --> :feature:settings:common
+        :feature:settings:extension --> :feature:settings:common
     end
-    subgraph domain
-        direction LR
-        :usecase --> :model
-        :service --> :model
-        :service --> :usecase
-        :service --> :reader
+
+    subgraph domain [domain]
+        :domain:usecase --> :domain:model
+        :domain:service --> :domain:model
+        :domain:usecase --> :domain:service
     end
-    subgraph data
-        direction LR
-        :coil --> :service
-        :coil --> :reader
-        base --> :service
-        source --> :service
-        :reader:document --> :storage:client
-        :reader:zip --> :storage:client
-        :storage:client --> :service
-        :storage:client --> :model
-        :storage:client --> :reader
-        :storage:device --> :storage:client
-        :storage:smb --> :storage:client
+
+    subgraph data [data]
+        :data:coil --> :domain:service
+        :data:database --> :domain:model
+        :data:datastore --> :domain:model
+        :data:reader:document --> :data:storage
+        :data:reader:zip --> :data:storage
+        :data:storage:device --> :data:storage
+        :data:storage:smb --> :data:storage
+        :data:storage --> :domain:service
     end
+
+    subgraph framework [framework]
+        :framework:ui --> :framework:designsystem
+        :framework:ui --> :framework:common
+    end
+
+    :app:share --> feature
+    feature --> domain
+    feature --> framework
+    data --> domain
+    domain --> framework
 ```
 
 ## Screen transition diagram

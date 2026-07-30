@@ -52,7 +52,7 @@ jobs:
       name: ${{ matrix.name }}
       task: packageDistributionForCurrentOS
       output-name: jvm-${{ matrix.name }}
-      output-path: app/jvm/build/compose/binaries/main/
+      output-path: app/jvmApp/build/compose/binaries/main/
 
   upload-release-assets:
     runs-on: ubuntu-latest
