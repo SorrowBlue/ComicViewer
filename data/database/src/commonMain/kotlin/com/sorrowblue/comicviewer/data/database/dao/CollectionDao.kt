@@ -103,7 +103,7 @@ internal interface CollectionDao {
               *,
               (
                 CASE
-                WHEN type = "smart" THEN (
+                WHEN type = 'smart' THEN (
                   SELECT
                     COUNT(*)
                   FROM
@@ -112,20 +112,20 @@ internal interface CollectionDao {
                     bookshelf_id = collection.bookshelf_id
                     AND CASE
                       WHEN collection.show_hidden = 0 THEN (hidden = 0 AND file.name NOT LIKE '.%')
-                      ELSE "" = ""
+                      ELSE '' = ''
                     END
                     AND CASE
-                      WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
-                      WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
-                      ELSE file.parent != ""
+                      WHEN collection.`range` = 'InFolder' THEN file.parent == collection.range_parent
+                      WHEN collection.`range` = 'SubFolder' THEN file.parent LIKE collection.range_parent||'%'
+                      ELSE file.parent != ''
                     END
-                    AND name LIKE ("%"||`query`||"%")
+                    AND name LIKE ('%'||`query`||'%')
                     AND CASE
-                      WHEN period = "None" THEN "" = ""
-                      WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
-                      WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
-                      WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
-                      ELSE "" = ""
+                      WHEN period = 'None' THEN '' = ''
+                      WHEN period = 'Hour24' THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                      WHEN period = 'Week1' THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                      WHEN period = 'Month1' THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                      ELSE '' = ''
                     END
                 )
                 ELSE (SELECT COUNT(*) FROM collection_file WHERE id = collection_id)
@@ -148,7 +148,7 @@ internal interface CollectionDao {
               *,
               (
                 CASE
-                WHEN type = "smart" THEN (
+                WHEN type = 'smart' THEN (
                   SELECT
                     COUNT(*)
                   FROM
@@ -157,20 +157,20 @@ internal interface CollectionDao {
                     bookshelf_id = collection.bookshelf_id
                     AND CASE
                       WHEN collection.show_hidden = false THEN (hidden = false AND name NOT LIKE '.%')
-                      ELSE "" = ""
+                      ELSE '' = ''
                     END
                     AND CASE
-                      WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
-                      WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
-                      ELSE file.parent != ""
+                      WHEN collection.`range` = 'InFolder' THEN file.parent == collection.range_parent
+                      WHEN collection.`range` = 'SubFolder' THEN file.parent LIKE collection.range_parent||'%'
+                      ELSE file.parent != ''
                     END
-                    AND name LIKE ("%"||`query`||"%")
+                    AND name LIKE ('%'||`query`||'%')
                     AND CASE
-                      WHEN period = "None" THEN "" = ""
-                      WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
-                      WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
-                      WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
-                      ELSE "" = ""
+                      WHEN period = 'None' THEN '' = ''
+                      WHEN period = 'Hour24' THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                      WHEN period = 'Week1' THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                      WHEN period = 'Month1' THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                      ELSE '' = ''
                     END
                 )
                 ELSE (SELECT COUNT(*) FROM collection_file WHERE id = collection_id)
@@ -187,7 +187,7 @@ internal interface CollectionDao {
               *,
               (
                 CASE
-                WHEN type = "smart" THEN (
+                WHEN type = 'smart' THEN (
                   SELECT
                     COUNT(*)
                   FROM
@@ -196,20 +196,20 @@ internal interface CollectionDao {
                     bookshelf_id = collection.bookshelf_id
                     AND CASE
                       WHEN collection.show_hidden = false THEN (hidden = false AND name NOT LIKE '.%')
-                      ELSE "" = ""
+                      ELSE '' = ''
                     END
                     AND CASE
-                      WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
-                      WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
-                      ELSE file.parent != ""
+                      WHEN collection.`range` = 'InFolder' THEN file.parent == collection.range_parent
+                      WHEN collection.`range` = 'SubFolder' THEN file.parent LIKE collection.range_parent||'%'
+                      ELSE file.parent != ''
                     END
-                    AND name LIKE ("%"||`query`||"%")
+                    AND name LIKE ('%'||`query`||'%')
                     AND CASE
-                      WHEN period = "None" THEN "" = ""
-                      WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
-                      WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
-                      WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
-                      ELSE "" = ""
+                      WHEN period = 'None' THEN '' = ''
+                      WHEN period = 'Hour24' THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                      WHEN period = 'Week1' THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                      WHEN period = 'Month1' THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                      ELSE '' = ''
                     END
                 )
                 ELSE (SELECT COUNT(*) FROM collection_file WHERE id = collection_id)
@@ -234,7 +234,7 @@ internal interface CollectionDao {
               *,
               (
                 CASE
-                WHEN type = "smart" THEN (
+                WHEN type = 'smart' THEN (
                   SELECT
                     COUNT(*)
                   FROM
@@ -243,20 +243,20 @@ internal interface CollectionDao {
                     bookshelf_id = collection.bookshelf_id
                     AND CASE
                       WHEN collection.show_hidden = false THEN (hidden = false AND name NOT LIKE '.%')
-                      ELSE "" = ""
+                      ELSE '' = ''
                     END
                     AND CASE
-                      WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
-                      WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
-                      ELSE file.parent != ""
+                      WHEN collection.`range` = 'InFolder' THEN file.parent == collection.range_parent
+                      WHEN collection.`range` = 'SubFolder' THEN file.parent LIKE collection.range_parent||'%'
+                      ELSE file.parent != ''
                     END
-                    AND name LIKE ("%"||`query`||"%")
+                    AND name LIKE ('%'||`query`||'%')
                     AND CASE
-                      WHEN period = "None" THEN "" = ""
-                      WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
-                      WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
-                      WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
-                      ELSE "" = ""
+                      WHEN period = 'None' THEN '' = ''
+                      WHEN period = 'Hour24' THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                      WHEN period = 'Week1' THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                      WHEN period = 'Month1' THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                      ELSE '' = ''
                     END
                 )
                 ELSE (SELECT COUNT(*) FROM collection_file WHERE id = collection_id)
@@ -324,20 +324,20 @@ internal interface CollectionDao {
                   bookshelf_id = collection.bookshelf_id
                   AND CASE
                     WHEN collection.show_hidden = 0 THEN (hidden = 0 AND name NOT LIKE '.%')
-                    ELSE "" = ""
+                    ELSE '' = ''
                   END
                   AND CASE
-                    WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
-                    WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
-                    ELSE file.parent != ""
+                    WHEN collection.`range` = 'InFolder' THEN file.parent == collection.range_parent
+                    WHEN collection.`range` = 'SubFolder' THEN file.parent LIKE collection.range_parent||'%'
+                    ELSE file.parent != ''
                   END
-                  AND name LIKE ("%"||`query`||"%")
+                  AND name LIKE ('%'||`query`||'%')
                   AND CASE
-                    WHEN period = "None" THEN "" = ""
-                    WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
-                    WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
-                    WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
-                    ELSE "" = ""
+                    WHEN period = 'None' THEN '' = ''
+                    WHEN period = 'Hour24' THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                    WHEN period = 'Week1' THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                    WHEN period = 'Month1' THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                    ELSE '' = ''
                   END
               ) as count,
               0 as exist
@@ -362,20 +362,20 @@ internal interface CollectionDao {
                   bookshelf_id = collection.bookshelf_id
                   AND CASE
                     WHEN collection.show_hidden = 0 THEN (hidden = 0 AND name NOT LIKE '.%')
-                    ELSE "" = ""
+                    ELSE '' = ''
                   END
                   AND CASE
-                    WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
-                    WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
-                    ELSE file.parent != ""
+                    WHEN collection.`range` = 'InFolder' THEN file.parent == collection.range_parent
+                    WHEN collection.`range` = 'SubFolder' THEN file.parent LIKE collection.range_parent||'%'
+                    ELSE file.parent != ''
                   END
-                  AND name LIKE ("%"||`query`||"%")
+                  AND name LIKE ('%'||`query`||'%')
                   AND CASE
-                    WHEN period = "None" THEN "" = ""
-                    WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
-                    WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
-                    WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
-                    ELSE "" = ""
+                    WHEN period = 'None' THEN '' = ''
+                    WHEN period = 'Hour24' THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                    WHEN period = 'Week1' THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                    WHEN period = 'Month1' THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                    ELSE '' = ''
                   END
               ) as count,
               0 as exist
