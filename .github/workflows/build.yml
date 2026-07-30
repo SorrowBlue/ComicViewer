@@ -11,7 +11,7 @@ jobs:
     with:
       environment: android
       task: bundlePrerelease assemblePrerelease
-      output-path: app/android/build/outputs/
+      output-path: app/androidApp/build/outputs/
 
   build-jvm:
     strategy:

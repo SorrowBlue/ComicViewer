@@ -29,11 +29,11 @@ jobs:
       fetch-depth: 0
       task: bundleRelease
       package-name: com.sorrowblue.comicviewer
-      release-files: app/android/build/outputs/bundle/release/android-release.aab
+      release-files: app/androidApp/build/outputs/bundle/release/android-release.aab
       tracks: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
       status: draft
-      mapping-file: app/android/build/outputs/mapping/release/mapping.txt
-      debug-symbols: app/android/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+      mapping-file: app/androidApp/build/outputs/mapping/release/mapping.txt
+      debug-symbols: app/androidApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
 
   build-jvm-release:
     needs: [ lint, test ]
