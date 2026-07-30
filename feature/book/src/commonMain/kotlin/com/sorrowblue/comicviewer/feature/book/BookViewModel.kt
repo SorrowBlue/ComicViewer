@@ -89,7 +89,7 @@ internal class BookViewModel(
 
     private suspend fun GetNextBookUseCase.execute(isNext: Boolean): List<NextBook> = buildList {
         if (collectionId != CollectionId.Companion()) {
-            getNextBookUseCase.invoke(
+            invoke(
                 GetNextBookUseCase.Request(
                     book.bookshelfId,
                     book.path,
@@ -100,7 +100,7 @@ internal class BookViewModel(
                 add(NextBook.Collection(it))
             }
         }
-        getNextBookUseCase.invoke(
+        invoke(
             GetNextBookUseCase.Request(
                 book.bookshelfId,
                 book.path,

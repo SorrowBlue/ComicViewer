@@ -50,7 +50,12 @@ internal class CollectionLocalDataSourceImpl(
     ): Flow<PagingData<Pair<Collection, Boolean>>> = Pager(pagingConfig) {
         val criteria = collectionCriteria()
         when (criteria.type) {
-            CollectionType.Smart -> TODO()
+            CollectionType.Smart ->
+                if (criteria.recent) {
+                    dao.pagingSourceSmartRecent(bookshelfId, path)
+                } else {
+                    dao.pagingSourceSmart(bookshelfId, path)
+                }
 
             CollectionType.Basic ->
                 if (criteria.recent) {

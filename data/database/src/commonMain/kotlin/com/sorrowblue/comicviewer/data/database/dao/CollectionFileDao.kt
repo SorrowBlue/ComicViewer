@@ -128,3 +128,66 @@ internal fun CollectionFileDao.pagingSource(
         },
     )
 }
+
+internal fun CollectionFileDao.flowPrevNextCollectionFile(
+    collectionId: Int,
+    bookshelfId: Int,
+    path: String,
+    isNext: Boolean,
+    sortType: SortType,
+): Flow<List<FileEntity>> {
+    val column = when (sortType) {
+        is SortType.Name -> "sort_index"
+        is SortType.Date -> "last_modified"
+        is SortType.Size -> "size"
+    }
+
+    val comparison =
+        if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">=" else "<="
+    val order =
+        if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) "ASC" else "DESC"
+
+    return flowPrevNext(
+        RoomRawQuery(
+            """
+              SELECT
+                file.*
+              FROM
+                collection_file
+              INNER JOIN
+                file
+              ON
+                collection_file.bookshelf_id = file.bookshelf_id AND collection_file.file_path = file.path
+              , (
+                SELECT
+                  collection_file.collection_id c_collection_id,
+                  file.bookshelf_id c_bookshelf_id,
+                  file.path c_path,
+                  file.$column c_$column
+                FROM
+                  collection_file
+                INNER JOIN
+                  file
+                ON
+                  collection_file.bookshelf_id = file.bookshelf_id AND collection_file.file_path = file.path
+                WHERE
+                  collection_file.collection_id = :collectionId AND file.bookshelf_id = :bookshelfId AND file.path = :path
+              )
+              WHERE
+                collection_file.collection_id = c_collection_id
+                AND file.bookshelf_id = c_bookshelf_id
+                AND file.file_type != 'FOLDER'
+                AND file.path != c_path
+                AND file.$column $comparison c_$column
+              ORDER BY
+                file.$column $order
+              LIMIT 1
+              ;
+            """.trimIndent(),
+        ) { statement ->
+            statement.bindLong(1, collectionId.toLong())
+            statement.bindLong(2, bookshelfId.toLong())
+            statement.bindText(3, path)
+        },
+    )
+}

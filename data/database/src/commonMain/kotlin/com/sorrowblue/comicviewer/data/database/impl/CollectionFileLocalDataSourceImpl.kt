@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.data.database.dao.CollectionDao
 import com.sorrowblue.comicviewer.data.database.dao.CollectionFileDao
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.bookshelfIdCacheKey
+import com.sorrowblue.comicviewer.data.database.dao.flowPrevNextCollectionFile
 import com.sorrowblue.comicviewer.data.database.dao.pagingSource
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionFileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
@@ -83,11 +84,21 @@ internal class CollectionFileLocalDataSourceImpl(
                 ).map { BookshelfId(it.bookshelfId) to it.cacheKey }
     }
 
-    override fun flowNextCollectionFile(file: CollectionFile, sortType: SortType): Flow<File?> {
-        TODO("Not yet implemented")
-    }
+    override fun flowNextCollectionFile(file: CollectionFile, sortType: SortType): Flow<File?> =
+        collectionFileDao.flowPrevNextCollectionFile(
+            file.id.value,
+            file.bookshelfId.value,
+            file.path,
+            true,
+            sortType,
+        ).map { it.firstOrNull()?.toModel() }
 
-    override fun flowPrevCollectionFile(file: CollectionFile, sortType: SortType): Flow<File?> {
-        TODO("Not yet implemented")
-    }
+    override fun flowPrevCollectionFile(file: CollectionFile, sortType: SortType): Flow<File?> =
+        collectionFileDao.flowPrevNextCollectionFile(
+            file.id.value,
+            file.bookshelfId.value,
+            file.path,
+            false,
+            sortType,
+        ).map { it.firstOrNull()?.toModel() }
 }

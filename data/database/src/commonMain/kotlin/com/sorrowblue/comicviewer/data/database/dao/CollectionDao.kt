@@ -310,6 +310,82 @@ internal interface CollectionDao {
         bookshelfId: BookshelfId,
         path: String,
     ): PagingSource<Int, CollectionEntityCountExist>
+
+    @Query(
+        """
+            SELECT
+              *,
+              (
+                SELECT
+                  COUNT(*)
+                FROM
+                  file
+                WHERE
+                  bookshelf_id = collection.bookshelf_id
+                  AND CASE
+                    WHEN collection.show_hidden = 0 THEN (hidden = 0 AND name NOT LIKE '.%')
+                    ELSE "" = ""
+                  END
+                  AND CASE
+                    WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
+                    WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
+                    ELSE file.parent != ""
+                  END
+                  AND name LIKE ("%"||`query`||"%")
+                  AND CASE
+                    WHEN period = "None" THEN "" = ""
+                    WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                    WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                    WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                    ELSE "" = ""
+                  END
+              ) as count,
+              0 as exist
+            FROM collection WHERE type = 'Smart' AND :bookshelfId IS NOT NULL AND :path IS NOT NULL ORDER BY created_at DESC
+        """,
+    )
+    fun pagingSourceSmart(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): PagingSource<Int, CollectionEntityCountExist>
+
+    @Query(
+        """
+            SELECT
+              *,
+              (
+                SELECT
+                  COUNT(*)
+                FROM
+                  file
+                WHERE
+                  bookshelf_id = collection.bookshelf_id
+                  AND CASE
+                    WHEN collection.show_hidden = 0 THEN (hidden = 0 AND name NOT LIKE '.%')
+                    ELSE "" = ""
+                  END
+                  AND CASE
+                    WHEN collection.`range` = "InFolder" THEN file.parent == collection.range_parent
+                    WHEN collection.`range` = "SubFolder" THEN file.parent LIKE collection.range_parent||"%"
+                    ELSE file.parent != ""
+                  END
+                  AND name LIKE ("%"||`query`||"%")
+                  AND CASE
+                    WHEN period = "None" THEN "" = ""
+                    WHEN period = "Hour24" THEN last_modified > strftime('%s000', datetime('now', '-24 hours'))
+                    WHEN period = "Week1" THEN last_modified > strftime('%s000', datetime('now', '-7 days'))
+                    WHEN period = "Month1" THEN last_modified > strftime('%s000', datetime('now', '-1 months'))
+                    ELSE "" = ""
+                  END
+              ) as count,
+              0 as exist
+            FROM collection WHERE type = 'Smart' AND :bookshelfId IS NOT NULL AND :path IS NOT NULL ORDER BY updated_at DESC
+        """,
+    )
+    fun pagingSourceSmartRecent(
+        bookshelfId: BookshelfId,
+        path: String,
+    ): PagingSource<Int, CollectionEntityCountExist>
 }
 
 internal suspend fun CollectionDao.insert(entity: CollectionEntity): Long = insert(
