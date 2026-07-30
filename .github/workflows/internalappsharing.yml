@@ -25,7 +25,7 @@ jobs:
       fetch-depth: 0
       task: bundleInternal
       package-name: com.sorrowblue.comicviewer
-      release-files: app/androidApp/build/outputs/bundle/internal/android-internal.aab
+      release-files: app/androidApp/build/outputs/bundle/internal/androidApp-internal.aab
       tracks: internalsharing
       mapping-file: app/androidApp/build/outputs/mapping/internal/mapping.txt
       debug-symbols: app/androidApp/build/intermediates/merged_native_libs/internal/mergeInternalNativeLibs/out/lib

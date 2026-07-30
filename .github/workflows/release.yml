@@ -29,7 +29,7 @@ jobs:
       fetch-depth: 0
       task: bundleRelease
       package-name: com.sorrowblue.comicviewer
-      release-files: app/androidApp/build/outputs/bundle/release/android-release.aab
+      release-files: app/androidApp/build/outputs/bundle/release/androidApp-release.aab
       tracks: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
       status: draft
       mapping-file: app/androidApp/build/outputs/mapping/release/mapping.txt
