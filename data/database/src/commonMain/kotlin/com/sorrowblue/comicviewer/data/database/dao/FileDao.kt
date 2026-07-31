@@ -418,19 +418,19 @@ internal fun FileDao.flowPrevNextFile(
         add("($column $op c_$column OR ($column = c_$column AND path $op c_path))")
 
         if (!searchCondition.showHidden) {
-            add("hidden = ?")
+            add("hidden = :hidden")
             add("name NOT LIKE '.%'")
             bindArgs += false
         }
 
         when (val range = searchCondition.range) {
             is SearchCondition.Range.InFolder -> {
-                add("parent = ?")
+                add("parent = :parent")
                 bindArgs += range.parent
             }
 
             is SearchCondition.Range.SubFolder -> {
-                add("parent LIKE ?")
+                add("parent LIKE :parent")
                 bindArgs += "${range.parent}%"
             }
 
@@ -440,7 +440,7 @@ internal fun FileDao.flowPrevNextFile(
         }
 
         if (searchCondition.query.isNotEmpty()) {
-            add("name LIKE ?")
+            add("name LIKE :name")
             bindArgs += "%${searchCondition.query}%"
         }
 
@@ -473,7 +473,7 @@ internal fun FileDao.flowPrevNextFile(
           FROM
             file
           WHERE
-            bookshelf_id = ? AND path = ?
+            bookshelf_id = :bookshelf_id AND path = :path
         )
         WHERE
           ${selectionStr.joinToString(" AND ")}
