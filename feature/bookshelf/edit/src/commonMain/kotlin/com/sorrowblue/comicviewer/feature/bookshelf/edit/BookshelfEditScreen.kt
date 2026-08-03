@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard
+package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -10,16 +10,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -32,22 +30,19 @@ import androidx.compose.ui.unit.dp
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.DeviceEditForm
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditScreenUiState
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SelectionList
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditorContents
-import com.sorrowblue.comicviewer.framework.common.isTouchable
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard.BookshelfWizardPage
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard.BookshelfWizardScreenUiState
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import com.sorrowblue.comicviewer.framework.ui.material3.AdaptiveAlertDialog
+import com.sorrowblue.comicviewer.framework.ui.material3.AdaptiveAlertDialog2
 import com.sorrowblue.comicviewer.framework.ui.material3.HorizontalPagerIndicator
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
@@ -57,22 +52,26 @@ import soil.form.compose.rememberForm
 
 @NavDestination(BookshelfWizardNavKey.Edit::class)
 @Composable
-internal fun BookshelfWizardScreen(
+internal fun BookshelfEditScreen(
     uiState: BookshelfWizardScreenUiState,
     pages: SnapshotStateList<BookshelfWizardPage>,
     pagerState: PagerState,
+    actionButton: @Composable () -> Unit = {},
+    confirmButton: @Composable (() -> Unit)? = null,
+    dismissButton: @Composable (() -> Unit)? = null,
     onBack: () -> Unit,
-    onPrevClick: () -> Unit,
-    onNextClick: () -> Unit,
     content: @Composable (BookshelfWizardPage, PaddingValues) -> Unit,
 ) {
-    AdaptiveAlertDialog(
+    AdaptiveAlertDialog2(
         title = {
             Text(uiState.title)
         },
         onBackClick = {
             onBack()
         },
+        actionButton = actionButton,
+        confirmButton = confirmButton,
+        dismissButton = dismissButton
     ) { contentPadding ->
         Box {
             HorizontalPager(
@@ -80,7 +79,7 @@ internal fun BookshelfWizardScreen(
                 verticalAlignment = Alignment.Top,
                 contentPadding = PaddingValues(),
             ) { pageIndex ->
-                content(pages[pageIndex], contentPadding.plus(PaddingValues(top = 8.dp)))
+                content(pages[pageIndex], contentPadding.plus(PaddingValues(top = 16.dp)))
             }
             AnimatedVisibility(pages.size > 1, enter = fadeIn(), exit = fadeOut()) {
                 Row {
@@ -100,31 +99,6 @@ internal fun BookshelfWizardScreen(
                     )
                 }
             }
-            if (!isTouchable) {
-                FilledTonalIconButton(
-                    onClick = onPrevClick,
-                    modifier = Modifier.align(
-                        Alignment.CenterStart,
-                    ).animateFloatingActionButton(
-                        0 < pagerState.targetPage && 0 < pagerState.currentPage,
-                        Alignment.Center,
-                    ),
-                ) {
-                    Icon(ComicIcons.ArrowLeft, null)
-                }
-                FilledTonalIconButton(
-                    onClick = onNextClick,
-                    modifier = Modifier.align(
-                        Alignment.CenterEnd,
-                    ).animateFloatingActionButton(
-                        pagerState.targetPage < pagerState.pageCount - 1 &&
-                            pagerState.currentPage < pagerState.pageCount - 1,
-                        Alignment.Center,
-                    ),
-                ) {
-                    Icon(ComicIcons.ArrowRight, null)
-                }
-            }
         }
     }
 }
@@ -140,10 +114,10 @@ private fun BookshelfWizardSelectionScreen() {
 @Preview(device = Devices.PIXEL_9, name = "Selection")
 @Preview(device = Devices.PIXEL_TABLET, name = "Selection")
 @Composable
-private fun BookshelfWizardScreenSelectionPreview() {
+private fun BookshelfEditScreenSelectionPreview() {
     PreviewTheme {
         Box(Modifier.fillMaxSize())
-        BookshelfWizardScreen(
+        BookshelfEditScreen(
             uiState = BookshelfWizardScreenUiState(
                 title = stringResource(Res.string.bookshelf_wizard_title_register),
             ),
@@ -155,8 +129,6 @@ private fun BookshelfWizardScreenSelectionPreview() {
             },
             pagerState = rememberPagerState(0) { 2 },
             onBack = {},
-            onPrevClick = {},
-            onNextClick = {},
             content = { _, contentPadding ->
                 SelectionList(
                     items = remember { List(4) { BookshelfType.entries }.flatten() },
@@ -172,10 +144,10 @@ private fun BookshelfWizardScreenSelectionPreview() {
 @Preview(device = Devices.PIXEL_9, name = "SmbEditor")
 @Preview(device = Devices.PIXEL_TABLET, name = "SmbEditor")
 @Composable
-private fun BookshelfWizardScreenSmbEditorPreview() {
+private fun BookshelfEditScreenSmbEditorPreview() {
     PreviewTheme {
         Box(Modifier.fillMaxSize())
-        BookshelfWizardScreen(
+        BookshelfEditScreen(
             uiState = BookshelfWizardScreenUiState(
                 title = "Register",
             ),
@@ -187,21 +159,19 @@ private fun BookshelfWizardScreenSmbEditorPreview() {
             },
             pagerState = rememberPagerState(0) { 2 },
             onBack = {},
-            onPrevClick = {},
-            onNextClick = {},
             content = { _, contentPadding ->
-                BookshelfEditorContents(
-                    onSaveClick = {},
-                    contentPadding = contentPadding,
-                ) {
-                    SmbEditorContents(
-                        form = rememberForm(
-                            initialValue = SmbEditForm(auth = SmbEditForm.Auth.UserPass),
-                        ) {},
-                        uiState = BookshelfEditScreenUiState(progress = false),
-                    )
-                }
-            },
+                SmbEditorContents(
+                    form = rememberForm(
+                        initialValue = SmbEditForm(auth = SmbEditForm.Auth.UserPass),
+                    ) {},
+                    uiState = BookshelfEditScreenUiState(progress = false),
+                    modifier = Modifier.fillMaxHeight()
+                        .padding(
+                            contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Horizontal)
+                                .plus(PaddingValues(bottom = ComicTheme.dimension.padding)),
+                        ),
+                )
+            }
         )
     }
 }
@@ -210,10 +180,10 @@ private fun BookshelfWizardScreenSmbEditorPreview() {
 @Preview(device = Devices.PIXEL_9, name = "DeviceEditor")
 @Preview(device = Devices.PIXEL_TABLET, name = "DeviceEditor")
 @Composable
-private fun BookshelfWizardScreenDeviceEditorPreview() {
+private fun BookshelfEditScreenDeviceEditorPreview() {
     PreviewTheme {
         Box(Modifier.fillMaxSize())
-        BookshelfWizardScreen(
+        BookshelfEditScreen(
             uiState = BookshelfWizardScreenUiState(
                 title = "Register",
             ),
@@ -225,24 +195,22 @@ private fun BookshelfWizardScreenDeviceEditorPreview() {
             },
             pagerState = rememberPagerState(1) { 2 },
             onBack = {},
-            onPrevClick = {},
-            onNextClick = {},
             content = { _, contentPadding ->
-                BookshelfEditorContents(
-                    onSaveClick = {},
-                    contentPadding = contentPadding,
-                ) {
-                    val form = rememberForm(initialValue = DeviceEditForm()) {}
-                    DeviceEditorContents(
+                val form = rememberForm(initialValue = DeviceEditForm()) {}
+                DeviceEditorContents(
+                    form = form,
+                    folderSelectFieldState = rememberFolderSelectFieldState(
                         form = form,
-                        folderSelectFieldState = rememberFolderSelectFieldState(
-                            form = form,
-                            onOpenDocumentTreeCancel = {},
+                        onOpenDocumentTreeCancel = {},
+                    ),
+                    uiState = BookshelfEditScreenUiState(progress = false),
+                    modifier = Modifier.fillMaxHeight()
+                        .padding(
+                            contentPadding.only(PaddingValuesSides.Top + PaddingValuesSides.Horizontal)
+                                .plus(PaddingValues(bottom = ComicTheme.dimension.padding)),
                         ),
-                        uiState = BookshelfEditScreenUiState(progress = false),
-                    )
-                }
-            },
+                )
+            }
         )
     }
 }

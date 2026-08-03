@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.section
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,6 +13,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditViewModel
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditViewModelEvent
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.DeviceEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectFieldName
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectFieldState
@@ -20,7 +26,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.HostField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathFieldName
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.BookshelfEditScreenUiState
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.EventFlow

@@ -16,6 +16,7 @@
     <string name="bookshelf_edit_label_display_name">Display name</string>
     <string name="bookshelf_edit_label_guest">Guest</string>
     <string name="bookshelf_edit_label_save">Save</string>
+    <string name="bookshelf_edit_label_back">Back</string>
     <string name="bookshelf_edit_label_select_folder">Select folder</string>
     <string name="bookshelf_edit_label_username_password">Username/password</string>
     <string name="bookshelf_edit_msg_cancelled_folder_selection">Folder selection canceled.</string>

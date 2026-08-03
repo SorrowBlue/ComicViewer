@@ -63,7 +63,6 @@ internal class BookshelfEditViewModel(
                     GetBookshelfInfoUseCase.Request(editType.bookshelfId),
                 ).mapNotNull { it.dataOrNull() }
                     .map {
-                        delay(2000.milliseconds)
                         when (val bookshelf = it.bookshelf) {
                             is DeviceStorage -> {
                                 return@map DeviceEditForm(

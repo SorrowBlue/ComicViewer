@@ -10,7 +10,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.wizard.BookshelfWizardScreenRoot
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
@@ -36,7 +36,7 @@ internal fun bookshelfWizardNavEntry(navigator: Navigator) {
             ),
         ),
     ) {
-        BookshelfWizardScreenRoot(it, onBack = navigator::goBack)
+        BookshelfEditScreenRoot(it, onBack = navigator::goBack)
     }
     scope.entry<BookshelfWizardNavKey.Edit>(
         metadata = DialogSceneStrategy.dialog(
@@ -45,6 +45,6 @@ internal fun bookshelfWizardNavEntry(navigator: Navigator) {
             ),
         ),
     ) {
-        BookshelfWizardScreenRoot(it, onBack = navigator::goBack)
+        BookshelfEditScreenRoot(it, onBack = navigator::goBack)
     }
 }

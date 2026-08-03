@@ -8,6 +8,7 @@
     <string name="bookshelf_edit_label_display_name">表示名</string>
     <string name="bookshelf_edit_label_guest">ゲスト</string>
     <string name="bookshelf_edit_label_save">保存</string>
+    <string name="bookshelf_edit_label_back">戻る</string>
     <string name="bookshelf_edit_label_select_folder">フォルダ選択</string>
     <string name="bookshelf_edit_label_username_password">ユーザ名／パスワード</string>
     <string name="bookshelf_edit_msg_cancelled_folder_selection">フォルダの選択がキャンセルされました。</string>
