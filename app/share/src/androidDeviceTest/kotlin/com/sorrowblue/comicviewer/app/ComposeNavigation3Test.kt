@@ -28,6 +28,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.common.appGraph
+import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.manualFileKitCoreInitialization
@@ -47,12 +48,15 @@ class ComposeNavigation3Test {
         TestRule { base, _ -> base }
     }
 
+    var isCompact = true
+
     @Before
     fun setup() {
         FileKit.manualFileKitCoreInitialization(
             InstrumentationRegistry.getInstrumentation().context,
         )
         composeTestRule.setContent {
+            isCompact = isCompactWindowClass()
             val context = InstrumentationRegistry.getInstrumentation().context
             val appGraph = context.applicationContext.appGraph<AppGraph>()
             CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.viewModelFactory) {
@@ -244,24 +248,20 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
-        composeTestRule.onNodeWithTag("BookshelfEditorContents").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BackButton").performClick()
         composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.DEVICE}")
             .performClick()
-        composeTestRule.waitUntil(1000) {
-            composeTestRule.onNodeWithTag("BookshelfEditorContents").isDisplayed()
-        }
+        composeTestRule.onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BackButton").performClick()
         composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
-        composeTestRule.waitUntil(1000) {
-            composeTestRule.onNodeWithTag("BookshelfEditorContents").isDisplayed()
-        }
+        composeTestRule.onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("DisplayNameField").performTextInput("SMBBookshelf")
         composeTestRule.onNodeWithTag("HostField").performTextInput(BuildConfig.SMB_HOST)
@@ -278,7 +278,7 @@ class ComposeNavigation3Test {
         composeTestRule.onNodeWithTag("SaveButton").performClick()
 
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithTag("BookshelfEditorContents").isNotDisplayed()
+            composeTestRule.onNodeWithTag("BookshelfEditorScreen").isNotDisplayed()
         }
         composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
@@ -288,7 +288,7 @@ class ComposeNavigation3Test {
             composeTestRule.onNodeWithTag("EditButton").isDisplayed()
         }
         composeTestRule.onNodeWithTag("EditButton").performClick()
-        composeTestRule.onNodeWithTag("BookshelfEditorContents").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
         composeTestRule.onAllNodesWithTag("BackButton").onLast().performClick()
 
         composeTestRule.onNodeWithTag("DeleteButton").performClick()
@@ -346,5 +346,57 @@ class ComposeNavigation3Test {
 
         composeTestRule.onAllNodesWithTag("CloseButton").onLast().performClick()
         composeTestRule.onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
+    }
+
+    @Test
+    fun bookshelfEditTransitionTest() {
+        composeTestRule.waitForIdle()
+        // 1. 本棚一覧画面から登録画面（Selection）へ
+        composeTestRule.onAllNodesWithTag("NavigationSuiteItem")[0].performClick()
+        composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
+        composeTestRule.onAllNodesWithTag("BookshelfFab").onFirst()
+            .performClick()
+        composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
+
+        // 2. SMB本棚を選択してEditor画面へ
+        composeTestRule.onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
+        composeTestRule.onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
+
+        // 3. 値を入力して変更状態にする (テストのためDisplayNameフィールドに入力)
+        composeTestRule.onNodeWithTag("DisplayNameField").performTextInput("TransitionTestSMB")
+
+        // 4. 画面サイズ（スマホ/タブレット）を判定して戻るボタンを操作
+        if (isCompact) {
+            composeTestRule.onNodeWithTag("BackButton").performClick()
+        } else {
+            composeTestRule.onNodeWithTag("BackButton").performClick()
+        }
+
+        // 5. 破棄確認ダイアログが表示されることを検証
+        composeTestRule.onNodeWithTag("DiscordDialog").assertIsDisplayed()
+
+        // 6. キャンセル（Dismiss）して編集画面に戻る
+        composeTestRule.onNodeWithTag("DismissButton").performClick()
+        composeTestRule.onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
+
+        // 7. 再度戻るボタンを押して、今度は破棄（Confirm）してSelectionへ戻る
+        if (isCompact) {
+            composeTestRule.onNodeWithTag("BackButton").performClick()
+        } else {
+            composeTestRule.onNodeWithTag("BackButton").performClick()
+        }
+
+        composeTestRule.onNodeWithTag("DiscordDialog").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("ConfirmButton").performClick()
+        composeTestRule.onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
+
+        // 8. Selectionから一覧画面へ戻る
+        if (isCompact) {
+            composeTestRule.onNodeWithTag("BackButton").performClick()
+        } else {
+            composeTestRule.onNodeWithTag("CancelButton").performClick()
+        }
+        composeTestRule.onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
     }
 }

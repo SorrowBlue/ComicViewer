@@ -9,20 +9,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.DeviceEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectFieldState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.BookshelfEditorScreenUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.DeviceEditorForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import soil.form.annotation.InternalSoilFormApi
 import soil.form.compose.Form
 
-@OptIn(InternalSoilFormApi::class)
 @Composable
 internal fun DeviceEditorContents(
-    form: Form<DeviceEditForm>,
+    form: Form<DeviceEditorForm>,
     folderSelectFieldState: FolderSelectFieldState,
-    uiState: BookshelfEditScreenUiState,
+    uiState: BookshelfEditorScreenUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {

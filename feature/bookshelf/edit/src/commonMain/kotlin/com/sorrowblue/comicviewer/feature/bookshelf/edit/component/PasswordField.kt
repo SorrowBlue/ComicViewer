@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_hint_password
@@ -37,7 +37,7 @@ import soil.form.rule.notBlank
 
 @Composable
 internal fun PasswordField(
-    form: Form<SmbEditForm>,
+    form: Form<SmbEditorForm>,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {

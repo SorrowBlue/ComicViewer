@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.editor
 
 import kotlinx.serialization.Serializable
 
@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * Bookshelf editor form state.
  */
 @Serializable
-internal sealed interface BookshelfEditForm {
+internal sealed interface BookshelfEditorForm {
     /**
      * Bookshelf display name.
      */
@@ -22,7 +22,7 @@ internal sealed interface BookshelfEditForm {
      * @param displayName New display name.
      * @return New BookshelfEditorForm.
      */
-    fun <T : BookshelfEditForm> update(displayName: String): T
+    fun <T : BookshelfEditorForm> update(displayName: String): T
 }
 
 /**
@@ -38,7 +38,7 @@ internal sealed interface BookshelfEditForm {
  * @property password SMB password.
  */
 @Serializable
-internal data class SmbEditForm(
+internal data class SmbEditorForm(
     override val displayName: String = "",
     val host: String = "",
     val port: Int = 445,
@@ -47,7 +47,7 @@ internal data class SmbEditForm(
     val domain: String = "",
     val username: String = "",
     val password: String = "",
-) : BookshelfEditForm {
+) : BookshelfEditorForm {
     /**
      * SMB authentication type.
      */
@@ -59,7 +59,7 @@ internal data class SmbEditForm(
         UserPass("AuthUserPass"),
     }
 
-    override fun <T : BookshelfEditForm> update(displayName: String): T {
+    override fun <T : BookshelfEditorForm> update(displayName: String): T {
         @Suppress("UNCHECKED_CAST")
         return copy(displayName = displayName) as T
     }
@@ -72,11 +72,11 @@ internal data class SmbEditForm(
  * @property path Path to the directory in device. Null if the root directory is selected.
  */
 @Serializable
-internal data class DeviceEditForm(
+internal data class DeviceEditorForm(
     override val displayName: String = "",
     val path: String? = null,
-) : BookshelfEditForm {
-    override fun <T : BookshelfEditForm> update(displayName: String): T {
+) : BookshelfEditorForm {
+    override fun <T : BookshelfEditorForm> update(displayName: String): T {
         @Suppress("UNCHECKED_CAST")
         return copy(displayName = displayName) as T
     }

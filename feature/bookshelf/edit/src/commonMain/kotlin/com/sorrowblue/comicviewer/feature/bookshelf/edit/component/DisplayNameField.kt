@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.BookshelfEditorForm
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_display_name
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_display_name
@@ -24,7 +24,7 @@ import soil.form.compose.hasError
 import soil.form.rule.notBlank
 
 @Composable
-internal fun <T : BookshelfEditForm> DisplayNameField(
+internal fun <T : BookshelfEditorForm> DisplayNameField(
     form: Form<T>,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

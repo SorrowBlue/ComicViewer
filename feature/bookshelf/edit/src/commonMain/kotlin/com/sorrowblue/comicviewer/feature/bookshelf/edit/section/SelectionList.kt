@@ -37,7 +37,7 @@ internal fun SelectionList(
         contentPadding = contentPadding.plus(PaddingValues(bottom = 16.dp)),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
-            .drawDivider(lazyListState, visibleTop = true, visibleBottom = true)
+            .drawDivider(lazyListState, visibleTop = true, visibleBottom = true),
     ) {
         items(items = items) {
             BookshelfSource(
@@ -57,11 +57,11 @@ fun Modifier.drawDivider(
 ): Modifier {
     val topDividerAlpha by animateFloatAsState(
         targetValue = if (visibleTop && state.canScrollBackward) 1f else 0f,
-        label = "TopDividerAlpha"
+        label = "TopDividerAlpha",
     )
     val bottomDividerAlpha by animateFloatAsState(
         targetValue = if (visibleBottom && state.canScrollForward) 1f else 0f,
-        label = "BottomDividerAlpha"
+        label = "BottomDividerAlpha",
     )
     val dividerColor = ComicTheme.colorScheme.outlineVariant
     return drawWithContent {
@@ -73,7 +73,7 @@ fun Modifier.drawDivider(
                 color = dividerColor.copy(alpha = topDividerAlpha),
                 start = Offset(0f, y),
                 end = Offset(size.width, y),
-                strokeWidth = strokeWidth
+                strokeWidth = strokeWidth,
             )
         }
         if (bottomDividerAlpha > 0f) {
@@ -83,7 +83,7 @@ fun Modifier.drawDivider(
                 color = dividerColor.copy(alpha = bottomDividerAlpha),
                 start = Offset(0f, y),
                 end = Offset(size.width, y),
-                strokeWidth = strokeWidth
+                strokeWidth = strokeWidth,
             )
         }
     }

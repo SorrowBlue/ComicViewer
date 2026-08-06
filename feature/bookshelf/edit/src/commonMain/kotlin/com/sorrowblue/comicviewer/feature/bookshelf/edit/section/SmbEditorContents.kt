@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentDataType
 import androidx.compose.ui.autofill.ContentType
@@ -22,8 +21,6 @@ import androidx.compose.ui.semantics.contentDataType
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm.Auth
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DisplayNameField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.DomainField
@@ -32,14 +29,16 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PasswordField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.UsernameField
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.BookshelfEditorScreenUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm.Auth
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import soil.form.compose.Form
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun SmbEditorContents(
-    form: Form<SmbEditForm>,
-    uiState: BookshelfEditScreenUiState,
+    form: Form<SmbEditorForm>,
+    uiState: BookshelfEditorScreenUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {

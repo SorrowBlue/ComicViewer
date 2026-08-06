@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.editor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -35,21 +36,21 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import logcat.logcat
 
-sealed interface BookshelfEditViewModelEvent {
+internal sealed interface BookshelfEditorViewModelEvent {
     data class RegisterError(val error: RegisterBookshelfUseCase.Error) :
-        BookshelfEditViewModelEvent
+        BookshelfEditorViewModelEvent
 
-    data object Complete : BookshelfEditViewModelEvent
+    data object Complete : BookshelfEditorViewModelEvent
 }
 
 @AssistedInject
-internal class BookshelfEditViewModel(
+internal class BookshelfEditorViewModel(
     @Assisted private val editType: BookshelfEditType,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val registerBookshelfUseCase: RegisterBookshelfUseCase,
 ) : ViewModel() {
 
-    val event: SharedFlow<BookshelfEditViewModelEvent>
+    val event: SharedFlow<BookshelfEditorViewModelEvent>
         field = MutableSharedFlow()
 
     val formFlow =
@@ -65,14 +66,14 @@ internal class BookshelfEditViewModel(
                     .map {
                         when (val bookshelf = it.bookshelf) {
                             is DeviceStorage -> {
-                                return@map DeviceEditForm(
+                                return@map DeviceEditorForm(
                                     displayName = bookshelf.displayName,
                                     path = it.folder.path,
                                 )
                             }
 
                             is SmbServer -> {
-                                return@map SmbEditForm(
+                                return@map SmbEditorForm(
                                     displayName = bookshelf.displayName,
                                     host = bookshelf.host,
                                     port = bookshelf.port,
@@ -80,10 +81,10 @@ internal class BookshelfEditViewModel(
                                         .removePrefix("/")
                                         .removeSuffix("/"),
                                     auth = when (bookshelf.auth) {
-                                        is SmbServer.Auth.Guest -> SmbEditForm.Auth.Guest
+                                        is SmbServer.Auth.Guest -> SmbEditorForm.Auth.Guest
 
                                         is SmbServer.Auth.UsernamePassword ->
-                                            SmbEditForm.Auth.UserPass
+                                            SmbEditorForm.Auth.UserPass
                                     },
                                     domain = when (val auth = bookshelf.auth) {
                                         is SmbServer.Auth.Guest -> ""
@@ -108,13 +109,13 @@ internal class BookshelfEditViewModel(
             }
         }.shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
-    fun submit(form: BookshelfEditForm) {
+    fun submit(form: BookshelfEditorForm) {
         viewModelScope.launch {
             logcat { "#onSubmit form: $form" }
             val bookshelf: Bookshelf
             val path: String
             when (form) {
-                is DeviceEditForm -> when (editType) {
+                is DeviceEditorForm -> when (editType) {
                     is BookshelfEditType.Edit -> {
                         bookshelf = (getBookshelf(editType.bookshelfId) as DeviceStorage)
                             .copy(displayName = form.displayName)
@@ -127,12 +128,12 @@ internal class BookshelfEditViewModel(
                     }
                 }
 
-                is SmbEditForm -> {
+                is SmbEditorForm -> {
                     val paths = "/${form.path}/".replace("(/+)".toRegex(), "/")
                     val auth = when (form.auth) {
-                        SmbEditForm.Auth.Guest -> SmbServer.Auth.Guest
+                        SmbEditorForm.Auth.Guest -> SmbServer.Auth.Guest
 
-                        SmbEditForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
+                        SmbEditorForm.Auth.UserPass -> SmbServer.Auth.UsernamePassword(
                             domain = form.domain,
                             username = form.username,
                             password = form.password,
@@ -164,8 +165,8 @@ internal class BookshelfEditViewModel(
             }
             delay(300.milliseconds)
             registerBookshelfUseCase(RegisterBookshelfUseCase.Request(bookshelf, path)).fold(
-                onSuccess = { event.emit(BookshelfEditViewModelEvent.Complete) },
-                onError = { event.emit(BookshelfEditViewModelEvent.RegisterError(it)) },
+                onSuccess = { event.emit(BookshelfEditorViewModelEvent.Complete) },
+                onError = { event.emit(BookshelfEditorViewModelEvent.RegisterError(it)) },
             )
         }
     }
@@ -180,6 +181,6 @@ internal class BookshelfEditViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(editType: BookshelfEditType): BookshelfEditViewModel
+        fun create(editType: BookshelfEditType): BookshelfEditorViewModel
     }
 }

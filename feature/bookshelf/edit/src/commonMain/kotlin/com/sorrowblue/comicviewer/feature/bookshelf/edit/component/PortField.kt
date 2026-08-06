@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_error_port
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_smb_input_label_port
@@ -26,7 +26,7 @@ import soil.form.rule.minimum
 
 @Composable
 internal fun PortField(
-    form: Form<SmbEditForm>,
+    form: Form<SmbEditorForm>,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {

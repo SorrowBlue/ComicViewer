@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.feature.bookshelf.edit.section
+package com.sorrowblue.comicviewer.feature.bookshelf.edit.editor
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,12 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditViewModel
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditViewModelEvent
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.DeviceEditForm
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.AuthField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectFieldName
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectFieldState
@@ -55,54 +50,25 @@ import soil.form.compose.FormState
 import soil.form.compose.rememberForm
 import soil.form.compose.rememberFormState
 
-internal sealed interface BookshelfEditScreenEvent {
-    data object Complete : BookshelfEditScreenEvent
-}
-
-internal interface IBookshelfEditScreenState {
-    val uiState: BookshelfEditScreenUiState
-    val events: EventFlow<BookshelfEditScreenEvent>
-
-    fun onSubmit(form: BookshelfEditForm)
-
-    val formState: FormState<out BookshelfEditForm>
-    val form: Form<out BookshelfEditForm>
-    var initialForm: BookshelfEditForm
-}
-
-internal sealed interface BookshelfEditScreenState : IBookshelfEditScreenState
-
-internal interface SmbEditScreenState : BookshelfEditScreenState {
-    override val formState: FormState<SmbEditForm>
-    override val form: Form<SmbEditForm>
-    val permissionRequester: LocalNetworkPermissionRequester
-
-    fun onPermissionConfirmClick()
-}
-
-internal interface LocalEditScreenState : BookshelfEditScreenState {
-    fun onOpenDocumentTreeCancel()
-
-    val folderSelectFieldState: FolderSelectFieldState
-    override val formState: FormState<DeviceEditForm>
-    override val form: Form<DeviceEditForm>
+internal sealed interface BookshelfEditorScreenEvent {
+    data object Complete : BookshelfEditorScreenEvent
 }
 
 @Composable
-internal fun rememberBookshelfEditScreenState(
+internal fun rememberBookshelfEditorScreenState(
     editType: BookshelfEditType,
-    viewModel: BookshelfEditViewModel =
-        assistedMetroViewModel<BookshelfEditViewModel, BookshelfEditViewModel.Factory> {
+    viewModel: BookshelfEditorViewModel =
+        assistedMetroViewModel<BookshelfEditorViewModel, BookshelfEditorViewModel.Factory> {
             create(editType)
         },
-): BookshelfEditScreenState {
+): BookshelfEditorScreenState {
     val coroutineScope = rememberCoroutineScope()
     val permissionRequester = rememberLocalNetworkPermissionRequester()
     val state = when (editType.bookshelfType) {
         BookshelfType.SMB -> {
             val formState =
                 rememberFormState(
-                    SmbEditForm(),
+                    SmbEditorForm(),
                     kSerializableSaver(),
                     policy = FormPolicy(
                         formOptions = FormOptions(preValidation = false),
@@ -115,21 +81,21 @@ internal fun rememberBookshelfEditScreenState(
                     ),
                 )
             rememberSaveable(
-                saver = SmbEditScreenStateImpl.saver(
+                saver = SmbEditorScreenStateImpl.saver(
                     coroutineScope = coroutineScope,
                     formState = formState,
-                    initialForm = SmbEditForm(),
+                    initialForm = SmbEditorForm(),
                     eventFlow = viewModel.event,
-                    bookshelfEditFormFlow = viewModel.formFlow,
+                    bookshelfEditorFormFlow = viewModel.formFlow,
                     submit = viewModel::submit,
                 ),
             ) {
-                SmbEditScreenStateImpl(
+                SmbEditorScreenStateImpl(
                     coroutineScope = coroutineScope,
                     formState = formState,
-                    initialForm = SmbEditForm(),
+                    initialForm = SmbEditorForm(),
                     eventFlow = viewModel.event,
-                    bookshelfEditFormFlow = viewModel.formFlow,
+                    bookshelfEditorFormFlow = viewModel.formFlow,
                     submit = viewModel::submit,
                 )
             }.apply {
@@ -139,24 +105,24 @@ internal fun rememberBookshelfEditScreenState(
         }
 
         BookshelfType.DEVICE -> {
-            val formState = rememberFormState(DeviceEditForm(), kSerializableSaver())
+            val formState = rememberFormState(DeviceEditorForm(), kSerializableSaver())
 
             rememberSaveable(
-                saver = LocalEditScreenStateImpl.saver(
+                saver = LocalEditorScreenStateImpl.saver(
                     coroutineScope = coroutineScope,
                     formState = formState,
-                    initialForm = SmbEditForm(),
+                    initialForm = SmbEditorForm(),
                     eventFlow = viewModel.event,
-                    bookshelfEditFormFlow = viewModel.formFlow,
+                    bookshelfEditorFormFlow = viewModel.formFlow,
                     submit = viewModel::submit,
                 ),
             ) {
-                LocalEditScreenStateImpl(
+                LocalEditorScreenStateImpl(
                     coroutineScope = coroutineScope,
                     formState = formState,
-                    initialForm = DeviceEditForm(),
+                    initialForm = DeviceEditorForm(),
                     eventFlow = viewModel.event,
-                    bookshelfEditFormFlow = viewModel.formFlow,
+                    bookshelfEditorFormFlow = viewModel.formFlow,
                     submit = viewModel::submit,
                 )
             }.apply {
@@ -171,25 +137,46 @@ internal fun rememberBookshelfEditScreenState(
     return state
 }
 
-private class SmbEditScreenStateImpl(
+internal interface IBookshelfEditorScreenState {
+    val uiState: BookshelfEditorScreenUiState
+    val events: EventFlow<BookshelfEditorScreenEvent>
+
+    fun onSubmit(form: BookshelfEditorForm)
+
+    val formState: FormState<out BookshelfEditorForm>
+    val form: Form<out BookshelfEditorForm>
+    var initialForm: BookshelfEditorForm
+}
+
+internal sealed interface BookshelfEditorScreenState : IBookshelfEditorScreenState
+
+internal interface SmbEditorScreenState : BookshelfEditorScreenState {
+    override val formState: FormState<SmbEditorForm>
+    override val form: Form<SmbEditorForm>
+    val permissionRequester: LocalNetworkPermissionRequester
+
+    fun onPermissionConfirmClick()
+}
+
+private class SmbEditorScreenStateImpl(
     isInitialized: Boolean = false,
     coroutineScope: CoroutineScope,
-    override val formState: FormState<SmbEditForm>,
-    initialForm: BookshelfEditForm,
-    eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
-    bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
-    submit: (BookshelfEditForm) -> Unit,
-) : BookshelfEditScreenStateImpl(
+    override val formState: FormState<SmbEditorForm>,
+    initialForm: BookshelfEditorForm,
+    eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
+    bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
+    submit: (BookshelfEditorForm) -> Unit,
+) : BookshelfEditorScreenStateImpl(
     isInitialized,
     coroutineScope,
     formState,
     initialForm,
     eventFlow,
-    bookshelfEditFormFlow,
+    bookshelfEditorFormFlow,
     submit,
 ),
-    SmbEditScreenState {
-    override lateinit var form: Form<SmbEditForm>
+    SmbEditorScreenState {
+    override lateinit var form: Form<SmbEditorForm>
 
     override lateinit var permissionRequester: LocalNetworkPermissionRequester
 
@@ -200,21 +187,21 @@ private class SmbEditScreenStateImpl(
     companion object {
         fun saver(
             coroutineScope: CoroutineScope,
-            formState: FormState<SmbEditForm>,
-            initialForm: BookshelfEditForm,
-            eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
-            bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
-            submit: (BookshelfEditForm) -> Unit,
-        ): Saver<SmbEditScreenStateImpl, Boolean> = Saver(
+            formState: FormState<SmbEditorForm>,
+            initialForm: BookshelfEditorForm,
+            eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
+            bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
+            submit: (BookshelfEditorForm) -> Unit,
+        ): Saver<SmbEditorScreenStateImpl, Boolean> = Saver(
             save = { it.isInitialized },
             restore = { isInitialized ->
-                SmbEditScreenStateImpl(
+                SmbEditorScreenStateImpl(
                     isInitialized = isInitialized,
                     coroutineScope = coroutineScope,
                     formState = formState,
                     initialForm = initialForm,
                     eventFlow = eventFlow,
-                    bookshelfEditFormFlow = bookshelfEditFormFlow,
+                    bookshelfEditorFormFlow = bookshelfEditorFormFlow,
                     submit = submit,
                 )
             },
@@ -222,25 +209,33 @@ private class SmbEditScreenStateImpl(
     }
 }
 
-private class LocalEditScreenStateImpl(
+internal interface LocalEditorScreenState : BookshelfEditorScreenState {
+    fun onOpenDocumentTreeCancel()
+
+    val folderSelectFieldState: FolderSelectFieldState
+    override val formState: FormState<DeviceEditorForm>
+    override val form: Form<DeviceEditorForm>
+}
+
+private class LocalEditorScreenStateImpl(
     isInitialized: Boolean = false,
     coroutineScope: CoroutineScope,
-    override val formState: FormState<DeviceEditForm>,
-    initialForm: BookshelfEditForm,
-    eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
-    bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
-    submit: (BookshelfEditForm) -> Unit,
-) : BookshelfEditScreenStateImpl(
+    override val formState: FormState<DeviceEditorForm>,
+    initialForm: BookshelfEditorForm,
+    eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
+    bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
+    submit: (BookshelfEditorForm) -> Unit,
+) : BookshelfEditorScreenStateImpl(
     isInitialized,
     coroutineScope,
     formState,
     initialForm,
     eventFlow,
-    bookshelfEditFormFlow,
+    bookshelfEditorFormFlow,
     submit,
 ),
-    LocalEditScreenState {
-    override lateinit var form: Form<DeviceEditForm>
+    LocalEditorScreenState {
+    override lateinit var form: Form<DeviceEditorForm>
     override lateinit var folderSelectFieldState: FolderSelectFieldState
 
     override fun onOpenDocumentTreeCancel() {
@@ -256,21 +251,21 @@ private class LocalEditScreenStateImpl(
     companion object {
         fun saver(
             coroutineScope: CoroutineScope,
-            formState: FormState<DeviceEditForm>,
-            initialForm: BookshelfEditForm,
-            eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
-            bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
-            submit: (BookshelfEditForm) -> Unit,
-        ): Saver<LocalEditScreenStateImpl, Boolean> = Saver(
+            formState: FormState<DeviceEditorForm>,
+            initialForm: BookshelfEditorForm,
+            eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
+            bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
+            submit: (BookshelfEditorForm) -> Unit,
+        ): Saver<LocalEditorScreenStateImpl, Boolean> = Saver(
             save = { it.isInitialized },
             restore = { isInitialized ->
-                LocalEditScreenStateImpl(
+                LocalEditorScreenStateImpl(
                     isInitialized = isInitialized,
                     coroutineScope = coroutineScope,
                     formState = formState,
                     initialForm = initialForm,
                     eventFlow = eventFlow,
-                    bookshelfEditFormFlow = bookshelfEditFormFlow,
+                    bookshelfEditorFormFlow = bookshelfEditorFormFlow,
                     submit = submit,
                 )
             },
@@ -278,41 +273,41 @@ private class LocalEditScreenStateImpl(
     }
 }
 
-private abstract class BookshelfEditScreenStateImpl(
+private abstract class BookshelfEditorScreenStateImpl(
     protected var isInitialized: Boolean,
     var coroutineScope: CoroutineScope,
-    override val formState: FormState<out BookshelfEditForm>,
-    override var initialForm: BookshelfEditForm,
-    eventFlow: SharedFlow<BookshelfEditViewModelEvent>,
-    bookshelfEditFormFlow: SharedFlow<BookshelfEditForm?>,
-    private val submit: (BookshelfEditForm) -> Unit,
-) : IBookshelfEditScreenState {
-    override val events: EventFlow<BookshelfEditScreenEvent> = EventFlow()
+    override val formState: FormState<out BookshelfEditorForm>,
+    override var initialForm: BookshelfEditorForm,
+    eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
+    bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
+    private val submit: (BookshelfEditorForm) -> Unit,
+) : IBookshelfEditorScreenState {
+    override val events: EventFlow<BookshelfEditorScreenEvent> = EventFlow()
 
-    override var uiState by mutableStateOf(BookshelfEditScreenUiState())
+    override var uiState by mutableStateOf(BookshelfEditorScreenUiState())
 
     init {
         if (isInitialized) {
             uiState = uiState.copy(progress = false)
         } else {
             uiState = uiState.copy(progress = true)
-            bookshelfEditFormFlow.onEach { form ->
+            bookshelfEditorFormFlow.onEach { form ->
                 if (form != null) {
                     isInitialized = true
                     initialForm = form
                     @Suppress("UNCHECKED_CAST")
-                    (formState as FormState<BookshelfEditForm>).reset(form)
+                    (formState as FormState<BookshelfEditorForm>).reset(form)
                 }
                 uiState = uiState.copy(progress = false)
             }.launchIn(coroutineScope)
         }
         eventFlow.onEach { event ->
             when (event) {
-                BookshelfEditViewModelEvent.Complete -> {
-                    events.tryEmit(BookshelfEditScreenEvent.Complete)
+                BookshelfEditorViewModelEvent.Complete -> {
+                    events.tryEmit(BookshelfEditorScreenEvent.Complete)
                 }
 
-                is BookshelfEditViewModelEvent.RegisterError -> {
+                is BookshelfEditorViewModelEvent.RegisterError -> {
                     uiState = uiState.copy(progress = false)
                     when (event.error) {
                         RegisterBookshelfUseCase.Error.Auth -> {
@@ -361,7 +356,8 @@ private abstract class BookshelfEditScreenStateImpl(
         }.launchIn(coroutineScope)
     }
 
-    override fun onSubmit(form: BookshelfEditForm) {
+    override fun onSubmit(form: BookshelfEditorForm) {
+        uiState = uiState.copy(progress = true)
         submit(form)
     }
 }

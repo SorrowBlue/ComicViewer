@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.SmbEditForm
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_hint_domain
 import org.jetbrains.compose.resources.stringResource
@@ -23,7 +23,7 @@ import soil.form.compose.watch
 
 @Composable
 internal fun DomainField(
-    form: Form<SmbEditForm>,
+    form: Form<SmbEditorForm>,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {

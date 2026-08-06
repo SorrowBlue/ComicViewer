@@ -9,6 +9,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,13 +30,15 @@ fun <EVENT> EventEffect(
     eventFlow: EventFlow<EVENT>,
     block: suspend CoroutineScope.(EVENT) -> Unit,
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     SafeLaunchedEffect(eventFlow) {
         supervisorScope {
-            eventFlow.collect { event ->
-                launch {
-                    block(event)
+            eventFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect { event ->
+                    launch {
+                        block(event)
+                    }
                 }
-            }
         }
     }
 }

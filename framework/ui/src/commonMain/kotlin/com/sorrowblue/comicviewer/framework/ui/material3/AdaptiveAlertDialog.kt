@@ -123,18 +123,17 @@ fun AdaptiveAlertDialog(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3ComponentOverrideApi::class)
 @Composable
 fun AdaptiveAlertDialog2(
     title: @Composable () -> Unit,
-    onBackClick: () -> Unit,
+    onDismissRequest: () -> Unit,
     actionButton: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     confirmButton: @Composable (() -> Unit)? = null,
     dismissButton: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
     isFullScreenDialog: Boolean = isCompactWindowClass(),
-    navigationIcon: @Composable () -> Unit = { BackIconButton(onClick = onBackClick) },
+    navigationIcon: @Composable () -> Unit = {},
     content: @Composable ((PaddingValues) -> Unit),
 ) {
     val movableContent = remember {
@@ -144,7 +143,7 @@ fun AdaptiveAlertDialog2(
         LocalBasicAlertDialogOverride provides FixedDefaultBasicAlertDialogOverride,
     ) {
         BasicAlertDialog(
-            onDismissRequest = onBackClick,
+            onDismissRequest = onDismissRequest,
             properties = DialogProperties(usePlatformDefaultWidth = false),
             modifier = modifier,
         ) {
@@ -207,12 +206,12 @@ private fun AdaptiveAlertDialogPreview() {
                     Text(text = "Dismiss")
                 }
             },
-            onBackClick = { },
+            onDismissRequest = { },
         ) { contentPadding ->
             val scrollState = rememberScrollState()
             val dividerAlpha by animateFloatAsState(
                 targetValue = if (scrollState.canScrollForward) 1f else 0f,
-                label = "DividerAlpha"
+                label = "DividerAlpha",
             )
             val dividerColor = ComicTheme.colorScheme.outlineVariant
             Column(
@@ -231,7 +230,7 @@ private fun AdaptiveAlertDialogPreview() {
                                 color = dividerColor.copy(alpha = dividerAlpha),
                                 start = Offset(0f, y),
                                 end = Offset(size.width, y),
-                                strokeWidth = strokeWidth
+                                strokeWidth = strokeWidth,
                             )
                         }
                     },
