@@ -25,7 +25,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.konture)
 //    alias(libs.plugins.modulegraph)
-    id("nl.littlerobots.version-catalog-update") version "1.1.0"
+    id("nl.littlerobots.version-catalog-update") version "1.1.1"
 }
 
 konture {
