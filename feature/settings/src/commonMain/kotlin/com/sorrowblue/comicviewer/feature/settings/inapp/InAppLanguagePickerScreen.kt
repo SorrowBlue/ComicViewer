@@ -16,9 +16,9 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.navigation.InAppLanguagePickerNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.designsystem.locale.AppLocaleIso
-import com.sorrowblue.comicviewer.framework.designsystem.locale.displayLanguageName
-import com.sorrowblue.comicviewer.framework.designsystem.locale.fake
+import com.sorrowblue.comicviewer.framework.ui.locale.AppLocaleIso
+import com.sorrowblue.comicviewer.framework.ui.locale.displayLanguageName
+import com.sorrowblue.comicviewer.framework.ui.locale.fake
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_language_label_all_languages

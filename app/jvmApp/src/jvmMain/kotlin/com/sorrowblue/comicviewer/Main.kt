@@ -59,7 +59,7 @@ fun main() {
             }
             window.minimumSize = Dimension(400, 600)
             val viewModel = viewModel { MainViewModel() }
-            context(jvmApplication, jvmApplication.appGraph) {
+            context(jvmApplication.appGraph) {
                 Application(finishApp = ::exitApplication)
             }
             SplashScreen(keepOnScreenCondition = { viewModel.shouldKeepSplash.value })

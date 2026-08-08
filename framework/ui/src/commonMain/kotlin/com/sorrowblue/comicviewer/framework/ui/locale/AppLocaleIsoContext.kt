@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.designsystem.locale
+package com.sorrowblue.comicviewer.framework.ui.locale
 
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo

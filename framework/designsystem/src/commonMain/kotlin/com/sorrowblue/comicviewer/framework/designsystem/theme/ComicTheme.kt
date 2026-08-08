@@ -21,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.window.core.layout.WindowSizeClass
-import com.sorrowblue.comicviewer.framework.designsystem.locale.ProvideLocalAppLocaleIso
 
 object ComicTheme {
     val motionScheme: MotionScheme
@@ -85,7 +84,7 @@ fun ComicTheme(
             )
         }
     } else {
-        CompositionLocalProvider(LocalDimension provides dimension, ProvideLocalAppLocaleIso) {
+        CompositionLocalProvider(LocalDimension provides dimension) {
             MaterialExpressiveTheme(
                 colorScheme = colorScheme,
                 typography = AppTypography,

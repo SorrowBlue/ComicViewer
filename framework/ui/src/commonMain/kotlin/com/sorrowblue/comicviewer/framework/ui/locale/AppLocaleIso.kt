@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.designsystem.locale
+package com.sorrowblue.comicviewer.framework.ui.locale
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue
@@ -11,9 +11,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
-import com.sorrowblue.comicviewer.framework.common.LocalPlatformContext
-import com.sorrowblue.comicviewer.framework.common.appGraph
-import io.github.takahirom.rin.rememberRetained
+import androidx.lifecycle.ViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 
 abstract class AppLocaleIso {
     /**
@@ -48,14 +50,15 @@ abstract class AppLocaleIso {
  */
 expect val Locale.displayLanguageName: String
 
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+internal class AppLocaleIsoViewModel(val appLocaleIso: AppLocaleIso) : ViewModel()
+
 val ProvideLocalAppLocaleIso: ProvidedValue<*>
     @Composable
     get() {
-        val context = LocalPlatformContext.current
-        val graph = rememberRetained {
-            context.appGraph<AppLocaleIsoContext.Factory>().createAppLocaleIsoContext()
-        }
-        return graph.appLocaleIso provides appLanguageTag
+        val viewModel = metroViewModel<AppLocaleIsoViewModel>()
+        return viewModel.appLocaleIso provides appLanguageTag
     }
 
 val fake = object : AppLocaleIso() {

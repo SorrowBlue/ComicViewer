@@ -96,8 +96,12 @@ compose.desktop {
             }
         }
         jvmArgs(
+            "-Dfile.encoding=UTF-8",
             "-Dsun.stdout.encoding=UTF-8",
             "-Dsun.stderr.encoding=UTF-8",
         )
     }
+}
+tasks.withType<JavaExec> {
+    jvmArgs("-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
 }

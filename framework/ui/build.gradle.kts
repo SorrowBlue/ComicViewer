@@ -35,9 +35,13 @@ kotlin {
         }
         androidMain {
             dependencies {
+                implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.coreKtx)
                 implementation(libs.compose.edgeToEdgePreview)
             }
+        }
+        jvmMain.dependencies {
+            implementation(libs.filekit.core)
         }
     }
 }

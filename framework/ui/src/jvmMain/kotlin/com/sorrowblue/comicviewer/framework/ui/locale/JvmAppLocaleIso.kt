@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.designsystem.locale
+package com.sorrowblue.comicviewer.framework.ui.locale
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue
@@ -11,8 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.intl.Locale
-import comicviewer.framework.designsystem.generated.resources.Res
-import comicviewer.framework.designsystem.generated.resources.locales
+import comicviewer.framework.ui.generated.resources.Res
+import comicviewer.framework.ui.generated.resources.locales
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn

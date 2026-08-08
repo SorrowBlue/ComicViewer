@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.designsystem.locale
+package com.sorrowblue.comicviewer.framework.ui.locale
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
@@ -41,19 +41,18 @@ class LocaleHelper(private val context: PlatformContext) {
         }
     }
 
-    fun load(): JavaLocale? = kotlin
-        .runCatching {
-            file
-                .inputStream()
-                .use {
-                    Properties()
-                        .apply {
-                            load(it)
-                        }.getProperty(KeyTag, null)
-                }?.let {
-                    JavaLocale.forLanguageTag(it)
-                }
-        }.getOrNull()
+    fun load(): JavaLocale? = runCatching {
+        file
+            .inputStream()
+            .use {
+                Properties()
+                    .apply {
+                        load(it)
+                    }.getProperty(KeyTag, null)
+            }?.let {
+                JavaLocale.forLanguageTag(it)
+            }
+    }.getOrNull()
 }
 
 private const val KeyTag = "language_tag"

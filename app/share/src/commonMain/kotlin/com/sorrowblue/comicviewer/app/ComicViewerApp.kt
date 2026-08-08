@@ -20,6 +20,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -27,11 +29,11 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.app.wrapper.PreAppScreen
-import com.sorrowblue.comicviewer.framework.common.providePlatformContext
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
+import com.sorrowblue.comicviewer.framework.ui.locale.ProvideLocalAppLocaleIso
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
@@ -42,9 +44,9 @@ import logcat.logcat
 context(appGraph: AppGraph)
 internal fun ComicViewerApp(state: ComicViewerAppState, finishApp: () -> Unit) {
     CompositionLocalProvider(
-        providePlatformContext(appGraph.context),
         LocalNavigator provides state.navigator,
         ProvidesAppState,
+        ProvideLocalAppLocaleIso,
     ) {
         ComicTheme {
             PreAppScreen(finishApp = finishApp) {
@@ -60,9 +62,10 @@ internal fun ComicViewerApp(state: ComicViewerAppState, finishApp: () -> Unit) {
 @Composable
 private fun ComicViewerApp(navigator: Navigator, entryProvider: (NavKey) -> NavEntry<NavKey>) {
     val appState = LocalAppState.current
+    val lifecycle = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(appState) {
-        appState.snackbarEvents.collect { event ->
+        appState.snackbarEvents.flowWithLifecycle(lifecycle.lifecycle).collect { event ->
             val result = snackbarHostState.showSnackbar(
                 message = event.message,
                 actionLabel = event.actionLabel,

@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.feature.settings.inapp
 
 import androidx.lifecycle.ViewModel
-import com.sorrowblue.comicviewer.framework.designsystem.locale.AppLocaleIso
+import com.sorrowblue.comicviewer.framework.ui.locale.AppLocaleIso
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ViewModelKey

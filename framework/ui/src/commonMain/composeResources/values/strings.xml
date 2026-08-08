@@ -4,4 +4,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="label_settings">Settings</string>
+
+    <string name="locales">ja-jp,en-US</string>
 </resources>

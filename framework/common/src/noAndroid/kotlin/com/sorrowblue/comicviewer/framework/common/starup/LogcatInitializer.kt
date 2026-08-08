@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.framework.common.starup
 
 import com.sorrowblue.comicviewer.framework.common.Initializer
-import com.sorrowblue.comicviewer.framework.common.InitializerScope
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlin.reflect.KClass
 import logcat.LogPriority
@@ -13,7 +13,7 @@ import logcat.LogcatLogger
 import logcat.PrintLogger
 import logcat.logcat
 
-@ContributesIntoSet(InitializerScope::class)
+@ContributesIntoSet(AppScope::class)
 class LogcatInitializer : Initializer<LogcatLogger.Companion> {
     override fun create(): LogcatLogger.Companion {
         if (!LogcatLogger.isInstalled) {

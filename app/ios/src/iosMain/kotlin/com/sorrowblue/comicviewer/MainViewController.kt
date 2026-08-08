@@ -9,7 +9,7 @@ import androidx.compose.ui.window.ComposeUIViewController
 @Suppress("FunctionNaming")
 fun MainViewController() = ComposeUIViewController {
     val iosApplication = IosApplication()
-    context(iosApplication, iosApplication.appGraph) {
+    context(iosApplication.appGraph) {
         Application(finishApp = {})
     }
 }
