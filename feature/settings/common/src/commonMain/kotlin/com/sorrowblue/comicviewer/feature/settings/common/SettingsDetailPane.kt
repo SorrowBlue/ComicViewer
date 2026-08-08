@@ -69,6 +69,9 @@ fun SettingsDetailPane(
             } else {
                 LargeTopAppBar(
                     title = title,
+                    navigationIcon = {
+                        BackIconButton(onClick = onBackClick)
+                    },
                     actions = actions,
                     windowInsets = WindowInsets.safeDrawing
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),

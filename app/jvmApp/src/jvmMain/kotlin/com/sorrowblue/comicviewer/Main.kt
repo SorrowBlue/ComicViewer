@@ -18,16 +18,16 @@ import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.app.MainViewModel
+import com.sorrowblue.comicviewer.app.initFileKit
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import comicviewer.framework.ui.generated.resources.app_name
-import io.github.vinceglb.filekit.FileKit
 import java.awt.Dimension
 import org.jetbrains.compose.resources.stringResource
 
 fun main() {
-    FileKit.init(appId = "com.sorrowblue.comicviewer")
+    initFileKit(appId = "com.sorrowblue.comicviewer")
     val jvmApplication = JvmApplication()
     application {
         val trayState = rememberTrayState()

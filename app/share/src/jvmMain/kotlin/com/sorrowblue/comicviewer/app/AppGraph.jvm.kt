@@ -4,12 +4,16 @@
 
 package com.sorrowblue.comicviewer.app
 
+import com.sorrowblue.comicviewer.data.database.TestHelper
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.Scope
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 
@@ -26,5 +30,19 @@ actual interface AppGraph :
             @Provides applicationContext: PlatformContext,
             @Provides licenseeHelper: LicenseeHelper,
         ): AppGraph
+    }
+}
+
+@Scope
+annotation class TestScope
+
+@GraphExtension(TestScope::class)
+interface TestHelperContext {
+    val testHelper: TestHelper
+
+    @ContributesTo(AppScope::class)
+    @GraphExtension.Factory
+    fun interface Factory {
+        fun createTestHelperContext(): TestHelperContext
     }
 }

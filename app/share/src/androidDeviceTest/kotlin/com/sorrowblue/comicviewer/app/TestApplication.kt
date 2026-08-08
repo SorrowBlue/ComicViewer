@@ -20,11 +20,7 @@ class TestApplication :
         Log.d("***********", "TestApplicationappGraph")
         createGraphFactory<AppGraph.Factory>().createAppGraph(
             InstrumentationRegistry.getInstrumentation().context,
-            object : LicenseeHelper {
-                override suspend fun loadLibraries(): ByteArray {
-                    TODO("Not yet implemented")
-                }
-            },
+            FakeLicenseeHelper(),
         )
     }
 
@@ -34,4 +30,10 @@ class TestApplication :
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(appGraph.workerFactory).build()
+}
+
+private class FakeLicenseeHelper : LicenseeHelper {
+    override suspend fun loadLibraries(): ByteArray {
+        return ByteArray(0)
+    }
 }

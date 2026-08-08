@@ -21,7 +21,9 @@ kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.app"
         androidResources.enable = true
-        withDeviceTest {
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }.configure {
             instrumentationRunner = "com.sorrowblue.comicviewer.app.InstrumentationTestRunner"
             execution = "ANDROIDX_TEST_ORCHESTRATOR"
             animationsDisabled = true
@@ -74,12 +76,21 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutinesTest)
+            implementation(libs.compose.uiTest)
+            implementation(libs.filekit.core)
         }
         androidMain.dependencies {
             implementation(libs.metro.android)
             implementation(libs.androidx.workRuntime)
             implementation(libs.androidx.appcompat)
             implementation(libs.androidx.coreSplashscreen)
+        }
+        jvmMain.dependencies {
+            implementation(libs.filekit.core)
+        }
+        jvmTest.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
         }
         getByName("androidDeviceTest") {
             dependencies {

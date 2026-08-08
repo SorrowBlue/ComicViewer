@@ -22,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.settings.SettingsItem
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
@@ -64,7 +65,8 @@ internal fun SettingsListPane(
                     onClick = { onSettingsClick(settings) },
                     selected = currentSettings == settings,
                     modifier = Modifier
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .testTag(settings.testTag),
                 )
             }
         }

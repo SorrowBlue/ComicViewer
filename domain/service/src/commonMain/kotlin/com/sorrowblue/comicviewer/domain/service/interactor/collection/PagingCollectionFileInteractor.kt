@@ -18,9 +18,7 @@ import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.runBlocking
 
 @ContributesBinding(AppScope::class)
 internal class PagingCollectionFileInteractor(
@@ -31,19 +29,23 @@ internal class PagingCollectionFileInteractor(
 ) : PagingCollectionFileUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun run(request: Request): Flow<PagingData<File>> =
-        dataSource.flow(request.collectionId).filterNotNull().flatMapLatest {
-            when (it) {
-                is BasicCollection -> collectionFileLocalDataSource.pagingDataFlow(
-                    request.collectionId,
-                    request.pagingConfig,
-                ) {
-                    runBlocking { datastoreDataSource.folderDisplaySettings.first() }.sortType
+        dataSource.flow(request.collectionId).filterNotNull().flatMapLatest { collection ->
+            when (collection) {
+                is BasicCollection -> {
+                    datastoreDataSource.folderDisplaySettings.flatMapLatest { settings ->
+                        collectionFileLocalDataSource.pagingDataFlow(
+                            request.collectionId,
+                            request.pagingConfig,
+                        ) {
+                            settings.sortType
+                        }
+                    }
                 }
 
                 is SmartCollection -> fileLocalDataSource.pagingDataFlow(
                     request.pagingConfig,
-                    it.bookshelfId,
-                    it::searchCondition,
+                    collection.bookshelfId,
+                    collection::searchCondition,
                 )
             }
         }

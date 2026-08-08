@@ -25,6 +25,7 @@ import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -126,10 +127,13 @@ internal fun BasicCollectionEditScreen(
             AlertDialogContent(
                 title = title,
                 confirmButton = {
-                    CreateButton(form = form)
+                    CreateButton(form = form, modifier = Modifier.testTag("CreateButton"))
                 },
                 dismissButton = {
-                    TextButton(onClick = onBackClick) {
+                    TextButton(
+                        onClick = onBackClick,
+                        modifier = Modifier.testTag("CloseButton"),
+                    ) {
                         Text(text = stringResource(Res.string.collection_editor_label_cancel))
                     }
                 },

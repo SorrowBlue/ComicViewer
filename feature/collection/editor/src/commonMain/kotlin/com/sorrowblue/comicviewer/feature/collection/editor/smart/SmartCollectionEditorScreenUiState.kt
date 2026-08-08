@@ -115,15 +115,15 @@ internal fun SmartCollectionEditorScreen(
         val scrollState = rememberScrollState()
         BasicAlertDialog(
             onDismissRequest = onCancel,
-            modifier = Modifier.padding(ComicTheme.dimension.margin),
+            modifier = modifier.padding(ComicTheme.dimension.margin),
         ) {
             AlertDialogContent(
                 title = title,
                 confirmButton = {
-                    CreateButton(form = form)
+                    CreateButton(form = form, modifier = Modifier.testTag("CreateButton"))
                 },
                 dismissButton = {
-                    TextButton(onClick = onCancel) {
+                    TextButton(onClick = onCancel, modifier = Modifier.testTag("CloseButton")) {
                         Text(text = stringResource(Res.string.collection_editor_label_cancel))
                     }
                 },
