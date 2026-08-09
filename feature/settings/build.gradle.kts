@@ -17,7 +17,6 @@ kotlin {
                 implementation(projects.feature.settings.security)
                 implementation(projects.feature.settings.extension)
                 implementation(projects.feature.settings.viewer)
-                implementation(projects.feature.authentication)
                 implementation(libs.androidx.coreUri)
             }
         }
