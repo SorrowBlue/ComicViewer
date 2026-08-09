@@ -25,7 +25,6 @@ internal fun CollectionScreenRoot(
     state.scaffoldState.CollectionScreen(
         uiState = state.uiState,
         lazyPagingItems = state.lazyPagingItems,
-        lazyGridState = state.lazyGridState,
         onBackClick = onBackClick,
         onDeleteClick = { onDeleteClick(id) },
         onEditClick = { onEditClick(state.collection) },

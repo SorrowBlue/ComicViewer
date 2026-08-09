@@ -5,8 +5,6 @@
 package com.sorrowblue.comicviewer.feature.collection
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
@@ -47,7 +45,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
     uiState: CollectionScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
-    lazyGridState: LazyGridState,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -71,7 +68,6 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
             CollectionContents(
                 fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,
                 lazyPagingItems = lazyPagingItems,
-                lazyGridState = lazyGridState,
                 onItemClick = onFileClick,
                 onItemInfoClick = onFileInfoClick,
                 contentPadding = contentPadding + PaddingValues(16.dp),
@@ -133,7 +129,6 @@ private fun CollectionScreenPreview() {
                 },
                 lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }
                     .collectAsLazyPagingItems(),
-                lazyGridState = rememberLazyGridState(),
                 onBackClick = {},
                 onEditClick = {},
                 onDeleteClick = {},

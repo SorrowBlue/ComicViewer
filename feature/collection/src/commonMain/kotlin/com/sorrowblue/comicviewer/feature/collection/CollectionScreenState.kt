@@ -4,8 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.collection
 
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +28,6 @@ internal interface CollectionScreenState {
     val collection: Collection
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyPagingItems: LazyPagingItems<File>
-    val lazyGridState: LazyGridState
 }
 
 @Composable
@@ -41,14 +38,12 @@ internal fun rememberCollectionScreenState(
             create(id)
         },
 ): CollectionScreenState {
-    val lazyGridState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     return remember {
         CollectionScreenStateImpl(
             coroutineScope = coroutineScope,
             collectionFlow = viewModel.collectionFlow,
-            lazyGridState = lazyGridState,
             scaffoldState = scaffoldState,
         )
     }.apply {
@@ -59,7 +54,6 @@ internal fun rememberCollectionScreenState(
 private class CollectionScreenStateImpl(
     coroutineScope: CoroutineScope,
     collectionFlow: SharedFlow<Collection>,
-    override val lazyGridState: LazyGridState,
     override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
 ) : CollectionScreenState {
 

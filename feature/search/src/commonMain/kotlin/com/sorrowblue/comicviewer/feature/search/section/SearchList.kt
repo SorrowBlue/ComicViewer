@@ -4,6 +4,7 @@
 
 package com.sorrowblue.comicviewer.feature.search.section
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -44,6 +45,7 @@ internal fun SearchList(
                 .imePadding(),
         )
     } else {
+        @OptIn(ExperimentalFoundationApi::class)
         FileLazyVerticalGrid(
             uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             state = lazyListState,

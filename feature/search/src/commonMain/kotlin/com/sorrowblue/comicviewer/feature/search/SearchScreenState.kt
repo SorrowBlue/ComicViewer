@@ -4,8 +4,10 @@
 
 package com.sorrowblue.comicviewer.feature.search
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -13,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,6 +49,7 @@ internal interface SearchScreenState {
     fun onShowHiddenClick()
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun rememberSearchScreenState(
     bookshelfId: BookshelfId,
@@ -55,7 +59,8 @@ internal fun rememberSearchScreenState(
     },
 ): SearchScreenState {
     val coroutineScope = rememberCoroutineScope()
-    val lazyGridState = rememberLazyGridState()
+    val cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
+    val lazyGridState = rememberLazyGridState(cacheWindow)
     val state = remember(lazyGridState) {
         SearchScreenStateImpl(
             path = path,

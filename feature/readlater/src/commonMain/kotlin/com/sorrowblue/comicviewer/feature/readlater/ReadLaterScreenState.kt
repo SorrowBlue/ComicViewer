@@ -4,11 +4,14 @@
 
 package com.sorrowblue.comicviewer.feature.readlater
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -25,11 +28,13 @@ internal interface ReadLaterScreenState {
     fun onClearAllClick()
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun rememberReadLaterScreenState(
     viewModel: ReadLaterViewModel = metroViewModel(),
 ): ReadLaterScreenState {
-    val lazyGridState = rememberLazyGridState()
+    val cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
+    val lazyGridState = rememberLazyGridState(cacheWindow)
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
         onNavigationReSelect = {

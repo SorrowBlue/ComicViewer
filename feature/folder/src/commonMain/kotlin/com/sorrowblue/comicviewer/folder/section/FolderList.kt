@@ -4,6 +4,7 @@
 
 package com.sorrowblue.comicviewer.folder.section
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -77,6 +78,7 @@ internal fun FolderList(
                     bottom = ComicTheme.dimension.margin,
                 )
             }
+            @OptIn(ExperimentalFoundationApi::class)
             FileLazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 uiState = uiState.fileLazyVerticalGridUiState,
