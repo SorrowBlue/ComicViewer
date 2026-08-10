@@ -9,46 +9,46 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import dev.zacsweers.metrox.viewmodel.metroViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@Composable
+internal fun rememberBookshelfScreenState(): BookshelfScreenState {
+    val coroutineScope = rememberCoroutineScope()
+    val lazyGridState = rememberLazyGridState()
+    val state = remember {
+        BookshelfScreenStateImpl(
+            coroutineScope = coroutineScope,
+            lazyGridState = lazyGridState,
+        )
+    }.apply {
+        scaffoldState =
+            rememberAdaptiveNavigationSuiteScaffoldState(
+                onNavigationReSelect = ::onNavigationReSelect,
+            )
+    }
+    return state
+}
+
 internal interface BookshelfScreenState {
-    val lazyPagingItems: LazyPagingItems<BookshelfFolder>
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyGridState: LazyGridState
 }
 
-@Composable
-internal fun rememberBookshelfScreenState(
-    viewModel: BookshelfViewModel = metroViewModel(),
-): BookshelfScreenState {
-    val lazyGridState = rememberLazyGridState()
-    val coroutineScope = rememberCoroutineScope()
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(onNavigationReSelect = {
+private class BookshelfScreenStateImpl(
+    private val coroutineScope: CoroutineScope,
+    override val lazyGridState: LazyGridState,
+) : BookshelfScreenState {
+
+    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
+
+    fun onNavigationReSelect() {
         if (lazyGridState.canScrollBackward) {
             coroutineScope.launch {
-                lazyGridState.animateScrollToItem(0)
+                lazyGridState.scrollToItem(0)
             }
         }
-    })
-    return remember(viewModel) {
-        BookshelfScreenStateImpl(
-            lazyGridState = lazyGridState,
-            scaffoldState = scaffoldState,
-        )
-    }.apply {
-        lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
     }
-}
-
-private class BookshelfScreenStateImpl(
-    override val lazyGridState: LazyGridState,
-    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
-) : BookshelfScreenState {
-    override lateinit var lazyPagingItems: LazyPagingItems<BookshelfFolder>
 }

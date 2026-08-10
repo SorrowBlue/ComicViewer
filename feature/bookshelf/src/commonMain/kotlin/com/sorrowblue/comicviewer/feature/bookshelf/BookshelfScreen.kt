@@ -58,12 +58,12 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
+    lazyGridState: LazyGridState,
     onFabClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     modifier: Modifier = Modifier,
-    lazyGridState: LazyGridState = rememberLazyGridState(),
 ) {
     AdaptiveNavigationSuiteScaffold(
         modifier = modifier,
@@ -119,6 +119,7 @@ internal fun BookshelfScreenPreview() {
             lazyPagingItems = PagingData.flowData {
                 BookshelfFolder(fakeSmbServer(), fakeFolder())
             }.collectAsLazyPagingItems(),
+            lazyGridState = rememberLazyGridState(),
             onFabClick = {},
             onSettingsClick = {},
             onBookshelfClick = { _, _ -> },

@@ -7,9 +7,12 @@ package com.sorrowblue.comicviewer.feature.bookshelf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.lifecycle.compose.dropUnlessResumed
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 
 @Composable
 internal fun BookshelfScreenRoot(
@@ -19,13 +22,15 @@ internal fun BookshelfScreenRoot(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
 ) {
     val state = rememberBookshelfScreenState()
+    val viewModel = metroViewModel<BookshelfViewModel>()
+    val lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
     state.scaffoldState.BookshelfScreen(
-        lazyPagingItems = state.lazyPagingItems,
+        lazyPagingItems = lazyPagingItems,
         lazyGridState = state.lazyGridState,
-        onFabClick = onFabClick,
-        onSettingsClick = onSettingsClick,
-        onBookshelfClick = onBookshelfClick,
-        onBookshelfInfoClick = onBookshelfInfoClick,
+        onFabClick = dropUnlessResumed(block = onFabClick),
+        onSettingsClick = dropUnlessResumed(block = onSettingsClick),
+        onBookshelfClick = dropUnlessResumed(block = onBookshelfClick),
+        onBookshelfInfoClick = dropUnlessResumed(block = onBookshelfInfoClick),
         modifier = Modifier.testTag("BookshelfScreenRoot"),
     )
 }
