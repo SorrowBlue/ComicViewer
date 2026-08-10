@@ -18,8 +18,9 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @AssistedInject
@@ -29,9 +30,11 @@ internal class DeleteCollectionViewModel(
     private val deleteCollectionUseCase: DeleteCollectionUseCase,
 ) : ViewModel() {
 
-    val collectionFlow =
+    val uiState =
         getCollectionUseCase(GetCollectionUseCase.Request(id)).mapNotNull { it.dataOrNull() }
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+            .map {
+                DeleteCollectionScreenUiState(name = it.name)
+            }.stateIn(viewModelScope, SharingStarted.Eagerly, DeleteCollectionScreenUiState())
 
     fun delete(onComplete: () -> Unit) {
         viewModelScope.launch {

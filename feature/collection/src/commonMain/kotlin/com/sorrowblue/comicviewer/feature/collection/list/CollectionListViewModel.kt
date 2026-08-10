@@ -19,6 +19,8 @@ internal class CollectionListViewModel(pagingCollectionUseCase: PagingCollection
     ViewModel() {
 
     val pagingDataFlow = pagingCollectionUseCase(
-        PagingCollectionUseCase.Request(PagingConfig(20)),
+        PagingCollectionUseCase.Request(PagingConfig(PageSize)),
     ).cachedIn(viewModelScope)
 }
+
+private const val PageSize = 20

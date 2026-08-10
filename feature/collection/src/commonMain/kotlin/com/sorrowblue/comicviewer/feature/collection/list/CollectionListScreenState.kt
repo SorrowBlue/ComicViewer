@@ -10,49 +10,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 internal interface CollectionListScreenState {
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
-    val lazyPagingItems: LazyPagingItems<Collection>
     val lazyListState: LazyListState
 
     fun onNavClick()
 }
 
 @Composable
-internal fun rememberCollectionListScreenState(
-    viewModel: CollectionListViewModel = metroViewModel(),
-): CollectionListScreenState {
-    val lazyListState = rememberLazyListState()
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
+internal fun rememberCollectionListScreenState(): CollectionListScreenState {
     val coroutineScope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
     return remember {
         CollectionListScreenStateImpl(
-            lazyListState = lazyListState,
-            scaffoldState = scaffoldState,
             coroutineScope = coroutineScope,
+            lazyListState = lazyListState,
         )
     }.apply {
-        lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+        scaffoldState =
+            rememberAdaptiveNavigationSuiteScaffoldState(onNavigationReSelect = ::onNavClick)
     }
 }
 
 @Stable
 private class CollectionListScreenStateImpl(
+    private val coroutineScope: CoroutineScope,
     override val lazyListState: LazyListState,
-    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
-    val coroutineScope: CoroutineScope,
 ) : CollectionListScreenState {
-
-    override lateinit var lazyPagingItems: LazyPagingItems<Collection>
+    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
     override fun onNavClick() {
         if (lazyListState.canScrollBackward) {

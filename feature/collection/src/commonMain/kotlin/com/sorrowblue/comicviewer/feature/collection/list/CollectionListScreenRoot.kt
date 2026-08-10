@@ -7,7 +7,9 @@ package com.sorrowblue.comicviewer.feature.collection.list
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 
 @Composable
 internal fun CollectionListScreenRoot(
@@ -19,8 +21,10 @@ internal fun CollectionListScreenRoot(
     onCreateSmartCollectionClick: () -> Unit,
 ) {
     val state = rememberCollectionListScreenState()
+    val viewModel = metroViewModel<CollectionListViewModel>()
+    val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     state.scaffoldState.CollectionListScreen(
-        lazyPagingItems = state.lazyPagingItems,
+        lazyPagingItems = lazyPagingItems,
         lazyListState = state.lazyListState,
         onItemClick = onItemClick,
         onEditClick = onEditClick,

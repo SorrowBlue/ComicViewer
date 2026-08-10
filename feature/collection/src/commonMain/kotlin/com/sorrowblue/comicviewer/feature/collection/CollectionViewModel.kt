@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionFileUseCase
+import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiState
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -20,8 +21,9 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 
 @AssistedInject
 internal class CollectionViewModel(
@@ -30,13 +32,18 @@ internal class CollectionViewModel(
     pagingCollectionFileUseCase: PagingCollectionFileUseCase,
 ) : ViewModel() {
 
+    val uiState =
+        getCollectionUseCase(GetCollectionUseCase.Request(id)).mapNotNull { it.dataOrNull() }
+            .map {
+                CollectionScreenUiState(
+                    collection = it,
+                    appBarUiState = CollectionAppBarUiState(title = it.name),
+                )
+            }.stateIn(viewModelScope, SharingStarted.Eagerly, CollectionScreenUiState())
+
     val pagingDataFlow = pagingCollectionFileUseCase(
         PagingCollectionFileUseCase.Request(PagingConfig(20), id),
     ).cachedIn(viewModelScope)
-
-    val collectionFlow =
-        getCollectionUseCase(GetCollectionUseCase.Request(id)).mapNotNull { it.dataOrNull() }
-            .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey
