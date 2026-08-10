@@ -19,9 +19,9 @@ internal fun CollectionListScreenRoot(
     onSettingsClick: () -> Unit,
     onCreateBasicCollectionClick: () -> Unit,
     onCreateSmartCollectionClick: () -> Unit,
+    viewModel: CollectionListViewModel = metroViewModel(),
 ) {
     val state = rememberCollectionListScreenState()
-    val viewModel = metroViewModel<CollectionListViewModel>()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     state.scaffoldState.CollectionListScreen(
         lazyPagingItems = lazyPagingItems,

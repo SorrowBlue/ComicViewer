@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -36,6 +37,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.bookshelfEditorE
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.discordDialogEntry
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceEditorContents
+import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SelectionList
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.drawDivider
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.type.bookshelfTypeEntry
@@ -112,7 +114,6 @@ internal fun BookshelfEditScreen(
     }
 }
 
-@NavDestination(BookshelfWizardNavKey.Edit::class)
 @Composable
 private fun BookshelfEditScreen(
     uiState: BookshelfEditScreenUiState,
@@ -201,16 +202,22 @@ private fun BookshelfEditScreenSelectionPreview() {
                 title = stringResource(Res.string.bookshelf_wizard_title_register),
             ),
             backStack = remember {
-                mutableStateListOf(BookshelfEditPage.WizardSelection)
+                mutableStateListOf(
+                    BookshelfEditPage.WizardSelection,
+                )
             },
-            onBack = {},
-            onComplete = {},
-            onTypeClick = {},
-            updateCanSubmit = {},
-            discardConfirm = {},
-            onConfirm = {},
             onDismissRequest = {},
-        )
+            onBackClick = {},
+            onSaveClick = {},
+        ) { contentPadding ->
+            val items = remember { BookshelfType.entries.toList() }
+            SelectionList(
+                items = items,
+                onSourceClick = {},
+                contentPadding = contentPadding.plus(PaddingValues(top = 16.dp)),
+                modifier = Modifier.testTag("BookshelfSelectionList"),
+            )
+        }
     }
 }
 

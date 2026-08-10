@@ -15,6 +15,7 @@ import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.asLog
@@ -27,7 +28,7 @@ fun <T> EventFlow() = MutableSharedFlow<T>(extraBufferCapacity = 20)
 
 @Composable
 fun <EVENT> EventEffect(
-    eventFlow: EventFlow<EVENT>,
+    eventFlow: SharedFlow<EVENT>,
     block: suspend CoroutineScope.(EVENT) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current

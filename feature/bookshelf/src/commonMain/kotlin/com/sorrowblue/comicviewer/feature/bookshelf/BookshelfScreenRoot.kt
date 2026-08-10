@@ -20,9 +20,9 @@ internal fun BookshelfScreenRoot(
     onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, PathString) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
+    viewModel: BookshelfViewModel = metroViewModel(),
 ) {
     val state = rememberBookshelfScreenState()
-    val viewModel = metroViewModel<BookshelfViewModel>()
     val lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
     state.scaffoldState.BookshelfScreen(
         lazyPagingItems = lazyPagingItems,
