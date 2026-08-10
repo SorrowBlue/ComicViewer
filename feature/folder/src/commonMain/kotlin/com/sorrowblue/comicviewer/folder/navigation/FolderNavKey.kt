@@ -14,10 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.FolderScreenRoot
-import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
-import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
-import io.github.irgaly.navigation3.resultstate.resultConsumer
 
 interface FolderNavKey : NavKey {
     val bookshelfId: BookshelfId
@@ -38,13 +35,8 @@ inline fun <reified T : FolderNavKey> folderEntry(
 ) {
     scope.entry<T>(
         clazzContentKey = { it.toString() },
-        metadata = metadata {
-            put(
-                NavigationResultMetadata.ResultConsumerKey,
-                NavigationResultMetadata.resultConsumer(SortTypeSelectScreenResultKey),
-            )
-            transitionMaterialSharedAxisZ()
-        } + SupportingPaneSceneStrategy.mainPane(sceneKey),
+        metadata = metadata { transitionMaterialSharedAxisZ() } +
+            SupportingPaneSceneStrategy.mainPane(sceneKey),
     ) {
         FolderScreenRoot(
             bookshelfId = it.bookshelfId,

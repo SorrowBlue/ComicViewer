@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.folder.section.FolderListUiState
-import com.sorrowblue.comicviewer.folder.sorttype.SortTypeSelectScreenResult
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -40,6 +40,11 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+internal sealed interface FolderScreenUiEvent {
+    data object Reload : FolderScreenUiEvent
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @AssistedInject
@@ -48,9 +53,9 @@ internal class FolderViewModel(
     @Assisted private val path: String,
     @Assisted private val restorePath: String?,
     @Assisted private val showSearch: Boolean,
-    private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
+    getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val pagingFileUseCase: PagingFileUseCase,
-    private val getFileUseCase: GetFileUseCase,
+    getFileUseCase: GetFileUseCase,
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : ViewModel() {
 
@@ -59,6 +64,8 @@ internal class FolderViewModel(
     fun updatePermission(isGranted: Boolean) {
         isPermissionGranted.value = isGranted
     }
+
+    val events = EventFlow<FolderScreenUiEvent>()
 
     val pagingFlow: Flow<PagingData<File>> = combine(
         getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
@@ -121,135 +128,88 @@ internal class FolderViewModel(
         ),
     )
 
-    suspend fun onSortClick(sortType: SortType): Boolean {
-        var refresh = false
-        folderDisplaySettingsUseCase.edit { settings ->
-            val beforeFolderScopeOnly =
-                settings.folderScopeOnlyList.find {
-                    it.bookshelfId == bookshelfId && it.path == path
+    fun onSortClick(sortType: SortType) {
+        viewModelScope.launch {
+            var refresh = false
+            folderDisplaySettingsUseCase.edit { settings ->
+                val beforeFolderScopeOnly =
+                    settings.folderScopeOnlyList.find {
+                        it.bookshelfId == bookshelfId && it.path == path
+                    }
+                val folderScopeOnly = settings.folderScopeOnlyList.any { scope ->
+                    scope.bookshelfId == bookshelfId && scope.path == path
                 }
-            when {
-                uiState.value.folderAppBarUiState.folderScopeOnly -> {
-                    if (beforeFolderScopeOnly == null) {
+                when {
+                    folderScopeOnly -> {
+                        if (beforeFolderScopeOnly == null) {
+                            refresh = true
+                            settings.copy(
+                                folderScopeOnlyList =
+                                    settings.folderScopeOnlyList + FolderScopeOnly(
+                                        bookshelfId,
+                                        path,
+                                        sortType,
+                                    ),
+                            )
+                        } else if (beforeFolderScopeOnly.sortType != sortType) {
+                            refresh = true
+                            val new = FolderScopeOnly(
+                                bookshelfId,
+                                path,
+                                sortType,
+                            )
+                            settings.copy(
+                                folderScopeOnlyList =
+                                    settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
+                            )
+                        } else {
+                            settings
+                        }
+                    }
+
+                    !folderScopeOnly && beforeFolderScopeOnly != null -> {
                         refresh = true
                         settings.copy(
                             folderScopeOnlyList =
-                                settings.folderScopeOnlyList + FolderScopeOnly(
-                                    bookshelfId,
-                                    path,
-                                    sortType,
-                                ),
+                                settings.folderScopeOnlyList - beforeFolderScopeOnly,
                         )
-                    } else if (beforeFolderScopeOnly.sortType != sortType) {
+                    }
+
+                    settings.sortType != sortType -> {
                         refresh = true
-                        val new = FolderScopeOnly(
-                            bookshelfId,
-                            path,
-                            sortType,
-                        )
-                        settings.copy(
-                            folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
-                        )
-                    } else {
+                        settings.copy(sortType = sortType)
+                    }
+
+                    else -> {
                         settings
                     }
                 }
-
-                !uiState.value.folderAppBarUiState.folderScopeOnly && beforeFolderScopeOnly != null -> {
-                    refresh = true
-                    settings.copy(
-                        folderScopeOnlyList =
-                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
-                    )
-                }
-
-                settings.sortType != sortType -> {
-                    refresh = true
-                    settings.copy(sortType = sortType)
-                }
-
-                else -> {
-                    settings
-                }
             }
-        }
-        return refresh
-    }
-
-    suspend fun onFolderScopeOnlyClick() {
-        folderDisplaySettingsUseCase.edit { settings ->
-            val beforeFolderScopeOnly =
-                settings.folderScopeOnlyList.find {
-                    it.bookshelfId == bookshelfId && it.path == path
-                }
-            val folderScopeOnlyList = if (beforeFolderScopeOnly == null) {
-                settings.folderScopeOnlyList + FolderScopeOnly(
-                    bookshelfId,
-                    path,
-                    settings.sortType,
-                )
-            } else {
-                settings.folderScopeOnlyList - beforeFolderScopeOnly
+            if (refresh) {
+                events.tryEmit(FolderScreenUiEvent.Reload)
             }
-            settings.copy(folderScopeOnlyList = folderScopeOnlyList)
         }
     }
 
-    suspend fun onSortTypeSelectScreenResult(result: SortTypeSelectScreenResult): Boolean {
-        var refresh = false
-        folderDisplaySettingsUseCase.edit { settings ->
-            val beforeFolderScopeOnly =
-                settings.folderScopeOnlyList.find {
-                    it.bookshelfId == bookshelfId && it.path == path
-                }
-            when {
-                result.folderScopeOnly -> {
-                    if (beforeFolderScopeOnly == null) {
-                        refresh = true
-                        settings.copy(
-                            folderScopeOnlyList =
-                                settings.folderScopeOnlyList + FolderScopeOnly(
-                                    bookshelfId,
-                                    path,
-                                    result.sortType,
-                                ),
-                        )
-                    } else if (beforeFolderScopeOnly.sortType != result.sortType) {
-                        refresh = true
-                        val new = FolderScopeOnly(
-                            bookshelfId,
-                            path,
-                            result.sortType,
-                        )
-                        settings.copy(
-                            folderScopeOnlyList =
-                                settings.folderScopeOnlyList - beforeFolderScopeOnly + new,
-                        )
-                    } else {
-                        settings
+    fun onFolderScopeOnlyClick() {
+        viewModelScope.launch {
+            folderDisplaySettingsUseCase.edit { settings ->
+                val beforeFolderScopeOnly =
+                    settings.folderScopeOnlyList.find {
+                        it.bookshelfId == bookshelfId && it.path == path
                     }
-                }
-
-                !result.folderScopeOnly && beforeFolderScopeOnly != null -> {
-                    refresh = true
-                    settings.copy(
-                        folderScopeOnlyList =
-                            settings.folderScopeOnlyList - beforeFolderScopeOnly,
+                val folderScopeOnlyList = if (beforeFolderScopeOnly == null) {
+                    settings.folderScopeOnlyList + FolderScopeOnly(
+                        bookshelfId,
+                        path,
+                        settings.sortType,
                     )
+                } else {
+                    settings.folderScopeOnlyList - beforeFolderScopeOnly
                 }
-
-                settings.sortType != result.sortType -> {
-                    refresh = true
-                    settings.copy(sortType = result.sortType)
-                }
-
-                else -> {
-                    settings
-                }
+                settings.copy(folderScopeOnlyList = folderScopeOnlyList)
             }
         }
-        return refresh
     }
 
     @AssistedFactory
