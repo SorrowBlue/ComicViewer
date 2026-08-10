@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.Lifecycle
@@ -47,7 +48,7 @@ internal fun rememberBookScreenState(
 ): BookScreenState {
     val coroutineScope = rememberCoroutineScope()
     val systemUiController = rememberSystemUiController()
-    val currentList = remember { mutableStateListOf<PageItem>() }
+    val currentList = retain { mutableStateListOf<PageItem>() }
     val pagerState = rememberPagerState(
         initialPage = if (initialUiState.alwaysOpenFromFirstPage) {
             1
