@@ -41,7 +41,6 @@ import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntry
 import logcat.logcat
 
 @Composable
-context(appGraph: AppGraph)
 internal fun ComicViewerApp(state: ComicViewerAppState, finishApp: () -> Unit) {
     CompositionLocalProvider(
         LocalNavigator provides state.navigator,
@@ -98,7 +97,11 @@ private fun ComicViewerApp(navigator: Navigator, entryProvider: (NavKey) -> NavE
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
                 val windowInsetsDecorator =
                     rememberSupportingPaneWindowInsetsDecorator<NavKey>(directive = directive)
-                val sceneStrategies = remember {
+                val sceneStrategies = remember(
+                    supportingPaneSceneStrategy,
+                    listDetailSceneStrategy,
+                    dialogSceneStrategy
+                ) {
                     listOf(
                         supportingPaneSceneStrategy,
                         listDetailSceneStrategy,

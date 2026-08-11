@@ -59,9 +59,7 @@ internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity(
                 val state = rememberComicViewerUIState(
                     allowNavigationRestored = receivedBookData.isNullOrEmpty(),
                 )
-                context(appGraph) {
-                    ComicViewerApp(finishApp = ::finish, state = state)
-                }
+                ComicViewerApp(finishApp = ::finish, state = state)
                 LaunchedEffect(receivedBookData.isNullOrEmpty()) {
                     if (!receivedBookData.isNullOrEmpty()) {
                         state.navigator.navigate(ReceiveBookNavKey(receivedBookData))

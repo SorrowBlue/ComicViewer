@@ -66,9 +66,7 @@ class NavigationTest {
                     LocalMetroViewModelFactory provides appGraph.viewModelFactory,
                 ) {
                     val state = rememberComicViewerUIState(allowNavigationRestored = false)
-                    context(appGraph) {
-                        ComicViewerApp(finishApp = {}, state = state)
-                    }
+                    ComicViewerApp(finishApp = {}, state = state)
                 }
                 AppContent(appGraph)
             }
