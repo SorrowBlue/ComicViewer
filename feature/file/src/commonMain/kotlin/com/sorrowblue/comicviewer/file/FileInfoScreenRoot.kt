@@ -8,7 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.file.wrapper.FileInfoWrapper
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 
 @Composable
 fun FileInfoScreenRoot(
@@ -19,29 +23,24 @@ fun FileInfoScreenRoot(
     onOpenFolderClick: (File) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val prepareState = rememberFileInfoPrepareState(fileKey, isOpenFolderEnabled)
-    when (val uiState = prepareState.uiState) {
-        is FileInfoPrepareUiState.Success -> {
-            val state = rememberFileInfoScreenState(uiState.file, uiState.isOpenFolderEnabled)
-            FileInfoScreen(
-                uiState = state.uiState,
-                lazyPagingItems = state.lazyPagingItems,
-                onBackClick = onBackClick,
-                onReadLaterClick = state::onReadLaterClick,
-                onCollectionClick = { onCollectionClick(state.uiState.file) },
-                onOpenFolderClick = {
-                    onOpenFolderClick(state.uiState.file)
-                },
-                modifier = modifier.testTag("FileInfoScreenRoot"),
-            )
-        }
-
-        FileInfoPrepareUiState.Loading -> {
-            LoadingContents()
-        }
-
-        FileInfoPrepareUiState.Error -> {
-            ErrorContents()
-        }
+    FileInfoWrapper(
+        fileKey = fileKey,
+        isOpenFolderEnabled = isOpenFolderEnabled,
+    ) { file ->
+        val viewModel =
+            assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> { create(file) }
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val lazyPagingItems = viewModel.pagingFlow?.collectAsLazyPagingItems()
+        FileInfoScreen(
+            uiState = uiState,
+            lazyPagingItems = lazyPagingItems,
+            onBackClick = onBackClick,
+            onReadLaterClick = viewModel::updateReadLater,
+            onCollectionClick = { onCollectionClick(uiState.file) },
+            onOpenFolderClick = {
+                onOpenFolderClick(uiState.file)
+            },
+            modifier = modifier.testTag("FileInfoScreenRoot"),
+        )
     }
 }

@@ -8,8 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,8 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -135,19 +131,6 @@ internal fun FileInfoScreen(
             )
         }
     }
-}
-
-private fun Modifier.padding(
-    layoutDirection: LayoutDirection,
-    horizontal: PaddingValues,
-): Modifier {
-    val start: Dp
-    val end: Dp
-    with(layoutDirection) {
-        start = horizontal.calculateStartPadding(this)
-        end = horizontal.calculateEndPadding(this)
-    }
-    return this.padding(start = start, end = end)
 }
 
 @NavPreview(FileInfoNavKey::class, primary = true)

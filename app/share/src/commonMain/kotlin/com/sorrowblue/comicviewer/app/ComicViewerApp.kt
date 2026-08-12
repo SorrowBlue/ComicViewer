@@ -100,7 +100,7 @@ private fun ComicViewerApp(navigator: Navigator, entryProvider: (NavKey) -> NavE
                 val sceneStrategies = remember(
                     supportingPaneSceneStrategy,
                     listDetailSceneStrategy,
-                    dialogSceneStrategy
+                    dialogSceneStrategy,
                 ) {
                     listOf(
                         supportingPaneSceneStrategy,
