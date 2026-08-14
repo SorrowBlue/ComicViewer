@@ -14,8 +14,10 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.Scope
+import com.sorrowblue.comicviewer.domain.service.datasource.JvmDatastoreDataSource
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
+
 
 @DependencyGraph(scope = AppScope::class)
 actual interface AppGraph :
@@ -23,6 +25,7 @@ actual interface AppGraph :
     PlatformGraph {
     actual val context: PlatformContext
     actual val viewModelFactory: MetroViewModelFactory
+    val jvmDatastoreDataSource: JvmDatastoreDataSource
 
     @DependencyGraph.Factory
     actual fun interface Factory {
