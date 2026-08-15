@@ -13,12 +13,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sorrowblue.comicviewer.app.MainViewModel
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
 import com.sorrowblue.comicviewer.feature.authentication.ScreenType
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenRoot
@@ -28,19 +26,20 @@ private const val TAG = "RootScreenWrapper"
 
 @Composable
 internal fun PreAppScreen(
+    isInitialized: Boolean,
+    onInitialize: () -> Unit,
     finishApp: () -> Unit,
-    viewModel: MainViewModel = viewModel(),
     content: @Composable () -> Unit,
 ) {
-    val isInitialized by viewModel.isInitialized.collectAsState()
     val state = rememberPreAppScreenState()
+    val currentOnInitialized by rememberUpdatedState(onInitialize)
     LaunchedEffect(state.uiState) {
         logcat(TAG) { "PreAppScreenState: ${state.uiState}" }
     }
     if (state.uiState == PreAppUiState.TutorialRequired) {
         TutorialScreenRoot(onComplete = state::onTutorialComplete)
         SideEffect {
-            viewModel.shouldKeepSplash.value = false
+            currentOnInitialized()
         }
     } else {
         if (isInitialized || state.uiState == PreAppUiState.NoAuthRequired ||
@@ -60,7 +59,7 @@ internal fun PreAppScreen(
                     onComplete = state::onAuthComplete,
                 )
                 SideEffect {
-                    viewModel.shouldKeepSplash.value = false
+                    currentOnInitialized()
                 }
             }
         }

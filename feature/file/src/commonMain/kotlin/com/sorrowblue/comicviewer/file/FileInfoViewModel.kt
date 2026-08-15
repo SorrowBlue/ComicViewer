@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 @AssistedInject
 internal class FileInfoViewModel(
     @Assisted private val file: File,
+    @Assisted private val isOpenFolderEnabled: Boolean,
     getFileAttributeUseCase: GetFileAttributeUseCase,
     existsReadlaterUseCase: ExistsReadlaterUseCase,
     getFileSizeUseCase: GetFileSizeUseCase,
@@ -83,9 +84,19 @@ internal class FileInfoViewModel(
             fileInfoButtonsUiState = FileInfoButtonsUiState(
                 readLaterChecked = isReadLater,
                 readLaterLoading = readLaterLoading,
+                isOpenFolderEnabled = isOpenFolderEnabled,
             ),
         )
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, FileInfoScreenUiState(file))
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        FileInfoScreenUiState(
+            file,
+            fileInfoButtonsUiState = FileInfoButtonsUiState(
+                isOpenFolderEnabled = isOpenFolderEnabled,
+            ),
+        ),
+    )
 
     val pagingFlow = if (file is Book) {
         null
@@ -116,7 +127,7 @@ internal class FileInfoViewModel(
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(file: File): FileInfoViewModel
+        fun create(file: File, isOpenFolderEnabled: Boolean): FileInfoViewModel
     }
 }
 

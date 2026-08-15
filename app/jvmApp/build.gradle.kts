@@ -40,7 +40,6 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.jcifs)
             implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.compose.componentsAnimatedimage)
             implementation(libs.metro.viewmodelCompose)
         }
     }

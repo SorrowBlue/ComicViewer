@@ -26,7 +26,7 @@ fun rememberNavigator(
         topLevelRoutes = topLevelRoutes,
         configuration = configuration,
     )
-    return remember { Navigator(state) }
+    return remember(state) { Navigator(state) }
 }
 
 /**

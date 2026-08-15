@@ -87,6 +87,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.filekit.core)
+            implementation(libs.compose.componentsAnimatedimage)
         }
         jvmTest.dependencies {
             implementation(compose.desktop.currentOs)

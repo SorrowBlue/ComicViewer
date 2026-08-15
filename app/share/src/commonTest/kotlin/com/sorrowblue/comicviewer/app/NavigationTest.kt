@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -27,7 +26,6 @@ import androidx.compose.ui.test.waitUntilAtLeastOneExists
 import androidx.compose.ui.test.waitUntilDoesNotExist
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -62,13 +60,12 @@ class NavigationTest {
         runComposeUiTest {
             setContent {
                 isCompact = isCompactWindowClass()
-                CompositionLocalProvider(
-                    LocalMetroViewModelFactory provides appGraph.viewModelFactory,
-                ) {
-                    val state = rememberComicViewerUIState(allowNavigationRestored = false)
-                    ComicViewerApp(finishApp = {}, state = state)
+                context(appGraph.context) {
+                    MetroContent {
+                        ComicViewerApp(finishApp = {})
+                        AppContent(appGraph)
+                    }
                 }
-                AppContent(appGraph)
             }
             tutorial()
             block()

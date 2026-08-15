@@ -1,8 +1,4 @@
-/*
- * Copyright 2026 SorrowBlue. See LICENSE for details.
- */
-
-package com.sorrowblue.comicviewer
+package com.sorrowblue.comicviewer.app
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -25,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialSharedAxisZOut
-import comicviewer.app.jvmapp.generated.resources.Res
+import comicviewer.app.share.generated.resources.Res
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.animatedimage.AnimatedImage
 import org.jetbrains.compose.animatedimage.animate
@@ -37,7 +34,7 @@ internal fun SplashScreen(keepOnScreenCondition: () -> Boolean) {
     val currentKeepOnScreenCondition by rememberUpdatedState(keepOnScreenCondition)
     LaunchedEffect(Unit) {
         do {
-            delay(2000)
+            delay(2000.milliseconds)
             shouldKeepSplash = currentKeepOnScreenCondition()
         } while (shouldKeepSplash)
     }

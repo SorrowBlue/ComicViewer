@@ -8,29 +8,47 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.android.ActivityKey
-import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 
 /**
  * Main activity
  */
 @ContributesIntoMap(AppScope::class, binding<Activity>())
 @ActivityKey
-internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity() {
-    private val viewModel: MainViewModel by viewModels()
+internal class MainActivity(override val defaultViewModelProviderFactory: MetroViewModelFactory) :
+    AppCompatActivity() {
+
+    private val viewModel: ComicViewerAppViewModel by metroViewModel { factory: ComicViewerAppViewModel.Factory, ->
+        factory.create(receivedBookData.isNullOrEmpty())
+    }
+
+    val receivedBookData
+        get() = if (intent.action == Intent.ACTION_VIEW &&
+            intent.isAllowedCategory() &&
+            intent.scheme in listOf("file", "content") &&
+            intent.type in listOf("application/pdf", "application/zip")
+        ) {
+            intent.dataString
+        } else {
+            null
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
@@ -42,28 +60,20 @@ internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity(
             setKeepOnScreenCondition(viewModel.shouldKeepSplash::value)
         }
 
-        val receivedBookData = if (intent.action == Intent.ACTION_VIEW &&
-            intent.isAllowedCategory() &&
-            intent.scheme in listOf("file", "content") &&
-            intent.type in listOf("application/pdf", "application/zip")
-        ) {
-            intent.dataString
-        } else {
-            null
-        }
-
         setContent {
-            CompositionLocalProvider(
-                LocalMetroViewModelFactory provides appGraph.viewModelFactory,
-            ) {
-                val state = rememberComicViewerUIState(
+            MetroContent {
+                val navigator = rememberAppNavigator()
+                ComicViewerApp(
+                    finishApp = ::finish,
+                    navigator = navigator,
                     allowNavigationRestored = receivedBookData.isNullOrEmpty(),
                 )
-                ComicViewerApp(finishApp = ::finish, state = state)
                 LaunchedEffect(receivedBookData.isNullOrEmpty()) {
-                    if (!receivedBookData.isNullOrEmpty()) {
-                        state.navigator.navigate(ReceiveBookNavKey(receivedBookData))
-                        state.onNavigationHistoryRestore()
+                    receivedBookData?.let { data ->
+                        if (data.isNotEmpty()) {
+                            navigator.navigate(ReceiveBookNavKey(data))
+                            viewModel.completeInit()
+                        }
                     }
                 }
             }
@@ -74,4 +84,17 @@ internal class MainActivity(private val appGraph: AppGraph) : AppCompatActivity(
         categories == null || allowedCategories.any { hasCategory(it) }
 
     private val allowedCategories = listOf(Intent.CATEGORY_BROWSABLE, Intent.CATEGORY_DEFAULT)
+}
+
+private inline fun <reified T : ManualViewModelAssistedFactory, reified VM : ViewModel> ComponentActivity.metroViewModel(
+    crossinline creationCallback: (T) -> VM,
+): Lazy<VM> = viewModels<VM> {
+    object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val factory =
+                this@metroViewModel.defaultViewModelProviderFactory as MetroViewModelFactory
+            @Suppress("UNCHECKED_CAST")
+            return creationCallback(factory.createManuallyAssistedFactory(T::class).invoke()) as T
+        }
+    }
 }

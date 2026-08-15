@@ -5,34 +5,26 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.ApplicationScope
-import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
-import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sorrowblue.comicviewer.Application
 import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings
+import com.sorrowblue.comicviewer.framework.common.Initializer
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import comicviewer.framework.ui.generated.resources.app_name
-import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
-import java.awt.Dimension
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import java.awt.GraphicsEnvironment
 import java.awt.Rectangle
 import kotlinx.coroutines.runBlocking
@@ -59,27 +51,14 @@ fun rememberWindowState2(settings: WindowSettings): WindowState {
 }
 
 @Composable
-context(appGraph: AppGraph, scope: ApplicationScope)
+context(appGraph: AppGraph)
 fun MainWindow(exitApplication: () -> Unit) {
     @Suppress("LeakLensFlowLifecycleLeak")
-    val initialSettings by remember { appGraph.jvmDatastoreDataSource.windowSettings }.collectAsState(null)
+    val initialSettings by remember { appGraph.jvmDatastoreDataSource.windowSettings }.collectAsState(
+        null
+    )
     val settings = initialSettings ?: return
     val windowState = rememberWindowState2(settings)
-    val trayState = rememberTrayState()
-    var composeWindow by remember { mutableStateOf<ComposeWindow?>(null) }
-    scope.Tray(
-        state = trayState,
-        icon = rememberVectorPainter(ComicIcons.Launcher),
-        onAction = {
-            windowState.isMinimized = false
-            composeWindow?.let { window ->
-                if (window.isShowing) {
-                    window.toFront()
-                    window.requestFocus()
-                }
-            }
-        },
-    )
     Window(
         onCloseRequest = {
             runBlocking {
@@ -112,23 +91,18 @@ fun MainWindow(exitApplication: () -> Unit) {
         title = stringResource(FrameworkResString.app_name),
         icon = rememberVectorPainter(ComicIcons.Launcher),
     ) {
-        DisposableEffect(Unit) {
-            composeWindow = this@Window.window
-            onDispose {
-                composeWindow = null
+        context(appGraph.context) {
+            MetroContent {
+                val viewModel =
+                    assistedMetroViewModel<ComicViewerAppViewModel, ComicViewerAppViewModel.Factory> { create() }
+                Application(finishApp = exitApplication)
+                SplashScreen(keepOnScreenCondition = { viewModel.shouldKeepSplash.value })
             }
         }
-        window.minimumSize = Dimension(400, 600)
-        CompositionLocalProvider(LocalMetroViewModelFactory provides appGraph.viewModelFactory) {
-            val splashViewModel = viewModel { MainViewModel() }
-            Application(finishApp = exitApplication)
-            SplashScreen(keepOnScreenCondition = { splashViewModel.shouldKeepSplash.value })
+        LaunchedEffect(Unit) {
+            Initializer.initialize(appGraph.initializer.toList())
         }
     }
-}
-
-@Composable
-internal fun SplashScreen(keepOnScreenCondition: () -> Boolean) {
 }
 
 private fun isWindowPositionValid(x: Int, y: Int, width: Int, height: Int): Boolean {

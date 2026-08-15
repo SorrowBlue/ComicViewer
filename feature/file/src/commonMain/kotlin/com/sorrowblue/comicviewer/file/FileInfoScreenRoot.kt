@@ -28,7 +28,12 @@ fun FileInfoScreenRoot(
         isOpenFolderEnabled = isOpenFolderEnabled,
     ) { file ->
         val viewModel =
-            assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> { create(file) }
+            assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> {
+                create(
+                    file,
+                    isOpenFolderEnabled,
+                )
+            }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val lazyPagingItems = viewModel.pagingFlow?.collectAsLazyPagingItems()
         FileInfoScreen(

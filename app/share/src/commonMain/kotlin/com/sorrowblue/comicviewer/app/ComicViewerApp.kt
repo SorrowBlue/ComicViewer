@@ -18,18 +18,25 @@ import androidx.compose.material3.adaptive.navigation3.rememberSupportingPaneSce
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.app.wrapper.PreAppScreen
+import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfFolderNavKey
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import com.sorrowblue.comicviewer.framework.common.appGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
@@ -37,24 +44,52 @@ import com.sorrowblue.comicviewer.framework.ui.locale.ProvideLocalAppLocaleIso
 import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
 import logcat.logcat
 
 @Composable
-internal fun ComicViewerApp(state: ComicViewerAppState, finishApp: () -> Unit) {
+context(context: PlatformContext)
+internal fun ComicViewerApp(
+    finishApp: () -> Unit,
+    navigator: Navigator = rememberAppNavigator(),
+    allowNavigationRestored: Boolean = true,
+    entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
+        context.appGraph<NavigationGraph>().navigationEntryProvider.forEach { provider ->
+            provider(navigator = navigator)
+        }
+    },
+) {
+    val viewModel: ComicViewerAppViewModel =
+        assistedMetroViewModel<ComicViewerAppViewModel, ComicViewerAppViewModel.Factory> {
+            create(allowNavigationRestored = allowNavigationRestored)
+        }
+    val isInitialized by viewModel.isInitialized.collectAsStateWithLifecycle()
     CompositionLocalProvider(
-        LocalNavigator provides state.navigator,
+        LocalNavigator provides navigator,
         ProvidesAppState,
         ProvideLocalAppLocaleIso,
     ) {
         ComicTheme {
-            PreAppScreen(finishApp = finishApp) {
+            PreAppScreen(isInitialized = isInitialized, onInitialize = {
+                viewModel.shouldKeepSplash.value = false
+            }, finishApp = finishApp) {
                 ComicViewerApp(
-                    navigator = state.navigator,
-                    entryProvider = state.entryProvider,
+                    navigator = navigator,
+                    entryProvider = entryProvider,
                 )
             }
         }
+    }
+    EventEffect(viewModel.restoreNavigation) {
+        navigator.navigate(
+            BookshelfFolderNavKey(
+                bookshelfId = it.bookshelfId,
+                path = it.path,
+                restorePath = it.restorePath,
+                onRestoreComplete = it.onRestoreComplete,
+            ),
+        )
     }
 }
 

@@ -12,9 +12,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.fold
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -25,6 +22,7 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -32,39 +30,31 @@ import logcat.LogPriority
 import logcat.logcat
 
 @AssistedInject
-class ComicViewerAppViewModel(
+internal class ComicViewerAppViewModel(
     @Assisted allowNavigationRestored: Boolean,
-    @Assisted private val completeInit: () -> Unit,
     val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
-    val navKeySubclassMap: Set<NavKeyEntry>,
-    val navigationEntryProvider: Set<NavigationEntryProvider>,
-    val navigationKeys: Set<NavigationKey>,
 ) : ViewModel() {
 
-    private var isNavigationRestored = false
+    val shouldKeepSplash = MutableStateFlow(true)
+    val isInitialized = MutableStateFlow(false)
 
     init {
-        if (allowNavigationRestored && !isNavigationRestored) {
+        if (allowNavigationRestored) {
             viewModelScope.launch {
                 if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
                     restoreNavigationWithTimeout()
                 } else {
-                    completeRestoreHistory()
+                    completeInit()
                 }
             }
         } else if (allowNavigationRestored) {
-            completeRestoreHistory()
+            completeInit()
         }
     }
 
     val restoreNavigation: SharedFlow<RestoreNavigation>
         field = MutableSharedFlow<RestoreNavigation>()
-
-    fun onNavigationHistoryRestore() {
-        logcat { "onNavigationHistoryRestore" }
-        completeRestoreHistory()
-    }
 
     private fun restoreNavigationWithTimeout() {
         val restorationJob = viewModelScope.launch {
@@ -73,14 +63,14 @@ class ComicViewerAppViewModel(
         viewModelScope.launch {
             delay(RESTORE_TIMEOUT_MILLIS.milliseconds)
             restorationJob.cancel()
-            completeRestoreHistory()
+            completeInit()
         }
     }
 
     private suspend fun restoreNavigation() {
         val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
         if (history?.folderList.isNullOrEmpty()) {
-            completeRestoreHistory()
+            completeInit()
             return
         }
 
@@ -104,7 +94,7 @@ class ComicViewerAppViewModel(
                 bookshelfId = bookshelfId,
                 path = path,
                 restorePath = bookPath,
-                onRestoreComplete = ::onNavigationHistoryRestore,
+                onRestoreComplete = ::completeInit,
             ),
         )
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -158,7 +148,7 @@ class ComicViewerAppViewModel(
                 bookshelfId = bookshelfId,
                 path = folderList.last().path,
                 restorePath = bookPath,
-                onRestoreComplete = ::onNavigationHistoryRestore,
+                onRestoreComplete = ::completeInit,
             ),
         )
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -166,19 +156,16 @@ class ComicViewerAppViewModel(
         }
     }
 
-    private fun completeRestoreHistory() {
-        completeInit()
-        isNavigationRestored = true
+    fun completeInit() {
+        shouldKeepSplash.value = false
+        isInitialized.value = true
     }
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey
     @ContributesIntoMap(AppScope::class)
     interface Factory : ManualViewModelAssistedFactory {
-        fun create(
-            allowNavigationRestored: Boolean,
-            completeInit: () -> Unit,
-        ): ComicViewerAppViewModel
+        fun create(allowNavigationRestored: Boolean = true): ComicViewerAppViewModel
     }
 }
 
