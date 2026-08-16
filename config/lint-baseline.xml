@@ -5,21 +5,21 @@
         id="InvalidPackage"
         message="Invalid package reference in org.bouncycastle:bcprov-jdk18on; not included in Android: `javax.naming.directory`. Referenced from `org.bouncycastle.jce.provider.CrlCache`.">
         <location
-            file="bcprov-jdk18on-1.80.jar"/>
+            file="bcprov-jdk18on-1.84.jar"/>
     </issue>
 
     <issue
         id="InvalidPackage"
         message="Invalid package reference in org.bouncycastle:bcprov-jdk18on; not included in Android: `javax.naming`. Referenced from `org.bouncycastle.jce.provider.X509LDAPCertStoreSpi`.">
         <location
-            file="bcprov-jdk18on-1.80.jar"/>
+            file="bcprov-jdk18on-1.84.jar"/>
     </issue>
 
     <issue
         id="InvalidPackage"
         message="Invalid package reference in org.codelibs:jcifs; not included in Android: `javax.security.auth.kerberos`. Referenced from `org.codelibs.jcifs.smb.impl.Kerb5Authenticator`.">
         <location
-            file="jcifs-3.0.2.jar"/>
+            file="jcifs-3.0.3.jar"/>
     </issue>
 
 </issues>

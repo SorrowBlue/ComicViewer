@@ -11,6 +11,9 @@
       <option name="taskNames">
         <list>
           <option value="app:androidApp:lintRelease" />
+          <option value="app:androidApp:lintDebug" />
+          <option value="app:androidApp:lintPrerelease" />
+          <option value="app:androidApp:lintInternal" />
         </list>
       </option>
       <option name="vmOptions" />
