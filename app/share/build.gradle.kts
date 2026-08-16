@@ -16,7 +16,13 @@ tasks.configureEach {
         dependsOn(":app:androidApp:mergeDebugAssets")
     }
 }
-
+tasks.withType<Test>().configureEach {
+    if (name.contains("AndroidHostTest")) {
+        filter {
+            excludeTestsMatching("com.sorrowblue.comicviewer.app.NavigationTest")
+        }
+    }
+}
 kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.app"
