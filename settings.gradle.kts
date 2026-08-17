@@ -18,7 +18,7 @@ plugins {
 
 android {
     compileSdk = 37
-    minSdk = 30
+    minSdk = 31
 }
 
 kover {
