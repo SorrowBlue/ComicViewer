@@ -5,10 +5,8 @@
 package com.sorrowblue.comicviewer.app
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -19,7 +17,6 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.rememberWindowState
 import com.sorrowblue.comicviewer.Application
 import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings
-import com.sorrowblue.comicviewer.framework.common.Initializer
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
@@ -27,7 +24,6 @@ import comicviewer.framework.ui.generated.resources.app_name
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import java.awt.GraphicsEnvironment
 import java.awt.Rectangle
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -53,39 +49,19 @@ fun rememberWindowState2(settings: WindowSettings): WindowState {
 @Composable
 context(appGraph: AppGraph)
 fun MainWindow(exitApplication: () -> Unit) {
+    val state = rememberMainWindowState()
+
     @Suppress("LeakLensFlowLifecycleLeak")
-    val initialSettings by remember { appGraph.jvmDatastoreDataSource.windowSettings }.collectAsState(
-        null
-    )
+    val initialSettings by state.windowSettings.collectAsState()
     val settings = initialSettings ?: return
     val windowState = rememberWindowState2(settings)
     Window(
         onCloseRequest = {
-            runBlocking {
-                try {
-                    appGraph.jvmDatastoreDataSource.updateWindowSettings { settings ->
-                        if (windowState.placement == WindowPlacement.Maximized) {
-                            settings.copy(isMaximized = true)
-                        } else {
-                            val position = windowState.position
-                            val x =
-                                if (position is WindowPosition.Absolute) position.x.value.toInt() else settings.x
-                            val y =
-                                if (position is WindowPosition.Absolute) position.y.value.toInt() else settings.y
-                            settings.copy(
-                                width = windowState.size.width.value.toInt(),
-                                height = windowState.size.height.value.toInt(),
-                                x = x,
-                                y = y,
-                                isMaximized = false,
-                            )
-                        }
-                    }
-                } catch (e: Exception) {
-                    // ignore
-                }
-            }
-            exitApplication()
+            state.saveWindowSettings(
+                windowState = windowState,
+                settings = settings,
+                onComplete = exitApplication,
+            )
         },
         state = windowState,
         title = stringResource(FrameworkResString.app_name),
@@ -98,9 +74,6 @@ fun MainWindow(exitApplication: () -> Unit) {
                 Application(finishApp = exitApplication)
                 SplashScreen(keepOnScreenCondition = { viewModel.shouldKeepSplash.value })
             }
-        }
-        LaunchedEffect(Unit) {
-            Initializer.initialize(appGraph.initializer.toList())
         }
     }
 }

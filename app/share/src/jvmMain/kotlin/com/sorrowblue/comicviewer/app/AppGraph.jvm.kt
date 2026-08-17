@@ -5,11 +5,9 @@
 package com.sorrowblue.comicviewer.app
 
 import com.sorrowblue.comicviewer.data.database.TestHelper
-import com.sorrowblue.comicviewer.domain.service.datasource.JvmDatastoreDataSource
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageWindowSettingsUseCase
 import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
-import com.sorrowblue.comicviewer.framework.common.Initializer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.PlatformGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.DependencyGraph
@@ -21,11 +19,9 @@ import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 @DependencyGraph(scope = AppScope::class)
 actual interface AppGraph :
     ViewModelGraph,
-    NavigationGraph,
-    PlatformGraph {
+    NavigationGraph {
     actual val context: PlatformContext
-    val jvmDatastoreDataSource: JvmDatastoreDataSource
-    val initializer: Set<Initializer<*>>
+    val settingsUseCase: ManageWindowSettingsUseCase
 
     @DependencyGraph.Factory
     actual fun interface Factory {
