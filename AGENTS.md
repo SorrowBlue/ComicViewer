@@ -44,7 +44,7 @@ ComicViewer is a multi-platform comic viewer application supporting Android, iOS
 - **Kotlin**: 2.4.10
 - **Gradle**: 9.6.1
 - **Java**: 21 (Required)
-- **Android SDK**: compileSdk 37, minSdk 30
+- **Android SDK**: compileSdk 37, minSdk 31
 - **Modular Architecture**: feature/domain/data layer structure
 - **Metro**: Dependency injection framework
 - **Room**: Database (Android)
@@ -63,7 +63,7 @@ ComicViewer is a multi-platform comic viewer application supporting Android, iOS
 
 2. **Android SDK**
     - API 37 (compileSdk)
-    - Minimum API 30 (minSdk)
+    - Minimum API 31 (minSdk)
     - Android SDK Build-Tools
 
 3. **Network Access**
