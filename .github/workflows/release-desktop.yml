@@ -35,9 +35,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
-          # PR時はPR元のリポジトリとブランチ名、それ以外は現在のリポジトリと実行リファレンスを指定して、仮想マージコミットのフェッチ自体を完全に防ぎます
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
 
       - name: Setup Java and Gradle
