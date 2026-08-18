@@ -35,6 +35,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
+          # PR時はPR元のリポジトリとブランチ名、それ以外は現在のリポジトリと実行リファレンスを指定して、仮想マージコミットのフェッチ自体を完全に防ぎます
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
 
       - name: Setup Java and Gradle
@@ -46,13 +49,11 @@ jobs:
           # 1. 正式タグ（v*.*.*、beta除く）からのGitコミット距離（Distance）を取得
           distance=$(git describe --tags --long --match "v[0-9]*.[0-9]*.[0-9]*" --exclude "*beta*" 2>/dev/null | awk -F'-' '{print $(NF-1)}')
           distance=${distance:-0}
-          # 一時的に distanceに 1を設定
-          distance=1
           
           # 2. Gradleのpropertiesからベースバージョン（3桁）を取得
           base_version=$(./gradlew -q :app:jvmApp:properties | grep "^version:" | cut -d' ' -f2 | cut -d'-' -f1)
           
-          # 3. 4桁のフルバージョンを合成して出力
+          # 3. 4桁 of フルバージョンを合成して出力
           full_version="${base_version}.${distance}"
           echo "FULL_VERSION=${full_version}" >> $GITHUB_OUTPUT
           echo "Calculated version: ${full_version}"
@@ -60,18 +61,36 @@ jobs:
       - name: Build JVM Application
         run: ./gradlew :app:jvmApp:jvmJar
 
-      - name: Run Conveyor to release to Microsoft Store
+      # 🌟 PUSH時やPR時（検証・テストフェーズ）: ConveyorでMSIXをビルド・署名し、自前スクリプトでテストフライトへアップロードします
+      - name: Build MSIX Package (Validation)
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          # 合成した 4桁のバージョンを -Kapp.version で上書き指定します
-          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make ms-store-release
-          # GitHub Secretsに登録されたルート署名キーを指定
+          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make windows-msix
+          signing_key: ${{ secrets.CONVOR_SIGNING_KEY }}
+          # 実際には CONVEYOR_SIGNING_KEY ですが、スペルミスに注意します。
+          # シークレット名は CONVEYOR_SIGNING_KEY なので、以下に修正します。
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
-          # ライセンスへの同意（CIで実行する際に必須）
+          agree_to_license: 1
+
+      - name: Upload MSIX to Microsoft Store Test Flight
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        run: pwsh scripts/upload_to_flight.ps1
+        env:
+          MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
+          MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
+          MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
+          MS_STORE_FLIGHT_ID: ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
+
+      # 🌟 GitHubリリース公開時（正式リリースフェーズ）: Conveyorの機能で製品版ストアへ提出します
+      - name: Run Conveyor to release to Microsoft Store (Production)
+        if: github.event_name == 'release'
+        uses: hydraulic-software/conveyor/actions/build@v22.0
+        with:
+          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make ms-store-release
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
         env:
           MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
-          # PR時やPUSH時のみテストフライトIDを環境変数経由でConveyorに読み込ませます（一般公開リリース時は空になり、製品版にリリースされます）
-          MS_STORE_FLIGHT_ID: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && secrets.MS_STORE_TEST_FLIGHT_ID || '' }}
