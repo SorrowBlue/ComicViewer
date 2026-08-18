@@ -11,6 +11,15 @@ on:
       - 'config/**'
       - 'docs/**'
       - 'iosApp/**'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '.idea/**'
+      - '.run/**'
+      - 'config/**'
+      - 'docs/**'
+      - 'iosApp/**'
   release:
     types: [ published ]
 
@@ -26,7 +35,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
+          # PR時はPR元のリポジトリとブランチ名、それ以外は現在のリポジトリと実行リファレンスを指定して、仮想マージコミットのフェッチ自体を完全に防ぎます
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
+
+      # CI環境上にすべてのGitタグと完全な履歴（unshallow）を強制フェッチして、describeが機能するようにします
+      - name: Fetch all tags
+        run: |
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            echo "Repository is shallow. Unshallowing..."
+            git fetch --unshallow --tags --force
+          else
+            echo "Repository is already complete. Fetching tags..."
+            git fetch --tags --force
+          fi
 
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
@@ -52,8 +75,8 @@ jobs:
       - name: Run Conveyor to release to Microsoft Store
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          # 合成した 4桁のバージョンを -Kapp.version で上書き指定し、かつmainへのpush時はテストフライトIDも -K オプションで上書き指定します
-          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} ${{ (github.event_name == 'push') && format('-Kapp.windows.store.flight-id={0} ', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}make ms-store-release
+          # 合成した 4桁のバージョンを -Kapp.version で上書き指定し、かつmainへのpush/PR時はテストフライトIDも -K オプションで上書き指定します
+          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('-Kapp.windows.store.flight-id={0} ', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}make ms-store-release
           # GitHub Secretsに登録されたルート署名キーを指定
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           # ライセンスへの同意（CIで実行する際に必須）
