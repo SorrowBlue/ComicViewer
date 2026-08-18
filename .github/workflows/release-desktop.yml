@@ -45,6 +45,8 @@ jobs:
         with:
           # mainへのpushまたはpull_request時はテスト用フライトIDを指定し、それ以外（本番リリースなど）は通常の製品版リリースとします
           command: make ms-store-release ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('--windows-store-flight-id={0}', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}
+          # Conveyorアクションが要求するパッケージ仮署名用のダミーキー（ストア提出時にマイクロソフト側で本署名されるためダミーで問題ありません）
+          signing_key: "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
         env:
           MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
