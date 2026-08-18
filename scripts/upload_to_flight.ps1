@@ -35,24 +35,52 @@ try {
     $submission = Invoke-RestMethod -Uri $submissionUri -Method Post -Headers $headers
     Write-Host "Created a new flight submission (ID: $($submission.id))"
 } catch {
-    Write-Host "An active submission already exists. Retrieving the existing submission..."
-    # 進行中の申請がすでに存在する場合は、最後の申請情報を取得する
-    $submission = Invoke-RestMethod -Uri "$submissionUri/last" -Method Get -Headers $headers
-    Write-Host "Retrieved existing flight submission (ID: $($submission.id))"
+    $errMsg = $_.Exception.Message
+    if ($_.Exception.Response) {
+        try {
+            $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+            $errResponse = $reader.ReadToEnd()
+            $errMsg += " | Response: $errResponse"
+        } catch {}
+    }
+    Write-Host "Could not create a new submission, trying to retrieve last active submission. Detail: $errMsg"
+    try {
+        # 進行中の申請がすでに存在する場合は、最後の申請情報を取得する
+        $submission = Invoke-RestMethod -Uri "$submissionUri/last" -Method Get -Headers $headers
+        Write-Host "Retrieved existing flight submission (ID: $($submission.id))"
+    } catch {
+        $lastErrMsg = $_.Exception.Message
+        if ($_.Exception.Response) {
+            try {
+                $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+                $lastErrResponse = $reader.ReadToEnd()
+                $lastErrMsg += " | Response: $lastErrResponse"
+            } catch {}
+        }
+        Write-Error "Failed to retrieve the last submission. Detail: $lastErrMsg"
+    }
 }
 
 $submissionId = $submission.id
 $fileUploadUrl = $submission.fileUploadUrl
 
+if (-not $submissionId -or -not $fileUploadUrl) {
+    Write-Warning "Submission ID or File Upload URL is empty. Raw API Response:"
+    $submission | Out-String | Write-Host
+}
+
 # 3. アップロード用パッケージ（ZIP）の作成
 # ConveyorでビルドされたMSIXファイルを探す
-$outputDir = Join-Path $PSScriptRoot "../output"
+$outputDir = "$pwd\output"
 if (-not (Test-Path $outputDir)) {
-    $outputDir = Resolve-Path "output"
+    $outputDir = "../output"
+}
+if (-not (Test-Path $outputDir)) {
+    Write-Error "Output directory path does not exist: $outputDir"
 }
 $msixFiles = Get-ChildItem -Path $outputDir -Filter "*.msix"
 if ($msixFiles.Count -eq 0) {
-    Write-Error "No MSIX package found in output directory."
+    Write-Error "No MSIX package found in output directory ($outputDir)."
 }
 $msixFile = $msixFiles[0]
 $msixFilename = $msixFile.Name
@@ -75,13 +103,31 @@ Write-Host "Upload completed successfully."
 # アップロード後に一時ZIPファイルをクリーンアップ
 Remove-Item $zipPath
 
-# 5. 申請情報の更新 (アップロードしたパッケージファイル名を申請データに登録)
+# 5. 申請情報の更新 (既存パッケージを PendingDelete マークし、新規パッケージを追加)
 Write-Host "Updating flight submission packages data..."
-$submission.flightPackages = @(
-    @{
-        fileName = $msixFilename
+$updatedPackages = @()
+# 既存のパッケージがすでに登録されている場合、すべて PendingDelete に設定して維持する
+if ($submission.flightPackages) {
+    foreach ($pkg in $submission.flightPackages) {
+        # 既存のオブジェクトからプロパティを安全にハッシュテーブルへコピー
+        $copiedPkg = @{}
+        foreach ($prop in $pkg.PSObject.Properties) {
+            $copiedPkg[$prop.Name] = $prop.Value
+        }
+        # state プロパティを追加・上書き
+        $copiedPkg["state"] = "PendingDelete"
+        $updatedPackages += $copiedPkg
     }
-)
+}
+# 新しくアップロードしたパッケージを PendingUpload として追加
+$newPackage = @{
+    fileName = $msixFilename
+    fileRequestName = $msixFilename
+    state = "PendingUpload"
+}
+$updatedPackages += $newPackage
+# 申請データのパッケージ情報を差し替え
+$submission.flightPackages = $updatedPackages
 
 # PUTリクエスト用のボディデータを生成 (更新された申請情報JSON)
 $submissionJson = $submission | ConvertTo-Json -Depth 10 -Compress
