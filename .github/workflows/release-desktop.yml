@@ -53,29 +53,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Setup JDK and Gradle
+      - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
-
-      - name: Calculate Version
-        id: versioning
-        run: |
-          # 1. 正式タグ（v*.*.*、beta除く）からのGitコミット距離（Distance）を取得
-          distance=$(git describe --tags --long --match "v[0-9]*.[0-9]*.[0-9]*" --exclude "*beta*" 2>/dev/null | awk -F'-' '{print $(NF-1)}')
-          distance=${distance:-0}
-
-          # 2. Gradleのpropertiesからベースバージョン（3桁）を取得
-          base_version=$(./gradlew -q :app:jvmApp:properties | grep "^version:" | cut -d' ' -f2 | cut -d'-' -f1)
-          
-          # 3. 4桁 of フルバージョンを合成して出力
-          full_version="${base_version}.${distance}"
-          # 一時的にfull_versionを設定
-          full_version="2.0.0.1"
-          echo "FULL_VERSION=${full_version}" >> $GITHUB_OUTPUT
-          echo "Calculated version: ${full_version}"
 
       - name: Download Windows build
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
@@ -90,18 +73,27 @@ jobs:
       - name: Run printConveyorConfig
         run: ./gradlew -q printConveyorConfig
 
-
-      # 🌟 PUSH時やPR時（検証・テストフェーズ）: ConveyorでMSIXをビルド・署名し、自前スクリプトでテストフライトへアップロードします
-      - name: Build MSIX Package (Validation)
-        if: github.event_name == 'push' || github.event_name == 'pull_request'
+      # 🌟 PR時 (検証フェーズ): 履歴断絶に備え、バージョンを固定値で強制上書きしてビルドチェックのみ実施します
+      - name: Build MSIX Package for PR (Validation Only)
+        if: github.event_name == 'pull_request'
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          command: -f ci.conveyor.conf -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make windows-msix
+          command: -f ci.conveyor.conf -Kapp.version=2.0.1 make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
 
+      # 🌟 main PUSH時 (テストリリース): Gradleの自動計算バージョンを使用してMSIXをビルド・署名します
+      - name: Build MSIX Package for Test Flight
+        if: github.event_name == 'push'
+        uses: hydraulic-software/conveyor/actions/build@v22.0
+        with:
+          command: -f ci.conveyor.conf make windows-msix
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+          agree_to_license: 1
+
+      # 🌟 main PUSH時 (テストリリース): 自作PythonスクリプトでMSIXを特定のテストフライトへ送信します
       - name: Upload MSIX to Microsoft Store Test Flight
-        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        if: github.event_name == 'push'
         run: python scripts/upload_to_flight.py
         env:
           MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
@@ -109,12 +101,12 @@ jobs:
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_FLIGHT_ID: ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
 
-      # 🌟 GitHubリリース公開時（正式リリースフェーズ）: Conveyorの機能で製品版ストアへ提出します
+      # 🌟 GitHubリリース公開時 (正式リリースフェーズ): Conveyorの機能で正式版ストアへ提出します (バージョンは自動インポート)
       - name: Run Conveyor to release to Microsoft Store (Production)
         if: github.event_name == 'release'
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          command: -f ci.conveyor.conf -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make ms-store-release
+          command: -f ci.conveyor.conf make ms-store-release
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
         env:

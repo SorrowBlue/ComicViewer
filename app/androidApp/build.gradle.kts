@@ -1,5 +1,5 @@
 import com.sorrowblue.comicviewer.calculateVersionCode
-import com.sorrowblue.comicviewer.gitTagProvider
+import com.sorrowblue.comicviewer.gitFormalTagProvider
 
 plugins {
     alias(libs.plugins.comicviewer.androidApplication)
@@ -70,7 +70,8 @@ dependencies {
 androidComponents {
     onVariants(selector().all()) { variant ->
         variant.outputs.forEach { output ->
-            val versionName = gitTagProvider.orElse("0.0.0").get()
+            val rawVersionName = gitFormalTagProvider.orElse("0.0.0").get()
+            val versionName = if (rawVersionName.startsWith("v")) rawVersionName.substring(1) else rawVersionName
             val versionCode = calculateVersionCode(versionName)
             output.versionName.set(versionName)
             output.versionCode.set(versionCode)
