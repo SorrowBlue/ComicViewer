@@ -40,14 +40,29 @@ jobs:
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
 
+      - name: Calculate Version
+        id: versioning
+        run: |
+          # 1. 正式タグ（v*.*.*、beta除く）からのGitコミット距離（Distance）を取得
+          distance=$(git describe --tags --long --match "v[0-9]*.[0-9]*.[0-9]*" --exclude "*beta*" 2>/dev/null | awk -F'-' '{print $(NF-1)}')
+          distance=${distance:-0}
+          
+          # 2. Gradleのpropertiesからベースバージョン（3桁）を取得
+          base_version=$(./gradlew -q :app:jvmApp:properties | grep "^version:" | cut -d' ' -f2 | cut -d'-' -f1)
+          
+          # 3. 4桁のフルバージョンを合成して出力
+          full_version="${base_version}.${distance}"
+          echo "FULL_VERSION=${full_version}" >> $GITHUB_OUTPUT
+          echo "Calculated version: ${full_version}"
+
       - name: Build JVM Application
         run: ./gradlew :app:jvmApp:jvmJar
 
       - name: Run Conveyor to release to Microsoft Store
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          # mainへのpushまたはpull_request時はテスト用フライトIDを -K オプションで上書き指定し、それ以外（本番リリースなど）は通常の製品版リリースとします
-          command: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('-Kapp.windows.store.flight-id={0} ', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}make ms-store-release
+          # 合成した 4桁のバージョンを -Kapp.version で上書き指定し、かつmainへのpush/PR時はテストフライトIDも -K オプションで上書き指定します
+          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('-Kapp.windows.store.flight-id={0} ', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}make ms-store-release
           # GitHub Secretsに登録されたルート署名キーを指定
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           # ライセンスへの同意（CIで実行する際に必須）
