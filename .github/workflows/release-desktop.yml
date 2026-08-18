@@ -35,6 +35,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
+          # PR時はPR元のリポジトリとブランチ名、それ以外は現在のリポジトリと実行リファレンスを指定して、仮想マージコミットのフェッチ自体を完全に防ぎます
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
 
       - name: Setup Java and Gradle
@@ -46,8 +49,6 @@ jobs:
           # 1. 正式タグ（v*.*.*、beta除く）からのGitコミット距離（Distance）を取得
           distance=$(git describe --tags --long --match "v[0-9]*.[0-9]*.[0-9]*" --exclude "*beta*" 2>/dev/null | awk -F'-' '{print $(NF-1)}')
           distance=${distance:-0}
-          # 一時的に distanceに 1を設定
-          distance=1
           
           # 2. Gradleのpropertiesからベースバージョン（3桁）を取得
           base_version=$(./gradlew -q :app:jvmApp:properties | grep "^version:" | cut -d' ' -f2 | cut -d'-' -f1)
@@ -63,8 +64,8 @@ jobs:
       - name: Run Conveyor to release to Microsoft Store
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          # 合成した 4桁のバージョンを -Kapp.version で上書き指定し、かつmainへのpush/PR時はテストフライトIDも -K オプションで上書き指定します
-          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('-Kapp.windows.store.flight-id={0} ', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}make ms-store-release
+          # 合成した 4桁のバージョンを -Kapp.version で上書き指定します
+          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make ms-store-release
           # GitHub Secretsに登録されたルート署名キーを指定
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           # ライセンスへの同意（CIで実行する際に必須）
@@ -73,3 +74,5 @@ jobs:
           MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
+          # PR時やPUSH時のみテストフライトIDを環境変数経由でConveyorに読み込ませます（一般公開リリース時は空になり、製品版にリリースされます）
+          MS_STORE_FLIGHT_ID: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && secrets.MS_STORE_TEST_FLIGHT_ID || '' }}
