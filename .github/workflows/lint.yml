@@ -1,0 +1,56 @@
+name: Lint
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  checks: write
+  security-events: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: "Detekt"
+            task: "reportMerge --continue"
+            sarif_file: "build/reports/detekt/merge.sarif"
+            category: "detekt"
+          - name: "Detekt (build-logic)"
+            task: ":build-logic:detektMain"
+            sarif_file: "build-logic/build/reports/detekt/main.sarif"
+            category: "detekt"
+          - name: "VersionCatalog"
+            task: "checkVersionCatalog"
+          - name: "lintDebug"
+            task: "app:androidApp:lintDebug"
+            sarif_file: "app/androidApp/build/reports/lint-results-debug.sarif"
+            category: "android-lint"
+          - name: "lintInternal"
+            task: "app:androidApp:lintInternal"
+            sarif_file: "app/androidApp/build/reports/lint-results-internal.sarif"
+            category: "android-lint"
+          - name: "lintPrerelease"
+            task: "app:androidApp:lintPrerelease"
+            sarif_file: "app/androidApp/build/reports/lint-results-prerelease.sarif"
+            category: "android-lint"
+          - name: "lintRelease"
+            task: "app:androidApp:lintRelease"
+            sarif_file: "app/androidApp/build/reports/lint-results-release.sarif"
+            category: "android-lint"
+    name: 🔍️ ${{ matrix.name || matrix.task }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
+        run: ./gradlew ${{ matrix.task }}
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
+        with:
+          sarif_file: ${{ matrix.sarif_file }}
+          category: ${{ matrix.category }}
