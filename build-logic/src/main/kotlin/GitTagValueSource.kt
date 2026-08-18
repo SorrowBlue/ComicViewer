@@ -32,18 +32,17 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
         }
 
         val rawTag = stdout.toString().trim()
-        
+
         // 正規表現でタグ名と進捗を解析
         // 例: "v2.0.99-9-gabcdef" or "v2.0.0"
         val regex = Regex("""^v(\d+)\.(\d+)\.(\d+)(?:-(\d+)-g([0-9a-fA-F]+))?$""")
         val matchResult = regex.matchEntire(rawTag) ?: return rawTag
-        
+
         val major = matchResult.groupValues[1]
         val minor = matchResult.groupValues[2]
-        val patch = matchResult.groupValues[3]
         val distanceStr = matchResult.groupValues[4]
         val hash = matchResult.groupValues[5]
-        
+
         if (distanceStr.isEmpty()) {
             // コミット距離なし (正式タグジャスト)
             rawTag
@@ -58,13 +57,13 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
                 isIgnoreExitValue = true
                 errorOutput = ByteArrayOutputStream()
             }
-            
+
             val totalDistance = if (revResult.exitValue == 0) {
                 revStdout.toString().trim().toIntOrNull() ?: 0
             } else {
                 distanceStr.toIntOrNull() ?: 0
             }
-            
+
             "v$major.$minor.0-$totalDistance-g$hash"
         }
     }.onFailure {
@@ -75,16 +74,22 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
 /**
  * ベータタグを除外し、正式タグ（v*.*.* のみ）を取得するプロバイダー（Android用）
  */
-abstract class GitFormalTagValueSource @Inject constructor(private val execOperations: ExecOperations) :
-    ValueSource<String, GitTagParameters> {
+abstract class GitFormalTagValueSource @Inject constructor(
+    private val execOperations: ExecOperations,
+) : ValueSource<String, GitTagParameters> {
     override fun obtain(): String = runCatching {
         val stdout = ByteArrayOutputStream()
         val result = execOperations.exec {
             // --match と --exclude を使ってベータタグを完全に除外して正式タグのみにマッチさせる
             commandLine(
-                "git", "describe", "--tags", "--abbrev=1",
-                "--match", "v[0-9]*.[0-9]*.[0-9]*",
-                "--exclude", "*beta*"
+                "git",
+                "describe",
+                "--tags",
+                "--abbrev=1",
+                "--match",
+                "v[0-9]*.[0-9]*.[0-9]*",
+                "--exclude",
+                "*beta*",
             )
             standardOutput = stdout
             isIgnoreExitValue = true

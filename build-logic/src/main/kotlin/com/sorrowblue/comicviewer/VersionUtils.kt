@@ -31,31 +31,33 @@ fun extractPackageVersion(versionName: String): String {
     if (versionName == "UNKNOWN" || versionName.isBlank()) {
         return "1.0.0"
     }
-    
+
     val formalTagRegex = Regex("""^v\d+\.\d+\.\d+$""")
     val formalTagWithDistanceRegex = Regex("""^v\d+\.\d+\.\d+-\d+-g[0-9a-fA-F]+$""")
-    
+
     if (!formalTagRegex.matches(versionName) && !formalTagWithDistanceRegex.matches(versionName)) {
-        throw IllegalArgumentException("Invalid git tag format: '$versionName'. Expected formal tag (vX.Y.Z) or formal tag with distance (vX.Y.Z-N-gHash).")
+        logger.warn(
+            "Invalid git tag format: '$versionName'. Expected formal tag (vX.Y.Z) or formal tag with distance (vX.Y.Z-N-gHash)."
+        )
     }
-    
+
     val cleanName = versionName.substring(1)
     val parts = cleanName.split("-")
     val baseVersion = parts[0]
     val baseParts = baseVersion.split(".")
-    
+
     val major = baseParts[0].toIntOrNull() ?: 1
     val minor = baseParts[1].toIntOrNull() ?: 0
     val patch = baseParts[2].toIntOrNull() ?: 0
-    
+
     val distance = if (parts.size > 1) parts[1].toIntOrNull() ?: 0 else 0
-    
+
     val newPatch = if (distance == 0) {
         patch
     } else {
         1000 + distance
     }
-    
+
     return "$major.$minor.$newPatch"
 }
 
@@ -84,14 +86,20 @@ fun calculateVersionCode(versionName: String): Int {
         if (suffix != null && suffix.startsWith("beta.")) {
             val betaNumber = suffix.substring(5).toIntOrNull() ?: 1
             val boundedBeta = betaNumber.coerceIn(1, 98)
-            logger.lifecycle("#calculateVersionCode versionName=$versionName, major=$major, minor=$minor, patch=$patch, betaNumber=$betaNumber, returning versionCode=${baseVersionCode * 100 + boundedBeta}")
+            logger.lifecycle(
+                "#calculateVersionCode versionName=$versionName, major=$major, minor=$minor, patch=$patch, betaNumber=$betaNumber, returning versionCode=${baseVersionCode * 100 + boundedBeta}",
+            )
             baseVersionCode * 100 + boundedBeta
         } else {
-            logger.lifecycle("#calculateVersionCode versionName=$versionName, major=$major, minor=$minor, patch=$patch, returning versionCode=${baseVersionCode * 100 + 99}")
+            logger.lifecycle(
+                "#calculateVersionCode versionName=$versionName, major=$major, minor=$minor, patch=$patch, returning versionCode=${baseVersionCode * 100 + 99}",
+            )
             baseVersionCode * 100 + 99
         }
     } else {
-        logger.lifecycle("#calculateVersionCode versionName=$versionName, invalid format, returning versionCode=10000")
+        logger.lifecycle(
+            "#calculateVersionCode versionName=$versionName, invalid format, returning versionCode=10000",
+        )
         1
     }
 }
