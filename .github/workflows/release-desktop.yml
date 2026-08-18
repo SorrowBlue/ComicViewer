@@ -45,8 +45,8 @@ jobs:
         with:
           # mainへのpushまたはpull_request時はテスト用フライトIDを -K オプションで上書き指定し、それ以外（本番リリースなど）は通常の製品版リリースとします
           command: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('-Kapp.windows.store.flight-id={0} ', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}make ms-store-release
-          # Conveyorアクションが要求するパッケージ仮署名用のダミーキー（生成日タイムスタンプ付き。ストア提出時にマイクロソフト側で本署名されるためダミーで問題ありません）
-          signing_key: "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about/2026-08-18T17:00:00Z"
+          # GitHub Secretsに登録されたルート署名キーを指定
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           # ライセンスへの同意（CIで実行する際に必須）
           agree_to_license: 1
         env:
