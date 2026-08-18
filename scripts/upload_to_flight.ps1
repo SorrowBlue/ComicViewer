@@ -96,7 +96,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $tempDir = Join-Path $pwd "temp_zip_dir"
 if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
 $null = New-Item -ItemType Directory -Path $tempDir
-Copy-Item -Path $msixFile.FullName -DestinationPath $tempDir
+Copy-Item -Path $msixFile.FullName -Destination $tempDir
 [System.IO.Compression.ZipFile]::CreateFromDirectory($tempDir, $zipPath)
 Remove-Item $tempDir -Recurse -Force
 
