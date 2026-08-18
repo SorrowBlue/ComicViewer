@@ -4,16 +4,34 @@ on:
   workflow_call:
 
 jobs:
-
   android-build:
-    uses: SorrowBlue/github-actions/.github/workflows/android-build.yml@main
-    secrets: inherit
-    with:
-      environment: android
-      task: bundlePrerelease assemblePrerelease
-      output-path: app/androidApp/build/outputs/
-
-  build-jvm:
+    name: Android
+    runs-on: ubuntu-latest
+    environment: android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Decode android keystore file
+        id: android_keystore
+        uses: timheuer/base64-to-file@dfa5a5dd38803cb4f5c3a081eeb28e8362d43e9c # v2
+        with:
+          fileName: 'android_keystore.jks'
+          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
+      - name: Run bundlePrerelease assemblePrerelease
+        run: ./gradlew bundlePrerelease assemblePrerelease
+        env:
+          ORG_GRADLE_PROJECT_androidSigningStoreFile: ${{ steps.android_keystore.outputs.filePath }}
+          ORG_GRADLE_PROJECT_androidSigningStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_androidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_androidSigningKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android
+          path: app/androidApp/build/outputs/
+  jvm-build:
     strategy:
       matrix:
         include:
@@ -23,10 +41,17 @@ jobs:
             name: Windows
           - os: macos-latest
             name: Mac
-    uses: SorrowBlue/github-actions/.github/workflows/jvm-build.yml@main
-    with:
-      runs-on: ${{ matrix.os }}
-      name: ${{ matrix.name }}
-      task: packageDistributionForCurrentOS
-      output-name: jvm-${{ matrix.name }}
-      output-path: app/jvmApp/build/compose/binaries/main/
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run packageDistributionForCurrentOS
+        run: ./gradlew packageDistributionForCurrentOS
+      - name: Upload artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: jvm-${{ matrix.name }}
+          path: app/jvmApp/build/compose/binaries/main/
