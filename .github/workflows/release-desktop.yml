@@ -49,6 +49,12 @@ jobs:
       - name: Calculate Version
         id: versioning
         run: |
+          # デバッグ：CI環境で見えているタグとコミットログを出力します
+          echo "=== Local Tags ==="
+          git tag
+          echo "=== Git Log ==="
+          git log --oneline --graph --decorate -n 15
+          
           # 1. 正式タグ（v*.*.*、beta除く）からのGitコミット距離（Distance）を取得
           distance=$(git describe --tags --long --match "v[0-9]*.[0-9]*.[0-9]*" --exclude "*beta*" 2>/dev/null | awk -F'-' '{print $(NF-1)}')
           distance=${distance:-0}
