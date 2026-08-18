@@ -28,7 +28,6 @@ permissions:
 
 jobs:
   jvm-build:
-    needs: setup-matrix
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
