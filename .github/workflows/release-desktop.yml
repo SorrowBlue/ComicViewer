@@ -43,8 +43,8 @@ jobs:
       - name: Run Conveyor to release to Microsoft Store
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          # mainへのpushまたはpull_request時はテスト用フライトIDを指定し、それ以外（本番リリースなど）は通常の製品版リリースとします
-          command: make ms-store-release ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('--windows-store-flight-id={0}', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}
+          # mainへのpushまたはpull_request時はテスト用フライトIDを -K オプションで上書き指定し、それ以外（本番リリースなど）は通常の製品版リリースとします
+          command: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('-Kapp.windows.store.flight-id={0} ', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}make ms-store-release
           # Conveyorアクションが要求するパッケージ仮署名用のダミーキー（ストア提出時にマイクロソフト側で本署名されるためダミーで問題ありません）
           signing_key: "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
           # ライセンスへの同意（CIで実行する際に必須）
