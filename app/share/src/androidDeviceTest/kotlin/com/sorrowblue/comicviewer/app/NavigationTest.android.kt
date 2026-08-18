@@ -25,7 +25,7 @@ actual fun tearDownTest(appGraph: AppGraph) {
 
 actual fun createAppGraph(): AppGraph {
     val context = InstrumentationRegistry.getInstrumentation().context
-    return context.applicationContext.appGraph<AppGraph>()
+    return context.applicationContext.appGraph()
 }
 
 @Composable

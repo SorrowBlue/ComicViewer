@@ -85,6 +85,7 @@ dependencies {
 }
 
 val reportMerge = tasks.register("reportMerge", ReportMergeTask::class) {
+    description = "Merge all detekt reports into a single report"
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }

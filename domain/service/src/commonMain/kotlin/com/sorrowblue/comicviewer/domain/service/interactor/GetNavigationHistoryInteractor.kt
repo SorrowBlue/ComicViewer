@@ -49,7 +49,6 @@ internal class GetNavigationHistoryInteractor(
                 list.add(0, it)
                 parent = it.parent
             } ?: kotlin.run {
-                parent = null
                 return emptyList()
             }
         }

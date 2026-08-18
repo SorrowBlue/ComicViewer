@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.LockPerson: ImageVector
     get() {
         if (_MaterialSymbolsLock_person != null) return _MaterialSymbolsLock_person!!

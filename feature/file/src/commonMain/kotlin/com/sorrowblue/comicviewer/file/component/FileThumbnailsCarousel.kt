@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +41,7 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import kotlin.math.max
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 
 @Composable
@@ -96,7 +96,6 @@ fun FileThumbnailsCarousel(
             }
 
             if (!isTouchable) {
-                rememberCoroutineScope()
                 FilledTonalIconButton(
                     onPress = {
                         carouselState.animateScrollToItem(carouselState.currentItem - 1)
@@ -135,10 +134,9 @@ private fun FilledTonalIconButton(
     val isPressed by interactionSource.collectIsPressedAsState()
     LaunchedEffect(isPressed) {
         if (isPressed) {
-            delay(300)
+            delay(300.milliseconds)
             while (true) {
                 currentOnPress()
-//                delay(10)
             }
         }
     }

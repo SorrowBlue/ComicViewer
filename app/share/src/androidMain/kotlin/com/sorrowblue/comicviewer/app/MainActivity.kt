@@ -19,6 +19,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.sorrowblue.comicviewer.app.ComicViewerAppViewModel.Factory
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -35,7 +36,7 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 internal class MainActivity(override val defaultViewModelProviderFactory: MetroViewModelFactory) :
     AppCompatActivity() {
 
-    private val viewModel: ComicViewerAppViewModel by metroViewModel { factory: ComicViewerAppViewModel.Factory, ->
+    private val viewModel: ComicViewerAppViewModel by metroViewModel { factory: Factory ->
         factory.create(receivedBookData.isNullOrEmpty())
     }
 

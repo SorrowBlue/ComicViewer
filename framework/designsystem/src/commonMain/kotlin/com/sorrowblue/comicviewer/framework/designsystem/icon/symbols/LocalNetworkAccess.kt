@@ -10,10 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,2821 +24,2001 @@ val ComicIcons.LocalAccessNetwork: ImageVector
 
         return ImageVector.Builder(
             name = "LocalAccessNetwork",
-            defaultWidth = 256.0.dp,
-            defaultHeight = 256.0.dp,
-            viewportWidth = 256.0f,
-            viewportHeight = 256.0f,
+            defaultWidth = 324.0.dp,
+            defaultHeight = 280.0.dp,
+            viewportWidth = 324.0f,
+            viewportHeight = 280.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFFF8F9FF)),
+                stroke = SolidColor(Color(0xFF004AC6)),
+                strokeAlpha = 0.4f,
+                strokeLineWidth = 2.0f,
             ) {
-                moveTo(x = 0.0f, y = 48.0f)
+                moveTo(x = 67.0f, y = 136.0f)
                 arcToRelative(
-                    a = 48.0f,
-                    b = 48.0f,
+                    a = 95.0f,
+                    b = 95.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = 48.0f,
-                    dy1 = -48.0f,
+                    dx1 = 95.0f,
+                    dy1 = -95.0f
                 )
-                horizontalLineToRelative(dx = 160.0f)
+                horizontalLineToRelative(dx = 0.0f)
                 arcToRelative(
-                    a = 48.0f,
-                    b = 48.0f,
+                    a = 95.0f,
+                    b = 95.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = 48.0f,
-                    dy1 = 48.0f,
+                    dx1 = 95.0f,
+                    dy1 = 95.0f
                 )
-                verticalLineToRelative(dy = 160.0f)
+                verticalLineToRelative(dy = 0.0f)
                 arcToRelative(
-                    a = 48.0f,
-                    b = 48.0f,
+                    a = 95.0f,
+                    b = 95.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = -48.0f,
-                    dy1 = 48.0f,
+                    dx1 = -95.0f,
+                    dy1 = 95.0f
                 )
-                horizontalLineToRelative(dx = -160.0f)
+                horizontalLineToRelative(dx = 0.0f)
                 arcToRelative(
-                    a = 48.0f,
-                    b = 48.0f,
+                    a = 95.0f,
+                    b = 95.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = -48.0f,
-                    dy1 = -48.0f,
-                )
-                close()
-            }
-            group {
-                path {
-                    moveTo(x = 128.0f, y = 128.0f)
-                    moveToRelative(dx = -79.5f, dy = 0.0f)
-                    arcToRelative(
-                        a = 79.5f,
-                        b = 79.5f,
-                        theta = 0.0f,
-                        isMoreThanHalf = true,
-                        isPositiveArc = true,
-                        dx1 = 159.0f,
-                        dy1 = 0.0f,
-                    )
-                    arcToRelative(
-                        a = 79.5f,
-                        b = 79.5f,
-                        theta = 0.0f,
-                        isMoreThanHalf = true,
-                        isPositiveArc = true,
-                        dx1 = -159.0f,
-                        dy1 = 0.0f,
-                    )
-                    close()
-                }
-                path(
-                    fill = SolidColor(Color(0xFF2563EB)),
-                    fillAlpha = 0.2f,
-                ) {
-                    moveTo(x = 207.0f, y = 128.0f)
-                    lineTo(x = 208.0f, y = 128.0f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 207.90002083159732f,
-                        y1 = 131.99833354165426f,
-                    )
-                    lineTo(x = 206.90127057120233f, y = 131.9483543723836f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 207.0f,
-                        y1 = 128.0f,
-                    )
-                    close()
-                    moveTo(x = 206.60532905696402f, y = 135.88683991509942f)
-                    lineTo(x = 207.60033322224206f, y = 135.98667333174626f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 207.10168623488337f,
-                        y1 = 139.95505059788795f,
-                    )
-                    lineTo(x = 206.11291515694734f, y = 139.80561246541433f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 206.60532905696402f,
-                        y1 = 135.88683991509942f,
-                    )
-                    close()
-                    moveTo(x = 205.4252596494581f, y = 143.69487713280984f)
-                    lineTo(x = 206.40532622729933f, y = 143.8935464636049f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 205.51299373685157f,
-                        y1 = 147.79231674036183f,
-                    )
-                    lineTo(x = 204.54408131514094f, y = 147.5449127811073f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 205.4252596494581f,
-                        y1 = 143.69487713280984f,
-                    )
-                    close()
-                    moveTo(x = 203.47158264092286f, y = 151.34609632624583f)
-                    lineTo(x = 204.42691913004847f, y = 151.64161653290716f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 203.1498170277903f,
-                        y1 = 155.43182459643612f,
-                    )
-                    lineTo(x = 202.21044431494295f, y = 155.08892678898064f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 203.47158264092286f,
-                        y1 = 151.34609632624583f,
-                    )
-                    close()
-                    moveTo(x = 200.7638185262279f, y = 158.7640490423834f)
-                    lineTo(x = 201.68487952023082f, y = 159.15346738469202f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 200.03576818821415f,
-                        y1 = 162.79724272889842f,
-                    )
-                    lineTo(x = 199.13532108586148f, y = 162.36227719478717f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 200.7638185262279f,
-                        y1 = 158.7640490423834f,
-                    )
-                    close()
-                    moveTo(x = 197.32902238933946f, y = 165.87461754973202f)
-                    lineTo(x = 198.20660495122982f, y = 166.35404308833623f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 196.20196176476048f,
-                        y1 = 169.81497831445273f,
-                    )
-                    lineTo(x = 195.34943724270096f, y = 169.29229108552207f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 197.32902238933946f,
-                        y1 = 165.87461754973202f,
-                    )
-                    close()
-                    moveTo(x = 193.2015135778646f, y = 172.60675539820778f)
-                    lineTo(x = 194.02684919277425f, y = 173.17139787160284f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 191.68670388392445f,
-                        y1 = 176.41491245888318f,
-                    )
-                    lineTo(x = 190.89062008537542f, y = 175.80972605314713f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 193.2015135778646f,
-                        y1 = 172.60675539820778f,
-                    )
-                    close()
-                    moveTo(x = 188.42253279547458f, y = 178.8931972917776f)
-                    lineTo(x = 189.18737498275908f, y = 179.5374149790153f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 186.53510950990568f,
-                        y1 = 182.53110080186673f,
-                    )
-                    lineTo(x = 185.80342064103183f, y = 181.8494620418434f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 188.42253279547458f,
-                        y1 = 178.8931972917776f,
-                    )
-                    close()
-                    moveTo(x = 183.03983003842606f, y = 184.67113118106232f)
-                    lineTo(x = 183.73653674777321f, y = 185.38848727196182f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 180.79865167079856f,
-                        y1 = 188.10243241122342f,
-                    )
-                    lineTo(x = 180.13866852491358f, y = 187.35115200608314f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 183.03983003842606f,
-                        y1 = 184.67113118106232f,
-                    )
-                    close()
-                    moveTo(x = 177.10718749338247f, y = 189.8828258605712f)
-                    lineTo(x = 177.72879746165313f, y = 190.66615277019866f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 174.53464715711067f,
-                        y1 = 193.07324038314994f,
-                    )
-                    lineTo(x = 173.95296406764677f, y = 192.25982487836055f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 177.10718749338247f,
-                        y1 = 189.8828258605712f,
-                    )
-                    close()
-                    moveTo(x = 170.683882163583f, y = 194.47620779982384f)
-                    lineTo(x = 171.22418446945116f, y = 195.3176787846317f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 167.80568383133814f,
-                        y1 = 197.39385804752135f,
-                    )
-                    lineTo(x = 167.3081127834464f, y = 196.52643482192735f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 170.683882163583f,
-                        y1 = 194.47620779982384f,
-                    )
-                    close()
-                    moveTo(x = 163.8340935926206f, y = 198.4053814448534f)
-                    lineTo(x = 164.28768971404617f, y = 199.29658880491485f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 160.67899527073257f,
-                        y1 = 201.0211152208417f,
-                    )
-                    lineTo(x = 160.27050782984838f, y = 200.1083512805812f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 163.8340935926206f,
-                        y1 = 198.4053814448534f,
-                    )
-                    close()
-                    moveTo(x = 156.62626260365718f, y = 201.6310877914109f)
-                    lineTo(x = 156.98862035813386f, y = 202.56312687737812f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 153.22578899162147f,
-                        y1 = 203.9187695484469f,
-                    )
-                    lineTo(x = 152.9104666292262f, y = 202.9697849290913f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 156.62626260365718f,
-                        y1 = 201.6310877914109f,
-                    )
-                    close()
-                    moveTo(x = 149.13240746134238f, y = 204.12109664795827f)
-                    lineTo(x = 149.39990628996696f, y = 205.08465483337545f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 145.52053496744327f,
-                        y1 = 206.05786862613274f,
-                    )
-                    lineTo(x = 145.30152828035025f, y = 205.08214526830608f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 149.13240746134238f,
-                        y1 = 204.12109664795827f,
-                    )
-                    close()
-                    moveTo(x = 141.42740428911898f, y = 205.85052866908836f)
-                    lineTo(x = 141.59737143201923f, y = 206.83597839907682f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 137.64022154938928f,
-                        y1 = 207.41703928300709f,
-                    )
-                    lineTo(x = 137.51971878002192f, y = 206.4243262919695f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 141.42740428911898f,
-                        y1 = 205.85052866908836f,
-                    )
-                    close()
-                    moveTo(x = 133.58823893174846f, y = 206.8021039417203f)
-                    lineTo(x = 133.6589761334162f, y = 207.79959892832437f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 129.66358622424735f,
-                        y1 = 207.98270113514855f,
-                    )
-                    lineTo(x = 129.64279139644424f, y = 206.9829173709592f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 133.58823893174846f,
-                        y1 = 206.8021039417203f,
-                    )
-                    close()
-                    moveTo(x = 125.69323773819814f, y = 206.9663146402789f)
-                    lineTo(x = 125.66403821589684f, y = 207.96588824332042f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 121.67032889546122f,
-                        y1 = 207.7492022763135f,
-                    )
-                    lineTo(x = 121.74944978426795f, y = 206.7523372478596f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 125.69323773819814f,
-                        y1 = 206.9663146402789f,
-                    )
-                    close()
-                    moveTo(x = 117.82128495065348f, y = 206.341520025745f)
-                    lineTo(x = 117.69244045635796f, y = 207.33318483619746f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 113.74031554804057f,
-                        y1 = 206.71887574991493f,
-                    )
-                    lineTo(x = 113.91856160369005f, y = 205.734889803041f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 117.82128495065348f,
-                        y1 = 206.341520025745f,
-                    )
-                    close()
-                    moveTo(x = 110.05103451924606f, y = 204.9339628393774f)
-                    lineTo(x = 109.82383242455296f, y = 205.90781047025558f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 105.9527802540389f,
-                        y1 = 204.90201623802398f,
-                    )
-                    lineTo(x = 106.2283705008634f, y = 203.9407410350487f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 110.05103451924606f,
-                        y1 = 204.9339628393774f,
-                    )
-                    close()
-                    moveTo(x = 102.46012421778315f, y = 202.75770692730572f)
-                    lineTo(x = 102.13683465091964f, y = 203.70400701499312f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 98.38553349189696f,
-                        y1 = 202.3167772003095f,
-                    )
-                    lineTo(x = 98.75571432324826f, y = 201.38781748530565f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 102.46012421778315f,
-                        y1 = 202.75770692730572f,
-                    )
-                    close()
-                    moveTo(x = 95.12439991277569f, y = 199.8344967192288f)
-                    lineTo(x = 94.70825307622854f, y = 200.7437941460545f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 91.11418468986292f,
-                        y1 = 198.98898949067f,
-                    )
-                    lineTo(x = 91.57525738123962f, y = 198.10162712203663f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 95.12439991277569f,
-                        y1 = 199.8344967192288f,
-                    )
-                    close()
-                    moveTo(x = 88.11715773661123f, y = 196.193539965261f)
-                    lineTo(x = 87.61231163201137f, y = 197.05674933190988f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 84.21138676157828f,
-                        y1 = 194.95190326387979f,
-                    )
-                    lineTo(x = 84.75874442705856f, y = 194.11500447308129f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 88.11715773661123f,
-                        y1 = 196.193539965261f,
-                    )
-                    close()
-                    moveTo(x = 81.50841173682768f, y = 191.87121590174763f)
-                    lineTo(x = 80.91991061957233f, y = 192.6797123055672f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 77.74611018218087f,
-                        y1 = 190.2458557510337f,
-                    )
-                    lineTo(x = 78.3742838049036f, y = 189.46778255414577f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 81.50841173682768f,
-                        y1 = 191.87121590174763f,
-                    )
-                    close()
-                    moveTo(x = 75.3641943188939f, y = 186.9107117619609f)
-                    lineTo(x = 74.69791829761408f, y = 187.6564169741376f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 71.7829538581157f,
-                        y1 = 184.9178682232676f,
-                    )
-                    lineTo(x = 72.48566693488925f, y = 184.20639487047674f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 75.3641943188939f,
-                        y1 = 186.9107117619609f,
-                    )
-                    close()
-                    moveTo(x = 69.74589647224164f, y = 181.36159126354096f)
-                    lineTo(x = 69.0085027567004f, y = 182.03705444409212f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 66.38149967621545f,
-                        y1 = 179.02117617076033f,
-                    )
-                    lineTo(x = 67.15173093026276f, y = 178.38341146862584f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 69.74589647224164f,
-                        y1 = 181.36159126354096f,
-                    )
-                    close()
-                    moveTo(x = 64.70965437179228f, y = 175.2792993842126f)
-                    lineTo(x = 63.90851075624535f, y = 175.87777152831657f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 61.595717181182266f,
-                        y1 = 172.61469739131343f,
-                    )
-                    lineTo(x = 62.42577071641749f, y = 172.057013673922f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 64.70965437179228f,
-                        y1 = 175.2792993842126f,
-                    )
-                    close()
-                    moveTo(x = 60.30578848385322f, y = 168.72460837389576f)
-                    lineTo(x = 59.44889973048427f, y = 169.24010974571723f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 57.473424329737185f,
-                        y1 = 165.7624433031907f,
-                    )
-                    lineTo(x = 58.355006525615465f, y = 165.29041276190082f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 60.30578848385322f,
-                        y1 = 168.72460837389576f,
-                    )
-                    close()
-                    moveTo(x = 56.57830078065223f, y = 161.76301053847268f)
-                    lineTo(x = 55.67422863863517f, y = 162.1903904187065f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 54.055809709402965f,
-                        y1 = 158.53287936418667f,
-                    )
-                    lineTo(x = 54.980112088035426f, y = 158.15121837213434f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 56.57830078065223f,
-                        y1 = 161.76301053847268f,
-                    )
-                    close()
-                    moveTo(x = 53.56443508717605f, y = 154.46406386231664f)
-                    lineTo(x = 52.6222127465074f, y = 154.79905201247254f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 51.37702099575283f,
-                        y1 = 150.99824098740373f,
-                    )
-                    lineTo(x = 52.33480823330591f, y = 150.7107629750612f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 53.56443508717605f,
-                        y1 = 154.46406386231664f,
-                    )
-                    close()
-                    moveTo(x = 51.29430495318239f, y = 146.9006970079048f)
-                    lineTo(x = 50.32334678803281f, y = 147.13994633711877f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 49.46382376012372f,
-                        y1 = 143.23381178888238f,
-                    )
-                    lineTo(x = 50.445525963122165f, y = 143.04338914152135f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 51.29430495318239f,
-                        y1 = 146.9006970079048f,
-                    )
-                    close()
-                    moveTo(x = 49.790592768564835f, y = 139.14848063672972f)
-                    lineTo(x = 48.8006002719644f, y = 139.28960064478957f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 48.335334036875125f,
-                        y1 = 135.3171713785952f,
-                    )
-                    lineTo(x = 49.33114236141418f, y = 135.22570673636275f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 49.790592768564835f,
-                        y1 = 139.14848063672972f,
-                    )
-                    close()
-                    moveTo(x = 49.068323128410924f, y = 131.2848723322302f)
-                    lineTo(x = 48.06918797813765f, y = 131.3264529946635f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 48.002827322292646f,
-                        y1 = 127.32742021062836f,
-                    )
-                    lineTo(x = 49.00279198076399f, y = 127.3358274579955f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 49.068323128410924f,
-                        y1 = 131.2848723322302f,
-                    )
-                    close()
-                    moveTo(x = 49.134712712214494f, y = 123.38844266922145f)
-                    lineTo(x = 48.13641793641975f, y = 123.33006852579388f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 48.46962591355627f,
-                        y1 = 119.34438923759161f,
-                    )
-                    lineTo(x = 49.46375558963682f, y = 119.45258437212172f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 49.134712712214494f,
-                        y1 = 123.38844266922145f,
-                    )
-                    close()
-                    moveTo(x = 49.98909817719964f, y = 115.53809016268367f)
-                    lineTo(x = 49.00161840729076f, y = 115.38034446854043f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 49.731065713445204f,
-                        y1 = 111.44784226612833f,
-                    )
-                    lineTo(x = 50.70942739202714f, y = 111.65474423780172f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 49.98909817719964f,
-                        y1 = 115.53809016268367f,
-                    )
-                    close()
-                    moveTo(x = 51.622942786222495f, y = 107.81225293988064f)
-                    lineTo(x = 50.656144593643035f, y = 107.55671183785381f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 51.77454283245552f,
-                        y1 = 103.71667898332599f,
-                    )
-                    lineTo(x = 52.727361047049826f, y = 104.02022049603441f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 51.622942786222495f,
-                        y1 = 107.81225293988064f,
-                    )
-                    close()
-                    moveTo(x = 54.01992170402697f, y = 100.28812501252037f)
-                    lineTo(x = 53.08346501673617f, y = 99.93734178483075f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 54.57963952269779f,
-                        y1 = 96.22814661712354f,
-                    )
-                    lineTo(x = 55.49739402866406f, y = 96.6252947844095f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 54.01992170402697f,
-                        y1 = 100.28812501252037f,
-                    )
-                    close()
-                    moveTo(x = 57.156085109602216f, y = 93.040884979707f)
-                    lineTo(x = 56.259326693268065f, y = 92.59836453641216f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 58.11832818528478f,
-                        y1 = 89.05706810754438f,
-                    )
-                    lineTo(x = 58.99184908296871f, y = 89.54385475620009f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 57.156085109602216f,
-                        y1 = 93.040884979707f,
-                    )
-                    close()
-                    moveTo(x = 61.00009749487754f, y = 86.14294486822938f)
-                    lineTo(x = 60.15199746316712f, y = 85.61310872732089f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 62.3552514128349f,
-                        y1 = 82.27509450061285f,
-                    )
-                    lineTo(x = 63.175810770174465f, y = 82.84665581935519f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 61.00009749487754f,
-                        y1 = 86.14294486822938f,
-                    )
-                    close()
-                    moveTo(x = 65.51355075876081f, y = 79.66322661552553f)
-                    lineTo(x = 64.7225830468464f, y = 79.05136872458283f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 67.24807526899907f,
-                        y1 = 75.94998903478697f,
-                    )
-                    lineTo(x = 68.00747432813658f, y = 76.60061417185213f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 65.51355075876081f,
-                        y1 = 79.66322661552553f,
-                    )
-                    close()
-                    moveTo(x = 70.65134796818862f, y = 73.6664734244664f)
-                    lineTo(x = 69.92541566398846f, y = 72.97870726528244f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 72.74791227515904f,
-                        y1 = 70.14495007307937f,
-                    )
-                    lineTo(x = 73.43856337171954f, y = 70.86813819716588f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 70.65134796818862f,
-                        y1 = 73.6664734244664f,
-                    )
-                    close()
-                    moveTo(x = 76.36215395177429f, y = 68.21260287067399f)
-                    lineTo(x = 75.70851033091067f, y = 67.45580037536607f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 78.79980987795366f,
-                        y1 = 64.91797964590471f,
-                    )
-                    lineTo(x = 79.41481225447924f, y = 65.7065049003309f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 76.36215395177429f,
-                        y1 = 68.21260287067399f,
-                    )
-                    close()
-                    moveTo(x = 82.58890822387133f, y = 63.35610822591187f)
-                    lineTo(x = 82.01408427733806f, y = 62.537831114847464f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 85.34329951702718f,
-                        y1 = 60.321303913964584f,
-                    )
-                    lineTo(x = 85.87650827306433f, y = 61.167287615040024f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 82.58890822387133f,
-                        y1 = 63.35610822591187f,
-                    )
-                    close()
-                    moveTo(x = 89.26939511408426f, y = 59.14551397932681f)
-                    lineTo(x = 88.77913429274355f, y = 58.27393820691323f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 92.31300080689607f,
-                        y1 = 56.400851341713576f,
-                    )
-                    lineTo(x = 92.75908829680986f, y = 57.29584069994215f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 89.26939511408426f,
-                        y1 = 59.14551397932681f,
-                    )
-                    close()
-                    moveTo(x = 96.33686540568142f, y = 55.62289099679329f)
-                    lineTo(x = 95.93606623360145f, y = 54.70672506004384f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 99.63927479614891f,
-                        y1 = 53.19579379532428f,
-                    )
-                    lineTo(x = 99.99378386119704f, y = 54.13084637288273f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 96.33686540568142f,
-                        y1 = 55.62289099679329f,
-                    )
-                    close()
-                    moveTo(x = 103.72070327170427f, y = 52.82343616272843f)
-                    lineTo(x = 103.41337040172584f, y = 51.87183408883891f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 107.2489197768293f,
-                        y1 = 50.73815515034906f,
-                    )
-                    lineTo(x = 107.50830827961893f, y = 51.70392821096969f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 103.72070327170427f,
-                        y1 = 52.82343616272843f,
-                    )
-                    close()
-                    moveTo(x = 111.34713184496779f, y = 50.775120704457464f)
-                    lineTo(x = 111.136336045537f, y = 49.79759058679237f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 115.06590269170445f,
-                        y1 = 49.05249131974118f,
-                    )
-                    lineTo(x = 115.22757890805815f, y = 50.039335178244414f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 111.34713184496779f,
-                        y1 = 50.775120704457464f,
-                    )
-                    close()
-                    moveTo(x = 119.13995037213004f, y = 49.498410712956385f)
-                    lineTo(x = 119.02779784519498f, y = 48.50471970932291f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 123.01211883143996f,
-                        y1 = 48.15564489928968f,
-                    )
-                    lineTo(x = 123.07446734604696f, y = 49.15369933804857f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 119.13995037213004f,
-                        y1 = 49.498410712956385f,
-                    )
-                    close()
-                    moveTo(x = 127.02129558643094f, y = 49.00606265243603f)
-                    lineTo(x = 127.00890692296804f, y = 48.00613939487194f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 131.0081722310374f,
-                        y1 = 48.05657688196973f,
-                    )
-                    lineTo(x = 130.97057007814945f, y = 49.055869670945114f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 127.02129558643094f,
-                        y1 = 49.00606265243603f,
-                    )
-                    close()
-                    moveTo(x = 134.91241969171557f, y = 49.30299590196853f)
-                    lineTo(x = 134.99991867515502f, y = 48.30683129313269f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 138.97416896807187f,
-                        y1 = 48.75627712266284f,
-                    )
-                    lineTo(x = 138.83699185597098f, y = 49.74682365862955f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 134.91241969171557f,
-                        y1 = 49.30299590196853f,
-                    )
-                    close()
-                    moveTo(x = 142.73447718438274f, y = 50.386243602677595f)
-                    lineTo(x = 142.9209895538053f, y = 49.40379099005327f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 146.83051543635534f,
-                        y1 = 50.24775444785416f,
-                    )
-                    lineTo(x = 146.5951339934009f, y = 51.21965751725598f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 142.73447718438274f,
-                        y1 = 50.386243602677595f,
-                    )
-                    close()
-                    moveTo(x = 150.40931265159412f, y = 52.24498230161184f)
-                    lineTo(x = 150.69297483705736f, y = 51.286058026948695f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 154.49871361893955f,
-                        y1 = 52.51610650912721f,
-                    )
-                    lineTo(x = 154.1674796987028f, y = 53.459655177763125f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 150.40931265159412f,
-                        y1 = 52.24498230161184f,
-                    )
-                    close()
-                    moveTo(x = 157.86024167432473f, y = 54.86064009610885f)
-                    lineTo(x = 158.2382194170377f, y = 53.93482541378111f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 161.9021454143535f,
-                        y1 = 55.538668682503285f,
-                    )
-                    lineTo(x = 161.47836859667407f, y = 56.44443532397199f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 157.86024167432473f,
-                        y1 = 54.86064009610885f,
-                    )
-                    close()
-                    moveTo(x = 165.01281703272906f, y = 58.207082198107514f)
-                    lineTo(x = 165.48133370402942f, y = 57.32362754238736f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 168.96683817934652f,
-                        y1 = 59.28524052587221f,
-                    )
-                    lineTo(x = 168.45475270210468f, y = 60.1441750192988f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 165.01281703272906f,
-                        y1 = 58.207082198107514f,
-                    )
-                    close()
-                    moveTo(x = 171.795572558153f, y = 62.25087206431134f)
-                    lineTo(x = 172.34994689433216f, y = 61.41860462208743f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 175.6222038390878f,
-                        y1 = 63.71838753182702f,
-                    )
-                    lineTo(x = 175.02692629109922f, y = 64.52190768767919f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 171.795572558153f,
-                        y1 = 62.25087206431134f,
-                    )
-                    close()
-                    moveTo(x = 178.14073719946742f, y = 66.95160548307643f)
-                    lineTo(x = 178.77543007541004f, y = 66.17884099552045f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 181.8017441798766f,
-                        y1 = 68.79381516088783f,
-                    )
-                    lineTo(x = 181.12922237762814f, y = 69.53389247137673f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 178.14073719946742f,
-                        y1 = 66.95160548307643f,
-                    )
-                    close()
-                    moveTo(x = 183.9849121690089f, y = 72.26231427993838f)
-                    lineTo(x = 184.69358194330016f, y = 71.556773954368f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 187.44371527731218f,
-                        y1 = 74.46081141789836f,
-                    )
-                    lineTo(x = 186.70066883634576f, y = 75.13005127517462f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 183.9849121690089f,
-                        y1 = 72.26231427993838f,
-                    )
-                    close()
-                    moveTo(x = 189.26970440230915f, y = 78.12993560808589f)
-                    lineTo(x = 190.04527028081938f, y = 77.49866897021356f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 192.4917444211767f,
-                        y1 = 80.66275354951844f,
-                    )
-                    lineTo(x = 191.68559761591195f, y = 81.25446913014946f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 189.26970440230915f,
-                        y1 = 78.12993560808589f,
-                    )
-                    close()
-                    moveTo(x = 193.94231000229308f, y = 84.4958421347858f)
-                    lineTo(x = 194.77702278713224f, y = 83.94515659218816f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 196.89539337292115f,
-                        y1 = 87.33767380005847f,
-                    )
-                    lineTo(x = 196.03420095575964f, y = 87.84595287755775f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 193.94231000229308f,
-                        y1 = 84.4958421347858f,
-                    )
-                    close()
-                    moveTo(x = 197.95604183836375f, y = 91.2964278263123f)
-                    lineTo(x = 198.84156135530503f, y = 90.83182564689852f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 200.61066232787263f,
-                        y1 = 94.41887857281033f,
-                    )
-                    lineTo(x = 199.70302904877423f, y = 94.8386425906502f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 197.95604183836375f,
-                        y1 = 91.2964278263123f,
-                    )
-                    close()
-                    moveTo(x = 201.27079602877845f, y = 98.46374347841038f)
-                    lineTo(x = 202.19827445952248f, y = 98.08986681358013f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 203.60042954673784f,
-                        y1 = 101.83561481041974f,
-                    )
-                    lineTo(x = 202.65542417740363f, y = 102.1626696252895f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 201.27079602877845f,
-                        y1 = 98.46374347841038f,
-                    )
-                    close()
-                    moveTo(x = 203.85345264537864f, y = 105.92617564228385f)
-                    lineTo(x = 204.81362293202898f, y = 105.64676014408491f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 205.83482226375156f,
-                        y1 = 109.51377693604758f,
-                    )
-                    lineTo(x = 204.86188698545465f, y = 109.744854724347f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 203.85345264537864f,
-                        y1 = 105.92617564228385f,
-                    )
-                    close()
-                    moveTo(x = 205.67820663696398f, y = 113.6091621625034f)
-                    lineTo(x = 206.66147507540657f, y = 113.42699965823128f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 207.29151516547736f,
-                        y1 = 117.37664729179754f,
-                    )
-                    lineTo(x = 206.30037122590892f, y = 117.50943920065006f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 205.67820663696398f,
-                        y1 = 113.6091621625034f,
-                    )
-                    close()
-                    moveTo(x = 206.72682566483408f, y = 121.43593717741666f)
-                    lineTo(x = 207.7233677618573f, y = 121.35284777459916f)
-                    arcTo(
-                        horizontalEllipseRadius = 80.0f,
-                        verticalEllipseRadius = 80.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 207.95595345795994f,
-                        y1 = 125.34566267619432f,
-                    )
-                    lineTo(x = 206.95650403973542f, y = 125.37884189274189f)
-                    arcTo(
-                        horizontalEllipseRadius = 79.0f,
-                        verticalEllipseRadius = 79.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 206.72682566483408f,
-                        y1 = 121.43593717741666f,
-                    )
-                    close()
-                }
-            }
-            group {
-                path {
-                    moveTo(x = 128.0f, y = 128.0f)
-                    moveToRelative(dx = -59.5f, dy = 0.0f)
-                    arcToRelative(
-                        a = 59.5f,
-                        b = 59.5f,
-                        theta = 0.0f,
-                        isMoreThanHalf = true,
-                        isPositiveArc = true,
-                        dx1 = 119.0f,
-                        dy1 = 0.0f,
-                    )
-                    arcToRelative(
-                        a = 59.5f,
-                        b = 59.5f,
-                        theta = 0.0f,
-                        isMoreThanHalf = true,
-                        isPositiveArc = true,
-                        dx1 = -119.0f,
-                        dy1 = 0.0f,
-                    )
-                    close()
-                }
-                path(
-                    fill = SolidColor(Color(0xFF2563EB)),
-                    fillAlpha = 0.3f,
-                ) {
-                    moveTo(x = 187.0f, y = 128.0f)
-                    lineTo(x = 188.0f, y = 128.0f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 187.86671604206734f,
-                        y1 = 131.99703769540358f,
-                    )
-                    lineTo(x = 186.86893744136623f, y = 131.9304204004802f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 187.0f,
-                        y1 = 128.0f,
-                    )
-                    close()
-                    moveTo(x = 186.4763320500166f, y = 135.84337873471654f)
-                    lineTo(x = 187.46745632205077f, y = 135.97631735733884f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 186.80399467047448f,
-                        y1 = 139.92015984770367f,
-                    )
-                    lineTo(x = 185.82392809263325f, y = 139.7214905169086f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 186.4763320500166f,
-                        y1 = 135.84337873471654f,
-                    )
-                    close()
-                    moveTo(x = 184.91462406860327f, y = 143.54752607746858f)
-                    lineTo(x = 185.87927871383383f, y = 143.8110434686121f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 184.69741677888425f,
-                        y1 = 147.63168180776913f,
-                    )
-                    lineTo(x = 183.7524598325695f, y = 147.30448711097299f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 184.91462406860327f,
-                        y1 = 143.54752607746858f,
-                    )
-                    close()
-                    moveTo(x = 182.34259864617022f, y = 150.97568219621039f)
-                    lineTo(x = 183.2636596401731f, y = 151.36510053851902f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 181.58437719190576f,
-                        y1 = 154.99471283335998f,
-                    )
-                    lineTo(x = 180.69130423870735f, y = 154.54480095280397f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 182.34259864617022f,
-                        y1 = 150.97568219621039f,
-                    )
-                    close()
-                    moveTo(x = 178.8059129786588f, y = 157.99598650494676f)
-                    lineTo(x = 179.6670301477886f, y = 158.50439305587807f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 177.5201368945807f,
-                        y1 = 161.87854840370213f,
-                    )
-                    lineTo(x = 176.69480127967103f, y = 161.3139059303071f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 178.8059129786588f,
-                        y1 = 157.99598650494676f,
-                    )
-                    close()
-                    moveTo(x = 174.36734838583993f, y = 164.48381838111447f)
-                    lineTo(x = 175.15323564661688f, y = 165.10218818418423f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 172.57684206944265f,
-                        y1 = 168.16099041502798f,
-                    )
-                    lineTo(x = 171.8338947016186f, y = 167.4916405747775f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 174.36734838583993f,
-                        y1 = 164.48381838111447f,
-                    )
-                    close()
-                    moveTo(x = 169.10569585148278f, y = 170.32400936307184f)
-                    lineTo(x = 169.80240256082993f, y = 171.04136545397137f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 166.84224339673716f,
-                        y1 = 173.7305163748304f,
-                    )
-                    lineTo(x = 166.1948726734582f, y = 172.96834110191654f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 169.10569585148278f,
-                        y1 = 170.32400936307184f,
-                    )
-                    close()
-                    moveTo(x = 163.11435736867855f, y = 175.41288755797024f)
-                    lineTo(x = 163.70951596814768f, y = 176.21649582166467f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 160.4181383520884f,
-                        y1 = 178.4882590884738f,
-                    )
-                    lineTo(x = 159.87783604622024f, y = 177.64678810366587f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 163.11435736867855f,
-                        y1 = 175.41288755797024f,
-                    )
-                    close()
-                    moveTo(x = 156.49968791847633f, y = 179.6601179687915f)
-                    lineTo(x = 156.9827334764166f, y = 180.53571318860153f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 153.41856415309667f,
-                        y1 = 182.34976169584286f,
-                    )
-                    lineTo(x = 152.99492141721174f, y = 181.4439323342455f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 156.49968791847633f,
-                        y1 = 179.6601179687915f,
-                    )
-                    close()
-                    moveTo(x = 149.37910751412375f, y = 182.99030607206635f)
-                    lineTo(x = 149.74146526860042f, y = 183.92234515803358f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 145.96777343269568f,
-                        y1 = 185.24647690357298f,
-                    )
-                    lineTo(x = 145.66831054215075f, y = 184.2923689551801f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 149.37910751412375f,
-                        y1 = 182.99030607206635f,
-                    )
-                    close()
-                    moveTo(x = 141.87901682487637f, y = 185.34433618043545f)
-                    lineTo(x = 142.11425439817936f, y = 186.31627408179875f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 138.19802857401447f,
-                        y1 = 187.1269837993076f,
-                    )
-                    lineTo(x = 138.02806143111422f, y = 186.14153406931916f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 141.87901682487637f,
-                        y1 = 185.34433618043545f,
-                    )
-                    close()
-                    moveTo(x = 134.1325533800877f, y = 186.68042083216832f)
-                    lineTo(x = 134.23649496280106f, y = 187.67500423610338f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 130.24725386051202f,
-                        y1 = 187.95790064775795f,
-                    )
-                    lineTo(x = 130.2097996295035f, y = 186.95860230362865f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 134.1325533800877f,
-                        y1 = 186.68042083216832f,
-                    )
-                    close()
-                    moveTo(x = 126.27722818422397f, y = 186.97484257944882f)
-                    lineTo(x = 126.24802866192269f, y = 187.9744161824903f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 122.25658711913748f,
-                        y1 = 187.7244774651059f,
-                    )
-                    lineTo(x = 122.35231066715185f, y = 186.72906950735413f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 126.27722818422397f,
-                        y1 = 186.97484257944882f,
-                    )
-                    close()
-                    moveTo(x = 118.45248469632827f, y = 186.2223750076047f)
-                    lineTo(x = 118.29066240304569f, y = 187.20919492298785f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 114.36787431841479f,
-                        y1 = 186.4308578526917f,
-                    )
-                    lineTo(x = 114.59507641310788f, y = 185.4570102218135f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 118.45248469632827f,
-                        y1 = 186.2223750076047f,
-                    )
-                    close()
-                    moveTo(x = 110.79722350560235f, y = 184.43637551157764f)
-                    lineTo(x = 110.50565102264646f, y = 185.392924249062f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 106.72115159598336f,
-                        y1 = 184.10000544205747f,
-                    )
-                    lineTo(x = 107.07579906938363f, y = 183.1650053513565f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 110.79722350560235f,
-                        y1 = 184.43637551157764f,
-                    )
-                    close()
-                    moveTo(x = 103.44733664371861f, y = 181.64854818271522f)
-                    lineTo(x = 103.03118980717147f, y = 182.55784560954092f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 99.4521594132719f,
-                        y1 = 180.77329625705372f,
-                    )
-                    lineTo(x = 99.92795675638403f, y = 179.89374131943617f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 103.44733664371861f,
-                        y1 = 181.64854818271522f,
-                    )
-                    close()
-                    moveTo(x = 96.53329530340831f, y = 177.90838101499082f)
-                    lineTo(x = 95.99996132549998f, y = 178.75428577795674f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 92.68993296467926f,
-                        y1 = 176.5097842291754f,
-                    )
-                    lineTo(x = 93.27843408193459f, y = 175.70128782535582f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 96.53329530340831f,
-                        y1 = 177.90838101499082f,
-                    )
-                    close()
-                    moveTo(x = 90.17783378483352f, y = 173.2822674210592f)
-                    lineTo(x = 89.53678012016968f, y = 174.04976347904326f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 86.55451161500739f,
-                        y1 = 171.38515290429945f,
-                    )
-                    lineTo(x = 87.24526975475727f, y = 170.66206702256113f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 90.17783378483352f,
-                        y1 = 173.2822674210592f,
-                    )
-                    close()
-                    moveTo(x = 84.49377078306648f, y = 167.85232765251786f)
-                    lineTo(x = 83.75637706752525f, y = 168.52779083306902f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 81.1548080259671f,
-                        y1 = 165.4903719495553f,
-                    )
-                    lineTo(x = 81.93556122553431f, y = 164.86553241706272f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 84.49377078306648f,
-                        y1 = 167.85232765251786f,
-                    )
-                    close()
-                    moveTo(x = 79.58200669199573f, y = 161.71495104587953f)
-                    lineTo(x = 78.76136273762278f, y = 162.2863908941148f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 76.58667479786311f,
-                        y1 = 158.9300823092878f,
-                    )
-                    lineTo(x = 77.44356355123207f, y = 158.41458093746633f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 79.58200669199573f,
-                        y1 = 161.71495104587953f,
-                    )
-                    close()
-                    moveTo(x = 75.5297324754305f, y = 154.9790849715128f)
-                    lineTo(x = 74.64040590721747f, y = 155.43635759814862f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 72.93120294638402f,
-                        y1 = 151.82073867594488f,
-                    )
-                    lineTo(x = 73.84901623061097f, y = 151.42372636467914f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 75.5297324754305f,
-                        y1 = 154.9790849715128f,
-                    )
-                    close()
-                    moveTo(x = 72.40888190054912f, y = 147.76430085919827f)
-                    lineTo(x = 71.46665955988047f, y = 148.09928900935418f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 70.2532824190107f,
-                        y1 = 144.28854224973682f,
-                    )
-                    lineTo(x = 71.21572771202719f, y = 144.01706654557455f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 72.40888190054912f,
-                        y1 = 147.76430085919827f,
-                    )
-                    close()
-                    moveTo(x = 70.27485460880082f, y = 140.19867163116197f)
-                    lineTo(x = 69.29646231403473f, y = 140.40542877745287f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 68.60045020397325f,
-                        y1 = 136.46720048359188f,
-                    )
-                    lineTo(x = 69.5904427005737f, y = 136.32608047553202f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 70.27485460880082f,
-                        y1 = 140.19867163116197f,
-                    )
-                    close()
-                    moveTo(x = 69.16553269161197f, y = 132.41649822124054f)
-                    lineTo(x = 68.16833833045285f, y = 132.49135412329548f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 68.0020464794993f,
-                        y1 = 128.49555358119807f,
-                    )
-                    lineTo(x = 69.00201237150765f, y = 128.48729435484478f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 69.16553269161197f,
-                        y1 = 132.41649822124054f,
-                    )
-                    close()
-                    moveTo(x = 69.10060822810958f, y = 124.5559255377726f)
-                    lineTo(x = 68.10231345231483f, y = 124.49755139434501f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 68.4686937829332f,
-                        y1 = 120.51510988124586f,
-                    )
-                    lineTo(x = 69.46088221988431f, y = 120.63985804989176f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 69.10060822810958f,
-                        y1 = 124.5559255377726f,
-                    )
-                    close()
-                    moveTo(x = 70.08123372204638f, y = 116.75649019034616f)
-                    lineTo(x = 69.0995597173353f, y = 116.56592222747067f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 69.9921084452324f,
-                        y1 = 112.66753387838989f,
-                    )
-                    lineTo(x = 70.95890663781186f, y = 112.92307498041673f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 70.08123372204638f,
-                        y1 = 116.75649019034616f,
-                    )
-                    close()
-                    moveTo(x = 72.0900016431813f, y = 109.15664351182278f)
-                    lineTo(x = 71.14237455238776f, y = 108.83726458829435f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 72.54524763815348f,
-                        y1 = 105.09213147221507f,
-                    )
-                    lineTo(x = 73.46949351085092f, y = 105.4739292810115f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 72.0900016431813f,
-                        y1 = 109.15664351182278f,
-                    )
-                    close()
-                    moveTo(x = 75.09125343628546f, y = 101.89129384560347f)
-                    lineTo(x = 74.19449501995129f, y = 101.44877340230862f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 76.082789423826f,
-                        y1 = 97.92337708469907f,
-                    )
-                    lineTo(x = 76.94807626676223f, y = 98.42465413328742f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 75.09125343628546f,
-                        y1 = 101.89129384560347f,
-                    )
-                    close()
-                    moveTo(x = 79.03171251241375f, y = 95.08941172611611f)
-                    lineTo(x = 78.20174153804788f, y = 94.53160514520283f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 80.54193728513519f,
-                        y1 = 91.2885265434366f,
-                    )
-                    lineTo(x = 81.33290499704961f, y = 91.90038443437933f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 79.03171251241375f,
-                        y1 = 95.08941172611611f,
-                    )
-                    close()
-                    moveTo(x = 83.84142998592588f, y = 88.871740464057f)
-                    lineTo(x = 83.0929796467043f, y = 88.20854962446475f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 85.84353485532839f,
-                        y1 = 85.30535810542398f,
-                    )
-                    lineTo(x = 86.54614260773957f, y = 86.01693547033356f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 83.84142998592588f,
-                        y1 = 88.871740464057f,
-                    )
-                    close()
-                    moveTo(x = 89.43502636904714f, y = 83.34865277683203f)
-                    lineTo(x = 88.78138274818353f, y = 82.5918502815241f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 91.89347105877096f,
-                        y1 = 80.08008172152013f,
-                    )
-                    lineTo(x = 92.49524654112477f, y = 80.87874702616146f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 89.43502636904714f,
-                        y1 = 83.34865277683203f,
-                    )
-                    close()
-                    moveTo(x = 95.71320718208312f, y = 78.61819151212754f)
-                    lineTo(x = 95.16597340550827f, y = 77.78121170724836f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 98.58435071955827f,
-                        y1 = 75.70545365518458f,
-                    )
-                    lineTo(x = 99.07461154089896f, y = 76.57702942759818f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 95.71320718208312f,
-                        y1 = 78.61819151212754f,
-                    )
-                    close()
-                    moveTo(x = 102.56452557500042f, y = 74.76432924462028f)
-                    lineTo(x = 102.13341583898347f, y = 73.8620297402918f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 105.79740098224796f,
-                        y1 = 72.25912992375419f,
-                    )
-                    lineTo(x = 106.1674442992105f, y = 73.18814442502494f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 102.56452557500042f,
-                        y1 = 74.76432924462028f,
-                    )
-                    close()
-                    moveTo(x = 109.86736067127346f, y = 71.85547764051849f)
-                    lineTo(x = 109.56002780129504f, y = 70.90387556662898f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 113.40457970296917f,
-                        y1 = 69.80228779107361f,
-                    )
-                    lineTo(x = 113.6478367079197f, y = 70.77224966122238f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 109.86736067127346f,
-                        y1 = 71.85547764051849f,
-                    )
-                    close()
-                    moveTo(x = 117.49207651551474f, y = 69.94327305088407f)
-                    lineTo(x = 117.3139761174726f, y = 68.95926072971261f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 121.27084838389692f,
-                        y1 = 68.37853978199212f,
-                    )
-                    lineTo(x = 121.38300091083197f, y = 69.37223078562558f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 117.49207651551474f,
-                        y1 = 69.94327305088407f,
-                    )
-                    close()
-                    moveTo(x = 125.30332330042391f, y = 69.06165989122222f)
-                    lineTo(x = 125.25761691568533f, y = 68.06270497412429f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 129.25656930319525f,
-                        y1 = 68.01315949655068f,
-                    )
-                    lineTo(x = 129.23562648147532f, y = 69.01294017160816f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 125.30332330042391f,
-                        y1 = 69.06165989122222f,
-                    )
-                    close()
-                    moveTo(x = 133.16244002292748f, y = 69.22628807868541f)
-                    lineTo(x = 133.24993900636693f, y = 68.23012346984957f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 137.21998428788285f,
-                        y1 = 68.71263296678461f,
-                    )
-                    lineTo(x = 137.0663178830848f, y = 69.70075575067155f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 133.16244002292748f,
-                        y1 = 69.22628807868541f,
-                    )
-                    close()
-                    moveTo(x = 140.92991591886434f, y = 70.4342352232588f)
-                    lineTo(x = 141.14906703613323f, y = 69.45854429483946f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 145.01973112779368f,
-                        y1 = 70.46454352021172f,
-                    )
-                    lineTo(x = 144.73606894233046f, y = 71.42346779487485f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 140.92991591886434f,
-                        y1 = 70.4342352232588f,
-                    )
-                    close()
-                    moveTo(x = 148.46786698216764f, y = 72.66405850443772f)
-                    lineTo(x = 148.8147799818654f, y = 71.7261611909536f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 152.5173529606211f,
-                        y1 = 73.23779219384664f,
-                    )
-                    lineTo(x = 152.1087304112774f, y = 74.15049565728253f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 148.46786698216764f,
-                        y1 = 72.66405850443772f,
-                    )
-                    close()
-                    moveTo(x = 155.6424836067223f, y = 75.87617531251098f)
-                    lineTo(x = 156.1110002780227f, y = 74.99272065679082f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 159.57975608280756f,
-                        y1 = 76.98314978607186f,
-                    )
-                    lineTo(x = 159.05342681476077f, y = 77.83343062297067f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 155.6424836067223f,
-                        y1 = 75.87617531251098f,
-                    )
-                    close()
-                    moveTo(x = 162.3264059016911f, y = 80.0135658975128f)
-                    lineTo(x = 162.9082093915503f, y = 79.20023650594523f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 166.0815725565581f,
-                        y1 = 81.63413074664078f,
-                    )
-                    lineTo(x = 165.44687968061544f, y = 82.40689523419675f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 162.3264059016911f,
-                        y1 = 80.0135658975128f,
-                    )
-                    close()
-                    moveTo(x = 168.40098451500444f, y = 85.00278555280153f)
-                    lineTo(x = 169.08574696441127f, y = 84.27401920623885f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 171.90738567326326f,
-                        y1 = 87.10817339199292f,
-                    )
-                    lineTo(x = 171.1755959120422f, y = 87.7897038354597f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 168.40098451500444f,
-                        y1 = 85.00278555280153f,
-                    )
-                    close()
-                    moveTo(x = 173.75838683210472f, y = 90.75526836553303f)
-                    lineTo(x = 174.53395271061498f, y = 90.1240017276607f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 176.95377876811597f,
-                        y1 = 93.30810549534142f,
-                    )
-                    lineTo(x = 176.137882455314f, y = 93.88630373708574f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 173.75838683210472f,
-                        y1 = 90.75526836553303f,
-                    )
-                    close()
-                    moveTo(x = 178.30351116185193f, y = 97.16889939055956f)
-                    lineTo(x = 179.15611304595112f, y = 96.6463383632809f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 181.1311710164791f,
-                        y1 = 100.12386923517451f,
-                    )
-                    lineTo(x = 180.2456514995378f, y = 100.58847141458827f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 178.30351116185193f,
-                        y1 = 97.16889939055956f,
-                    )
-                    close()
-                    moveTo(x = 181.9556749300027f, y = 104.12982733937858f)
-                    lineTo(x = 182.870177894918f, y = 103.72524814174092f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 184.36540762394674f,
-                        y1 = 107.43447488182406f,
-                    )
-                    lineTo(x = 183.42598416354764f, y = 107.77723363379367f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 181.9556749300027f,
-                        y1 = 104.12982733937858f,
-                    )
-                    close()
-                    moveTo(x = 184.65004691237158f, y = 111.51448560626326f)
-                    lineTo(x = 185.61021719902192f, y = 111.23507010806435f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 186.5990761819089f,
-                        y1 = 115.11014854131999f,
-                    )
-                    lineTo(x = 185.62242491221042f, y = 115.32497939896464f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 184.65004691237158f,
-                        y1 = 111.51448560626326f,
-                    )
-                    close()
-                    moveTo(x = 186.33879808345006f, y = 119.19178575541882f)
-                    lineTo(x = 187.32759127130515f, y = 119.04249398856152f)
-                    arcTo(
-                        horizontalEllipseRadius = 60.0f,
-                        verticalEllipseRadius = 60.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = true,
-                        x1 = 187.79252582139304f,
-                        y1 = 123.01463583095006f,
-                    )
-                    lineTo(x = 186.79598372436982f, y = 123.09772523376756f)
-                    arcTo(
-                        horizontalEllipseRadius = 59.0f,
-                        verticalEllipseRadius = 59.0f,
-                        theta = 0.0f,
-                        isMoreThanHalf = false,
-                        isPositiveArc = false,
-                        x1 = 186.33879808345006f,
-                        y1 = 119.19178575541882f,
-                    )
-                    close()
-                }
-            }
-            path(
-                fill = SolidColor(Color(0xFF2563EB)),
-            ) {
-                moveTo(x = 128.0f, y = 140.0f)
-                curveTo(
-                    x1 = 123.582f,
-                    y1 = 140.0f,
-                    x2 = 120.0f,
-                    y2 = 136.418f,
-                    x3 = 120.0f,
-                    y3 = 132.0f,
-                )
-                curveTo(
-                    x1 = 120.0f,
-                    y1 = 127.582f,
-                    x2 = 123.582f,
-                    y2 = 124.0f,
-                    x3 = 128.0f,
-                    y3 = 124.0f,
-                )
-                curveTo(
-                    x1 = 132.418f,
-                    y1 = 124.0f,
-                    x2 = 136.0f,
-                    y2 = 127.582f,
-                    x3 = 136.0f,
-                    y3 = 132.0f,
-                )
-                curveTo(
-                    x1 = 136.0f,
-                    y1 = 136.418f,
-                    x2 = 132.418f,
-                    y2 = 140.0f,
-                    x3 = 128.0f,
-                    y3 = 140.0f,
+                    dx1 = -95.0f,
+                    dy1 = -95.0f
                 )
                 close()
             }
             path(
-                stroke = SolidColor(Color(0xFF2563EB)),
-                strokeLineCap = StrokeCap.Round,
-                strokeLineWidth = 2.0f,
+                stroke = SolidColor(Color(0xFF004AC6)),
+                strokeAlpha = 0.4f,
+                strokeLineWidth = 4.0f,
             ) {
-                moveTo(x = 112.5f, y = 116.5f)
-                curveTo(
-                    x1 = 117.113f,
-                    y1 = 111.887f,
-                    x2 = 122.557f,
-                    y2 = 110.0f,
-                    x3 = 128.0f,
-                    y3 = 110.0f,
-                )
-                curveTo(
-                    x1 = 133.443f,
-                    y1 = 110.0f,
-                    x2 = 138.887f,
-                    y2 = 111.887f,
-                    x3 = 143.5f,
-                    y3 = 116.5f,
-                )
-            }
-            path(
-                stroke = SolidColor(Color(0xFF2563EB)),
-                strokeAlpha = 0.6f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineWidth = 2.0f,
-            ) {
-                moveTo(x = 101.5f, y = 105.5f)
-                curveTo(
-                    x1 = 108.902f,
-                    y1 = 98.098f,
-                    x2 = 118.451f,
-                    y2 = 95.0f,
-                    x3 = 128.0f,
-                    y3 = 95.0f,
-                )
-                curveTo(
-                    x1 = 137.549f,
-                    y1 = 95.0f,
-                    x2 = 147.098f,
-                    y2 = 98.098f,
-                    x3 = 154.5f,
-                    y3 = 105.5f,
-                )
-            }
-            path(
-                fill = SolidColor(Color(0xFF2563EB)),
-            ) {
-                moveTo(x = 52.0f, y = 104.0f)
+                moveTo(x = 36.0f, y = 136.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 126.0f,
+                    b = 126.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = 12.0f,
-                    dy1 = -12.0f,
+                    dx1 = 126.0f,
+                    dy1 = -126.0f
                 )
-                lineToRelative(dx = 24.0f, dy = 0.0f)
+                horizontalLineToRelative(dx = 0.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 126.0f,
+                    b = 126.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = 12.0f,
-                    dy1 = 12.0f,
+                    dx1 = 126.0f,
+                    dy1 = 126.0f
                 )
-                lineToRelative(dx = 0.0f, dy = 24.0f)
+                verticalLineToRelative(dy = 0.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 126.0f,
+                    b = 126.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = -12.0f,
-                    dy1 = 12.0f,
+                    dx1 = -126.0f,
+                    dy1 = 126.0f
                 )
-                lineToRelative(dx = -24.0f, dy = 0.0f)
+                horizontalLineToRelative(dx = 0.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 126.0f,
+                    b = 126.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = -12.0f,
-                    dy1 = -12.0f,
+                    dx1 = -126.0f,
+                    dy1 = -126.0f
                 )
                 close()
             }
             path(
-                stroke = SolidColor(Color(0xFFFFFFFF)),
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineWidth = 2.0f,
+                fill = SolidColor(Color(0xFF004AC6)),
             ) {
-                moveTo(x = 66.0f, y = 112.0f)
-                lineTo(x = 86.0f, y = 112.0f)
-                moveTo(x = 66.0f, y = 120.0f)
-                lineTo(x = 86.0f, y = 120.0f)
-                moveTo(x = 64.0f, y = 108.0f)
-                lineTo(x = 88.0f, y = 108.0f)
-                lineTo(x = 88.0f, y = 122.0f)
-                curveTo(
-                    x1 = 88.0f,
-                    y1 = 123.1046f,
-                    x2 = 87.1046f,
-                    y2 = 124.0f,
-                    x3 = 86.0f,
-                    y3 = 124.0f,
-                )
-                lineTo(x = 66.0f, y = 124.0f)
-                curveTo(
-                    x1 = 64.8954f,
-                    y1 = 124.0f,
-                    x2 = 64.0f,
-                    y2 = 123.1046f,
-                    x3 = 64.0f,
-                    y3 = 122.0f,
-                )
-                lineTo(x = 64.0f, y = 108.0f)
-                close()
-            }
-            path(
-                stroke = SolidColor(Color(0xFFFFFFFF)),
-                strokeLineCap = StrokeCap.Round,
-                strokeLineWidth = 2.0f,
-            ) {
-                moveTo(x = 70.0f, y = 128.0f)
-                lineTo(x = 82.0f, y = 128.0f)
-                moveTo(x = 76.0f, y = 124.0f)
-                lineTo(x = 76.0f, y = 128.0f)
-            }
-            path(
-                fill = SolidColor(Color(0xFF2563EB)),
-            ) {
-                moveTo(x = 156.0f, y = 104.0f)
+                moveTo(x = 47.0f, y = 106.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 16.0f,
+                    b = 16.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = 12.0f,
-                    dy1 = -12.0f,
+                    dx1 = 16.0f,
+                    dy1 = -16.0f
                 )
-                lineToRelative(dx = 24.0f, dy = 0.0f)
+                horizontalLineToRelative(dx = 36.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 16.0f,
+                    b = 16.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = 12.0f,
-                    dy1 = 12.0f,
+                    dx1 = 16.0f,
+                    dy1 = 16.0f
                 )
-                lineToRelative(dx = 0.0f, dy = 24.0f)
+                verticalLineToRelative(dy = 36.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 16.0f,
+                    b = 16.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = -12.0f,
-                    dy1 = 12.0f,
+                    dx1 = -16.0f,
+                    dy1 = 16.0f
                 )
-                lineToRelative(dx = -24.0f, dy = 0.0f)
+                horizontalLineToRelative(dx = -36.0f)
                 arcToRelative(
-                    a = 12.0f,
-                    b = 12.0f,
+                    a = 16.0f,
+                    b = 16.0f,
                     theta = 0.0f,
                     isMoreThanHalf = false,
                     isPositiveArc = true,
-                    dx1 = -12.0f,
-                    dy1 = -12.0f,
-                )
-                close()
-            }
-            path(
-                stroke = SolidColor(Color(0xFFFFFFFF)),
-                strokeLineCap = StrokeCap.Round,
-                strokeLineWidth = 2.0f,
-            ) {
-                moveTo(x = 176.0f, y = 108.0f)
-                lineTo(x = 184.0f, y = 108.0f)
-                curveTo(
-                    x1 = 185.1046f,
-                    y1 = 108.0f,
-                    x2 = 186.0f,
-                    y2 = 108.8954f,
-                    x3 = 186.0f,
-                    y3 = 110.0f,
-                )
-                lineTo(x = 186.0f, y = 124.0f)
-                curveTo(
-                    x1 = 186.0f,
-                    y1 = 125.1046f,
-                    x2 = 185.1046f,
-                    y2 = 126.0f,
-                    x3 = 184.0f,
-                    y3 = 126.0f,
-                )
-                lineTo(x = 176.0f, y = 126.0f)
-                curveTo(
-                    x1 = 174.8954f,
-                    y1 = 126.0f,
-                    x2 = 174.0f,
-                    y2 = 125.1046f,
-                    x3 = 174.0f,
-                    y3 = 124.0f,
-                )
-                lineTo(x = 174.0f, y = 110.0f)
-                curveTo(
-                    x1 = 174.0f,
-                    y1 = 108.8954f,
-                    x2 = 174.8954f,
-                    y2 = 108.0f,
-                    x3 = 176.0f,
-                    y3 = 108.0f,
+                    dx1 = -16.0f,
+                    dy1 = -16.0f
                 )
                 close()
             }
             path(
                 fill = SolidColor(Color(0xFFFFFFFF)),
             ) {
-                moveTo(x = 180.0f, y = 123.0f)
-                moveToRelative(dx = -1.0f, dy = 0.0f)
-                arcToRelative(
-                    a = 1.0f,
-                    b = 1.0f,
-                    theta = 0.0f,
-                    isMoreThanHalf = true,
-                    isPositiveArc = true,
-                    dx1 = 2.0f,
-                    dy1 = 0.0f,
+                moveTo(x = 66.0f, y = 134.75f)
+                curveTo(
+                    x1 = 65.175f,
+                    y1 = 134.75f,
+                    x2 = 64.4688f,
+                    y2 = 134.456f,
+                    x3 = 63.8813f,
+                    y3 = 133.869f
                 )
-                arcToRelative(
-                    a = 1.0f,
-                    b = 1.0f,
-                    theta = 0.0f,
-                    isMoreThanHalf = true,
-                    isPositiveArc = true,
-                    dx1 = -2.0f,
-                    dy1 = 0.0f,
+                curveTo(
+                    x1 = 63.2938f,
+                    y1 = 133.281f,
+                    x2 = 63.0f,
+                    y2 = 132.575f,
+                    x3 = 63.0f,
+                    y3 = 131.75f
                 )
+                horizontalLineTo(x = 69.0f)
+                curveTo(
+                    x1 = 68.175f,
+                    y1 = 131.75f,
+                    x2 = 67.4687f,
+                    y2 = 131.456f,
+                    x3 = 66.8812f,
+                    y3 = 130.869f
+                )
+                curveTo(
+                    x1 = 66.2937f,
+                    y1 = 130.281f,
+                    x2 = 66.0f,
+                    y2 = 129.575f,
+                    x3 = 66.0f,
+                    y3 = 128.75f
+                )
+                verticalLineTo(y = 112.25f)
+                curveTo(
+                    x1 = 66.0f,
+                    y1 = 111.425f,
+                    x2 = 66.2937f,
+                    y2 = 110.719f,
+                    x3 = 66.8812f,
+                    y3 = 110.131f
+                )
+                curveTo(
+                    x1 = 67.4687f,
+                    y1 = 109.544f,
+                    x2 = 68.175f,
+                    y2 = 109.25f,
+                    x3 = 69.0f,
+                    y3 = 109.25f
+                )
+                horizontalLineTo(x = 93.0f)
+                curveTo(
+                    x1 = 93.825f,
+                    y1 = 109.25f,
+                    x2 = 94.5313f,
+                    y2 = 109.544f,
+                    x3 = 95.1188f,
+                    y3 = 110.131f
+                )
+                curveTo(
+                    x1 = 95.7063f,
+                    y1 = 110.719f,
+                    x2 = 96.0f,
+                    y2 = 111.425f,
+                    x3 = 96.0f,
+                    y3 = 112.25f
+                )
+                verticalLineTo(y = 128.75f)
+                curveTo(
+                    x1 = 96.0f,
+                    y1 = 129.575f,
+                    x2 = 95.7063f,
+                    y2 = 130.281f,
+                    x3 = 95.1188f,
+                    y3 = 130.869f
+                )
+                curveTo(
+                    x1 = 94.5313f,
+                    y1 = 131.456f,
+                    x2 = 93.825f,
+                    y2 = 131.75f,
+                    x3 = 93.0f,
+                    y3 = 131.75f
+                )
+                horizontalLineTo(x = 99.0f)
+                curveTo(
+                    x1 = 99.0f,
+                    y1 = 132.575f,
+                    x2 = 98.7063f,
+                    y2 = 133.281f,
+                    x3 = 98.1188f,
+                    y3 = 133.869f
+                )
+                curveTo(
+                    x1 = 97.5313f,
+                    y1 = 134.456f,
+                    x2 = 96.825f,
+                    y2 = 134.75f,
+                    x3 = 96.0f,
+                    y3 = 134.75f
+                )
+                horizontalLineTo(x = 66.0f)
+                verticalLineTo(y = 134.75f)
+                moveTo(x = 81.0f, y = 133.25f)
+                curveTo(
+                    x1 = 81.425f,
+                    y1 = 133.25f,
+                    x2 = 81.7813f,
+                    y2 = 133.106f,
+                    x3 = 82.0688f,
+                    y3 = 132.819f
+                )
+                curveTo(
+                    x1 = 82.3563f,
+                    y1 = 132.531f,
+                    x2 = 82.5f,
+                    y2 = 132.175f,
+                    x3 = 82.5f,
+                    y3 = 131.75f
+                )
+                curveTo(
+                    x1 = 82.5f,
+                    y1 = 131.325f,
+                    x2 = 82.3563f,
+                    y2 = 130.969f,
+                    x3 = 82.0688f,
+                    y3 = 130.681f
+                )
+                curveTo(
+                    x1 = 81.7813f,
+                    y1 = 130.394f,
+                    x2 = 81.425f,
+                    y2 = 130.25f,
+                    x3 = 81.0f,
+                    y3 = 130.25f
+                )
+                curveTo(
+                    x1 = 80.575f,
+                    y1 = 130.25f,
+                    x2 = 80.2187f,
+                    y2 = 130.394f,
+                    x3 = 79.9312f,
+                    y3 = 130.681f
+                )
+                curveTo(
+                    x1 = 79.6437f,
+                    y1 = 130.969f,
+                    x2 = 79.5f,
+                    y2 = 131.325f,
+                    x3 = 79.5f,
+                    y3 = 131.75f
+                )
+                curveTo(
+                    x1 = 79.5f,
+                    y1 = 132.175f,
+                    x2 = 79.6437f,
+                    y2 = 132.531f,
+                    x3 = 79.9312f,
+                    y3 = 132.819f
+                )
+                curveTo(
+                    x1 = 80.2187f,
+                    y1 = 133.106f,
+                    x2 = 80.575f,
+                    y2 = 133.25f,
+                    x3 = 81.0f,
+                    y3 = 133.25f
+                )
+                verticalLineTo(y = 133.25f)
+                moveTo(x = 69.0f, y = 128.75f)
+                horizontalLineTo(x = 93.0f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                horizontalLineTo(x = 69.0f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                moveTo(x = 69.0f, y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 112.25f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+                verticalLineTo(y = 128.75f)
+            }
+            path(
+                fill = SolidColor(Color(0xFF004AC6)),
+            ) {
+                moveTo(x = 50.7225f, y = 178.0f)
+                verticalLineTo(y = 169.27f)
+                horizontalLineTo(x = 53.9892f)
+                curveTo(
+                    x1 = 54.6577f,
+                    y1 = 169.27f,
+                    x2 = 55.22f,
+                    y2 = 169.395f,
+                    x3 = 55.6764f,
+                    y3 = 169.646f
+                )
+                curveTo(
+                    x1 = 56.1327f,
+                    y1 = 169.897f,
+                    x2 = 56.4778f,
+                    y2 = 170.24f,
+                    x3 = 56.7118f,
+                    y3 = 170.674f
+                )
+                curveTo(
+                    x1 = 56.9458f,
+                    y1 = 171.109f,
+                    x2 = 57.0628f,
+                    y2 = 171.605f,
+                    x3 = 57.0628f,
+                    y3 = 172.161f
+                )
+                curveTo(
+                    x1 = 57.0628f,
+                    y1 = 172.718f,
+                    x2 = 56.9448f,
+                    y2 = 173.214f,
+                    x3 = 56.7087f,
+                    y3 = 173.648f
+                )
+                curveTo(
+                    x1 = 56.4726f,
+                    y1 = 174.082f,
+                    x2 = 56.1245f,
+                    y2 = 174.423f,
+                    x3 = 55.6645f,
+                    y3 = 174.672f
+                )
+                curveTo(
+                    x1 = 55.2045f,
+                    y1 = 174.922f,
+                    x2 = 54.6375f,
+                    y2 = 175.046f,
+                    x3 = 53.9634f,
+                    y3 = 175.046f
+                )
+                horizontalLineTo(x = 51.7997f)
+                verticalLineTo(y = 173.758f)
+                horizontalLineTo(x = 53.7567f)
+                curveTo(
+                    x1 = 54.153f,
+                    y1 = 173.758f,
+                    x2 = 54.477f,
+                    y2 = 173.689f,
+                    x3 = 54.7287f,
+                    y3 = 173.552f
+                )
+                curveTo(
+                    x1 = 54.9804f,
+                    y1 = 173.415f,
+                    x2 = 55.1659f,
+                    y2 = 173.226f,
+                    x3 = 55.2851f,
+                    y3 = 172.985f
+                )
+                curveTo(
+                    x1 = 55.4043f,
+                    y1 = 172.744f,
+                    x2 = 55.4639f,
+                    y2 = 172.469f,
+                    x3 = 55.4639f,
+                    y3 = 172.161f
+                )
+                curveTo(
+                    x1 = 55.4639f,
+                    y1 = 171.849f,
+                    x2 = 55.4043f,
+                    y2 = 171.575f,
+                    x3 = 55.2851f,
+                    y3 = 171.337f
+                )
+                curveTo(
+                    x1 = 55.1659f,
+                    y1 = 171.099f,
+                    x2 = 54.9798f,
+                    y2 = 170.914f,
+                    x3 = 54.7268f,
+                    y3 = 170.78f
+                )
+                curveTo(
+                    x1 = 54.4738f,
+                    y1 = 170.646f,
+                    x2 = 54.148f,
+                    y2 = 170.579f,
+                    x3 = 53.7492f,
+                    y3 = 170.579f
+                )
+                horizontalLineTo(x = 52.2872f)
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 50.7225f)
+                close()
+                moveTo(x = 63.3837f, y = 178.117f)
+                curveTo(
+                    x1 = 62.6193f,
+                    y1 = 178.117f,
+                    x2 = 61.936f,
+                    y2 = 177.94f,
+                    x3 = 61.3337f,
+                    y3 = 177.585f
+                )
+                curveTo(
+                    x1 = 60.7314f,
+                    y1 = 177.23f,
+                    x2 = 60.257f,
+                    y2 = 176.718f,
+                    x3 = 59.9104f,
+                    y3 = 176.049f
+                )
+                curveTo(
+                    x1 = 59.5637f,
+                    y1 = 175.381f,
+                    x2 = 59.3904f,
+                    y2 = 174.578f,
+                    x3 = 59.3904f,
+                    y3 = 173.641f
+                )
+                curveTo(
+                    x1 = 59.3904f,
+                    y1 = 172.698f,
+                    x2 = 59.5648f,
+                    y2 = 171.892f,
+                    x3 = 59.9135f,
+                    y3 = 171.223f
+                )
+                curveTo(
+                    x1 = 60.2623f,
+                    y1 = 170.554f,
+                    x2 = 60.7381f,
+                    y2 = 170.041f,
+                    x3 = 61.3411f,
+                    y3 = 169.686f
+                )
+                curveTo(
+                    x1 = 61.9441f,
+                    y1 = 169.33f,
+                    x2 = 62.6249f,
+                    y2 = 169.152f,
+                    x3 = 63.3837f,
+                    y3 = 169.152f
+                )
+                curveTo(
+                    x1 = 63.8616f,
+                    y1 = 169.152f,
+                    x2 = 64.3089f,
+                    y2 = 169.22f,
+                    x3 = 64.7253f,
+                    y3 = 169.355f
+                )
+                curveTo(
+                    x1 = 65.1418f,
+                    y1 = 169.49f,
+                    x2 = 65.5127f,
+                    y2 = 169.688f,
+                    x3 = 65.8378f,
+                    y3 = 169.948f
+                )
+                curveTo(
+                    x1 = 66.163f,
+                    y1 = 170.208f,
+                    x2 = 66.4311f,
+                    y2 = 170.525f,
+                    x3 = 66.6422f,
+                    y3 = 170.899f
+                )
+                curveTo(
+                    x1 = 66.8533f,
+                    y1 = 171.273f,
+                    x2 = 66.9937f,
+                    y2 = 171.698f,
+                    x3 = 67.0634f,
+                    y3 = 172.176f
+                )
+                horizontalLineTo(x = 65.486f)
+                curveTo(
+                    x1 = 65.4376f,
+                    y1 = 171.916f,
+                    x2 = 65.3515f,
+                    y2 = 171.686f,
+                    x3 = 65.2279f,
+                    y3 = 171.486f
+                )
+                curveTo(
+                    x1 = 65.1042f,
+                    y1 = 171.286f,
+                    x2 = 64.9505f,
+                    y2 = 171.117f,
+                    x3 = 64.7667f,
+                    y3 = 170.977f
+                )
+                curveTo(
+                    x1 = 64.583f,
+                    y1 = 170.838f,
+                    x2 = 64.3761f,
+                    y2 = 170.733f,
+                    x3 = 64.146f,
+                    y3 = 170.661f
+                )
+                curveTo(
+                    x1 = 63.9159f,
+                    y1 = 170.59f,
+                    x2 = 63.6702f,
+                    y2 = 170.555f,
+                    x3 = 63.409f,
+                    y3 = 170.555f
+                )
+                curveTo(
+                    x1 = 62.932f,
+                    y1 = 170.555f,
+                    x2 = 62.5089f,
+                    y2 = 170.675f,
+                    x3 = 62.1397f,
+                    y3 = 170.914f
+                )
+                curveTo(
+                    x1 = 61.7706f,
+                    y1 = 171.154f,
+                    x2 = 61.4819f,
+                    y2 = 171.503f,
+                    x3 = 61.2738f,
+                    y3 = 171.962f
+                )
+                curveTo(
+                    x1 = 61.0657f,
+                    y1 = 172.421f,
+                    x2 = 60.9616f,
+                    y2 = 172.98f,
+                    x3 = 60.9616f,
+                    y3 = 173.641f
+                )
+                curveTo(
+                    x1 = 60.9616f,
+                    y1 = 174.307f,
+                    x2 = 61.067f,
+                    y2 = 174.869f,
+                    x3 = 61.2778f,
+                    y3 = 175.327f
+                )
+                curveTo(
+                    x1 = 61.4886f,
+                    y1 = 175.785f,
+                    x2 = 61.7778f,
+                    y2 = 176.131f,
+                    x3 = 62.1456f,
+                    y3 = 176.365f
+                )
+                curveTo(
+                    x1 = 62.5133f,
+                    y1 = 176.598f,
+                    x2 = 62.933f,
+                    y2 = 176.715f,
+                    x3 = 63.4048f,
+                    y3 = 176.715f
+                )
+                curveTo(
+                    x1 = 63.666f,
+                    y1 = 176.715f,
+                    x2 = 63.9113f,
+                    y2 = 176.679f,
+                    x3 = 64.1407f,
+                    y3 = 176.606f
+                )
+                curveTo(
+                    x1 = 64.3701f,
+                    y1 = 176.534f,
+                    x2 = 64.5773f,
+                    y2 = 176.429f,
+                    x3 = 64.7625f,
+                    y3 = 176.29f
+                )
+                curveTo(
+                    x1 = 64.9477f,
+                    y1 = 176.152f,
+                    x2 = 65.1028f,
+                    y2 = 175.983f,
+                    x3 = 65.2279f,
+                    y3 = 175.782f
+                )
+                curveTo(
+                    x1 = 65.3529f,
+                    y1 = 175.581f,
+                    x2 = 65.4404f,
+                    y2 = 175.351f,
+                    x3 = 65.4902f,
+                    y3 = 175.094f
+                )
+                horizontalLineTo(x = 67.0676f)
+                curveTo(
+                    x1 = 67.0102f,
+                    y1 = 175.512f,
+                    x2 = 66.8827f,
+                    y2 = 175.904f,
+                    x3 = 66.685f,
+                    y3 = 176.268f
+                )
+                curveTo(
+                    x1 = 66.4872f,
+                    y1 = 176.632f,
+                    x2 = 66.2289f,
+                    y2 = 176.953f,
+                    x3 = 65.9101f,
+                    y3 = 177.231f
+                )
+                curveTo(
+                    x1 = 65.5913f,
+                    y1 = 177.51f,
+                    x2 = 65.2194f,
+                    y2 = 177.727f,
+                    x3 = 64.7945f,
+                    y3 = 177.883f
+                )
+                curveTo(
+                    x1 = 64.3696f,
+                    y1 = 178.039f,
+                    x2 = 63.8993f,
+                    y2 = 178.117f,
+                    x3 = 63.3837f,
+                    y3 = 178.117f
+                )
+                close()
+                moveTo(x = 77.4005f, y = 168.859f)
+                lineTo(x = 74.588f, y = 179.312f)
+                horizontalLineTo(x = 73.2483f)
+                lineTo(x = 76.0608f, y = 168.859f)
+                horizontalLineTo(x = 77.4005f)
+                close()
+                moveTo(x = 83.8983f, y = 178.0f)
+                verticalLineTo(y = 169.27f)
+                horizontalLineTo(x = 85.6664f)
+                lineTo(x = 88.6877f, y = 174.077f)
+                curveTo(
+                    x1 = 88.8124f,
+                    y1 = 174.277f,
+                    x2 = 88.9454f,
+                    y2 = 174.502f,
+                    x3 = 89.0866f,
+                    y3 = 174.754f
+                )
+                curveTo(
+                    x1 = 89.2279f,
+                    y1 = 175.006f,
+                    x2 = 89.3743f,
+                    y2 = 175.288f,
+                    x3 = 89.5258f,
+                    y3 = 175.599f
+                )
+                curveTo(
+                    x1 = 89.6772f,
+                    y1 = 175.91f,
+                    x2 = 89.8279f,
+                    y2 = 176.255f,
+                    x3 = 89.9777f,
+                    y3 = 176.634f
+                )
+                horizontalLineTo(x = 89.8027f)
+                curveTo(
+                    x1 = 89.7731f,
+                    y1 = 176.305f,
+                    x2 = 89.7481f,
+                    y2 = 175.968f,
+                    x3 = 89.7275f,
+                    y3 = 175.622f
+                )
+                curveTo(
+                    x1 = 89.707f,
+                    y1 = 175.276f,
+                    x2 = 89.6913f,
+                    y2 = 174.947f,
+                    x3 = 89.6803f,
+                    y3 = 174.637f
+                )
+                curveTo(
+                    x1 = 89.6694f,
+                    y1 = 174.326f,
+                    x2 = 89.6639f,
+                    y2 = 174.064f,
+                    x3 = 89.6639f,
+                    y3 = 173.849f
+                )
+                verticalLineTo(y = 169.27f)
+                horizontalLineTo(x = 91.2539f)
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 89.4783f)
+                lineTo(x = 86.7551f, y = 173.672f)
+                curveTo(
+                    x1 = 86.5838f,
+                    y1 = 173.394f,
+                    x2 = 86.4214f,
+                    y2 = 173.12f,
+                    x3 = 86.2679f,
+                    y3 = 172.851f
+                )
+                curveTo(
+                    x1 = 86.1144f,
+                    y1 = 172.581f,
+                    x2 = 85.9499f,
+                    y2 = 172.277f,
+                    x3 = 85.7743f,
+                    y3 = 171.936f
+                )
+                curveTo(
+                    x1 = 85.5988f,
+                    y1 = 171.596f,
+                    x2 = 85.3864f,
+                    y2 = 171.185f,
+                    x3 = 85.1372f,
+                    y3 = 170.704f
+                )
+                horizontalLineTo(x = 85.357f)
+                curveTo(
+                    x1 = 85.3808f,
+                    y1 = 171.13f,
+                    x2 = 85.4029f,
+                    y2 = 171.533f,
+                    x3 = 85.4235f,
+                    y3 = 171.914f
+                )
+                curveTo(
+                    x1 = 85.444f,
+                    y1 = 172.295f,
+                    x2 = 85.4606f,
+                    y2 = 172.636f,
+                    x3 = 85.4732f,
+                    y3 = 172.936f
+                )
+                curveTo(
+                    x1 = 85.4857f,
+                    y1 = 173.236f,
+                    x2 = 85.492f,
+                    y2 = 173.479f,
+                    x3 = 85.492f,
+                    y3 = 173.665f
+                )
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 83.8983f)
+                close()
+                moveTo(x = 93.6241f, y = 178.0f)
+                lineTo(x = 96.6717f, y = 169.27f)
+                horizontalLineTo(x = 98.6611f)
+                lineTo(x = 101.773f, y = 178.0f)
+                horizontalLineTo(x = 100.057f)
+                lineTo(x = 98.5069f, y = 173.466f)
+                curveTo(
+                    x1 = 98.3556f,
+                    y1 = 172.996f,
+                    x2 = 98.1974f,
+                    y2 = 172.466f,
+                    x3 = 98.0323f,
+                    y3 = 171.875f
+                )
+                curveTo(
+                    x1 = 97.8671f,
+                    y1 = 171.284f,
+                    x2 = 97.6848f,
+                    y2 = 170.611f,
+                    x3 = 97.4855f,
+                    y3 = 169.854f
+                )
+                horizontalLineTo(x = 97.8145f)
+                curveTo(
+                    x1 = 97.6205f,
+                    y1 = 170.616f,
+                    x2 = 97.4438f,
+                    y2 = 171.294f,
+                    x3 = 97.2846f,
+                    y3 = 171.89f
+                )
+                curveTo(
+                    x1 = 97.1254f,
+                    y1 = 172.486f,
+                    x2 = 96.9753f,
+                    y2 = 173.011f,
+                    x3 = 96.8344f,
+                    y3 = 173.466f
+                )
+                lineTo(x = 95.3351f, y = 178.0f)
+                horizontalLineTo(x = 93.6241f)
+                close()
+                moveTo(x = 95.3993f, y = 175.837f)
+                verticalLineTo(y = 174.577f)
+                horizontalLineTo(x = 99.9977f)
+                verticalLineTo(y = 175.837f)
+                horizontalLineTo(x = 95.3993f)
+                close()
+                moveTo(x = 107.084f, y = 178.135f)
+                curveTo(
+                    x1 = 106.409f,
+                    y1 = 178.135f,
+                    x2 = 105.821f,
+                    y2 = 178.03f,
+                    x3 = 105.322f,
+                    y3 = 177.819f
+                )
+                curveTo(
+                    x1 = 104.822f,
+                    y1 = 177.608f,
+                    x2 = 104.433f,
+                    y2 = 177.302f,
+                    x3 = 104.153f,
+                    y3 = 176.899f
+                )
+                curveTo(
+                    x1 = 103.873f,
+                    y1 = 176.497f,
+                    x2 = 103.721f,
+                    y2 = 176.008f,
+                    x3 = 103.697f,
+                    y3 = 175.432f
+                )
+                horizontalLineTo(x = 105.238f)
+                curveTo(
+                    x1 = 105.264f,
+                    y1 = 175.738f,
+                    x2 = 105.359f,
+                    y2 = 175.992f,
+                    x3 = 105.525f,
+                    y3 = 176.194f
+                )
+                curveTo(
+                    x1 = 105.69f,
+                    y1 = 176.396f,
+                    x2 = 105.907f,
+                    y2 = 176.548f,
+                    x3 = 106.177f,
+                    y3 = 176.648f
+                )
+                curveTo(
+                    x1 = 106.446f,
+                    y1 = 176.748f,
+                    x2 = 106.744f,
+                    y2 = 176.798f,
+                    x3 = 107.071f,
+                    y3 = 176.798f
+                )
+                curveTo(
+                    x1 = 107.415f,
+                    y1 = 176.798f,
+                    x2 = 107.719f,
+                    y2 = 176.745f,
+                    x3 = 107.982f,
+                    y3 = 176.64f
+                )
+                curveTo(
+                    x1 = 108.245f,
+                    y1 = 176.535f,
+                    x2 = 108.451f,
+                    y2 = 176.388f,
+                    x3 = 108.6f,
+                    y3 = 176.198f
+                )
+                curveTo(
+                    x1 = 108.75f,
+                    y1 = 176.007f,
+                    x2 = 108.824f,
+                    y2 = 175.788f,
+                    x3 = 108.824f,
+                    y3 = 175.538f
+                )
+                curveTo(
+                    x1 = 108.824f,
+                    y1 = 175.31f,
+                    x2 = 108.758f,
+                    y2 = 175.122f,
+                    x3 = 108.627f,
+                    y3 = 174.974f
+                )
+                curveTo(
+                    x1 = 108.495f,
+                    y1 = 174.826f,
+                    x2 = 108.311f,
+                    y2 = 174.7f,
+                    x3 = 108.075f,
+                    y3 = 174.598f
+                )
+                curveTo(
+                    x1 = 107.839f,
+                    y1 = 174.496f,
+                    x2 = 107.562f,
+                    y2 = 174.406f,
+                    x3 = 107.245f,
+                    y3 = 174.327f
+                )
+                lineTo(x = 106.254f, y = 174.068f)
+                curveTo(
+                    x1 = 105.527f,
+                    y1 = 173.882f,
+                    x2 = 104.959f,
+                    y2 = 173.598f,
+                    x3 = 104.549f,
+                    y3 = 173.218f
+                )
+                curveTo(
+                    x1 = 104.139f,
+                    y1 = 172.838f,
+                    x2 = 103.935f,
+                    y2 = 172.34f,
+                    x3 = 103.935f,
+                    y3 = 171.723f
+                )
+                curveTo(
+                    x1 = 103.935f,
+                    y1 = 171.209f,
+                    x2 = 104.074f,
+                    y2 = 170.758f,
+                    x3 = 104.352f,
+                    y3 = 170.372f
+                )
+                curveTo(
+                    x1 = 104.63f,
+                    y1 = 169.986f,
+                    x2 = 105.01f,
+                    y2 = 169.687f,
+                    x3 = 105.49f,
+                    y3 = 169.473f
+                )
+                curveTo(
+                    x1 = 105.971f,
+                    y1 = 169.259f,
+                    x2 = 106.515f,
+                    y2 = 169.152f,
+                    x3 = 107.124f,
+                    y3 = 169.152f
+                )
+                curveTo(
+                    x1 = 107.746f,
+                    y1 = 169.152f,
+                    x2 = 108.291f,
+                    y2 = 169.26f,
+                    x3 = 108.759f,
+                    y3 = 169.475f
+                )
+                curveTo(
+                    x1 = 109.226f,
+                    y1 = 169.69f,
+                    x2 = 109.592f,
+                    y2 = 169.986f,
+                    x3 = 109.856f,
+                    y3 = 170.364f
+                )
+                curveTo(
+                    x1 = 110.12f,
+                    y1 = 170.742f,
+                    x2 = 110.258f,
+                    y2 = 171.175f,
+                    x3 = 110.27f,
+                    y3 = 171.662f
+                )
+                horizontalLineTo(x = 108.754f)
+                curveTo(
+                    x1 = 108.714f,
+                    y1 = 171.287f,
+                    x2 = 108.547f,
+                    y2 = 170.997f,
+                    x3 = 108.251f,
+                    y3 = 170.791f
+                )
+                curveTo(
+                    x1 = 107.955f,
+                    y1 = 170.585f,
+                    x2 = 107.572f,
+                    y2 = 170.483f,
+                    x3 = 107.102f,
+                    y3 = 170.483f
+                )
+                curveTo(
+                    x1 = 106.775f,
+                    y1 = 170.483f,
+                    x2 = 106.492f,
+                    y2 = 170.532f,
+                    x3 = 106.255f,
+                    y3 = 170.631f
+                )
+                curveTo(
+                    x1 = 106.017f,
+                    y1 = 170.73f,
+                    x2 = 105.835f,
+                    y2 = 170.866f,
+                    x3 = 105.709f,
+                    y3 = 171.039f
+                )
+                curveTo(
+                    x1 = 105.582f,
+                    y1 = 171.212f,
+                    x2 = 105.518f,
+                    y2 = 171.409f,
+                    x3 = 105.518f,
+                    y3 = 171.631f
+                )
+                curveTo(
+                    x1 = 105.518f,
+                    y1 = 171.875f,
+                    x2 = 105.593f,
+                    y2 = 172.075f,
+                    x3 = 105.744f,
+                    y3 = 172.231f
+                )
+                curveTo(
+                    x1 = 105.894f,
+                    y1 = 172.387f,
+                    x2 = 106.083f,
+                    y2 = 172.512f,
+                    x3 = 106.312f,
+                    y3 = 172.606f
+                )
+                curveTo(
+                    x1 = 106.541f,
+                    y1 = 172.699f,
+                    x2 = 106.772f,
+                    y2 = 172.775f,
+                    x3 = 107.005f,
+                    y3 = 172.834f
+                )
+                lineTo(x = 107.821f, y = 173.043f)
+                curveTo(
+                    x1 = 108.144f,
+                    y1 = 173.119f,
+                    x2 = 108.459f,
+                    y2 = 173.223f,
+                    x3 = 108.764f,
+                    y3 = 173.353f
+                )
+                curveTo(
+                    x1 = 109.07f,
+                    y1 = 173.484f,
+                    x2 = 109.345f,
+                    y2 = 173.647f,
+                    x3 = 109.59f,
+                    y3 = 173.844f
+                )
+                curveTo(
+                    x1 = 109.834f,
+                    y1 = 174.042f,
+                    x2 = 110.028f,
+                    y2 = 174.28f,
+                    x3 = 110.172f,
+                    y3 = 174.56f
+                )
+                curveTo(
+                    x1 = 110.315f,
+                    y1 = 174.84f,
+                    x2 = 110.387f,
+                    y2 = 175.17f,
+                    x3 = 110.387f,
+                    y3 = 175.549f
+                )
+                curveTo(
+                    x1 = 110.387f,
+                    y1 = 176.061f,
+                    x2 = 110.257f,
+                    y2 = 176.512f,
+                    x3 = 109.996f,
+                    y3 = 176.901f
+                )
+                curveTo(
+                    x1 = 109.735f,
+                    y1 = 177.29f,
+                    x2 = 109.359f,
+                    y2 = 177.593f,
+                    x3 = 108.866f,
+                    y3 = 177.81f
+                )
+                curveTo(
+                    x1 = 108.374f,
+                    y1 = 178.027f,
+                    x2 = 107.78f,
+                    y2 = 178.135f,
+                    x3 = 107.084f,
+                    y3 = 178.135f
+                )
+                close()
+            }
+            path(
+                fill = SolidColor(Color(0xFF004AC6)),
+            ) {
+                moveTo(x = 162.0f, y = 146.625f)
+                curveTo(
+                    x1 = 161.125f,
+                    y1 = 146.625f,
+                    x2 = 160.385f,
+                    y2 = 146.323f,
+                    x3 = 159.781f,
+                    y3 = 145.719f
+                )
+                curveTo(
+                    x1 = 159.177f,
+                    y1 = 145.115f,
+                    x2 = 158.875f,
+                    y2 = 144.375f,
+                    x3 = 158.875f,
+                    y3 = 143.5f
+                )
+                curveTo(
+                    x1 = 158.875f,
+                    y1 = 142.625f,
+                    x2 = 159.177f,
+                    y2 = 141.885f,
+                    x3 = 159.781f,
+                    y3 = 141.281f
+                )
+                curveTo(
+                    x1 = 160.385f,
+                    y1 = 140.677f,
+                    x2 = 161.125f,
+                    y2 = 140.375f,
+                    x3 = 162.0f,
+                    y3 = 140.375f
+                )
+                curveTo(
+                    x1 = 162.875f,
+                    y1 = 140.375f,
+                    x2 = 163.615f,
+                    y2 = 140.677f,
+                    x3 = 164.219f,
+                    y3 = 141.281f
+                )
+                curveTo(
+                    x1 = 164.823f,
+                    y1 = 141.885f,
+                    x2 = 165.125f,
+                    y2 = 142.625f,
+                    x3 = 165.125f,
+                    y3 = 143.5f
+                )
+                curveTo(
+                    x1 = 165.125f,
+                    y1 = 144.375f,
+                    x2 = 164.823f,
+                    y2 = 145.115f,
+                    x3 = 164.219f,
+                    y3 = 145.719f
+                )
+                curveTo(
+                    x1 = 163.615f,
+                    y1 = 146.323f,
+                    x2 = 162.875f,
+                    y2 = 146.625f,
+                    x3 = 162.0f,
+                    y3 = 146.625f
+                )
+                verticalLineTo(y = 146.625f)
+                moveTo(x = 154.938f, y = 139.562f)
+                lineTo(x = 152.312f, y = 136.875f)
+                curveTo(
+                    x1 = 153.542f,
+                    y1 = 135.646f,
+                    x2 = 154.984f,
+                    y2 = 134.672f,
+                    x3 = 156.641f,
+                    y3 = 133.953f
+                )
+                curveTo(
+                    x1 = 158.297f,
+                    y1 = 133.234f,
+                    x2 = 160.083f,
+                    y2 = 132.875f,
+                    x3 = 162.0f,
+                    y3 = 132.875f
+                )
+                curveTo(
+                    x1 = 163.917f,
+                    y1 = 132.875f,
+                    x2 = 165.703f,
+                    y2 = 133.24f,
+                    x3 = 167.359f,
+                    y3 = 133.969f
+                )
+                curveTo(
+                    x1 = 169.016f,
+                    y1 = 134.698f,
+                    x2 = 170.458f,
+                    y2 = 135.688f,
+                    x3 = 171.688f,
+                    y3 = 136.938f
+                )
+                lineTo(x = 169.062f, y = 139.562f)
+                curveTo(
+                    x1 = 168.146f,
+                    y1 = 138.646f,
+                    x2 = 167.083f,
+                    y2 = 137.927f,
+                    x3 = 165.875f,
+                    y3 = 137.406f
+                )
+                curveTo(
+                    x1 = 164.667f,
+                    y1 = 136.885f,
+                    x2 = 163.375f,
+                    y2 = 136.625f,
+                    x3 = 162.0f,
+                    y3 = 136.625f
+                )
+                curveTo(
+                    x1 = 160.625f,
+                    y1 = 136.625f,
+                    x2 = 159.333f,
+                    y2 = 136.885f,
+                    x3 = 158.125f,
+                    y3 = 137.406f
+                )
+                curveTo(
+                    x1 = 156.917f,
+                    y1 = 137.927f,
+                    x2 = 155.854f,
+                    y2 = 138.646f,
+                    x3 = 154.938f,
+                    y3 = 139.562f
+                )
+                verticalLineTo(y = 139.562f)
+                moveTo(x = 149.625f, y = 134.25f)
+                lineTo(x = 147.0f, y = 131.625f)
+                curveTo(
+                    x1 = 148.917f,
+                    y1 = 129.667f,
+                    x2 = 151.156f,
+                    y2 = 128.135f,
+                    x3 = 153.719f,
+                    y3 = 127.031f
+                )
+                curveTo(
+                    x1 = 156.281f,
+                    y1 = 125.927f,
+                    x2 = 159.042f,
+                    y2 = 125.375f,
+                    x3 = 162.0f,
+                    y3 = 125.375f
+                )
+                curveTo(
+                    x1 = 164.958f,
+                    y1 = 125.375f,
+                    x2 = 167.719f,
+                    y2 = 125.927f,
+                    x3 = 170.281f,
+                    y3 = 127.031f
+                )
+                curveTo(
+                    x1 = 172.844f,
+                    y1 = 128.135f,
+                    x2 = 175.083f,
+                    y2 = 129.667f,
+                    x3 = 177.0f,
+                    y3 = 131.625f
+                )
+                lineTo(x = 174.375f, y = 134.25f)
+                curveTo(
+                    x1 = 172.771f,
+                    y1 = 132.646f,
+                    x2 = 170.911f,
+                    y2 = 131.391f,
+                    x3 = 168.797f,
+                    y3 = 130.484f
+                )
+                curveTo(
+                    x1 = 166.682f,
+                    y1 = 129.578f,
+                    x2 = 164.417f,
+                    y2 = 129.125f,
+                    x3 = 162.0f,
+                    y3 = 129.125f
+                )
+                curveTo(
+                    x1 = 159.583f,
+                    y1 = 129.125f,
+                    x2 = 157.318f,
+                    y2 = 129.578f,
+                    x3 = 155.203f,
+                    y3 = 130.484f
+                )
+                curveTo(
+                    x1 = 153.089f,
+                    y1 = 131.391f,
+                    x2 = 151.229f,
+                    y2 = 132.646f,
+                    x3 = 149.625f,
+                    y3 = 134.25f
+                )
+                verticalLineTo(y = 134.25f)
+            }
+            path(
+                fill = SolidColor(Color(0xFF004AC6)),
+            ) {
+                moveTo(x = 209.0f, y = 106.0f)
+                arcToRelative(
+                    a = 16.0f,
+                    b = 16.0f,
+                    theta = 0.0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    dx1 = 16.0f,
+                    dy1 = -16.0f
+                )
+                horizontalLineToRelative(dx = 36.0f)
+                arcToRelative(
+                    a = 16.0f,
+                    b = 16.0f,
+                    theta = 0.0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    dx1 = 16.0f,
+                    dy1 = 16.0f
+                )
+                verticalLineToRelative(dy = 36.0f)
+                arcToRelative(
+                    a = 16.0f,
+                    b = 16.0f,
+                    theta = 0.0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    dx1 = -16.0f,
+                    dy1 = 16.0f
+                )
+                horizontalLineToRelative(dx = -36.0f)
+                arcToRelative(
+                    a = 16.0f,
+                    b = 16.0f,
+                    theta = 0.0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    dx1 = -16.0f,
+                    dy1 = -16.0f
+                )
+                close()
+            }
+            path(
+                fill = SolidColor(Color(0xFFFFFFFF)),
+            ) {
+                moveTo(x = 234.75f, y = 138.5f)
+                curveTo(
+                    x1 = 233.925f,
+                    y1 = 138.5f,
+                    x2 = 233.219f,
+                    y2 = 138.206f,
+                    x3 = 232.631f,
+                    y3 = 137.619f
+                )
+                curveTo(
+                    x1 = 232.044f,
+                    y1 = 137.031f,
+                    x2 = 231.75f,
+                    y2 = 136.325f,
+                    x3 = 231.75f,
+                    y3 = 135.5f
+                )
+                verticalLineTo(y = 108.5f)
+                curveTo(
+                    x1 = 231.75f,
+                    y1 = 107.675f,
+                    x2 = 232.044f,
+                    y2 = 106.969f,
+                    x3 = 232.631f,
+                    y3 = 106.381f
+                )
+                curveTo(
+                    x1 = 233.219f,
+                    y1 = 105.794f,
+                    x2 = 233.925f,
+                    y2 = 105.5f,
+                    x3 = 234.75f,
+                    y3 = 105.5f
+                )
+                horizontalLineTo(x = 249.75f)
+                curveTo(
+                    x1 = 250.575f,
+                    y1 = 105.5f,
+                    x2 = 251.281f,
+                    y2 = 105.794f,
+                    x3 = 251.869f,
+                    y3 = 106.381f
+                )
+                curveTo(
+                    x1 = 252.456f,
+                    y1 = 106.969f,
+                    x2 = 252.75f,
+                    y2 = 107.675f,
+                    x3 = 252.75f,
+                    y3 = 108.5f
+                )
+                verticalLineTo(y = 113.15f)
+                curveTo(
+                    x1 = 253.2f,
+                    y1 = 113.325f,
+                    x2 = 253.562f,
+                    y2 = 113.6f,
+                    x3 = 253.837f,
+                    y3 = 113.975f
+                )
+                curveTo(
+                    x1 = 254.112f,
+                    y1 = 114.35f,
+                    x2 = 254.25f,
+                    y2 = 114.775f,
+                    x3 = 254.25f,
+                    y3 = 115.25f
+                )
+                verticalLineTo(y = 118.25f)
+                curveTo(
+                    x1 = 254.25f,
+                    y1 = 118.725f,
+                    x2 = 254.112f,
+                    y2 = 119.15f,
+                    x3 = 253.837f,
+                    y3 = 119.525f
+                )
+                curveTo(
+                    x1 = 253.562f,
+                    y1 = 119.9f,
+                    x2 = 253.2f,
+                    y2 = 120.175f,
+                    x3 = 252.75f,
+                    y3 = 120.35f
+                )
+                verticalLineTo(y = 135.5f)
+                curveTo(
+                    x1 = 252.75f,
+                    y1 = 136.325f,
+                    x2 = 252.456f,
+                    y2 = 137.031f,
+                    x3 = 251.869f,
+                    y3 = 137.619f
+                )
+                curveTo(
+                    x1 = 251.281f,
+                    y1 = 138.206f,
+                    x2 = 250.575f,
+                    y2 = 138.5f,
+                    x3 = 249.75f,
+                    y3 = 138.5f
+                )
+                horizontalLineTo(x = 234.75f)
+                verticalLineTo(y = 138.5f)
+                moveTo(x = 242.25f, y = 113.0f)
+                curveTo(
+                    x1 = 242.675f,
+                    y1 = 113.0f,
+                    x2 = 243.031f,
+                    y2 = 112.856f,
+                    x3 = 243.319f,
+                    y3 = 112.569f
+                )
+                curveTo(
+                    x1 = 243.606f,
+                    y1 = 112.281f,
+                    x2 = 243.75f,
+                    y2 = 111.925f,
+                    x3 = 243.75f,
+                    y3 = 111.5f
+                )
+                curveTo(
+                    x1 = 243.75f,
+                    y1 = 111.075f,
+                    x2 = 243.606f,
+                    y2 = 110.719f,
+                    x3 = 243.319f,
+                    y3 = 110.431f
+                )
+                curveTo(
+                    x1 = 243.031f,
+                    y1 = 110.144f,
+                    x2 = 242.675f,
+                    y2 = 110.0f,
+                    x3 = 242.25f,
+                    y3 = 110.0f
+                )
+                curveTo(
+                    x1 = 241.825f,
+                    y1 = 110.0f,
+                    x2 = 241.469f,
+                    y2 = 110.144f,
+                    x3 = 241.181f,
+                    y3 = 110.431f
+                )
+                curveTo(
+                    x1 = 240.894f,
+                    y1 = 110.719f,
+                    x2 = 240.75f,
+                    y2 = 111.075f,
+                    x3 = 240.75f,
+                    y3 = 111.5f
+                )
+                curveTo(
+                    x1 = 240.75f,
+                    y1 = 111.925f,
+                    x2 = 240.894f,
+                    y2 = 112.281f,
+                    x3 = 241.181f,
+                    y3 = 112.569f
+                )
+                curveTo(
+                    x1 = 241.469f,
+                    y1 = 112.856f,
+                    x2 = 241.825f,
+                    y2 = 113.0f,
+                    x3 = 242.25f,
+                    y3 = 113.0f
+                )
+                verticalLineTo(y = 113.0f)
+            }
+            path(
+                fill = SolidColor(Color(0xFF004AC6)),
+            ) {
+                moveTo(x = 217.861f, y = 169.273f)
+                horizontalLineTo(x = 219.795f)
+                lineTo(x = 222.386f, y = 175.597f)
+                horizontalLineTo(x = 222.489f)
+                lineTo(x = 225.08f, y = 169.273f)
+                horizontalLineTo(x = 227.014f)
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 225.497f)
+                verticalLineTo(y = 172.004f)
+                horizontalLineTo(x = 225.416f)
+                lineTo(x = 223.004f, y = 177.974f)
+                horizontalLineTo(x = 221.871f)
+                lineTo(x = 219.459f, y = 171.991f)
+                horizontalLineTo(x = 219.378f)
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 217.861f)
+                verticalLineTo(y = 169.273f)
+                close()
+                moveTo(x = 237.734f, y = 173.636f)
+                curveTo(
+                    x1 = 237.734f,
+                    y1 = 174.577f,
+                    x2 = 237.558f,
+                    y2 = 175.382f,
+                    x3 = 237.206f,
+                    y3 = 176.053f
+                )
+                curveTo(
+                    x1 = 236.856f,
+                    y1 = 176.72f,
+                    x2 = 236.379f,
+                    y2 = 177.232f,
+                    x3 = 235.774f,
+                    y3 = 177.587f
+                )
+                curveTo(
+                    x1 = 235.172f,
+                    y1 = 177.942f,
+                    x2 = 234.488f,
+                    y2 = 178.119f,
+                    x3 = 233.724f,
+                    y3 = 178.119f
+                )
+                curveTo(
+                    x1 = 232.96f,
+                    y1 = 178.119f,
+                    x2 = 232.275f,
+                    y2 = 177.942f,
+                    x3 = 231.67f,
+                    y3 = 177.587f
+                )
+                curveTo(
+                    x1 = 231.068f,
+                    y1 = 177.229f,
+                    x2 = 230.591f,
+                    y2 = 176.716f,
+                    x3 = 230.238f,
+                    y3 = 176.048f
+                )
+                curveTo(
+                    x1 = 229.889f,
+                    y1 = 175.378f,
+                    x2 = 229.714f,
+                    y2 = 174.574f,
+                    x3 = 229.714f,
+                    y3 = 173.636f
+                )
+                curveTo(
+                    x1 = 229.714f,
+                    y1 = 172.696f,
+                    x2 = 229.889f,
+                    y2 = 171.892f,
+                    x3 = 230.238f,
+                    y3 = 171.224f
+                )
+                curveTo(
+                    x1 = 230.591f,
+                    y1 = 170.554f,
+                    x2 = 231.068f,
+                    y2 = 170.041f,
+                    x3 = 231.67f,
+                    y3 = 169.686f
+                )
+                curveTo(
+                    x1 = 232.275f,
+                    y1 = 169.331f,
+                    x2 = 232.96f,
+                    y2 = 169.153f,
+                    x3 = 233.724f,
+                    y3 = 169.153f
+                )
+                curveTo(
+                    x1 = 234.488f,
+                    y1 = 169.153f,
+                    x2 = 235.172f,
+                    y2 = 169.331f,
+                    x3 = 235.774f,
+                    y3 = 169.686f
+                )
+                curveTo(
+                    x1 = 236.379f,
+                    y1 = 170.041f,
+                    x2 = 236.856f,
+                    y2 = 170.554f,
+                    x3 = 237.206f,
+                    y3 = 171.224f
+                )
+                curveTo(
+                    x1 = 237.558f,
+                    y1 = 171.892f,
+                    x2 = 237.734f,
+                    y2 = 172.696f,
+                    x3 = 237.734f,
+                    y3 = 173.636f
+                )
+                close()
+                moveTo(x = 236.145f, y = 173.636f)
+                curveTo(
+                    x1 = 236.145f,
+                    y1 = 172.974f,
+                    x2 = 236.041f,
+                    y2 = 172.416f,
+                    x3 = 235.834f,
+                    y3 = 171.962f
+                )
+                curveTo(
+                    x1 = 235.629f,
+                    y1 = 171.504f,
+                    x2 = 235.345f,
+                    y2 = 171.159f,
+                    x3 = 234.981f,
+                    y3 = 170.926f
+                )
+                curveTo(
+                    x1 = 234.618f,
+                    y1 = 170.69f,
+                    x2 = 234.199f,
+                    y2 = 170.572f,
+                    x3 = 233.724f,
+                    y3 = 170.572f
+                )
+                curveTo(
+                    x1 = 233.25f,
+                    y1 = 170.572f,
+                    x2 = 232.831f,
+                    y2 = 170.69f,
+                    x3 = 232.467f,
+                    y3 = 170.926f
+                )
+                curveTo(
+                    x1 = 232.103f,
+                    y1 = 171.159f,
+                    x2 = 231.818f,
+                    y2 = 171.504f,
+                    x3 = 231.611f,
+                    y3 = 171.962f
+                )
+                curveTo(
+                    x1 = 231.406f,
+                    y1 = 172.416f,
+                    x2 = 231.304f,
+                    y2 = 172.974f,
+                    x3 = 231.304f,
+                    y3 = 173.636f
+                )
+                curveTo(
+                    x1 = 231.304f,
+                    y1 = 174.298f,
+                    x2 = 231.406f,
+                    y2 = 174.858f,
+                    x3 = 231.611f,
+                    y3 = 175.315f
+                )
+                curveTo(
+                    x1 = 231.818f,
+                    y1 = 175.77f,
+                    x2 = 232.103f,
+                    y2 = 176.115f,
+                    x3 = 232.467f,
+                    y3 = 176.351f
+                )
+                curveTo(
+                    x1 = 232.831f,
+                    y1 = 176.584f,
+                    x2 = 233.25f,
+                    y2 = 176.7f,
+                    x3 = 233.724f,
+                    y3 = 176.7f
+                )
+                curveTo(
+                    x1 = 234.199f,
+                    y1 = 176.7f,
+                    x2 = 234.618f,
+                    y2 = 176.584f,
+                    x3 = 234.981f,
+                    y3 = 176.351f
+                )
+                curveTo(
+                    x1 = 235.345f,
+                    y1 = 176.115f,
+                    x2 = 235.629f,
+                    y2 = 175.77f,
+                    x3 = 235.834f,
+                    y3 = 175.315f
+                )
+                curveTo(
+                    x1 = 236.041f,
+                    y1 = 174.858f,
+                    x2 = 236.145f,
+                    y2 = 174.298f,
+                    x3 = 236.145f,
+                    y3 = 173.636f
+                )
+                close()
+                moveTo(x = 240.429f, y = 178.0f)
+                verticalLineTo(y = 169.273f)
+                horizontalLineTo(x = 243.77f)
+                curveTo(
+                    x1 = 244.4f,
+                    y1 = 169.273f,
+                    x2 = 244.925f,
+                    y2 = 169.372f,
+                    x3 = 245.342f,
+                    y3 = 169.571f
+                )
+                curveTo(
+                    x1 = 245.763f,
+                    y1 = 169.767f,
+                    x2 = 246.076f,
+                    y2 = 170.036f,
+                    x3 = 246.284f,
+                    y3 = 170.376f
+                )
+                curveTo(
+                    x1 = 246.494f,
+                    y1 = 170.717f,
+                    x2 = 246.599f,
+                    y2 = 171.104f,
+                    x3 = 246.599f,
+                    y3 = 171.536f
+                )
+                curveTo(
+                    x1 = 246.599f,
+                    y1 = 171.891f,
+                    x2 = 246.531f,
+                    y2 = 172.195f,
+                    x3 = 246.395f,
+                    y3 = 172.447f
+                )
+                curveTo(
+                    x1 = 246.258f,
+                    y1 = 172.697f,
+                    x2 = 246.075f,
+                    y2 = 172.901f,
+                    x3 = 245.845f,
+                    y3 = 173.057f
+                )
+                curveTo(
+                    x1 = 245.615f,
+                    y1 = 173.213f,
+                    x2 = 245.358f,
+                    y2 = 173.325f,
+                    x3 = 245.074f,
+                    y3 = 173.393f
+                )
+                verticalLineTo(y = 173.479f)
+                curveTo(
+                    x1 = 245.383f,
+                    y1 = 173.496f,
+                    x2 = 245.68f,
+                    y2 = 173.591f,
+                    x3 = 245.964f,
+                    y3 = 173.764f
+                )
+                curveTo(
+                    x1 = 246.251f,
+                    y1 = 173.935f,
+                    x2 = 246.486f,
+                    y2 = 174.176f,
+                    x3 = 246.667f,
+                    y3 = 174.489f
+                )
+                curveTo(
+                    x1 = 246.849f,
+                    y1 = 174.801f,
+                    x2 = 246.94f,
+                    y2 = 175.179f,
+                    x3 = 246.94f,
+                    y3 = 175.622f
+                )
+                curveTo(
+                    x1 = 246.94f,
+                    y1 = 176.074f,
+                    x2 = 246.831f,
+                    y2 = 176.48f,
+                    x3 = 246.612f,
+                    y3 = 176.841f
+                )
+                curveTo(
+                    x1 = 246.393f,
+                    y1 = 177.199f,
+                    x2 = 246.064f,
+                    y2 = 177.482f,
+                    x3 = 245.623f,
+                    y3 = 177.689f
+                )
+                curveTo(
+                    x1 = 245.183f,
+                    y1 = 177.896f,
+                    x2 = 244.629f,
+                    y2 = 178.0f,
+                    x3 = 243.961f,
+                    y3 = 178.0f
+                )
+                horizontalLineTo(x = 240.429f)
+                close()
+                moveTo(x = 242.01f, y = 176.679f)
+                horizontalLineTo(x = 243.71f)
+                curveTo(
+                    x1 = 244.284f,
+                    y1 = 176.679f,
+                    x2 = 244.697f,
+                    y2 = 176.57f,
+                    x3 = 244.95f,
+                    y3 = 176.351f
+                )
+                curveTo(
+                    x1 = 245.206f,
+                    y1 = 176.129f,
+                    x2 = 245.334f,
+                    y2 = 175.845f,
+                    x3 = 245.334f,
+                    y3 = 175.499f
+                )
+                curveTo(
+                    x1 = 245.334f,
+                    y1 = 175.24f,
+                    x2 = 245.27f,
+                    y2 = 175.007f,
+                    x3 = 245.142f,
+                    y3 = 174.8f
+                )
+                curveTo(
+                    x1 = 245.014f,
+                    y1 = 174.589f,
+                    x2 = 244.832f,
+                    y2 = 174.425f,
+                    x3 = 244.596f,
+                    y3 = 174.305f
+                )
+                curveTo(
+                    x1 = 244.361f,
+                    y1 = 174.183f,
+                    x2 = 244.079f,
+                    y2 = 174.122f,
+                    x3 = 243.753f,
+                    y3 = 174.122f
+                )
+                horizontalLineTo(x = 242.01f)
+                verticalLineTo(y = 176.679f)
+                close()
+                moveTo(x = 242.01f, y = 172.984f)
+                horizontalLineTo(x = 243.574f)
+                curveTo(
+                    x1 = 243.846f,
+                    y1 = 172.984f,
+                    x2 = 244.092f,
+                    y2 = 172.935f,
+                    x3 = 244.311f,
+                    y3 = 172.835f
+                )
+                curveTo(
+                    x1 = 244.53f,
+                    y1 = 172.733f,
+                    x2 = 244.701f,
+                    y2 = 172.589f,
+                    x3 = 244.826f,
+                    y3 = 172.405f
+                )
+                curveTo(
+                    x1 = 244.954f,
+                    y1 = 172.217f,
+                    x2 = 245.018f,
+                    y2 = 171.996f,
+                    x3 = 245.018f,
+                    y3 = 171.74f
+                )
+                curveTo(
+                    x1 = 245.018f,
+                    y1 = 171.402f,
+                    x2 = 244.899f,
+                    y2 = 171.124f,
+                    x3 = 244.66f,
+                    y3 = 170.905f
+                )
+                curveTo(
+                    x1 = 244.425f,
+                    y1 = 170.686f,
+                    x2 = 244.074f,
+                    y2 = 170.577f,
+                    x3 = 243.608f,
+                    y3 = 170.577f
+                )
+                horizontalLineTo(x = 242.01f)
+                verticalLineTo(y = 172.984f)
+                close()
+                moveTo(x = 251.096f, y = 169.273f)
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 249.515f)
+                verticalLineTo(y = 169.273f)
+                horizontalLineTo(x = 251.096f)
+                close()
+                moveTo(x = 254.008f, y = 178.0f)
+                verticalLineTo(y = 169.273f)
+                horizontalLineTo(x = 255.589f)
+                verticalLineTo(y = 176.675f)
+                horizontalLineTo(x = 259.433f)
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 254.008f)
+                close()
+                moveTo(x = 262.005f, y = 178.0f)
+                verticalLineTo(y = 169.273f)
+                horizontalLineTo(x = 267.681f)
+                verticalLineTo(y = 170.598f)
+                horizontalLineTo(x = 263.586f)
+                verticalLineTo(y = 172.967f)
+                horizontalLineTo(x = 267.387f)
+                verticalLineTo(y = 174.293f)
+                horizontalLineTo(x = 263.586f)
+                verticalLineTo(y = 176.675f)
+                horizontalLineTo(x = 267.716f)
+                verticalLineTo(y = 178.0f)
+                horizontalLineTo(x = 262.005f)
                 close()
             }
         }.build().also { _localAccessNetwork = it }
@@ -2850,7 +2027,7 @@ val ComicIcons.LocalAccessNetwork: ImageVector
 @Suppress("ObjectPropertyName")
 private var _localAccessNetwork: ImageVector? = null
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LocalAccessNetworkPreview() {
     Icon(imageVector = ComicIcons.LocalAccessNetwork, contentDescription = null)

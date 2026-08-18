@@ -55,13 +55,12 @@ internal abstract class BaseFetcher<T : Any, V : CoilMetadata>(
 
     protected abstract suspend fun doFetch(): FetchResult
 
-    protected fun readFromDiskCache(): DiskCache.Snapshot? {
+    protected fun readFromDiskCache(): DiskCache.Snapshot? =
         if (options.diskCachePolicy.readEnabled) {
-            return diskCache.value?.openSnapshot(diskCacheKey)
+            diskCache.value?.openSnapshot(diskCacheKey)
         } else {
-            return null
+            null
         }
-    }
 
     protected suspend fun writeToDiskCache(
         snapshot: DiskCache.Snapshot?,

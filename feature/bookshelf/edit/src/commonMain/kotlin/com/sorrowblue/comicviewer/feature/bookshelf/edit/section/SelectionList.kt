@@ -68,11 +68,10 @@ fun Modifier.drawDivider(
         drawContent()
         if (topDividerAlpha > 0f) {
             val strokeWidth = 1.dp.toPx()
-            val y = strokeWidth
             drawLine(
                 color = dividerColor.copy(alpha = topDividerAlpha),
-                start = Offset(0f, y),
-                end = Offset(size.width, y),
+                start = Offset(0f, strokeWidth),
+                end = Offset(size.width, strokeWidth),
                 strokeWidth = strokeWidth,
             )
         }

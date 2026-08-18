@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.FileInfo: ImageVector
     get() {
         if (_TablerFileInfo != null) return _TablerFileInfo!!

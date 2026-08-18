@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 
+@Suppress("UnusedReceiverParameter")
 val ComicIcons.Shelves: ImageVector
     get() {
         if (_MaterialSymbolsShelves != null) return _MaterialSymbolsShelves!!

@@ -149,7 +149,7 @@ internal fun SmartCollectionEditorScreen(
 private fun SmartCollectionCreateScreenPreview() = ComicTheme {
     val formState =
         rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
-    val form = rememberForm(formState, {})
+    val form = rememberForm(state = formState, onSubmit = {})
     SmartCollectionEditorScreen(
         form = form,
         uiState = SmartCollectionEditorScreenUiState(
@@ -172,7 +172,7 @@ private fun SmartCollectionCreateScreenPreview() = ComicTheme {
 private fun SmartCollectionEditScreenPreview() = PreviewTheme {
     val formState =
         rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
-    val form = rememberForm(formState, {})
+    val form = rememberForm(state = formState, onSubmit = {})
     SmartCollectionEditorScreen(
         form = form,
         uiState = SmartCollectionEditorScreenUiState(

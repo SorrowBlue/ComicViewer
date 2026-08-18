@@ -51,7 +51,7 @@ interface SystemUiController {
     var screenBrightness: Float
 
     companion object {
-        val BRIGHTNESS_OVERRIDE_NONE = -1f
+        const val BRIGHTNESS_OVERRIDE_NONE = -1f
     }
 }
 

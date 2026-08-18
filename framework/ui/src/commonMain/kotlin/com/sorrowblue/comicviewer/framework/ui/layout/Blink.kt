@@ -19,6 +19,7 @@ import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.currentValueOf
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.platform.LocalDensity
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -93,13 +94,13 @@ private class DrawBlinkNode(
         count.intValue = 0
         job = coroutineScope.launch {
             while (count.intValue < BlinksCount) {
-                delay(500)
+                delay(500.milliseconds)
                 alpha.animateTo(range.start)
-                delay(500)
+                delay(500.milliseconds)
                 alpha.animateTo(range.endInclusive)
                 count.intValue++
             }
-            delay(500)
+            delay(500.milliseconds)
             alpha.animateTo(0f)
         }
     }

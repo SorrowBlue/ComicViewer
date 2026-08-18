@@ -27,22 +27,22 @@ internal actual val provideAsyncImagePreviewHandler: ProvidedValue<AsyncImagePre
         return LocalAsyncImagePreviewHandler provides previewHandler
     }
 
-internal actual class PreviewImage(context: PlatformContext) : Image {
+private class PreviewImage(context: PlatformContext) : Image {
     private val bitmap =
         requireNotNull(ContextCompat.getDrawable(context, nextSampleAvatar)).toBitmap()
 
-    actual override val shareable = false
+    override val shareable = false
 
-    actual override val size
+    override val size
         get() = bitmap.allocationByteCountCompat.toLong()
 
-    actual override val width
+    override val width
         get() = bitmap.width
 
-    actual override val height
+    override val height
         get() = bitmap.height
 
-    actual override fun draw(canvas: Canvas) {
+    override fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, 0f, 0f, null)
     }
 

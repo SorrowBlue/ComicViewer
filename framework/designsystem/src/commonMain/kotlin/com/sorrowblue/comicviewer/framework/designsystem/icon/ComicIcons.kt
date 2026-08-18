@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
-import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.LastPage
 import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.automirrored.outlined.ViewList
@@ -29,7 +28,6 @@ import androidx.compose.material.icons.outlined.Dataset
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DisplaySettings
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FirstPage
 import androidx.compose.material.icons.outlined.Folder
@@ -40,7 +38,6 @@ import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.InstallMobile
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Lan
 import androidx.compose.material.icons.outlined.Language
@@ -55,7 +52,6 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.Start
-import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.WatchLater
@@ -65,7 +61,6 @@ object ComicIcons {
     val Cached = Icons.Outlined.Cached
     val History = Icons.Outlined.History
     val WatchLater = Icons.Outlined.WatchLater
-    val Extension = Icons.Outlined.Extension
     val Visibility = Icons.Outlined.Visibility
     val VisibilityOff = Icons.Outlined.VisibilityOff
     val FolderOff = Icons.Outlined.FolderOff
@@ -90,14 +85,12 @@ object ComicIcons {
     val ArrowDownward = Icons.Outlined.ArrowDownward
     val Start = Icons.Outlined.Start
     val Language = Icons.Outlined.Language
-    val Help = Icons.AutoMirrored.Outlined.Help
     val Dataset = Icons.Outlined.Dataset
     val Info = Icons.Outlined.Info
     val Lock = Icons.Outlined.Lock
     val Image = Icons.Outlined.Image
     val FolderOpen = Icons.Outlined.FolderOpen
     val DisplaySettings = Icons.Outlined.DisplaySettings
-    val InstallMobile = Icons.Outlined.InstallMobile
     val ArrowRight = Icons.AutoMirrored.Outlined.ArrowRight
     val ArrowLeft = Icons.AutoMirrored.Outlined.ArrowLeft
     val Settings = Icons.Outlined.Settings
@@ -109,7 +102,6 @@ object ComicIcons {
     val Folder = Icons.Outlined.Folder
     val ContentCopy = Icons.Outlined.ContentCopy
     val RemoveRedEye = Icons.Outlined.RemoveRedEye
-    val Storage = Icons.Outlined.Storage
     val Notifications = Icons.Outlined.Notifications
     val CollectionsBookmark = Icons.Outlined.CollectionsBookmark
     val OpenInBrowser = Icons.Outlined.OpenInBrowser

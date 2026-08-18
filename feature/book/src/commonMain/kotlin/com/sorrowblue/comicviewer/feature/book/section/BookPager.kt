@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +30,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.Bitmap
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
@@ -129,7 +129,7 @@ private fun DefaultBookPage(
             contentScale = pageScale.contentScale,
             modifier = Modifier.fillMaxSize(),
         )
-        val state by painter.state.collectAsState()
+        val state by painter.state.collectAsStateWithLifecycle()
         when (state) {
             is AsyncImagePainter.State.Error -> {
                 Column(
