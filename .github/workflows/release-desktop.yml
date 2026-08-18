@@ -35,8 +35,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
-          # PR時はPR元のヘッドコミット、それ以外（mainプッシュやリリースなど）はトリガーされたコミットを確実にチェックアウトします
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # PR時はPR元のブランチ名（head_ref）、それ以外（mainプッシュやリリースなど）は実行されたブランチ名（ref_name）を指定して、一時マージコミットを完全に回避します
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       # CI環境上にすべてのGitタグと完全な履歴（unshallow）を強制フェッチして、describeが機能するようにします
