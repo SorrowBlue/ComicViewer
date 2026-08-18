@@ -40,17 +40,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
 
-      # CI環境上にすべてのGitタグと完全な履歴（unshallow）を強制フェッチして、describeが機能するようにします
-      - name: Fetch all tags
-        run: |
-          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
-            echo "Repository is shallow. Unshallowing..."
-            git fetch --unshallow --tags --force
-          else
-            echo "Repository is already complete. Fetching tags..."
-            git fetch --tags --force
-          fi
-
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
 
