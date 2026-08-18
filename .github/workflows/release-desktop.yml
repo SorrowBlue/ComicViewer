@@ -40,7 +40,7 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run jvmJar
-        run: ./gradlew :app:jvmApp:jvmJar :app:jvmApp:printConveyorConfig :app:jvmApp:writeConveyorConfig :pdf:desktopApp:copyConveyorInputs
+        run: ./gradlew :app:jvmApp:jvmJar :app:jvmApp:printConveyorConfig :app:jvmApp:writeConveyorConfig :app:jvmApp:copyConveyorInputs
       - name: Upload artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
