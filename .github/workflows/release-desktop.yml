@@ -35,6 +35,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
+          # PR時はPR元のヘッドコミット、それ以外（mainプッシュやリリースなど）はトリガーされたコミットを確実にチェックアウトします
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       # CI環境上にすべてのGitタグを強制フェッチして、describeが機能するようにします
