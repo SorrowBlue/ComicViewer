@@ -37,6 +37,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      # CI環境上にすべてのGitタグを強制フェッチして、describeが機能するようにします
+      - name: Fetch all tags
+        run: git fetch --tags --force
+
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
 
