@@ -40,6 +40,9 @@ jobs:
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
 
+      - name: Build JVM Application
+        run: ./gradlew :app:jvmApp:jar
+
       - name: Run Conveyor to release to Microsoft Store
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
