@@ -90,7 +90,15 @@ Write-Host "Found MSIX package: $msixFilename"
 $zipPath = Join-Path $pwd "packages.zip"
 if (Test-Path $zipPath) { Remove-Item $zipPath }
 Write-Host "Archiving MSIX to packages.zip..."
-Compress-Archive -Path $msixFile.FullName -DestinationPath $zipPath
+
+# Use .NET ZipFile to ensure cross-platform compatibility and avoid ZIP header corruption on Linux
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$tempDir = Join-Path $pwd "temp_zip_dir"
+if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
+$null = New-Item -ItemType Directory -Path $tempDir
+Copy-Item -Path $msixFile.FullName -DestinationPath $tempDir
+[System.IO.Compression.ZipFile]::CreateFromDirectory($tempDir, $zipPath)
+Remove-Item $tempDir -Recurse -Force
 
 # 4. Upload ZIP to Azure Blob Storage
 Write-Host "Uploading packages.zip to Azure Blob Storage..."
