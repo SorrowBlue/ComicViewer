@@ -41,7 +41,7 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
 
       - name: Run Conveyor to release to Microsoft Store
-        uses: hydraulic-software/conveyor/actions/build@v15
+        uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
           # mainへのpushまたはpull_request時はテスト用フライトIDを指定し、それ以外（本番リリースなど）は通常の製品版リリースとします
           command: make ms-store-release ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && format('--windows-store-flight-id={0}', secrets.MS_STORE_TEST_FLIGHT_ID) || '' }}
