@@ -27,17 +27,38 @@ permissions:
   contents: read
 
 jobs:
+  jvm-build:
+    needs: setup-matrix
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: ${{ inputs.fetch-depth }}
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run jvmJar
+        run: ./gradlew :app:jvmApp:jvmJar :app:jvmApp:printConveyorConfig :app:jvmApp:writeConveyorConfig :pdf:desktopApp:copyConveyorInputs
+      - name: Upload artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: build-${{ matrix.config.os }}
+          path: app/jvmApp/build/all-libs
+
   release-ms-store:
     name: Release to Microsoft Store
+    needs: jvm-build
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
-      - name: Setup Java and Gradle
+      - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
 
       - name: Calculate Version
@@ -46,26 +67,37 @@ jobs:
           # 1. 正式タグ（v*.*.*、beta除く）からのGitコミット距離（Distance）を取得
           distance=$(git describe --tags --long --match "v[0-9]*.[0-9]*.[0-9]*" --exclude "*beta*" 2>/dev/null | awk -F'-' '{print $(NF-1)}')
           distance=${distance:-0}
-          # 一時的に distanceに 1を設定
-          distance=1
 
           # 2. Gradleのpropertiesからベースバージョン（3桁）を取得
           base_version=$(./gradlew -q :app:jvmApp:properties | grep "^version:" | cut -d' ' -f2 | cut -d'-' -f1)
           
           # 3. 4桁 of フルバージョンを合成して出力
           full_version="${base_version}.${distance}"
+          # 一時的にfull_versionを設定
+          full_version="2.0.0.1"
           echo "FULL_VERSION=${full_version}" >> $GITHUB_OUTPUT
           echo "Calculated version: ${full_version}"
 
-      - name: Build JVM Application
-        run: ./gradlew :app:jvmApp:jvmJar
+      - name: Download Windows build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: build-windows-latest
+          path: ./artifacts/windows
+      - name: Download Linux build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: build-ubuntu-latest
+          path: ./artifacts/linux
+      - name: Run printConveyorConfig
+        run: ./gradlew -q printConveyorConfig
+
 
       # 🌟 PUSH時やPR時（検証・テストフェーズ）: ConveyorでMSIXをビルド・署名し、自前スクリプトでテストフライトへアップロードします
       - name: Build MSIX Package (Validation)
         if: github.event_name == 'push' || github.event_name == 'pull_request'
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make windows-msix
+          command: -f ci.conveyor.conf -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
 
@@ -83,10 +115,16 @@ jobs:
         if: github.event_name == 'release'
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
-          command: -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make ms-store-release
+          command: -f ci.conveyor.conf -Kapp.version=${{ steps.versioning.outputs.FULL_VERSION }} make ms-store-release
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
         env:
           MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
+
+      - name: Upload conveyor artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: conveyor-output
+          path: output/*
