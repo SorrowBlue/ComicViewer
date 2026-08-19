@@ -89,7 +89,7 @@ jobs:
           debugSymbols: ./artifacts/android-debug-symbols/
 
   notify:
-    needs: build-upload
+    needs: publish
     runs-on: ubuntu-latest
     steps:
       - name: Notify Discord
