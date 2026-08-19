@@ -19,15 +19,21 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
     ValueSource<String, GitTagParameters> {
     override fun obtain(): String = runCatching {
         val stdout = ByteArrayOutputStream()
+        val stderr = ByteArrayOutputStream()
         val result = execOperations.exec {
             commandLine("git", "describe", "--tags", "--abbrev=1")
             standardOutput = stdout
             isIgnoreExitValue = true
-            errorOutput = ByteArrayOutputStream()
+            errorOutput = stderr
         }
 
         if (result.exitValue != 0) {
-            logger.error("Warning: Could not get git tag. (Exit code: ${result.exitValue}). stdout: $stdout")
+            // 原因を突き止めるため、エラー時に stderr をログに出力します
+            logger.error(
+                "Warning: Could not get git tag. (Exit code: ${result.exitValue}). stderr: ${
+                    stderr.toString().trim()
+                }"
+            )
             return "UNKNOWN"
         }
 
@@ -51,16 +57,22 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
             // 開始タグ vMajor.Minor.0 から HEAD までの直線総コミット数を取得する
             val startTag = "v$major.$minor.0"
             val revStdout = ByteArrayOutputStream()
+            val revStderr = ByteArrayOutputStream()
             val revResult = execOperations.exec {
                 commandLine("git", "rev-list", "--count", "$startTag..HEAD")
                 standardOutput = revStdout
                 isIgnoreExitValue = true
-                errorOutput = ByteArrayOutputStream()
+                errorOutput = revStderr
             }
 
             val totalDistance = if (revResult.exitValue == 0) {
                 revStdout.toString().trim().toIntOrNull() ?: 0
             } else {
+                logger.error(
+                    "Warning: Failed to execute git rev-list. stderr: ${
+                        revStderr.toString().trim()
+                    }"
+                )
                 distanceStr.toIntOrNull() ?: 0
             }
 
@@ -74,32 +86,32 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
 /**
  * ベータタグを除外し、正式タグ（v*.*.* のみ）を取得するプロバイダー（Android用）
  */
-abstract class GitFormalTagValueSource @Inject constructor(
-    private val execOperations: ExecOperations,
-) : ValueSource<String, GitTagParameters> {
+abstract class GitFormalTagValueSource @Inject constructor(private val execOperations: ExecOperations) :
+    ValueSource<String, GitTagParameters> {
     override fun obtain(): String = runCatching {
         val stdout = ByteArrayOutputStream()
+        val stderr = ByteArrayOutputStream()
         val result = execOperations.exec {
             // --match と --exclude を使ってベータタグを完全に除外して正式タグのみにマッチさせる
             commandLine(
-                "git",
-                "describe",
-                "--tags",
-                "--abbrev=1",
-                "--match",
-                "v[0-9]*.[0-9]*.[0-9]*",
-                "--exclude",
-                "*beta*",
+                "git", "describe", "--tags", "--abbrev=1",
+                "--match", "v[0-9]*.[0-9]*.[0-9]*",
+                "--exclude", "*beta*"
             )
             standardOutput = stdout
             isIgnoreExitValue = true
-            errorOutput = ByteArrayOutputStream()
+            errorOutput = stderr
         }
 
         if (result.exitValue == 0) {
             stdout.toString().trim()
         } else {
-            logger.error("Warning: Could not get git formal tag. (Exit code: ${result.exitValue}). stdout: $stdout")
+            // 原因を突き止めるため、エラー時に stderr をログに出力します
+            logger.error(
+                "Warning: Could not get git formal tag. (Exit code: ${result.exitValue}). stderr: ${
+                    stderr.toString().trim()
+                }"
+            )
             "UNKNOWN"
         }
     }.onFailure {
