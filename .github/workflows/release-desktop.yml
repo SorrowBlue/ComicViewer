@@ -27,25 +27,8 @@ permissions:
   contents: read
 
 jobs:
-
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Get Git Details
-        run: git describe --tags --abbrev=1
-
-      - name: Get Git Details2
-        run: git describe --tags --abbrev=1 --match v[0-9]*.[0-9]*.[0-9]* --exclude *beta*
-
   jvm-build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
         with:
@@ -57,7 +40,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: build-${{ matrix.os }}
+          name: build-windows-latest
           path: app/jvmApp/build/all-libs
 
   release-ms-store:
@@ -77,24 +60,9 @@ jobs:
         with:
           name: build-windows-latest
           path: ./artifacts/windows
-      - name: Download Linux build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: build-ubuntu-latest
-          path: ./artifacts/linux
       - name: Run printConveyorConfig
         run: ./gradlew -q printConveyorConfig
 
-      # 🌟 PR時 (検証フェーズ): 履歴断絶に備え、バージョンを固定値で強制上書きしてビルドチェックのみ実施します
-      - name: Build MSIX Package for PR (Validation Only)
-        if: github.event_name == 'pull_request'
-        uses: hydraulic-software/conveyor/actions/build@v22.0
-        with:
-          command: -f ci.conveyor.conf -Kapp.version=2.0.1 make windows-msix
-          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
-          agree_to_license: 1
-
-      # 🌟 main PUSH時 (テストリリース): Gradleの自動計算バージョンを使用してMSIXをビルド・署名します
       - name: Build MSIX Package for Test Flight
         if: github.event_name == 'push'
         uses: hydraulic-software/conveyor/actions/build@v22.0
@@ -103,7 +71,6 @@ jobs:
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
 
-      # 🌟 main PUSH時 (テストリリース): 自作PythonスクリプトでMSIXを特定のテストフライトへ送信します
       - name: Upload MSIX to Microsoft Store Test Flight
         if: github.event_name == 'push'
         run: python scripts/upload_to_flight.py
@@ -113,7 +80,6 @@ jobs:
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_FLIGHT_ID: ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
 
-      # 🌟 GitHubリリース公開時 (正式リリースフェーズ): Conveyorの機能で正式版ストアへ提出します (バージョンは自動インポート)
       - name: Run Conveyor to release to Microsoft Store (Production)
         if: github.event_name == 'release'
         uses: hydraulic-software/conveyor/actions/build@v22.0
