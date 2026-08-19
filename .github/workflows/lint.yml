@@ -43,13 +43,13 @@ jobs:
     name: 🔍️ ${{ matrix.name || matrix.task }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
         run: ./gradlew ${{ matrix.task }}
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@ff2f1c621b7f889edc0d3c761ac2e6a3f8cdb0dd # v4
         if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
         with:
           sarif_file: ${{ matrix.sarif_file }}
