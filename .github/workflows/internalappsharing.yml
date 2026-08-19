@@ -17,76 +17,16 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    environment: android
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
-      - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Decode android keystore file
-        id: android_keystore
-        uses: timheuer/base64-to-file@dfa5a5dd38803cb4f5c3a081eeb28e8362d43e9c # v2
-        with:
-          fileName: 'android_keystore.jks'
-          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
-      - name: Run bundleInternal
-        run: ./gradlew bundleInternal
-        env:
-          ORG_GRADLE_PROJECT_androidSigningStoreFile: ${{ steps.android_keystore.outputs.filePath }}
-          ORG_GRADLE_PROJECT_androidSigningStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_androidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_androidSigningKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      - name: Upload release files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: android-release-files
-          path: app/androidApp/build/outputs/bundle/internal/androidApp-internal.aab
-      - name: Upload mapping file
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: android-mapping-file
-          path: app/androidApp/build/outputs/mapping/internal/mapping.txt
-      - name: Upload debug symbols
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: android-debug-symbols
-          path: app/androidApp/build/intermediates/merged_native_libs/internal/mergeInternalNativeLibs/out/lib
-
   publish:
-    runs-on: ubuntu-latest
-    environment: android
-    needs: build
-    outputs:
-      internalSharingDownloadUrl: ${{ steps.upload.outputs.internalSharingDownloadUrl }}
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v8
-        with:
-          path: artifacts/
-      - name: Print
-        run: |
-          find ./artifacts
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-      - name: Upload to Google Play
-        id: upload
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
-          packageName: com.sorrowblue.comicviewer
-          releaseFiles: ./artifacts/android-release-files/*
-          tracks: internalsharing
-          status: completed
-          mappingFile: ./artifacts/android-mapping-file/mapping.txt
-          debugSymbols: ./artifacts/android-debug-symbols/
+    uses: ./.github/workflows/shared/android-publish.yml
+    with:
+      build-task: 'bundleInternal'
+      aab-path: 'app/androidApp/build/outputs/bundle/internal/androidApp-internal.aab'
+      mapping-path: 'app/androidApp/build/outputs/mapping/internal/mapping.txt'
+      debug-symbols-path: 'app/androidApp/build/intermediates/merged_native_libs/internal/mergeInternalNativeLibs/out/lib'
+      track: 'internalsharing'
+      status: 'completed'
+    secrets: inherit
 
   notify:
     needs: publish
@@ -99,5 +39,5 @@ jobs:
           nodetail: true
           title: ":sparkles: Uploaded to internal app share."
           description: |
-            Click [here](${{ needs.build-upload.outputs.internalSharingDownloadUrl }}) to download!
+            Click [here](${{ needs.publish.outputs.play-url }}) to download!
           color: 0xff91a4

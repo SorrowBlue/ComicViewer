@@ -1,0 +1,122 @@
+name: Android Publish (Shared)
+
+on:
+  workflow_call:
+    inputs:
+      build-task:
+        required: true
+        type: string
+        description: "Gradle task to run for bundle build (e.g. bundleInternal, bundleRelease)"
+      aab-path:
+        required: true
+        type: string
+        description: "Path to the generated AAB file"
+      mapping-path:
+        required: true
+        type: string
+        description: "Path to the Proguard mapping file"
+      debug-symbols-path:
+        required: true
+        type: string
+        description: "Path to the debug symbols directory"
+      track:
+        required: true
+        type: string
+        description: "Google Play track (e.g. internalsharing, beta, production)"
+      status:
+        required: true
+        type: string
+        description: "Google Play release status (e.g. completed, draft)"
+    outputs:
+      play-url:
+        description: "Google Play associated URL (download URL or Console URL)"
+        value: ${{ jobs.publish.outputs.play-url }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Decode android keystore file
+        id: android_keystore
+        uses: timheuer/base64-to-file@dfa5a5dd38803cb4f5c3a081eeb28e8362d43e9c # v2
+        with:
+          fileName: 'android_keystore.jks'
+          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
+      - name: Run gradle build task
+        run: ./gradlew ${{ inputs.build-task }}
+        env:
+          ORG_GRADLE_PROJECT_androidSigningStoreFile: ${{ steps.android_keystore.outputs.filePath }}
+          ORG_GRADLE_PROJECT_androidSigningStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_androidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_androidSigningKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      - name: Upload release files
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-release-files
+          path: ${{ inputs.aab-path }}
+      - name: Upload mapping file
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-mapping-file
+          path: ${{ inputs.mapping-path }}
+      - name: Upload debug symbols
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-debug-symbols
+          path: ${{ inputs.debug-symbols-path }}
+
+  publish:
+    runs-on: ubuntu-latest
+    environment: android
+    needs: build
+    outputs:
+      play-url: ${{ steps.resolve-url.outputs.play-url }}
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts/
+      - name: Print
+        run: |
+          find ./artifacts
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+      - name: Upload to Google Play
+        id: upload
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
+          packageName: com.sorrowblue.comicviewer
+          releaseFiles: ./artifacts/android-release-files/*
+          tracks: ${{ inputs.track }}
+          status: ${{ inputs.status }}
+          mappingFile: ./artifacts/android-mapping-file/mapping.txt
+          debugSymbols: ./artifacts/android-debug-symbols/
+      - name: Resolve Play URL
+        id: resolve-url
+        run: |
+          if [ "${{ inputs.track }}" = "internalsharing" ]; then
+            URL="${{ steps.upload.outputs.internalSharingDownloadUrl }}"
+          elif [ -n "${{ secrets.PLAY_CONSOLE_DEVELOPER_ID }}" ] && [ -n "${{ secrets.PLAY_CONSOLE_APP_ID }}" ]; then
+            if [ "${{ inputs.track }}" = "production" ]; then
+              URL="https://play.google.com/console/u/0/developers/${{ secrets.PLAY_CONSOLE_DEVELOPER_ID }}/app/${{ secrets.PLAY_CONSOLE_APP_ID }}/tracks/production"
+            elif [ "${{ inputs.track }}" = "beta" ]; then
+              URL="https://play.google.com/console/u/0/developers/${{ secrets.PLAY_CONSOLE_DEVELOPER_ID }}/app/${{ secrets.PLAY_CONSOLE_APP_ID }}/tracks/open-testing"
+            else
+              URL="https://play.google.com/console"
+            fi
+          else
+            URL="https://play.google.com/console"
+          fi
+          echo "play-url=$URL" >> $GITHUB_OUTPUT
