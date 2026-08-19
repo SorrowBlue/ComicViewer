@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🤖 ExportLibraryDefinitions for android
@@ -32,7 +32,7 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
         with:
           token: ${{ secrets.PAT }}
           title: 'Update aboutlibraries.json'
@@ -46,7 +46,7 @@ jobs:
 
       - name: Enable Auto Merge
         if: steps.cpr.outputs.pull-request-operation == 'created'
-        uses: peter-evans/enable-pull-request-automerge@v3
+        uses: peter-evans/enable-pull-request-automerge@a660677d5469627102a1c1e11409dd063606628d # v3
         with:
           token: ${{ secrets.PAT }}
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}

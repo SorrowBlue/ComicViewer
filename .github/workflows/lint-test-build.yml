@@ -26,7 +26,7 @@ jobs:
       should-run: ${{ steps.check.outputs.should-run }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 2
       - name: Get changed files
@@ -79,7 +79,7 @@ jobs:
     if: always() && cancelled() != true && needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: wechuli/allcheckspassed@v2
+      - uses: wechuli/allcheckspassed@204ff63e89eabdc8086f0c50b91f675bcf37c8f6 # v2
         with:
           poll: false
           delay: 0
