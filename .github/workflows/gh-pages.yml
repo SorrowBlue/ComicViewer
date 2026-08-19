@@ -60,7 +60,7 @@ jobs:
           cp -a docs/. ./
           rm -rf docs
       - name: Setup Ruby
-        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f3ec1aec69527ad90 # v1.193.0
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -70,7 +70,7 @@ jobs:
       - name: Build with Jekyll
         run: bundle exec jekyll build --source ./ --destination ./_site
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@56afc609e74202658d3ffbe7e37975b403859a41 # v3.0.1
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./_site
   deploy:
