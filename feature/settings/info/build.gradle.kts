@@ -1,4 +1,4 @@
-import com.sorrowblue.comicviewer.gitTagProvider
+import com.sorrowblue.comicviewer.GitTagValueSource
 
 plugins {
     alias(libs.plugins.comicviewer.multiplatformFeature)
@@ -26,16 +26,11 @@ kotlin {
     }
 }
 
-
+val gitTagProvider: Provider<String>
+    get() = providers.of(GitTagValueSource::class) {}
 
 buildConfig {
     packageName = "om.sorrowblue.comicviewer.feature.settings"
-    buildConfigField(
-        "VERSION_NAME",
-        gitTagProvider.orElse("unknown").get(),
-    )
-    buildConfigField(
-        "TIMESTAMP",
-        System.currentTimeMillis(),
-    )
+    buildConfigField("VERSION_NAME", gitTagProvider.get())
+    buildConfigField("TIMESTAMP", System.currentTimeMillis())
 }

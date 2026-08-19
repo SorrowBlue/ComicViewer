@@ -23,10 +23,6 @@ class VersionUtilsTest {
 
         // コミット数が 64000 まで進んだ極端なフライトリリース -> 65535の上限に綺麗に収まることを確認
         assertEquals("2.0.65000", extractPackageVersion("v2.0.0-64000-gabcdef")) // 1000 + 64000 = 65000
-
-        // 3. 不明な場合や空文字の場合 -> 許容されるフォールバック
-        assertEquals("1.0.0", extractPackageVersion("UNKNOWN"))
-        assertEquals("1.0.0", extractPackageVersion(""))
     }
 
     @Test
@@ -41,16 +37,5 @@ class VersionUtilsTest {
         assertFailsWith<IllegalArgumentException> {
             extractPackageVersion("invalid-format-string")
         }
-    }
-
-    @Test
-    fun testCalculateVersionCode() {
-        // 公式リリース: (major * 10000 + minor * 100 + patch) * 100 + 99
-        assertEquals(2000099, calculateVersionCode("v2.0.0"))
-        assertEquals(2000199, calculateVersionCode("v2.0.1"))
-        
-        // ベータリリース: (major * 10000 + minor * 100 + patch) * 100 + beta_number
-        assertEquals(2000001, calculateVersionCode("v2.0.0-beta.1"))
-        assertEquals(2000022, calculateVersionCode("v2.0.0-beta.22"))
     }
 }

@@ -1,5 +1,4 @@
 import com.sorrowblue.comicviewer.configureKotlin
-import com.sorrowblue.comicviewer.extractPackageVersion
 import com.sorrowblue.comicviewer.libs
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -13,6 +12,7 @@ plugins {
     alias(libs.plugins.comicviewer.primitive.dokka)
     alias(libs.plugins.comicviewer.primitive.aboutlibraries)
     id("dev.hydraulic.conveyor") version "2.0"
+    id("comicviewer.primitive.jvm-app-version")
 }
 
 aboutLibraries {
@@ -45,9 +45,6 @@ kotlin {
     }
 }
 
-val gitTagProvider = providers.of(GitTagValueSource::class) {}
-version = extractPackageVersion(gitTagProvider.orElse("1.0.0").get())
-
 compose.desktop {
     application {
         mainClass = "com.sorrowblue.comicviewer.MainKt"
@@ -60,7 +57,7 @@ compose.desktop {
             )
 
             packageName = "com-sorrowblue-comicviewer"
-            packageVersion = extractPackageVersion(gitTagProvider.orElse("1.0.0").get())
+            packageVersion = version.toString()
             vendor = "SorrowBlue"
             description = "Multi-platform Comic Viewer"
             copyright = "Copyright 2026 SorrowBlue."
