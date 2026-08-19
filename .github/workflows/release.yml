@@ -18,7 +18,7 @@ jobs:
   test:
     uses: ./.github/workflows/test.yml
 
-  publish-android:
+  android-publish:
     needs: [ lint, test ]
     uses: ./.github/workflows/shared/android-publish.yml
     with:
@@ -30,7 +30,7 @@ jobs:
       status: 'draft'
     secrets: inherit
 
-  publish-desktop:
+  desktop-publish:
     needs: [ lint, test ]
     uses: ./.github/workflows/shared/desktop-publish.yml
     with:
@@ -63,7 +63,7 @@ jobs:
 
   upload-release-assets:
     runs-on: ubuntu-latest
-    needs: [ publish-android, publish-desktop, build-jvm-release ]
+    needs: [ android-publish, desktop-publish, build-jvm-release ]
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -93,7 +93,7 @@ jobs:
             **GitHub Release**:
               [View release](${{ github.event.release.html_url }})
             **Google Play Console**:
-              [View Console](${{ needs.publish-android.outputs.play-url }})
+              [View Console](${{ needs.android-publish.outputs.play-url }})
           color: 0x00ff00
       - name: Notify Discord - Failure
         if: failure()
