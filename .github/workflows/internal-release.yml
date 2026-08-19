@@ -28,8 +28,8 @@ jobs:
       status: 'completed'
     secrets: inherit
 
-  desktop-publish:
-    uses: ./.github/workflows/shared/desktop-publish.yml
+  windows-publish:
+    uses: ./.github/workflows/shared/windows-publish.yml
     with:
       channel: 'test-flight'
     secrets: inherit
