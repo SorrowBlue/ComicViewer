@@ -21,25 +21,25 @@ jobs:
           - name: "Detekt (build-logic)"
             task: ":build-logic:detektMain"
             sarif_file: "build-logic/build/reports/detekt/main.sarif"
-            category: "detekt"
+            category: "detekt-build-logic"
           - name: "VersionCatalog"
             task: "checkVersionCatalog"
           - name: "lintDebug"
             task: "app:androidApp:lintDebug"
             sarif_file: "app/androidApp/build/reports/lint-results-debug.sarif"
-            category: "android-lint"
+            category: "android-lint-debug"
           - name: "lintInternal"
             task: "app:androidApp:lintInternal"
             sarif_file: "app/androidApp/build/reports/lint-results-internal.sarif"
-            category: "android-lint"
+            category: "android-lint-internal"
           - name: "lintPrerelease"
             task: "app:androidApp:lintPrerelease"
             sarif_file: "app/androidApp/build/reports/lint-results-prerelease.sarif"
-            category: "android-lint"
+            category: "android-lint-prerelease"
           - name: "lintRelease"
             task: "app:androidApp:lintRelease"
             sarif_file: "app/androidApp/build/reports/lint-results-release.sarif"
-            category: "android-lint"
+            category: "android-lint-release"
     name: 🔍️ ${{ matrix.name || matrix.task }}
     steps:
       - name: Checkout
@@ -49,7 +49,7 @@ jobs:
       - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
         run: ./gradlew ${{ matrix.task }}
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
         with:
           sarif_file: ${{ matrix.sarif_file }}

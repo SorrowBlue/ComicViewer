@@ -3,35 +3,54 @@ tag-template: 'v$RESOLVED_VERSION'
 
 categories:
   - title: '✨ Features'
-    label: 'type: :sparkles:feature'
+    when:
+      labels:
+        - 'type: :sparkles:feature'
   - title: '🚀 Enhancements'
-    label: 'type: :rocket:enhancement'
+    when:
+      labels:
+        - 'type: :rocket:enhancement'
   - title: '🐛 Bug Fixes'
-    label: 'type: :bug:bug'
+    when:
+      labels:
+        - 'type: :bug:bug'
   - title: '♻️ Refactoring'
-    label: 'type: :recycle:refactor'
+    when:
+      labels:
+        - 'type: :recycle:refactor'
   - title: '⚙️ Maintenance'
-    label: 'type: :gear:chore'
+    when:
+      labels:
+        - 'type: :gear:chore'
   - title: '📝 Documentation'
-    label: 'type: :memo:documentation'
+    when:
+      labels:
+        - 'type: :memo:documentation'
   - title: '📦 Dependency update'
-    label: 'type: :dependabot:dependencies'
+    when:
+      labels:
+        - 'type: :dependabot:dependencies'
+  - type: 'version-resolver'
+    semver-increment: 'major'
+    when:
+      labels:
+        - 'major'
+  - type: 'version-resolver'
+    semver-increment: 'minor'
+    when:
+      labels:
+        - 'minor'
+  - type: 'version-resolver'
+    semver-increment: 'patch'
+    when:
+      labels:
+        - 'patch'
+  - type: 'version-resolver'
+    semver-increment: 'patch'
 
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
-
-version-resolver:
-  major:
-    labels:
-      - 'major'
-  minor:
-    labels:
-      - 'minor'
-  patch:
-    labels:
-      - 'patch'
-  default: patch
 
 template: |
   ## Changes

@@ -1,20 +1,36 @@
-name: Internal App Sharing
+name: Android Publish (Shared)
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.idea/**'
-      - '.run/**'
-      - 'config/**'
-      - 'docs/**'
-      - 'iosApp/**'
-
-permissions:
-  contents: read
-  id-token: write
+  workflow_call:
+    inputs:
+      build-task:
+        required: true
+        type: string
+        description: "Gradle task to run for bundle build (e.g. bundleInternal, bundleRelease)"
+      aab-path:
+        required: true
+        type: string
+        description: "Path to the generated AAB file"
+      mapping-path:
+        required: true
+        type: string
+        description: "Path to the Proguard mapping file"
+      debug-symbols-path:
+        required: true
+        type: string
+        description: "Path to the debug symbols directory"
+      track:
+        required: true
+        type: string
+        description: "Google Play track (e.g. internalsharing, beta, production)"
+      status:
+        required: true
+        type: string
+        description: "Google Play release status (e.g. completed, draft)"
+    outputs:
+      play-url:
+        description: "Google Play associated URL (download URL or Console URL)"
+        value: ${{ jobs.publish.outputs.play-url }}
 
 jobs:
   build:
@@ -33,8 +49,8 @@ jobs:
         with:
           fileName: 'android_keystore.jks'
           encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
-      - name: Run bundleInternal
-        run: ./gradlew bundleInternal
+      - name: Run gradle build task
+        run: ./gradlew ${{ inputs.build-task }}
         env:
           ORG_GRADLE_PROJECT_androidSigningStoreFile: ${{ steps.android_keystore.outputs.filePath }}
           ORG_GRADLE_PROJECT_androidSigningStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
@@ -44,24 +60,24 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-release-files
-          path: app/androidApp/build/outputs/bundle/internal/androidApp-internal.aab
+          path: ${{ inputs.aab-path }}
       - name: Upload mapping file
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-mapping-file
-          path: app/androidApp/build/outputs/mapping/internal/mapping.txt
+          path: ${{ inputs.mapping-path }}
       - name: Upload debug symbols
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-debug-symbols
-          path: app/androidApp/build/intermediates/merged_native_libs/internal/mergeInternalNativeLibs/out/lib
+          path: ${{ inputs.debug-symbols-path }}
 
   publish:
     runs-on: ubuntu-latest
     environment: android
     needs: build
     outputs:
-      internalSharingDownloadUrl: ${{ steps.upload.outputs.internalSharingDownloadUrl }}
+      play-url: ${{ steps.resolve-url.outputs.play-url }}
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v8
@@ -83,21 +99,24 @@ jobs:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           packageName: com.sorrowblue.comicviewer
           releaseFiles: ./artifacts/android-release-files/*
-          tracks: internalsharing
-          status: completed
+          tracks: ${{ inputs.track }}
+          status: ${{ inputs.status }}
           mappingFile: ./artifacts/android-mapping-file/mapping.txt
           debugSymbols: ./artifacts/android-debug-symbols/
-
-  notify:
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify Discord
-        uses: sarisia/actions-status-discord@v1
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          nodetail: true
-          title: ":sparkles: Uploaded to internal app share."
-          description: |
-            Click [here](${{ needs.build-upload.outputs.internalSharingDownloadUrl }}) to download!
-          color: 0xff91a4
+      - name: Resolve Play URL
+        id: resolve-url
+        run: |
+          if [ "${{ inputs.track }}" = "internalsharing" ]; then
+            URL="${{ steps.upload.outputs.internalSharingDownloadUrl }}"
+          elif [ -n "${{ secrets.PLAY_CONSOLE_DEVELOPER_ID }}" ] && [ -n "${{ secrets.PLAY_CONSOLE_APP_ID }}" ]; then
+            if [ "${{ inputs.track }}" = "production" ]; then
+              URL="https://play.google.com/console/u/0/developers/${{ secrets.PLAY_CONSOLE_DEVELOPER_ID }}/app/${{ secrets.PLAY_CONSOLE_APP_ID }}/tracks/production"
+            elif [ "${{ inputs.track }}" = "beta" ]; then
+              URL="https://play.google.com/console/u/0/developers/${{ secrets.PLAY_CONSOLE_DEVELOPER_ID }}/app/${{ secrets.PLAY_CONSOLE_APP_ID }}/tracks/open-testing"
+            else
+              URL="https://play.google.com/console"
+            fi
+          else
+            URL="https://play.google.com/console"
+          fi
+          echo "play-url=$URL" >> $GITHUB_OUTPUT

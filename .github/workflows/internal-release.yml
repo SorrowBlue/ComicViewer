@@ -1,0 +1,49 @@
+name: Internal Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.idea/**'
+      - '.run/**'
+      - 'config/**'
+      - 'docs/**'
+      - 'iosApp/**'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  android-publish:
+    uses: ./.github/workflows/android-publish.yml
+    with:
+      build-task: 'bundleInternal'
+      aab-path: 'app/androidApp/build/outputs/bundle/internal/androidApp-internal.aab'
+      mapping-path: 'app/androidApp/build/outputs/mapping/internal/mapping.txt'
+      debug-symbols-path: 'app/androidApp/build/intermediates/merged_native_libs/internal/mergeInternalNativeLibs/out/lib'
+      track: 'internalsharing'
+      status: 'completed'
+    secrets: inherit
+
+  windows-publish:
+    uses: ./.github/workflows/windows-publish.yml
+    with:
+      channel: 'test-flight'
+    secrets: inherit
+
+  notify-android:
+    needs: android-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: ":sparkles: Uploaded to internal app share."
+          description: |
+            Click [here](${{ needs.android-publish.outputs.play-url }}) to download!
+          color: 0xff91a4
