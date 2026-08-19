@@ -5,9 +5,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -76,7 +73,6 @@ jobs:
         with:
           path: ./_site
   deploy:
-    if: github.event_name != 'pull_request'
     needs: jekyll-build
     permissions:
       id-token: write
