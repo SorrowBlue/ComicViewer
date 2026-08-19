@@ -27,7 +27,7 @@ abstract class GitTagValueSource @Inject constructor(private val execOperations:
         }
 
         if (result.exitValue != 0) {
-            logger.error("Warning: Could not get git tag. (Exit code: ${result.exitValue})")
+            logger.error("Warning: Could not get git tag. (Exit code: ${result.exitValue}). stdout: $stdout")
             return "UNKNOWN"
         }
 
@@ -99,7 +99,7 @@ abstract class GitFormalTagValueSource @Inject constructor(
         if (result.exitValue == 0) {
             stdout.toString().trim()
         } else {
-            logger.error("Warning: Could not get git formal tag. (Exit code: ${result.exitValue})")
+            logger.error("Warning: Could not get git formal tag. (Exit code: ${result.exitValue}). stdout: $stdout")
             "UNKNOWN"
         }
     }.onFailure {
