@@ -13,27 +13,80 @@ permissions:
 
 jobs:
   lint:
-    uses: SorrowBlue/github-actions/.github/workflows/analyze-matrix.yml@main
-    with:
-      matrix-json: '.github/lint-matrix.json'
+    uses: ./.github/workflows/lint.yml
 
   test:
     uses: ./.github/workflows/test.yml
 
-  build-android-release:
+  build-android:
     needs: [ lint, test ]
-    uses: SorrowBlue/github-actions/.github/workflows/android-publish.yml@main
-    secrets: inherit
-    with:
-      environment: android
-      fetch-depth: 0
-      task: bundleRelease
-      package-name: com.sorrowblue.comicviewer
-      release-files: app/androidApp/build/outputs/bundle/release/androidApp-release.aab
-      tracks: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
-      status: draft
-      mapping-file: app/androidApp/build/outputs/mapping/release/mapping.txt
-      debug-symbols: app/androidApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+    runs-on: ubuntu-latest
+    environment: android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Decode android keystore file
+        id: android_keystore
+        uses: timheuer/base64-to-file@dfa5a5dd38803cb4f5c3a081eeb28e8362d43e9c # v2
+        with:
+          fileName: 'android_keystore.jks'
+          encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
+      - name: Run bundleRelease
+        run: ./gradlew bundleRelease
+        env:
+          ORG_GRADLE_PROJECT_androidSigningStoreFile: ${{ steps.android_keystore.outputs.filePath }}
+          ORG_GRADLE_PROJECT_androidSigningStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_androidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_androidSigningKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      - name: Upload release files
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-release-files
+          path: app/androidApp/build/outputs/bundle/release/androidApp-release.aab
+      - name: Upload mapping file
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-mapping-file
+          path: app/androidApp/build/outputs/mapping/release/mapping.txt
+      - name: Upload debug symbols
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-debug-symbols
+          path: app/androidApp/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib
+
+  publish-android:
+    needs: build-android
+    runs-on: ubuntu-latest
+    environment: android
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts/
+      - name: Print
+        run: |
+          find ./artifacts
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+      - name: Upload to Google Play
+        id: upload
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
+          packageName: com.sorrowblue.comicviewer
+          releaseFiles: ./artifacts/android-release-files/*
+          tracks: ${{ contains(github.ref_name, 'beta') && 'beta' || 'production' }}
+          status: draft
+          mappingFile: ./artifacts/android-mapping-file/mapping.txt
+          debugSymbols: ./artifacts/android-debug-symbols/
 
   build-jvm-release:
     needs: [ lint, test ]
@@ -46,13 +99,20 @@ jobs:
             name: Windows
           - os: macos-latest
             name: Mac
-    uses: SorrowBlue/github-actions/.github/workflows/jvm-build.yml@main
-    with:
-      runs-on: ${{ matrix.os }}
-      name: ${{ matrix.name }}
-      task: packageDistributionForCurrentOS
-      output-name: jvm-${{ matrix.name }}
-      output-path: app/jvmApp/build/compose/binaries/main/
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run packageDistributionForCurrentOS
+        run: ./gradlew packageDistributionForCurrentOS
+      - name: Upload artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: jvm-${{ matrix.name }}
+          path: app/jvmApp/build/compose/binaries/main/
 
   upload-release-assets:
     runs-on: ubuntu-latest

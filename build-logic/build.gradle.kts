@@ -25,6 +25,7 @@ dependencies {
     compileOnly(libs.bundles.plugins)
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
     detektPlugins(libs.bundles.detekt)
+    testImplementation(kotlin("test"))
 }
 
 detekt {

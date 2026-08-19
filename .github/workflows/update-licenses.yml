@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Setup Java and Gradle
-        uses: SorrowBlue/github-actions/.github/actions/setup-java-gradle@main
+        uses: ./.github/actions/setup-java-gradle
       - name: 🤖 ExportLibraryDefinitions for android
         run: ./gradlew :app:androidApp:exportLibraryDefinitions --no-configure-on-demand
         env:
