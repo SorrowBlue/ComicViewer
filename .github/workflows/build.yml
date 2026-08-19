@@ -37,8 +37,6 @@ jobs:
         include:
           - os: ubuntu-latest
             name: Ubuntu
-          - os: windows-latest
-            name: Windows
           - os: macos-latest
             name: Mac
     name: ${{ matrix.name }}

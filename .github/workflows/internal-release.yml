@@ -1,4 +1,4 @@
-name: Internal App Sharing
+name: Internal Release
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ permissions:
   id-token: write
 
 jobs:
-  publish:
+  publish-android:
     uses: ./.github/workflows/shared/android-publish.yml
     with:
       build-task: 'bundleInternal'
@@ -28,8 +28,14 @@ jobs:
       status: 'completed'
     secrets: inherit
 
-  notify:
-    needs: publish
+  publish-desktop:
+    uses: ./.github/workflows/shared/desktop-publish.yml
+    with:
+      channel: 'test-flight'
+    secrets: inherit
+
+  notify-android:
+    needs: publish-android
     runs-on: ubuntu-latest
     steps:
       - name: Notify Discord
@@ -39,5 +45,5 @@ jobs:
           nodetail: true
           title: ":sparkles: Uploaded to internal app share."
           description: |
-            Click [here](${{ needs.publish.outputs.play-url }}) to download!
+            Click [here](${{ needs.publish-android.outputs.play-url }}) to download!
           color: 0xff91a4

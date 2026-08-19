@@ -1,30 +1,12 @@
-name: Release Desktop App (Conveyor)
+name: Desktop Publish (Shared)
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.idea/**'
-      - '.run/**'
-      - 'config/**'
-      - 'docs/**'
-      - 'iosApp/**'
-  pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - '.idea/**'
-      - '.run/**'
-      - 'config/**'
-      - 'docs/**'
-      - 'iosApp/**'
-  release:
-    types: [ published ]
-
-permissions:
-  contents: read
+  workflow_call:
+    inputs:
+      channel:
+        required: true
+        type: string
+        description: "Release channel (test-flight or production)"
 
 jobs:
   jvm-build:
@@ -63,8 +45,9 @@ jobs:
       - name: Run printConveyorConfig
         run: ./gradlew -q printConveyorConfig
 
+      # Test Flight
       - name: Build MSIX Package for Test Flight
-        if: github.event_name == 'push'
+        if: inputs.channel == 'test-flight'
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
           command: -f ci.conveyor.conf make windows-msix
@@ -72,7 +55,7 @@ jobs:
           agree_to_license: 1
 
       - name: Upload MSIX to Microsoft Store Test Flight
-        if: github.event_name == 'push'
+        if: inputs.channel == 'test-flight'
         run: python scripts/upload_to_flight.py
         env:
           MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
@@ -80,8 +63,9 @@ jobs:
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_FLIGHT_ID: ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
 
+      # Production
       - name: Run Conveyor to release to Microsoft Store (Production)
-        if: github.event_name == 'release'
+        if: inputs.channel == 'production'
         uses: hydraulic-software/conveyor/actions/build@v22.0
         with:
           command: -f ci.conveyor.conf make ms-store-release
