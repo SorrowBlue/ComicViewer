@@ -40,6 +40,10 @@ jobs:
             task: "app:androidApp:lintRelease"
             sarif_file: "app/androidApp/build/reports/lint-results-release.sarif"
             category: "android-lint"
+          - name: "lint"
+            task: "app:androidApp:lintDebug app:androidApp:lintInternal app:androidApp:lintPrerelease app:androidApp:lintRelease"
+            sarif_file: "app/androidApp/build/reports/"
+            category: "android-lint"
     name: 🔍️ ${{ matrix.name || matrix.task }}
     steps:
       - name: Checkout
