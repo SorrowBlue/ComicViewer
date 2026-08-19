@@ -20,7 +20,7 @@ jobs:
 
   android-publish:
     needs: [ lint, test ]
-    uses: ./.github/workflows/shared/android-publish.yml
+    uses: ./.github/workflows/android-publish.yml
     with:
       build-task: 'bundleRelease'
       aab-path: 'app/androidApp/build/outputs/bundle/release/androidApp-release.aab'
@@ -32,7 +32,7 @@ jobs:
 
   windows-publish:
     needs: [ lint, test ]
-    uses: ./.github/workflows/shared/windows-publish.yml
+    uses: ./.github/workflows/windows-publish.yml
     with:
       channel: 'production'
     secrets: inherit

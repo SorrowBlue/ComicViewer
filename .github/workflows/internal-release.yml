@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   android-publish:
-    uses: ./.github/workflows/shared/android-publish.yml
+    uses: ./.github/workflows/android-publish.yml
     with:
       build-task: 'bundleInternal'
       aab-path: 'app/androidApp/build/outputs/bundle/internal/androidApp-internal.aab'
@@ -29,7 +29,7 @@ jobs:
     secrets: inherit
 
   windows-publish:
-    uses: ./.github/workflows/shared/windows-publish.yml
+    uses: ./.github/workflows/windows-publish.yml
     with:
       channel: 'test-flight'
     secrets: inherit
