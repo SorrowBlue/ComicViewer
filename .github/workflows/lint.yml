@@ -11,50 +11,54 @@ permissions:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - name: "Detekt"
-            task: "reportMerge --continue"
-            sarif_file: "build/reports/detekt/merge.sarif"
-            category: "detekt"
-          - name: "Detekt (build-logic)"
-            task: ":build-logic:detektMain"
-            sarif_file: "build-logic/build/reports/detekt/main.sarif"
-            category: "detekt"
-          - name: "VersionCatalog"
-            task: "checkVersionCatalog"
-          - name: "lintDebug"
-            task: "app:androidApp:lintDebug"
-            sarif_file: "app/androidApp/build/reports/lint-results-debug.sarif"
-            category: "android-lint"
-          - name: "lintInternal"
-            task: "app:androidApp:lintInternal"
-            sarif_file: "app/androidApp/build/reports/lint-results-internal.sarif"
-            category: "android-lint"
-          - name: "lintPrerelease"
-            task: "app:androidApp:lintPrerelease"
-            sarif_file: "app/androidApp/build/reports/lint-results-prerelease.sarif"
-            category: "android-lint"
-          - name: "lintRelease"
-            task: "app:androidApp:lintRelease"
-            sarif_file: "app/androidApp/build/reports/lint-results-release.sarif"
-            category: "android-lint"
-          - name: "lint"
-            task: "app:androidApp:lintDebug app:androidApp:lintInternal app:androidApp:lintPrerelease app:androidApp:lintRelease"
-            sarif_file: "app/androidApp/build/reports/"
-            category: "android-lint"
-    name: 🔍️ ${{ matrix.name || matrix.task }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
-      - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
-        run: ./gradlew ${{ matrix.task }}
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
-        if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
+      - name: 🔍️Run analyze
+        run: |
+          ./gradlew :build-logic:detektMain \
+                    reportMerge \
+                    checkVersionCatalog \
+                    app:androidApp:lintDebug \
+                    app:androidApp:lintInternal \
+                    app:androidApp:lintPrerelease \
+                    app:androidApp:lintRelease \
+                    --continue
+      - name: Upload Detekt SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: ${{ !cancelled() }}
         with:
-          sarif_file: ${{ matrix.sarif_file }}
-          category: ${{ matrix.category }}
+          sarif_file: "build/reports/detekt/merge.sarif"
+          category: "detekt"
+      - name: Upload Detekt (build-logic) SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: "build-logic/build/reports/detekt/main.sarif"
+          category: "detekt-build-logic"
+      - name: Upload Android Lint (Debug) SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: "app/androidApp/build/reports/lint-results-debug.sarif"
+          category: "android-lint-debug"
+      - name: Upload Android Lint (Internal) SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: "app/androidApp/build/reports/lint-results-internal.sarif"
+          category: "android-lint-internal"
+      - name: Upload Android Lint (Prerelease) SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: "app/androidApp/build/reports/lint-results-prerelease.sarif"
+          category: "android-lint-prerelease"
+      - name: Upload Android Lint (Release) SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: "app/androidApp/build/reports/lint-results-release.sarif"
+          category: "android-lint-release"
