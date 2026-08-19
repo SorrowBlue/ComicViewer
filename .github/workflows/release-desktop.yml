@@ -27,6 +27,20 @@ permissions:
   contents: read
 
 jobs:
+
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Get Git Details
+        run: git describe --tags --abbrev=1
+
+      - name: Get Git Details2
+        run: git describe --tags --abbrev=1 --match v[0-9]*.[0-9]*.[0-9]* --exclude *beta*
+
   jvm-build:
     strategy:
       matrix:
