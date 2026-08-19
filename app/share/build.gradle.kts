@@ -42,6 +42,12 @@ kotlin {
                         apiLevel = 35
                         systemImageSource = "aosp-atd"
                     }
+                    @Suppress("UnstableApiUsage")
+                    create("pixel7pro35") {
+                        device = "Pixel 7 Pro"
+                        apiLevel = 35
+                        systemImageSource = "aosp-atd"
+                    }
                 }
             }
         }
