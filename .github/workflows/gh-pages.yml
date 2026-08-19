@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -56,33 +59,22 @@ jobs:
         run: |
           cp -a docs/. ./
           rm -rf docs
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f3ec1aec69527ad90 # v1.193.0
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.12
-        with:
-          source: ./
-      - name: Archive artifact
-        shell: sh
-        run: |
-          echo "::group::Archive artifact"
-          tar \
-            --dereference --hard-dereference \
-            --directory "_site" \
-            -cvf "$RUNNER_TEMP/artifact.tar" \
-            --exclude=.git \
-            --exclude=.github \
-            .
-          echo "::endgroup::"
+        run: bundle exec jekyll build --source ./ --destination ./_site
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffbe7e37975b403859a41 # v3.0.1
         with:
-          name: github-pages
-          path: ${{ runner.temp }}/artifact.tar
-          retention-days: 1
-          if-no-files-found: error
+          path: ./_site
   deploy:
+    if: github.event_name != 'pull_request'
     needs: jekyll-build
     permissions:
       id-token: write
