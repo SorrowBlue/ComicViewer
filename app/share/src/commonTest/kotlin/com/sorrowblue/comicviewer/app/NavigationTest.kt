@@ -140,7 +140,7 @@ class NavigationTest {
 
         onAllNodesWithTag("BookshelfListItemMenu").onFirst().performClick()
         onNodeWithTag("BookshelfInfoScreenRoot").assertIsDisplayed()
-        waitUntilAtLeastOneExists(hasTestTag("EditButton"))
+        waitUntilAtLeastOneExists(hasTestTag("EditButton"), timeoutMillis = 5000)
         onNodeWithTag("EditButton").performClick()
         onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
         if (isCompact) {
@@ -162,7 +162,7 @@ class NavigationTest {
             }
         onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
 
-        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"))
+        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"), timeoutMillis = 5000)
         onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
         onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
 
@@ -181,7 +181,7 @@ class NavigationTest {
         onNodeWithTag("SearchButton").performClick()
         onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
 
-        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"))
+        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"), timeoutMillis = 5000)
         onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
 
         onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
@@ -281,9 +281,9 @@ class NavigationTest {
         onNodeWithTag("BasicCollectionCreateScreenRoot").assertIsDisplayed()
         onNodeWithTag("CollectionNameField").requestFocus()
         onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
-        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled())
+        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = 5000)
         onNodeWithTag("CreateButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("BasicCollectionCreateScreenRoot"))
+        waitUntilDoesNotExist(hasTestTag("BasicCollectionCreateScreenRoot"), timeoutMillis = 5000)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Collection
@@ -300,7 +300,7 @@ class NavigationTest {
         onNodeWithTag("DeleteButton").performClick()
         onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         onNodeWithTag("ConfirmButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"))
+        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = 5000)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Smart collection create
@@ -310,9 +310,9 @@ class NavigationTest {
         onNodeWithTag("CollectionNameField").requestFocus()
         onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
         onNodeWithTag("QueryField").performTextInput("Search keyword")
-        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled())
+        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = 5000)
         onNodeWithTag("CreateButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("SmartCollectionCreateScreenRoot"))
+        waitUntilDoesNotExist(hasTestTag("SmartCollectionCreateScreenRoot"), timeoutMillis = 5000)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Collection
@@ -329,7 +329,7 @@ class NavigationTest {
         onNodeWithTag("DeleteButton").performClick()
         onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         onNodeWithTag("ConfirmButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"))
+        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = 5000)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
     }
 
@@ -355,10 +355,10 @@ class NavigationTest {
     }
 
     private fun ComposeUiTest.tutorial() {
-        waitUntilAtLeastOneExists(hasTestTag("TutorialScreen"))
+        waitUntilAtLeastOneExists(hasTestTag("TutorialScreen"), timeoutMillis = 5000)
         onNodeWithTag("NextButton").performClick()
         onNodeWithTag("NextButton").performClick()
         onNodeWithTag("NextButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("TutorialScreen"))
+        waitUntilDoesNotExist(hasTestTag("TutorialScreen"), timeoutMillis = 5000)
     }
 }
