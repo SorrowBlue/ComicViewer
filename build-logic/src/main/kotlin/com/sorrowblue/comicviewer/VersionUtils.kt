@@ -17,7 +17,7 @@ fun extractPackageVersion(versionName: String): String {
     val formalTagRegex = Regex("""^v\d+\.\d+\.\d+$""")
     val formalTagWithDistanceRegex = Regex("""^v\d+\.\d+\.\d+-\d+-g[0-9a-fA-F]+$""")
 
-    require(!formalTagRegex.matches(versionName) && !formalTagWithDistanceRegex.matches(versionName)) {
+    require(formalTagRegex.matches(versionName) && formalTagWithDistanceRegex.matches(versionName)) {
         "Invalid git tag format: '$versionName'. Expected formal tag (vX.Y.Z) or formal tag with distance (vX.Y.Z-N-gHash)."
     }
 
