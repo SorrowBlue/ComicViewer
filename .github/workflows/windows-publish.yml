@@ -48,7 +48,7 @@ jobs:
       # Test Flight
       - name: Build MSIX Package for Test Flight
         if: inputs.channel == 'test-flight'
-        uses: hydraulic-software/conveyor/actions/build@v22.0
+        uses: hydraulic-software/conveyor/actions/build@v22.1
         with:
           command: -f ci.conveyor.conf make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
@@ -66,7 +66,7 @@ jobs:
       # Production
       - name: Run Conveyor to release to Microsoft Store (Production)
         if: inputs.channel == 'production'
-        uses: hydraulic-software/conveyor/actions/build@v22.0
+        uses: hydraulic-software/conveyor/actions/build@v22.1
         with:
           command: -f ci.conveyor.conf make ms-store-release
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
