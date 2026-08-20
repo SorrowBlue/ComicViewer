@@ -53,15 +53,21 @@ jobs:
           command: -f ci.conveyor.conf make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
+        env:
+          MS_STORE_IDENTITY_NAME: ${{ secrets.MS_STORE_IDENTITY_NAME }}
+          MS_STORE_PUBLISHER: ${{ secrets.MS_STORE_PUBLISHER }}
+          MS_STORE_PUBLISHER_DISPLAY_NAME: ${{ secrets.MS_STORE_PUBLISHER_DISPLAY_NAME }}
+          MS_STORE_APP_ID: ${{ secrets.MS_STORE_APP_ID }}
+
+      - name: Setup MSStore CLI
+        if: inputs.channel == 'test-flight'
+        uses: microsoft/microsoft-store-apppublisher@cc9910a8d59f2eb55cbb83df0a3800cf3b5300e0 # v1.4
 
       - name: Upload MSIX to Microsoft Store Test Flight
         if: inputs.channel == 'test-flight'
-        run: python scripts/upload_to_flight.py
-        env:
-          MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
-          MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
-          MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
-          MS_STORE_FLIGHT_ID: ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
+        run: |
+          msstore reconfigure --tenantId ${{ secrets.MS_STORE_TENANT_ID }} --clientId ${{ secrets.MS_STORE_CLIENT_ID }} --clientSecret ${{ secrets.MS_STORE_CLIENT_SECRET }}
+          msstore publish output/*.msix -id ${{ secrets.MS_STORE_APP_ID }} --flightId ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
 
       # Production
       - name: Run Conveyor to release to Microsoft Store (Production)
@@ -75,6 +81,10 @@ jobs:
           MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
+          MS_STORE_APP_ID: ${{ secrets.MS_STORE_APP_ID }}
+          MS_STORE_IDENTITY_NAME: ${{ secrets.MS_STORE_IDENTITY_NAME }}
+          MS_STORE_PUBLISHER: ${{ secrets.MS_STORE_PUBLISHER }}
+          MS_STORE_PUBLISHER_DISPLAY_NAME: ${{ secrets.MS_STORE_PUBLISHER_DISPLAY_NAME }}
 
       - name: Upload conveyor artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
