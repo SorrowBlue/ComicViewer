@@ -2,15 +2,6 @@ name: Internal Release
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.idea/**'
-      - '.run/**'
-      - 'config/**'
-      - 'docs/**'
-      - 'iosApp/**'
 
 permissions:
   contents: read

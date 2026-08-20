@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**/build.gradle.kts'
+      - 'gradle/libs.versions.toml'
+      - 'settings.gradle.kts'
 
 permissions:
   contents: write
@@ -39,8 +43,6 @@ jobs:
           body: 'This PR updates the aboutlibraries.json'
           base: main
           branch: chore/update-licenses
-          assignees: 'SorrowBlue'
-          reviewers: 'Copilot'
           labels: ':robot:create-pull-request'
           commit-message: 'Update aboutlibraries.json'
 
