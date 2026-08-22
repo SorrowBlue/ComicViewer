@@ -1,0 +1,57 @@
+name: Linux Publish (Shared)
+
+on:
+  workflow_call:
+    inputs:
+      channel:
+        required: true
+        type: string
+        description: "Release channel (test-flight or production)"
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    name: Build and Release Linux App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: Run copyConveyorInputs
+        run: ./gradlew :app:jvmApp:jvmJar :app:jvmApp:printConveyorConfig :app:jvmApp:writeConveyorConfig :app:jvmApp:copyConveyorInputs
+
+      - name: Prepare inputs for Conveyor
+        run: |
+          mkdir -p artifacts/linux
+          cp -R app/jvmApp/build/all-libs/* artifacts/linux/
+
+      - name: Build Linux Package with Conveyor
+        uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
+        with:
+          command: -f ci.conveyor.conf make linux
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+          agree_to_license: 1
+
+      - name: Upload Conveyor Inputs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: conveyor-inputs-Ubuntu
+          path: app/jvmApp/build/all-libs
+
+      - name: Upload Linux Assets to GitHub Release
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3
+        if: github.event_name == 'release'
+        with:
+          files: |
+            output/*.deb
+            output/*.tar.gz
+          tag_name: ${{ github.event.release.tag_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

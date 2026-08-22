@@ -1,0 +1,59 @@
+name: macOS Publish (Shared)
+
+on:
+  workflow_call:
+    inputs:
+      channel:
+        required: true
+        type: string
+        description: "Release channel (test-flight or production)"
+
+permissions:
+  contents: write
+
+jobs:
+  build-mac:
+    name: Build and Release macOS App
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: Run copyConveyorInputs
+        run: ./gradlew :app:jvmApp:jvmJar :app:jvmApp:printConveyorConfig :app:jvmApp:writeConveyorConfig :app:jvmApp:copyConveyorInputs
+
+      # Conveyor は mac.amd64 と mac.aarch64 の両方のインプットを必要としますが、
+      # ここではローカルのビルド成果物 (all-libs) を両方のインプットとして共通配置してクロスビルドします。
+      - name: Prepare inputs for Conveyor
+        run: |
+          mkdir -p artifacts/mac
+          cp -R app/jvmApp/build/all-libs/* artifacts/mac/
+
+      - name: Build macOS Package with Conveyor
+        uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
+        with:
+          command: -f ci.conveyor.conf make mac
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+          agree_to_license: 1
+
+      - name: Upload Conveyor Inputs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: conveyor-inputs-Mac
+          path: app/jvmApp/build/all-libs
+
+      - name: Upload macOS Assets to GitHub Release
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3
+        if: github.event_name == 'release'
+        with:
+          files: |
+            output/*.dmg
+            output/*.zip
+          tag_name: ${{ github.event.release.tag_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

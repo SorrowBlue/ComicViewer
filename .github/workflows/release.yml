@@ -37,47 +37,86 @@ jobs:
       channel: 'production'
     secrets: inherit
 
-  build-jvm-release:
+  mac-publish:
     needs: [ lint, test ]
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            name: Ubuntu
-          - os: macos-latest
-            name: Mac
-    name: ${{ matrix.name }}
-    runs-on: ${{ matrix.os }}
+    uses: ./.github/workflows/mac-publish.yml
+    with:
+      channel: 'production'
+    secrets: inherit
+
+  linux-publish:
+    needs: [ lint, test ]
+    uses: ./.github/workflows/linux-publish.yml
+    with:
+      channel: 'production'
+    secrets: inherit
+
+  build-download-site:
+    name: Build Download Site
+    needs: [ mac-publish, linux-publish ]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Run packageDistributionForCurrentOS
-        run: ./gradlew packageDistributionForCurrentOS
-      - name: Upload artifact
+        with:
+          fetch-depth: 0
+
+      - name: Download Linux inputs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: conveyor-inputs-Ubuntu
+          path: ./artifacts/linux
+
+      - name: Download Mac inputs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: conveyor-inputs-Mac
+          path: ./artifacts/mac
+
+      - name: Build Download Site with Conveyor
+        uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
+        with:
+          command: -f ci.conveyor.conf make site
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+          agree_to_license: 1
+
+      - name: Upload site artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: jvm-${{ matrix.name }}
-          path: app/jvmApp/build/compose/binaries/main/
+          name: download-site
+          path: |
+            output/download.html
+            output/metadata.properties
 
   upload-release-assets:
     runs-on: ubuntu-latest
-    needs: [ android-publish, windows-publish, build-jvm-release ]
+    needs: [ android-publish, windows-publish, mac-publish, linux-publish, build-download-site ]
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           path: ./artifacts
+
       - name: Display structure of downloaded files
         run: ls -la ./artifacts/**
+
       - name: Upload Release Assets
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3
         if: github.event_name == 'release'
         with:
           files: |
-            ./artifacts/jvm-Ubuntu/deb/*
-            ./artifacts/jvm-Mac/dmg/*
+            ./artifacts/download-site/download.html
+            ./artifacts/download-site/metadata.properties
+          tag_name: ${{ github.event.release.tag_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Pages Deployment
+        run: |
+          gh workflow run gh-pages.yml --ref ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Notify Discord - Release Success
         uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1
         with:
@@ -89,6 +128,7 @@ jobs:
             :package: Release artifacts uploaded to GitHub
             :iphone: Android AAB uploaded to Play Console
             :jvm: JVM apps built for Windows, macOS, Linux
+            :spider_web: Download site updated and deployed to GitHub Pages
 
             **GitHub Release**:
               [View release](${{ github.event.release.html_url }})

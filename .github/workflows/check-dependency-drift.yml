@@ -1,0 +1,129 @@
+name: Check Dependency Configuration Drift
+
+on:
+  push:
+    branches:
+      - main
+      - feature/check-dependency-drift
+    # 検証時のみ一時的にpathsを無効化し、どのファイルのプッシュでも発火するようにします
+    # paths:
+    #   - 'gradle/libs.versions.toml'
+    #   - '**/build.gradle.kts'
+    #   - 'settings.gradle.kts'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-drift:
+    name: Check Drift on ${{ matrix.os-name }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            os-name: Linux
+          - os: macos-latest
+            os-name: macOS
+          - os: windows-latest
+            os-name: Windows
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: Generate current dependency manifest
+        run: |
+          ./gradlew :app:jvmApp:writeConveyorConfig
+          # チェックアウト時に消えないように親ディレクトリに退避させておく
+          cp extract_deps.py ../extract_deps.py
+          if [ -f app/jvmApp/generated.conveyor.conf ]; then
+            python extract_deps.py app/jvmApp/generated.conveyor.conf ./dependency-manifest-new.txt
+          else
+            echo "Current conveyor config not found."
+            touch ./dependency-manifest-new.txt
+          fi
+
+      - name: Generate previous dependency manifest (HEAD~1)
+        run: |
+          git checkout HEAD~1
+          ./gradlew :app:jvmApp:writeConveyorConfig || true
+          if [ -f app/jvmApp/generated.conveyor.conf ]; then
+            python ../extract_deps.py app/jvmApp/generated.conveyor.conf ./dependency-manifest-old.txt
+          else
+            echo "Previous conveyor config not found. Creating empty fallback."
+            touch ./dependency-manifest-old.txt
+          fi
+
+      - name: Compare manifests and create artifact
+        run: |
+          diff -u ./dependency-manifest-old.txt ./dependency-manifest-new.txt > ./diff-${{ matrix.os-name }}.txt || true
+          # 差分がない場合はファイル自体を削除（アップロード対象外にする）
+          if [ ! -s ./diff-${{ matrix.os-name }}.txt ]; then
+            rm -f ./diff-${{ matrix.os-name }}.txt
+          fi
+
+      - name: Upload diff artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: diff-${{ matrix.os-name }}
+          path: ./diff-${{ matrix.os-name }}.txt
+          if-no-files-found: ignore
+
+  create-issue:
+    name: Create Unified Issue
+    needs: [ check-drift ]
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Download all diff artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          path: ./diffs
+          merge-multiple: true
+
+      - name: Check and unify diffs
+        run: |
+          HAS_DIFF=false
+          BODY_FILE="./issue_body.md"
+          
+          # 本文のヘッダーを作成 (英語・絵文字なし)
+          cat << 'EOF' > "$BODY_FILE"
+          ## Dependency changes detected
+
+          Dependency changes (additions, removals, or version updates) affecting the Conveyor build configuration have been detected.
+          Please verify the distribution settings and perform verification testing.
+
+          EOF
+          
+          # 各OSの差分ファイルを順番にマージ
+          for OS in "Windows" "macOS" "Linux"; do
+            FILE="./diffs/diff-${OS}.txt"
+            if [ -s "$FILE" ]; then
+              HAS_DIFF=true
+              echo "### Diffs for ${OS}" >> "$BODY_FILE"
+              echo "\`\`\`diff" >> "$BODY_FILE"
+              cat "$FILE" >> "$BODY_FILE"
+              echo -e "\n\`\`\`" >> "$BODY_FILE"
+              echo "" >> "$BODY_FILE"
+            fi
+          done
+          
+          if [ "$HAS_DIFF" = true ]; then
+            echo "Creating unified Issue..."
+            gh issue create --title "[Dependency Update] Distribution configuration check required" --body-file "$BODY_FILE"
+          else
+            echo "No dependency changes detected across all platforms."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
