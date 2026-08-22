@@ -5,6 +5,8 @@ theme: jekyll-theme-cayman
 include:
   - .well-known
   - dokka
+  - download
 keep_files:
   - .well-known
   - dokka
+  - download

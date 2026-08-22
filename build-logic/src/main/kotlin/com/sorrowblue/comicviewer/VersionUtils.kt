@@ -4,6 +4,8 @@
 
 package com.sorrowblue.comicviewer
 
+private val VersionTagRegex = Regex("""^v(\d+)\.(\d+)\.(\d+)(?:-(\d+)-g[0-9a-fA-F]+)?$""")
+
 /**
  * Git タグからパッケージバージョンを抽出します。
  * Git タグ（例: "v1.2.3" または "1.2.3-beta.1"）をパッケージバージョン形式に変換します。
@@ -14,23 +16,17 @@ fun extractPackageVersion(versionName: String): String {
         return "0.0.0"
     }
 
-    val formalTagRegex = Regex("""^v\d+\.\d+\.\d+$""")
-    val formalTagWithDistanceRegex = Regex("""^v\d+\.\d+\.\d+-\d+-g[0-9a-fA-F]+$""")
-
-    require(formalTagRegex.matches(versionName) || formalTagWithDistanceRegex.matches(versionName)) {
+    val matchResult = VersionTagRegex.matchEntire(versionName)
+    requireNotNull(matchResult) {
         "Invalid git tag format: '$versionName'. Expected formal tag (vX.Y.Z) or formal tag with distance (vX.Y.Z-N-gHash)."
     }
 
-    val cleanName = versionName.substring(1)
-    val parts = cleanName.split("-")
-    val baseVersion = parts[0]
-    val baseParts = baseVersion.split(".")
+    val (majorStr, minorStr, patchStr) = matchResult.destructured
+    val major = majorStr.toInt()
+    val minor = minorStr.toInt()
+    val patch = patchStr.toInt()
 
-    val major = baseParts[0].toIntOrNull() ?: 1
-    val minor = baseParts[1].toIntOrNull() ?: 0
-    val patch = baseParts[2].toIntOrNull() ?: 0
-
-    val distance = if (parts.size > 1) parts[1].toIntOrNull() ?: 0 else 0
+    val distance = matchResult.groups[4]?.value?.toIntOrNull() ?: 0
 
     val newPatch = if (distance == 0) {
         patch
@@ -40,3 +36,4 @@ fun extractPackageVersion(versionName: String): String {
 
     return "$major.$minor.$newPatch"
 }
+
