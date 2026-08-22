@@ -37,60 +37,44 @@ jobs:
       channel: 'production'
     secrets: inherit
 
-  mac-publish:
+  build-jvm-apps:
+    name: Build JVM Apps & Download Site
     needs: [ lint, test ]
-    uses: ./.github/workflows/mac-publish.yml
-    with:
-      channel: 'production'
-    secrets: inherit
-
-  linux-publish:
-    needs: [ lint, test ]
-    uses: ./.github/workflows/linux-publish.yml
-    with:
-      channel: 'production'
-    secrets: inherit
-
-  build-download-site:
-    name: Build Download Site
-    needs: [ mac-publish, linux-publish ]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
-      - name: Download Linux inputs
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: conveyor-inputs-Ubuntu
-          path: ./artifacts/linux
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
 
-      - name: Download Mac inputs
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: conveyor-inputs-Mac
-          path: ./artifacts/mac
+      - name: Build JVM Jar
+        run: ./gradlew :app:jvmApp:jvmJar
 
-      - name: Build Download Site with Conveyor
+      - name: Build Apps and Site with Conveyor
         uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
         with:
           command: -f ci.conveyor.conf make site
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
 
-      - name: Upload site artifacts
+      - name: Upload site and app artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: download-site
+          name: jvm-apps
           path: |
             output/download.html
             output/metadata.properties
+            output/*.dmg
+            output/*.deb
+            output/*.tar.gz
+            output/*.zip
 
   upload-release-assets:
     runs-on: ubuntu-latest
-    needs: [ android-publish, windows-publish, mac-publish, linux-publish, build-download-site ]
+    needs: [ android-publish, windows-publish, build-jvm-apps ]
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
@@ -105,8 +89,12 @@ jobs:
         if: github.event_name == 'release'
         with:
           files: |
-            ./artifacts/download-site/download.html
-            ./artifacts/download-site/metadata.properties
+            ./artifacts/jvm-apps/download.html
+            ./artifacts/jvm-apps/metadata.properties
+            ./artifacts/jvm-apps/*.dmg
+            ./artifacts/jvm-apps/*.deb
+            ./artifacts/jvm-apps/*.tar.gz
+            ./artifacts/jvm-apps/*.zip
           tag_name: ${{ github.event.release.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

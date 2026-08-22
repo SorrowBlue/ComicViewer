@@ -4,12 +4,10 @@ on:
   push:
     branches:
       - main
-      - feature/check-dependency-drift
-    # 検証時のみ一時的にpathsを無効化し、どのファイルのプッシュでも発火するようにします
-    # paths:
-    #   - 'gradle/libs.versions.toml'
-    #   - '**/build.gradle.kts'
-    #   - 'settings.gradle.kts'
+    paths:
+      - 'gradle/libs.versions.toml'
+      - '**/build.gradle.kts'
+      - 'settings.gradle.kts'
   workflow_dispatch:
 
 permissions:
