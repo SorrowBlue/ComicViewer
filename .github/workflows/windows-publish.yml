@@ -50,7 +50,7 @@ jobs:
         if: inputs.channel == 'test-flight'
         uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
         with:
-          command: -f config/conveyor/ci.conveyor.conf make windows-msix
+          command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[windows.amd64]' make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
         env:
@@ -74,7 +74,7 @@ jobs:
         if: inputs.channel == 'production'
         uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
         with:
-          command: -f config/conveyor/ci.conveyor.conf make ms-store-release
+          command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[windows.amd64]' make ms-store-release
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
         env:

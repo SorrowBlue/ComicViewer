@@ -47,7 +47,7 @@ jobs:
     secrets: inherit
 
   deploy-pages:
-    needs: [ android-publish, windows-publish, jvm-publish ]
+    needs: [ jvm-publish ]
     uses: ./.github/workflows/gh-pages.yml
     secrets: inherit
 
