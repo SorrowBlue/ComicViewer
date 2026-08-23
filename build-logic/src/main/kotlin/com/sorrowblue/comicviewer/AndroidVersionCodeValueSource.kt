@@ -29,9 +29,10 @@ abstract class AndroidVersionCodeValueSource @Inject constructor(
             commandLine("git", "tag")
             standardOutput = stdout
             errorOutput = stderr
+            isIgnoreExitValue = true
         }
-        val count = stdout.toString().split(Regex("\r?\n")).count { it.trim().isNotEmpty() }
         if (result.exitValue == 0) {
+            val count = stdout.toString().lineSequence().count { it.trim().isNotEmpty() }
             (DEFAULT_VERSION_CODE + count).toString()
         } else {
             logger.warn(

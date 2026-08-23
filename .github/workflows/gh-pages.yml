@@ -2,14 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**/aboutlibraries.json'
-      - '.idea/**'
-      - '.run/**'
-      - 'config/**'
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,9 +32,7 @@ jobs:
         with:
           name: kdoc-html
           include-hidden-files: true
-          path: |
-            build/dokka/html/
-            docs/
+          path: build/dokka/html/
           retention-days: 1
 
   jekyll-build:
@@ -50,33 +41,53 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Create Jekyll source directory
+        run: |
+          mkdir -p ./jekyll-source
+          cp -a docs/. ./jekyll-source/
+
       - name: Download KDoc artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: kdoc-html
-      - name: Move dokka html to root dokka/
+          path: ./jekyll-source/dokka
+
+      - name: Restore download page from previous deployment (if manual trigger)
+        if: steps.download-site-artifact.outcome != 'success'
         run: |
-          mkdir -p dokka
-          cp -a build/dokka/html/. dokka/
-          rm -rf build
-      - name: Move docs to root
-        run: |
-          cp -a docs/. ./
-          rm -rf docs
+          echo "Artifact not found. Downloading download-site.zip from latest GitHub Release..."
+          mkdir -p ./jekyll-source/download
+          gh release download --repo ${{ github.repository }} \
+            --pattern "download-site.zip" \
+            --dir ./jekyll-source/download || true
+          
+          # zipの解凍
+          if [ -f ./jekyll-source/download/download-site.zip ]; then
+            unzip -o ./jekyll-source/download/download-site.zip -d ./jekyll-source/download/
+            rm ./jekyll-source/download/download-site.zip
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: '4.0.6'
           bundler-cache: true
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
       - name: Build with Jekyll
-        run: bundle exec jekyll build --source ./ --destination ./_site
-      - name: Upload artifact
+        run: bundle exec jekyll build --source ./jekyll-source --destination ./_site
+
+      - name: Upload pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./_site
+
   deploy:
     needs: jekyll-build
     permissions:

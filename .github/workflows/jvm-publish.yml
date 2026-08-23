@@ -1,0 +1,60 @@
+name: JVM Publish
+
+on:
+  workflow_call:
+    inputs:
+      tag-name:
+        type: string
+        description: 'GitHub Release Tag Name to upload assets to (leave empty to skip upload)'
+        required: false
+        default: ''
+
+jobs:
+  build-jvm-apps:
+    name: Build JVM Apps & Download Site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK and Gradle
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: Build JVM Jar
+        run: ./gradlew :app:jvmApp:jvmJar
+
+      - name: Build Apps and Site with Conveyor
+        uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
+        with:
+          command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[linux, mac]' make site
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+          agree_to_license: 1
+
+      - name: Archive download site files for Release Assets fallback
+        run: |
+          cd output
+          zip -r download-site.zip download.html icon.svg
+          cd ..
+
+      - name: Upload JVM installers (for Release Assets Archive)
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: jvm-installers
+          path: |
+            output/**
+            !output/download.html
+            !output/icon.svg
+
+      - name: Upload Release Assets to GitHub Releases
+        if: ${{ inputs.tag-name != '' }}
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        with:
+          files: |
+            output/**
+            !output/download.html
+            !output/icon.svg
+          tag_name: ${{ inputs.tag-name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
