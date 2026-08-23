@@ -50,11 +50,10 @@ jobs:
         if: inputs.channel == 'test-flight'
         uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
         with:
-          command: -f ci.conveyor.conf make windows-msix
+          command: -f config/conveyor/ci.conveyor.conf make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
         env:
-          BUILD_WINDOWS_MACHINES: "[windows.amd64]"
           MS_STORE_IDENTITY_NAME: ${{ secrets.MS_STORE_IDENTITY_NAME }}
           MS_STORE_PUBLISHER: ${{ secrets.MS_STORE_PUBLISHER }}
           MS_STORE_PUBLISHER_DISPLAY_NAME: ${{ secrets.MS_STORE_PUBLISHER_DISPLAY_NAME }}
@@ -75,11 +74,10 @@ jobs:
         if: inputs.channel == 'production'
         uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
         with:
-          command: -f ci.conveyor.conf make ms-store-release
+          command: -f config/conveyor/ci.conveyor.conf make ms-store-release
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
         env:
-          BUILD_WINDOWS_MACHINES: "[windows.amd64]"
           MS_STORE_CLIENT_ID: ${{ secrets.MS_STORE_CLIENT_ID }}
           MS_STORE_CLIENT_SECRET: ${{ secrets.MS_STORE_CLIENT_SECRET }}
           MS_STORE_TENANT_ID: ${{ secrets.MS_STORE_TENANT_ID }}
