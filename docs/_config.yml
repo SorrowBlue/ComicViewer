@@ -10,3 +10,8 @@ keep_files:
   - .well-known
   - dokka
   - download
+
+plugins:
+  - jekyll-optional-front-matter
+  - jekyll-readme-index
+  - jekyll-relative-links

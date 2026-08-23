@@ -49,7 +49,10 @@ jobs:
   deploy-pages:
     needs: [ jvm-publish ]
     uses: ./.github/workflows/gh-pages.yml
+    with:
+      tag-name: ${{ github.event.release.tag_name }}
     secrets: inherit
+
 
   notify-release:
     name: Notify Release Results

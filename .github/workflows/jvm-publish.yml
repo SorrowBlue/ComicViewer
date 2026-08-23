@@ -36,6 +36,7 @@ jobs:
         run: |
           cd output
           zip -r download-site.zip download.html icon.svg
+          rm download.html icon.svg
           cd ..
 
       - name: Upload JVM installers (for Release Assets Archive)
@@ -44,8 +45,6 @@ jobs:
           name: jvm-installers
           path: |
             output/**
-            !output/download.html
-            !output/icon.svg
 
       - name: Upload Release Assets to GitHub Releases
         if: ${{ inputs.tag-name != '' }}
@@ -53,8 +52,7 @@ jobs:
         with:
           files: |
             output/**
-            !output/download.html
-            !output/icon.svg
           tag_name: ${{ inputs.tag-name }}
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

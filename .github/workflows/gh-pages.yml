@@ -2,7 +2,20 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      tag-name:
+        type: string
+        description: 'GitHub Release Tag Name to download assets from (leave empty for latest)'
+        required: false
+        default: ''
   workflow_call:
+    inputs:
+      tag-name:
+        type: string
+        description: 'GitHub Release Tag Name to download assets from (leave empty for latest)'
+        required: false
+        default: ''
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,8 +33,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Setup Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Generate Dokka
@@ -53,18 +64,31 @@ jobs:
           name: kdoc-html
           path: ./jekyll-source/dokka
 
-      - name: Restore download page from previous deployment (if manual trigger)
-        if: steps.download-site-artifact.outcome != 'success'
+      - name: Download download-site.zip from GitHub Release
         run: |
-          echo "Artifact not found. Downloading download-site.zip from latest GitHub Release..."
           mkdir -p ./jekyll-source/download
-          gh release download --repo ${{ github.repository }} \
-            --pattern "download-site.zip" \
-            --dir ./jekyll-source/download || true
+          TAG="${{ github.event.release.tag_name }}"
+          if [ -z "$TAG" ]; then
+            TAG="${{ inputs.tag-name }}"
+          fi
+
+          
+          if [ -n "$TAG" ]; then
+            echo "Downloading download-site.zip from release tag: $TAG"
+            gh release download "$TAG" --repo ${{ github.repository }} \
+              --pattern "download-site.zip" \
+              --dir ./jekyll-source/download || true
+          else
+            echo "No release tag specified. Downloading download-site.zip from latest GitHub Release..."
+            gh release download --repo ${{ github.repository }} \
+              --pattern "download-site.zip" \
+              --dir ./jekyll-source/download || true
+          fi
           
           # zipの解凍
           if [ -f ./jekyll-source/download/download-site.zip ]; then
             unzip -o ./jekyll-source/download/download-site.zip -d ./jekyll-source/download/
+            mv ./jekyll-source/download/download.html ./jekyll-source/download/index.html
             rm ./jekyll-source/download/download-site.zip
           fi
         env:
