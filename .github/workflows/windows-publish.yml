@@ -45,7 +45,6 @@ jobs:
       - name: Run printConveyorConfig
         run: ./gradlew -q printConveyorConfig
 
-      # Test Flight
       - name: Build MSIX Package for Test Flight
         if: inputs.channel == 'test-flight'
         uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
@@ -69,7 +68,6 @@ jobs:
           msstore reconfigure --tenantId ${{ secrets.MS_STORE_TENANT_ID }} --clientId ${{ secrets.MS_STORE_CLIENT_ID }} --clientSecret ${{ secrets.MS_STORE_CLIENT_SECRET }}
           msstore publish output/*.msix -id ${{ secrets.MS_STORE_APP_ID }} --flightId ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
 
-      # Production
       - name: Run Conveyor to release to Microsoft Store (Production)
         if: inputs.channel == 'production'
         uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
