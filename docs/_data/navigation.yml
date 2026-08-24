@@ -1,0 +1,12 @@
+# main links
+main:
+  - title: "Home"
+    url: /
+  - title: "Download"
+    url: /download/
+  - title: "Privacy Policy"
+    url: /privacy_policy.html
+  - title: "Terms & Conditions"
+    url: /teams_conditions.html
+  - title: "API Docs"
+    url: /dokka/
