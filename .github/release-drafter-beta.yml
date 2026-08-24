@@ -1,4 +1,4 @@
-_extends: release-drafter
+_extends: .github/release-drafter.yml
 prerelease: true
 include-pre-releases: true
 prerelease-identifier: 'beta'
