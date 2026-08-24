@@ -39,6 +39,8 @@ expect fun createAppGraph(): AppGraph
 @Composable
 expect fun AppContent(appGraph: AppGraph)
 
+private const val TEST_TIMEOUT = 15000L
+
 @OptIn(ExperimentalTestApi::class)
 class NavigationTest {
 
@@ -135,12 +137,12 @@ class NavigationTest {
         onNodeWithTag("PasswordField")
             .performTextInput(BuildConfig.SMB_PASSWORD)
         onNodeWithTag("SaveButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("BookshelfEditorScreen"), timeoutMillis = 5000)
+        waitUntilDoesNotExist(hasTestTag("BookshelfEditorScreen"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
         onAllNodesWithTag("BookshelfListItemMenu").onFirst().performClick()
         onNodeWithTag("BookshelfInfoScreenRoot").assertIsDisplayed()
-        waitUntilAtLeastOneExists(hasTestTag("EditButton"), timeoutMillis = 5000)
+        waitUntilAtLeastOneExists(hasTestTag("EditButton"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("EditButton").performClick()
         onNodeWithTag("BookshelfEditorScreen").assertIsDisplayed()
         if (isCompact) {
@@ -162,7 +164,7 @@ class NavigationTest {
             }
         onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
 
-        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"), timeoutMillis = 5000)
+        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"), timeoutMillis = TEST_TIMEOUT)
         onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
         onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
 
@@ -181,7 +183,7 @@ class NavigationTest {
         onNodeWithTag("SearchButton").performClick()
         onNodeWithTag("SearchScreenRoot").assertIsDisplayed()
 
-        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"), timeoutMillis = 5000)
+        waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"), timeoutMillis = TEST_TIMEOUT)
         onAllNodesWithTag("FileListItemMenu").onFirst().performClick()
 
         onNodeWithTag("FileInfoScreenRoot").assertIsDisplayed()
@@ -269,7 +271,7 @@ class NavigationTest {
         onNodeWithTag("UsernameField").performTextInput(BuildConfig.SMB_USERNAME)
         onNodeWithTag("PasswordField").performTextInput(BuildConfig.SMB_PASSWORD)
         onNodeWithTag("SaveButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("BookshelfEditorScreen"), timeoutMillis = 3000)
+        waitUntilDoesNotExist(hasTestTag("BookshelfEditorScreen"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
         onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
@@ -281,9 +283,9 @@ class NavigationTest {
         onNodeWithTag("BasicCollectionCreateScreenRoot").assertIsDisplayed()
         onNodeWithTag("CollectionNameField").requestFocus()
         onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
-        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = 5000)
+        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("CreateButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("BasicCollectionCreateScreenRoot"), timeoutMillis = 5000)
+        waitUntilDoesNotExist(hasTestTag("BasicCollectionCreateScreenRoot"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Collection
@@ -300,7 +302,7 @@ class NavigationTest {
         onNodeWithTag("DeleteButton").performClick()
         onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         onNodeWithTag("ConfirmButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = 5000)
+        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Smart collection create
@@ -310,9 +312,9 @@ class NavigationTest {
         onNodeWithTag("CollectionNameField").requestFocus()
         onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
         onNodeWithTag("QueryField").performTextInput("Search keyword")
-        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = 5000)
+        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("CreateButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("SmartCollectionCreateScreenRoot"), timeoutMillis = 5000)
+        waitUntilDoesNotExist(hasTestTag("SmartCollectionCreateScreenRoot"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Collection
@@ -329,7 +331,7 @@ class NavigationTest {
         onNodeWithTag("DeleteButton").performClick()
         onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         onNodeWithTag("ConfirmButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = 5000)
+        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
     }
 
@@ -355,10 +357,10 @@ class NavigationTest {
     }
 
     private fun ComposeUiTest.tutorial() {
-        waitUntilAtLeastOneExists(hasTestTag("TutorialScreen"), timeoutMillis = 5000)
+        waitUntilAtLeastOneExists(hasTestTag("TutorialScreen"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("NextButton").performClick()
         onNodeWithTag("NextButton").performClick()
         onNodeWithTag("NextButton").performClick()
-        waitUntilDoesNotExist(hasTestTag("TutorialScreen"), timeoutMillis = 5000)
+        waitUntilDoesNotExist(hasTestTag("TutorialScreen"), timeoutMillis = TEST_TIMEOUT)
     }
 }

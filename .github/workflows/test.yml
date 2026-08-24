@@ -47,8 +47,12 @@ jobs:
           fail-on-error: false
 
   instrumentation-test:
-    name: Instrumentation Test
+    name: Instrumentation Test (Shard ${{ matrix.shard }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     services:
       samba: *samba_settings
