@@ -1,3 +1,9 @@
+---
+layout: single
+author_profile: true
+toc: true
+toc_label: "目次"
+---
 **Terms & Conditions**
 
 By downloading or using the app, these terms will automatically apply to you – you should make sure

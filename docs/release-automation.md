@@ -1,3 +1,6 @@
+---
+layout: single
+---
 # リリース自動化
 
 このドキュメントでは、GitHub Actionsを使用したComicViewerの自動リリースプロセスについて説明します。

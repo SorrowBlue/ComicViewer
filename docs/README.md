@@ -1,11 +1,14 @@
+---
+layout: single
+author_profile: true
+toc: true
+toc_label: "目次"
+---
 # ComicViewer
 
 [![Lint, Test, and Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml)
 [![Release](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/release.yml)
 [![Deploy Dokka](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/gh-pages.yml)
-
-[Privacy Policy](privacy_policy.md)  
-[Terms & Conditions ](teams_conditions.md)
 
 <a href='https://play.google.com/store/apps/details?id=com.sorrowblue.comicviewer&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
     <img alt='Get it on Google Play' src='https://play.google.com/intl/ja/badges/static/images/badges/en_badge_web_generic.png' width="280" />
@@ -15,8 +18,10 @@
 
 ## Testing
 
-> [!WARNING]
-> Play Internal App Sharing is a link for test apps. Please note that this is not for product use.
+<div class="notice--warning" markdown="1">
+#### WARNING
+Play Internal App Sharing is a link for test apps. Please note that this is not for product use.
+</div>
 
 This app is under development and you can receive PlayStore promo codes. Please
 [email](<mailto:sorrowblue.dev@gmail.com?subject=[ComicViewer Tester]&body=I would like a promo code.>)

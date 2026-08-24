@@ -1,7 +1,20 @@
 title: ComicViewer
 description: Manga/e-book/image viewer compatible with Material You.
 show_downloads: true
-theme: jekyll-theme-cayman
+theme: minimal-mistakes-jekyll
+locale: "ja-JP"
+
+minimal_mistakes_skin: "mint"
+
+author:
+  name: "Sorrow Blue"
+  avatar: "/images/icon.svg"
+  bio: "Manga/e-book/image viewer compatible with Material You."
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/SorrowBlue"
+
 include:
   - .well-known
   - dokka
@@ -15,3 +28,4 @@ plugins:
   - jekyll-optional-front-matter
   - jekyll-readme-index
   - jekyll-relative-links
+  - jekyll-include-cache
