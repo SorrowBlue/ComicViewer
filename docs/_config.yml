@@ -4,7 +4,7 @@ show_downloads: true
 theme: minimal-mistakes-jekyll
 locale: "ja-JP"
 
-minimal_mistakes_skin: "mintPermalink"
+minimal_mistakes_skin: "mint"
 
 author:
   name: "Sorrow Blue"
