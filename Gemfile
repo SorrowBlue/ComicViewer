@@ -7,6 +7,6 @@ gem "webrick", "~> 1.8"
 group :jekyll_plugins do
   gem "jekyll-optional-front-matter", "~> 0.3.2"
   gem "jekyll-readme-index", "~> 0.3.0"
-  gem "jekyll-relative-links", "~> 0.7.0"
+  gem "jekyll-relative-links", "~> 0.8.0"
 end
 
