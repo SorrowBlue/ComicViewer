@@ -47,12 +47,8 @@ jobs:
           fail-on-error: false
 
   instrumentation-test:
-    name: Instrumentation Test (Shard ${{ matrix.shard }})
+    name: Instrumentation Test
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     services:
       samba: *samba_settings
@@ -88,7 +84,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: android-crash-logs-shard-${{ matrix.shard }}
+          name: android-crash-logs
           path: |
             **/build/outputs/androidTest-results/managedDevice/**/*.txt
             **/build/reports/androidTests/managedDevice/**/*
