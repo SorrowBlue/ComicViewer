@@ -1,3 +1,6 @@
+---
+layout: single
+---
 **Privacy Policy**
 
 Sorrow Blue built the ComicViewer app as an Open Source app. This SERVICE is provided by Sorrow Blue

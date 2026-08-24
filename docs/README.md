@@ -1,3 +1,6 @@
+---
+layout: single
+---
 # ComicViewer
 
 [![Lint, Test, and Build](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml/badge.svg)](https://github.com/SorrowBlue/ComicViewer/actions/workflows/lint-test-build.yml)
