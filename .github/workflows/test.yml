@@ -84,3 +84,12 @@ jobs:
           path: '**/build/outputs/*Test-results/**/TEST-*.xml'
           reporter: 'java-junit'
           fail-on-error: false
+      - name: Upload Crash Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-crash-logs-shard-${{ matrix.shard }}
+          path: |
+            **/build/outputs/androidTest-results/managedDevice/**/*.txt
+            **/build/reports/androidTests/managedDevice/**/*
+          if-no-files-found: ignore
