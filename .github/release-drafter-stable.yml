@@ -1,0 +1,3 @@
+_extends: release-drafter
+prerelease: false
+include-pre-releases: false
