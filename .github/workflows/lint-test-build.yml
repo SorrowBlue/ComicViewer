@@ -84,3 +84,30 @@ jobs:
           poll: false
           delay: 0
           checks_include: '^check-commit,^lint,^test,^build'
+
+  jekyll-build:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Create Jekyll source directory
+        run: |
+          mkdir -p ./jekyll-source
+          cp -a docs/. ./jekyll-source/
+          mkdir -p ./jekyll-source/.well-known
+          mkdir -p ./jekyll-source/dokka
+          mkdir -p ./jekyll-source/download
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Build with Jekyll
+        run: bundle exec jekyll build --source ./jekyll-source --destination ./_site
+      - name: Upload site artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: jekyll-site
+          path: ./_site
