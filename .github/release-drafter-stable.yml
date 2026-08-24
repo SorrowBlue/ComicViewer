@@ -1,0 +1,3 @@
+_extends: release-drafter.yml
+prerelease: false
+include-pre-releases: false
