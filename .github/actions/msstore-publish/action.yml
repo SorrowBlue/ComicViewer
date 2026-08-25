@@ -1,0 +1,25 @@
+name: 'Microsoft Store Publish (Direct API)'
+description: 'Publish MSIX/MSI/EXE to Microsoft Store directly via Partner Center REST API'
+inputs:
+  tenantId:
+    description: 'Azure AD Tenant ID'
+    required: true
+  clientId:
+    description: 'Azure AD Application Client ID'
+    required: true
+  clientSecret:
+    description: 'Azure AD Application Client Secret'
+    required: true
+  appId:
+    description: 'Microsoft Store Product ID'
+    required: true
+  flightId:
+    description: 'Package Flight ID (for Test Flight)'
+    required: false
+  packageDirectory:
+    description: 'The directory containing the .msix file'
+    required: true
+    default: 'output'
+runs:
+  using: 'node20'
+  main: 'index.js'

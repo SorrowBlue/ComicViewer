@@ -36,15 +36,16 @@ jobs:
           MS_STORE_PUBLISHER_DISPLAY_NAME: ${{ secrets.MS_STORE_PUBLISHER_DISPLAY_NAME }}
           MS_STORE_APP_ID: ${{ secrets.MS_STORE_APP_ID }}
 
-      - name: Setup MSStore CLI
+      - name: Publish MSIX to Microsoft Store Test Flight
         if: inputs.channel == 'test-flight'
-        uses: microsoft/microsoft-store-apppublisher@cc9910a8d59f2eb55cbb83df0a3800cf3b5300e0 # v1.4
-
-      - name: Upload MSIX to Microsoft Store Test Flight
-        if: inputs.channel == 'test-flight'
-        run: |
-          msstore reconfigure --tenantId ${{ secrets.MS_STORE_TENANT_ID }} --clientId ${{ secrets.MS_STORE_CLIENT_ID }} --clientSecret ${{ secrets.MS_STORE_CLIENT_SECRET }}
-          msstore publish output/*.msix -id ${{ secrets.MS_STORE_APP_ID }} --flightId ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
+        uses: ./.github/actions/msstore-publish
+        with:
+          tenantId: ${{ secrets.MS_STORE_TENANT_ID }}
+          clientId: ${{ secrets.MS_STORE_CLIENT_ID }}
+          clientSecret: ${{ secrets.MS_STORE_CLIENT_SECRET }}
+          appId: ${{ secrets.MS_STORE_APP_ID }}
+          flightId: ${{ secrets.MS_STORE_TEST_FLIGHT_ID }}
+          packageDirectory: 'output'
 
       - name: Run Conveyor to release to Microsoft Store (Production)
         if: inputs.channel == 'production'
