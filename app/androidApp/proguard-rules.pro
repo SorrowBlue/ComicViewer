@@ -14,11 +14,11 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
 -dontwarn aQute.bnd.annotation.spi.ServiceProvider
 -dontwarn com.google.auto.value.AutoValue
 -dontwarn com.google.crypto.tink.subtle.Ed25519Sign$KeyPair

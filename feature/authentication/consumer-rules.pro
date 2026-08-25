@@ -1,4 +1,1 @@
-
--keep class com.sorrowblue.comicviewer.feature.authentication.ScreenType {
-    *;
-}
+# ScreenType is annotated with @Serializable; Kotlin Serialization automatically generates necessary keep rules.
