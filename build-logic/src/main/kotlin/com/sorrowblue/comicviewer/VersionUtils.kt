@@ -36,4 +36,3 @@ fun extractPackageVersion(versionName: String): String {
 
     return "$major.$minor.$newPatch"
 }
-

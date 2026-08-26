@@ -8,7 +8,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +18,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.sorrowblue.comicviewer.app.ComicViewerAppViewModel.Factory
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
 import dev.zacsweers.metro.AppScope
@@ -33,8 +33,24 @@ import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
  */
 @ContributesIntoMap(AppScope::class, binding<Activity>())
 @ActivityKey
-internal class MainActivity(override val defaultViewModelProviderFactory: MetroViewModelFactory) :
+internal class MainActivity(private val metroViewModelFactory: MetroViewModelFactory) :
     AppCompatActivity() {
+
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
+        val superFactory = super.defaultViewModelProviderFactory
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = runCatching {
+                metroViewModelFactory.create(modelClass)
+            }.getOrElse { superFactory.create(modelClass) }
+
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T =
+                runCatching {
+                    metroViewModelFactory.create(modelClass, extras)
+                }.getOrElse {
+                    superFactory.create(modelClass, extras)
+                }
+        }
+    }
 
     private val viewModel: ComicViewerAppViewModel by metroViewModel { factory: Factory ->
         factory.create(receivedBookData.isNullOrEmpty())
@@ -85,17 +101,26 @@ internal class MainActivity(override val defaultViewModelProviderFactory: MetroV
         categories == null || allowedCategories.any { hasCategory(it) }
 
     private val allowedCategories = listOf(Intent.CATEGORY_BROWSABLE, Intent.CATEGORY_DEFAULT)
-}
 
-private inline fun <reified T : ManualViewModelAssistedFactory, reified VM : ViewModel> ComponentActivity.metroViewModel(
-    crossinline creationCallback: (T) -> VM,
-): Lazy<VM> = viewModels<VM> {
-    object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            val factory =
-                this@metroViewModel.defaultViewModelProviderFactory as MetroViewModelFactory
-            @Suppress("UNCHECKED_CAST")
-            return creationCallback(factory.createManuallyAssistedFactory(T::class).invoke()) as T
+    private inline fun <reified T : ManualViewModelAssistedFactory, reified VM : ViewModel> metroViewModel(
+        crossinline creationCallback: (T) -> VM,
+    ): Lazy<VM> = viewModels<VM> {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val factory = metroViewModelFactory
+                @Suppress("UNCHECKED_CAST")
+                return creationCallback(
+                    factory.createManuallyAssistedFactory(T::class).invoke(),
+                ) as T
+            }
+
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val factory = metroViewModelFactory
+                @Suppress("UNCHECKED_CAST")
+                return creationCallback(
+                    factory.createManuallyAssistedFactory(T::class).invoke(),
+                ) as T
+            }
         }
     }
 }
