@@ -178,12 +178,35 @@ async function main() {
         console.log("Package ZIP uploaded successfully.");
 
         console.log("Updating submission package lists...");
-        submissionData.applicationPackages = [
-            {
+        if (isFlight) {
+            const currentPackages = submissionData.flightPackages || [];
+            const updatedPackages = currentPackages.map(pkg => ({
+                ...pkg,
+                fileStatus: 'PendingDelete'
+            }));
+            updatedPackages.push({
                 fileName: msixName,
-                fileStatus: "PendingUpload"
-            }
-        ];
+                fileStatus: 'PendingUpload',
+                minimumDirectXVersion: 'None',
+                minimumSystemRam: 'None'
+            });
+            submissionData.flightPackages = updatedPackages;
+            delete submissionData.applicationPackages;
+        } else {
+            const currentPackages = submissionData.applicationPackages || [];
+            const updatedPackages = currentPackages.map(pkg => ({
+                ...pkg,
+                fileStatus: 'PendingDelete'
+            }));
+            updatedPackages.push({
+                fileName: msixName,
+                fileStatus: 'PendingUpload',
+                minimumDirectXVersion: 'None',
+                minimumSystemRam: 'None'
+            });
+            submissionData.applicationPackages = updatedPackages;
+            delete submissionData.flightPackages;
+        }
 
         await request({
             hostname: 'manage.devcenter.microsoft.com',
