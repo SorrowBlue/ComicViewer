@@ -26,7 +26,6 @@ import androidx.compose.ui.test.waitUntilAtLeastOneExists
 import androidx.compose.ui.test.waitUntilDoesNotExist
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -61,28 +60,17 @@ class NavigationTest {
 
     private fun runComicViewerAppTest(block: suspend ComposeUiTest.() -> Unit) {
         runComposeUiTest {
-            var navigator: Navigator? = null
             setContent {
                 isCompact = isCompactWindowClass()
                 context(appGraph.context) {
                     MetroContent {
-                        val nav = rememberAppNavigator()
-                        navigator = nav
-                        ComicViewerApp(finishApp = {}, navigator = nav)
+                        ComicViewerApp(finishApp = {})
                         AppContent(appGraph)
                     }
                 }
             }
             tutorial()
-            try {
-                block()
-            } finally {
-                navigator?.let { nav ->
-                    nav.state.backStacks.values.forEach { stack ->
-                        stack.clear()
-                    }
-                }
-            }
+            block()
         }
     }
 
