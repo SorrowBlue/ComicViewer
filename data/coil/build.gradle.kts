@@ -23,15 +23,5 @@ kotlin {
                 implementation(libs.androidx.startupRuntime)
             }
         }
-        jvmMain {
-            dependencies {
-                implementation(libs.compose.ui)
-            }
-        }
-        iosMain {
-            dependencies {
-                implementation(libs.compose.ui)
-            }
-        }
     }
 }
