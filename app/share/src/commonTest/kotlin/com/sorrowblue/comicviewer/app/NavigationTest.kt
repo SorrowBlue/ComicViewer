@@ -99,7 +99,10 @@ class NavigationTest {
 
         onAllNodesWithTag("BookshelfFab").onFirst().performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BookshelfSelectionList"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BookshelfSelectionList"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         if (isCompact) {
@@ -113,7 +116,10 @@ class NavigationTest {
 
         onAllNodesWithTag("BookshelfFab").onFirst().performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BookshelfSelectionList"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BookshelfSelectionList"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
@@ -123,7 +129,10 @@ class NavigationTest {
 
         onNodeWithTag("BackButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BookshelfSelectionList"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BookshelfSelectionList"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         onNodeWithTag("BookshelfSelectionItem-${BookshelfType.DEVICE}").performClick()
@@ -133,7 +142,10 @@ class NavigationTest {
 
         onNodeWithTag("BackButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BookshelfSelectionList"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BookshelfSelectionList"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         onNodeWithTag("BookshelfSelectionItem-${BookshelfType.SMB}").performClick()
@@ -196,7 +208,10 @@ class NavigationTest {
 
         onNodeWithTag("AddCollectionButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BasicCollectionAddScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BasicCollectionAddScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BasicCollectionAddScreenRoot").assertIsDisplayed()
 
         onAllNodesWithTag("CloseButton").onLast().performClick()
@@ -234,7 +249,10 @@ class NavigationTest {
 
         onNodeWithTag("SmartCollectionButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("SmartCollectionCreateScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("SmartCollectionCreateScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
 
         onAllNodesWithTag("CloseButton").onLast().performClick()
@@ -252,7 +270,10 @@ class NavigationTest {
         onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
         onAllNodesWithTag("BookshelfFab").onFirst().performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BookshelfSelectionList"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BookshelfSelectionList"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         // 2. SMB本棚を選択してEditor画面へ
@@ -294,7 +315,10 @@ class NavigationTest {
 
         onNodeWithTag("ConfirmButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BookshelfSelectionList"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BookshelfSelectionList"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BookshelfSelectionList").assertIsDisplayed()
 
         // 8. Selectionから一覧画面へ戻る
@@ -329,22 +353,37 @@ class NavigationTest {
         onNodeWithTag("BookshelfScreenRoot").assertIsDisplayed()
 
         onAllNodesWithTag("NavigationSuiteItem")[1].performClick()
-        waitUntilAtLeastOneExists(hasTestTag("CollectionListScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("CollectionListScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Basic collection create
         onNodeWithTag("FloatingActionButton").performClick()
         onNodeWithTag("BasicCollectionCreateButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BasicCollectionCreateScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BasicCollectionCreateScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BasicCollectionCreateScreenRoot").assertIsDisplayed()
         onNodeWithTag("CollectionNameField").requestFocus()
         onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
-        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("CreateButton") and isEnabled(),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("CreateButton").performClick()
         advanceClock()
-        waitUntilDoesNotExist(hasTestTag("BasicCollectionCreateScreenRoot"), timeoutMillis = TEST_TIMEOUT)
-        waitUntilAtLeastOneExists(hasTestTag("CollectionListScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilDoesNotExist(
+            hasTestTag("BasicCollectionCreateScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
+        waitUntilAtLeastOneExists(
+            hasTestTag("CollectionListScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Collection
@@ -356,7 +395,10 @@ class NavigationTest {
         // Basic collection edit
         onNodeWithTag("EditButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("BasicCollectionEditScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("BasicCollectionEditScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("BasicCollectionEditScreenRoot").assertIsDisplayed()
         onNodeWithTag("CloseButton").performClick()
         advanceClock()
@@ -366,28 +408,49 @@ class NavigationTest {
         // Basic collection delete
         onNodeWithTag("DeleteButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("DeleteCollectionScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         onNodeWithTag("ConfirmButton").performClick()
         advanceClock()
-        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = TEST_TIMEOUT)
-        waitUntilAtLeastOneExists(hasTestTag("CollectionListScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilDoesNotExist(
+            hasTestTag("DeleteCollectionScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
+        waitUntilAtLeastOneExists(
+            hasTestTag("CollectionListScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Smart collection create
         onNodeWithTag("FloatingActionButton").performClick()
         onNodeWithTag("SmartCollectionCreateButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("SmartCollectionCreateScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("SmartCollectionCreateScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("SmartCollectionCreateScreenRoot").assertIsDisplayed()
         onNodeWithTag("CollectionNameField").requestFocus()
         onNodeWithTag("CollectionNameField").performTextInput("TestCollectionName")
         onNodeWithTag("QueryField").performTextInput("Search keyword")
-        waitUntilAtLeastOneExists(hasTestTag("CreateButton") and isEnabled(), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("CreateButton") and isEnabled(),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("CreateButton").performClick()
         advanceClock()
-        waitUntilDoesNotExist(hasTestTag("SmartCollectionCreateScreenRoot"), timeoutMillis = TEST_TIMEOUT)
-        waitUntilAtLeastOneExists(hasTestTag("CollectionListScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilDoesNotExist(
+            hasTestTag("SmartCollectionCreateScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
+        waitUntilAtLeastOneExists(
+            hasTestTag("CollectionListScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
 
         // Collection
@@ -399,7 +462,10 @@ class NavigationTest {
         // Smart collection edit
         onNodeWithTag("EditButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("SmartCollectionEditScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("SmartCollectionEditScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("SmartCollectionEditScreenRoot").assertIsDisplayed()
         onNodeWithTag("CloseButton").performClick()
         advanceClock()
@@ -409,12 +475,21 @@ class NavigationTest {
         // Smart collection delete
         onNodeWithTag("DeleteButton").performClick()
         advanceClock()
-        waitUntilAtLeastOneExists(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilAtLeastOneExists(
+            hasTestTag("DeleteCollectionScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("DeleteCollectionScreenRoot").assertIsDisplayed()
         onNodeWithTag("ConfirmButton").performClick()
         advanceClock()
-        waitUntilDoesNotExist(hasTestTag("DeleteCollectionScreenRoot"), timeoutMillis = TEST_TIMEOUT)
-        waitUntilAtLeastOneExists(hasTestTag("CollectionListScreenRoot"), timeoutMillis = TEST_TIMEOUT)
+        waitUntilDoesNotExist(
+            hasTestTag("DeleteCollectionScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
+        waitUntilAtLeastOneExists(
+            hasTestTag("CollectionListScreenRoot"),
+            timeoutMillis = TEST_TIMEOUT,
+        )
         onNodeWithTag("CollectionListScreenRoot").assertIsDisplayed()
     }
 

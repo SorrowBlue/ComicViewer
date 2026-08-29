@@ -4,10 +4,13 @@
 
 package com.sorrowblue.comicviewer.domain.model.settings
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class DisplaySettings(
-    val darkMode: DarkMode = DarkMode.DEVICE,
-    val restoreOnLaunch: Boolean = false,
+    @ProtoNumber(1) val darkMode: DarkMode = DarkMode.DEVICE,
+    @ProtoNumber(2) val restoreOnLaunch: Boolean = false,
 )

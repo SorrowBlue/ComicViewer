@@ -4,11 +4,14 @@
 
 package com.sorrowblue.comicviewer.domain.model.settings
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class Settings(
-    val doneTutorial: Boolean = false,
-    val useAuth: Boolean = false,
-    val restoreOnLaunch: Boolean = false,
+    @ProtoNumber(1) val doneTutorial: Boolean = false,
+    @ProtoNumber(2) val useAuth: Boolean = false,
+    @ProtoNumber(3) val restoreOnLaunch: Boolean = false,
 )

@@ -4,7 +4,10 @@
 
 package com.sorrowblue.comicviewer.domain.model.settings
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
-data class CollectionSettings(val recent: Boolean = true)
+data class CollectionSettings(@ProtoNumber(1) val recent: Boolean = true)

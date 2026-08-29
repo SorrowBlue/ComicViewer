@@ -12,6 +12,7 @@ kotlin {
             dependencies {
                 api(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serializationCore)
+                implementation(libs.kotlinx.serializationProtobuf)
             }
         }
     }

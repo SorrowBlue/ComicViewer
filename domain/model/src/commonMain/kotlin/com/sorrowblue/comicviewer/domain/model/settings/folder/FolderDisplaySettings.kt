@@ -5,7 +5,9 @@
 package com.sorrowblue.comicviewer.domain.model.settings.folder
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
 
 /**
  * Represents the display settings for folders.
@@ -25,22 +27,31 @@ import kotlinx.serialization.Serializable
  * @property folderThumbnailOrder The order for folder thumbnails.
  * @property folderScopeOnlyList List of folder-specific settings.
  */
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class FolderDisplaySettings(
-    val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
-    val gridColumnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
-    val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
-    val folderScopeOnlyList: List<FolderScopeOnly> = emptyList(),
-    val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.DisplayHiddenFile,
-    val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.DisplayFileExtension,
-    val showThumbnails: Boolean = FolderDisplaySettingsDefaults.DisplayThumbnail,
-    val isSavedThumbnail: Boolean = FolderDisplaySettingsDefaults.SavedThumbnail,
-    val fontSize: Int = FolderDisplaySettingsDefaults.FontSize,
-    val thumbnailQuality: Int = FolderDisplaySettingsDefaults.ThumbnailQuality,
-    val imageFormat: ImageFormat = FolderDisplaySettingsDefaults.imageFormat,
-    val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
-    val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
-    val folderThumbnailOrder: FolderThumbnailOrder =
+    @ProtoNumber(
+        1,
+    ) val fileListDisplay: FileListDisplay = FolderDisplaySettingsDefaults.fileListDisplay,
+    @ProtoNumber(
+        2,
+    ) val gridColumnSize: GridColumnSize = FolderDisplaySettingsDefaults.gridColumnSize,
+    @ProtoNumber(3) val sortType: SortType = FolderDisplaySettingsDefaults.sortType,
+    @ProtoNumber(4) val folderScopeOnlyList: List<FolderScopeOnly> = emptyList(),
+    @ProtoNumber(5) val showHiddenFiles: Boolean = FolderDisplaySettingsDefaults.DisplayHiddenFile,
+    @ProtoNumber(
+        6,
+    ) val showFilesExtension: Boolean = FolderDisplaySettingsDefaults.DisplayFileExtension,
+    @ProtoNumber(7) val showThumbnails: Boolean = FolderDisplaySettingsDefaults.DisplayThumbnail,
+    @ProtoNumber(8) val isSavedThumbnail: Boolean = FolderDisplaySettingsDefaults.SavedThumbnail,
+    @ProtoNumber(9) val fontSize: Int = FolderDisplaySettingsDefaults.FontSize,
+    @ProtoNumber(10) val thumbnailQuality: Int = FolderDisplaySettingsDefaults.ThumbnailQuality,
+    @ProtoNumber(11) val imageFormat: ImageFormat = FolderDisplaySettingsDefaults.imageFormat,
+    @ProtoNumber(12) val imageScale: ImageScale = FolderDisplaySettingsDefaults.imageScale,
+    @ProtoNumber(
+        13,
+    ) val imageFilterQuality: ImageFilterQuality = FolderDisplaySettingsDefaults.imageFilterQuality,
+    @ProtoNumber(14) val folderThumbnailOrder: FolderThumbnailOrder =
         FolderDisplaySettingsDefaults.folderThumbnailOrder,
 ) {
     /**
@@ -107,5 +118,10 @@ object FolderDisplaySettingsDefaults {
  * @property path The folder path.
  * @property sortType The sort type for the folder.
  */
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
-data class FolderScopeOnly(val bookshelfId: BookshelfId, val path: String, val sortType: SortType)
+data class FolderScopeOnly(
+    @ProtoNumber(1) val bookshelfId: BookshelfId,
+    @ProtoNumber(2) val path: String,
+    @ProtoNumber(3) val sortType: SortType,
+)
