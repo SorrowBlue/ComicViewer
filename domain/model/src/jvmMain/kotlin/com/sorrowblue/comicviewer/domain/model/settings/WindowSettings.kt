@@ -4,7 +4,9 @@
 
 package com.sorrowblue.comicviewer.domain.model.settings
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
 
 /**
  * Window settings
@@ -15,11 +17,12 @@ import kotlinx.serialization.Serializable
  * @property y Window y position
  * @property isMaximized Whether the window is maximized
  */
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class WindowSettings(
-    val width: Int = 1024,
-    val height: Int = 768,
-    val x: Int = -1,
-    val y: Int = -1,
-    val isMaximized: Boolean = false,
+    @ProtoNumber(1) val width: Int = 1024,
+    @ProtoNumber(2) val height: Int = 768,
+    @ProtoNumber(3) val x: Int = -1,
+    @ProtoNumber(4) val y: Int = -1,
+    @ProtoNumber(5) val isMaximized: Boolean = false,
 )

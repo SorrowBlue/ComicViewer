@@ -4,11 +4,14 @@
 
 package com.sorrowblue.comicviewer.domain.model.settings
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class SecuritySettings(
-    val password: String? = null,
-    val useBiometrics: Boolean = false,
-    val lockOnBackground: Boolean = false,
+    @ProtoNumber(1) val password: String? = null,
+    @ProtoNumber(2) val useBiometrics: Boolean = false,
+    @ProtoNumber(3) val lockOnBackground: Boolean = false,
 )

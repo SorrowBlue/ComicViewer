@@ -5,11 +5,14 @@
 package com.sorrowblue.comicviewer.domain.model.settings
 
 import com.sorrowblue.comicviewer.domain.model.SupportExtension
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class FolderSettings(
-    val isAutoRefresh: Boolean = true,
-    val supportExtension: List<SupportExtension> = SupportExtension.Archive.entries,
-    val resolveImageFolder: Boolean = false,
+    @ProtoNumber(1) val isAutoRefresh: Boolean = true,
+    @ProtoNumber(2) val supportExtension: List<SupportExtension> = SupportExtension.Archive.entries,
+    @ProtoNumber(3) val resolveImageFolder: Boolean = false,
 )
