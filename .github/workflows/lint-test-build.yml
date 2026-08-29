@@ -57,25 +57,25 @@ jobs:
             echo "  - Other files changed: $OTHER_FILES_CHANGED"
           fi
 
-#  lint:
-#    needs: check-commit
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/lint.yml
+  lint:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/lint.yml
 
   test:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/test.yml
 
-#  build:
-#    needs: [ lint, test ]
-#    if: needs.check-commit.outputs.should-run == 'true'
-#    uses: ./.github/workflows/build.yml
-#    secrets: inherit
+  build:
+    needs: [ lint, test ]
+    if: needs.check-commit.outputs.should-run == 'true'
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
 
   allchecks:
     name: All Checks Passed
-    needs: [ check-commit, test ]
+    needs: [ check-commit, lint, test, build ]
     if: always() && cancelled() != true && needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -83,4 +83,4 @@ jobs:
         with:
           poll: false
           delay: 0
-          checks_include: '^check-commit,^test'
+          checks_include: '^check-commit,^lint,^test,^build'
