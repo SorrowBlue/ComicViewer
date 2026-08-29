@@ -6,12 +6,32 @@ on:
 jobs:
 
   unit-test:
-    name: Unit Test (${{ matrix.shard }})
+    name: Unit Test (${{ matrix.tasks }} - ${{ matrix.shard }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        include:
+          - shard: 1
+            tasks: "jvmTest testAndroidHostTest"
+          - shard: 2
+            tasks: "jvmTest testAndroidHostTest"
+          - shard: 3
+            tasks: "jvmTest testAndroidHostTest"
+          - shard: 4
+            tasks: "jvmTest testAndroidHostTest"
+          - shard: 5
+            tasks: "jvmTest testAndroidHostTest"
+          - shard: 6
+            tasks: "jvmTest"
+          - shard: 7
+            tasks: "jvmTest"
+          - shard: 8
+            tasks: "jvmTest"
+          - shard: 9
+            tasks: "jvmTest"
+          - shard: 10
+            tasks: "jvmTest"
 
     services:
       samba: &samba_settings
@@ -35,7 +55,7 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
       - name: Run Unit Tests
         run: >
-          ./gradlew jvmTest --continue
+          ./gradlew ${{ matrix.tasks }} --continue
           -PsmbHost=localhost
           -PsmbPort=445
           -PsmbUsername=testuser
@@ -45,18 +65,18 @@ jobs:
         if: cancelled() != true
         uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
         with:
-          name: 'Unit Test (${{ matrix.shard }})'
+          name: 'Unit Test (${{ matrix.tasks }} - ${{ matrix.shard }})'
           path: '**/build/test-results/*/TEST-*.xml'
           reporter: 'java-junit'
           fail-on-error: false
-      - name: Upload JVM Test Reports on Failure
+      - name: Upload JVM/Android Test Reports on Failure
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: jvm-test-reports-${{ matrix.shard }}
+          name: test-reports-${{ matrix.shard }}
           path: |
-            **/build/reports/tests/jvmTest/**/*
-            **/build/test-results/jvmTest/**/*
+            **/build/reports/tests/**/*
+            **/build/test-results/**/*
           if-no-files-found: ignore
 
 #  instrumentation-test:
