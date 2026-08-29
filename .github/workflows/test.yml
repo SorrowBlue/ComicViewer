@@ -5,8 +5,8 @@ on:
 
 jobs:
 
-  unit-test:
-    name: Unit Test
+  jvm-test:
+    name: JVM Test
     runs-on: ubuntu-latest
 
     services:
@@ -29,9 +29,9 @@ jobs:
         uses: ./.github/actions/setup_samba
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
-      - name: Run Unit Tests
+      - name: Run JVM Tests
         run: >
-          ./gradlew jvmTest testAndroidHostTest --continue
+          ./gradlew jvmTest --continue
           -PsmbHost=localhost
           -PsmbPort=445
           -PsmbUsername=testuser
@@ -41,10 +41,59 @@ jobs:
         if: cancelled() != true
         uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
         with:
-          name: 'Unit Test'
+          name: 'JVM Test'
           path: '**/build/test-results/*/TEST-*.xml'
           reporter: 'java-junit'
           fail-on-error: false
+      - name: Upload JVM Test Reports on Failure
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: jvm-test-reports
+          path: |
+            **/build/reports/tests/jvmTest/**/*
+            **/build/test-results/jvmTest/**/*
+          if-no-files-found: ignore
+
+  android-host-test:
+    name: Android Host Test
+    runs-on: ubuntu-latest
+
+    services:
+      samba: *samba_settings
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup samba
+        uses: ./.github/actions/setup_samba
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run Android Host Tests
+        run: >
+          ./gradlew testAndroidHostTest --continue
+          -PsmbHost=localhost
+          -PsmbPort=445
+          -PsmbUsername=testuser
+          -PsmbPassword=testpass
+          -PsmbPath="/testshare/testfolder/"
+      - name: Upload Test Report
+        if: cancelled() != true
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3
+        with:
+          name: 'Android Host Test'
+          path: '**/build/test-results/*/TEST-*.xml'
+          reporter: 'java-junit'
+          fail-on-error: false
+      - name: Upload Android Host Test Reports on Failure
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-host-test-reports
+          path: |
+            **/build/reports/tests/testAndroidHostTest/**/*
+            **/build/test-results/testAndroidHostTest/**/*
+          if-no-files-found: ignore
 
   instrumentation-test:
     name: Instrumentation Test
