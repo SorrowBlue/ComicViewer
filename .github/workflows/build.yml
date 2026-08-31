@@ -19,6 +19,10 @@ jobs:
         with:
           fileName: 'android_keystore.jks'
           encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
+      - name: 🤖 ExportLibraryDefinitions
+        run: ./gradlew :app:androidApp:exportLibraryDefinitions
+        env:
+          ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Run bundlePrerelease assemblePrerelease
         run: ./gradlew bundlePrerelease assemblePrerelease
         env:
@@ -39,6 +43,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
+      - name: 🖥️ ExportLibraryDefinitions
+        run: ./gradlew :app:jvmApp:exportLibraryDefinitions
+        env:
+          ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Run packageDistributionForCurrentOS
         run: ./gradlew packageDistributionForCurrentOS
       - name: Upload artifact

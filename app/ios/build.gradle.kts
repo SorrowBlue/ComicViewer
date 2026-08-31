@@ -1,4 +1,3 @@
-import com.mikepenz.aboutlibraries.plugin.AboutLibrariesExtension
 import com.sorrowblue.comicviewer.configureKotlin
 import com.sorrowblue.comicviewer.libs
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -13,11 +12,6 @@ plugins {
     alias(libs.plugins.comicviewer.primitive.aboutlibraries)
 }
 
-configure<AboutLibrariesExtension> {
-    export {
-        outputFile.set(file("src/iosMain/composeResources/files/aboutlibraries.json"))
-    }
-}
 configureKotlin<KotlinMultiplatformExtension>()
 
 kotlin {
@@ -49,3 +43,8 @@ kotlin {
     }
 }
 
+aboutLibraries {
+    export {
+        outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/iosMain/composeResources/files/aboutlibraries.json"))
+    }
+}

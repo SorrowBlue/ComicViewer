@@ -66,8 +66,3 @@ dependencies {
     implementation(project(":framework:common"))
 }
 
-aboutLibraries {
-    export {
-        outputFile.set(file("src/main/res/raw/aboutlibraries.json"))
-    }
-}

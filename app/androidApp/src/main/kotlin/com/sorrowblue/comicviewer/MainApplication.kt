@@ -24,7 +24,6 @@ internal class MainApplication :
     override val appGraph: AppGraph by lazy {
         createGraphFactory<AppGraph.Factory>().createAppGraph(
             this,
-            LicenseeHelperImpl(this),
         )
     }
 

@@ -22,6 +22,11 @@ jobs:
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
 
+      - name: 🖥️ ExportLibraryDefinitions
+        run: ./gradlew :app:jvmApp:exportLibraryDefinitions
+        env:
+          ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build JVM Jar
         run: ./gradlew :app:jvmApp:jvmJar
 

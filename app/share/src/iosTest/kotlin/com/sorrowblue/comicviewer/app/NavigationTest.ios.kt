@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.app
 
-import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
 import com.sorrowblue.comicviewer.framework.common.IosContext
 import dev.zacsweers.metro.createGraphFactory
@@ -23,12 +22,6 @@ actual fun createAppGraph(): AppGraph {
 
 internal class IosApplication : IosContext(), AppGraphProvider<AppGraph> {
     override val appGraph: AppGraph by lazy {
-        createGraphFactory<AppGraph.Factory>().createAppGraph(this, FakeLicenseeHelper())
-    }
-}
-
-private class FakeLicenseeHelper : LicenseeHelper {
-    override suspend fun loadLibraries(): ByteArray {
-        return ByteArray(0)
+        createGraphFactory<AppGraph.Factory>().createAppGraph(this)
     }
 }

@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.Configuration
-import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
 import dev.zacsweers.metro.createGraphFactory
 import logcat.AndroidLogcatLogger
@@ -20,7 +19,6 @@ class TestApplication :
         Log.d("***********", "TestApplicationappGraph")
         createGraphFactory<AppGraph.Factory>().createAppGraph(
             InstrumentationRegistry.getInstrumentation().context,
-            FakeLicenseeHelper(),
         )
     }
 
@@ -30,10 +28,4 @@ class TestApplication :
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(appGraph.workerFactory).build()
-}
-
-private class FakeLicenseeHelper : LicenseeHelper {
-    override suspend fun loadLibraries(): ByteArray {
-        return ByteArray(0)
-    }
 }

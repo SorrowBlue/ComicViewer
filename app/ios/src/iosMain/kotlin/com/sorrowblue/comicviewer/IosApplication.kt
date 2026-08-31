@@ -11,6 +11,6 @@ import dev.zacsweers.metro.createGraphFactory
 
 internal class IosApplication : IosContext(), AppGraphProvider<AppGraph> {
     override val appGraph: AppGraph by lazy {
-        createGraphFactory<AppGraph.Factory>().createAppGraph(this, LicenseeHelperImpl())
+        createGraphFactory<AppGraph.Factory>().createAppGraph(this)
     }
 }

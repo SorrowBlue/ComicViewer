@@ -64,3 +64,9 @@ dependencies {
     implementation(libs.metro.android)
     implementation(libs.metro.viewmodelCompose)
 }
+
+aboutLibraries {
+    export {
+        outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/androidMain/composeResources/files/aboutlibraries.json"))
+    }
+}
