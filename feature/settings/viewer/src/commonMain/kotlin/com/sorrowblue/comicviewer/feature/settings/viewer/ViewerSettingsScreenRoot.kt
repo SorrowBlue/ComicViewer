@@ -8,9 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.dropUnlessResumed
+import androidx.navigation3.runtime.result.ResultEffect
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
-import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.BindingDirectionScreenResultKey
-import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
 
 @Composable
 internal fun ViewerSettingsScreenRoot(
@@ -33,6 +32,5 @@ internal fun ViewerSettingsScreenRoot(
         onScreenBrightnessChange = dropUnlessResumed(block = state::onScreenBrightnessChange),
         modifier = Modifier.testTag("ViewerSettingsRoot"),
     )
-
-    NavigationResultEffect(BindingDirectionScreenResultKey, state::onBindingDirectionScreenResult)
+    ResultEffect<BindingDirection>(onResult = state::onBindingDirectionScreenResult)
 }

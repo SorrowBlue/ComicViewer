@@ -9,16 +9,9 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.settings.folder.FolderSettingsScreenRoot
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.FilterQualityResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.SortOrderScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
-import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
-import io.github.irgaly.navigation3.resultstate.resultConsumer
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,17 +22,6 @@ context(scope: EntryProviderScope<NavKey>)
 internal fun folderSettingsNavEntry(navigator: Navigator) {
     scope.entry<FolderSettingsNavKey>(
         metadata = metadata {
-            put(
-                NavigationResultMetadata.ResultConsumerKey,
-                NavigationResultMetadata.resultConsumer(
-                    SortOrderScreenResultKey,
-                    ThumbnailScaleScreenResultKey,
-                    FilterQualityResultKey,
-                    ThumbnailFormatScreenResultKey,
-                    FolderThumbnailOrderScreenResultKey,
-                ),
-            )
-
             transitionMaterialSharedAxisX()
         } + ListDetailSceneStrategy.detailPane("Settings"),
     ) { _ ->

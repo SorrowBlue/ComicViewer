@@ -5,28 +5,21 @@
 package com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder
 
 import androidx.compose.runtime.Composable
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
-import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
-import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
-import io.github.irgaly.navigation3.resultstate.setResult
 
 @Composable
 internal fun FolderThumbnailOrderScreenRoot(
     folderThumbnailOrder: FolderThumbnailOrder,
     onDismissRequest: () -> Unit,
 ) {
-    val resultProducer = LocalNavigationResultProducer.current
+    val resultBus = LocalResultEventBus.current
     FolderThumbnailOrderScreen(
         currentFolderThumbnailOrder = folderThumbnailOrder,
         onFolderThumbnailOrderChange = {
-            resultProducer.setResult(FolderThumbnailOrderScreenResultKey, it)
+            resultBus.sendResult(it)
             onDismissRequest()
         },
         onDismissRequest = onDismissRequest,
     )
 }
-
-internal val FolderThumbnailOrderScreenResultKey = SerializableNavigationResultKey(
-    serializer = FolderThumbnailOrder.serializer(),
-    resultKey = "FolderThumbnailOrderScreenResultKey",
-)

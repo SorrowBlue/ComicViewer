@@ -10,7 +10,6 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
-import com.sorrowblue.comicviewer.feature.history.ClearAllHistoryScreenResultKey
 import com.sorrowblue.comicviewer.feature.history.HistoryScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -24,8 +23,6 @@ import comicviewer.feature.history.generated.resources.history_title
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.binding
-import io.github.irgaly.navigation3.resultstate.NavigationResultMetadata
-import io.github.irgaly.navigation3.resultstate.resultConsumer
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
@@ -46,10 +43,6 @@ context(scope: EntryProviderScope<NavKey>)
 internal fun historyNavEntry(navigator: Navigator) {
     scope.entry<HistoryNavKey>(
         metadata = metadata {
-            put(
-                NavigationResultMetadata.ResultConsumerKey,
-                NavigationResultMetadata.resultConsumer(ClearAllHistoryScreenResultKey),
-            )
             transitionMaterialFadeThrough()
         } + SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>("History"),
     ) {

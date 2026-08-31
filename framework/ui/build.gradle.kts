@@ -28,8 +28,6 @@ kotlin {
                 implementation(libs.compose.material3AdaptiveNavigationSuite)
                 implementation(libs.kotlinx.serializationCbor)
                 implementation(libs.metro.viewmodelCompose)
-                implementation(libs.navigation3.resultstate)
-                implementation(libs.rin)
                 implementation(libs.compose.edgeToEdgePreview)
             }
         }

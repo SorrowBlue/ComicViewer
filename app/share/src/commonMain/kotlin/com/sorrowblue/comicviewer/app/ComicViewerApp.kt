@@ -29,6 +29,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.app.wrapper.PreAppScreen
@@ -45,7 +46,6 @@ import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
-import io.github.irgaly.navigation3.resultstate.rememberNavigationResultNavEntryDecorator
 import logcat.logcat
 
 @Composable
@@ -149,10 +149,7 @@ private fun ComicViewerApp(navigator: Navigator, entryProvider: (NavKey) -> NavE
                     entries = navigator.state.toDecoratedEntries(
                         entryDecorators = listOf(
                             rememberSaveableStateHolderNavEntryDecorator(),
-                            rememberNavigationResultNavEntryDecorator(
-                                backStack = navigator.backStack,
-                                entryProvider = entryProvider,
-                            ),
+                            rememberResultEventBusNavEntryDecorator(),
                             rememberViewModelStoreNavEntryDecorator(),
                             windowInsetsDecorator,
                         ),

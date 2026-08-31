@@ -72,6 +72,7 @@ kotlin {
                 // Required for metro dependency resolution
                 implementation(libs.androidx.datastore)
                 implementation(libs.coil3)
+                implementation(libs.androidx.navigation3UI)
 
                 implementation(libs.androidx.lifecycleCompose)
                 implementation(libs.androidx.lifecycleViewmodelCompose)
@@ -80,8 +81,6 @@ kotlin {
                 implementation(libs.compose.material3AdaptiveLayout)
                 implementation(libs.compose.material3AdaptiveNavigation3)
                 implementation(libs.compose.material3AdaptiveNavigationSuite)
-                implementation(libs.rin)
-                implementation(libs.navigation3.resultstate)
                 implementation(libs.metro.viewmodelCompose)
             }
         }

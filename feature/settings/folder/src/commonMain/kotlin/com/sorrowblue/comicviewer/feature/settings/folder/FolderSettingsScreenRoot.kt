@@ -7,17 +7,12 @@ package com.sorrowblue.comicviewer.feature.settings.folder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.navigation3.runtime.result.ResultEffect
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.filterquality.FilterQualityResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.SortOrderScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.ThumbnailFormatScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.FolderThumbnailOrderScreenResultKey
-import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.ThumbnailScaleScreenResultKey
-import com.sorrowblue.comicviewer.framework.ui.NavigationResultEffect
 
 @Composable
 internal fun FolderSettingsScreenRoot(
@@ -51,9 +46,9 @@ internal fun FolderSettingsScreenRoot(
         modifier = Modifier.testTag("FolderSettingsRoot"),
     )
 
-    NavigationResultEffect(SortOrderScreenResultKey, state::onFileSortChange)
-    NavigationResultEffect(ThumbnailScaleScreenResultKey, state::onImageScaleChange)
-    NavigationResultEffect(FilterQualityResultKey, state::onImageFilterQualityChange)
-    NavigationResultEffect(ThumbnailFormatScreenResultKey, state::onImageFormatChange)
-    NavigationResultEffect(FolderThumbnailOrderScreenResultKey, state::onFolderThumbnailOrderChange)
+    ResultEffect(onResult = state::onFileSortChange)
+    ResultEffect(onResult = state::onImageScaleChange)
+    ResultEffect(onResult = state::onImageFilterQualityChange)
+    ResultEffect(onResult = state::onImageFormatChange)
+    ResultEffect(onResult = state::onFolderThumbnailOrderChange)
 }
