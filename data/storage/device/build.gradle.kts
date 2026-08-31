@@ -11,8 +11,6 @@ kotlin {
             dependencies {
                 implementation(projects.data.storage)
                 implementation(libs.kotlinx.coroutinesCore)
-                implementation(libs.filekit.compose)
-                implementation(libs.androidx.coreUri)
             }
         }
         androidMain {

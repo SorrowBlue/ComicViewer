@@ -13,8 +13,6 @@ kotlin {
             dependencies {
                 implementation(projects.data.storage)
                 implementation(libs.kotlinx.coroutinesCore)
-                implementation(libs.filekit.compose)
-                implementation(libs.androidx.coreUri)
             }
         }
         commonTest {
@@ -37,9 +35,7 @@ kotlin {
         androidMain {
             dependsOn(androidJvm)
             dependencies {
-                implementation(libs.jcifs)
-                implementation(libs.slf4j.android)
-                implementation(libs.androidx.documentfile)
+                runtimeOnly(libs.slf4j.android)
             }
         }
         getByName("androidHostTest") {
