@@ -2,9 +2,8 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.common.starup
+package com.sorrowblue.comicviewer.framework.startup
 
-import com.sorrowblue.comicviewer.framework.common.Initializer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlin.reflect.KClass

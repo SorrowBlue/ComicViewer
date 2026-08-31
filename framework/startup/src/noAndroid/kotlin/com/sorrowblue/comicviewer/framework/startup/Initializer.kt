@@ -2,16 +2,11 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.common
+package com.sorrowblue.comicviewer.framework.startup
 
 import dev.zacsweers.metro.DefaultBinding
-import dev.zacsweers.metro.ExperimentalMetroApi
 import kotlin.reflect.KClass
 
-@Suppress("AbstractClassCanBeInterface")
-abstract class InitializerScope
-
-@OptIn(ExperimentalMetroApi::class)
 @DefaultBinding<Initializer<*>>
 interface Initializer<T> {
     fun create(): T

@@ -80,6 +80,7 @@ dependencies {
     dokka(projects.framework.common)
     dokka(projects.framework.designsystem)
     dokka(projects.framework.notification)
+    dokka(projects.framework.startup)
     dokka(projects.framework.test)
     dokka(projects.framework.ui)
 }
