@@ -15,11 +15,6 @@ plugins {
     id("comicviewer.primitive.jvm-app-version")
 }
 
-aboutLibraries {
-    export {
-        outputFile.set(file("src/jvmMain/composeResources/files/aboutlibraries.json"))
-    }
-}
 configureKotlin<KotlinMultiplatformExtension>()
 
 kotlin {
@@ -42,6 +37,12 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.metro.viewmodelCompose)
         }
+    }
+}
+
+aboutLibraries {
+    export {
+        outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/jvmMain/composeResources/files/aboutlibraries.json"))
     }
 }
 

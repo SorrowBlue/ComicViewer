@@ -6,7 +6,6 @@ package com.sorrowblue.comicviewer.app
 
 import com.sorrowblue.comicviewer.data.database.TestHelper
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageWindowSettingsUseCase
-import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -25,10 +24,7 @@ actual interface AppGraph :
 
     @DependencyGraph.Factory
     actual fun interface Factory {
-        actual fun createAppGraph(
-            @Provides applicationContext: PlatformContext,
-            @Provides licenseeHelper: LicenseeHelper,
-        ): AppGraph
+        actual fun createAppGraph(@Provides applicationContext: PlatformContext): AppGraph
     }
 }
 

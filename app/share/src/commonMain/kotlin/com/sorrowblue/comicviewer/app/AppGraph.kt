@@ -6,7 +6,6 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.appGraph
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
@@ -35,10 +34,7 @@ expect interface AppGraph :
 
     @DependencyGraph.Factory
     fun interface Factory {
-        fun createAppGraph(
-            @Provides applicationContext: PlatformContext,
-            @Provides licenseeHelper: LicenseeHelper,
-        ): AppGraph
+        fun createAppGraph(@Provides applicationContext: PlatformContext): AppGraph
     }
 }
 

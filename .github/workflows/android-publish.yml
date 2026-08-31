@@ -49,6 +49,10 @@ jobs:
         with:
           fileName: 'android_keystore.jks'
           encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
+      - name: 🤖 ExportLibraryDefinitions
+        run: ./gradlew :app:androidApp:exportLibraryDefinitions
+        env:
+          ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Run gradle build task
         run: ./gradlew ${{ inputs.build-task }}
         env:

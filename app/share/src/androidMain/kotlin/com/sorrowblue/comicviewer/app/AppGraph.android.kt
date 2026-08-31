@@ -7,7 +7,6 @@ package com.sorrowblue.comicviewer.app
 import android.content.Context
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
-import com.sorrowblue.comicviewer.feature.settings.info.license.LicenseeHelper
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
@@ -30,9 +29,6 @@ actual interface AppGraph :
 
     @DependencyGraph.Factory
     actual fun interface Factory {
-        actual fun createAppGraph(
-            @Provides applicationContext: PlatformContext,
-            @Provides licenseeHelper: LicenseeHelper,
-        ): AppGraph
+        actual fun createAppGraph(@Provides applicationContext: PlatformContext): AppGraph
     }
 }
