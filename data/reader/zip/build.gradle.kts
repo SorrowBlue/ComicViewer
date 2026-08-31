@@ -17,10 +17,5 @@ kotlin {
                 implementation(libs.kioarch)
             }
         }
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.startupRuntime)
-            }
-        }
     }
 }

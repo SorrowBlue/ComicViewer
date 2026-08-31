@@ -9,7 +9,7 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.core.content.getSystemService
 import androidx.startup.Initializer
-import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
+import com.sorrowblue.comicviewer.framework.startup.LogcatInitializer
 import logcat.LogPriority
 import logcat.logcat
 

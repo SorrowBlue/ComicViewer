@@ -17,7 +17,6 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutinesCore)
                 implementation(libs.androidx.coreKtx)
-                implementation(libs.androidx.startupRuntime)
             }
         }
         jvmMain {

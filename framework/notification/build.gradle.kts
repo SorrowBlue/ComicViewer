@@ -19,6 +19,7 @@ kotlin {
         }
         androidMain {
             dependencies {
+                implementation(projects.framework.startup)
                 implementation(libs.androidx.coreKtx)
                 implementation(libs.androidx.startupRuntime)
             }

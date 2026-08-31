@@ -18,6 +18,7 @@ kotlin {
         }
         androidMain {
             dependencies {
+                implementation(projects.framework.startup)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.startupRuntime)
             }

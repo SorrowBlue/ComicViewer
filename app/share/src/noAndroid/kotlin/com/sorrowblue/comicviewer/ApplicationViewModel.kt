@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.framework.common.Initializer
+import com.sorrowblue.comicviewer.framework.startup.Initializer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ViewModelKey

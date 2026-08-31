@@ -11,7 +11,7 @@ import coil3.ImageLoader
 import coil3.request.allowRgb565
 import coil3.request.bitmapConfig
 import com.sorrowblue.comicviewer.data.coil.BaseCoilInitializer
-import com.sorrowblue.comicviewer.framework.common.LogcatInitializer
+import com.sorrowblue.comicviewer.framework.startup.LogcatInitializer
 
 internal class CoilInitializer :
     BaseCoilInitializer(),
