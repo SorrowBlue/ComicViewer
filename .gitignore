@@ -136,8 +136,8 @@ google-services.json
 .kotlin/*
 
 aboutlibraries.json
-!/app/ios/src/iosMain/composeResources/files/aboutlibraries.json
-!/app/jvmApp/src/jvmMain/composeResources/files/aboutlibraries.json
-!/app/androidApp/src/main/res/raw/aboutlibraries.json
+!/feature/settings/info/src/androidMain/composeResources/files/aboutlibraries.json
+!/feature/settings/info/src/iosMain/composeResources/files/aboutlibraries.json
+!/feature/settings/info/src/jvmMain/composeResources/files/aboutlibraries.json
 /iosApp/iosApp.xcodeproj/xcuserdata/
 UserInterfaceState.xcuserstate
