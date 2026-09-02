@@ -31,7 +31,7 @@ jobs:
         run: ./gradlew :app:jvmApp:jvmJar
 
       - name: Build Apps and Site with Conveyor
-        uses: hydraulic-software/conveyor/actions/build@5011cc412f9c3a67d8f72f9ea5db5f34c4a68e36 # v22.1
+        uses: hydraulic-software/conveyor/actions/build@0bb33f7c91992f451c02afb714d9bbc551e0cdfa # v22.2
         with:
           command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[linux, mac]' make site
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
