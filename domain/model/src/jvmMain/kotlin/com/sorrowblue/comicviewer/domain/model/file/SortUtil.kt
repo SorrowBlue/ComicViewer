@@ -2,13 +2,8 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
+package com.sorrowblue.comicviewer.domain.model.file
 
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
-import com.sorrowblue.comicviewer.domain.model.file.BookFolder
-import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import java.text.Collator
 import java.text.RuleBasedCollator
 import java.util.Locale

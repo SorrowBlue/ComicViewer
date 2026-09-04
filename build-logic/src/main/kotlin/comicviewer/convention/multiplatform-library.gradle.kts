@@ -57,9 +57,7 @@ kotlin {
     configureKotlin<KotlinMultiplatformExtension>()
     compilerOptions {
         if (project.path.startsWith(":data")) {
-            freeCompilerArgs.add(
-                "-opt-in=com.sorrowblue.comicviewer.domain.model.InternalDataApi",
-            )
+            optIn.add("com.sorrowblue.comicviewer.domain.model.common.InternalDataApi")
         }
     }
     sourceSets {

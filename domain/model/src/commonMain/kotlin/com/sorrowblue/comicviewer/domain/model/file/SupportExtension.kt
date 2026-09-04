@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
+package com.sorrowblue.comicviewer.domain.model.file
 
 import kotlinx.serialization.Serializable
 
@@ -23,14 +23,5 @@ sealed interface SupportExtension {
         WIM("wim"),
         ZIP("zip"),
         PDF("pdf"),
-    }
-
-    enum class Document(override val extension: String) : SupportExtension {
-        PDF("pdf"),
-        EPUB("epub"),
-        XPS("xps"),
-        OPEN_XPS("oxps"),
-        MOBI("mobi"),
-        FB2("fb2"),
     }
 }

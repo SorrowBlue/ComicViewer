@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.model.file
 
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
+import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 
 data class Folder private constructor(

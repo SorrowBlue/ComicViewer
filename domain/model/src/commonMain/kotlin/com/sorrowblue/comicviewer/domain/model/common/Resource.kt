@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
+package com.sorrowblue.comicviewer.domain.model.common
 
 sealed interface Resource<out D, out E> {
     class Success<D>(val data: D) : Resource<D, Nothing>

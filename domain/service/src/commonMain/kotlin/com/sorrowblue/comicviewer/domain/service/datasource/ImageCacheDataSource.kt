@@ -4,10 +4,10 @@
 
 package com.sorrowblue.comicviewer.domain.service.datasource
 
-import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.ImageCache
-import com.sorrowblue.comicviewer.domain.model.OtherImageCache
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 

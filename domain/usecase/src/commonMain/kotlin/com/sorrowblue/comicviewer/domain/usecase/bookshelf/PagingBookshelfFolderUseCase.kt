@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
 import androidx.paging.PagingConfig
 import com.sorrowblue.comicviewer.domain.BaseRequest
-import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
 
 abstract class PagingBookshelfFolderUseCase :

@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor.file
 
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.service.BookFileReaderManager
 import com.sorrowblue.comicviewer.domain.usecase.file.CloseBookUseCase
 import dev.zacsweers.metro.AppScope

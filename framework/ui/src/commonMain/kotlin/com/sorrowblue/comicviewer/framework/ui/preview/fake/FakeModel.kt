@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
 import androidx.annotation.IntRange
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
+import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer

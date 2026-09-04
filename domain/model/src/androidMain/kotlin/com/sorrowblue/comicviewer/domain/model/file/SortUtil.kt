@@ -2,15 +2,10 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
+package com.sorrowblue.comicviewer.domain.model.file
 
 import android.icu.text.Collator
 import android.icu.text.RuleBasedCollator
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
-import com.sorrowblue.comicviewer.domain.model.file.BookFolder
-import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import java.util.Locale
 
 actual object SortUtil {

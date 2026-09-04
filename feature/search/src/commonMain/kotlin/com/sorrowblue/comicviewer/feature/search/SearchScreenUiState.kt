@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.feature.search
 
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlinx.serialization.Serializable
 
 @Serializable

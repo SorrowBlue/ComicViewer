@@ -14,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
-import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
-import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.ImageCache
-import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.BookPageImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ImageCacheNavKey

@@ -19,7 +19,7 @@ kotlin {
     configureKotlin<KotlinAndroidProjectExtension>()
     compilerOptions {
         if (project.path.startsWith(":data")) {
-            optIn.add("com.sorrowblue.comicviewer.domain.model.InternalDataApi")
+            optIn.add("com.sorrowblue.comicviewer.domain.model.common.InternalDataApi")
         }
     }
 }

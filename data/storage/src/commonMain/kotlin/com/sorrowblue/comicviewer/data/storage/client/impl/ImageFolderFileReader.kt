@@ -6,8 +6,8 @@ package com.sorrowblue.comicviewer.data.storage.client.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileReader
-import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
-import com.sorrowblue.comicviewer.domain.model.SortUtil
+import com.sorrowblue.comicviewer.domain.model.file.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import kotlinx.coroutines.CoroutineDispatcher

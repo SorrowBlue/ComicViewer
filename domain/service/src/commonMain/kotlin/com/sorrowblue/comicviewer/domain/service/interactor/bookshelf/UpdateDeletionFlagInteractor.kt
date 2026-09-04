@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.UpdateDeletionFlagUseCase
 import dev.zacsweers.metro.AppScope

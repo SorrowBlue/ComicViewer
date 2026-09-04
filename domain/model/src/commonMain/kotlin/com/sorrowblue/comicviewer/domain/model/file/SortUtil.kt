@@ -2,9 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
-
-import com.sorrowblue.comicviewer.domain.model.file.File
+package com.sorrowblue.comicviewer.domain.model.file
 
 expect object SortUtil {
     val compareFile: Comparator<File>

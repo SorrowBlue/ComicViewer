@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.PagingBookshelfFolderUseCase
 import dev.zacsweers.metro.AppScope

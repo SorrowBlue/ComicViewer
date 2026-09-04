@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.domain.model.ImageCache
-import com.sorrowblue.comicviewer.domain.model.OtherImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons

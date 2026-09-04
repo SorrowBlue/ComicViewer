@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.info
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.dataOrNull
+import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted

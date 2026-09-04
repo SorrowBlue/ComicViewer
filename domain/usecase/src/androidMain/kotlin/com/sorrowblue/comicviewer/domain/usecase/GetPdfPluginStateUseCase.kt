@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.domain.usecase
 
 import com.sorrowblue.comicviewer.domain.EmptyRequest
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 
 abstract class GetPdfPluginStateUseCase :
     UseCase<EmptyRequest, PdfPluginState, Resource.SystemError>()

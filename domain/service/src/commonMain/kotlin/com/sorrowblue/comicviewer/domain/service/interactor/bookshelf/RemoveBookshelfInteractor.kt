@@ -4,12 +4,12 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
-import com.sorrowblue.comicviewer.domain.model.BookPageImageCache
-import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.ThumbnailImageCache
-import com.sorrowblue.comicviewer.domain.model.fold
-import com.sorrowblue.comicviewer.domain.model.isSuccess
-import com.sorrowblue.comicviewer.domain.model.onError
+import com.sorrowblue.comicviewer.domain.model.cache.BookPageImageCache
+import com.sorrowblue.comicviewer.domain.model.common.Resource
+import com.sorrowblue.comicviewer.domain.model.cache.ThumbnailImageCache
+import com.sorrowblue.comicviewer.domain.model.common.fold
+import com.sorrowblue.comicviewer.domain.model.common.isSuccess
+import com.sorrowblue.comicviewer.domain.model.common.onError
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase

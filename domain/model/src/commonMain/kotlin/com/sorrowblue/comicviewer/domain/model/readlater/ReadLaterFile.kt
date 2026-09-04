@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
+package com.sorrowblue.comicviewer.domain.model.readlater
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlin.time.Clock

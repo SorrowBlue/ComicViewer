@@ -11,9 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
-import com.sorrowblue.comicviewer.domain.model.ImageCache
-import com.sorrowblue.comicviewer.domain.model.OtherImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope

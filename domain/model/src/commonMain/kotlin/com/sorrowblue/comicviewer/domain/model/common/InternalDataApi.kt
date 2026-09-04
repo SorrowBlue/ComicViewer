@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
+package com.sorrowblue.comicviewer.domain.model.common
 
 /**
  * dataモジュール内部での利用を意図したAPIであることを示すマーカーアノテーション。

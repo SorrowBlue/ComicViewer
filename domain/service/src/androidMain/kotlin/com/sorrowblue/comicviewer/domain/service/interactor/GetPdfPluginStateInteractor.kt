@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor
 import android.content.Context
 import android.content.pm.PackageManager.NameNotFoundException
 import com.sorrowblue.comicviewer.domain.EmptyRequest
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.usecase.GetPdfPluginStateUseCase
 import com.sorrowblue.comicviewer.domain.usecase.PACKAGE_PDF_PLUGIN
 import com.sorrowblue.comicviewer.domain.usecase.PdfPluginState

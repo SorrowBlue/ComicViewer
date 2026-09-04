@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.usecase.readlater
 
-import com.sorrowblue.comicviewer.domain.model.ReadLaterFile
+import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 

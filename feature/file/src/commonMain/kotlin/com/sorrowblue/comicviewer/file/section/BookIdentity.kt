@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.domain.model.extension
+import com.sorrowblue.comicviewer.domain.model.file.extension
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.file.component.FileInfoCardTitle
 import com.sorrowblue.comicviewer.file.component.FileInfoDataText

@@ -2,9 +2,8 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.model
+package com.sorrowblue.comicviewer.domain.model.file
 
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import kotlin.jvm.JvmInline
 
 @JvmInline

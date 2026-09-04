@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.model.BookshelfImageCacheInfo
+import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
 
 abstract class GetBookshelfImageCacheInfoUseCase :
     UseCase<GetBookshelfImageCacheInfoUseCase.Request, List<BookshelfImageCacheInfo>, Unit>() {
