@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="app.jvmApp [jvm, hot] 🔥" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="app [jvm, hot] 🔥" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/app/jvmApp" />
@@ -15,11 +15,15 @@
           <option value="&quot;com.sorrowblue.comicviewer.MainKt&quot;" />
         </list>
       </option>
-      <option name="vmOptions" value="-Dfile.encoding=UTF-8" />
+      <option name="vmOptions" />
     </ExternalSystemSettings>
     <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+    <EXTENSION ID="com.android.tools.idea.testartifacts.testsuite.GradleRunConfigurationExtension">
+      <com.android.tools.idea.testartifacts.testsuite.SHOW_TEST_RESULT_IN_ANDROID_TEST_SUITE_VIEW>false</com.android.tools.idea.testartifacts.testsuite.SHOW_TEST_RESULT_IN_ANDROID_TEST_SUITE_VIEW>
+      <android.execution.deploysToLocalDevice>false</android.execution.deploysToLocalDevice>
+    </EXTENSION>
     <EXTENSION ID="org.jetbrains.compose.desktop.ide.hotreload.ComposeHotReloadRunConfigurationExtension">
       <ComposeHotReload>
         <isHotReloadWarmupEnabled>true</isHotReloadWarmupEnabled>
