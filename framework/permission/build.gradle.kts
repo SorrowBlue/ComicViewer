@@ -15,6 +15,7 @@ kotlin {
                 implementation(projects.framework.designsystem)
                 implementation(projects.framework.ui)
                 implementation(libs.compose.componentsResources)
+                implementation(libs.compose.preview)
                 implementation(libs.compose.material3)
             }
         }

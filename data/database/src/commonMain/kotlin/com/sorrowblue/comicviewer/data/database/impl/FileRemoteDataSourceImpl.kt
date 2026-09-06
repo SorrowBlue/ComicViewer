@@ -13,11 +13,11 @@ import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.pagingSourceFileSearch
 import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
-import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding

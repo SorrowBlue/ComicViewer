@@ -9,7 +9,8 @@ kotlin {
     sourceSets {
         androidMain {
             dependencies {
-                api(libs.androidx.testExtJunitKtx)
+                api(libs.androidx.testExtJunit)
+                implementation(libs.junit)
             }
         }
     }

@@ -8,14 +8,14 @@ import coil3.disk.DiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.pageDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.cache.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
-import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.cache.ThumbnailImageCache
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding

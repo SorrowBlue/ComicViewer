@@ -6,13 +6,13 @@ package com.sorrowblue.comicviewer.domain.service.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow

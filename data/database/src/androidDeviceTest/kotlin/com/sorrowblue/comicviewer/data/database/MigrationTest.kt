@@ -4,6 +4,7 @@ import androidx.room3.Room
 import androidx.room3.support.getSupportWrapper
 import androidx.room3.testing.MigrationTestHelper
 import androidx.sqlite.driver.AndroidSQLiteDriver
+import androidx.test.filters.MediumTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.AndroidCryptUtil
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPasswordConverters
@@ -27,6 +28,7 @@ private val ALL_MIGRATIONS = listOf(
 )
 private const val TEST_DB = "migration-test"
 
+@MediumTest
 internal class MigrationTest {
     @get:Rule
     val helper = MigrationTestHelper(

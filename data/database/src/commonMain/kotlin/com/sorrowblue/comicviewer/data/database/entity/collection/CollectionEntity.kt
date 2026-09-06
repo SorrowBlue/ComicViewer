@@ -11,12 +11,12 @@ import androidx.room3.ForeignKey
 import androidx.room3.Index
 import androidx.room3.PrimaryKey
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
-import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone

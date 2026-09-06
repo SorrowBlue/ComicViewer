@@ -10,18 +10,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.data.storage)
+                implementation(libs.kotlinx.coroutinesCore)
                 implementation(libs.kpdfium)
-            }
-        }
-        androidMain {
-            dependencies {
-                implementation(libs.kotlinx.coroutinesCore)
-                implementation(libs.androidx.coreKtx)
-            }
-        }
-        jvmMain {
-            dependencies {
-                implementation(libs.kotlinx.coroutinesCore)
             }
         }
     }

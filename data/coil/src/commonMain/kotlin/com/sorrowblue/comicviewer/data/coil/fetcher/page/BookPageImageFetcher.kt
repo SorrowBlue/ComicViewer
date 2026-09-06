@@ -18,9 +18,9 @@ import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.resizeImage
 import com.sorrowblue.comicviewer.data.storage.client.impl.BookFileReaderManagerImpl
-import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
+import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource

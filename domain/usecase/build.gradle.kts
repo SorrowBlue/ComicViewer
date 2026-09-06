@@ -11,9 +11,8 @@ kotlin {
         commonMain {
             dependencies {
                 api(projects.domain.model)
-
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.androidx.pagingCommon)
+                api(libs.androidx.pagingCommon)
+                api(libs.kotlinx.coroutinesCore)
             }
         }
     }

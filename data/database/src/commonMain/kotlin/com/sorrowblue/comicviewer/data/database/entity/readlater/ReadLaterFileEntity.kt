@@ -9,8 +9,8 @@ import androidx.room3.Entity
 import androidx.room3.ForeignKey
 import androidx.room3.Index
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
-import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 
 @Entity(
     tableName = "read_later_file",

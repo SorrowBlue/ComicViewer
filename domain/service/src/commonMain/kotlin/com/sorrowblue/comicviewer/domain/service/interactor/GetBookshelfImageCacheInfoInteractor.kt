@@ -4,9 +4,9 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor
 
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource

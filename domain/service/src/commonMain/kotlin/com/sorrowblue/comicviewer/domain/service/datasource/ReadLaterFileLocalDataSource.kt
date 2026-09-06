@@ -6,9 +6,9 @@ package com.sorrowblue.comicviewer.domain.service.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import kotlinx.coroutines.flow.Flow
 
 interface ReadLaterFileLocalDataSource {

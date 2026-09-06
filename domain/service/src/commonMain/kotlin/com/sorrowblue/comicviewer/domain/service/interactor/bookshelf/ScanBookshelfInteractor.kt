@@ -4,11 +4,11 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
-import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
+import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource

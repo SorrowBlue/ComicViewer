@@ -6,10 +6,10 @@ package com.sorrowblue.comicviewer.domain.service.datasource
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
-import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface BookshelfLocalDataSource {

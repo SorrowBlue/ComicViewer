@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
-import com.sorrowblue.comicviewer.framework.startup.LogcatInitializer
 import com.sorrowblue.comicviewer.framework.common.appGraph
+import com.sorrowblue.comicviewer.framework.startup.LogcatInitializer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.HasMemberInjections

@@ -5,8 +5,8 @@
 package com.sorrowblue.comicviewer.domain.service.interactor
 
 import com.sorrowblue.comicviewer.domain.EmptyRequest
-import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource

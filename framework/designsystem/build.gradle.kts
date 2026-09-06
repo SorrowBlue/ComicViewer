@@ -10,10 +10,11 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(libs.compose.componentsResources)
+                implementation(libs.compose.preview)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material3Adaptive)
                 implementation(libs.compose.materialIconsExtended)
-                implementation(libs.rin)
             }
         }
         androidMain {
@@ -24,11 +25,6 @@ kotlin {
         noAndroid {
             dependencies {
                 implementation(projects.domain.model)
-            }
-        }
-        jvmMain {
-            dependencies {
-                implementation(libs.filekit.core)
             }
         }
     }
