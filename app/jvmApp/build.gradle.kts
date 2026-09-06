@@ -23,19 +23,13 @@ kotlin {
     sourceSets {
         jvmMain.dependencies {
             implementation(projects.app.share)
-            implementation(projects.feature.settings.info)
             implementation(projects.framework.common)
-            implementation(projects.framework.designsystem)
-            implementation(projects.framework.ui)
 
             implementation(compose.desktop.currentOs)
 
-            implementation(libs.androidx.lifecycleViewmodelCompose)
-            implementation(libs.compose.material3)
-            implementation(libs.filekit.core)
-            implementation(libs.jcifs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.metro.viewmodelCompose)
+            implementation(libs.compose.ui)
+
+            runtimeOnly(libs.kotlinx.coroutinesSwing)
         }
     }
 }

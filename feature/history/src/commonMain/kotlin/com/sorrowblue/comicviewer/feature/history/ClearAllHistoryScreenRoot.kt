@@ -8,10 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.navigation3.runtime.result.LocalResultEventBus
-import kotlinx.serialization.Serializable
-
-@Serializable
-internal data class ClearAllHistoryScreenResult(val confirmed: Boolean)
 
 @Composable
 internal fun ClearAllHistoryScreenRoot(onClose: () -> Unit) {

@@ -41,8 +41,8 @@ import coil3.request.transformations
 import coil3.size.Size
 import coil3.toBitmap
 import coil3.transform.Transformation
-import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import com.sorrowblue.comicviewer.feature.book.asImageBitmap
 import com.sorrowblue.comicviewer.feature.book.createSplitBitmap
 import com.sorrowblue.comicviewer.feature.book.trimBorders

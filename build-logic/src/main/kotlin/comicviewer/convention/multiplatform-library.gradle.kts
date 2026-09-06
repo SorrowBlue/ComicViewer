@@ -10,11 +10,12 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 plugins {
     org.jetbrains.kotlin.multiplatform
     com.android.kotlin.multiplatform.library
-    id("comicviewer.primitive.lint")
-    id("comicviewer.primitive.detekt")
-    id("comicviewer.primitive.metro")
-    id("comicviewer.primitive.dokka")
+    com.autonomousapps.`dependency-analysis`
     id("comicviewer.primitive.aboutlibraries")
+    id("comicviewer.primitive.detekt")
+    id("comicviewer.primitive.dokka")
+    id("comicviewer.primitive.lint")
+    id("comicviewer.primitive.metro")
 }
 
 kotlin {
@@ -26,14 +27,11 @@ kotlin {
         }
     }
     jvm()
-
     iosArm64() // 64-bit iPhone devices
     iosSimulatorArm64() // iPhone Simulator on Arm 64-bit macOS
-
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-
         val noAndroid = create("noAndroid") {
             dependsOn(commonMain.get())
         }

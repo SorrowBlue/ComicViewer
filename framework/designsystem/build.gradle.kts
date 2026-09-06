@@ -17,11 +17,6 @@ kotlin {
                 implementation(libs.compose.materialIconsExtended)
             }
         }
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.appcompat)
-            }
-        }
         noAndroid {
             dependencies {
                 implementation(projects.domain.model)

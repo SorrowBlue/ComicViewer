@@ -6,11 +6,11 @@ package com.sorrowblue.comicviewer.feature.settings.extension.subscreen.imagecac
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.cache.BookPageImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.ThumbnailImageCache
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase

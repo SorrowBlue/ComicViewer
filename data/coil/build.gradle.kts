@@ -20,10 +20,5 @@ kotlin {
                 implementation(libs.kotlinx.serializationJson)
             }
         }
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.startupRuntime)
-            }
-        }
     }
 }

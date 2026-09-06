@@ -1,7 +1,5 @@
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
@@ -11,17 +9,10 @@ kotlin {
     }
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation(libs.compose.componentsResources)
-                implementation(libs.compose.runtime)
-            }
-        }
         androidMain {
             dependencies {
                 implementation(projects.framework.startup)
                 implementation(libs.androidx.coreKtx)
-                implementation(libs.androidx.startupRuntime)
             }
         }
     }

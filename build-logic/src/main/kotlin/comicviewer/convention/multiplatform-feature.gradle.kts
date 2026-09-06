@@ -39,6 +39,8 @@ kotlin {
             // Paging
             implementation(libs.androidx.pagingCommon)
 
+            implementation(libs.compose.componentsResources)
+            implementation(libs.compose.preview)
             implementation(libs.compose.uiBackhandler)
             implementation(libs.kotlinx.collectionsImmutable)
             implementation(libs.androidx.lifecycleCommon)

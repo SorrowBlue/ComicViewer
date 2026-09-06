@@ -5,6 +5,7 @@
 package comicviewer.convention
 
 import com.sorrowblue.comicviewer.configureKotlin
+import com.sorrowblue.comicviewer.hasPlugin
 import com.sorrowblue.comicviewer.libs
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
@@ -16,12 +17,6 @@ plugins {
 }
 
 kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.compose.componentsResources)
-            implementation(libs.compose.preview)
-        }
-    }
 
     configureKotlin<KotlinMultiplatformExtension>()
     compilerOptions {
@@ -33,19 +28,8 @@ kotlin {
     }
 }
 
-composeCompiler {
-    val composeCompilerReports = project.findProperty("composeCompilerReports") as? String
-    if (composeCompilerReports.toBoolean()) {
-        reportsDestination.set(layout.buildDirectory.dir("compose_compiler"))
-        metricsDestination.set(layout.buildDirectory.dir("compose_compiler"))
-    }
-}
-
 dependencies {
     if (pluginManager.hasPlugin(libs.plugins.androidMultiplatform)) {
         add("androidRuntimeClasspath", libs.compose.uiTooling)
     }
 }
-
-private fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean =
-    hasPlugin(provider.get().pluginId)

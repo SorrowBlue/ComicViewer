@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 plugins {
     com.android.library
+    com.autonomousapps.`dependency-analysis`
     id("comicviewer.primitive.lint")
     id("comicviewer.primitive.detekt")
     id("comicviewer.primitive.dokka")

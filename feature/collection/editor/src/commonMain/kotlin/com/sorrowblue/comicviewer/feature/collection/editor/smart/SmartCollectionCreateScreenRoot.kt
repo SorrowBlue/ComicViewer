@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.github.skydoves.navgraph.annotations.NavDestination
-import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import comicviewer.feature.collection.editor.generated.resources.Res
