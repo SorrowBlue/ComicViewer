@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.window.ComposeUIViewController
-import com.sorrowblue.comicviewer.framework.common.Initializer
+import com.sorrowblue.comicviewer.framework.startup.Initializer
 
 @Suppress("FunctionNaming")
 fun MainViewController() = ComposeUIViewController {
