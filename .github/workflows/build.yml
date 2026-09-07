@@ -73,6 +73,7 @@ jobs:
           -scheme iosApp
           -configuration Debug
           -destination 'generic/platform=iOS Simulator'
+          ARCHS=arm64
           CODE_SIGNING_ALLOWED=NO
           CODE_SIGN_IDENTITY=""
           CODE_SIGNING_REQUIRED=NO

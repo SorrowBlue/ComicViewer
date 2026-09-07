@@ -5,3 +5,5 @@ PRODUCT_BUNDLE_IDENTIFIER=org.sorrowblue.comicviewer.app.ComicViewer$(TEAM_ID)
 
 CURRENT_PROJECT_VERSION=1
 MARKETING_VERSION=1.0
+
+EXCLUDED_ARCHS[sdk=iphonesimulator*]=x86_64
