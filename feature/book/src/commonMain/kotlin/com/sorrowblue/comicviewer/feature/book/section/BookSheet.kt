@@ -12,7 +12,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -44,7 +44,7 @@ internal fun BookSheet(
     Box(modifier = modifier) {
         val scope = rememberCoroutineScope()
         val focusRequester = remember { FocusRequester() }
-        LaunchedEffect(Unit) {
+        SideEffect(Unit) {
             focusRequester.requestFocus()
         }
         HorizontalPager(

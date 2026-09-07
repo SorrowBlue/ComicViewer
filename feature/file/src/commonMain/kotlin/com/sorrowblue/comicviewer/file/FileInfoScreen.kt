@@ -21,6 +21,7 @@ import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,11 +54,13 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 import kotlinx.coroutines.flow.Flow
 
+@NonRestartableComposable
 @Composable
 internal fun ErrorContents() {
     Text("Error")
 }
 
+@NonRestartableComposable
 @Composable
 internal fun LoadingContents() {
     CircularProgressIndicator()
