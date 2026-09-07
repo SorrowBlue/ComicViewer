@@ -21,7 +21,6 @@ plugins {
     alias(libs.plugins.versionCatalogLinter)
     alias(libs.plugins.dokka)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.konture)
     id("nl.littlerobots.version-catalog-update") version "1.1.1"
 }
 
@@ -86,7 +85,7 @@ dependencyAnalysis {
 
 konture {
     excludeConfigurations("dokka", "kover")
-    excludeModules(":framework:common")
+    excludeModules(":framework:common", ":")
 }
 
 versionCatalogUpdate {
