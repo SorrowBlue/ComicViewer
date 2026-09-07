@@ -14,6 +14,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.9"
     id("com.android.settings") version "9.4.0"
+    id("io.github.baole.konture") version "0.8.4"
 }
 
 android {

@@ -29,7 +29,7 @@ class ArchitectureGuardrailsTest {
     fun `domain model does not depend on other layer`() {
         Konture.modules()
             .that().haveNamePath(":domain:model")
-            .should().onlyDependOnModules("")
+            .should().onlyDependOnModules()
             .check()
     }
 
@@ -41,7 +41,7 @@ class ArchitectureGuardrailsTest {
     fun `domain usecase only depends on domain model`() {
         Konture.modules()
             .that().haveNamePath(":domain:usecase")
-            .should().onlyDependOnModules(":domain:model")
+            .should().onlyDependOnModules(":domain:model", ":")
             .check()
     }
 
@@ -90,7 +90,7 @@ class ArchitectureGuardrailsTest {
     @Test
     fun `interactors are internal`() {
         Konture.classes()
-            .that().haveNameEndingWith("Interactor")
+            .that().nameEndsWith("Interactor")
             .should().beInternal()
             .check()
     }
@@ -101,7 +101,7 @@ class ArchitectureGuardrailsTest {
     @Test
     fun `datasource implementations are internal`() {
         Konture.classes()
-            .that().haveNameEndingWith("DataSourceImpl")
+            .that().nameEndsWith("DataSourceImpl")
             .should().beInternal()
             .check()
     }
@@ -112,8 +112,8 @@ class ArchitectureGuardrailsTest {
     @Test
     fun `datasource interfaces are interfaces`() {
         Konture.classes()
-            .that().resideInAPackage("..domain.service.datasource..")
-            .and().haveNameEndingWith("DataSource")
+            .that().inPackage("..domain.service.datasource..")
+            .and().nameEndsWith("DataSource")
             .should().beInterfaces()
             .check()
     }
@@ -125,8 +125,8 @@ class ArchitectureGuardrailsTest {
     fun `viewmodels do not reside in domain or data layers`() {
         Konture.classes()
             .allowEmpty()
-            .that().haveNameEndingWith("ViewModel")
-            .and().resideInAPackage("..domain..", "..data..")
+            .that().nameEndsWith("ViewModel")
+            .and().inPackage("..domain..", "..data..")
             .should().beInterfaces()
             .check()
     }
