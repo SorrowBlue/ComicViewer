@@ -4,11 +4,11 @@
 
 package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
+import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(InternalDataApi::class)

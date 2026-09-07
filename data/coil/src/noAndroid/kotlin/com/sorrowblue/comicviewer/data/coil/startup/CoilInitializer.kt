@@ -5,9 +5,9 @@
 package com.sorrowblue.comicviewer.data.coil.startup
 
 import com.sorrowblue.comicviewer.data.coil.BaseCoilInitializer
-import com.sorrowblue.comicviewer.framework.common.Initializer
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.starup.LogcatInitializer
+import com.sorrowblue.comicviewer.framework.startup.Initializer
+import com.sorrowblue.comicviewer.framework.startup.LogcatInitializer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.binding

@@ -29,9 +29,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.benchmarkMacroJunit4)
-    implementation(libs.androidx.test.espressoCore)
-    implementation(libs.androidx.testExtJunitKtx)
-    implementation(libs.androidx.testUiautomator)
+    implementation(libs.androidx.testExtJunit)
+    implementation(libs.junit)
 }
 
 androidComponents {

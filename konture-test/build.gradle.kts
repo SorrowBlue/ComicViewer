@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.dependencyAnalysis)
     kotlin("jvm")
     id("io.github.baole.konture")
 }

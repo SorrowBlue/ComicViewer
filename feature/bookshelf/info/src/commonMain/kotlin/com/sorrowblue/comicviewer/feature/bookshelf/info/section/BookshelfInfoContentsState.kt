@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester

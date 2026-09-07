@@ -22,10 +22,17 @@ class IosZipFileReaderImpl: IosZipFileReader {
     private let entries: [ZipEntry]
 
     private init(
-        seekableInputStream: SeekableInputStream,
+        seekableInputStream: any SeekableInputStream,
         supportedExtension: Set<String>
     ) throws {
-        self.adapter = try SmbZipSourceSeekable(seekable: seekableInputStream)
+        guard let iosSeekable = seekableInputStream as? any IosSeekableInputStream else {
+            throw NSError(
+                domain: "IosZipFileReader",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "seekableInputStream must conform to IosSeekableInputStream"]
+            )
+        }
+        self.adapter = try SmbZipSourceSeekable(seekable: iosSeekable)
         self.supportedExtension = supportedExtension
         let source = try ZipSource.init(adapter: adapter)
         self.archive = try ZipArchive(source: source)
@@ -43,15 +50,9 @@ class IosZipFileReaderImpl: IosZipFileReader {
         }
     }
 
-    func doCopyTo(pageIndex: Int32, bufferedSink: any OkioBufferedSink)
-        async throws
-    {
-        let name = try self.entries[Int(pageIndex)].getName()
-        let isDirectory = try self.entries[Int(pageIndex)]
-            .getExternalAttributes().isDirectory
-        print("doCopyTo name: \(name), isDirectory: \(isDirectory)")
+    func source(pageIndex: Int32) async throws -> any Kotlinx_io_coreSource {
         let data = try self.entries[Int(pageIndex)].data()
-        IosZipFileReaderKt.writeData(bufferedSink, data: data)
+        return IosSmbFileClientKt.toSource(data)
     }
 
     func fileName(pageIndex: Int32) async throws -> String {

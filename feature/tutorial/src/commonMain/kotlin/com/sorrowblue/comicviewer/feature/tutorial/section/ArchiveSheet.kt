@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.sorrowblue.comicviewer.domain.model.SupportExtension
+import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileBundle
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme

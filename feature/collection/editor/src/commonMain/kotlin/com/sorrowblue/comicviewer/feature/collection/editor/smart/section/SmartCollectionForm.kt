@@ -4,8 +4,8 @@
 
 package com.sorrowblue.comicviewer.feature.collection.editor.smart.section
 
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,0 +1,15 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
+package com.sorrowblue.comicviewer.domain.model.common
+
+sealed class PagingException : RuntimeException() {
+    class NoNetwork : PagingException()
+
+    class InvalidAuth : PagingException()
+
+    class InvalidServer : PagingException()
+
+    class NotFound : PagingException()
+}

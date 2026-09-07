@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.model.bookshelf
 
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
+import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 
 data class DeviceStorage private constructor(
     override val id: BookshelfId,

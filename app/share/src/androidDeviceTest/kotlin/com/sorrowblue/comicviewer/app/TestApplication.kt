@@ -1,7 +1,6 @@
 package com.sorrowblue.comicviewer.app
 
 import android.app.Application
-import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.Configuration
 import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
@@ -16,7 +15,6 @@ class TestApplication :
     Configuration.Provider {
 
     override val appGraph by lazy {
-        Log.d("***********", "TestApplicationappGraph")
         createGraphFactory<AppGraph.Factory>().createAppGraph(
             InstrumentationRegistry.getInstrumentation().context,
         )

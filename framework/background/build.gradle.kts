@@ -8,7 +8,7 @@ kotlin {
     }
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.androidx.workRuntime)
+            api(libs.androidx.workRuntime)
         }
     }
 }

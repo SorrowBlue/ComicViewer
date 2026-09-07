@@ -1,0 +1,36 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
+package com.sorrowblue.comicviewer.domain.model.file
+
+import java.text.Collator
+import java.text.RuleBasedCollator
+import java.util.Locale
+
+actual object SortUtil {
+    private val collator: Collator
+        get() {
+            val us = Collator.getInstance(Locale.US) as RuleBasedCollator
+            val lo = Collator.getInstance(Locale.getDefault()) as RuleBasedCollator
+            return RuleBasedCollator(us.rules + lo.rules).apply {
+                strength = Collator.PRIMARY
+            }
+        }
+
+    actual val compareFile = compareBy<File> { if (it is BookFile) 1 else 0 }
+        .thenBy(collator::compare, File::name)
+
+    actual fun filter(file: File, supportExtensions: List<String>): Boolean =
+        file is IFolder || (file is BookFile && file.extension in supportExtensions)
+
+    actual fun sortedIndex(list: List<File>): List<File> = list
+        .sortedWith(compareFile)
+        .mapIndexed { index, fileModel ->
+            when (fileModel) {
+                is BookFile -> fileModel.copy(sortIndex = index)
+                is Folder -> fileModel.copy(sortIndex = index)
+                is BookFolder -> fileModel.copy(sortIndex = index)
+            }
+        }
+}

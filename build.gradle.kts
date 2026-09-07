@@ -1,10 +1,8 @@
 import dev.detekt.gradle.report.ReportMergeTask
 import nl.littlerobots.vcu.plugin.resolver.VersionSelectors
 
-//import dev.iurysouza.modulegraph.ModuleType.Custom
-//import dev.iurysouza.modulegraph.Theme
-
 plugins {
+    alias(libs.plugins.dependencyAnalysis)
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.androidMultiplatform) apply false
@@ -24,8 +22,66 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.detekt)
     alias(libs.plugins.konture)
-//    alias(libs.plugins.modulegraph)
     id("nl.littlerobots.version-catalog-update") version "1.1.1"
+}
+
+dependencyAnalysis {
+    issues {
+        all {
+            onAny {
+                exclude("dev.zacsweers.metro:runtime")
+                exclude("org.jetbrains.compose.hot-reload:hot-reload-runtime-api")
+                excludeRegex("org\\.jetbrains\\.compose\\.desktop:desktop.*")
+                exclude(":framework:common")
+            }
+        }
+    }
+    structure {
+        ignoreKtx(true)
+        bundle("coil3") {
+            includeGroup("io.coil-kt.coil3")
+        }
+        bundle("kotlinx-serialization") {
+            include("org\\.jetbrains\\.kotlinx:kotlinx-serialization.*")
+        }
+        bundle("kotlinx-coroutines") {
+            include("org\\.jetbrains\\.kotlinx:kotlinx-coroutines.*")
+        }
+        bundle("androidx.benchmark-macro") {
+            include("androidx\\.benchmark:benchmark-macro.*")
+        }
+        bundle("androidx.sqlite") {
+            includeGroup("androidx.sqlite")
+        }
+        bundle("androidx.room3") {
+            includeGroup("androidx.room3")
+        }
+        bundle("androidx.paging") {
+            includeGroup("androidx.paging")
+        }
+        bundle("org.jetbrains.compose.desktop") {
+            includeGroup("org.jetbrains.compose.desktop")
+        }
+        bundle("org.jetbrains.compose.ui") {
+            includeGroup("org.jetbrains.compose.ui")
+        }
+        bundle("androidx.compose.runtime") {
+            includeGroup("androidx.compose.runtime")
+        }
+        bundle("org.jetbrains.compose.components:components-animatedimage") {
+            include("org\\.jetbrains\\.compose\\.components:components-animatedimage.*")
+        }
+    }
+    abi {
+        exclusions {
+            ignoreInternalPackages()
+            ignoreGeneratedCode()
+            excludeClasses("kotlinx\\.serialization.*")
+            excludeAnnotations("kotlinx\\.serialization.*")
+            excludeClasses(""".+\$\$${"serializer"}$""")
+            excludeClasses(""".+\$${"Companion"}$""")
+        }
+    }
 }
 
 konture {
@@ -80,6 +136,7 @@ dependencies {
     dokka(projects.framework.common)
     dokka(projects.framework.designsystem)
     dokka(projects.framework.notification)
+    dokka(projects.framework.startup)
     dokka(projects.framework.test)
     dokka(projects.framework.ui)
 }
@@ -89,43 +146,6 @@ val reportMerge = tasks.register("reportMerge", ReportMergeTask::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     output.set(rootProject.layout.buildDirectory.file("reports/detekt/merge.sarif"))
 }
-
-//afterEvaluate {
-//    val task = tasks.named("createModuleGraph")
-//    task.configure {
-//        doNotTrackState("Failed to create MD5 hash for file content.")
-//    }
-//}
-//moduleGraphConfig {
-//    readmePath.set(layout.projectDirectory.file("README2.md").asFile.path)
-//    rootModulesRegex.set("^(:composeApp).*")
-//    nestingEnabled.set(true)
-//    setStyleByModuleType.set(true)
-//    excludedModulesRegex.set(".*(framework|aggregate|di|data|domain|folder|settings:|file).*")
-//    theme.set(
-//        Theme.BASE(
-//            moduleTypes = listOf(
-//                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
-//                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
-//                Custom(id = "comicviewer.multiplatformLibrary", color = "#00C853"),
-//            )
-//        )
-//    )
-//    graph(layout.projectDirectory.file("README2.md").asFile.path, "## Data") {
-//        rootModulesRegex = "^:data(?!:di\$).+"
-//        nestingEnabled = true
-//        setStyleByModuleType = true
-//        strictMode = true
-//        excludedModulesRegex = ".*(framework|feature|aggregate|composeApp|di|app).*"
-//        theme = Theme.BASE(
-//            moduleTypes = listOf(
-//                Custom(id = "comicviewer.kotlinMultiplatform.application", color = "#2962FF"),
-//                Custom(id = "comicviewer.kotlinMultiplatform.dynamicfeature", color = "#FF6D00"),
-//                Custom(id = "comicviewer.multiplatformLibrary", color = "#00C853"),
-//            )
-//        )
-//    }
-//}
 
 tasks.updateDaemonJvm {
     vendor = JvmVendorSpec.ADOPTIUM

@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.data.coil.fetcher.page
 
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
-import com.sorrowblue.comicviewer.domain.model.BookPageImage
+import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import kotlinx.io.Sink
 import kotlinx.io.writeString
 import kotlinx.serialization.Serializable

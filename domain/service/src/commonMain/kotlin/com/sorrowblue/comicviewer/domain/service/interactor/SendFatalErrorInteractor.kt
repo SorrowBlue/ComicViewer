@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor
 
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding

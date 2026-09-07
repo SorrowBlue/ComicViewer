@@ -39,10 +39,11 @@ kotlin {
             // Paging
             implementation(libs.androidx.pagingCommon)
 
+            implementation(libs.compose.componentsResources)
+            implementation(libs.compose.preview)
             implementation(libs.compose.uiBackhandler)
             implementation(libs.kotlinx.collectionsImmutable)
             implementation(libs.androidx.lifecycleCommon)
-            implementation(libs.rin)
 
             // Adaptive
             implementation(libs.androidx.windowCore)
@@ -58,7 +59,6 @@ kotlin {
             implementation(libs.androidx.navigation3UI)
             implementation(libs.androidx.navigationeventCompose)
             implementation(libs.kotlinx.serializationCore)
-            implementation(libs.navigation3.resultstate)
 
             // Paging
             implementation(libs.androidx.pagingCompose)

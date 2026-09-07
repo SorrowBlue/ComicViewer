@@ -35,7 +35,6 @@ aboutLibraries {
                 "EPL-1.0" to listOf("junit"),
                 "GNU Lesser General Public License, version 2.1" to listOf("org.codelibs"),
                 "Other" to listOf(
-                    "io.github.irgaly.navigation3.resultstate",
                     "net.java.dev.jna",
                     "org.jetbrains.kotlinx",
                 ),

@@ -7,35 +7,19 @@ package com.sorrowblue.comicviewer.feature.history
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
-import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
-import io.github.irgaly.navigation3.resultstate.setResult
-import kotlinx.serialization.Serializable
-
-internal val ClearAllHistoryScreenResultKey = SerializableNavigationResultKey(
-    serializer = ClearAllHistoryScreenResult.serializer(),
-    resultKey = "ClearAllHistoryScreenResultKey",
-)
-
-@Serializable
-internal data class ClearAllHistoryScreenResult(val confirmed: Boolean)
+import androidx.navigation3.runtime.result.LocalResultEventBus
 
 @Composable
 internal fun ClearAllHistoryScreenRoot(onClose: () -> Unit) {
-    val resultProducer = LocalNavigationResultProducer.current
+    val resultBus = LocalResultEventBus.current
+
     ClearAllHistoryScreen(
         onDismissRequest = {
-            resultProducer.setResult(
-                ClearAllHistoryScreenResultKey,
-                ClearAllHistoryScreenResult(confirmed = false),
-            )
+            resultBus.sendResult(ClearAllHistoryScreenResult(confirmed = false))
             onClose()
         },
         onConfirm = {
-            resultProducer.setResult(
-                ClearAllHistoryScreenResultKey,
-                ClearAllHistoryScreenResult(confirmed = true),
-            )
+            resultBus.sendResult(ClearAllHistoryScreenResult(confirmed = true))
             onClose()
         },
         modifier = Modifier.testTag("ClearAllHistoryScreenRoot"),

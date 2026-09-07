@@ -16,7 +16,7 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.Modifier
 
-class NavKeyProcessor(
+internal class NavKeyProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
 ) : SymbolProcessor {
@@ -190,7 +190,7 @@ class NavKeyProcessor(
     }
 }
 
-class NavKeyProcessorProvider : SymbolProcessorProvider {
+internal class NavKeyProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         return NavKeyProcessor(environment.codeGenerator, environment.logger)
     }

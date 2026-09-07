@@ -9,9 +9,9 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactoryMap
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.file.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
-import com.sorrowblue.comicviewer.domain.model.extension
+import com.sorrowblue.comicviewer.domain.model.file.extension
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -23,7 +23,6 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
-import io.github.vinceglb.filekit.utils.toPath
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -84,10 +83,10 @@ internal actual class DeviceFileClient(
     }
 
     actual override suspend fun source(file: File): Source =
-        SystemFileSystem.source(file.path.toPath()).buffered()
+        SystemFileSystem.source(kotlinx.io.files.Path(file.path)).buffered()
 
     actual override suspend fun extractTo(file: File, sink: Sink) {
-        SystemFileSystem.source(file.path.toPath()).buffered().transferTo(sink)
+        SystemFileSystem.source(kotlinx.io.files.Path(file.path)).buffered().transferTo(sink)
     }
 
     actual override suspend fun seekableInputStream(file: File): SeekableInputStream =

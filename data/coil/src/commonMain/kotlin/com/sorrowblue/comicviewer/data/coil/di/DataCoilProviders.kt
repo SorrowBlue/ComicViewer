@@ -24,5 +24,3 @@ interface DataCoilProviders {
         }
     }
 }
-
-private fun DiskCache.Builder.directory(directory: Path) = directory.toString()

@@ -4,8 +4,8 @@
 
 package com.sorrowblue.comicviewer.domain.model.file
 
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 
 data class BookFolder private constructor(
     override val bookshelfId: BookshelfId,

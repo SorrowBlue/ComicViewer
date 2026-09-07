@@ -5,8 +5,8 @@
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
 import com.sorrowblue.comicviewer.domain.EmptyRequest
-import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
 
 abstract class FlowBookshelfListUseCase :

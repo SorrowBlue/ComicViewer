@@ -19,15 +19,15 @@ import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMini
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileHistoryEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileInfoEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileTypeInfoEntity
-import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource

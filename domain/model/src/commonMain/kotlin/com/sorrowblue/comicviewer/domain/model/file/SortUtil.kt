@@ -1,0 +1,24 @@
+/*
+ * Copyright 2026 SorrowBlue. See LICENSE for details.
+ */
+
+package com.sorrowblue.comicviewer.domain.model.file
+
+expect object SortUtil {
+    val compareFile: Comparator<File>
+
+    fun filter(file: File, supportExtensions: List<String>): Boolean
+
+    fun sortedIndex(list: List<File>): List<File>
+}
+
+val SUPPORTED_IMAGE = setOf(
+    "bmp",
+    "gif",
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+    "heic",
+    "heif",
+)

@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.model.collection
 
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
+import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDateTime

@@ -69,20 +69,17 @@ kotlin {
                     }
                 }
 
-                // Required for metro dependency resolution
-                implementation(libs.androidx.datastore)
-                implementation(libs.coil3)
+                implementation(libs.androidx.navigation3UI)
 
-                implementation(libs.androidx.lifecycleCompose)
-                implementation(libs.androidx.lifecycleViewmodelCompose)
                 implementation(libs.androidx.lifecycleViewmodelNavigation3)
+                implementation(libs.compose.componentsResources)
+                implementation(libs.compose.preview)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material3AdaptiveLayout)
                 implementation(libs.compose.material3AdaptiveNavigation3)
                 implementation(libs.compose.material3AdaptiveNavigationSuite)
-                implementation(libs.rin)
-                implementation(libs.navigation3.resultstate)
                 implementation(libs.metro.viewmodelCompose)
+                api(libs.metro.viewmodel)
             }
         }
         commonTest.dependencies {
@@ -107,12 +104,8 @@ kotlin {
         }
         getByName("androidDeviceTest") {
             dependencies {
-                implementation(libs.jcifs)
                 implementation(libs.androidx.testRunner)
-                implementation(libs.androidx.testRules)
-                implementation(libs.compose.uiTestJunit4)
-                implementation(libs.compose.uiTestManifest)
-                implementation(libs.androidx.test.espressoCore)
+                runtimeOnly(libs.androidx.test.espressoCore)
                 implementation(libs.filekit.core)
             }
         }

@@ -25,7 +25,7 @@ internal interface HistoryScreenState {
     val lazyGridState: LazyGridState
     val scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
-    fun onNavResult(result: Boolean)
+    fun onNavResult(result: ClearAllHistoryScreenResult)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -64,8 +64,8 @@ private class HistoryScreenStateImpl(
 
     override lateinit var lazyPagingItems: LazyPagingItems<Book>
 
-    override fun onNavResult(result: Boolean) {
-        if (result) {
+    override fun onNavResult(result: ClearAllHistoryScreenResult) {
+        if (result.confirmed) {
             clearAll()
         }
     }

@@ -5,8 +5,8 @@
 package com.sorrowblue.comicviewer.feature.collection.nav
 
 import androidx.navigation3.runtime.NavKey
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlinx.serialization.Serializable
 
 @Serializable

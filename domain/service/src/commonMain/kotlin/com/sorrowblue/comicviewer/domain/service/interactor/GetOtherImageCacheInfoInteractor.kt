@@ -4,9 +4,9 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor
 
-import com.sorrowblue.comicviewer.domain.model.OtherImageCache
-import com.sorrowblue.comicviewer.domain.model.Resource
-import com.sorrowblue.comicviewer.domain.model.fold
+import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
+import com.sorrowblue.comicviewer.domain.model.common.Resource
+import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase

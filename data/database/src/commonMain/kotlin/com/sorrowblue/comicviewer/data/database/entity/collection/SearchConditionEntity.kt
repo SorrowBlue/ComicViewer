@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.data.database.entity.collection
 
 import androidx.room3.ColumnInfo
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType as SortTypeModel
 
 internal data class SearchConditionEntity(

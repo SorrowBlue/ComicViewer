@@ -10,7 +10,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.domain.service)
-                implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastoreCoreOkio)
                 implementation(libs.filekit.core)
                 implementation(libs.kotlinx.serializationProtobuf)
@@ -18,8 +17,8 @@ kotlin {
         }
         androidMain {
             dependencies {
+                implementation(projects.framework.startup)
                 implementation(libs.androidx.appcompat)
-                implementation(libs.androidx.startupRuntime)
             }
         }
     }

@@ -6,21 +6,19 @@ package com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdire
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.dropUnlessResumed
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
-import io.github.irgaly.navigation3.resultstate.LocalNavigationResultProducer
-import io.github.irgaly.navigation3.resultstate.SerializableNavigationResultKey
-import io.github.irgaly.navigation3.resultstate.setResult
 
 @Composable
 internal fun ReadingDirectionScreenRoot(
     bindingDirection: BindingDirection,
     onDismissRequest: () -> Unit,
 ) {
-    val resultProducer = LocalNavigationResultProducer.current
+    val resultBus = LocalResultEventBus.current
     ReadingDirectionScreen(
         bindingDirection = bindingDirection,
         onBindingDirectionChange = dropUnlessResumed { direction ->
-            resultProducer.setResult(BindingDirectionScreenResultKey, direction)
+            resultBus.sendResult(direction)
             onDismissRequest()
         },
         onDismissRequest = dropUnlessResumed {
@@ -28,8 +26,3 @@ internal fun ReadingDirectionScreenRoot(
         },
     )
 }
-
-internal val BindingDirectionScreenResultKey = SerializableNavigationResultKey(
-    serializer = BindingDirection.serializer(),
-    resultKey = "BindingDirectionScreenResultKey",
-)

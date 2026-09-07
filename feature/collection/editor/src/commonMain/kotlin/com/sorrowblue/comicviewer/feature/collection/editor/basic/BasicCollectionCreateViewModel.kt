@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
-import com.sorrowblue.comicviewer.domain.model.fold
+import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseCase
 import dev.zacsweers.metro.AppScope

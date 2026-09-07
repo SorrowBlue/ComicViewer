@@ -4,8 +4,8 @@
 
 package com.sorrowblue.comicviewer.domain.usecase.collection
 
-import com.sorrowblue.comicviewer.domain.model.Resource
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 
 abstract class RemoveCollectionFileUseCase :

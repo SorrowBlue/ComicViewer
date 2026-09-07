@@ -10,8 +10,8 @@ import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
-import com.sorrowblue.comicviewer.domain.model.dataOrNull
-import com.sorrowblue.comicviewer.domain.model.fold
+import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
+import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase

@@ -4,9 +4,9 @@
 
 package com.sorrowblue.comicviewer.domain.model.collection
 
-import com.sorrowblue.comicviewer.domain.model.InternalDataApi
-import com.sorrowblue.comicviewer.domain.model.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
+import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDateTime

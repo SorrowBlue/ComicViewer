@@ -30,7 +30,7 @@ class IosSmbFileClientImpl: IosSmbFileClient {
     
 
     class Factory: IosSmbFileClientFactory {
-        func create(bookshelf__ bookshelf: SmbServer) -> any IosSmbFileClient {
+        func create(bookshelf_ bookshelf: SmbServer) -> any IosSmbFileClient {
             return IosSmbFileClientImpl(bookshelf: bookshelf)
         }
     }
@@ -127,7 +127,7 @@ class IosSmbFileClientImpl: IosSmbFileClient {
         return list
     }
 
-    func source(file: any File) async throws -> any kotlinxIoSource {
+    func source(file: any File) async throws -> any Kotlinx_io_coreSource {
         let client = try await connectShare(path: file.path)
         let subPath = file.path.withoutShare()
         let data = try await client.contents(atPath: subPath)

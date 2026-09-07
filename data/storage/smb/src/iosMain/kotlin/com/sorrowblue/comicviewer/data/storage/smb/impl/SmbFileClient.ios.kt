@@ -10,9 +10,9 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactoryMap
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.smb.IosSmbFile
 import com.sorrowblue.comicviewer.data.storage.smb.IosSmbFileClient
-import com.sorrowblue.comicviewer.domain.model.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.file.SUPPORTED_IMAGE
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
-import com.sorrowblue.comicviewer.domain.model.extension
+import com.sorrowblue.comicviewer.domain.model.file.extension
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File

@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 plugins {
     com.android.library
+    com.autonomousapps.`dependency-analysis`
     id("comicviewer.primitive.lint")
     id("comicviewer.primitive.detekt")
     id("comicviewer.primitive.dokka")
@@ -19,7 +20,7 @@ kotlin {
     configureKotlin<KotlinAndroidProjectExtension>()
     compilerOptions {
         if (project.path.startsWith(":data")) {
-            optIn.add("com.sorrowblue.comicviewer.domain.model.InternalDataApi")
+            optIn.add("com.sorrowblue.comicviewer.domain.model.common.InternalDataApi")
         }
     }
 }

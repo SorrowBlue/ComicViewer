@@ -10,17 +10,14 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.startup)
                 implementation(projects.domain.service)
                 implementation(projects.data.storage)
+                api(libs.coil3.core)
                 implementation(libs.coil3)
                 implementation(libs.kotlinx.io)
                 implementation(libs.kotlinx.ioOkio)
                 implementation(libs.kotlinx.serializationJson)
-            }
-        }
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.startupRuntime)
             }
         }
     }

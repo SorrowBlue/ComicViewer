@@ -59,10 +59,10 @@ android {
 
 dependencies {
     implementation(projects.app.share)
-    implementation(libs.jcifs)
     implementation(libs.androidx.workRuntime)
     implementation(libs.metro.android)
-    implementation(libs.metro.viewmodelCompose)
+    implementation(libs.androidx.appcompat)
+    implementation(project(":framework:ui"))
 }
 
 aboutLibraries {

@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.model.settings
 
-import com.sorrowblue.comicviewer.domain.model.SupportExtension
+import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber

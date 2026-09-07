@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.feature.collection.delete
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.model.dataOrNull
+import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.collection.DeleteCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import dev.zacsweers.metro.AppScope

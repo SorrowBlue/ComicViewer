@@ -5,15 +5,10 @@
 package com.sorrowblue.comicviewer.feature.history
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.navigation3.runtime.result.ResultEffect
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import io.github.irgaly.navigation3.resultstate.LocalNavigationResultConsumer
-import io.github.irgaly.navigation3.resultstate.SerializedNavigationResult
-import io.github.irgaly.navigation3.resultstate.getResultState
 
 @Composable
 internal fun HistoryScreenRoot(
@@ -32,20 +27,5 @@ internal fun HistoryScreenRoot(
         onBookInfoClick = onBookInfoClick,
         modifier = Modifier.testTag("HistoryScreenRoot"),
     )
-    val resultConsumer = LocalNavigationResultConsumer.current
-    val navigationResult: SerializedNavigationResult<ClearAllHistoryScreenResult>? by remember(
-        resultConsumer,
-    ) {
-        resultConsumer.getResultState(ClearAllHistoryScreenResultKey)
-    }
-
-    LaunchedEffect(navigationResult) {
-        val result: SerializedNavigationResult<ClearAllHistoryScreenResult>? = navigationResult
-        if (result != null) {
-            // The received result is just a String, but getResult() will decode it to a Screen2Result instance.
-            val screenResult = result.getResult()
-            state.onNavResult(screenResult.confirmed)
-            resultConsumer.clearResult(result.resultKey)
-        }
-    }
+    ResultEffect<ClearAllHistoryScreenResult>(onResult = state::onNavResult)
 }

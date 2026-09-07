@@ -54,3 +54,27 @@ jobs:
         with:
           name: jvm-Ubuntu
           path: app/jvmApp/build/compose/binaries/main/
+
+  ios-build:
+    name: iOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 📱 ExportLibraryDefinitions
+        run: ./gradlew :app:ios:exportLibraryDefinitions
+        env:
+          ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build iOS App (Simulator)
+        run: >
+          xcodebuild -project iosApp/iosApp.xcodeproj
+          -scheme iosApp
+          -configuration Debug
+          -destination 'generic/platform=iOS Simulator'
+          ARCHS=arm64
+          CODE_SIGNING_ALLOWED=NO
+          CODE_SIGN_IDENTITY=""
+          CODE_SIGNING_REQUIRED=NO
+          build

@@ -4,8 +4,8 @@
 
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.model.ImageCache
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
 
 abstract class ClearImageCacheUseCase :
     OneShotUseCase<ClearImageCacheUseCase.Request, Unit, Unit>() {

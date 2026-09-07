@@ -21,6 +21,8 @@ kotlin {
                 implementation(libs.androidx.pagingCompose)
                 implementation(libs.coil3.compose)
                 implementation(libs.composables.composeunstyledScrollbars)
+                implementation(libs.compose.componentsResources)
+                implementation(libs.compose.preview)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material3Adaptive)
                 implementation(libs.compose.material3AdaptiveLayout)
@@ -28,8 +30,6 @@ kotlin {
                 implementation(libs.compose.material3AdaptiveNavigationSuite)
                 implementation(libs.kotlinx.serializationCbor)
                 implementation(libs.metro.viewmodelCompose)
-                implementation(libs.navigation3.resultstate)
-                implementation(libs.rin)
                 implementation(libs.compose.edgeToEdgePreview)
             }
         }
@@ -37,7 +37,6 @@ kotlin {
             dependencies {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.coreKtx)
-                implementation(libs.compose.edgeToEdgePreview)
             }
         }
         jvmMain.dependencies {

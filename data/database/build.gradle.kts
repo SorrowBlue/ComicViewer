@@ -13,12 +13,17 @@ kotlin {
         }
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//            execution = "ANDROIDX_TEST_ORCHESTRATOR"
             managedDevices {
                 localDevices {
                     @Suppress("UnstableApiUsage")
                     create("pixel9api35") {
                         device = "Pixel 9"
+                        apiLevel = 35
+                        systemImageSource = "aosp-atd"
+                    }
+                    @Suppress("UnstableApiUsage")
+                    create("pixel7pro35") {
+                        device = "Pixel 7 Pro"
                         apiLevel = 35
                         systemImageSource = "aosp-atd"
                     }
@@ -35,11 +40,11 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.domain.service)
-                implementation(libs.androidx.room3Runtime)
+                implementation(libs.androidx.pagingCommon)
                 implementation(libs.androidx.room3Paging)
+                implementation(libs.androidx.room3Runtime)
                 implementation(libs.androidx.sqliteBundled)
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.serializationJson)
             }
         }
 
@@ -55,24 +60,16 @@ kotlin {
 
         getByName("androidHostTest") {
             dependencies {
-                implementation(libs.androidx.testCoreKtx)
-                implementation(libs.androidx.testRunner)
-                implementation(libs.androidx.testRules)
-                implementation(libs.androidx.testExtJunitKtx)
-                implementation(libs.robolectric)
+                runtimeOnly(libs.robolectric)
             }
         }
 
         getByName("androidDeviceTest") {
             dependencies {
-                implementation(libs.androidx.testCoreKtx)
                 implementation(libs.androidx.testRunner)
-                implementation(libs.androidx.testRules)
-                implementation(libs.androidx.testExtJunitKtx)
-                implementation(libs.kotlinx.coroutinesTest)
-                implementation(libs.androidx.room3Testing)
                 implementation(libs.androidx.room3SqliteWrapper)
-                implementation(libs.androidx.sqliteBundled)
+                implementation(libs.androidx.room3Testing)
+                implementation(libs.kotlinx.coroutinesTest)
             }
         }
 
@@ -94,21 +91,8 @@ dependencies {
     kspIosArm64Test(libs.androidx.room3Compiler)
     kspIosSimulatorArm64(libs.androidx.room3Compiler)
     kspIosSimulatorArm64Test(libs.androidx.room3Compiler)
-    androidTestUtil(libs.androidx.testOrchestrator)
 }
 
 room3 {
     schemaDirectory("$projectDir/schemas")
-}
-
-afterEvaluate {
-    tasks.getByName("lintAnalyzeAndroidHostTest") {
-        dependsOn(tasks.getByName("kspAndroidHostTest"))
-    }
-    tasks.getByName("generateAndroidHostTestLintModel") {
-        dependsOn(tasks.getByName("kspAndroidHostTest"))
-    }
-}
-tasks.withType<AbstractTestTask>().configureEach {
-    failOnNoDiscoveredTests = false
 }

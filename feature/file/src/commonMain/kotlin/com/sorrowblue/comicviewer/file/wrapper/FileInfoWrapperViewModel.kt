@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.file.wrapper
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import dev.zacsweers.metro.AppScope

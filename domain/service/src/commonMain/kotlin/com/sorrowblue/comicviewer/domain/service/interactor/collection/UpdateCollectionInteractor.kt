@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.service.interactor.collection
 
-import com.sorrowblue.comicviewer.domain.model.Resource
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase
 import dev.zacsweers.metro.AppScope
