@@ -139,5 +139,7 @@ aboutlibraries.json
 !/feature/settings/info/src/androidMain/composeResources/files/aboutlibraries.json
 !/feature/settings/info/src/iosMain/composeResources/files/aboutlibraries.json
 !/feature/settings/info/src/jvmMain/composeResources/files/aboutlibraries.json
-/iosApp/iosApp.xcodeproj/xcuserdata/
+xcuserdata/
+*.xcuserdatad/
+*.xcuserstate
 UserInterfaceState.xcuserstate

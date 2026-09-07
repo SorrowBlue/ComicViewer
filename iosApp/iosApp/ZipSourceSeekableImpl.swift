@@ -3,9 +3,9 @@ import SwiftZip
 
 class ZipSourceSeekableImpl : ZipSourceSeekable {
     
-    private let seekableInputStream: SeekableInputStream
+    private let seekableInputStream: IosSeekableInputStream
     
-    init(seekableInputStream: SeekableInputStream) {
+    init(seekableInputStream: IosSeekableInputStream) {
         self.seekableInputStream = seekableInputStream
     }
     
@@ -30,6 +30,6 @@ class ZipSourceSeekableImpl : ZipSourceSeekable {
     }
     
     func stat() throws -> SwiftZip.ZipStat {
-        return SwiftZip.ZipStat(size: Int(seekableInputStream.size()))
+        return SwiftZip.ZipStat(size: Int(seekableInputStream.length()))
     }
 }

@@ -61,8 +61,37 @@ class SmbSeekableInputStream : IosSeekableInputStream {
         }
     }
     
-    func size() -> Int64 {
+    func length() -> Int64 {
         return Int64(fileSize)
+    }
+    
+    func read(buf: KotlinByteArray) -> Int32 {
+        return read(buf: buf, offset: 0, length: buf.size)
+    }
+    
+    func read(buf: KotlinByteArray, offset: Int32, length: Int32) -> Int32 {
+        guard offset >= 0, length >= 0, offset <= buf.size, length <= buf.size - offset else {
+            return 0
+        }
+        if length == 0 {
+            return 0
+        }
+        do {
+            let data = try self.file.read(length: Int(length))
+            let bytesRead = data.count
+            for (index, byte) in data.enumerated() {
+                buf.set(index: offset + Int32(index), value: Int8(bitPattern: byte))
+            }
+            pos += bytesRead
+            return Int32(bytesRead)
+        } catch {
+            print("read error return 0")
+            return 0
+        }
+    }
+    
+    func seek(position: Int64) -> Int64 {
+        return seek(offset: position, whence: SeekableInputStreamCompanion.shared.SEEK_SET)
     }
     
     func close() {

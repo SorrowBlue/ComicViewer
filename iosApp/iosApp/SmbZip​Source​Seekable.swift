@@ -5,9 +5,9 @@ import SwiftZip
 
 class SmbZipSourceSeekable : ZipSourceSeekable {
     
-    let seekable: SeekableInputStream
+    let seekable: IosSeekableInputStream
     
-    init(seekable: SeekableInputStream) throws {
+    init(seekable: IosSeekableInputStream) throws {
         self.seekable = seekable
     }
     
@@ -24,7 +24,7 @@ class SmbZipSourceSeekable : ZipSourceSeekable {
     }
     
     func stat() throws -> ZipStat {
-        return ZipStat(size: Int(self.seekable.size()))
+        return ZipStat(size: Int(self.seekable.length()))
     }
     
     func seek(offset: Int, relativeTo whence: ZipWhence) throws {

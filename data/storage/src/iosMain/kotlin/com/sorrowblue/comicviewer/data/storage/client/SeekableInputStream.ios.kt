@@ -9,6 +9,8 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 interface IosSeekableInputStream : SeekableInputStream {
 
+    fun open()
+
     /**
      * Swift UnsafeMutableRawPointer?
      */
