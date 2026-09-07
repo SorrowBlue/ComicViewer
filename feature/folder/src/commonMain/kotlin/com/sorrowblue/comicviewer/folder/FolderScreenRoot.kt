@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.folder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -62,7 +62,7 @@ fun FolderScreenRoot(
         modifier = modifier.testTag("FolderScreenRoot"),
     )
 
-    LaunchedEffect(permissionRequester.state) {
+    SideEffect(permissionRequester.state) {
         viewModel.updatePermission(permissionRequester.state == LocalNetworkPermissionState.Granted)
     }
     EventEffect(state.events) {

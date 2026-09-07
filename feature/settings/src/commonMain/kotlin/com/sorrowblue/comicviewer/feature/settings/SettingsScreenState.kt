@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.feature.settings
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +34,7 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
     val state = remember(appLocaleSettingsLauncher) {
         SettingsScreenStateImpl(appLocaleSettingsLauncher = appLocaleSettingsLauncher)
     }
-    LaunchedEffect(navigator.backStack.lastOrNull()) {
+    SideEffect(navigator.backStack.lastOrNull()) {
         when (navigator.backStack.lastOrNull()) {
             is DisplaySettingsNavKey -> SettingsItem.DISPLAY
             is FolderSettingsNavKey -> SettingsItem.FOLDER

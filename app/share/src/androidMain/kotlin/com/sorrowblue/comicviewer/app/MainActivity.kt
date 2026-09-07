@@ -13,7 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.lifecycle.ViewModel
@@ -85,7 +85,7 @@ internal class MainActivity(private val metroViewModelFactory: MetroViewModelFac
                     navigator = navigator,
                     allowNavigationRestored = receivedBookData.isNullOrEmpty(),
                 )
-                LaunchedEffect(receivedBookData.isNullOrEmpty()) {
+                SideEffect(receivedBookData.isNullOrEmpty()) {
                     receivedBookData?.let { data ->
                         if (data.isNotEmpty()) {
                             navigator.navigate(ReceiveBookNavKey(data))

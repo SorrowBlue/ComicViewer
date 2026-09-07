@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -141,7 +141,7 @@ private fun BookshelfEditorScreen(
         )
     }
     val currentUpdateCanSubmit by rememberUpdatedState(updateCanSubmit)
-    LaunchedEffect(state.formState.value) {
+    SideEffect(state.formState.value) {
         currentUpdateCanSubmit(state.formState.meta.canSubmit)
     }
     EventEffect(state.events) {

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -33,7 +32,7 @@ internal fun PreAppScreen(
 ) {
     val state = rememberPreAppScreenState()
     val currentOnInitialized by rememberUpdatedState(onInitialize)
-    LaunchedEffect(state.uiState) {
+    SideEffect(state.uiState) {
         logcat(TAG) { "PreAppScreenState: ${state.uiState}" }
     }
     if (state.uiState == PreAppUiState.TutorialRequired) {
