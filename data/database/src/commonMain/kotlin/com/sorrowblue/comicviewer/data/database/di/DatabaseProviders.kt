@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPasswordConverters
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -22,7 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
 @ContributesTo(AppScope::class)
-interface DatabaseProviders {
+@BindingContainer
+object DatabaseProviders {
     @SingleIn(AppScope::class)
     @Provides
     private fun provideRoomDatabase(
