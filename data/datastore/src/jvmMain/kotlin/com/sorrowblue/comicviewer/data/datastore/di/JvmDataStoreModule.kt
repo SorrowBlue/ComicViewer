@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.data.datastore.qualifier.WindowSettings
 import com.sorrowblue.comicviewer.data.datastore.serializer.WindowSettingsSerializer
 import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings as DomainWindowSettings
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
@@ -18,7 +19,8 @@ import dev.zacsweers.metro.SingleIn
  * JVM DataStore module
  */
 @ContributesTo(AppScope::class)
-interface JvmDataStoreModule {
+@BindingContainer
+object JvmDataStoreModule {
 
     /**
      * Provide window settings data store
