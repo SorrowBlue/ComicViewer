@@ -34,7 +34,8 @@ internal class DatastoreDataSourceImpl(
     @param:Display private val displaySettingsDataStore: DataStore<DisplaySettings>,
     @param:Viewer private val viewerSettingsDataStore: DataStore<ViewerSettings>,
     @param:Book private val bookSettingsDataStore: DataStore<BookSettings>,
-    @param:FolderDisplay private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
+    @param:FolderDisplay private val folderDisplaySettingsDataStore:
+    DataStore<FolderDisplaySettings>,
     @param:Folder private val folderSettingsDataStore: DataStore<FolderSettings>,
     @param:Collection private val collectionSettingsDataStore: DataStore<CollectionSettings>,
     @param:Security private val securitySettingsDataStore: DataStore<SecuritySettings>,

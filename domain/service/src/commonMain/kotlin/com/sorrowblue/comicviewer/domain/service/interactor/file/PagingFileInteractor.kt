@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
@@ -24,13 +24,13 @@ import kotlinx.coroutines.runBlocking
 
 @ContributesBinding(AppScope::class)
 internal class PagingFileInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val fileRemoteDataSource: FileRemoteDataSource,
     private val datastoreDataSource: DatastoreDataSource,
 ) : PagingFileUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun run(request: Request): Flow<PagingData<File>> = bookshelfLocalDataSource
+    override fun run(request: Request): Flow<PagingData<File>> = bookshelfRepository
         .flow(
             request.bookshelfId,
         ).filterNotNull()

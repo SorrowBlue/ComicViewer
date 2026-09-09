@@ -83,6 +83,10 @@ dependencyAnalysis {
     }
 }
 
+tasks.named<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
+}
+
 konture {
     excludeConfigurations("dokka", "kover")
     excludeModules(":framework:common", ":")
@@ -105,6 +109,7 @@ dependencies {
     dokka(projects.data.storage.device)
     dokka(projects.data.storage.smb)
     dokka(projects.domain.model)
+    dokka(projects.domain.repository)
     dokka(projects.domain.service)
     dokka(projects.domain.usecase)
     dokka(projects.feature.authentication)

@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
@@ -23,7 +23,7 @@ import logcat.logcat
 @ContributesBinding(AppScope::class)
 internal class RegisterBookshelfInteractor(
     private val fileLocalDataSource: FileLocalDataSource,
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val imageCacheDataSource: ImageCacheDataSource,
 ) : RegisterBookshelfUseCase() {
@@ -55,7 +55,7 @@ internal class RegisterBookshelfInteractor(
                         fileLocalDataSource.deleteAll2(request.bookshelf.id)
                     }
                     val bookshelf =
-                        bookshelfLocalDataSource.updateOrCreate(
+                        bookshelfRepository.updateOrCreate(
                             request.bookshelf,
                         ) { bookshelf ->
                             val folder =

@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.datasource
+package com.sorrowblue.comicviewer.domain.repository
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import kotlinx.coroutines.flow.Flow
 
-interface BookshelfLocalDataSource {
+interface BookshelfRepository {
     suspend fun updateOrCreate(
         bookshelf: Bookshelf,
         transaction: suspend (Bookshelf) -> Unit,

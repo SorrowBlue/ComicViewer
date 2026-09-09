@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.getFileClient
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
@@ -38,7 +38,7 @@ internal class BookThumbnailFetcher(
     options: Options,
     diskCache: Lazy<DiskCache>,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val datastoreDataSource: DatastoreDataSource,
     private val fileClientFactory: FileClientFactory,
@@ -54,7 +54,7 @@ internal class BookThumbnailFetcher(
             }
 
             // Slow path: fetch the image from the network.
-            val bookshelf = checkNotNull(bookshelfLocalDataSource.flow(data.bookshelfId).first()) {
+            val bookshelf = checkNotNull(bookshelfRepository.flow(data.bookshelfId).first()) {
                 "Bookshelf not found. id: ${data.bookshelfId}"
             }
             val dataSource = remoteDataSourceFactory.create(bookshelf)
@@ -157,7 +157,7 @@ internal class BookThumbnailFetcher(
     class Factory(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
-        private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+        private val bookshelfRepository: BookshelfRepository,
         private val fileModelLocalDataSource: FileLocalDataSource,
         private val datastoreDataSource: DatastoreDataSource,
         private val fileClientFactory: FileClientFactory,
@@ -173,7 +173,7 @@ internal class BookThumbnailFetcher(
                 coilDiskCacheLazy.value.thumbnailDiskCache(data.bookshelfId)
             },
             remoteDataSourceFactory = remoteDataSourceFactory,
-            bookshelfLocalDataSource = bookshelfLocalDataSource,
+            bookshelfRepository = bookshelfRepository,
             fileLocalDataSource = fileModelLocalDataSource,
             datastoreDataSource = datastoreDataSource,
             fileClientFactory = fileClientFactory,

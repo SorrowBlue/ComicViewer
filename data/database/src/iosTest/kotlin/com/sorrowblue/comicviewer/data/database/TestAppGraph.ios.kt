@@ -1,6 +1,5 @@
 package com.sorrowblue.comicviewer.data.database
 
-import com.sorrowblue.comicviewer.data.database.di.DatabaseProviders
 import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
 import com.sorrowblue.comicviewer.framework.common.IosContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
@@ -16,7 +15,7 @@ internal actual fun createPlatformContext(): PlatformContext =
     }
 
 @DependencyGraph(AppScope::class)
-internal actual interface TestAppGraph : DatabaseProviders {
+internal actual interface TestAppGraph {
     actual val database: ComicViewerDatabase
 
     @DependencyGraph.Factory

@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.common.fold
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
@@ -21,12 +21,12 @@ import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 internal class GetBookshelfImageCacheInfoInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetBookshelfImageCacheInfoUseCase() {
     override fun run(request: Request): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> =
-        bookshelfLocalDataSource.allBookshelf().fold(
+        bookshelfRepository.allBookshelf().fold(
             onSuccess = { flow -> flow.map { Resource.Success(imageCacheInfoList(it)) } },
             onError = {
                 flow {
