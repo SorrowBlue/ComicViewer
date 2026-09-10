@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.datasource
+package com.sorrowblue.comicviewer.domain.repository
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 
-interface ImageCacheDataSource {
+interface ImageCacheRepository {
     suspend fun deleteThumbnails(list: List<String> = emptyList())
 
     suspend fun clearImageCache()

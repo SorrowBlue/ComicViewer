@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import dev.zacsweers.metro.AppScope
@@ -29,7 +29,7 @@ import logcat.logcat
 internal class GetBookInteractor(
     private val bookshelfRepository: BookshelfRepository,
     private val fileRepository: FileRepository,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
     private val folderSettingsInteractor: ManageFolderSettingsUseCase,
 ) : GetBookUseCase() {
     override fun run(request: Request): Flow<Resource<Book, Error>> =
@@ -43,12 +43,12 @@ internal class GetBookInteractor(
 
     private suspend fun fetch(bookshelf: Bookshelf, path: String): Resource<Book, Error> {
         logcat { "fetch(): bookshelf=$bookshelf, path=$path" }
-        val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
+        val remoteStorageClient = remoteStorageClientFactory.create(bookshelf)
         val resolveImageFolder =
             folderSettingsInteractor.settings.first().resolveImageFolder
         val localFile =
             runCatching {
-                when (val file = remoteDataSource.file(path, resolveImageFolder)) {
+                when (val file = remoteStorageClient.file(path, resolveImageFolder)) {
                     is BookFile -> fileRepository.updateSimple(file)
                     is BookFolder -> fileRepository.updateSimple(file)
                     is Folder -> return Resource.Error(Error.NotFound)
@@ -59,8 +59,8 @@ internal class GetBookInteractor(
         return localFile.fold(
             onSuccess = {
                 when (it) {
-                    is BookFile -> updateTotalPageCount(remoteDataSource, it)
-                    is BookFolder -> updateTotalPageCount(remoteDataSource, it)
+                    is BookFile -> updateTotalPageCount(remoteStorageClient, it)
+                    is BookFolder -> updateTotalPageCount(remoteStorageClient, it)
                     is Folder -> Resource.Error(Error.NotFound)
                 }
             },
@@ -78,13 +78,13 @@ internal class GetBookInteractor(
     }
 
     private suspend fun updateTotalPageCount(
-        datSource: RemoteDataSource,
+        remoteStorageClient: RemoteStorageClient,
         book: Book,
     ): Resource<Book, Error> {
         logcat { "updateTotalPageCount()" }
         return kotlin
             .runCatching {
-                datSource.pageCount(book).let { totalPageCount ->
+                remoteStorageClient.pageCount(book).let { totalPageCount ->
                     logcat { "totalPageCount: $totalPageCount" }
                     when (book) {
                         is BookFile -> book.copy(totalPageCount = totalPageCount)

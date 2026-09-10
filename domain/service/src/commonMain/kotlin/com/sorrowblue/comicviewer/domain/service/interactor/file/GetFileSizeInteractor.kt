@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.file
 
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileSizeUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -16,13 +16,13 @@ import kotlinx.coroutines.flow.map
 @ContributesBinding(AppScope::class)
 internal class GetFileSizeInteractor(
     private val bookshelfRepository: BookshelfRepository,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
 ) : GetFileSizeUseCase() {
     override fun run(request: Request): Flow<Resource<Long, Error>> =
         bookshelfRepository.flow(request.bookshelfId).map { bookshelf ->
             if (bookshelf != null) {
                 runCatching {
-                    remoteDataSourceFactory.create(bookshelf).getFileSize(request.path)
+                    remoteStorageClientFactory.create(bookshelf).getFileSize(request.path)
                 }.fold({ size ->
                     Resource.Success(size)
                 }, {

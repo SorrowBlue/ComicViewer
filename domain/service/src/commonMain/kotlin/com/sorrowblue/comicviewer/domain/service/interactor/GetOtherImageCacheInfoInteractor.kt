@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor
 import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.common.fold
-import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
+import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import dev.zacsweers.metro.AppScope
@@ -15,11 +15,11 @@ import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
 internal class GetOtherImageCacheInfoInteractor(
-    private val imageCacheDataSource: ImageCacheDataSource,
+    private val imageCacheRepository: ImageCacheRepository,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetOtherImageCacheInfoUseCase() {
     override suspend fun run(request: Request): Resource<OtherImageCache, Unit> =
-        imageCacheDataSource.getOtherImageCache().fold(
+        imageCacheRepository.getOtherImageCache().fold(
             onSuccess = {
                 Resource.Success(it)
             },

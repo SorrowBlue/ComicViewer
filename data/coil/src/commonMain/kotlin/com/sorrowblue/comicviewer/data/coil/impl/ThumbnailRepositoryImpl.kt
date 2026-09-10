@@ -8,14 +8,14 @@ import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import coil3.request.ImageRequest
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
+import com.sorrowblue.comicviewer.domain.repository.ThumbnailRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.Deferred
 
 @ContributesBinding(AppScope::class)
-internal class ThumbnailDataSourceImpl(private val context: PlatformContext) :
-    ThumbnailDataSource {
+internal class ThumbnailRepositoryImpl(private val context: PlatformContext) :
+    ThumbnailRepository {
     override fun load(fileThumbnail: FileThumbnail): Deferred<Any> {
         val request = ImageRequest
             .Builder(context)

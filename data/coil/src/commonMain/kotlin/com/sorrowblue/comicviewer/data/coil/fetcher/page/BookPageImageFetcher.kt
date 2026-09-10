@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
@@ -38,7 +38,7 @@ internal class BookPageImageFetcher(
     private val data: BookPageImage,
     options: Options,
     diskCacheLazy: Lazy<DiskCache>,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
     private val bookshelfRepository: BookshelfRepository,
     private val settingsRepository: SettingsRepository,
     private val bookFileReaderManager: BookFileReaderManagerImpl,
@@ -63,8 +63,8 @@ internal class BookPageImageFetcher(
                     "Bookshelf not found. id: ${data.book.bookshelfId}"
                 }
             }
-            val dataSource = remoteDataSourceFactory.create(bookshelf)
-            check(dataSource.exists(data.book.path)) {
+            val storageClient = remoteStorageClientFactory.create(bookshelf)
+            check(storageClient.exists(data.book.path)) {
                 "File not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
             }
             val fileReader = bookFileReaderManager.get(bookshelf, data.book)
@@ -124,7 +124,7 @@ internal class BookPageImageFetcher(
     @ContributesIntoMap(AppScope::class, binding = binding<Fetcher.Factory<*>>())
     class Factory(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-        private val remoteDataSourceFactory: RemoteDataSource.Factory,
+        private val remoteStorageClientFactory: RemoteStorageClient.Factory,
         private val bookshelfRepository: BookshelfRepository,
         private val settingsRepository: SettingsRepository,
         private val bookFileReaderManager: BookFileReaderManagerImpl,
@@ -134,7 +134,7 @@ internal class BookPageImageFetcher(
                 data,
                 options,
                 lazy { coilDiskCacheLazy.value.pageDiskCache(data.book.bookshelfId) },
-                remoteDataSourceFactory,
+                remoteStorageClientFactory,
                 bookshelfRepository,
                 settingsRepository,
                 bookFileReaderManager,

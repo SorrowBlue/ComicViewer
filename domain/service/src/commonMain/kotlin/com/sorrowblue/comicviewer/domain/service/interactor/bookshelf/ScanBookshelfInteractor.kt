@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.first
 internal class ScanBookshelfInteractor(
     private val bookshelfRepository: BookshelfRepository,
     private val fileRepository: FileRepository,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
     private val settingsRepository: SettingsRepository,
 ) : ScanBookshelfUseCase() {
     override suspend fun run(request: Request): Resource<List<File>, Error> {
@@ -37,7 +37,7 @@ internal class ScanBookshelfInteractor(
                         .map { it.extension }
                 val resolveImageFolder =
                     settingsRepository.folderSettings.first().resolveImageFolder
-                remoteDataSourceFactory
+                remoteStorageClientFactory
                     .create(
                         bookshelf,
                     ).nestedListFiles(
@@ -52,7 +52,7 @@ internal class ScanBookshelfInteractor(
         return Resource.Success(emptyList())
     }
 
-    private suspend fun RemoteDataSource.nestedListFiles(
+    private suspend fun RemoteStorageClient.nestedListFiles(
         bookshelf: Bookshelf,
         file: File,
         process: suspend (Bookshelf, File) -> Unit,

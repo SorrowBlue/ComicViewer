@@ -8,7 +8,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
+import com.sorrowblue.comicviewer.domain.repository.ThumbnailRepository
 import com.sorrowblue.comicviewer.domain.service.limitedCoroutineScope
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
@@ -24,7 +24,7 @@ import kotlinx.coroutines.sync.withLock
 internal class RegenerateThumbnailsInteractor(
     private val bookshelfRepository: BookshelfRepository,
     private val fileRepository: FileRepository,
-    private val thumbnailDataSource: ThumbnailDataSource,
+    private val thumbnailRepository: ThumbnailRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : RegenerateThumbnailsUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Error> {
@@ -48,7 +48,7 @@ internal class RegenerateThumbnailsInteractor(
                                 }
                         }
                         if (list.isNotEmpty()) {
-                            thumbnailDataSource
+                            thumbnailRepository
                                 .load(FileThumbnail.from(list.first()))
                                 .await()
                             request.process(bookshelf, offset, count)

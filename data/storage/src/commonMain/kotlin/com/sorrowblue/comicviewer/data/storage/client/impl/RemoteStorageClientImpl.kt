@@ -12,8 +12,8 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteException
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -26,16 +26,16 @@ import logcat.asLog
 import logcat.logcat
 
 @AssistedInject
-internal class RemoteDataSourceImpl(
+internal class RemoteStorageClientImpl(
     @Assisted private val bookshelf: Bookshelf,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     fileClientFactory: FileClientFactory,
-) : RemoteDataSource {
+) : RemoteStorageClient {
 
     @ContributesBinding(AppScope::class)
     @AssistedFactory
-    interface Factory : RemoteDataSource.Factory {
-        override fun create(bookshelf: Bookshelf): RemoteDataSourceImpl
+    interface Factory : RemoteStorageClient.Factory {
+        override fun create(bookshelf: Bookshelf): RemoteStorageClientImpl
     }
 
     @Suppress("UNCHECKED_CAST")
