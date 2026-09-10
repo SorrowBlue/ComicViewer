@@ -489,15 +489,16 @@ This section defines boundary conditions to accelerate decision-making during im
 Detailed module configuration tables and Mermaid dependency diagrams are defined in the repository's **[README.md](./README.md#module-configuration)**.
 To prevent duplicate management of information, system architecture and module structure details are centralized (SSoT) in `README.md`.
 
-### Dependency Rules
+### Dependency Rules (Onion Architecture)
 
+- **All dependencies point inward toward the Domain Model (Core).**
+- **Domain layer MUST NOT depend on outer layers (Presentation, Infrastructure, Framework).**
+- **Use cases (Application layer) orchestrate domain logic and repository abstractions.**
 - **Upper layers can depend on lower layers.**
 - **Minimize dependencies between layers at the same level.**
-- **Avoid direct dependencies between feature modules.**
-- **Implement screen transitions using Compose Navigation.**
-- **Leverage the Destinations library.**
+- **Avoid direct dependencies between feature modules (implement screen transitions using Compose Navigation and NavKey).**
 
-Refer to [README.md](./README.md) for the detailed module dependency diagram.
+Refer to [README.md](./README.md#module-dependencies) for the detailed module dependency diagram and Onion Architecture mapping.
 
 ### Common Development Tasks
 

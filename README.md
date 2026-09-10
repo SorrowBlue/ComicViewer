@@ -66,9 +66,9 @@ graph LR
 | app     | jvmApp         |              | JVM (Desktop) Application |
 | app     | ios            |              | iOS Application |
 | app     | share          |              | Platform shared entry point |
-| domain  | model          |              | Domain models and entities |
-| domain  | service        |              | Domain service definitions |
-| domain  | usecase        |              | Usecase implementations |
+| domain  | model          |              | Domain models and entities (Core) |
+| domain  | service        |              | Usecase implementations (Interactors) and DataSource interfaces |
+| domain  | usecase        |              | Usecase definitions and interfaces (Application API) |
 | data    | coil           |              | Thumbnail and image loading implementations |
 | data    | database       |              | Room database implementations |
 | data    | datastore      |              | Datastore for settings and status persistence |
@@ -107,21 +107,34 @@ graph LR
 | framework| designsystem  |              | Design system components |
 | framework| notification  |              | Notification processing implementations |
 | framework| permission    |              | Permission management implementations |
+| framework| startup       |              | Application startup initialization |
 | framework| test          |              | Testing utilities |
 | framework| ui            |              | Shared UI components |
 | framework| navkey-processor|            | Navigation key processor |
+
+## Architecture Overview (Onion Architecture Mapping)
+
+ComicViewer adheres to the principles of **Onion Architecture**, placing the Domain Model at its core with all dependencies pointing inward:
+
+- **Layer 1: Domain Model (Core)**: Pure Kotlin entities, value objects, and domain errors (`:domain:model`).
+- **Layer 2: Domain Services & Ports**: Domain-specific logic and data access abstraction interfaces (`:domain:service`).
+- **Layer 3: Application Services / Use Cases**: Use case definitions and application workflow orchestration (`:domain:usecase`, `:domain:service` interactors).
+- **Layer 4: Outer Ring (Infrastructure, Presentation & Composition Root)**:
+  - **Presentation (UI)**: UI screens and viewmodels (`:feature:*`), shared design system (`:framework:designsystem`), and UI components (`:framework:ui`).
+  - **Infrastructure**: Database (`:data:database`), storage/network (`:data:storage:*`), image loading (`:data:coil`), and platform services (`:framework:background`, `:framework:notification`, `:framework:permission`, `:framework:startup`).
+  - **Composition Root**: Application entry points and Metro DI wiring (`:app:share`, `:app:androidApp`, `:app:jvmApp`, `:app:ios`).
 
 ## Module dependencies
 
 ```mermaid
 graph TD
-    subgraph app [app]
+    subgraph app [app - Composition Root]
         :app:androidApp --> :app:share
         :app:jvmApp --> :app:share
         :app:ios --> :app:share
     end
 
-    subgraph feature [feature]
+    subgraph feature [feature - Presentation]
         :feature:book --> :feature:book:nav
         :feature:bookshelf --> :feature:bookshelf:edit
         :feature:bookshelf --> :feature:bookshelf:info
@@ -138,16 +151,16 @@ graph TD
         :feature:settings:extension --> :feature:settings:common
     end
 
-    subgraph domain [domain]
+    subgraph domain [domain - Core & Application]
+        :domain:service --> :domain:usecase
         :domain:usecase --> :domain:model
         :domain:service --> :domain:model
-        :domain:usecase --> :domain:service
     end
 
-    subgraph data [data]
+    subgraph data [data - Infrastructure]
         :data:coil --> :domain:service
-        :data:database --> :domain:model
-        :data:datastore --> :domain:model
+        :data:database --> :domain:service
+        :data:datastore --> :domain:service
         :data:reader:document --> :data:storage
         :data:reader:zip --> :data:storage
         :data:storage:device --> :data:storage
@@ -155,16 +168,24 @@ graph TD
         :data:storage --> :domain:service
     end
 
-    subgraph framework [framework]
+    subgraph framework [framework - UI & Platform Infrastructure]
         :framework:ui --> :framework:designsystem
         :framework:ui --> :framework:common
+        :framework:permission --> :framework:ui
+        :framework:permission --> :framework:designsystem
+        :framework:notification --> :framework:startup
     end
 
     :app:share --> feature
-    feature --> domain
-    feature --> framework
+    :app:share --> data
+    :app:share --> domain
+    :app:share --> framework
+
+    feature --> :domain:usecase
+    feature --> :framework:designsystem
+    feature --> :framework:ui
+
     data --> domain
-    domain --> framework
 ```
 
 ## Screen transition diagram
