@@ -1,8 +1,8 @@
-﻿/*
+/*
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder.section
+package com.sorrowblue.comicviewer.framework.ui.folder.section
 
 import com.sorrowblue.comicviewer.framework.ui.file.component.FileLazyVerticalGridUiState
 

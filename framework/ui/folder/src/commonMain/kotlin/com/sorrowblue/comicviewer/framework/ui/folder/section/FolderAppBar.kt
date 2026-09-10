@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder.section
+package com.sorrowblue.comicviewer.framework.ui.folder.section
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.folder.component.SortTypeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.file.component.FileListDisplayItem
@@ -28,12 +27,13 @@ import com.sorrowblue.comicviewer.framework.ui.file.component.gridSizeItem
 import com.sorrowblue.comicviewer.framework.ui.file.component.hiddenFilesToggleableItem
 import com.sorrowblue.comicviewer.framework.ui.file.component.rememberGridSizeItemState
 import com.sorrowblue.comicviewer.framework.ui.file.component.rememberHiddenFilesToggleableItemState
+import com.sorrowblue.comicviewer.framework.ui.folder.component.SortTypeItem
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import com.sorrowblue.comicviewer.framework.ui.material3.settingsItem
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import comicviewer.feature.folder.generated.resources.Res
-import comicviewer.feature.folder.generated.resources.folder_label_search
+import comicviewer.framework.ui.folder.generated.resources.Res
+import comicviewer.framework.ui.folder.generated.resources.folder_label_search
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

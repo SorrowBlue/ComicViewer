@@ -1,4 +1,4 @@
-﻿import dev.detekt.gradle.report.ReportMergeTask
+import dev.detekt.gradle.report.ReportMergeTask
 import nl.littlerobots.vcu.plugin.resolver.VersionSelectors
 
 plugins {
@@ -125,8 +125,7 @@ dependencies {
     dokka(projects.feature.collection.editor)
     dokka(projects.feature.collection.nav)
     dokka(projects.framework.ui.file)
-    dokka(projects.feature.folder)
-    dokka(projects.feature.folder.nav)
+    dokka(projects.framework.ui.folder)
     dokka(projects.feature.history)
     dokka(projects.feature.readlater)
     dokka(projects.feature.search)

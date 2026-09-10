@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder.navigation
+package com.sorrowblue.comicviewer.framework.ui.folder.navigation
 
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
@@ -11,11 +11,18 @@ import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.PathString
-import com.sorrowblue.comicviewer.folder.FolderScreenRoot
-import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.framework.ui.file.navigation.fileInfoEntry
+import com.sorrowblue.comicviewer.framework.ui.folder.FolderScreenRoot
+
+interface FolderNavKey : NavKey {
+    val bookshelfId: BookshelfId
+    val path: String
+    val restorePath: String?
+    val showSearch: Boolean get() = false
+    val onRestoreComplete: (() -> Unit)? get() = null
+}
 
 context(scope: EntryProviderScope<NavKey>)
 inline fun <reified T : FolderNavKey> folderEntry(

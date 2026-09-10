@@ -1,15 +1,14 @@
-﻿plugins {
+plugins {
     alias(libs.plugins.comicviewer.multiplatformFeature)
 }
 
 kotlin {
     android {
-        namespace = "com.sorrowblue.comicviewer.feature.folder"
+        namespace = "com.sorrowblue.comicviewer.framework.ui.folder"
     }
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.feature.folder.nav)
                 implementation(projects.framework.permission)
                 implementation(projects.framework.ui.file)
             }

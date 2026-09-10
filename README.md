@@ -90,8 +90,6 @@ graph LR
 | feature | collection      | add          | Add collection screen |
 | feature | collection      | editor       | Edit collection screen |
 | feature | collection      | nav          | Collection navigation |
-| feature | folder         |              | Folder navigation screen |
-| feature | folder         | nav          | Folder navigation |
 | feature | history        |              | Reading history screen |
 | feature | readlater      |              | Read later screen |
 | feature | search         |              | Search and discovery screen |
@@ -116,6 +114,7 @@ graph LR
 | framework| test          |              | Testing utilities |
 | framework| ui            |              | Shared UI components |
 | framework| ui            | file         | Shared file UI components and detail pane |
+| framework| ui            | folder       | Shared folder navigation and screen components |
 | framework| navkey-processor|            | Navigation key processor |
 
 ## Architecture Overview (Onion Architecture Mapping)
@@ -146,20 +145,14 @@ graph TD
         :feature:bookshelf --> :feature:bookshelf:nav
         :feature:bookshelf --> :feature:collection:nav
         :feature:bookshelf --> :feature:search:nav
-        :feature:bookshelf --> :feature:folder:nav
         :feature:bookshelf:edit --> :feature:bookshelf:nav
         :feature:bookshelf:info --> :feature:bookshelf:nav
         :feature:collection --> :feature:collection:nav
-        :feature:collection --> :feature:folder:nav
         :feature:collection:add --> :feature:collection:nav
         :feature:collection:editor --> :feature:collection:nav
-        :feature:folder --> :feature:folder:nav
         :feature:history --> :feature:collection:nav
-        :feature:history --> :feature:folder:nav
         :feature:readlater --> :feature:collection:nav
-        :feature:readlater --> :feature:folder:nav
         :feature:search --> :feature:collection:nav
-        :feature:search --> :feature:folder:nav
         :feature:search --> :feature:search:nav
         :feature:settings --> :feature:settings:common
         :feature:settings --> :feature:settings:nav
@@ -200,6 +193,8 @@ graph TD
         :framework:ui --> :framework:common
         :framework:ui:file --> :framework:ui
         :framework:ui:file --> :domain:usecase
+        :framework:ui:folder --> :framework:ui:file
+        :framework:ui:folder --> :framework:permission
         :framework:permission --> :framework:ui
         :framework:permission --> :framework:designsystem
         :framework:notification --> :framework:startup
@@ -214,6 +209,7 @@ graph TD
     feature --> :framework:designsystem
     feature --> :framework:ui
     feature --> :framework:ui:file
+    feature --> :framework:ui:folder
 
     data --> domain
 ```

@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder.component
+package com.sorrowblue.comicviewer.framework.ui.folder.component
 
 import androidx.compose.foundation.focusable
 import androidx.compose.material3.ButtonDefaults
@@ -22,11 +22,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import comicviewer.feature.folder.generated.resources.Res
-import comicviewer.feature.folder.generated.resources.folder_label_file_size
-import comicviewer.feature.folder.generated.resources.folder_label_name
-import comicviewer.feature.folder.generated.resources.folder_label_update_date
-import comicviewer.feature.folder.generated.resources.folder_sorttype_label_apply_to_folder_only
+import comicviewer.framework.ui.folder.generated.resources.Res
+import comicviewer.framework.ui.folder.generated.resources.folder_label_file_size
+import comicviewer.framework.ui.folder.generated.resources.folder_label_name
+import comicviewer.framework.ui.folder.generated.resources.folder_label_update_date
+import comicviewer.framework.ui.folder.generated.resources.folder_sorttype_label_apply_to_folder_only
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

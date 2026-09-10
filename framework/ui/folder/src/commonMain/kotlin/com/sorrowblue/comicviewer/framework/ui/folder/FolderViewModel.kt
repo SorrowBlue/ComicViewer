@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder
+package com.sorrowblue.comicviewer.framework.ui.folder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,9 +19,9 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCa
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
-import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
-import com.sorrowblue.comicviewer.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.folder.section.FolderAppBarUiState
+import com.sorrowblue.comicviewer.framework.ui.folder.section.FolderListUiState
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory

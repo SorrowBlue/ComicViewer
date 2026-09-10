@@ -41,13 +41,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.SettingsIconButton
-import comicviewer.feature.folder.generated.resources.Res as FolderRes
-import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_asc
-import comicviewer.feature.folder.generated.resources.folder_sorttype_label_date_desc
-import comicviewer.feature.folder.generated.resources.folder_sorttype_label_name_asc
-import comicviewer.feature.folder.generated.resources.folder_sorttype_label_name_desc
-import comicviewer.feature.folder.generated.resources.folder_sorttype_label_size_asc
-import comicviewer.feature.folder.generated.resources.folder_sorttype_label_size_desc
 import comicviewer.feature.search.generated.resources.Res
 import comicviewer.feature.search.generated.resources.search_label_bookshelf
 import comicviewer.feature.search.generated.resources.search_label_hour24
@@ -58,6 +51,13 @@ import comicviewer.feature.search.generated.resources.search_label_search
 import comicviewer.feature.search.generated.resources.search_label_show_hidden_files
 import comicviewer.feature.search.generated.resources.search_label_sub_folder
 import comicviewer.feature.search.generated.resources.search_label_week1
+import comicviewer.framework.ui.folder.generated.resources.Res as FolderRes
+import comicviewer.framework.ui.folder.generated.resources.folder_sorttype_label_date_asc
+import comicviewer.framework.ui.folder.generated.resources.folder_sorttype_label_date_desc
+import comicviewer.framework.ui.folder.generated.resources.folder_sorttype_label_name_asc
+import comicviewer.framework.ui.folder.generated.resources.folder_sorttype_label_name_desc
+import comicviewer.framework.ui.folder.generated.resources.folder_sorttype_label_size_asc
+import comicviewer.framework.ui.folder.generated.resources.folder_sorttype_label_size_desc
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

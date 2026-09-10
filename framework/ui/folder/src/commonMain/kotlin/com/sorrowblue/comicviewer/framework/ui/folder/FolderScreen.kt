@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder
+package com.sorrowblue.comicviewer.framework.ui.folder
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -25,11 +25,6 @@ import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
-import com.sorrowblue.comicviewer.folder.section.FolderAppBar
-import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
-import com.sorrowblue.comicviewer.folder.section.FolderList
-import com.sorrowblue.comicviewer.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionScreen
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
@@ -38,6 +33,11 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteS
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
+import com.sorrowblue.comicviewer.framework.ui.folder.navigation.FolderNavKey
+import com.sorrowblue.comicviewer.framework.ui.folder.section.FolderAppBar
+import com.sorrowblue.comicviewer.framework.ui.folder.section.FolderAppBarUiState
+import com.sorrowblue.comicviewer.framework.ui.folder.section.FolderList
+import com.sorrowblue.comicviewer.framework.ui.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData

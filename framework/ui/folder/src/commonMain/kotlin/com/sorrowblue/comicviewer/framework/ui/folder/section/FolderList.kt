@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder.section
+package com.sorrowblue.comicviewer.framework.ui.folder.section
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,8 +31,8 @@ import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.material3.LinearPullRefreshContainer
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.paging.isLoading
-import comicviewer.feature.folder.generated.resources.Res
-import comicviewer.feature.folder.generated.resources.folder_text_nothing_in_folder
+import comicviewer.framework.ui.folder.generated.resources.Res
+import comicviewer.framework.ui.folder.generated.resources.folder_text_nothing_in_folder
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
