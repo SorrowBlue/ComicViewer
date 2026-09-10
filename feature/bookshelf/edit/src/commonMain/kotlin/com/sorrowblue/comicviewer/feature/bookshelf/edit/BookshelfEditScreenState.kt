@@ -16,7 +16,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_selection_label_device
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_selection_label_smb

@@ -4,7 +4,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.sorrowblue.comicviewer.feature.collection.nav"
+        namespace = "com.sorrowblue.comicviewer.feature.bookshelf.nav"
     }
     sourceSets {
         commonMain.dependencies {
@@ -12,4 +12,3 @@ kotlin {
         }
     }
 }
-

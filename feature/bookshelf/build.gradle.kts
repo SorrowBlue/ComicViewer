@@ -10,9 +10,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.book.nav)
-                implementation(projects.feature.bookshelf.edit)
-                implementation(projects.feature.bookshelf.info)
-                implementation(projects.feature.collection.add)
+                implementation(projects.feature.bookshelf.nav)
+                implementation(projects.feature.collection.nav)
                 implementation(projects.feature.file)
                 implementation(projects.feature.folder)
                 implementation(projects.feature.folder.nav)

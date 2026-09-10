@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.runtime.Composable
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 
 @Composable
 internal fun BookshelfEditScreenRoot(key: BookshelfWizardNavKey, onBack: () -> Unit) {

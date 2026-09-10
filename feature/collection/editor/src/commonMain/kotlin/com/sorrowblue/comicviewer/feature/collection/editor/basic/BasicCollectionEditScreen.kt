@@ -34,9 +34,9 @@ import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.section.BasicCollectionContent
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionEditNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass

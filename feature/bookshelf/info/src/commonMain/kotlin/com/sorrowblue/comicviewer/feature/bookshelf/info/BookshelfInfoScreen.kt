@@ -29,12 +29,12 @@ import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfDeleteNavKey
-import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfNotificationNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContents
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContentsUiState
+import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfInfoNavKey
+import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme

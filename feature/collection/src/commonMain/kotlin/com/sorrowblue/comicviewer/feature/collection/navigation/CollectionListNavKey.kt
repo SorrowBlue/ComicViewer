@@ -10,11 +10,11 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionCreateNavKey
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionEditNavKey
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenRoot
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionCreateNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough

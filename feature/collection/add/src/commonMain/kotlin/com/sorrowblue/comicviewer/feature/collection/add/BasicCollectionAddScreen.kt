@@ -42,9 +42,9 @@ import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSortDropdownMenu
-import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavKey
 import com.sorrowblue.comicviewer.feature.collection.add.section.BasicCollectionContent
 import com.sorrowblue.comicviewer.feature.collection.add.section.CollectionAddAppBar
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionAddNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only

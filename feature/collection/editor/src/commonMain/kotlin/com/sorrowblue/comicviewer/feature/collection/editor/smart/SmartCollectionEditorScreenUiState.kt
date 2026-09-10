@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorForm
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver

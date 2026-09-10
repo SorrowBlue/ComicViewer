@@ -27,10 +27,10 @@ import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionCreateNavKey
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionEditNavKey
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.SmartCollectionEditNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionCreateNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionDeleteNavKey
 import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionListNavKey
 import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavKey
