@@ -67,7 +67,8 @@ graph LR
 | app     | ios            |              | iOS Application |
 | app     | share          |              | Platform shared entry point |
 | domain  | model          |              | Domain models and entities (Core) |
-| domain  | service        |              | Usecase implementations (Interactors) and DataSource interfaces |
+| domain  | repository     |              | Repository interfaces (Data access abstractions) |
+| domain  | service        |              | Usecase implementations (Interactors) and domain services |
 | domain  | usecase        |              | Usecase definitions and interfaces (Application API) |
 | data    | coil           |              | Thumbnail and image loading implementations |
 | data    | database       |              | Room database implementations |
@@ -117,7 +118,7 @@ graph LR
 ComicViewer adheres to the principles of **Onion Architecture**, placing the Domain Model at its core with all dependencies pointing inward:
 
 - **Layer 1: Domain Model (Core)**: Pure Kotlin entities, value objects, and domain errors (`:domain:model`).
-- **Layer 2: Domain Services & Ports**: Domain-specific logic and data access abstraction interfaces (`:domain:service`).
+- **Layer 2: Domain Services & Repositories**: Domain-specific services (`:domain:service`) and repository interfaces (`:domain:repository`).
 - **Layer 3: Application Services / Use Cases**: Use case definitions and application workflow orchestration (`:domain:usecase`, `:domain:service` interactors).
 - **Layer 4: Outer Ring (Infrastructure, Presentation & Composition Root)**:
   - **Presentation (UI)**: UI screens and viewmodels (`:feature:*`), shared design system (`:framework:designsystem`), and UI components (`:framework:ui`).
@@ -153,14 +154,18 @@ graph TD
 
     subgraph domain [domain - Core & Application]
         :domain:service --> :domain:usecase
-        :domain:usecase --> :domain:model
+        :domain:service --> :domain:repository
         :domain:service --> :domain:model
+        :domain:repository --> :domain:model
+        :domain:usecase --> :domain:model
     end
 
     subgraph data [data - Infrastructure]
+        :data:coil --> :domain:repository
         :data:coil --> :domain:service
+        :data:database --> :domain:repository
         :data:database --> :domain:service
-        :data:datastore --> :domain:service
+        :data:datastore --> :domain:repository
         :data:reader:document --> :data:storage
         :data:reader:zip --> :data:storage
         :data:storage:device --> :data:storage
