@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNa
 import com.sorrowblue.comicviewer.feature.search.SearchScreenRoot
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
@@ -52,7 +53,7 @@ internal fun searchNavEntry(navigator: Navigator) {
 
                     is Folder -> {
                         navigator.popNavigate<SearchFileInfoNavKey>(
-                            SearchFolderNavKey(
+                            FolderNavKey(
                                 file.bookshelfId,
                                 file.path,
                             ),

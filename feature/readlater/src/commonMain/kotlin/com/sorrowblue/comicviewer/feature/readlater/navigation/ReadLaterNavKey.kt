@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
@@ -63,7 +64,7 @@ internal fun readLaterNavEntry(navigator: Navigator) {
 
                     is Folder -> {
                         navigator.popNavigate<ReadLaterFileInfoNavKey>(
-                            ReadLaterFolderNavKey(
+                            FolderNavKey(
                                 bookshelfId = file.bookshelfId,
                                 path = file.path,
                             ),

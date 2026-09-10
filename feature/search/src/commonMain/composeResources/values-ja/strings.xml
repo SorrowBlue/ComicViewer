@@ -10,4 +10,11 @@
     <string name="search_label_week1">1週間以内</string>
     <string name="search_label_month1">1ヶ月以内</string>
     <string name="search_label_show_hidden_files">隠しファイルを表示</string>
+
+    <string name="search_sorttype_label_name_asc">ファイル名（昇順）</string>
+    <string name="search_sorttype_label_name_desc">ファイル名（降順）</string>
+    <string name="search_sorttype_label_date_asc">更新日時（昇順）</string>
+    <string name="search_sorttype_label_date_desc">更新日時（降順）</string>
+    <string name="search_sorttype_label_size_asc">ファイルサイズ（昇順）</string>
+    <string name="search_sorttype_label_size_desc">ファイルサイズ（降順）</string>
 </resources>

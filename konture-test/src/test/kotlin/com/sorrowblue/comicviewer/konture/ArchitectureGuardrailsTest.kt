@@ -158,4 +158,37 @@ class ArchitectureGuardrailsTest {
             .should().notDependOnModule { it.startsWith(":feature") || it.startsWith(":app") }
             .check()
     }
+
+    /**
+     * feature層のモジュール同士が直接依存しないことを保証する。
+     * featureモジュール間の画面遷移は :feature:*:nav を介して疎結合に行う必要がある。
+     * 同一フィーチャーグループ内のサブモジュール（例: :feature:settings -> :feature:settings:common）
+     * またはナビゲーションモジュール（:feature:*:nav）への依存のみ許可される。
+     */
+    @Test
+    fun `feature modules do not directly depend on other feature modules`() {
+        val featureNames = listOf(
+            "authentication",
+            "book",
+            "bookshelf",
+            "collection",
+            "folder",
+            "history",
+            "readlater",
+            "search",
+            "settings",
+            "tutorial",
+        )
+        featureNames.forEach { feature ->
+            Konture.modules()
+                .that().haveNamePath { it.startsWith(":feature:$feature") }
+                .should().notDependOnModule { target ->
+                    target.startsWith(":feature:") &&
+                        !target.startsWith(":feature:$feature") &&
+                        !target.endsWith(":nav")
+                }
+                .check()
+        }
+    }
 }
+

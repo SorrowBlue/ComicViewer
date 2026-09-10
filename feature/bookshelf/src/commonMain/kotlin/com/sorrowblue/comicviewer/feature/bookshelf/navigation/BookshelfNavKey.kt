@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenRoot
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Shelves
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
@@ -55,7 +56,7 @@ internal fun bookshelfNavEntry(navigator: Navigator) {
                 navigator.navigate(BookshelfWizardNavKey.Selection)
             },
             onBookshelfClick = { id, path ->
-                navigator.navigate(BookshelfFolderNavKey(id, path))
+                navigator.navigate(FolderNavKey(id, path, showSearch = true))
             },
             onBookshelfInfoClick = { bookshelfFolder ->
                 navigator.popNavigate<BookshelfInfoNavKey>(

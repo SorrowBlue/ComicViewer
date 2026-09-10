@@ -6,11 +6,14 @@ package com.sorrowblue.comicviewer.folder.nav
 
 import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-interface FolderNavKey : NavKey {
-    val bookshelfId: BookshelfId
-    val path: String
-    val restorePath: String?
-    val showSearch: Boolean get() = false
-    val onRestoreComplete: (() -> Unit)? get() = null
-}
+@Serializable
+data class FolderNavKey(
+    val bookshelfId: BookshelfId,
+    val path: String,
+    val restorePath: String? = null,
+    val showSearch: Boolean = false,
+    @Transient val onRestoreComplete: (() -> Unit)? = null,
+) : NavKey
