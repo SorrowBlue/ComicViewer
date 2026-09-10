@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.file.SortUtil
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
@@ -20,13 +20,13 @@ import kotlinx.coroutines.flow.first
 
 @ContributesBinding(AppScope::class)
 internal class ScanBookshelfInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val datastoreDataSource: DatastoreDataSource,
 ) : ScanBookshelfUseCase() {
     override suspend fun run(request: Request): Resource<List<File>, Error> {
-        val bookshelf = bookshelfLocalDataSource.flow(request.bookshelfId).first()
+        val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
         if (bookshelf != null) {
             val rootFolder = fileLocalDataSource.root(request.bookshelfId)
             if (rootFolder != null) {

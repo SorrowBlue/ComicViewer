@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 internal class GetBookshelfInfoInteractor(
-    private val localBookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetBookshelfInfoUseCase() {
     override fun run(request: Request): Flow<Resource<BookshelfFolder, Error>> =
-        localBookshelfLocalDataSource.flow(request.bookshelfId).map { bookshelf ->
+        bookshelfRepository.flow(request.bookshelfId).map { bookshelf ->
             if (bookshelf != null) {
                 val folder = fileLocalDataSource.root(request.bookshelfId)
                 if (folder != null) {

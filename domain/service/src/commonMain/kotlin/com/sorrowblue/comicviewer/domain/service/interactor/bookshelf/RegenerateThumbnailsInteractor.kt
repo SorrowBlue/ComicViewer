@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
 import com.sorrowblue.comicviewer.domain.service.limitedCoroutineScope
@@ -22,13 +22,13 @@ import kotlinx.coroutines.sync.withLock
 
 @ContributesBinding(AppScope::class)
 internal class RegenerateThumbnailsInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val thumbnailDataSource: ThumbnailDataSource,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : RegenerateThumbnailsUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Error> {
-        val bookshelf = bookshelfLocalDataSource.flow(request.bookshelfId).first()
+        val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
         if (bookshelf != null) {
             val mutex = Mutex()
             val limit = 1

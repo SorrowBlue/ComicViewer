@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQueryError
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
@@ -27,13 +27,13 @@ import logcat.logcat
 
 @ContributesBinding(AppScope::class)
 internal class GetBookInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val folderSettingsInteractor: ManageFolderSettingsUseCase,
 ) : GetBookUseCase() {
     override fun run(request: Request): Flow<Resource<Book, Error>> =
-        bookshelfLocalDataSource.flow(request.bookshelfId).map {
+        bookshelfRepository.flow(request.bookshelfId).map {
             if (it != null) {
                 fetch(it, request.path)
             } else {

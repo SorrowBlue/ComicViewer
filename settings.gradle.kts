@@ -82,6 +82,7 @@ include(":framework:ui")
 include(":framework:navkey-processor")
 
 include(":domain:model")
+include(":domain:repository")
 include(":domain:service")
 include(":domain:usecase")
 

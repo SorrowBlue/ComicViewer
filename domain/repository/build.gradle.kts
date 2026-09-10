@@ -4,16 +4,14 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.sorrowblue.comicviewer.domain.service"
+        namespace = "com.sorrowblue.comicviewer.domain.repository"
     }
     sourceSets {
         commonMain {
             dependencies {
                 api(projects.domain.model)
-                api(projects.domain.repository)
-                implementation(projects.domain.usecase)
-                api(libs.kotlinx.coroutinesCore)
                 api(libs.androidx.pagingCommon)
+                api(libs.kotlinx.coroutinesCore)
             }
         }
     }

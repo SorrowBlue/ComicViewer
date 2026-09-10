@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.model.common.isSuccess
 import com.sorrowblue.comicviewer.domain.model.common.onError
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RemoveBookshelfUseCase
@@ -19,12 +19,12 @@ import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
 internal class RemoveBookshelfInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val imageCacheDataSource: ImageCacheDataSource,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : RemoveBookshelfUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Unit> =
-        bookshelfLocalDataSource.delete(request.bookshelfId).fold(
+        bookshelfRepository.delete(request.bookshelfId).fold(
             onSuccess = { _ ->
                 val pageResult = imageCacheDataSource.clearImageCache(
                     request.bookshelfId,

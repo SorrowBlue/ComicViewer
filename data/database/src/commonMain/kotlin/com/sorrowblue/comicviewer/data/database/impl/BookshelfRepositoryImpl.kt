@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -31,10 +31,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 @ContributesBinding(AppScope::class)
-internal class BookshelfLocalDataSourceImpl(
+internal class BookshelfRepositoryImpl(
     private val dao: BookshelfDao,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : BookshelfLocalDataSource {
+) : BookshelfRepository {
     override suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean) {
         withContext(dispatcher) {
             dao.updateDeleted(bookshelfId.value, if (isDeleted) 1 else 0)

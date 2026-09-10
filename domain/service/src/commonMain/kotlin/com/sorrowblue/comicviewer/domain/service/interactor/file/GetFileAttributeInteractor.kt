@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.file
 
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileAttributeUseCase
 import dev.zacsweers.metro.AppScope
@@ -16,11 +16,11 @@ import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 internal class GetFileAttributeInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : GetFileAttributeUseCase() {
     override fun run(request: Request): Flow<Resource<FileAttribute, Error>> =
-        bookshelfLocalDataSource.flow(request.bookshelfId).map { bookshelf ->
+        bookshelfRepository.flow(request.bookshelfId).map { bookshelf ->
             if (bookshelf != null) {
                 kotlin
                     .runCatching {

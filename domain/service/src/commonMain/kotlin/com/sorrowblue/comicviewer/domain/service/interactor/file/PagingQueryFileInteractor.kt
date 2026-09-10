@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.file
 
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.service.datasource.BookshelfLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingQueryFileUseCase
 import dev.zacsweers.metro.AppScope
@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.flatMapLatest
 
 @ContributesBinding(AppScope::class)
 internal class PagingQueryFileInteractor(
-    private val bookshelfLocalDataSource: BookshelfLocalDataSource,
+    private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : PagingQueryFileUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun run(request: Request): Flow<PagingData<File>> =
-        bookshelfLocalDataSource.flow(request.bookshelfId).flatMapLatest {
+        bookshelfRepository.flow(request.bookshelfId).flatMapLatest {
             fileLocalDataSource.pagingDataFlow(
                 request.pagingConfig,
                 request.bookshelfId,

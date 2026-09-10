@@ -10,6 +10,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.domain.repository)
                 implementation(projects.framework.startup)
                 implementation(projects.domain.service)
                 implementation(projects.data.storage)
