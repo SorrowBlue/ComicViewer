@@ -85,6 +85,7 @@ graph LR
 | feature | bookshelf      |              | Bookshelf/Library screen |
 | feature | bookshelf      | edit         | Bookshelf editing screen |
 | feature | bookshelf      | info         | Bookshelf information screen |
+| feature | bookshelf      | nav          | Bookshelf navigation |
 | feature | collection      |              | Collection screen |
 | feature | collection      | add          | Add collection screen |
 | feature | collection      | editor       | Edit collection screen |
@@ -142,17 +143,22 @@ graph TD
     subgraph feature [feature - Presentation]
         :feature:authentication --> :feature:authentication:nav
         :feature:book --> :feature:book:nav
-        :feature:bookshelf --> :feature:bookshelf:edit
-        :feature:bookshelf --> :feature:bookshelf:info
+        :feature:bookshelf --> :feature:bookshelf:nav
+        :feature:bookshelf --> :feature:collection:nav
         :feature:bookshelf --> :feature:search:nav
         :feature:bookshelf --> :feature:folder:nav
-        :feature:collection --> :feature:collection:add
-        :feature:collection --> :feature:collection:editor
+        :feature:bookshelf:edit --> :feature:bookshelf:nav
+        :feature:bookshelf:info --> :feature:bookshelf:nav
         :feature:collection --> :feature:collection:nav
         :feature:collection --> :feature:folder:nav
+        :feature:collection:add --> :feature:collection:nav
+        :feature:collection:editor --> :feature:collection:nav
         :feature:folder --> :feature:folder:nav
+        :feature:history --> :feature:collection:nav
         :feature:history --> :feature:folder:nav
+        :feature:readlater --> :feature:collection:nav
         :feature:readlater --> :feature:folder:nav
+        :feature:search --> :feature:collection:nav
         :feature:search --> :feature:folder:nav
         :feature:search --> :feature:search:nav
         :feature:settings --> :feature:settings:common

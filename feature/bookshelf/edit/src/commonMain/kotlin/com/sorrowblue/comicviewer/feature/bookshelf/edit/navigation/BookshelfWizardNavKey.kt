@@ -8,23 +8,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenRoot
+import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
-import kotlinx.serialization.Serializable
-
-@Serializable
-sealed interface BookshelfWizardNavKey : NavKey {
-
-    @Serializable
-    data object Selection : BookshelfWizardNavKey
-
-    @Serializable
-    data class Edit(val bookshelfId: BookshelfId, val bookshelfType: BookshelfType) :
-        BookshelfWizardNavKey
-}
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

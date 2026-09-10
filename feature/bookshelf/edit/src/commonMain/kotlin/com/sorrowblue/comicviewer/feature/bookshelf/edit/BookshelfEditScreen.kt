@@ -35,12 +35,12 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.DeviceEditorForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.bookshelfEditorEntry
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.discordDialogEntry
-import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SelectionList
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.drawDivider
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.type.bookshelfTypeEntry
+import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides

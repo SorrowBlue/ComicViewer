@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
-import com.sorrowblue.comicviewer.feature.collection.editor.navigation.BasicCollectionCreateNavKey
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionCreateNavKey
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.collection.editor.generated.resources.Res

@@ -10,7 +10,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.feature.collection.editor)
+                implementation(projects.feature.collection.nav)
             }
         }
     }

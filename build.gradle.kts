@@ -119,6 +119,7 @@ dependencies {
     dokka(projects.feature.bookshelf)
     dokka(projects.feature.bookshelf.edit)
     dokka(projects.feature.bookshelf.info)
+    dokka(projects.feature.bookshelf.nav)
     dokka(projects.feature.collection)
     dokka(projects.feature.collection.add)
     dokka(projects.feature.collection.editor)

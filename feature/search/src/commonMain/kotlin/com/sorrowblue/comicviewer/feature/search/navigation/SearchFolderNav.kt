@@ -11,7 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
-import com.sorrowblue.comicviewer.feature.collection.add.navigation.BasicCollectionAddNavKey
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionAddNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
