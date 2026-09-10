@@ -1,4 +1,4 @@
-﻿import dev.detekt.gradle.report.ReportMergeTask
+import dev.detekt.gradle.report.ReportMergeTask
 import nl.littlerobots.vcu.plugin.resolver.VersionSelectors
 
 plugins {
