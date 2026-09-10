@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.readlater
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
-import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
 import dev.zacsweers.metro.AppScope
@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 internal class ExistsReadlaterInteractor(
-    private val readLaterFileLocalDataSource: ReadLaterFileLocalDataSource,
+    private val readLaterFileRepository: ReadLaterFileRepository,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : ExistsReadlaterUseCase() {
-    override fun run(request: Request): Flow<Resource<Boolean, Unit>> = readLaterFileLocalDataSource
+    override fun run(request: Request): Flow<Resource<Boolean, Unit>> = readLaterFileRepository
         .exists(ReadLaterFile(request.bookshelfId, request.path))
         .fold(
             onSuccess = { flow ->

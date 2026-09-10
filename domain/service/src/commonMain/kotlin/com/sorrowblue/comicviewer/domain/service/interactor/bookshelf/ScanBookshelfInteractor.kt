@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
@@ -23,7 +23,7 @@ internal class ScanBookshelfInteractor(
     private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val datastoreDataSource: DatastoreDataSource,
+    private val settingsRepository: SettingsRepository,
 ) : ScanBookshelfUseCase() {
     override suspend fun run(request: Request): Resource<List<File>, Error> {
         val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
@@ -31,12 +31,12 @@ internal class ScanBookshelfInteractor(
             val rootFolder = fileLocalDataSource.root(request.bookshelfId)
             if (rootFolder != null) {
                 val supportExtension =
-                    datastoreDataSource.folderSettings
+                    settingsRepository.folderSettings
                         .first()
                         .supportExtension
                         .map { it.extension }
                 val resolveImageFolder =
-                    datastoreDataSource.folderSettings.first().resolveImageFolder
+                    settingsRepository.folderSettings.first().resolveImageFolder
                 remoteDataSourceFactory
                     .create(
                         bookshelf,

@@ -12,9 +12,9 @@ import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
+import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import dev.zacsweers.metro.AppScope
@@ -24,13 +24,13 @@ import logcat.logcat
 
 @ContributesBinding(AppScope::class)
 internal class GetNextBookInteractor(
-    private val datastoreDataSource: DatastoreDataSource,
+    private val settingsRepository: SettingsRepository,
     private val fileLocalDataSource: FileLocalDataSource,
-    private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
-    private val collectionLocalDataSource: CollectionLocalDataSource,
+    private val collectionFileRepository: CollectionFileRepository,
+    private val collectionRepository: CollectionRepository,
 ) : GetNextBookUseCase() {
     override suspend fun run(request: Request): Resource<Book, Error> {
-        val settings = datastoreDataSource.folderDisplaySettings.first()
+        val settings = settingsRepository.folderDisplaySettings.first()
         return when (val location = request.location) {
             is Location.Collection -> collection(
                 request.isNext,
@@ -80,7 +80,7 @@ internal class GetNextBookInteractor(
         sortType: SortType,
     ): Resource<Book, Error> {
         logcat { "#collection $bookshelfId $collectionId" }
-        val collection = collectionLocalDataSource.flow(collectionId).first()
+        val collection = collectionRepository.flow(collectionId).first()
             ?: return Resource.Error(Error.NotFound)
 
         logcat { "collection: $collection" }
@@ -89,12 +89,12 @@ internal class GetNextBookInteractor(
             when (collection) {
                 is BasicCollection -> {
                     if (isNext) {
-                        collectionFileLocalDataSource.flowNextCollectionFile(
+                        collectionFileRepository.flowNextCollectionFile(
                             CollectionFile(collectionId, bookshelfId, path),
                             sortType,
                         )
                     } else {
-                        collectionFileLocalDataSource.flowPrevCollectionFile(
+                        collectionFileRepository.flowPrevCollectionFile(
                             CollectionFile(collectionId, bookshelfId, path),
                             sortType,
                         )

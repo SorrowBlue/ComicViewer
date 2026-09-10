@@ -23,7 +23,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
@@ -40,7 +40,7 @@ internal class BookPageImageFetcher(
     diskCacheLazy: Lazy<DiskCache>,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfRepository: BookshelfRepository,
-    private val datastoreDataSource: DatastoreDataSource,
+    private val settingsRepository: SettingsRepository,
     private val bookFileReaderManager: BookFileReaderManagerImpl,
 ) : BaseFetcher<BookPageImage, BookPageImageMetadata>(data, options, diskCacheLazy) {
 
@@ -68,7 +68,7 @@ internal class BookPageImageFetcher(
                 "File not found. id: ${data.book.bookshelfId}, path: ${data.book.path}"
             }
             val fileReader = bookFileReaderManager.get(bookshelf, data.book)
-            val viewerSettings = datastoreDataSource.viewerSettings.first()
+            val viewerSettings = settingsRepository.viewerSettings.first()
             val quality = viewerSettings.imageQuality
             val compressFormat = viewerSettings.imageFormat
             return runCatching {
@@ -126,7 +126,7 @@ internal class BookPageImageFetcher(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfRepository: BookshelfRepository,
-        private val datastoreDataSource: DatastoreDataSource,
+        private val settingsRepository: SettingsRepository,
         private val bookFileReaderManager: BookFileReaderManagerImpl,
     ) : Fetcher.Factory<BookPageImage> {
         override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
@@ -136,7 +136,7 @@ internal class BookPageImageFetcher(
                 lazy { coilDiskCacheLazy.value.pageDiskCache(data.book.bookshelfId) },
                 remoteDataSourceFactory,
                 bookshelfRepository,
-                datastoreDataSource,
+                settingsRepository,
                 bookFileReaderManager,
             )
     }

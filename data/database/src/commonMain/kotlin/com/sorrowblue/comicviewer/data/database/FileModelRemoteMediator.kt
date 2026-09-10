@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.common.PagingException
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
@@ -30,7 +30,7 @@ import logcat.logcat
 @AssistedInject
 internal class FileModelRemoteMediator(
     remoteDataSourceFactory: RemoteDataSource.Factory,
-    datastoreDataSource: DatastoreDataSource,
+    settingsRepository: SettingsRepository,
     @Assisted private val bookshelf: Bookshelf,
     @Assisted private val file: File,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
@@ -41,7 +41,7 @@ internal class FileModelRemoteMediator(
         fun create(bookshelf: Bookshelf, file: File): FileModelRemoteMediator
     }
 
-    private val folderSettings = datastoreDataSource.folderSettings
+    private val folderSettings = settingsRepository.folderSettings
     private val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
 
     override suspend fun initialize() = InitializeAction.LAUNCH_INITIAL_REFRESH

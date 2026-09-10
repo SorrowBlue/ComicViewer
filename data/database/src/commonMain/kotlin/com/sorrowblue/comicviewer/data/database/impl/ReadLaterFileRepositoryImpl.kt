@@ -14,15 +14,15 @@ import com.sorrowblue.comicviewer.data.database.entity.readlater.ReadLaterFileEn
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
-import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
-internal class ReadLaterFileLocalDataSourceImpl(private val readLaterFileDao: ReadLaterFileDao) :
-    ReadLaterFileLocalDataSource {
+internal class ReadLaterFileRepositoryImpl(private val readLaterFileDao: ReadLaterFileDao) :
+    ReadLaterFileRepository {
     override suspend fun updateOrAdd(
         file: ReadLaterFile,
     ): Resource<ReadLaterFile, Resource.SystemError> = kotlin

@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
@@ -27,7 +27,7 @@ internal class PagingFileInteractor(
     private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
     private val fileRemoteDataSource: FileRemoteDataSource,
-    private val datastoreDataSource: DatastoreDataSource,
+    private val settingsRepository: SettingsRepository,
 ) : PagingFileUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun run(request: Request): Flow<PagingData<File>> = bookshelfRepository
@@ -38,7 +38,7 @@ internal class PagingFileInteractor(
             val file = fileLocalDataSource.findBy(request.bookshelfId, request.path) as IFolder
             fileRemoteDataSource.pagingDataFlow(request.pagingConfig, bookshelf, file) {
                 val settings =
-                    runBlocking { datastoreDataSource.folderDisplaySettings.first() }
+                    runBlocking { settingsRepository.folderDisplaySettings.first() }
                 SearchCondition(
                     "",
                     SearchCondition.Range.InFolder(file.path),

@@ -19,7 +19,7 @@ import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
@@ -34,7 +34,7 @@ internal class CollectionThumbnailFetcher(
     options: Options,
     diskCache: Lazy<DiskCache>,
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-    private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
+    private val collectionFileRepository: CollectionFileRepository,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : BaseFetcher<Collection, CollectionThumbnailMetadata>(data, options, diskCache) {
 
@@ -74,7 +74,7 @@ internal class CollectionThumbnailFetcher(
         CoilMetadata.from<CollectionThumbnailMetadata>(source)
 
     private suspend fun getThumbnailCache(): CacheKeySnapshot? {
-        val cacheKeyList = collectionFileLocalDataSource.getCacheKeyList(
+        val cacheKeyList = collectionFileRepository.getCacheKeyList(
             data.id,
             CachesFetchCount,
         )
@@ -103,7 +103,7 @@ internal class CollectionThumbnailFetcher(
     class Factory(
         private val diskCache: Lazy<DiskCache>,
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
-        private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
+        private val collectionFileRepository: CollectionFileRepository,
         private val fileModelLocalDataSource: FileLocalDataSource,
     ) : Fetcher.Factory<Collection> {
         override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
@@ -112,7 +112,7 @@ internal class CollectionThumbnailFetcher(
                 options = options,
                 diskCache = diskCache,
                 coilDiskCacheLazy = coilDiskCacheLazy,
-                collectionFileLocalDataSource = collectionFileLocalDataSource,
+                collectionFileRepository = collectionFileRepository,
                 fileLocalDataSource = fileModelLocalDataSource,
             )
     }

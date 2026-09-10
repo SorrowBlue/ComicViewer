@@ -5,18 +5,18 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings
-import com.sorrowblue.comicviewer.domain.service.datasource.JvmDatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.JvmSettingsRepository
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageWindowSettingsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
 internal class ManageWindowSettingsInteractor(
-    private val datastoreDataSource: JvmDatastoreDataSource,
+    private val settingsRepository: JvmSettingsRepository,
 ) : ManageWindowSettingsUseCase {
-    override val settings = datastoreDataSource.windowSettings
+    override val settings = settingsRepository.windowSettings
 
     override suspend fun edit(action: (WindowSettings) -> WindowSettings) {
-        datastoreDataSource.updateWindowSettings(action)
+        settingsRepository.updateWindowSettings(action)
     }
 }

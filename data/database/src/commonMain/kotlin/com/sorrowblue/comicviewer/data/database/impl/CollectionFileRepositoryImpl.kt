@@ -23,7 +23,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -34,12 +34,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 @ContributesBinding(AppScope::class)
-internal class CollectionFileLocalDataSourceImpl(
+internal class CollectionFileRepositoryImpl(
     private val dao: CollectionDao,
     private val collectionFileDao: CollectionFileDao,
     private val fileDao: FileDao,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : CollectionFileLocalDataSource {
+) : CollectionFileRepository {
     override fun pagingDataFlow(
         id: CollectionId,
         pagingConfig: PagingConfig,

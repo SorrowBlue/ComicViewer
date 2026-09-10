@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.collection
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
 import dev.zacsweers.metro.AppScope
@@ -18,11 +18,11 @@ import kotlinx.coroutines.runBlocking
 
 @ContributesBinding(AppScope::class)
 internal class PagingCollectionExistInteractor(
-    private val dataSource: CollectionLocalDataSource,
+    private val collectionRepository: CollectionRepository,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,
 ) : PagingCollectionExistUseCase() {
     override fun run(request: Request): Flow<PagingData<Pair<Collection, Boolean>>> =
-        dataSource.pagingDataFlow(
+        collectionRepository.pagingDataFlow(
             request.pagingConfig,
             request.bookshelfId,
             request.path,

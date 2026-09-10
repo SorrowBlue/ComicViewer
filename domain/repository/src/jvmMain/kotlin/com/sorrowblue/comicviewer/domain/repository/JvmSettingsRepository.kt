@@ -2,15 +2,15 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.datasource
+package com.sorrowblue.comicviewer.domain.repository
 
 import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings
 import kotlinx.coroutines.flow.Flow
 
 /**
- * JVM Datastore data source
+ * JVM Settings repository
  */
-interface JvmDatastoreDataSource {
+interface JvmSettingsRepository {
 
     /**
      * Window settings flow

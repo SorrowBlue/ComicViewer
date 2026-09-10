@@ -5,18 +5,18 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 
 @ContributesBinding(AppScope::class)
-internal class CollectionSettingsInteractor(private val dataSource: DatastoreDataSource) :
+internal class CollectionSettingsInteractor(private val settingsRepository: SettingsRepository) :
     CollectionSettingsUseCase {
-    override val settings: Flow<CollectionSettings> = dataSource.collectionSettings
+    override val settings: Flow<CollectionSettings> = settingsRepository.collectionSettings
 
     override suspend fun edit(action: (CollectionSettings) -> CollectionSettings) {
-        dataSource.updateCollectionSettings(action)
+        settingsRepository.updateCollectionSettings(action)
     }
 }

@@ -5,17 +5,16 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.collection
 
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
-internal class RemoveCollectionFileInteractor(
-    private val dataSource: CollectionFileLocalDataSource,
-) : RemoveCollectionFileUseCase() {
+internal class RemoveCollectionFileInteractor(private val repository: CollectionFileRepository) :
+    RemoveCollectionFileUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Error> {
-        dataSource.remove(request.file)
+        repository.remove(request.file)
         return Resource.Success(Unit)
     }
 }

@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.datasource
+package com.sorrowblue.comicviewer.domain.repository
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -13,7 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
 
-interface CollectionFileLocalDataSource {
+interface CollectionFileRepository {
     fun pagingDataFlow(
         id: CollectionId,
         pagingConfig: PagingConfig,

@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.readlater
 
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.service.datasource.ReadLaterFileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
 import dev.zacsweers.metro.AppScope
@@ -13,11 +13,11 @@ import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
 internal class DeleteReadLaterInteractor(
-    private val readLaterFileLocalDataSource: ReadLaterFileLocalDataSource,
+    private val readLaterFileRepository: ReadLaterFileRepository,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : DeleteReadLaterUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Unit> =
-        when (val result = readLaterFileLocalDataSource.delete(request.readLaterFile)) {
+        when (val result = readLaterFileRepository.delete(request.readLaterFile)) {
             is Resource.Success -> Resource.Success(Unit)
 
             is Resource.Error -> {

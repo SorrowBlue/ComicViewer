@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.Flow
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-internal class DatastoreDataSourceImpl(
+internal class SettingsRepositoryImpl(
     @param:GlobalSettings private val settingsDataStore: DataStore<Settings>,
     @param:Display private val displaySettingsDataStore: DataStore<DisplaySettings>,
     @param:Viewer private val viewerSettingsDataStore: DataStore<ViewerSettings>,
@@ -39,7 +39,7 @@ internal class DatastoreDataSourceImpl(
     @param:Folder private val folderSettingsDataStore: DataStore<FolderSettings>,
     @param:Collection private val collectionSettingsDataStore: DataStore<CollectionSettings>,
     @param:Security private val securitySettingsDataStore: DataStore<SecuritySettings>,
-) : DatastoreDataSource {
+) : SettingsRepository {
     override val settings = settingsDataStore.data
 
     override suspend fun updateSettings(transform: suspend (Settings) -> Settings) =

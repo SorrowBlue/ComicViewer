@@ -22,7 +22,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dev.zacsweers.metro.AppScope
@@ -37,7 +37,7 @@ internal class FolderThumbnailFetcher(
     options: Options,
     private val diskCache: Lazy<DiskCache>,
     private val fileLocalDataSource: FileLocalDataSource,
-    private val datastoreDataSource: DatastoreDataSource,
+    private val settingsRepository: SettingsRepository,
     private val bookshelfRepository: BookshelfRepository,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
 ) : BaseFetcher<FolderThumbnail, FolderThumbnailMetadata>(data, options, diskCache) {
@@ -52,7 +52,7 @@ internal class FolderThumbnailFetcher(
             }
 
             // Slow path: fetch the image from the network.
-            val folderSettings = datastoreDataSource.folderSettings.first()
+            val folderSettings = settingsRepository.folderSettings.first()
             val resolveImageFolder = folderSettings.resolveImageFolder
             val folder =
                 checkNotNull(
@@ -71,7 +71,7 @@ internal class FolderThumbnailFetcher(
                 }
             }
             val folderThumbnailOrder =
-                datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
+                settingsRepository.folderDisplaySettings.first().folderThumbnailOrder
             val thumbnailCache = getThumbnailCache(folderThumbnailOrder)
             if (thumbnailCache == null) {
                 throw CoilRuntimeException("There are no book thumbnails in this folder.")
@@ -92,7 +92,7 @@ internal class FolderThumbnailFetcher(
 
     override suspend fun metadata(): FolderThumbnailMetadata {
         val folderThumbnailOrder =
-            datastoreDataSource.folderDisplaySettings.first().folderThumbnailOrder
+            settingsRepository.folderDisplaySettings.first().folderThumbnailOrder
         val thumbnailCache = getThumbnailCache(folderThumbnailOrder)
         thumbnailCache?.second?.closeQuietly()
         return FolderThumbnailMetadata(
@@ -140,7 +140,7 @@ internal class FolderThumbnailFetcher(
     class Factory(
         private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
         private val fileModelLocalDataSource: FileLocalDataSource,
-        private val datastoreDataSource: DatastoreDataSource,
+        private val settingsRepository: SettingsRepository,
         private val bookshelfRepository: BookshelfRepository,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
     ) : Fetcher.Factory<FolderThumbnail> {
@@ -153,7 +153,7 @@ internal class FolderThumbnailFetcher(
             options,
             lazy { lazyCoilDiskCache.value.thumbnailDiskCache(data.bookshelfId) },
             fileModelLocalDataSource,
-            datastoreDataSource,
+            settingsRepository,
             bookshelfRepository,
             remoteDataSourceFactory,
         )
