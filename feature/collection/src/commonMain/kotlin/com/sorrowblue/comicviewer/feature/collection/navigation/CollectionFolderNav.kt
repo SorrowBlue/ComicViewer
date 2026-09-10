@@ -13,9 +13,9 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionAddNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
-import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.folder.navigation.folderFileInfoNavEntry
+import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable

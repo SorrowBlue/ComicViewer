@@ -11,7 +11,7 @@ kotlin {
             dependencies {
                 implementation(projects.feature.folder.nav)
                 implementation(projects.framework.permission)
-                implementation(projects.feature.file)
+                implementation(projects.framework.ui.file)
             }
         }
     }

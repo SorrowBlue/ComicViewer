@@ -42,9 +42,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.FolderThumbnail
-import com.sorrowblue.comicviewer.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.file.component.FileThumbnailAsyncImage
 import com.sorrowblue.comicviewer.framework.ui.material3.ContentPadding
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage

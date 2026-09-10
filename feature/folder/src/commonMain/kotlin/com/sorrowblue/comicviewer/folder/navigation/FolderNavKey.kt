@@ -11,11 +11,11 @@ import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.PathString
-import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
-import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
+import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
+import com.sorrowblue.comicviewer.framework.ui.file.navigation.fileInfoEntry
 
 context(scope: EntryProviderScope<NavKey>)
 inline fun <reified T : FolderNavKey> folderEntry(

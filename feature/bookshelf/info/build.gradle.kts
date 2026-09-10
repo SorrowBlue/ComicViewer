@@ -13,7 +13,7 @@ kotlin {
                 implementation(projects.framework.notification)
                 implementation(projects.framework.permission)
                 implementation(projects.feature.bookshelf.nav)
-                implementation(projects.feature.file)
+                implementation(projects.framework.ui.file)
                 implementation(libs.androidx.coreUri)
             }
         }
