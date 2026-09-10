@@ -8,9 +8,9 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionFileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
+import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionFileUseCase
 import dev.zacsweers.metro.AppScope
@@ -22,31 +22,32 @@ import kotlinx.coroutines.flow.flatMapLatest
 
 @ContributesBinding(AppScope::class)
 internal class PagingCollectionFileInteractor(
-    private val dataSource: CollectionLocalDataSource,
-    private val collectionFileLocalDataSource: CollectionFileLocalDataSource,
-    private val datastoreDataSource: DatastoreDataSource,
+    private val collectionRepository: CollectionRepository,
+    private val collectionFileRepository: CollectionFileRepository,
+    private val settingsRepository: SettingsRepository,
     private val fileLocalDataSource: FileLocalDataSource,
 ) : PagingCollectionFileUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun run(request: Request): Flow<PagingData<File>> =
-        dataSource.flow(request.collectionId).filterNotNull().flatMapLatest { collection ->
-            when (collection) {
-                is BasicCollection -> {
-                    datastoreDataSource.folderDisplaySettings.flatMapLatest { settings ->
-                        collectionFileLocalDataSource.pagingDataFlow(
-                            request.collectionId,
-                            request.pagingConfig,
-                        ) {
-                            settings.sortType
-                        }
+    override fun run(request: Request): Flow<PagingData<File>> = collectionRepository.flow(
+        request.collectionId,
+    ).filterNotNull().flatMapLatest { collection ->
+        when (collection) {
+            is BasicCollection -> {
+                settingsRepository.folderDisplaySettings.flatMapLatest { settings ->
+                    collectionFileRepository.pagingDataFlow(
+                        request.collectionId,
+                        request.pagingConfig,
+                    ) {
+                        settings.sortType
                     }
                 }
-
-                is SmartCollection -> fileLocalDataSource.pagingDataFlow(
-                    request.pagingConfig,
-                    collection.bookshelfId,
-                    collection::searchCondition,
-                )
             }
+
+            is SmartCollection -> fileLocalDataSource.pagingDataFlow(
+                request.pagingConfig,
+                collection.bookshelfId,
+                collection::searchCondition,
+            )
         }
+    }
 }

@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.data.storage.client.getFileClient
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dev.zacsweers.metro.AppScope
@@ -40,7 +40,7 @@ internal class BookThumbnailFetcher(
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfRepository: BookshelfRepository,
     private val fileLocalDataSource: FileLocalDataSource,
-    private val datastoreDataSource: DatastoreDataSource,
+    private val settingsRepository: SettingsRepository,
     private val fileClientFactory: FileClientFactory,
 ) : BaseFetcher<BookThumbnail, BookThumbnailMetadata>(data, options, diskCache) {
 
@@ -73,7 +73,7 @@ internal class BookThumbnailFetcher(
                     check(fileReader.pageCount() != 0) {
                         "Only 0 pages"
                     }
-                    val displaySettings = datastoreDataSource.folderDisplaySettings.first()
+                    val displaySettings = settingsRepository.folderDisplaySettings.first()
                     if (displaySettings.isSavedThumbnail) {
                         val quality = displaySettings.thumbnailQuality
                         val compressFormat = displaySettings.imageFormat
@@ -96,7 +96,7 @@ internal class BookThumbnailFetcher(
                             return@use SourceFetchResult(
                                 source = it.toImageSource(),
                                 mimeType = "image/*",
-                                dataSource = DataSource.NETWORK,
+                                dataSource = DataSource.DISK,
                             )
                         }
 
@@ -159,7 +159,7 @@ internal class BookThumbnailFetcher(
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfRepository: BookshelfRepository,
         private val fileModelLocalDataSource: FileLocalDataSource,
-        private val datastoreDataSource: DatastoreDataSource,
+        private val settingsRepository: SettingsRepository,
         private val fileClientFactory: FileClientFactory,
     ) : Fetcher.Factory<BookThumbnail> {
         override fun create(
@@ -175,7 +175,7 @@ internal class BookThumbnailFetcher(
             remoteDataSourceFactory = remoteDataSourceFactory,
             bookshelfRepository = bookshelfRepository,
             fileLocalDataSource = fileModelLocalDataSource,
-            datastoreDataSource = datastoreDataSource,
+            settingsRepository = settingsRepository,
             fileClientFactory = fileClientFactory,
         )
     }

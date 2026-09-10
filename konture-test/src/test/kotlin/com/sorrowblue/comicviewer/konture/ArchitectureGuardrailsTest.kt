@@ -46,14 +46,26 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * domain:service が domain:model と domain:usecase 以外に依存しないことを保証する。
+     * :domain:repository が :domain:model 以外に依存しないことを保証する。
+     * repository はデータアクセスの抽象インターフェースを定義し、実装詳細を知ってはならない。
+     */
+    @Test
+    fun `domain repository only depends on domain model`() {
+        Konture.modules()
+            .that().haveNamePath(":domain:repository")
+            .should().onlyDependOnModules(":domain:model", ":")
+            .check()
+    }
+
+    /**
+     * domain:service が domain:model, domain:usecase, domain:repository 以外に依存しないことを保証する。
      * service はビジネスロジックを実装する。
      */
     @Test
-    fun `domain service only depend on domain model and domain usecase`() {
+    fun `domain service only depend on domain model and domain usecase and domain repository`() {
         Konture.modules()
             .that().haveNamePath(":domain:service")
-            .should().onlyDependOnModules(":domain:model", ":domain:usecase")
+            .should().onlyDependOnModules(":domain:model", ":domain:usecase", ":domain:repository")
             .check()
     }
 

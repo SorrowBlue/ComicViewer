@@ -5,17 +5,17 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
-internal class ManageBookSettingsInteractor(private val datastoreDataSource: DatastoreDataSource) :
+internal class ManageBookSettingsInteractor(private val settingsRepository: SettingsRepository) :
     ManageBookSettingsUseCase {
-    override val settings = datastoreDataSource.bookSettings
+    override val settings = settingsRepository.bookSettings
 
     override suspend fun edit(action: (BookSettings) -> BookSettings) {
-        datastoreDataSource.updateBookSettings(action)
+        settingsRepository.updateBookSettings(action)
     }
 }

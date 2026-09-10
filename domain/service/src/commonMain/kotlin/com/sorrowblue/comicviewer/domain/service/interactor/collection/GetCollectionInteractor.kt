@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.collection
 
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
-internal class GetCollectionInteractor(private val dataSource: CollectionLocalDataSource) :
+internal class GetCollectionInteractor(private val repository: CollectionRepository) :
     GetCollectionUseCase() {
     override fun run(request: Request): Flow<Resource<Collection, Error>> =
-        dataSource.flow(request.id).map {
+        repository.flow(request.id).map {
             if (it == null) {
                 Resource.Error(Error.NotFound)
             } else {

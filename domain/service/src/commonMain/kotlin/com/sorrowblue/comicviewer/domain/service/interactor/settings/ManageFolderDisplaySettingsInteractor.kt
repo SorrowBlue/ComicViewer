@@ -5,18 +5,18 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
 internal class ManageFolderDisplaySettingsInteractor(
-    private val datastoreDataSource: DatastoreDataSource,
+    private val settingsRepository: SettingsRepository,
 ) : ManageFolderDisplaySettingsUseCase {
-    override val settings = datastoreDataSource.folderDisplaySettings
+    override val settings = settingsRepository.folderDisplaySettings
 
     override suspend fun edit(action: (FolderDisplaySettings) -> FolderDisplaySettings) {
-        datastoreDataSource.updateFolderDisplaySettings(action::invoke)
+        settingsRepository.updateFolderDisplaySettings(action::invoke)
     }
 }

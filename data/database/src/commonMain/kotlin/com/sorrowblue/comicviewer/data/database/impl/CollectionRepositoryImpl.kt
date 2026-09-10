@@ -19,7 +19,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -30,10 +30,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 @ContributesBinding(AppScope::class)
-internal class CollectionLocalDataSourceImpl(
+internal class CollectionRepositoryImpl(
     private val dao: CollectionDao,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : CollectionLocalDataSource {
+) : CollectionRepository {
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<Collection>> = Pager(
         pagingConfig,
     ) {

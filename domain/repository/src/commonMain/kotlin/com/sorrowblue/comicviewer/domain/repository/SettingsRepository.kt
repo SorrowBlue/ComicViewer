@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.datasource
+package com.sorrowblue.comicviewer.domain.repository
 
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import kotlinx.coroutines.flow.Flow
 
-interface DatastoreDataSource {
+interface SettingsRepository {
     val settings: Flow<Settings>
 
     suspend fun updateSettings(transform: suspend (Settings) -> Settings): Settings

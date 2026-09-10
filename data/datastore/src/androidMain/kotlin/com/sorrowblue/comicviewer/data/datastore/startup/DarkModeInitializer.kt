@@ -8,7 +8,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.startup.Initializer
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
-import com.sorrowblue.comicviewer.domain.service.datasource.DatastoreDataSource
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.framework.common.appGraph
 import com.sorrowblue.comicviewer.framework.startup.LogcatInitializer
 import dev.zacsweers.metro.AppScope
@@ -25,11 +25,11 @@ import logcat.logcat
 class DarkModeInitializer : Initializer<Unit> {
 
     @Inject
-    lateinit var datastoreDataSource: DatastoreDataSource
+    lateinit var settingsRepository: SettingsRepository
 
     override fun create(context: Context) {
         context.appGraph<DarkModeInitializerInjector>().inject(this)
-        val darkMode = runBlocking { datastoreDataSource.displaySettings.first() }.darkMode
+        val darkMode = runBlocking { settingsRepository.displaySettings.first() }.darkMode
         when (darkMode) {
             DarkMode.DEVICE -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             DarkMode.DARK -> AppCompatDelegate.MODE_NIGHT_YES

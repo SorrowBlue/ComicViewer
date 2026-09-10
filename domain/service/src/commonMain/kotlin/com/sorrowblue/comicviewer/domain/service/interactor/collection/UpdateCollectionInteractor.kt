@@ -5,16 +5,16 @@
 package com.sorrowblue.comicviewer.domain.service.interactor.collection
 
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.service.datasource.CollectionLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
-internal class UpdateCollectionInteractor(private val dataSource: CollectionLocalDataSource) :
+internal class UpdateCollectionInteractor(private val repository: CollectionRepository) :
     UpdateCollectionUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Error> {
-        dataSource.update(request.collection)
+        repository.update(request.collection)
         return Resource.Success(Unit)
     }
 }
