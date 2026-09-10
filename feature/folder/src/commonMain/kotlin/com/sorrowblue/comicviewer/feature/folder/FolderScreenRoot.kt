@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder
+package com.sorrowblue.comicviewer.feature.folder
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect

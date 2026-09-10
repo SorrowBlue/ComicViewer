@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder
+package com.sorrowblue.comicviewer.feature.folder
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -25,11 +25,11 @@ import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
-import com.sorrowblue.comicviewer.folder.section.FolderAppBar
-import com.sorrowblue.comicviewer.folder.section.FolderAppBarUiState
-import com.sorrowblue.comicviewer.folder.section.FolderList
-import com.sorrowblue.comicviewer.folder.section.FolderListUiState
+import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
+import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBar
+import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBarUiState
+import com.sorrowblue.comicviewer.feature.folder.section.FolderList
+import com.sorrowblue.comicviewer.feature.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionScreen
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState

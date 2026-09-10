@@ -154,6 +154,10 @@ graph TD
         :feature:collection:add --> :feature:collection:nav
         :feature:collection:editor --> :feature:collection:nav
         :feature:folder --> :feature:folder:nav
+        :feature:folder --> :feature:book:nav
+        :feature:folder --> :feature:collection:nav
+        :feature:folder --> :feature:search:nav
+        :feature:folder --> :feature:settings:nav
         :feature:history --> :feature:collection:nav
         :feature:history --> :feature:folder:nav
         :feature:readlater --> :feature:collection:nav

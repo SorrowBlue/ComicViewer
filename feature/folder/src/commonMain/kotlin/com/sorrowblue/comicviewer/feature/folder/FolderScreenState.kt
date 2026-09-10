@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder
+package com.sorrowblue.comicviewer.feature.folder
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -132,7 +132,7 @@ private class FolderScreenStateImpl(
                         )
 
                         is PagingException.InvalidServer -> snackbarHostState.showSnackbar(
-                            "サーバーエラー",
+                            "サーバ�Eエラー",
                         )
 
                         is PagingException.NoNetwork -> snackbarHostState.showSnackbar(

@@ -8,7 +8,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.sorrowblue.comicviewer.folder.nav"
+        namespace = "com.sorrowblue.comicviewer.feature.folder.nav"
     }
     sourceSets {
         commonMain.dependencies {

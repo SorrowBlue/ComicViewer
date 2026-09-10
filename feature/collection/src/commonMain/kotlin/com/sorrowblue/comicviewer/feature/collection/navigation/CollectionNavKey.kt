@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.collection.CollectionScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
+import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
@@ -53,7 +54,7 @@ internal fun collectionNavEntry(navigator: Navigator) {
 
                     is Folder -> {
                         navigator.popNavigate<CollectionFileInfoNavKey>(
-                            CollectionFolderNavKey(
+                            FolderNavKey(
                                 bookshelfId = file.bookshelfId,
                                 path = file.path,
                             ),

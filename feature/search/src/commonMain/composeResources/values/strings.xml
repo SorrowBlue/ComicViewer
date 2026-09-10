@@ -11,4 +11,11 @@
     <string name="search_label_week1">one week</string>
     <string name="search_label_month1">one month</string>
     <string name="search_label_show_hidden_files">Show hidden files</string>
+
+    <string name="search_sorttype_label_name_asc">File name (ascending)</string>
+    <string name="search_sorttype_label_name_desc">File name (descending)</string>
+    <string name="search_sorttype_label_date_asc">Timestamp (ascending)</string>
+    <string name="search_sorttype_label_date_desc">Timestamp (descending)</string>
+    <string name="search_sorttype_label_size_asc">File size (ascending)</string>
+    <string name="search_sorttype_label_size_desc">File size (descending)</string>
 </resources>

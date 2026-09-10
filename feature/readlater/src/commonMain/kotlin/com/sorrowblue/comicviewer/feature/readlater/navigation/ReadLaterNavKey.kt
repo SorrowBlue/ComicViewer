@@ -12,6 +12,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
+import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -63,7 +64,7 @@ internal fun readLaterNavEntry(navigator: Navigator) {
 
                     is Folder -> {
                         navigator.popNavigate<ReadLaterFileInfoNavKey>(
-                            ReadLaterFolderNavKey(
+                            FolderNavKey(
                                 bookshelfId = file.bookshelfId,
                                 path = file.path,
                             ),
