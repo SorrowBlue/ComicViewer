@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder.component
+package com.sorrowblue.comicviewer.feature.folder.component
 
 import androidx.compose.foundation.focusable
 import androidx.compose.material3.ButtonDefaults

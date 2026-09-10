@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.folder.navigation
+package com.sorrowblue.comicviewer.feature.folder.navigation
 
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
@@ -13,10 +13,10 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionAddNavKey
+import com.sorrowblue.comicviewer.feature.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
-import com.sorrowblue.comicviewer.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.framework.ui.file.navigation.fileInfoEntry
