@@ -2,10 +2,11 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.datasource
+package com.sorrowblue.comicviewer.domain.repository
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -17,34 +18,35 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOr
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlinx.coroutines.flow.Flow
 
-sealed interface LocalDataSourceQueryError : Resource.IError {
-    data object NotFound : LocalDataSourceQueryError
+sealed interface FileRepositoryQueryError : Resource.IError {
+    data object NotFound : FileRepositoryQueryError
 
-    data class SystemError(val throwable: Throwable) : LocalDataSourceQueryError
+    data class SystemError(val throwable: Throwable) : FileRepositoryQueryError
 }
 
-interface FileLocalDataSource {
+interface FileRepository {
+    fun pagingDataFlow(
+        pagingConfig: PagingConfig,
+        bookshelf: Bookshelf,
+        file: File,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<File>>
+
+    fun pagingSourceBookThumbnail(
+        pagingConfig: PagingConfig,
+        bookshelf: Bookshelf,
+        file: File,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<BookThumbnail>>
+
     fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelfId: BookshelfId?,
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>>
 
-    /**
-     * Add files. If it already exists, update it.
-     *
-     * @param fileModel
-     */
     suspend fun addUpdate(fileModel: File)
 
-    /**
-     * Update reading history.
-     *
-     * @param path
-     * @param bookshelfId
-     * @param lastReadPage Last page read
-     * @param lastReading Last read time
-     */
     suspend fun updateHistory(
         path: String,
         bookshelfId: BookshelfId,
@@ -52,14 +54,6 @@ interface FileLocalDataSource {
         lastReading: Long,
     )
 
-    /**
-     * Update additional information in the file.
-     *
-     * @param path
-     * @param bookshelfId
-     * @param cacheKey
-     * @param totalPage
-     */
     suspend fun updateAdditionalInfo(
         path: String,
         bookshelfId: BookshelfId,
@@ -69,7 +63,7 @@ interface FileLocalDataSource {
 
     suspend fun updateSimpleAll(list: List<File>)
 
-    suspend fun updateSimple(list: File): Resource<File, LocalDataSourceQueryError>
+    suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError>
 
     suspend fun selectByNotPaths(
         bookshelfId: BookshelfId,
@@ -77,20 +71,8 @@ interface FileLocalDataSource {
         list: List<String>,
     ): List<File>
 
-    /**
-     * Delete all files.
-     *
-     * @param list
-     */
     suspend fun deleteAll(list: List<File>)
 
-    /**
-     * Returns true if the file exists.
-     *
-     * @param bookshelfId
-     * @param path
-     * @return true if the file exists
-     */
     suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean
 
     fun pagingSource(
@@ -152,5 +134,6 @@ interface FileLocalDataSource {
     suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File>
 
     suspend fun count(bookshelfId: BookshelfId): Long
+
     suspend fun updateFileType(file: File)
 }

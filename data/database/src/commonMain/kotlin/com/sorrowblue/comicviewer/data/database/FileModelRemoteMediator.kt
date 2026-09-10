@@ -7,6 +7,8 @@ package com.sorrowblue.comicviewer.data.database
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
+import com.sorrowblue.comicviewer.data.database.dao.FileDao
+import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.common.PagingException
@@ -14,7 +16,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
@@ -34,7 +35,7 @@ internal class FileModelRemoteMediator(
     @Assisted private val bookshelf: Bookshelf,
     @Assisted private val file: File,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val dao: FileDao,
 ) : RemoteMediator<Int, QueryFileWithCountEntity>() {
     @AssistedFactory
     fun interface Factory {
@@ -66,7 +67,10 @@ internal class FileModelRemoteMediator(
                             SortUtil.filter(it, supportExtensions)
                         },
                     )
-                    fileLocalDataSource.updateHistory(file, files)
+                    dao.updateSame(
+                        FileEntity.fromModel(file),
+                        files.map(FileEntity.Companion::fromModel),
+                    )
                 }
             }.fold({
                 return MediatorResult.Success(endOfPaginationReached = true)

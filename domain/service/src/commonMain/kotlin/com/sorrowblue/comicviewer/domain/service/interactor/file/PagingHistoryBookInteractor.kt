@@ -6,15 +6,15 @@ package com.sorrowblue.comicviewer.domain.service.interactor.file
 
 import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingHistoryBookUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.Flow
 
 @ContributesBinding(AppScope::class)
-internal class PagingHistoryBookInteractor(private val fileLocalDataSource: FileLocalDataSource) :
+internal class PagingHistoryBookInteractor(private val fileRepository: FileRepository) :
     PagingHistoryBookUseCase() {
     override fun run(request: Request): Flow<PagingData<Book>> =
-        fileLocalDataSource.pagingHistoryBookSource(request.pagingConfig)
+        fileRepository.pagingHistoryBookSource(request.pagingConfig)
 }

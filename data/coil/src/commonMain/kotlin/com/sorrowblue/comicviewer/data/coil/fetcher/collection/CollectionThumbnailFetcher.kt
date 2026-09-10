@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.data.coil.fetcher.CacheKeySnapshot
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
@@ -35,7 +35,7 @@ internal class CollectionThumbnailFetcher(
     diskCache: Lazy<DiskCache>,
     private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
     private val collectionFileRepository: CollectionFileRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
 ) : BaseFetcher<Collection, CollectionThumbnailMetadata>(data, options, diskCache) {
 
     override suspend fun doFetch(): FetchResult {
@@ -86,7 +86,7 @@ internal class CollectionThumbnailFetcher(
             coilDiskCacheLazy.value.thumbnailDiskCache(bookshelfId).openSnapshot(cacheKey)?.let {
                 cacheKey to it
             } ?: run {
-                fileLocalDataSource.removeCacheKey(cacheKey)
+                fileRepository.removeCacheKey(cacheKey)
                 null
             }
         } ?: getThumbnailCache()
@@ -104,7 +104,7 @@ internal class CollectionThumbnailFetcher(
         private val diskCache: Lazy<DiskCache>,
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val collectionFileRepository: CollectionFileRepository,
-        private val fileModelLocalDataSource: FileLocalDataSource,
+        private val fileRepository: FileRepository,
     ) : Fetcher.Factory<Collection> {
         override fun create(data: Collection, options: Options, imageLoader: ImageLoader) =
             CollectionThumbnailFetcher(
@@ -113,7 +113,7 @@ internal class CollectionThumbnailFetcher(
                 diskCache = diskCache,
                 coilDiskCacheLazy = coilDiskCacheLazy,
                 collectionFileRepository = collectionFileRepository,
-                fileLocalDataSource = fileModelLocalDataSource,
+                fileRepository = fileRepository,
             )
     }
 }

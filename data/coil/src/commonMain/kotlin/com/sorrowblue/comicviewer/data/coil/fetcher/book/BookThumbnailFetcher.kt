@@ -21,8 +21,8 @@ import com.sorrowblue.comicviewer.data.storage.client.getFileClient
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
@@ -39,7 +39,7 @@ internal class BookThumbnailFetcher(
     diskCache: Lazy<DiskCache>,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val bookshelfRepository: BookshelfRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
     private val settingsRepository: SettingsRepository,
     private val fileClientFactory: FileClientFactory,
 ) : BaseFetcher<BookThumbnail, BookThumbnailMetadata>(data, options, diskCache) {
@@ -63,7 +63,7 @@ internal class BookThumbnailFetcher(
             }
             val book =
                 checkNotNull(
-                    fileLocalDataSource.flow(data.bookshelfId, data.path).first() as? Book,
+                    fileRepository.flow(data.bookshelfId, data.path).first() as? Book,
                 ) {
                     "Book not found. id: ${data.bookshelfId}, path: ${data.path}"
                 }
@@ -87,7 +87,7 @@ internal class BookThumbnailFetcher(
 
                         snapshot?.let {
                             // DISKキャッシュキーとページ数を更新する。
-                            fileLocalDataSource.updateAdditionalInfo(
+                            fileRepository.updateAdditionalInfo(
                                 data.path,
                                 data.bookshelfId,
                                 diskCacheKey,
@@ -103,7 +103,7 @@ internal class BookThumbnailFetcher(
                         // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
                         val source = fileReader.source(0)
                         // DISKキャッシュキーとページ数を更新する。
-                        fileLocalDataSource.updateAdditionalInfo(
+                        fileRepository.updateAdditionalInfo(
                             data.path,
                             data.bookshelfId,
                             diskCacheKey,
@@ -158,7 +158,7 @@ internal class BookThumbnailFetcher(
         private val coilDiskCacheLazy: Lazy<CoilDiskCache>,
         private val remoteDataSourceFactory: RemoteDataSource.Factory,
         private val bookshelfRepository: BookshelfRepository,
-        private val fileModelLocalDataSource: FileLocalDataSource,
+        private val fileRepository: FileRepository,
         private val settingsRepository: SettingsRepository,
         private val fileClientFactory: FileClientFactory,
     ) : Fetcher.Factory<BookThumbnail> {
@@ -174,7 +174,7 @@ internal class BookThumbnailFetcher(
             },
             remoteDataSourceFactory = remoteDataSourceFactory,
             bookshelfRepository = bookshelfRepository,
-            fileLocalDataSource = fileModelLocalDataSource,
+            fileRepository = fileRepository,
             settingsRepository = settingsRepository,
             fileClientFactory = fileClientFactory,
         )

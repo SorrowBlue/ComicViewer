@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.domain.service.interactor.bookshelf
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.ThumbnailDataSource
 import com.sorrowblue.comicviewer.domain.service.limitedCoroutineScope
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
@@ -23,7 +23,7 @@ import kotlinx.coroutines.sync.withLock
 @ContributesBinding(AppScope::class)
 internal class RegenerateThumbnailsInteractor(
     private val bookshelfRepository: BookshelfRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
     private val thumbnailDataSource: ThumbnailDataSource,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : RegenerateThumbnailsUseCase() {
@@ -33,12 +33,12 @@ internal class RegenerateThumbnailsInteractor(
             val mutex = Mutex()
             val limit = 1
             var offset = 0L
-            val count = fileLocalDataSource.count(request.bookshelfId)
+            val count = fileRepository.count(request.bookshelfId)
             limitedCoroutineScope(MaxParallelCoroutines, context = dispatcher) {
                 List(count.toInt()) {
                     async {
                         val list = mutex.withLock {
-                            fileLocalDataSource
+                            fileRepository
                                 .fileList(
                                     request.bookshelfId,
                                     limit = limit,

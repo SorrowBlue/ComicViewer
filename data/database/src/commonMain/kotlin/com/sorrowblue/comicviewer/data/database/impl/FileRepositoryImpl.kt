@@ -4,11 +4,13 @@
 
 package com.sorrowblue.comicviewer.data.database.impl
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.room3.RoomRawQuery
+import com.sorrowblue.comicviewer.data.database.FileModelRemoteMediator
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.flowPrevNextFile
 import com.sorrowblue.comicviewer.data.database.dao.pagingSourceFileSearch
@@ -19,6 +21,7 @@ import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMini
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileHistoryEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileInfoEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileTypeInfoEntity
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -30,8 +33,8 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQueryError
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -43,10 +46,42 @@ import kotlinx.coroutines.withContext
 import logcat.logcat
 
 @ContributesBinding(AppScope::class)
-internal class FileLocalDataSourceImpl(
+internal class FileRepositoryImpl(
     private val dao: FileDao,
+    private val factory: FileModelRemoteMediator.Factory,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : FileLocalDataSource {
+) : FileRepository {
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun pagingDataFlow(
+        pagingConfig: PagingConfig,
+        bookshelf: Bookshelf,
+        file: File,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<File>> {
+        val remoteMediator = factory.create(bookshelf, file)
+        return Pager(pagingConfig, remoteMediator = remoteMediator) {
+            dao.pagingSourceFileSearch(bookshelf.id, searchCondition())
+        }.flow.map { it.map(QueryFileWithCountEntity::toModel) }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun pagingSourceBookThumbnail(
+        pagingConfig: PagingConfig,
+        bookshelf: Bookshelf,
+        file: File,
+        searchCondition: () -> SearchCondition,
+    ): Flow<PagingData<BookThumbnail>> {
+        val remoteMediator = factory.create(bookshelf, file)
+        return Pager(pagingConfig, remoteMediator = remoteMediator) {
+            dao.pagingSourceFileSearch(bookshelf.id, searchCondition())
+        }.flow.map { pagingData ->
+            pagingData.map {
+                BookThumbnail.from(it.toModel() as Book)
+            }
+        }
+    }
+
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> =
         dao.fileList(bookshelfId.value, limit, offset).first().map {
             it.toModel()
@@ -110,7 +145,7 @@ internal class FileLocalDataSourceImpl(
         }
     }
 
-    override suspend fun updateSimple(list: File): Resource<File, LocalDataSourceQueryError> =
+    override suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError> =
         withContext(
             dispatcher,
         ) {
@@ -121,11 +156,11 @@ internal class FileLocalDataSourceImpl(
                     if (it != null) {
                         Resource.Success(it)
                     } else {
-                        Resource.Error(LocalDataSourceQueryError.NotFound)
+                        Resource.Error(FileRepositoryQueryError.NotFound)
                     }
                 },
                 onFailure = {
-                    Resource.Error(LocalDataSourceQueryError.SystemError(it))
+                    Resource.Error(FileRepositoryQueryError.SystemError(it))
                 },
             )
         }

@@ -10,8 +10,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import dev.zacsweers.metro.AppScope
@@ -21,14 +21,14 @@ import kotlinx.coroutines.flow.first
 @ContributesBinding(AppScope::class)
 internal class ScanBookshelfInteractor(
     private val bookshelfRepository: BookshelfRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val settingsRepository: SettingsRepository,
 ) : ScanBookshelfUseCase() {
     override suspend fun run(request: Request): Resource<List<File>, Error> {
         val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
         if (bookshelf != null) {
-            val rootFolder = fileLocalDataSource.root(request.bookshelfId)
+            val rootFolder = fileRepository.root(request.bookshelfId)
             if (rootFolder != null) {
                 val supportExtension =
                     settingsRepository.folderSettings
@@ -64,7 +64,7 @@ internal class ScanBookshelfInteractor(
                 SortUtil.filter(it, supportExtensions)
             },
         )
-        fileLocalDataSource.updateHistory(file, fileModelList)
+        fileRepository.updateHistory(file, fileModelList)
         fileModelList.forEach {
             process(bookshelf, it)
         }

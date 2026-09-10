@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
@@ -22,7 +22,7 @@ import logcat.logcat
 
 @ContributesBinding(AppScope::class)
 internal class RegisterBookshelfInteractor(
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
     private val bookshelfRepository: BookshelfRepository,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val imageCacheDataSource: ImageCacheDataSource,
@@ -46,13 +46,13 @@ internal class RegisterBookshelfInteractor(
                 remoteDataSourceFactory.create(request.bookshelf).file(request.path)
             }.fold({ file ->
                 if (file is IFolder) {
-                    val root = fileLocalDataSource.root(request.bookshelf.id)
+                    val root = fileRepository.root(request.bookshelf.id)
                     if (root != null && root.path != file.path) {
                         // 別の本棚を登録する場合、一旦削除
                         imageCacheDataSource.deleteThumbnails(
-                            fileLocalDataSource.getCacheKeyList(request.bookshelf.id),
+                            fileRepository.getCacheKeyList(request.bookshelf.id),
                         )
-                        fileLocalDataSource.deleteAll2(request.bookshelf.id)
+                        fileRepository.deleteAll2(request.bookshelf.id)
                     }
                     val bookshelf =
                         bookshelfRepository.updateOrCreate(
@@ -66,7 +66,7 @@ internal class RegisterBookshelfInteractor(
                                 is BookFolder -> folder.copy(parent = "")
                                 is Folder -> folder.copy(parent = "")
                             }
-                            fileLocalDataSource.addUpdate(folderModel)
+                            fileRepository.addUpdate(folderModel)
                         }
                     Resource.Success(requireNotNull(bookshelf))
                 } else {

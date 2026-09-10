@@ -9,9 +9,8 @@ import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnailsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -25,17 +24,16 @@ import kotlinx.coroutines.runBlocking
 @ContributesBinding(AppScope::class)
 internal class PagingFolderBookThumbnailsInteractor(
     private val bookshelfRepository: BookshelfRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
-    private val fileRemoteDataSource: FileRemoteDataSource,
+    private val fileRepository: FileRepository,
     private val settingsRepository: SettingsRepository,
 ) : PagingFolderBookThumbnailsUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun run(request: Request): Flow<PagingData<BookThumbnail>> =
         bookshelfRepository.flow(request.bookshelfId).flatMapLatest { bookshelf ->
             if (bookshelf != null) {
-                val file = fileLocalDataSource.findBy(request.bookshelfId, request.path)
+                val file = fileRepository.findBy(request.bookshelfId, request.path)
                 if (file is IFolder) {
-                    fileRemoteDataSource.pagingSourceBookThumbnail(
+                    fileRepository.pagingSourceBookThumbnail(
                         request.pagingConfig,
                         bookshelf,
                         file,

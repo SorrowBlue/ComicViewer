@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import dev.zacsweers.metro.AppScope
@@ -21,15 +21,15 @@ import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
 internal class GetNavigationHistoryInteractor(
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
     private val bookshelfRepository: BookshelfRepository,
 ) : GetNavigationHistoryUseCase() {
     override fun run(request: EmptyRequest): Flow<Resource<NavigationHistory, Error>> {
-        return fileLocalDataSource.lastHistory().map { file ->
+        return fileRepository.lastHistory().map { file ->
             if (file != null) {
                 val bookshelf = bookshelfRepository.flow(file.bookshelfId).first()
                 if (bookshelf != null) {
-                    val book = fileLocalDataSource.findBy(file.bookshelfId, file.path) as? Book
+                    val book = fileRepository.findBy(file.bookshelfId, file.path) as? Book
                     if (book != null) {
                         return@map Resource.Success(
                             NavigationHistory(getFolderList(bookshelf, book.parent), book),
@@ -56,5 +56,5 @@ internal class GetNavigationHistoryInteractor(
     }
 
     private suspend fun getFolder(bookshelf: Bookshelf, path: String): Folder? =
-        fileLocalDataSource.findBy(bookshelf.id, path) as? Folder
+        fileRepository.findBy(bookshelf.id, path) as? Folder
 }

@@ -5,7 +5,7 @@
 package com.sorrowblue.comicviewer.domain.service.interactor
 
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
 import dev.zacsweers.metro.AppScope
@@ -14,12 +14,12 @@ import dev.zacsweers.metro.ContributesBinding
 @ContributesBinding(AppScope::class)
 internal class ClearImageCacheInteractor(
     private val imageCacheDataSource: ImageCacheDataSource,
-    private val localDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
 ) : ClearImageCacheUseCase() {
     override suspend fun run(request: Request): Resource<Unit, Unit> {
         when (request) {
             is BookshelfRequest -> {
-                localDataSource.clearCacheKey(request.bookshelfId)
+                fileRepository.clearCacheKey(request.bookshelfId)
                 imageCacheDataSource.clearImageCache(request.bookshelfId, request.imageCache)
             }
 
