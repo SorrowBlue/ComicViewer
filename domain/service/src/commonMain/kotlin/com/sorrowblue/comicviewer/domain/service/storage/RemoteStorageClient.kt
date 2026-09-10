@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.datasource
+package com.sorrowblue.comicviewer.domain.service.storage
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -10,9 +10,9 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import kotlin.coroutines.cancellation.CancellationException
 
-interface RemoteDataSource {
+interface RemoteStorageClient {
     interface Factory {
-        fun create(bookshelf: Bookshelf): RemoteDataSource
+        fun create(bookshelf: Bookshelf): RemoteStorageClient
     }
 
     @Throws(RemoteException::class, CancellationException::class)

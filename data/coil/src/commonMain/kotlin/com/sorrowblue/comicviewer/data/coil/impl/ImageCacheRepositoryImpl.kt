@@ -16,15 +16,15 @@ import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
+import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
-internal class ImageCacheDataSourceImpl(
+internal class ImageCacheRepositoryImpl(
     private val lazyCoilDiskCache: Lazy<CoilDiskCache>,
     private val imageCacheDiskCache: Lazy<DiskCache>,
-) : ImageCacheDataSource {
+) : ImageCacheRepository {
     override suspend fun deleteThumbnails(list: List<String>) {
         val diskCache = imageCacheDiskCache.value
         if (list.isEmpty()) {

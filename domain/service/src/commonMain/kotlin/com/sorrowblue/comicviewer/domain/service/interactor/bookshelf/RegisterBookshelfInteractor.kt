@@ -11,9 +11,9 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.ImageCacheDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
+import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteException
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -24,11 +24,11 @@ import logcat.logcat
 internal class RegisterBookshelfInteractor(
     private val fileRepository: FileRepository,
     private val bookshelfRepository: BookshelfRepository,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
-    private val imageCacheDataSource: ImageCacheDataSource,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
+    private val imageCacheRepository: ImageCacheRepository,
 ) : RegisterBookshelfUseCase() {
     override suspend fun run(request: Request): Resource<Bookshelf, Error> = runCatching {
-        remoteDataSourceFactory.create(request.bookshelf).connect(request.path)
+        remoteStorageClientFactory.create(request.bookshelf).connect(request.path)
     }.fold(
         onFailure = {
             logcat { "onFailure ${it.asLog()}" }
@@ -43,13 +43,13 @@ internal class RegisterBookshelfInteractor(
         onSuccess = {
             logcat { "onSuccess" }
             runCatching {
-                remoteDataSourceFactory.create(request.bookshelf).file(request.path)
+                remoteStorageClientFactory.create(request.bookshelf).file(request.path)
             }.fold({ file ->
                 if (file is IFolder) {
                     val root = fileRepository.root(request.bookshelf.id)
                     if (root != null && root.path != file.path) {
                         // 別の本棚を登録する場合、一旦削除
-                        imageCacheDataSource.deleteThumbnails(
+                        imageCacheRepository.deleteThumbnails(
                             fileRepository.getCacheKeyList(request.bookshelf.id),
                         )
                         fileRepository.deleteAll2(request.bookshelf.id)
@@ -59,7 +59,7 @@ internal class RegisterBookshelfInteractor(
                             request.bookshelf,
                         ) { bookshelf ->
                             val folder =
-                                remoteDataSourceFactory
+                                remoteStorageClientFactory
                                     .create(bookshelf)
                                     .file(request.path) as IFolder
                             val folderModel = when (folder) {

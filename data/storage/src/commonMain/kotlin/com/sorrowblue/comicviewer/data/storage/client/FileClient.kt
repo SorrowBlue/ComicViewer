@@ -14,7 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteException
 import dev.zacsweers.metro.DefaultBinding
 import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.MapKey

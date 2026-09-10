@@ -108,24 +108,24 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * すべての DataSourceImpl クラス（データソースの実装）が internal であることを保証する。
+     * すべての RepositoryImpl クラス（リポジトリの実装）が internal であることを保証する。
      */
     @Test
-    fun `datasource implementations are internal`() {
+    fun `repository implementations are internal`() {
         Konture.classes()
-            .that().nameEndsWith("DataSourceImpl")
+            .that().nameEndsWith("RepositoryImpl")
             .should().beInternal()
             .check()
     }
 
     /**
-     * ドメインサービスの DataSource インターフェースがインターフェースであることを保証する。
+     * ドメイン層の Repository インターフェースがインターフェースであることを保証する。
      */
     @Test
-    fun `datasource interfaces are interfaces`() {
+    fun `repository interfaces are interfaces`() {
         Konture.classes()
-            .that().inPackage("..domain.service.datasource..")
-            .and().nameEndsWith("DataSource")
+            .that().inPackage("..domain.repository..")
+            .and().nameEndsWith("Repository")
             .should().beInterfaces()
             .check()
     }

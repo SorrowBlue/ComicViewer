@@ -24,7 +24,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOr
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
 import dev.zacsweers.metro.ContributesIntoMap
@@ -39,7 +39,7 @@ internal class FolderThumbnailFetcher(
     private val fileRepository: FileRepository,
     private val settingsRepository: SettingsRepository,
     private val bookshelfRepository: BookshelfRepository,
-    private val remoteDataSourceFactory: RemoteDataSource.Factory,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
 ) : BaseFetcher<FolderThumbnail, FolderThumbnailMetadata>(data, options, diskCache) {
 
     override suspend fun doFetch(): FetchResult {
@@ -63,9 +63,9 @@ internal class FolderThumbnailFetcher(
                     checkNotNull(bookshelfRepository.flow(data.bookshelfId).first()) {
                         "Bookshelf not found. id: ${data.bookshelfId}"
                     }
-                val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
+                val remoteStorageClient = remoteStorageClientFactory.create(bookshelf)
                 val currentFile =
-                    remoteDataSource.file(folder.path, resolveImageFolder = resolveImageFolder)
+                    remoteStorageClient.file(folder.path, resolveImageFolder = resolveImageFolder)
                 if (currentFile is BookFolder) {
                     fileRepository.updateFileType(currentFile)
                 }
@@ -142,7 +142,7 @@ internal class FolderThumbnailFetcher(
         private val fileRepository: FileRepository,
         private val settingsRepository: SettingsRepository,
         private val bookshelfRepository: BookshelfRepository,
-        private val remoteDataSourceFactory: RemoteDataSource.Factory,
+        private val remoteStorageClientFactory: RemoteStorageClient.Factory,
     ) : Fetcher.Factory<FolderThumbnail> {
         override fun create(
             data: FolderThumbnail,
@@ -155,7 +155,7 @@ internal class FolderThumbnailFetcher(
             fileRepository,
             settingsRepository,
             bookshelfRepository,
-            remoteDataSourceFactory,
+            remoteStorageClientFactory,
         )
     }
 }

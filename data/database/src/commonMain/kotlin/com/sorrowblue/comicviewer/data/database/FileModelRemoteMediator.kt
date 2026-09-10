@@ -16,8 +16,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.RemoteException
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteException
+import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -30,7 +30,7 @@ import logcat.logcat
 
 @AssistedInject
 internal class FileModelRemoteMediator(
-    remoteDataSourceFactory: RemoteDataSource.Factory,
+    remoteStorageClientFactory: RemoteStorageClient.Factory,
     settingsRepository: SettingsRepository,
     @Assisted private val bookshelf: Bookshelf,
     @Assisted private val file: File,
@@ -43,7 +43,7 @@ internal class FileModelRemoteMediator(
     }
 
     private val folderSettings = settingsRepository.folderSettings
-    private val remoteDataSource = remoteDataSourceFactory.create(bookshelf)
+    private val remoteStorageClient = remoteStorageClientFactory.create(bookshelf)
 
     override suspend fun initialize() = InitializeAction.LAUNCH_INITIAL_REFRESH
 
@@ -63,7 +63,7 @@ internal class FileModelRemoteMediator(
                         SupportExtension::extension,
                     )
                     val files = SortUtil.sortedIndex(
-                        remoteDataSource.listFiles(file, false) {
+                        remoteStorageClient.listFiles(file, false) {
                             SortUtil.filter(it, supportExtensions)
                         },
                     )
