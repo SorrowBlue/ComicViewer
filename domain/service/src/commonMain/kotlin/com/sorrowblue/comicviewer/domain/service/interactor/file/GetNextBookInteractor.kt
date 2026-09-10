@@ -14,8 +14,8 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -25,7 +25,7 @@ import logcat.logcat
 @ContributesBinding(AppScope::class)
 internal class GetNextBookInteractor(
     private val settingsRepository: SettingsRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
     private val collectionFileRepository: CollectionFileRepository,
     private val collectionRepository: CollectionRepository,
 ) : GetNextBookUseCase() {
@@ -56,9 +56,9 @@ internal class GetNextBookInteractor(
         sortType: SortType,
     ): Resource<Book, Error> = runCatching {
         if (isNext) {
-            fileLocalDataSource.nextFileModel(bookshelfId, path, sortType)
+            fileRepository.nextFileModel(bookshelfId, path, sortType)
         } else {
-            fileLocalDataSource.prevFileModel(bookshelfId, path, sortType)
+            fileRepository.prevFileModel(bookshelfId, path, sortType)
         }
     }.fold({ modelFlow ->
         modelFlow.first().let {
@@ -103,14 +103,14 @@ internal class GetNextBookInteractor(
 
                 is SmartCollection -> {
                     if (isNext) {
-                        fileLocalDataSource.nextFileModel(
+                        fileRepository.nextFileModel(
                             bookshelfId,
                             path,
                             collection.searchCondition,
                             sortType,
                         )
                     } else {
-                        fileLocalDataSource.prevFileModel(
+                        fileRepository.prevFileModel(
                             bookshelfId,
                             path,
                             collection.searchCondition,

@@ -9,9 +9,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.FileRemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFileUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -25,8 +24,7 @@ import kotlinx.coroutines.runBlocking
 @ContributesBinding(AppScope::class)
 internal class PagingFileInteractor(
     private val bookshelfRepository: BookshelfRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
-    private val fileRemoteDataSource: FileRemoteDataSource,
+    private val fileRepository: FileRepository,
     private val settingsRepository: SettingsRepository,
 ) : PagingFileUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -35,8 +33,8 @@ internal class PagingFileInteractor(
             request.bookshelfId,
         ).filterNotNull()
         .flatMapLatest { bookshelf ->
-            val file = fileLocalDataSource.findBy(request.bookshelfId, request.path) as IFolder
-            fileRemoteDataSource.pagingDataFlow(request.pagingConfig, bookshelf, file) {
+            val file = fileRepository.findBy(request.bookshelfId, request.path) as IFolder
+            fileRepository.pagingDataFlow(request.pagingConfig, bookshelf, file) {
                 val settings =
                     runBlocking { settingsRepository.folderDisplaySettings.first() }
                 SearchCondition(

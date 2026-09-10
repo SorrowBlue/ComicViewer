@@ -12,8 +12,8 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
-import com.sorrowblue.comicviewer.domain.service.datasource.LocalDataSourceQueryError
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
 import com.sorrowblue.comicviewer.domain.service.datasource.RemoteDataSource
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
@@ -28,7 +28,7 @@ import logcat.logcat
 @ContributesBinding(AppScope::class)
 internal class GetBookInteractor(
     private val bookshelfRepository: BookshelfRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
     private val remoteDataSourceFactory: RemoteDataSource.Factory,
     private val folderSettingsInteractor: ManageFolderSettingsUseCase,
 ) : GetBookUseCase() {
@@ -49,8 +49,8 @@ internal class GetBookInteractor(
         val localFile =
             runCatching {
                 when (val file = remoteDataSource.file(path, resolveImageFolder)) {
-                    is BookFile -> fileLocalDataSource.updateSimple(file)
-                    is BookFolder -> fileLocalDataSource.updateSimple(file)
+                    is BookFile -> fileRepository.updateSimple(file)
+                    is BookFolder -> fileRepository.updateSimple(file)
                     is Folder -> return Resource.Error(Error.NotFound)
                 }
             }.getOrElse {
@@ -66,9 +66,9 @@ internal class GetBookInteractor(
             },
             onError = {
                 when (it) {
-                    LocalDataSourceQueryError.NotFound -> Resource.Error(Error.NotFound)
+                    FileRepositoryQueryError.NotFound -> Resource.Error(Error.NotFound)
 
-                    is LocalDataSourceQueryError.SystemError -> {
+                    is FileRepositoryQueryError.SystemError -> {
                         // TODO Report Error
                         Resource.Error(Error.ReportedSystemError)
                     }
@@ -90,7 +90,7 @@ internal class GetBookInteractor(
                         is BookFile -> book.copy(totalPageCount = totalPageCount)
                         is BookFolder -> book.copy(totalPageCount = totalPageCount)
                     }.also {
-                        fileLocalDataSource.addUpdate(it)
+                        fileRepository.addUpdate(it)
                     }
                 }
             }.fold(

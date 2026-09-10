@@ -10,8 +10,8 @@ import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.datasource.FileLocalDataSource
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionFileUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -25,7 +25,7 @@ internal class PagingCollectionFileInteractor(
     private val collectionRepository: CollectionRepository,
     private val collectionFileRepository: CollectionFileRepository,
     private val settingsRepository: SettingsRepository,
-    private val fileLocalDataSource: FileLocalDataSource,
+    private val fileRepository: FileRepository,
 ) : PagingCollectionFileUseCase() {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun run(request: Request): Flow<PagingData<File>> = collectionRepository.flow(
@@ -43,7 +43,7 @@ internal class PagingCollectionFileInteractor(
                 }
             }
 
-            is SmartCollection -> fileLocalDataSource.pagingDataFlow(
+            is SmartCollection -> fileRepository.pagingDataFlow(
                 request.pagingConfig,
                 collection.bookshelfId,
                 collection::searchCondition,
