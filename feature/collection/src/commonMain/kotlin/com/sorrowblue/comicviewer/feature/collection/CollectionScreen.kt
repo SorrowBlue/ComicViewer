@@ -26,7 +26,7 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiState
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
-import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState

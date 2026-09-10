@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationNavKey
+import com.sorrowblue.comicviewer.feature.authentication.nav.AuthenticationNavKey
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationColumnContents
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme

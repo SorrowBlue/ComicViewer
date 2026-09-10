@@ -17,7 +17,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
-import com.sorrowblue.comicviewer.feature.authentication.ScreenType
+import com.sorrowblue.comicviewer.feature.authentication.nav.ScreenType
 import com.sorrowblue.comicviewer.feature.tutorial.TutorialScreenRoot
 import logcat.logcat
 

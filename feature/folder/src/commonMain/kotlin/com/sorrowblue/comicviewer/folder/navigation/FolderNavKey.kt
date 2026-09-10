@@ -14,15 +14,8 @@ import com.sorrowblue.comicviewer.domain.model.file.PathString
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.file.navigation.fileInfoEntry
 import com.sorrowblue.comicviewer.folder.FolderScreenRoot
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
-
-interface FolderNavKey : NavKey {
-    val bookshelfId: BookshelfId
-    val path: String
-    val restorePath: String?
-    val showSearch: Boolean get() = false
-    val onRestoreComplete: (() -> Unit)? get() = null
-}
 
 context(scope: EntryProviderScope<NavKey>)
 inline fun <reified T : FolderNavKey> folderEntry(

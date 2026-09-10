@@ -10,7 +10,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.settings.common)
-                implementation(projects.feature.authentication)
+                implementation(projects.feature.authentication.nav)
             }
         }
         androidMain {
