@@ -23,7 +23,7 @@ import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavKey
 import com.sorrowblue.comicviewer.feature.history.section.HistoryBookList
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
-import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState

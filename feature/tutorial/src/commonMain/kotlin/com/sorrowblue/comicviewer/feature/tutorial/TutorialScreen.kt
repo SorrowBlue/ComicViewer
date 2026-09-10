@@ -18,7 +18,7 @@ import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.tutorial.component.TutorialBottomBar
-import com.sorrowblue.comicviewer.feature.tutorial.navigation.TutorialNavKey
+import com.sorrowblue.comicviewer.feature.tutorial.nav.TutorialNavKey
 import com.sorrowblue.comicviewer.feature.tutorial.section.ArchiveSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState

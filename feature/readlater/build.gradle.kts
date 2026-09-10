@@ -13,6 +13,7 @@ kotlin {
                 implementation(projects.feature.collection.add)
                 implementation(projects.feature.file)
                 implementation(projects.feature.folder)
+                implementation(projects.feature.folder.nav)
                 implementation(projects.feature.settings.nav)
             }
         }

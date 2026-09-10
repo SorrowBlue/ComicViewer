@@ -8,8 +8,8 @@ import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
-import com.sorrowblue.comicviewer.feature.authentication.ScreenType
-import com.sorrowblue.comicviewer.feature.authentication.navigation.AuthenticationNavKey
+import com.sorrowblue.comicviewer.feature.authentication.nav.AuthenticationNavKey
+import com.sorrowblue.comicviewer.feature.authentication.nav.ScreenType
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator

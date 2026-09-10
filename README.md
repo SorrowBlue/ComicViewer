@@ -79,6 +79,7 @@ graph LR
 | data    | storage        | device       | Local device storage implementations |
 | data    | storage        | smb          | SMB network storage implementations |
 | feature | authentication |              | Login/Authentication screen |
+| feature | authentication | nav          | Authentication navigation |
 | feature | book           |              | Comic viewer screen |
 | feature | book           | nav          | Comic viewer navigation |
 | feature | bookshelf      |              | Bookshelf/Library screen |
@@ -90,9 +91,11 @@ graph LR
 | feature | collection      | nav          | Collection navigation |
 | feature | file           |              | File browser and management screen |
 | feature | folder         |              | Folder navigation screen |
+| feature | folder         | nav          | Folder navigation |
 | feature | history        |              | Reading history screen |
 | feature | readlater      |              | Read later screen |
 | feature | search         |              | Search and discovery screen |
+| feature | search         | nav          | Search navigation |
 | feature | settings       |              | Settings top screen |
 | feature | settings       | common       | Common settings definitions |
 | feature | settings       | extension    | Extension settings screen |
@@ -103,6 +106,7 @@ graph LR
 | feature | settings       | security     | Security settings screen |
 | feature | settings       | viewer       | Viewer settings screen |
 | feature | tutorial       |              | User onboarding screen |
+| feature | tutorial       | nav          | Tutorial navigation |
 | framework| common        |              | Common utilities |
 | framework| background    |              | Background task processing implementations |
 | framework| designsystem  |              | Design system components |
@@ -136,20 +140,32 @@ graph TD
     end
 
     subgraph feature [feature - Presentation]
+        :feature:authentication --> :feature:authentication:nav
         :feature:book --> :feature:book:nav
         :feature:bookshelf --> :feature:bookshelf:edit
         :feature:bookshelf --> :feature:bookshelf:info
+        :feature:bookshelf --> :feature:search:nav
+        :feature:bookshelf --> :feature:folder:nav
         :feature:collection --> :feature:collection:add
         :feature:collection --> :feature:collection:editor
         :feature:collection --> :feature:collection:nav
+        :feature:collection --> :feature:folder:nav
+        :feature:folder --> :feature:folder:nav
+        :feature:history --> :feature:folder:nav
+        :feature:readlater --> :feature:folder:nav
+        :feature:search --> :feature:folder:nav
+        :feature:search --> :feature:search:nav
         :feature:settings --> :feature:settings:common
         :feature:settings --> :feature:settings:nav
         :feature:settings:display --> :feature:settings:common
         :feature:settings:folder --> :feature:settings:common
         :feature:settings:info --> :feature:settings:common
+        :feature:settings:info --> :feature:tutorial:nav
         :feature:settings:security --> :feature:settings:common
+        :feature:settings:security --> :feature:authentication:nav
         :feature:settings:viewer --> :feature:settings:common
         :feature:settings:extension --> :feature:settings:common
+        :feature:tutorial --> :feature:tutorial:nav
     end
 
     subgraph domain [domain - Core & Application]

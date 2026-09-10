@@ -30,7 +30,7 @@ import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.file.component.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
-import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent

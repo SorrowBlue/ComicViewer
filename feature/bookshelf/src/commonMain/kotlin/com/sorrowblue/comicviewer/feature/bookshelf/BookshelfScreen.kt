@@ -32,7 +32,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.navigation.BookshelfWiz
 import com.sorrowblue.comicviewer.feature.bookshelf.info.navigation.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
-import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold

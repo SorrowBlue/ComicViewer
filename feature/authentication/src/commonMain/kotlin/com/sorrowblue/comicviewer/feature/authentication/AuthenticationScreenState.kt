@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.sorrowblue.comicviewer.feature.authentication.nav.ScreenType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.saveable.decodeTo
 import com.sorrowblue.comicviewer.framework.ui.saveable.encodeToByteArray

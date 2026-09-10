@@ -24,10 +24,10 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBar
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchNavKey
+import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.search.section.SearchList
 import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
-import com.sorrowblue.comicviewer.folder.navigation.FolderNavKey
+import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus

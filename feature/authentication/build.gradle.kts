@@ -7,6 +7,11 @@ kotlin {
         namespace = "com.sorrowblue.comicviewer.feature.authentication"
     }
     sourceSets {
+        commonMain {
+            dependencies {
+                implementation(projects.feature.authentication.nav)
+            }
+        }
         androidMain {
             dependencies {
                 implementation(libs.androidx.biometric)
