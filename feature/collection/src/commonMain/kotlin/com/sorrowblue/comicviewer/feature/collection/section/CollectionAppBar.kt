@@ -8,12 +8,12 @@ import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.sorrowblue.comicviewer.file.component.fileListDisplayItem
-import com.sorrowblue.comicviewer.file.component.gridSizeItem
-import com.sorrowblue.comicviewer.file.component.rememberFileListDisplayItemState
-import com.sorrowblue.comicviewer.file.component.rememberGridSizeItemState
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
+import com.sorrowblue.comicviewer.framework.ui.file.component.fileListDisplayItem
+import com.sorrowblue.comicviewer.framework.ui.file.component.gridSizeItem
+import com.sorrowblue.comicviewer.framework.ui.file.component.rememberFileListDisplayItemState
+import com.sorrowblue.comicviewer.framework.ui.file.component.rememberGridSizeItemState
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import com.sorrowblue.comicviewer.framework.ui.material3.settingsItem

@@ -38,7 +38,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
-import com.sorrowblue.comicviewer.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionDialog
@@ -46,6 +45,7 @@ import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetwork
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
+import com.sorrowblue.comicviewer.framework.ui.file.component.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus

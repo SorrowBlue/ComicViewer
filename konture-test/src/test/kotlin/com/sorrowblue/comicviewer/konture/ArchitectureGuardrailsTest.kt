@@ -81,7 +81,8 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * framework層が data層、feature層、domain:usecase、domain:serviceに依存しないことを保証する。
+     * framework層が data層、feature層、domain:serviceに依存しないことを保証する。
+     * また、UI以外のframework層は domain:usecase にも依存しない。
      */
     @Test
     fun `framework layer does not depend on feature layer`() {
@@ -90,9 +91,13 @@ class ArchitectureGuardrailsTest {
             .should().notDependOnModule {
                 it.startsWith(":feature")
                     || it.startsWith(":data")
-                    || it.startsWith(":domain:usecase")
                     || it.startsWith(":domain:service")
             }
+            .check()
+
+        Konture.modules()
+            .that().haveNamePath { it.startsWith(":framework") && !it.startsWith(":framework:ui") }
+            .should().notDependOnModule { it.startsWith(":domain:usecase") }
             .check()
     }
 

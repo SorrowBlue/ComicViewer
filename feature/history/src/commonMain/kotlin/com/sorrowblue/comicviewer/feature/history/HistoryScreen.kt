@@ -22,11 +22,11 @@ import com.sorrowblue.comicviewer.feature.history.navigation.HistoryClearAllNavK
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavKey
 import com.sorrowblue.comicviewer.feature.history.section.HistoryBookList
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
-import com.sorrowblue.comicviewer.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
+import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
