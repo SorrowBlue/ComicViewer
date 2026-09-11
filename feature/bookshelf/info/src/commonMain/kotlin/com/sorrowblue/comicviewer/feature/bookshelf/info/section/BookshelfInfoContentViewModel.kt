@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.service.bookshelf.BookshelfScanManager
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted

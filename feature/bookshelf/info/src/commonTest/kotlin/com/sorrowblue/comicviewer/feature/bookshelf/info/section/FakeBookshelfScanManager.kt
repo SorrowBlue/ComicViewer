@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.service.bookshelf.BookshelfScanManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map

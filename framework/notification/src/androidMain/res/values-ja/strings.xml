@@ -6,4 +6,11 @@
 <resources>
     <string name="framework_notification_channel_name_bookshelf_scan">本棚のスキャン</string>
     <string name="framework_notification_channel_description_bookshelf_scan">本棚のスキャンに関する通知</string>
+
+    <string name="framework_notification_file_scan_title">ファイルのスキャン</string>
+    <string name="framework_notification_file_scan_cancelled">ファイルのスキャンがキャンセルされました</string>
+    <string name="framework_notification_file_scan_completed">ファイルのスキャンが完了しました</string>
+    <string name="framework_notification_thumbnail_scan_title">サムネイルのスキャン</string>
+    <string name="framework_notification_thumbnail_scan_cancelled">サムネイルのスキャンがキャンセルされました</string>
+    <string name="framework_notification_thumbnail_scan_completed">サムネイルのスキャンが完了しました</string>
 </resources>

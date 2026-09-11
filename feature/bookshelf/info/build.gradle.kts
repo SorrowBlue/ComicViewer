@@ -9,8 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.background)
-                implementation(projects.framework.notification)
+                implementation(projects.domain.service)
                 implementation(projects.framework.permission)
                 implementation(projects.feature.bookshelf.nav)
                 implementation(projects.framework.ui.file)
@@ -20,12 +19,6 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlinx.coroutinesTest)
-            }
-        }
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.workRuntime)
-                implementation(libs.metro.android)
             }
         }
     }
