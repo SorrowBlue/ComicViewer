@@ -5,12 +5,12 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.service.bookshelf.BookshelfScanManager
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ManageBookshelfScanUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
-internal class FakeBookshelfScanManager : BookshelfScanManager {
+internal class FakeManageBookshelfScanUseCase : ManageBookshelfScanUseCase {
 
     val scanningFiles = MutableStateFlow<Set<BookshelfId>>(emptySet())
     val scanningThumbnails = MutableStateFlow<Set<BookshelfId>>(emptySet())

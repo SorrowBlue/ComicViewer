@@ -9,7 +9,6 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.domain.service)
                 implementation(projects.framework.permission)
                 implementation(projects.feature.bookshelf.nav)
                 implementation(projects.framework.ui.file)
