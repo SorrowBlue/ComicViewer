@@ -15,6 +15,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.9"
     id("com.android.settings") version "9.4.0"
     id("io.github.baole.konture") version "0.8.4"
+    id("dev.iurysouza.modulegraph.settings") version "0.15.0"
 }
 
 android {

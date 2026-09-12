@@ -97,3 +97,87 @@
 | チュートリアルを始める | ヘルプ・情報 | 「チュートリアルを再表示する」に改称 |
 | - | - | 寄付（donation）は現在のツリーに未含 |
 
+## Module dependency graph
+
+```mermaid
+%%{
+  init: {
+    'theme': 'neutral'
+  }
+}%%
+
+graph TB
+  subgraph :feature
+    :feature:settings["settings"]
+    subgraph :settings
+      :feature:settings:viewer["viewer"]
+      :feature:settings:common["common"]
+      :feature:settings:folder["folder"]
+      :feature:settings:info["info"]
+      :feature:settings:extension["extension"]
+      :feature:settings:security["security"]
+      :feature:settings:display["display"]
+      :feature:settings:folder["folder"]
+      :feature:settings:info["info"]
+      :feature:settings:nav["nav"]
+      :feature:settings:security["security"]
+      :feature:settings:extension["extension"]
+      :feature:settings:viewer["viewer"]
+      :feature:settings:display["display"]
+      :feature:settings:common["common"]
+    end
+    subgraph :tutorial
+      :feature:tutorial:nav["nav"]
+    end
+    subgraph :authentication
+      :feature:authentication:nav["nav"]
+    end
+  end
+  subgraph :domain
+    :domain:usecase["usecase"]
+    :domain:usecase["usecase"]
+    :domain:model["model"]
+  end
+
+  :feature:settings:viewer --> :domain:usecase
+  :feature:settings:viewer --> :feature:settings:common
+  :feature:settings:folder --> :domain:usecase
+  :feature:settings:folder --> :feature:settings:common
+  :feature:settings:info --> :domain:usecase
+  :feature:settings:info --> :feature:settings:common
+  :feature:settings:info --> :feature:tutorial:nav
+  :domain:usecase --> :domain:model
+  :feature:settings:extension --> :domain:usecase
+  :feature:settings:extension --> :feature:settings:common
+  :feature:settings:security --> :domain:usecase
+  :feature:settings:security --> :feature:settings:common
+  :feature:settings:security --> :feature:authentication:nav
+  :feature:settings --> :domain:usecase
+  :feature:settings --> :feature:settings:common
+  :feature:settings --> :feature:settings:display
+  :feature:settings --> :feature:settings:folder
+  :feature:settings --> :feature:settings:info
+  :feature:settings --> :feature:settings:nav
+  :feature:settings --> :feature:settings:security
+  :feature:settings --> :feature:settings:extension
+  :feature:settings --> :feature:settings:viewer
+  :feature:settings:display --> :domain:usecase
+  :feature:settings:display --> :feature:settings:common
+  :feature:settings:common --> :domain:usecase
+
+classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
+class :feature:settings:viewer kotlin-multiplatform
+class :domain:usecase kotlin-multiplatform
+class :feature:settings:common kotlin-multiplatform
+class :feature:settings:folder kotlin-multiplatform
+class :feature:settings:info kotlin-multiplatform
+class :feature:tutorial:nav kotlin-multiplatform
+class :domain:model kotlin-multiplatform
+class :feature:settings:extension kotlin-multiplatform
+class :feature:settings:security kotlin-multiplatform
+class :feature:authentication:nav kotlin-multiplatform
+class :feature:settings kotlin-multiplatform
+class :feature:settings:display kotlin-multiplatform
+class :feature:settings:nav kotlin-multiplatform
+
+```

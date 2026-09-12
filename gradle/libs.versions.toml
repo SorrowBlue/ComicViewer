@@ -82,6 +82,7 @@ androidx-lifecycleCommon = { group = "org.jetbrains.androidx.lifecycle", name = 
 androidx-lifecycleCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycleViewmodelCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycleViewmodelNavigation3 = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
+androidx-navigation3Runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "multiplatform-navigation3" }
 androidx-navigation3UI = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "multiplatform-navigation3" }
 androidx-navigationeventCompose = { group = "org.jetbrains.androidx.navigationevent", name = "navigationevent-compose", version.ref = "androidx-navigationevent" }
 androidx-pagingCommon = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" }
@@ -198,7 +199,6 @@ androidTest = { id = "com.android.test", version.ref = "android-gradle" }
 androidxRoom3 = { id = "androidx.room3", version.ref = "androidx-room3" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 comicviewer-androidApplication = { id = "comicviewer.convention.android-application" }
-comicviewer-androidLibrary = { id = "comicviewer.convention.android-library" }
 comicviewer-di = { id = "comicviewer.primitive.metro" }
 comicviewer-multiplatformCompose = { id = "comicviewer.convention.multiplatform-compose" }
 comicviewer-multiplatformFeature = { id = "comicviewer.convention.multiplatform-feature" }
@@ -216,6 +216,5 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
-modulegraph = { id = "dev.iurysouza.modulegraph", version.ref = "modulegraph" }
 navgraph = { id = "com.github.skydoves.navgraph", version.ref = "navgraph" }
 versionCatalogLinter = { id = "io.github.pemistahl.version-catalog-linter", version.ref = "versionCatalogLinter" }

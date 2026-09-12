@@ -1,9 +1,5 @@
-/*
- * Copyright 2026 SorrowBlue. See LICENSE for details.
- */
-
 plugins {
-    alias(libs.plugins.comicviewer.multiplatformFeature)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
 }
 
 kotlin {
@@ -13,6 +9,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.domain.model)
+            implementation(libs.androidx.navigation3Runtime)
         }
     }
 }
