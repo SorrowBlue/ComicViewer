@@ -6,6 +6,7 @@ plugins {
 kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.domain.usecase"
+        withHostTest {}
     }
     sourceSets {
         commonMain {
@@ -15,6 +16,11 @@ kotlin {
                 implementation(projects.domain.service)
                 api(libs.androidx.pagingCommon)
                 api(libs.kotlinx.coroutinesCore)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(libs.kotlin.test)
             }
         }
     }

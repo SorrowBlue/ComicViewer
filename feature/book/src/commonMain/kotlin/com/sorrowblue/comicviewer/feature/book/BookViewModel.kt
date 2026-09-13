@@ -6,18 +6,20 @@ package com.sorrowblue.comicviewer.feature.book
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sorrowblue.comicviewer.domain.model.book.NextBook
+import com.sorrowblue.comicviewer.domain.model.book.NextPage
+import com.sorrowblue.comicviewer.domain.model.book.PageItem
+import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
+import com.sorrowblue.comicviewer.domain.usecase.book.CreateInitialBookPagesUseCase
+import com.sorrowblue.comicviewer.domain.usecase.book.ResolveBookPageLayoutUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.CloseBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetNextBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.UpdateLastReadPageUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageBookSettingsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
-import com.sorrowblue.comicviewer.feature.book.section.BookPage
-import com.sorrowblue.comicviewer.feature.book.section.NextBook
-import com.sorrowblue.comicviewer.feature.book.section.NextPage
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -25,11 +27,14 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 @AssistedInject
 internal class BookViewModel(
@@ -41,48 +46,52 @@ internal class BookViewModel(
     val getNextBookUseCase: GetNextBookUseCase,
     val updateLastReadPageUseCase: UpdateLastReadPageUseCase,
     val closeBookUseCase: CloseBookUseCase,
+    private val createInitialBookPagesUseCase: CreateInitialBookPagesUseCase,
+    private val resolveBookPageLayoutUseCase: ResolveBookPageLayoutUseCase,
 ) : ViewModel() {
+
+    private val mutex = Mutex()
+    private val _pageItemListFlow = MutableStateFlow<List<PageItem>>(emptyList())
+    val pageItemListFlow = _pageItemListFlow.asStateFlow()
 
     val bookSettingsFlow =
         manageBookSettingsUseCase.settings.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
-    val pageItemListFlow =
-        bookSettingsFlow.distinctUntilChanged { old, new -> old.pageFormat == new.pageFormat }
-            .map { settings ->
-                buildList {
-                    add(NextPage(false, getNextBookUseCase.execute(false)))
-                    addAll(
-                        when (settings.pageFormat) {
-                            BookSettings.PageFormat.Default -> (1..book.totalPageCount)
-                                .map {
-                                    BookPage.Default(it - 1)
-                                }
-
-                            BookSettings.PageFormat.Spread ->
-                                (1..book.totalPageCount).map {
-                                    BookPage.Spread.Unrated(it - 1)
-                                }
-
-                            BookSettings.PageFormat.Split -> (1..book.totalPageCount)
-                                .map {
-                                    BookPage.Split.Unrated(it - 1)
-                                }
-
-                            BookSettings.PageFormat.Auto ->
-                                if (isCompactWindowClass) {
-                                    (1..book.totalPageCount).map {
-                                        BookPage.Split.Unrated(it - 1)
-                                    }
-                                } else {
-                                    (1..book.totalPageCount).map {
-                                        BookPage.Spread.Unrated(it - 1)
-                                    }
-                                }
-                        },
+    init {
+        viewModelScope.launch {
+            bookSettingsFlow
+                .distinctUntilChanged { old, new -> old.pageFormat == new.pageFormat }
+                .collect { settings ->
+                    val pages = createInitialBookPagesUseCase(
+                        totalPageCount = book.totalPageCount,
+                        pageFormat = settings.pageFormat,
+                        isCompactWindow = isCompactWindowClass,
                     )
-                    add(NextPage(true, getNextBookUseCase.execute(true)))
+                    val prevBooks = getNextBookUseCase.execute(false)
+                    val nextBooks = getNextBookUseCase.execute(true)
+                    val list = buildList {
+                        add(NextPage(false, prevBooks))
+                        addAll(pages)
+                        add(NextPage(true, nextBooks))
+                    }
+                    mutex.withLock {
+                        _pageItemListFlow.value = list
+                    }
                 }
-            }.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+        }
+    }
+
+    fun onPageLoaded(unratedPage: UnratedPage, isPortrait: Boolean) {
+        viewModelScope.launch {
+            mutex.withLock {
+                val current = _pageItemListFlow.value
+                val updated = resolveBookPageLayoutUseCase(current, unratedPage, isPortrait)
+                if (updated !== current) {
+                    _pageItemListFlow.value = updated
+                }
+            }
+        }
+    }
 
     val viewerSettingsFlow =
         manageViewerSettingsUseCase.settings.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
