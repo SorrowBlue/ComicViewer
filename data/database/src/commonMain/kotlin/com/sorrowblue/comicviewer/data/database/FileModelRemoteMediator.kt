@@ -13,11 +13,11 @@ import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.common.PagingException
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
 import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
+import com.sorrowblue.comicviewer.domain.service.file.FileSortService
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -36,6 +36,7 @@ internal class FileModelRemoteMediator(
     @Assisted private val file: File,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val dao: FileDao,
+    private val fileSortService: FileSortService,
 ) : RemoteMediator<Int, QueryFileWithCountEntity>() {
     @AssistedFactory
     fun interface Factory {
@@ -62,9 +63,9 @@ internal class FileModelRemoteMediator(
                     val supportExtensions = settings.supportExtension.map(
                         SupportExtension::extension,
                     )
-                    val files = SortUtil.sortedIndex(
+                    val files = fileSortService.sortedIndex(
                         remoteStorageClient.listFiles(file, false) {
-                            SortUtil.filter(it, supportExtensions)
+                            fileSortService.filter(it, supportExtensions)
                         },
                     )
                     dao.updateSame(

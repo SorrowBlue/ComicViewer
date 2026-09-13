@@ -138,7 +138,9 @@ graph TB
     :domain:usecase["usecase"]
     :domain:model["model"]
     :domain:repository["repository"]
+    :domain:service["service"]
     :domain:repository["repository"]
+    :domain:service["service"]
   end
 
   :feature:settings:viewer --> :domain:usecase
@@ -150,6 +152,7 @@ graph TB
   :feature:settings:info --> :feature:tutorial:nav
   :domain:usecase --> :domain:model
   :domain:usecase --> :domain:repository
+  :domain:usecase --> :domain:service
   :domain:repository --> :domain:model
   :feature:settings:extension --> :domain:usecase
   :feature:settings:extension --> :feature:settings:common
@@ -167,6 +170,7 @@ graph TB
   :feature:settings --> :feature:settings:viewer
   :feature:settings:display --> :domain:usecase
   :feature:settings:display --> :feature:settings:common
+  :domain:service --> :domain:model
   :feature:settings:common --> :domain:usecase
 
 classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
@@ -178,6 +182,7 @@ class :feature:settings:info kotlin-multiplatform
 class :feature:tutorial:nav kotlin-multiplatform
 class :domain:model kotlin-multiplatform
 class :domain:repository kotlin-multiplatform
+class :domain:service kotlin-multiplatform
 class :feature:settings:extension kotlin-multiplatform
 class :feature:settings:security kotlin-multiplatform
 class :feature:authentication:nav kotlin-multiplatform

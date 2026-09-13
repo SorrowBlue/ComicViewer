@@ -70,6 +70,7 @@ graph LR
 | app     | share          |              | Platform shared entry point |
 | domain  | model          |              | Domain models and entities (Core) |
 | domain  | repository     |              | Repository interfaces and ports (Data access abstractions) |
+| domain  | service        |              | Domain services and pure business logic |
 | domain  | usecase        |              | Concrete use cases and application workflow orchestration |
 | data    | coil           |              | Thumbnail and image loading implementations |
 | data    | database       |              | Room database implementations |
@@ -125,8 +126,8 @@ graph LR
 ComicViewer adheres to the principles of **Onion Architecture**, placing the Domain Model at its core with all dependencies pointing inward:
 
 - **Layer 1: Domain Model (Core)**: Pure Kotlin entities, value objects, and domain errors (`:domain:model`).
-- **Layer 2: Repositories & Ports**: Gateway/Port interfaces (`:domain:repository`) abstracting data access, storage, and background tasks.
-- **Layer 3: Application Services / Use Cases**: Concrete use cases orchestrating domain logic and repository abstractions (`:domain:usecase`).
+- **Layer 2: Domain Services & Repository Ports**: Pure domain logic services (`:domain:service`) and Gateway/Port interfaces (`:domain:repository`) abstracting data access, storage, and background tasks.
+- **Layer 3: Application Services / Use Cases**: Concrete use cases orchestrating domain logic, domain services, and repository abstractions (`:domain:usecase`).
 - **Layer 4: Outer Ring (Infrastructure, Presentation & Composition Root)**:
   - **Presentation (UI)**: UI screens and viewmodels (`:feature:*`), shared design system (`:framework:designsystem`), and UI components (`:framework:ui`).
   - **Infrastructure**: Database (`:data:database`), storage/network (`:data:storage:*`), image loading (`:data:coil`), data synchronization (`:data:sync`), and platform services (`:framework:background`, `:framework:notification`, `:framework:permission`, `:framework:startup`).
@@ -166,19 +167,23 @@ graph TD
 
     subgraph domain [domain - Core & Application]
         :domain:usecase --> :domain:repository
+        :domain:usecase --> :domain:service
         :domain:usecase --> :domain:model
         :domain:repository --> :domain:model
+        :domain:service --> :domain:model
     end
 
     subgraph data [data - Infrastructure]
         :data:coil --> :domain:repository
         :data:database --> :domain:repository
+        :data:database --> :domain:service
         :data:datastore --> :domain:repository
         :data:reader:document --> :data:storage
         :data:reader:zip --> :data:storage
         :data:storage:device --> :data:storage
         :data:storage:smb --> :data:storage
         :data:storage --> :domain:repository
+        :data:storage --> :domain:service
         :data:sync --> :domain:repository
         :data:sync --> :domain:usecase
         :data:sync --> :framework:background

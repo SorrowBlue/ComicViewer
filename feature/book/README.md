@@ -14,6 +14,8 @@ graph TB
     :domain:usecase["usecase"]
     :domain:model["model"]
     :domain:repository["repository"]
+    :domain:service["service"]
+    :domain:service["service"]
     :domain:model["model"]
     :domain:repository["repository"]
     :domain:usecase["usecase"]
@@ -31,6 +33,8 @@ graph TB
 
   :domain:usecase --> :domain:model
   :domain:usecase --> :domain:repository
+  :domain:usecase --> :domain:service
+  :domain:service --> :domain:model
   :feature:book:nav --> :domain:model
   :domain:repository --> :domain:model
   :feature:book --> :domain:usecase
@@ -41,6 +45,7 @@ classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#f
 class :domain:usecase kotlin-multiplatform
 class :domain:model kotlin-multiplatform
 class :domain:repository kotlin-multiplatform
+class :domain:service kotlin-multiplatform
 class :feature:book:nav kotlin-multiplatform
 class :feature:book kotlin-multiplatform
 class :feature:settings:nav kotlin-multiplatform

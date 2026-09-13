@@ -9,11 +9,11 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.IFolder
-import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
+import com.sorrowblue.comicviewer.domain.service.file.FileSortService
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
@@ -27,6 +27,7 @@ class ScanBookshelfUseCase(private val action: suspend (Request) -> Resource<Lis
         fileRepository: FileRepository,
         remoteStorageClientFactory: RemoteStorageClient.Factory,
         settingsRepository: SettingsRepository,
+        fileSortService: FileSortService,
     ) : this({ request ->
         val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
         if (bookshelf != null) {
@@ -49,6 +50,7 @@ class ScanBookshelfUseCase(private val action: suspend (Request) -> Resource<Lis
                         resolveImageFolder,
                         supportExtension,
                         fileRepository,
+                        fileSortService,
                     )
             }
         }
@@ -74,10 +76,11 @@ private suspend fun RemoteStorageClient.nestedListFiles(
     resolveImageFolder: Boolean,
     supportExtensions: List<String>,
     fileRepository: FileRepository,
+    fileSortService: FileSortService,
 ) {
-    val fileModelList = SortUtil.sortedIndex(
+    val fileModelList = fileSortService.sortedIndex(
         listFiles(file, resolveImageFolder) {
-            SortUtil.filter(it, supportExtensions)
+            fileSortService.filter(it, supportExtensions)
         },
     )
     fileRepository.updateHistory(file, fileModelList)
@@ -94,6 +97,7 @@ private suspend fun RemoteStorageClient.nestedListFiles(
                 resolveImageFolder,
                 supportExtensions,
                 fileRepository,
+                fileSortService,
             )
         }
 }

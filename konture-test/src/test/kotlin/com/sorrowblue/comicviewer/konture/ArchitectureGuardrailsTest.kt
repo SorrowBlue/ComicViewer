@@ -34,14 +34,26 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * :domain:usecase が :domain:model, :domain:repository 以外に依存しないことを保証する。
+     * :domain:usecase が :domain:model, :domain:repository, :domain:service 以外に依存しないことを保証する。
      * usecase はビジネスルールを定義・実行し、実装詳細を知ってはならない。
      */
     @Test
-    fun `domain usecase only depends on domain model and repository`() {
+    fun `domain usecase only depends on domain model, repository and service`() {
         Konture.modules()
             .that().haveNamePath(":domain:usecase")
-            .should().onlyDependOnModules(":domain:model", ":domain:repository", ":")
+            .should().onlyDependOnModules(":domain:model", ":domain:repository", ":domain:service", ":")
+            .check()
+    }
+
+    /**
+     * :domain:service が :domain:model 以外に依存しないことを保証する。
+     * service はドメインロジックをカプセル化し、上位層や実装詳細を知ってはならない。
+     */
+    @Test
+    fun `domain service only depends on domain model`() {
+        Konture.modules()
+            .that().haveNamePath(":domain:service")
+            .should().onlyDependOnModules(":domain:model", ":")
             .check()
     }
 
