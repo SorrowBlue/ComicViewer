@@ -108,6 +108,7 @@ dependencies {
     dokka(projects.data.storage)
     dokka(projects.data.storage.device)
     dokka(projects.data.storage.smb)
+    dokka(projects.data.sync)
     dokka(projects.domain.model)
     dokka(projects.domain.repository)
     dokka(projects.domain.service)

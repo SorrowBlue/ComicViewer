@@ -28,14 +28,14 @@ import kotlinx.coroutines.test.setMain
 class BookshelfInfoContentViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var scanManager: FakeBookshelfScanManager
+    private lateinit var manageBookshelfScanUseCase: FakeManageBookshelfScanUseCase
     private lateinit var viewModel: BookshelfInfoContentViewModel
 
     @OptIn(InternalDataApi::class)
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        scanManager = FakeBookshelfScanManager()
+        manageBookshelfScanUseCase = FakeManageBookshelfScanUseCase()
         val bookshelfFolder = BookshelfFolder(
             bookshelf = ShareContents,
             folder = Folder(
@@ -55,7 +55,7 @@ class BookshelfInfoContentViewModelTest {
         viewModel = BookshelfInfoContentViewModel(
             bookshelfFolder = bookshelfFolder,
             pagingBookshelfBookUseCase = pagingUseCase,
-            scanManager = scanManager,
+            manageBookshelfScanUseCase = manageBookshelfScanUseCase,
         )
     }
 
@@ -77,12 +77,12 @@ class BookshelfInfoContentViewModelTest {
     @Test
     fun scanFile_callsScanManager() {
         viewModel.scanFile()
-        assertTrue(scanManager.scanFileCalled)
+        assertTrue(manageBookshelfScanUseCase.scanFileCalled)
     }
 
     @Test
     fun scanThumbnail_callsScanManager() {
         viewModel.scanThumbnail()
-        assertTrue(scanManager.scanThumbnailCalled)
+        assertTrue(manageBookshelfScanUseCase.scanThumbnailCalled)
     }
 }

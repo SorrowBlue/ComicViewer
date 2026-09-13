@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ManageBookshelfScanUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -27,7 +28,7 @@ private const val PageSize = 4
 internal class BookshelfInfoContentViewModel(
     @Assisted private val bookshelfFolder: BookshelfFolder,
     private val pagingBookshelfBookUseCase: PagingBookshelfBookUseCase,
-    private val scanManager: BookshelfScanManager,
+    private val manageBookshelfScanUseCase: ManageBookshelfScanUseCase,
 ) : ViewModel() {
 
     val pagingDataFlow = pagingBookshelfBookUseCase(
@@ -38,7 +39,7 @@ internal class BookshelfInfoContentViewModel(
     ).cachedIn(viewModelScope)
 
     val isScanningFile: StateFlow<Boolean> =
-        scanManager.isScanningFile(bookshelfFolder.bookshelf.id)
+        manageBookshelfScanUseCase.isScanningFile(bookshelfFolder.bookshelf.id)
             .stateIn(
                 viewModelScope,
                 SharingStarted.Eagerly,
@@ -46,7 +47,7 @@ internal class BookshelfInfoContentViewModel(
             )
 
     val isScanningThumbnail: StateFlow<Boolean> =
-        scanManager.isScanningThumbnail(bookshelfFolder.bookshelf.id)
+        manageBookshelfScanUseCase.isScanningThumbnail(bookshelfFolder.bookshelf.id)
             .stateIn(
                 viewModelScope,
                 SharingStarted.Eagerly,
@@ -54,11 +55,11 @@ internal class BookshelfInfoContentViewModel(
             )
 
     fun scanFile() {
-        scanManager.scanFile(bookshelfFolder.bookshelf.id)
+        manageBookshelfScanUseCase.scanFile(bookshelfFolder.bookshelf.id)
     }
 
     fun scanThumbnail() {
-        scanManager.scanThumbnail(bookshelfFolder.bookshelf.id)
+        manageBookshelfScanUseCase.scanThumbnail(bookshelfFolder.bookshelf.id)
     }
 
     @AssistedFactory
