@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.usecase.book.CreateInitialBookPagesUseCase
 import com.sorrowblue.comicviewer.domain.usecase.book.ResolveBookPageLayoutUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.CloseBookUseCase
@@ -27,14 +28,22 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+
+private sealed interface PageAction {
+    data class FormatChange(val pageFormat: BookSettings.PageFormat) : PageAction
+    data class PageLoaded(val unratedPage: UnratedPage, val isPortrait: Boolean) : PageAction
+}
 
 @AssistedInject
 internal class BookViewModel(
@@ -50,47 +59,48 @@ internal class BookViewModel(
     private val resolveBookPageLayoutUseCase: ResolveBookPageLayoutUseCase,
 ) : ViewModel() {
 
-    private val mutex = Mutex()
-    private val _pageItemListFlow = MutableStateFlow<List<PageItem>>(emptyList())
-    val pageItemListFlow = _pageItemListFlow.asStateFlow()
+    private val pageActionFlow = MutableSharedFlow<PageAction>(
+        extraBufferCapacity = 64,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
 
     val bookSettingsFlow =
         manageBookSettingsUseCase.settings.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
-    init {
-        viewModelScope.launch {
-            bookSettingsFlow
-                .distinctUntilChanged { old, new -> old.pageFormat == new.pageFormat }
-                .collect { settings ->
-                    val pages = createInitialBookPagesUseCase(
-                        totalPageCount = book.totalPageCount,
-                        pageFormat = settings.pageFormat,
-                        isCompactWindow = isCompactWindowClass,
-                    )
-                    val prevBooks = getNextBookUseCase.execute(false)
-                    val nextBooks = getNextBookUseCase.execute(true)
-                    val list = buildList {
-                        add(NextPage(false, prevBooks))
-                        addAll(pages)
-                        add(NextPage(true, nextBooks))
-                    }
-                    mutex.withLock {
-                        _pageItemListFlow.value = list
-                    }
-                }
-        }
-    }
-
-    fun onPageLoaded(unratedPage: UnratedPage, isPortrait: Boolean) {
-        viewModelScope.launch {
-            mutex.withLock {
-                val current = _pageItemListFlow.value
-                val updated = resolveBookPageLayoutUseCase(current, unratedPage, isPortrait)
-                if (updated !== current) {
-                    _pageItemListFlow.value = updated
+    val pageItemListFlow: StateFlow<List<PageItem>> = merge(
+        bookSettingsFlow
+            .distinctUntilChanged { old, new -> old.pageFormat == new.pageFormat }
+            .map { PageAction.FormatChange(it.pageFormat) },
+        pageActionFlow,
+    ).scan(emptyList<PageItem>()) { currentList, action ->
+        when (action) {
+            is PageAction.FormatChange -> {
+                val pages = createInitialBookPagesUseCase(
+                    totalPageCount = book.totalPageCount,
+                    pageFormat = action.pageFormat,
+                    isCompactWindow = isCompactWindowClass,
+                )
+                val prevBooks = getNextBookUseCase.execute(false)
+                val nextBooks = getNextBookUseCase.execute(true)
+                buildList {
+                    add(NextPage(false, prevBooks))
+                    addAll(pages)
+                    add(NextPage(true, nextBooks))
                 }
             }
+
+            is PageAction.PageLoaded -> {
+                resolveBookPageLayoutUseCase(currentList, action.unratedPage, action.isPortrait)
+            }
         }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList(),
+    )
+
+    fun onPageLoaded(unratedPage: UnratedPage, isPortrait: Boolean) {
+        pageActionFlow.tryEmit(PageAction.PageLoaded(unratedPage, isPortrait))
     }
 
     val viewerSettingsFlow =

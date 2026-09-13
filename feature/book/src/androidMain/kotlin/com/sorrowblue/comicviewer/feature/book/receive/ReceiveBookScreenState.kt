@@ -18,6 +18,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.book.PageItem
 import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -65,10 +68,12 @@ internal fun rememberReceiveBookScreenState(
     val currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { currentList.size })
     val systemUiController = rememberSystemUiController()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(lifecycle) {
         ReceiveBookScreenStateImpl(
             context = appContext,
             coroutineScope = scope,
+            lifecycle = lifecycle,
             pagerState = pagerState,
             systemUiController = systemUiController,
             currentList = currentList,
@@ -83,6 +88,7 @@ internal fun rememberReceiveBookScreenState(
 private class ReceiveBookScreenStateImpl(
     context: Context,
     private val coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val pagerState: PagerState,
     override val systemUiController: SystemUiController,
     override val currentList: SnapshotStateList<PageItem>,
@@ -92,26 +98,32 @@ private class ReceiveBookScreenStateImpl(
     private val onPageLoaded: (UnratedPage, Boolean) -> Unit,
 ) : ReceiveBookScreenState {
     init {
-        pageItemListFlow.onEach {
-            currentList.clear()
-            currentList.addAll(it)
-        }.launchIn(coroutineScope)
-        bookFlow.onEach { bookFile ->
-            if (bookFile != null) {
-                uiState = BookScreenUiState.Loaded(
-                    bookFile,
-                    CollectionId(),
-                    BookSheetUiState(bookFile),
-                    alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
-                )
-            } else {
-                Toast.makeText(
-                    context,
-                    getString(Res.string.book_error_file_not_opened),
-                    Toast.LENGTH_SHORT,
-                ).show()
+        pageItemListFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                currentList.clear()
+                currentList.addAll(it)
             }
-        }.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
+        bookFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { bookFile ->
+                if (bookFile != null) {
+                    uiState = BookScreenUiState.Loaded(
+                        bookFile,
+                        CollectionId(),
+                        BookSheetUiState(bookFile),
+                        alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
+                    )
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(Res.string.book_error_file_not_opened),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+            .launchIn(coroutineScope)
     }
 
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(""))

@@ -18,6 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import coil3.Bitmap
 import com.sorrowblue.comicviewer.domain.model.book.PageItem
 import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
@@ -67,13 +69,15 @@ internal fun rememberBookScreenState(
         }
     }
 
-    val state = remember(isCompactWindowClass) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val state = remember(isCompactWindowClass, lifecycle) {
         BookScreenStateImpl(
             initialUiState = initialUiState,
             currentList = currentList,
             pagerState = pagerState,
             coroutineScope = coroutineScope,
             systemUiController = systemUiController,
+            lifecycle = lifecycle,
             bookSettingsFlow = viewModel.bookSettingsFlow,
             viewerSettingsFlow = viewModel.viewerSettingsFlow,
             pageItemListFlow = viewModel.pageItemListFlow,
@@ -113,6 +117,7 @@ private class BookScreenStateImpl(
     override val pagerState: PagerState,
     private val coroutineScope: CoroutineScope,
     private val systemUiController: SystemUiController,
+    lifecycle: Lifecycle,
     private val bookSettingsFlow: SharedFlow<BookSettings>,
     private val viewerSettingsFlow: SharedFlow<ViewerSettings>,
     private val pageItemListFlow: Flow<List<PageItem>>,
@@ -123,29 +128,38 @@ private class BookScreenStateImpl(
         private set
 
     init {
-        pageItemListFlow.onEach {
-            currentList.clear()
-            currentList.addAll(it)
-        }.launchIn(coroutineScope)
-        bookSettingsFlow.onEach { settings ->
-            uiState = uiState.copy(
-                bookSheetUiState = uiState.bookSheetUiState.copy(
-                    pageScale = mapPageScale(settings.pageScale),
-                ),
-            )
-        }.launchIn(coroutineScope)
-        viewerSettingsFlow.onEach { settings ->
-            systemUiController.keepScreenOn = settings.keepOnScreen
-            if (settings.enableBrightnessControl) {
-                systemUiController.screenBrightness = settings.screenBrightness
+        pageItemListFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                currentList.clear()
+                currentList.addAll(it)
             }
-            uiState = uiState.copy(
-                bookSheetUiState = uiState.bookSheetUiState.copy(
-                    cutWhitespace = settings.cutWhitespace,
-                    beyondViewportPageCount = settings.readAheadPageCount,
-                ),
-            )
-        }.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
+        bookSettingsFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { settings ->
+                uiState = uiState.copy(
+                    bookSheetUiState = uiState.bookSheetUiState.copy(
+                        pageScale = mapPageScale(settings.pageScale),
+                    ),
+                )
+            }
+            .launchIn(coroutineScope)
+        viewerSettingsFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { settings ->
+                systemUiController.keepScreenOn = settings.keepOnScreen
+                if (settings.enableBrightnessControl) {
+                    systemUiController.screenBrightness = settings.screenBrightness
+                }
+                uiState = uiState.copy(
+                    bookSheetUiState = uiState.bookSheetUiState.copy(
+                        cutWhitespace = settings.cutWhitespace,
+                        beyondViewportPageCount = settings.readAheadPageCount,
+                    ),
+                )
+            }
+            .launchIn(coroutineScope)
         coroutineScope.launch {
             if (!uiState.isVisibleTooltip) {
                 val settings = viewerSettingsFlow.first()
