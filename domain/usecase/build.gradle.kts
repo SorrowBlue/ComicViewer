@@ -11,6 +11,7 @@ kotlin {
         commonMain {
             dependencies {
                 api(projects.domain.model)
+                implementation(projects.domain.repository)
                 api(libs.androidx.pagingCommon)
                 api(libs.kotlinx.coroutinesCore)
             }

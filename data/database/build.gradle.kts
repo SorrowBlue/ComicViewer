@@ -40,7 +40,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.domain.repository)
-                implementation(projects.domain.service)
                 implementation(libs.androidx.pagingCommon)
                 implementation(libs.androidx.room3Paging)
                 implementation(libs.androidx.room3Runtime)

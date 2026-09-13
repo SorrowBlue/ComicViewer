@@ -8,7 +8,6 @@ import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
-import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingBookshelfBookUseCase
 import kotlin.test.AfterTest
@@ -18,7 +17,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -48,14 +46,13 @@ class BookshelfInfoContentViewModelTest {
                 isHidden = false,
             ),
         )
-        val pagingUseCase = object : PagingBookshelfBookUseCase() {
-            override fun run(request: Request): Flow<PagingData<BookThumbnail>> =
-                flowOf(PagingData.empty())
+        val pagingUseCase = PagingBookshelfBookUseCase {
+            flowOf(PagingData.empty())
         }
         viewModel = BookshelfInfoContentViewModel(
             bookshelfFolder = bookshelfFolder,
             pagingBookshelfBookUseCase = pagingUseCase,
-            manageBookshelfScanUseCase = manageBookshelfScanUseCase,
+            manageBookshelfScanUseCase = manageBookshelfScanUseCase.useCase,
         )
     }
 

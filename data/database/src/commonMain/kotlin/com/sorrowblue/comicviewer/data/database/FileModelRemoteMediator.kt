@@ -15,9 +15,9 @@ import com.sorrowblue.comicviewer.domain.model.common.PagingException
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.SortUtil
 import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
+import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.service.storage.RemoteException
-import com.sorrowblue.comicviewer.domain.service.storage.RemoteStorageClient
+import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory

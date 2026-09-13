@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.storage
+package com.sorrowblue.comicviewer.domain.model.storage
 
 sealed class RemoteException : RuntimeException() {
     class NoNetwork : RemoteException()

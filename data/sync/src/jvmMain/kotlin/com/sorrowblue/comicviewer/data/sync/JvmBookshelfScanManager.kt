@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.data.sync
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
-import com.sorrowblue.comicviewer.domain.service.bookshelf.BookshelfScanManager
+import com.sorrowblue.comicviewer.domain.repository.bookshelf.BookshelfScanManager
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase

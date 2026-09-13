@@ -10,26 +10,37 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
-internal class FakeManageBookshelfScanUseCase : ManageBookshelfScanUseCase {
+internal class FakeManageBookshelfScanUseCase {
 
     val scanningFiles = MutableStateFlow<Set<BookshelfId>>(emptySet())
     val scanningThumbnails = MutableStateFlow<Set<BookshelfId>>(emptySet())
     var scanFileCalled = false
     var scanThumbnailCalled = false
 
-    override fun isScanningFile(bookshelfId: BookshelfId): Flow<Boolean> =
-        scanningFiles.map { bookshelfId in it }
+    val useCase: ManageBookshelfScanUseCase = ManageBookshelfScanUseCase(
+        isScanningFileAction = { bookshelfId -> scanningFiles.map { bookshelfId in it } },
+        isScanningThumbnailAction = { bookshelfId -> scanningThumbnails.map { bookshelfId in it } },
+        scanFileAction = { bookshelfId ->
+            scanFileCalled = true
+            scanningFiles.value += bookshelfId
+        },
+        scanThumbnailAction = { bookshelfId ->
+            scanThumbnailCalled = true
+            scanningThumbnails.value += bookshelfId
+        },
+    )
 
-    override fun isScanningThumbnail(bookshelfId: BookshelfId): Flow<Boolean> =
-        scanningThumbnails.map { bookshelfId in it }
+    fun isScanningFile(bookshelfId: BookshelfId): Flow<Boolean> =
+        useCase.isScanningFile(bookshelfId)
 
-    override fun scanFile(bookshelfId: BookshelfId) {
-        scanFileCalled = true
-        scanningFiles.value += bookshelfId
+    fun isScanningThumbnail(bookshelfId: BookshelfId): Flow<Boolean> =
+        useCase.isScanningThumbnail(bookshelfId)
+
+    fun scanFile(bookshelfId: BookshelfId) {
+        useCase.scanFile(bookshelfId)
     }
 
-    override fun scanThumbnail(bookshelfId: BookshelfId) {
-        scanThumbnailCalled = true
-        scanningThumbnails.value += bookshelfId
+    fun scanThumbnail(bookshelfId: BookshelfId) {
+        useCase.scanThumbnail(bookshelfId)
     }
 }

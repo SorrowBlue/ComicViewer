@@ -112,7 +112,6 @@ dependencies {
     dokka(projects.data.sync)
     dokka(projects.domain.model)
     dokka(projects.domain.repository)
-    dokka(projects.domain.service)
     dokka(projects.domain.usecase)
     dokka(projects.feature.authentication)
     dokka(projects.feature.authentication.nav)
@@ -176,7 +175,6 @@ moduleGraphConfig {
         ":data:sync",
         ":domain:model",
         ":domain:repository",
-        ":domain:service",
         ":domain:usecase",
         ":feature:authentication",
         ":feature:book",

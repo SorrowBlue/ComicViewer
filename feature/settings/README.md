@@ -137,6 +137,8 @@ graph TB
     :domain:usecase["usecase"]
     :domain:usecase["usecase"]
     :domain:model["model"]
+    :domain:repository["repository"]
+    :domain:repository["repository"]
   end
 
   :feature:settings:viewer --> :domain:usecase
@@ -147,6 +149,8 @@ graph TB
   :feature:settings:info --> :feature:settings:common
   :feature:settings:info --> :feature:tutorial:nav
   :domain:usecase --> :domain:model
+  :domain:usecase --> :domain:repository
+  :domain:repository --> :domain:model
   :feature:settings:extension --> :domain:usecase
   :feature:settings:extension --> :feature:settings:common
   :feature:settings:security --> :domain:usecase
@@ -173,6 +177,7 @@ class :feature:settings:folder kotlin-multiplatform
 class :feature:settings:info kotlin-multiplatform
 class :feature:tutorial:nav kotlin-multiplatform
 class :domain:model kotlin-multiplatform
+class :domain:repository kotlin-multiplatform
 class :feature:settings:extension kotlin-multiplatform
 class :feature:settings:security kotlin-multiplatform
 class :feature:authentication:nav kotlin-multiplatform

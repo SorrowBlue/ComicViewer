@@ -5,5 +5,16 @@
 package com.sorrowblue.comicviewer.domain.usecase.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.Flow
 
-interface CollectionSettingsUseCase : ManageSettingsUseCase<CollectionSettings>
+@Inject
+class CollectionSettingsUseCase(private val settingsRepository: SettingsRepository) :
+    ManageSettingsUseCase<CollectionSettings> {
+    override val settings: Flow<CollectionSettings> = settingsRepository.collectionSettings
+
+    override suspend fun edit(action: (CollectionSettings) -> CollectionSettings) {
+        settingsRepository.updateCollectionSettings(action)
+    }
+}
