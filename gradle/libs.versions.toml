@@ -44,6 +44,7 @@ filekit = "0.16.0"
 java = "21"
 jcifs = "3.0.3"
 junit = "4.13.2"
+kioarch = "0.3.3"
 kmpfile = "0.8.0"
 konture = "0.8.4"
 kotlin = "2.4.20"
@@ -136,7 +137,7 @@ filekit-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compos
 filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "filekit" }
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version = "0.3.2" }
+kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version.ref = "kioarch" }
 kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
 kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
 konture = { group = "io.github.baole", name = "konture", version.ref = "konture" }
