@@ -57,6 +57,8 @@ graph LR
     KotlinMultiplatformFeatureConventionPlugin --> MultiplatformLibraryConventionPlugin
     KotlinMultiplatformFeatureConventionPlugin --> MultiplatformComposeConventionPlugin
     KotlinMultiplatformFeatureConventionPlugin --> DiConventionPlugin
+```
+
 ## Module configuration
 
 | Module  |                |              | Overview               |

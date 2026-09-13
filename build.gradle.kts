@@ -1,4 +1,5 @@
 import dev.detekt.gradle.report.ReportMergeTask
+import dev.iurysouza.modulegraph.Orientation
 import nl.littlerobots.vcu.plugin.resolver.VersionSelectors
 
 plugins {
@@ -160,4 +161,45 @@ val reportMerge = tasks.register("reportMerge", ReportMergeTask::class) {
 tasks.updateDaemonJvm {
     vendor = JvmVendorSpec.ADOPTIUM
     languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+}
+
+moduleGraphConfig {
+    listOf(
+        ":data:coil",
+        ":data:database",
+        ":data:datastore",
+        ":data:reader:document",
+        ":data:reader:zip",
+        ":data:storage",
+        ":data:storage:device",
+        ":data:storage:smb",
+        ":data:sync",
+        ":domain:model",
+        ":domain:repository",
+        ":domain:service",
+        ":domain:usecase",
+        ":feature:authentication",
+        ":feature:book",
+        ":feature:bookshelf",
+        ":feature:collection",
+        ":feature:folder",
+        ":feature:history",
+        ":feature:readlater",
+        ":feature:search",
+        ":feature:settings",
+        ":feature:tutorial",
+    ).forEach {
+        graph(
+            readmePath = "${it.split(":").filter { it.isNotEmpty() }.joinToString("/")}/README.md",
+            heading = "## Module dependency graph",
+        ) {
+            rootModulesRegex = it
+            setStyleByModuleType = true
+            nestingEnabled = true
+            showFullPath = false
+            showTransitiveDependencies = true
+            orientation = Orientation.TOP_TO_BOTTOM
+            excludedModulesRegex = ":|:framework.*"
+        }
+    }
 }
