@@ -62,11 +62,15 @@ data class FolderDisplaySettings(
      * @return The sort type for the folder, or the default sort type if not
      *    set.
      */
-    fun currentSortType(bookshelfId: BookshelfId, path: String): SortType = folderScopeOnlyList
-        .find {
-            it.bookshelfId == bookshelfId && it.path == path
-        }?.sortType
-        ?: sortType
+    fun currentSortType(bookshelfId: BookshelfId, path: String): SortType {
+        val targetList = folderScopeOnlyList.filter { it.bookshelfId == bookshelfId }
+        targetList.find { it.path == path }?.let { return it.sortType }
+        return targetList
+            .filter { it.includeSubfolders && isSubfolder(parent = it.path, child = path) }
+            .maxByOrNull { it.path.length }
+            ?.sortType
+            ?: sortType
+    }
 
     /**
      * 指定されたフォルダーが個別ソート設定を持っているかを判定します。
@@ -77,6 +81,26 @@ data class FolderDisplaySettings(
      */
     fun isFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean = folderScopeOnlyList
         .any { it.bookshelfId == bookshelfId && it.path == path }
+
+    /**
+     * 指定されたフォルダーが子フォルダーへの適用を有効にしているかを判定します。
+     *
+     * @param bookshelfId 本棚ID
+     * @param path フォルダーパス
+     * @return 子フォルダーへの適用が有効な場合は true
+     */
+    fun isIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean = folderScopeOnlyList
+        .find { it.bookshelfId == bookshelfId && it.path == path }
+        ?.includeSubfolders ?: false
+}
+
+private fun isSubfolder(parent: String, child: String): Boolean {
+    if (parent == child) return false
+    return if (parent == "/" || parent.endsWith("/")) {
+        child.startsWith(parent)
+    } else {
+        child.startsWith("$parent/")
+    }
 }
 
 /** Default values for [FolderDisplaySettings]. */
@@ -134,4 +158,5 @@ data class FolderScopeOnly(
     @ProtoNumber(1) val bookshelfId: BookshelfId,
     @ProtoNumber(2) val path: String,
     @ProtoNumber(3) val sortType: SortType,
+    @ProtoNumber(4) val includeSubfolders: Boolean = false,
 )
