@@ -41,7 +41,7 @@ class CoroutineBookshelfScanManagerTest {
         assertFalse(manager.isScanningFile(id).first())
         manager.scanFile(id)
 
-        while (!fileCompleted) {
+        while (!fileCompleted || manager.isScanningFile(id).first()) {
             delay(10)
         }
 
@@ -71,7 +71,7 @@ class CoroutineBookshelfScanManagerTest {
         assertFalse(manager.isScanningThumbnail(id).first())
         manager.scanThumbnail(id)
 
-        while (!thumbnailCompleted) {
+        while (!thumbnailCompleted || manager.isScanningThumbnail(id).first()) {
             delay(10)
         }
 
