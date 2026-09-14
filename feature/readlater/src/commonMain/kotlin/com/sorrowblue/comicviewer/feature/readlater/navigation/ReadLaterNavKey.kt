@@ -16,10 +16,10 @@ import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.readlater.ReadLaterScreenRoot
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_title
 import dev.zacsweers.metro.AppScope

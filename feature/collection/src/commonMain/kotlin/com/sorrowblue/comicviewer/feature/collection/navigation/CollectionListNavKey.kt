@@ -17,10 +17,10 @@ import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNa
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
 import dev.zacsweers.metro.AppScope

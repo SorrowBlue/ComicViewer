@@ -58,7 +58,7 @@ kotlin {
             dependencies {
                 rootProject.subprojects.filterNot {
                     it.path == project.path || it.path.startsWith(projects.app.path) ||
-                        it.path == projects.framework.navkeyProcessor.path ||
+                        it.path == projects.framework.navigation.processor.path ||
                         it.path == projects.kontureTest.path
                 }.forEach {
                     val hasSource = it.projectDir.resolve("src").exists()

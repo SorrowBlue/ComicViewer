@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
-import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
 
 val LocalNavigationItems = staticCompositionLocalOf<NavigationItems> { DefaultNavigationItems }
 

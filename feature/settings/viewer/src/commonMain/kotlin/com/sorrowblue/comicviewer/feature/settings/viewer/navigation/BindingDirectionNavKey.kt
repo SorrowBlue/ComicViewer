@@ -12,8 +12,8 @@ import androidx.navigation3.runtime.metadata
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.ReadingDirectionScreenRoot
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import kotlinx.serialization.Serializable
 
 @Serializable

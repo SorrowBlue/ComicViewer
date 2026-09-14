@@ -16,10 +16,10 @@ import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Shelves
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf

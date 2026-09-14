@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.ksp
+package com.sorrowblue.comicviewer.framework.navigation.processor
 
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
@@ -74,7 +74,7 @@ internal class NavKeyProcessor(
                 appendLine("import ${key.qualifiedName?.asString()}")
             }
             appendLine("import androidx.navigation3.runtime.NavKey")
-            appendLine("import com.sorrowblue.comicviewer.framework.ui.navigation3.NavKeyEntry")
+            appendLine("import com.sorrowblue.comicviewer.framework.navigation.NavKeyEntry")
             appendLine("import dev.zacsweers.metro.AppScope")
             appendLine("import dev.zacsweers.metro.BindingContainer")
             appendLine("import dev.zacsweers.metro.ContributesTo")
@@ -114,7 +114,7 @@ internal class NavKeyProcessor(
     }
 
     private fun processNavigationEntries(resolver: Resolver) {
-        val symbols = resolver.getSymbolsWithAnnotation("com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry")
+        val symbols = resolver.getSymbolsWithAnnotation("com.sorrowblue.comicviewer.framework.navigation.NavigationEntry")
         val functions = symbols.filterIsInstance<KSFunctionDeclaration>().toList()
         if (functions.isEmpty()) return
 
@@ -140,8 +140,8 @@ internal class NavKeyProcessor(
                 appendLine()
                 appendLine("import androidx.navigation3.runtime.EntryProviderScope")
                 appendLine("import androidx.navigation3.runtime.NavKey")
-                appendLine("import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator")
-                appendLine("import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntryProvider")
+                appendLine("import com.sorrowblue.comicviewer.framework.navigation.NavigationEntryProvider")
+                appendLine("import com.sorrowblue.comicviewer.framework.navigation.Navigator")
                 appendLine("import dev.zacsweers.metro.AppScope")
                 appendLine("import dev.zacsweers.metro.ContributesIntoSet")
                 appendLine()
@@ -180,7 +180,7 @@ internal class NavKeyProcessor(
             val decl = resolved.declaration as? KSClassDeclaration ?: continue
             val qualifiedName = decl.qualifiedName?.asString()
             if (qualifiedName == "androidx.navigation3.runtime.NavKey" ||
-                qualifiedName == "com.sorrowblue.comicviewer.framework.ui.navigation.NavigationKey"
+                qualifiedName == "com.sorrowblue.comicviewer.framework.navigation.NavigationKey"
             ) {
                 return true
             }

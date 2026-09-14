@@ -16,9 +16,9 @@ import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.search.SearchScreenRoot
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

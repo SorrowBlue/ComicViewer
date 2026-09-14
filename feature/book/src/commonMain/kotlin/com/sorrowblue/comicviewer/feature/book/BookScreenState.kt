@@ -118,9 +118,9 @@ private class BookScreenStateImpl(
     private val coroutineScope: CoroutineScope,
     private val systemUiController: SystemUiController,
     lifecycle: Lifecycle,
-    private val bookSettingsFlow: SharedFlow<BookSettings>,
+    bookSettingsFlow: SharedFlow<BookSettings>,
     private val viewerSettingsFlow: SharedFlow<ViewerSettings>,
-    private val pageItemListFlow: Flow<List<PageItem>>,
+    pageItemListFlow: Flow<List<PageItem>>,
     private val updateLastReadPage: (Int) -> Unit,
     private val onPageLoaded: (UnratedPage, Boolean) -> Unit,
 ) : BookScreenState {

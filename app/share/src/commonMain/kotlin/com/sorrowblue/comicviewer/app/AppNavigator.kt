@@ -12,10 +12,10 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.appGraph
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.rememberNavigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.serializer
-import com.sorrowblue.comicviewer.framework.ui.navigation3.subclass
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.navigation.rememberNavigator
+import com.sorrowblue.comicviewer.framework.navigation.serializer
+import com.sorrowblue.comicviewer.framework.navigation.subclass
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual

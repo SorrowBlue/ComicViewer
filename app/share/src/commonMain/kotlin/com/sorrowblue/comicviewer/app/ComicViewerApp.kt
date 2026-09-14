@@ -37,13 +37,13 @@ import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.appGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.locale.ProvideLocalAppLocaleIso
-import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
 import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import logcat.logcat

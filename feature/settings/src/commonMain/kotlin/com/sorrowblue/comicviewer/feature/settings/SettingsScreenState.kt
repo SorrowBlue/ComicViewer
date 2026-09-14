@@ -19,7 +19,7 @@ import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecurityS
 import com.sorrowblue.comicviewer.feature.settings.utils.AppLocaleSettingsLauncher
 import com.sorrowblue.comicviewer.feature.settings.utils.rememberAppLocaleSettingsLauncher
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
+import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
 
 internal interface SettingsScreenState {
     val uiState: SettingsScreenUiState

@@ -10,8 +10,8 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.info.delete.BookshelfDeleteScreenRoot
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfInfoNavKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import kotlinx.serialization.Serializable
 
 @Serializable

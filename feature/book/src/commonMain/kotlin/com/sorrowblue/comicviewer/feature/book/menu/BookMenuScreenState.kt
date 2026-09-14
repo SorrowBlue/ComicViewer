@@ -48,7 +48,7 @@ internal interface BookMenuScreenState {
 }
 
 private class BookMenuScreenStateImpl(
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
     lifecycle: Lifecycle,
     private val bookSettingsFlow: SharedFlow<BookSettings>,
     private val updateBookSettings: (BookSettings) -> Unit,

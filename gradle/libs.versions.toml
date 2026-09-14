@@ -204,6 +204,7 @@ comicviewer-di = { id = "comicviewer.primitive.metro" }
 comicviewer-multiplatformCompose = { id = "comicviewer.convention.multiplatform-compose" }
 comicviewer-multiplatformFeature = { id = "comicviewer.convention.multiplatform-feature" }
 comicviewer-multiplatformLibrary = { id = "comicviewer.convention.multiplatform-library" }
+comicviewer-navigationLibrary = { id = "comicviewer.convention.navigation-library" }
 comicviewer-primitive-aboutlibraries = { id = "comicviewer.primitive.aboutlibraries" }
 comicviewer-primitive-detekt = { id = "comicviewer.primitive.detekt" }
 comicviewer-primitive-dokka = { id = "comicviewer.primitive.dokka" }
