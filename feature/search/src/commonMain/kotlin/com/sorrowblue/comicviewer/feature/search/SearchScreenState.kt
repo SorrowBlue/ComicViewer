@@ -16,6 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -61,10 +64,12 @@ internal fun rememberSearchScreenState(
     val coroutineScope = rememberCoroutineScope()
     val cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
     val lazyGridState = rememberLazyGridState(cacheWindow)
-    val state = remember(lazyGridState) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val state = remember(lazyGridState, lifecycle) {
         SearchScreenStateImpl(
             path = path,
             lazyGridState = lazyGridState,
+            lifecycle = lifecycle,
             coroutineScope = coroutineScope,
             searchConditionFlow = viewModel.searchConditionFlow,
             updateSearchCondition = viewModel::updateSearchCondition,
@@ -78,6 +83,7 @@ internal fun rememberSearchScreenState(
 private class SearchScreenStateImpl(
     private val path: String,
     override val lazyGridState: LazyGridState,
+    lifecycle: Lifecycle,
     coroutineScope: CoroutineScope,
     private val searchConditionFlow: StateFlow<SearchCondition>,
     private val updateSearchCondition: (SearchCondition) -> Unit,
@@ -91,9 +97,12 @@ private class SearchScreenStateImpl(
     override var isSkipFirstRefresh by mutableStateOf(true)
 
     init {
-        searchConditionFlow.onEach {
-            uiState = uiState.copy(searchCondition = it)
-        }.launchIn(coroutineScope)
+        searchConditionFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(searchCondition = it)
+            }
+            .launchIn(coroutineScope)
     }
 
     override fun onPeriodClick(period: SearchCondition.Period) {

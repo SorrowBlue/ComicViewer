@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
@@ -56,10 +59,12 @@ internal fun rememberViewerSettingsScreenState(
 ): ViewerSettingsScreenState {
     val coroutineScope = rememberCoroutineScope()
     val systemUiController = rememberSystemUiController()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(lifecycle) {
         ViewerSettingsScreenStateImpl(
             coroutineScope = coroutineScope,
             systemUiController = systemUiController,
+            lifecycle = lifecycle,
             settingsFlow = viewModel.settingsFlow,
             updateSettings = viewModel::updateSettings,
         )
@@ -69,6 +74,7 @@ internal fun rememberViewerSettingsScreenState(
 private class ViewerSettingsScreenStateImpl(
     private val coroutineScope: CoroutineScope,
     private val systemUiController: SystemUiController,
+    lifecycle: Lifecycle,
     settingsFlow: SharedFlow<ViewerSettings>,
     private val updateSettings: ((ViewerSettings) -> ViewerSettings) -> Unit,
 ) : ViewerSettingsScreenState {
@@ -78,21 +84,24 @@ private class ViewerSettingsScreenStateImpl(
         private set
 
     init {
-        settingsFlow.onEach {
-            uiState = uiState.copy(
-                isStatusBarShow = it.showStatusBar,
-                isNavigationBarShow = it.showNavigationBar,
-                isTurnOnScreen = it.keepOnScreen,
-                isDisplayFirstPage = it.alwaysOpenFromFirstPage,
-                isCutWhitespace = it.cutWhitespace,
-                preloadPages = it.readAheadPageCount.toFloat(),
-                imageQuality = it.imageQuality.toFloat(),
-                imageFormat = it.imageFormat,
-                isFixScreenBrightness = it.enableBrightnessControl,
-                screenBrightness = it.screenBrightness,
-                bindingDirection = it.bindingDirection,
-            )
-        }.launchIn(coroutineScope)
+        settingsFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(
+                    isStatusBarShow = it.showStatusBar,
+                    isNavigationBarShow = it.showNavigationBar,
+                    isTurnOnScreen = it.keepOnScreen,
+                    isDisplayFirstPage = it.alwaysOpenFromFirstPage,
+                    isCutWhitespace = it.cutWhitespace,
+                    preloadPages = it.readAheadPageCount.toFloat(),
+                    imageQuality = it.imageQuality.toFloat(),
+                    imageFormat = it.imageFormat,
+                    isFixScreenBrightness = it.enableBrightnessControl,
+                    screenBrightness = it.screenBrightness,
+                    bindingDirection = it.bindingDirection,
+                )
+            }
+            .launchIn(coroutineScope)
     }
 
     override fun onStatusBarShowChange(value: Boolean) {

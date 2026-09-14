@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
@@ -28,9 +31,11 @@ internal fun rememberImageCacheScreenState(
 ): ImageCacheScreenState {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    return remember(scope, snackbarHostState) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(scope, snackbarHostState, lifecycle) {
         ImageCacheScreenStateImpl(
             coroutineScope = scope,
+            lifecycle = lifecycle,
             snackbarHostState = snackbarHostState,
             eventFlow = viewModel.eventFlow,
             bookshelfImageCacheInfoFlow = viewModel.bookshelfImageCacheInfoFlow,
@@ -48,6 +53,7 @@ internal interface ImageCacheScreenState {
 
 private class ImageCacheScreenStateImpl(
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val snackbarHostState: SnackbarHostState,
     eventFlow: SharedFlow<ImageCacheViewModelEvent>,
     bookshelfImageCacheInfoFlow: SharedFlow<List<BookshelfImageCacheInfo>>,
@@ -67,14 +73,16 @@ private class ImageCacheScreenStateImpl(
                 imageCacheInfos = bookshelfImageCacheInfos,
                 otherImageCache = otherImageCache,
             )
-        }.launchIn(coroutineScope)
-        eventFlow.onEach {
-            when (it) {
-                is ImageCacheViewModelEvent.CompleteClearImageCache -> {
-                    snackbarHostState.showSnackbar("画像キャッシュを削除しました。")
+        }.flowWithLifecycle(lifecycle)
+            .launchIn(coroutineScope)
+        eventFlow.flowWithLifecycle(lifecycle)
+            .onEach {
+                when (it) {
+                    is ImageCacheViewModelEvent.CompleteClearImageCache -> {
+                        snackbarHostState.showSnackbar("画像キャッシュを削除しました。")
+                    }
                 }
-            }
-        }.launchIn(coroutineScope)
+            }.launchIn(coroutineScope)
     }
 
     override fun onClick(bookshelfId: BookshelfId, imageCache: ImageCache) {

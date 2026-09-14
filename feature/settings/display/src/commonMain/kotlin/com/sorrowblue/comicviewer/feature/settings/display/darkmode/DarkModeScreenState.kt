@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import dev.zacsweers.metrox.viewmodel.metroViewModel
@@ -29,9 +32,11 @@ internal fun rememberDarkModeScreenState(
     viewModel: DarkModeViewModel = metroViewModel(),
 ): DarkModeScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(coroutineScope) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(coroutineScope, lifecycle) {
         DarkModeScreenStateImpl(
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             settingsFlow = viewModel.settingsFlow,
             updateSettings = viewModel::updateSettings,
         )
@@ -40,15 +45,17 @@ internal fun rememberDarkModeScreenState(
 
 private class DarkModeScreenStateImpl(
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     settingsFlow: SharedFlow<DisplaySettings>,
     private val updateSettings: ((DisplaySettings) -> DisplaySettings, () -> Unit) -> Unit,
 ) : DarkModeScreenState {
     override var uiState by mutableStateOf(DarkModeScreenUiState())
 
     init {
-        settingsFlow.onEach {
-            uiState = uiState.copy(darkMode = it.darkMode)
-        }.launchIn(coroutineScope)
+        settingsFlow.flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(darkMode = it.darkMode)
+            }.launchIn(coroutineScope)
     }
 
     override fun onDarkModeChange(darkMode: DarkMode, done: () -> Unit) {

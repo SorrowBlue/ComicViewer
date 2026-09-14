@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
@@ -66,10 +69,12 @@ internal fun rememberBookshelfInfoContentsState(
         }
     val appState = LocalAppState.current
     val coroutineScope = rememberCoroutineScope()
-    val stateImpl = remember(bookshelfFolder, viewModel, appState) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val stateImpl = remember(bookshelfFolder, viewModel, appState, lifecycle) {
         BookshelfInfoContentsStateImpl(
             bookshelfFolder = bookshelfFolder,
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             viewModel = viewModel,
             appState = appState,
         )
@@ -86,6 +91,7 @@ internal fun rememberBookshelfInfoContentsState(
 private class BookshelfInfoContentsStateImpl(
     bookshelfFolder: BookshelfFolder,
     private val coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     private val viewModel: BookshelfInfoContentViewModel,
     private val appState: AppState,
 ) : BookshelfInfoContentsState {
@@ -107,12 +113,18 @@ private class BookshelfInfoContentsStateImpl(
         private set
 
     init {
-        viewModel.isScanningFile.onEach {
-            uiState = uiState.copy(isScanningFile = it)
-        }.launchIn(coroutineScope)
-        viewModel.isScanningThumbnail.onEach {
-            uiState = uiState.copy(isScanningThumbnail = it)
-        }.launchIn(coroutineScope)
+        viewModel.isScanningFile
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(isScanningFile = it)
+            }
+            .launchIn(coroutineScope)
+        viewModel.isScanningThumbnail
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(isScanningThumbnail = it)
+            }
+            .launchIn(coroutineScope)
     }
 
     override fun onScanFileClick() {

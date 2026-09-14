@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -46,10 +49,12 @@ internal fun rememberSmartCollectionEditScreenState(
     val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = SmartCollectionForm(), saver = kSerializableSaver())
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     return rememberSaveable(
         saver = SmartCollectionEditScreenImpl.saver(
             coroutineScope = coroutineScope,
             formState = formState,
+            lifecycle = lifecycle,
             collectionFlow = viewModel.collectionFlow,
             bookshelfListFlow = viewModel.bookshelfListFlow,
             eventFlow = viewModel.event,
@@ -60,6 +65,7 @@ internal fun rememberSmartCollectionEditScreenState(
             isDataLoaded = false,
             coroutineScope = coroutineScope,
             formState = formState,
+            lifecycle = lifecycle,
             collectionFlow = viewModel.collectionFlow,
             bookshelfListFlow = viewModel.bookshelfListFlow,
             eventFlow = viewModel.event,
@@ -74,6 +80,7 @@ private class SmartCollectionEditScreenImpl(
     var isDataLoaded: Boolean,
     private val coroutineScope: CoroutineScope,
     private val formState: FormState<SmartCollectionForm>,
+    lifecycle: Lifecycle,
     collectionFlow: SharedFlow<SmartCollection?>,
     bookshelfListFlow: SharedFlow<List<Bookshelf>?>,
     eventFlow: SharedFlow<SmartCollectionEditViewModelEvent>,
@@ -83,6 +90,7 @@ private class SmartCollectionEditScreenImpl(
         fun saver(
             coroutineScope: CoroutineScope,
             formState: FormState<SmartCollectionForm>,
+            lifecycle: Lifecycle,
             collectionFlow: SharedFlow<SmartCollection?>,
             bookshelfListFlow: SharedFlow<List<Bookshelf>?>,
             eventFlow: SharedFlow<SmartCollectionEditViewModelEvent>,
@@ -94,6 +102,7 @@ private class SmartCollectionEditScreenImpl(
                     isDataLoaded = it,
                     coroutineScope = coroutineScope,
                     formState = formState,
+                    lifecycle = lifecycle,
                     collectionFlow = collectionFlow,
                     bookshelfListFlow = bookshelfListFlow,
                     eventFlow = eventFlow,
@@ -143,13 +152,16 @@ private class SmartCollectionEditScreenImpl(
                 uiState = uiState.copy(enabledForm = true)
             }
         }
-        eventFlow.onEach { event ->
-            when (event) {
-                SmartCollectionEditViewModelEvent.Complete -> {
-                    this.event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+        eventFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { event ->
+                when (event) {
+                    SmartCollectionEditViewModelEvent.Complete -> {
+                        this.event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+                    }
                 }
             }
-        }.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
     }
 
     override fun onSubmit(formData: SmartCollectionForm) {

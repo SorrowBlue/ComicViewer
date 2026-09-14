@@ -21,7 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
@@ -110,9 +113,11 @@ fun rememberFileListDisplayItemState(
     viewModel: FileListDisplayItemViewModel = metroViewModel(),
 ): FileListDisplayItemState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(coroutineScope, viewModel) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(coroutineScope, viewModel, lifecycle) {
         FileListDisplayItemStateImpl(
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             fileListDisplayFlow = viewModel.fileListDisplayFlow,
             toggleFileListDisplay = viewModel::toggleFileListDisplay,
         )
@@ -127,13 +132,16 @@ interface FileListDisplayItemState {
 
 private class FileListDisplayItemStateImpl(
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     fileListDisplayFlow: SharedFlow<FileListDisplay>,
     private val toggleFileListDisplay: () -> Unit,
 ) : FileListDisplayItemState {
     override var fileListDisplay by mutableStateOf(FileListDisplay.Grid)
 
     init {
-        fileListDisplayFlow.onEach { fileListDisplay = it }.launchIn(coroutineScope)
+        fileListDisplayFlow.flowWithLifecycle(lifecycle)
+            .onEach { fileListDisplay = it }
+            .launchIn(coroutineScope)
     }
 
     override fun onClick() {

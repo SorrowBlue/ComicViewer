@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
@@ -23,9 +26,11 @@ internal actual fun rememberSecuritySettingsScreenState(
 ): SecuritySettingsScreenState {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(scope, snackbarHostState, lifecycle, viewModel) {
         SecuritySettingsScreenStateImpl(
             scope = scope,
+            lifecycle = lifecycle,
             snackbarHostState = snackbarHostState,
             settingsFlow = viewModel.settingsFlow,
             updateSettings = viewModel::updateSettings,
@@ -35,6 +40,7 @@ internal actual fun rememberSecuritySettingsScreenState(
 
 private class SecuritySettingsScreenStateImpl(
     scope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val snackbarHostState: SnackbarHostState,
     settingsFlow: StateFlow<SecuritySettings>,
     private val updateSettings: ((SecuritySettings) -> SecuritySettings) -> Unit,
@@ -43,13 +49,14 @@ private class SecuritySettingsScreenStateImpl(
 
     init {
         uiState = uiState.copy(isBiometricCanBeUsed = false)
-        settingsFlow.onEach {
-            uiState = uiState.copy(
-                isAuthEnabled = it.password != null,
-                isBackgroundLockEnabled = it.lockOnBackground,
-                isBiometricEnabled = it.useBiometrics,
-            )
-        }.launchIn(scope)
+        settingsFlow.flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(
+                    isAuthEnabled = it.password != null,
+                    isBackgroundLockEnabled = it.lockOnBackground,
+                    isBiometricEnabled = it.useBiometrics,
+                )
+            }.launchIn(scope)
     }
 
     override fun onChangeBackgroundLockEnabled(value: Boolean) {

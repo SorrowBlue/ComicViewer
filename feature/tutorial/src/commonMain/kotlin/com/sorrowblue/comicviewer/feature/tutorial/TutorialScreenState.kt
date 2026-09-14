@@ -12,6 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -38,10 +41,12 @@ internal fun rememberTutorialScreenState(
 ): TutorialScreenState {
     val coroutineScope = rememberCoroutineScope()
     val pageState = rememberPagerState { TutorialSheet.entries.size }
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(lifecycle) {
         TutorialScreenStateImpl(
             coroutineScope = coroutineScope,
             pageState = pageState,
+            lifecycle = lifecycle,
             bindingDirection = viewModel.bindingDirection,
             updateBindingDirection = viewModel::updateBindingDirection,
         )
@@ -51,6 +56,7 @@ internal fun rememberTutorialScreenState(
 private class TutorialScreenStateImpl(
     private val coroutineScope: CoroutineScope,
     override val pageState: PagerState,
+    lifecycle: Lifecycle,
     bindingDirection: SharedFlow<BindingDirection>,
     private val updateBindingDirection: (BindingDirection) -> Unit,
 ) : TutorialScreenState {
@@ -60,9 +66,12 @@ private class TutorialScreenStateImpl(
     override val enabledBack: Boolean get() = pageState.currentPage != 0
 
     init {
-        bindingDirection.onEach {
-            uiState = uiState.copy(bindingDirection = it)
-        }.launchIn(coroutineScope)
+        bindingDirection
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(bindingDirection = it)
+            }
+            .launchIn(coroutineScope)
     }
 
     override fun updateReadingDirection(bindingDirection: BindingDirection) {

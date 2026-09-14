@@ -11,6 +11,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegisterBookshelfUseCase
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditType
@@ -63,6 +66,7 @@ internal fun rememberBookshelfEditorScreenState(
         },
 ): BookshelfEditorScreenState {
     val coroutineScope = rememberCoroutineScope()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     val permissionRequester = rememberLocalNetworkPermissionRequester()
     val state = when (editType.bookshelfType) {
         BookshelfType.SMB -> {
@@ -83,6 +87,7 @@ internal fun rememberBookshelfEditorScreenState(
             rememberSaveable(
                 saver = SmbEditorScreenStateImpl.saver(
                     coroutineScope = coroutineScope,
+                    lifecycle = lifecycle,
                     formState = formState,
                     initialForm = SmbEditorForm(),
                     eventFlow = viewModel.event,
@@ -92,6 +97,7 @@ internal fun rememberBookshelfEditorScreenState(
             ) {
                 SmbEditorScreenStateImpl(
                     coroutineScope = coroutineScope,
+                    lifecycle = lifecycle,
                     formState = formState,
                     initialForm = SmbEditorForm(),
                     eventFlow = viewModel.event,
@@ -110,8 +116,9 @@ internal fun rememberBookshelfEditorScreenState(
             rememberSaveable(
                 saver = LocalEditorScreenStateImpl.saver(
                     coroutineScope = coroutineScope,
+                    lifecycle = lifecycle,
                     formState = formState,
-                    initialForm = SmbEditorForm(),
+                    initialForm = DeviceEditorForm(),
                     eventFlow = viewModel.event,
                     bookshelfEditorFormFlow = viewModel.formFlow,
                     submit = viewModel::submit,
@@ -119,6 +126,7 @@ internal fun rememberBookshelfEditorScreenState(
             ) {
                 LocalEditorScreenStateImpl(
                     coroutineScope = coroutineScope,
+                    lifecycle = lifecycle,
                     formState = formState,
                     initialForm = DeviceEditorForm(),
                     eventFlow = viewModel.event,
@@ -161,19 +169,21 @@ internal interface SmbEditorScreenState : BookshelfEditorScreenState {
 private class SmbEditorScreenStateImpl(
     isInitialized: Boolean = false,
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val formState: FormState<SmbEditorForm>,
     initialForm: BookshelfEditorForm,
     eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
     bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
     submit: (BookshelfEditorForm) -> Unit,
 ) : BookshelfEditorScreenStateImpl(
-    isInitialized,
-    coroutineScope,
-    formState,
-    initialForm,
-    eventFlow,
-    bookshelfEditorFormFlow,
-    submit,
+    isInitialized = isInitialized,
+    coroutineScope = coroutineScope,
+    lifecycle = lifecycle,
+    formState = formState,
+    initialForm = initialForm,
+    eventFlow = eventFlow,
+    bookshelfEditorFormFlow = bookshelfEditorFormFlow,
+    submit = submit,
 ),
     SmbEditorScreenState {
     override lateinit var form: Form<SmbEditorForm>
@@ -187,6 +197,7 @@ private class SmbEditorScreenStateImpl(
     companion object {
         fun saver(
             coroutineScope: CoroutineScope,
+            lifecycle: Lifecycle,
             formState: FormState<SmbEditorForm>,
             initialForm: BookshelfEditorForm,
             eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
@@ -198,6 +209,7 @@ private class SmbEditorScreenStateImpl(
                 SmbEditorScreenStateImpl(
                     isInitialized = isInitialized,
                     coroutineScope = coroutineScope,
+                    lifecycle = lifecycle,
                     formState = formState,
                     initialForm = initialForm,
                     eventFlow = eventFlow,
@@ -220,19 +232,21 @@ internal interface LocalEditorScreenState : BookshelfEditorScreenState {
 private class LocalEditorScreenStateImpl(
     isInitialized: Boolean = false,
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val formState: FormState<DeviceEditorForm>,
     initialForm: BookshelfEditorForm,
     eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
     bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
     submit: (BookshelfEditorForm) -> Unit,
 ) : BookshelfEditorScreenStateImpl(
-    isInitialized,
-    coroutineScope,
-    formState,
-    initialForm,
-    eventFlow,
-    bookshelfEditorFormFlow,
-    submit,
+    isInitialized = isInitialized,
+    coroutineScope = coroutineScope,
+    lifecycle = lifecycle,
+    formState = formState,
+    initialForm = initialForm,
+    eventFlow = eventFlow,
+    bookshelfEditorFormFlow = bookshelfEditorFormFlow,
+    submit = submit,
 ),
     LocalEditorScreenState {
     override lateinit var form: Form<DeviceEditorForm>
@@ -251,6 +265,7 @@ private class LocalEditorScreenStateImpl(
     companion object {
         fun saver(
             coroutineScope: CoroutineScope,
+            lifecycle: Lifecycle,
             formState: FormState<DeviceEditorForm>,
             initialForm: BookshelfEditorForm,
             eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
@@ -262,6 +277,7 @@ private class LocalEditorScreenStateImpl(
                 LocalEditorScreenStateImpl(
                     isInitialized = isInitialized,
                     coroutineScope = coroutineScope,
+                    lifecycle = lifecycle,
                     formState = formState,
                     initialForm = initialForm,
                     eventFlow = eventFlow,
@@ -276,6 +292,7 @@ private class LocalEditorScreenStateImpl(
 private abstract class BookshelfEditorScreenStateImpl(
     protected var isInitialized: Boolean,
     var coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val formState: FormState<out BookshelfEditorForm>,
     override var initialForm: BookshelfEditorForm,
     eventFlow: SharedFlow<BookshelfEditorViewModelEvent>,
@@ -291,69 +308,71 @@ private abstract class BookshelfEditorScreenStateImpl(
             uiState = uiState.copy(progress = false)
         } else {
             uiState = uiState.copy(progress = true)
-            bookshelfEditorFormFlow.onEach { form ->
-                if (form != null) {
-                    isInitialized = true
-                    initialForm = form
-                    @Suppress("UNCHECKED_CAST")
-                    (formState as FormState<BookshelfEditorForm>).reset(form)
-                }
-                uiState = uiState.copy(progress = false)
-            }.launchIn(coroutineScope)
-        }
-        eventFlow.onEach { event ->
-            when (event) {
-                BookshelfEditorViewModelEvent.Complete -> {
-                    events.tryEmit(BookshelfEditorScreenEvent.Complete)
-                }
-
-                is BookshelfEditorViewModelEvent.RegisterError -> {
+            bookshelfEditorFormFlow.flowWithLifecycle(lifecycle)
+                .onEach { form ->
+                    if (form != null) {
+                        isInitialized = true
+                        initialForm = form
+                        @Suppress("UNCHECKED_CAST")
+                        (formState as FormState<BookshelfEditorForm>).reset(form)
+                    }
                     uiState = uiState.copy(progress = false)
-                    when (event.error) {
-                        RegisterBookshelfUseCase.Error.Auth -> {
-                            formState.setError(
-                                AuthField to FieldError(
-                                    getString(Res.string.bookshelf_edit_error_bad_auth),
-                                ),
-                            )
-                        }
+                }.launchIn(coroutineScope)
+        }
+        eventFlow.flowWithLifecycle(lifecycle)
+            .onEach { event ->
+                when (event) {
+                    BookshelfEditorViewModelEvent.Complete -> {
+                        events.tryEmit(BookshelfEditorScreenEvent.Complete)
+                    }
 
-                        RegisterBookshelfUseCase.Error.Host -> {
-                            formState.setError(
-                                HostField to FieldError(
-                                    getString(Res.string.bookshelf_edit_error_bad_host),
-                                ),
-                            )
-                            formState.setError(
-                                PortField to FieldError(
-                                    getString(Res.string.bookshelf_edit_error_bad_port),
-                                ),
-                            )
-                        }
+                    is BookshelfEditorViewModelEvent.RegisterError -> {
+                        uiState = uiState.copy(progress = false)
+                        when (event.error) {
+                            RegisterBookshelfUseCase.Error.Auth -> {
+                                formState.setError(
+                                    AuthField to FieldError(
+                                        getString(Res.string.bookshelf_edit_error_bad_auth),
+                                    ),
+                                )
+                            }
 
-                        RegisterBookshelfUseCase.Error.Network -> {
-                            formState.setError(
-                                "auth" to FieldError(
-                                    getString(Res.string.bookshelf_edit_error_bad_network),
-                                ),
-                            )
-                        }
+                            RegisterBookshelfUseCase.Error.Host -> {
+                                formState.setError(
+                                    HostField to FieldError(
+                                        getString(Res.string.bookshelf_edit_error_bad_host),
+                                    ),
+                                )
+                                formState.setError(
+                                    PortField to FieldError(
+                                        getString(Res.string.bookshelf_edit_error_bad_port),
+                                    ),
+                                )
+                            }
 
-                        RegisterBookshelfUseCase.Error.Path -> {
-                            formState.setError(
-                                PathFieldName to FieldError(
-                                    getString(Res.string.bookshelf_edit_error_bad_path),
-                                ),
-                            )
-                        }
+                            RegisterBookshelfUseCase.Error.Network -> {
+                                formState.setError(
+                                    "auth" to FieldError(
+                                        getString(Res.string.bookshelf_edit_error_bad_network),
+                                    ),
+                                )
+                            }
 
-                        RegisterBookshelfUseCase.Error.System -> {
-                            formState.setError("auth" to FieldError("unknown error"))
+                            RegisterBookshelfUseCase.Error.Path -> {
+                                formState.setError(
+                                    PathFieldName to FieldError(
+                                        getString(Res.string.bookshelf_edit_error_bad_path),
+                                    ),
+                                )
+                            }
+
+                            RegisterBookshelfUseCase.Error.System -> {
+                                formState.setError("auth" to FieldError("unknown error"))
+                            }
                         }
                     }
                 }
-            }
-        }.launchIn(coroutineScope)
+            }.launchIn(coroutineScope)
     }
 
     override fun onSubmit(form: BookshelfEditorForm) {

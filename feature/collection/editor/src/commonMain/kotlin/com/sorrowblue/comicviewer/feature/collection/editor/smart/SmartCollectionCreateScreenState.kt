@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
@@ -49,10 +52,12 @@ internal fun rememberSmartCollectionCreateScreenState(
         saver = kSerializableSaver(),
         policy = FormPolicy(FormOptions(false)),
     )
-    return remember(viewModel) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(viewModel, lifecycle) {
         SmartCollectionCreateScreenStateImpl(
             coroutineScope = coroutineScope,
             formState = formState,
+            lifecycle = lifecycle,
             bookshelfListFlow = viewModel.bookshelfListFlow,
             eventFlow = viewModel.event,
             submit = viewModel::onSubmit,
@@ -65,6 +70,7 @@ internal fun rememberSmartCollectionCreateScreenState(
 private class SmartCollectionCreateScreenStateImpl(
     coroutineScope: CoroutineScope,
     private val formState: FormState<SmartCollectionForm>,
+    lifecycle: Lifecycle,
     bookshelfListFlow: SharedFlow<List<Bookshelf>?>,
     eventFlow: SharedFlow<SmartCollectionCreateViewModelEvent>,
     private val submit: (SmartCollectionForm) -> Unit,
@@ -78,31 +84,36 @@ private class SmartCollectionCreateScreenStateImpl(
 
     init {
         uiState = uiState.copy(enabledForm = false)
-        bookshelfListFlow.onEach { list ->
-            if (list.isNullOrEmpty()) {
-                formState.setError(
-                    BookshelfField to FieldError(
-                        getString(Res.string.collection_editor_error_not_get_bookshelf),
-                    ),
-                )
+        bookshelfListFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { list ->
+                if (list.isNullOrEmpty()) {
+                    formState.setError(
+                        BookshelfField to FieldError(
+                            getString(Res.string.collection_editor_error_not_get_bookshelf),
+                        ),
+                    )
+                    uiState = uiState.copy(enabledForm = true)
+                } else {
+                    uiState = uiState.copy(
+                        bookshelf = buildMap {
+                            put(null, getString(Res.string.collection_editor_label_all_bookshelf))
+                            putAll(list.map { it.id to it.displayName })
+                        },
+                    )
+                }
                 uiState = uiState.copy(enabledForm = true)
-            } else {
-                uiState = uiState.copy(
-                    bookshelf = buildMap {
-                        put(null, getString(Res.string.collection_editor_label_all_bookshelf))
-                        putAll(list.map { it.id to it.displayName })
-                    },
-                )
             }
-            uiState = uiState.copy(enabledForm = true)
-        }.launchIn(coroutineScope)
-        eventFlow.onEach {
-            when (it) {
-                SmartCollectionCreateViewModelEvent.Complete -> {
-                    event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+            .launchIn(coroutineScope)
+        eventFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                when (it) {
+                    SmartCollectionCreateViewModelEvent.Complete -> {
+                        event.emit(SmartCollectionEditorScreenStateEvent.Complete)
+                    }
                 }
             }
-        }
             .launchIn(coroutineScope)
     }
 

@@ -9,6 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
@@ -52,10 +55,12 @@ internal fun rememberBasicCollectionCreateScreenState(
     val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
-    return remember(viewModel) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(viewModel, lifecycle) {
         BasicCollectionCreateScreenStateImpl(
             appState = appState,
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             eventFlow = viewModel.event,
             submitForm = viewModel::submitForm,
         )
@@ -67,6 +72,7 @@ internal fun rememberBasicCollectionCreateScreenState(
 private class BasicCollectionCreateScreenStateImpl(
     private val appState: AppState,
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     eventFlow: SharedFlow<BasicCollectionCreateViewModelEvent>,
     private val submitForm: (BasicCollectionForm) -> Unit,
 ) : BasicCollectionCreateScreenState {
@@ -77,29 +83,31 @@ private class BasicCollectionCreateScreenStateImpl(
     override val uiState by mutableStateOf(BasicCollectionsCreateScreenUiState())
 
     init {
-        eventFlow.onEach {
-            when (it) {
-                is BasicCollectionCreateViewModelEvent.CreateSuccess -> {
-                    event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                    appState.showSnackbar(
-                        getString(
-                            Res.string.collection_editor_msg_success_create,
-                            it.name,
-                        ),
-                    )
-                }
+        eventFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                when (it) {
+                    is BasicCollectionCreateViewModelEvent.CreateSuccess -> {
+                        event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
+                        appState.showSnackbar(
+                            getString(
+                                Res.string.collection_editor_msg_success_create,
+                                it.name,
+                            ),
+                        )
+                    }
 
-                is BasicCollectionCreateViewModelEvent.CreateAddSuccess -> {
-                    event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
-                    appState.showSnackbar(
-                        getString(
-                            Res.string.collection_editor_msg_success_create_add,
-                            it.name,
-                        ),
-                    )
+                    is BasicCollectionCreateViewModelEvent.CreateAddSuccess -> {
+                        event.tryEmit(BasicCollectionCreateScreenStateEvent.CreateComplete)
+                        appState.showSnackbar(
+                            getString(
+                                Res.string.collection_editor_msg_success_create_add,
+                                it.name,
+                            ),
+                        )
+                    }
                 }
             }
-        }
             .launchIn(coroutineScope)
     }
 
