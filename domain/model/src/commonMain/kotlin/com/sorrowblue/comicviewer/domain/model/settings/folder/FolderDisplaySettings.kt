@@ -67,6 +67,16 @@ data class FolderDisplaySettings(
             it.bookshelfId == bookshelfId && it.path == path
         }?.sortType
         ?: sortType
+
+    /**
+     * 指定されたフォルダーが個別ソート設定を持っているかを判定します。
+     *
+     * @param bookshelfId 本棚ID
+     * @param path フォルダーパス
+     * @return 個別設定が存在する場合は true
+     */
+    fun isFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean = folderScopeOnlyList
+        .any { it.bookshelfId == bookshelfId && it.path == path }
 }
 
 /** Default values for [FolderDisplaySettings]. */
