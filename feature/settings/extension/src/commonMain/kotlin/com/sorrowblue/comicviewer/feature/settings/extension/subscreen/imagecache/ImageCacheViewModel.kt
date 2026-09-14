@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.ClearImageCacheUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetBookshelfImageCacheInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.GetOtherImageCacheInfoUseCase
+import com.sorrowblue.comicviewer.domain.usecase.invoke
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
@@ -39,13 +40,13 @@ internal class ImageCacheViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val bookshelfImageCacheInfoFlow = refreshTrigger.flatMapLatest { _ ->
-        getBookshelfImageCacheInfoUseCase(GetBookshelfImageCacheInfoUseCase.Request).mapNotNull {
+        getBookshelfImageCacheInfoUseCase().mapNotNull {
             it.dataOrNull()
         }
     }.shareIn(viewModelScope, SharingStarted.Lazily)
 
     val otherImageCacheInfoFlow = refreshTrigger.mapNotNull { _ ->
-        getOtherImageCacheInfoUseCase(GetOtherImageCacheInfoUseCase.Request).dataOrNull()
+        getOtherImageCacheInfoUseCase().dataOrNull()
     }.shareIn(viewModelScope, SharingStarted.Lazily)
 
     val eventFlow: SharedFlow<ImageCacheViewModelEvent>

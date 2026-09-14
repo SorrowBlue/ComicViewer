@@ -118,7 +118,7 @@ class ScanBookshelfUseCaseTest {
             )
         }
 
-        val useCase = ScanBookshelfUseCase(
+        val useCase = ScanBookshelfUseCaseImpl(
             bookshelfRepository = fakeBookshelfRepository,
             fileRepository = fakeFileRepository,
             remoteStorageClientFactory = fakeClientFactory,
@@ -172,7 +172,7 @@ class ScanBookshelfUseCaseTest {
 
         val fakeSettingsRepository = object : FakeSettingsRepository() {}
 
-        val useCase = ScanBookshelfUseCase(
+        val useCase = ScanBookshelfUseCaseImpl(
             bookshelfRepository = fakeBookshelfRepository,
             fileRepository = fakeFileRepository,
             remoteStorageClientFactory = fakeClientFactory,

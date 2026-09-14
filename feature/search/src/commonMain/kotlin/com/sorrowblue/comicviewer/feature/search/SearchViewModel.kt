@@ -31,9 +31,11 @@ internal class SearchViewModel(
         field = MutableStateFlow(SearchCondition())
 
     val pagingDataFlow = pagingQueryFileUseCase(
-        PagingQueryFileUseCase.Request(PagingConfig(20), bookshelfId) {
-            searchConditionFlow.value
-        },
+        PagingQueryFileUseCase.Request(
+            bookshelfId = bookshelfId,
+            searchCondition = { searchConditionFlow.value },
+            pagingConfig = PagingConfig(20),
+        ),
     ).cachedIn(viewModelScope)
 
     fun updateSearchCondition(searchCondition: SearchCondition) {

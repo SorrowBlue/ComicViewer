@@ -98,7 +98,7 @@ internal class BookshelfDeleteViewModel(
 ) : ViewModel() {
 
     val bookshelfFlow =
-        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
+        getBookshelfInfoUseCase(bookshelfId)
             .mapNotNull { it.dataOrNull()?.bookshelf }
 
     fun delete(done: () -> Unit, error: () -> Unit) {

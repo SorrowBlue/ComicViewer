@@ -67,10 +67,9 @@ internal class FolderViewModel(
     val events = EventFlow<FolderScreenUiEvent>()
 
     val pagingFlow: Flow<PagingData<File>> = combine(
-        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
-            .map { resource ->
-                if (resource is Resource.Success) resource.data.bookshelf else null
-            }.distinctUntilChanged(),
+        getBookshelfInfoUseCase(bookshelfId).map { resource ->
+            if (resource is Resource.Success) resource.data.bookshelf else null
+        }.distinctUntilChanged(),
         isPermissionGranted,
     ) { bookshelf, permissionState ->
         bookshelf to permissionState

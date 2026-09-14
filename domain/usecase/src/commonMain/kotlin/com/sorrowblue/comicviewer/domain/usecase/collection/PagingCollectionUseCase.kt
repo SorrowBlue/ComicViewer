@@ -5,19 +5,19 @@
 package com.sorrowblue.comicviewer.domain.usecase.collection
 
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.Flow
+
+fun interface PagingCollectionUseCase : PagingUseCase<PagingConfig, Collection>
 
 @Inject
-class PagingCollectionUseCase(private val repository: CollectionRepository) :
-    PagingUseCase<PagingCollectionUseCase.Request, Collection>() {
-    data class Request(val pagingConfig: PagingConfig) : BaseRequest
+@ContributesBinding(AppScope::class)
+internal class PagingCollectionUseCaseImpl(private val repository: CollectionRepository) :
+    PagingCollectionUseCase {
 
-    override fun run(request: Request): Flow<PagingData<Collection>> =
-        repository.pagingDataFlow(request.pagingConfig)
+    override fun invoke(request: PagingConfig) = repository.pagingDataFlow(request)
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.sorrowblue.comicviewer.domain.usecase.invoke
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteAllReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.PagingReadLaterFileUseCase
 import dev.zacsweers.metro.AppScope
@@ -22,13 +23,11 @@ internal class ReadLaterViewModel(
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
 ) : ViewModel() {
 
-    val pagingDataFlow = pagingReadLaterFileUseCase(
-        PagingReadLaterFileUseCase.Request(PagingConfig(20)),
-    ).cachedIn(viewModelScope)
+    val pagingDataFlow = pagingReadLaterFileUseCase(PagingConfig(20)).cachedIn(viewModelScope)
 
     fun clearAll() {
         viewModelScope.launch {
-            deleteAllReadLaterUseCase(DeleteAllReadLaterUseCase.Request)
+            deleteAllReadLaterUseCase()
         }
     }
 }

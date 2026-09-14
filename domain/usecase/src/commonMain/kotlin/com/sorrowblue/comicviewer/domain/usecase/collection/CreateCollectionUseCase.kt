@@ -8,19 +8,17 @@ import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+abstract class CreateCollectionUseCase : OneShotUseCase<Collection, Collection, Unit>()
+
 @Inject
-class CreateCollectionUseCase(private val repository: CollectionRepository) :
-    OneShotUseCase<CreateCollectionUseCase.Request, Collection, CreateCollectionUseCase.Error>() {
-    data class Request(val collection: Collection) : OneShotUseCase.Request
+@ContributesBinding(AppScope::class)
+internal class CreateCollectionUseCaseImpl(private val repository: CollectionRepository) :
+    CreateCollectionUseCase() {
 
-    sealed interface Error : Resource.AppError {
-        data object System : Error
-
-        data object NotFound : Error
-    }
-
-    override suspend fun run(request: Request): Resource<Collection, Error> =
-        Resource.Success(repository.create(request.collection))
+    override suspend fun run(request: Collection): Resource<Collection, Unit> =
+        Resource.Success(repository.create(request))
 }

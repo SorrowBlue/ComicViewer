@@ -39,7 +39,7 @@ internal class BasicCollectionCreateViewModel(
 
     fun submitForm(formData: BasicCollectionForm) {
         viewModelScope.launch {
-            createCollectionUseCase(CreateCollectionUseCase.Request(BasicCollection(formData.name)))
+            createCollectionUseCase(BasicCollection(formData.name))
                 .fold(
                     onSuccess = { collection ->
                         if (bookshelfId != BookshelfId() && path.isNotEmpty()) {
@@ -68,9 +68,7 @@ internal class BasicCollectionCreateViewModel(
         bookshelfId: BookshelfId,
         path: String,
     ) {
-        addCollectionFileUseCase(
-            AddCollectionFileUseCase.Request(CollectionFile(collection.id, bookshelfId, path)),
-        ).fold(
+        addCollectionFileUseCase(CollectionFile(collection.id, bookshelfId, path)).fold(
             onSuccess = {
                 event.emit(BasicCollectionCreateViewModelEvent.CreateAddSuccess(collection.name))
             },

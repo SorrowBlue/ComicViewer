@@ -99,7 +99,7 @@ class GetNextBookUseCaseTest {
             }
         }
 
-        val useCase = GetNextBookUseCase(
+        val useCase = GetNextBookUseCaseImpl(
             settingsRepository = fakeSettingsRepository,
             fileRepository = fakeFileRepository,
             collectionFileRepository = object : FakeCollectionFileRepository() {},
@@ -142,7 +142,7 @@ class GetNextBookUseCaseTest {
             ): Flow<File?> = flowOf(nonBookFolder)
         }
 
-        val useCase = GetNextBookUseCase(
+        val useCase = GetNextBookUseCaseImpl(
             settingsRepository = FakeSettingsRepository(),
             fileRepository = fakeFileRepository,
             collectionFileRepository = object : FakeCollectionFileRepository() {},
@@ -187,7 +187,7 @@ class GetNextBookUseCaseTest {
             }
         }
 
-        val useCase = GetNextBookUseCase(
+        val useCase = GetNextBookUseCaseImpl(
             settingsRepository = fakeSettingsRepository,
             fileRepository = object : FakeFileRepository() {},
             collectionFileRepository = fakeCollectionFileRepository,
@@ -241,7 +241,7 @@ class GetNextBookUseCaseTest {
             }
         }
 
-        val useCase = GetNextBookUseCase(
+        val useCase = GetNextBookUseCaseImpl(
             settingsRepository = fakeSettingsRepository,
             fileRepository = fakeFileRepository,
             collectionFileRepository = object : FakeCollectionFileRepository() {},
@@ -271,7 +271,7 @@ class GetNextBookUseCaseTest {
             override fun flow(id: CollectionId): Flow<Collection?> = flowOf(null)
         }
 
-        val useCase = GetNextBookUseCase(
+        val useCase = GetNextBookUseCaseImpl(
             settingsRepository = FakeSettingsRepository(),
             fileRepository = object : FakeFileRepository() {},
             collectionFileRepository = object : FakeCollectionFileRepository() {},

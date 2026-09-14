@@ -8,12 +8,10 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-@OptIn(ExperimentalTime::class)
 data class SmartCollection private constructor(
     override val id: CollectionId,
     override val name: String,

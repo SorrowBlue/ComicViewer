@@ -31,14 +31,14 @@ internal class DeleteCollectionViewModel(
 ) : ViewModel() {
 
     val uiState =
-        getCollectionUseCase(GetCollectionUseCase.Request(id)).mapNotNull { it.dataOrNull() }
+        getCollectionUseCase(id).mapNotNull { it.dataOrNull() }
             .map {
                 DeleteCollectionScreenUiState(name = it.name)
             }.stateIn(viewModelScope, SharingStarted.Eagerly, DeleteCollectionScreenUiState())
 
     fun delete(onComplete: () -> Unit) {
         viewModelScope.launch {
-            deleteCollectionUseCase(DeleteCollectionUseCase.Request(id))
+            deleteCollectionUseCase(id)
             onComplete()
         }
     }

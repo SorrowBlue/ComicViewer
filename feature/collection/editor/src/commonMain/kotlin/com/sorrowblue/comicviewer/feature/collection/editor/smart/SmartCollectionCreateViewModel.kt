@@ -6,7 +6,6 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
@@ -32,18 +31,16 @@ internal class SmartCollectionCreateViewModel(
     val event: SharedFlow<SmartCollectionCreateViewModelEvent>
         field = MutableSharedFlow()
 
-    val bookshelfListFlow = flowBookshelfListUseCase(EmptyRequest).map { it.dataOrNull() }
+    val bookshelfListFlow = flowBookshelfListUseCase().map { it.dataOrNull() }
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     fun onSubmit(formData: SmartCollectionForm) {
         viewModelScope.launch {
             createCollectionUseCase(
-                CreateCollectionUseCase.Request(
-                    SmartCollection(
-                        formData.name,
-                        formData.bookshelfId,
-                        formData.searchCondition,
-                    ),
+                SmartCollection(
+                    formData.name,
+                    formData.bookshelfId,
+                    formData.searchCondition,
                 ),
             )
             event.emit(SmartCollectionCreateViewModelEvent.Complete)

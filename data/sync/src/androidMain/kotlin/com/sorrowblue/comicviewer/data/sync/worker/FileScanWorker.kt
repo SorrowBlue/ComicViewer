@@ -69,10 +69,9 @@ internal class FileScanWorker(
     override suspend fun doWork(): Result {
         @OptIn(InternalDataApi::class)
         val bookshelfId = BookshelfId(inputData.getInt(BOOKSHELF_ID, 0))
-        val bookshelfInfo =
-            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
-                .first()
-                .dataOrNull() ?: return Result.failure()
+        val bookshelfInfo = getBookshelfInfoUseCase(bookshelfId)
+            .first()
+            .dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, "", true))
         return try {
             innerWork(bookshelfInfo)

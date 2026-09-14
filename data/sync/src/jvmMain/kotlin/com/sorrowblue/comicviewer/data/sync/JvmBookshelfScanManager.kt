@@ -29,8 +29,12 @@ internal class JvmBookshelfScanManager(
 ) : BookshelfScanManager {
 
     private val delegate = CoroutineBookshelfScanManager(
-        scanBookshelfUseCase = scanBookshelfUseCase,
-        regenerateThumbnailsUseCase = regenerateThumbnailsUseCase,
+        scanBookshelf = {
+            scanBookshelfUseCase.invoke(ScanBookshelfUseCase.Request(it) { _, _ -> })
+        },
+        regenerateThumbnails = {
+            regenerateThumbnailsUseCase.invoke(RegenerateThumbnailsUseCase.Request(it) { _, _, _ -> })
+        },
         onFileScanComplete = { bookshelfId ->
             val displayName = getDisplayName(bookshelfId)
             desktopNotification.notify(

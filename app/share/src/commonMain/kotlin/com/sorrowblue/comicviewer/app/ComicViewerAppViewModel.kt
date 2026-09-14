@@ -6,11 +6,11 @@ package com.sorrowblue.comicviewer.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
+import com.sorrowblue.comicviewer.domain.usecase.invoke
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -68,7 +68,7 @@ internal class ComicViewerAppViewModel(
     }
 
     private suspend fun restoreNavigation() {
-        val history = getNavigationHistoryUseCase(EmptyRequest).first().fold({ it }, { null })
+        val history = getNavigationHistoryUseCase().first().fold({ it }, { null })
         if (history?.folderList.isNullOrEmpty()) {
             completeInit()
             return

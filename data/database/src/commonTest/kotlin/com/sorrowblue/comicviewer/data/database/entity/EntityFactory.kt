@@ -8,7 +8,6 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 internal class EntityFactory {
     fun createBookshelfEntity(id: Int = 0, deleted: Boolean = false): BookshelfEntity =
@@ -24,7 +23,6 @@ internal class EntityFactory {
             password = DecryptedPassword(""),
         )
 
-    @OptIn(ExperimentalTime::class)
     fun createFileEntity(
         index: Int,
         bookshelfId: BookshelfId = BookshelfId(1),

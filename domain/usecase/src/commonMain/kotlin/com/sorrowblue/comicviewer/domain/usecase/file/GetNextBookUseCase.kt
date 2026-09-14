@@ -18,25 +18,21 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.book.BookNavigationService
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import logcat.logcat
 
-@Inject
-class GetNextBookUseCase(
-    private val settingsRepository: SettingsRepository,
-    private val fileRepository: FileRepository,
-    private val collectionFileRepository: CollectionFileRepository,
-    private val collectionRepository: CollectionRepository,
-    private val bookNavigationService: BookNavigationService,
-) : OneShotUseCase<GetNextBookUseCase.Request, Book, GetNextBookUseCase.Error>() {
+abstract class GetNextBookUseCase :
+    OneShotUseCase<GetNextBookUseCase.Request, Book, GetNextBookUseCase.Error>() {
 
     data class Request(
         val bookshelfId: BookshelfId,
         val path: String,
         val location: Location,
         val isNext: Boolean,
-    ) : OneShotUseCase.Request
+    )
 
     sealed interface Location {
         data object Folder : Location
@@ -48,6 +44,17 @@ class GetNextBookUseCase(
         System,
         NotFound,
     }
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class GetNextBookUseCaseImpl(
+    private val settingsRepository: SettingsRepository,
+    private val fileRepository: FileRepository,
+    private val collectionFileRepository: CollectionFileRepository,
+    private val collectionRepository: CollectionRepository,
+    private val bookNavigationService: BookNavigationService,
+) : GetNextBookUseCase() {
 
     override suspend fun run(request: Request): Resource<Book, Error> {
         val settings = settingsRepository.folderDisplaySettings.first()

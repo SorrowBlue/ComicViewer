@@ -10,23 +10,30 @@ import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@Inject
-class GetFileAttributeUseCase(
-    private val bookshelfRepository: BookshelfRepository,
-    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
-) : UseCase<GetFileAttributeUseCase.Request, FileAttribute, GetFileAttributeUseCase.Error>() {
+abstract class GetFileAttributeUseCase :
+    UseCase<GetFileAttributeUseCase.Request, FileAttribute, GetFileAttributeUseCase.Error>() {
+
+    data class Request(val bookshelfId: BookshelfId, val path: String)
 
     sealed interface Error : Resource.AppError {
-        data object NotFound : Error
 
+        data object NotFound : Error
         data object System : Error
     }
+}
 
-    data class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+@Inject
+@ContributesBinding(AppScope::class)
+internal class GetFileAttributeUseCaseImpl(
+    private val bookshelfRepository: BookshelfRepository,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
+) : GetFileAttributeUseCase() {
 
     override fun run(request: Request): Flow<Resource<FileAttribute, Error>> =
         bookshelfRepository.flow(request.bookshelfId).map { bookshelf ->

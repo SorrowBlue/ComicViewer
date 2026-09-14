@@ -10,6 +10,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.usecase.file.ClearAllHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingHistoryBookUseCase
+import com.sorrowblue.comicviewer.domain.usecase.invoke
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
@@ -22,13 +23,11 @@ internal class HistoryViewModel(
     private val clearAllHistoryUseCase: ClearAllHistoryUseCase,
 ) : ViewModel() {
 
-    val pagingDataFlow = pagingHistoryBookUseCase(
-        PagingHistoryBookUseCase.Request(PagingConfig(20)),
-    ).cachedIn(viewModelScope)
+    val pagingDataFlow = pagingHistoryBookUseCase(PagingConfig(20)).cachedIn(viewModelScope)
 
     fun clearAll() {
         viewModelScope.launch {
-            clearAllHistoryUseCase(ClearAllHistoryUseCase.Request)
+            clearAllHistoryUseCase()
         }
     }
 }

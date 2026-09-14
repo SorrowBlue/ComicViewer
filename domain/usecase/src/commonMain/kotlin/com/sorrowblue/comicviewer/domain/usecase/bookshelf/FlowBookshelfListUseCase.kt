@@ -4,26 +4,34 @@
 
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
-import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-@Inject
-class FlowBookshelfListUseCase(private val bookshelfRepository: BookshelfRepository) :
-    UseCase<EmptyRequest, List<Bookshelf>, FlowBookshelfListUseCase.Error>() {
+abstract class FlowBookshelfListUseCase :
+    UseCase<Unit, List<Bookshelf>, FlowBookshelfListUseCase.Error>() {
+
+    operator fun invoke(): Flow<Resource<List<Bookshelf>, Error>> = invoke(Unit)
 
     sealed interface Error : Resource.AppError {
         data object System : Error
     }
+}
 
-    override fun run(request: EmptyRequest): Flow<Resource<List<Bookshelf>, Error>> =
+@Inject
+@ContributesBinding(AppScope::class)
+internal class FlowBookshelfListUseCaseImpl(private val bookshelfRepository: BookshelfRepository) :
+    FlowBookshelfListUseCase() {
+
+    override fun run(request: Unit): Flow<Resource<List<Bookshelf>, Error>> =
         bookshelfRepository.allBookshelf().fold({ flow ->
             flow.map {
                 Resource.Success(it)

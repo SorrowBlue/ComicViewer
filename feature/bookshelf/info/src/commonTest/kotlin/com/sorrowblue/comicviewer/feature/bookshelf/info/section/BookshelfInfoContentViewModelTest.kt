@@ -46,13 +46,11 @@ class BookshelfInfoContentViewModelTest {
                 isHidden = false,
             ),
         )
-        val pagingUseCase = PagingBookshelfBookUseCase {
-            flowOf(PagingData.empty())
-        }
+        val pagingUseCase = PagingBookshelfBookUseCase { flowOf(PagingData.empty()) }
         viewModel = BookshelfInfoContentViewModel(
             bookshelfFolder = bookshelfFolder,
             pagingBookshelfBookUseCase = pagingUseCase,
-            manageBookshelfScanUseCase = manageBookshelfScanUseCase.useCase,
+            manageBookshelfScanUseCase = manageBookshelfScanUseCase,
         )
     }
 

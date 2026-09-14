@@ -8,15 +8,19 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
-@Inject
-class DeleteCollectionUseCase(private val repository: CollectionRepository) :
-    OneShotUseCase<DeleteCollectionUseCase.Request, Unit, Unit>() {
-    data class Request(val id: CollectionId) : OneShotUseCase.Request
+abstract class DeleteCollectionUseCase : OneShotUseCase<CollectionId, Unit, Unit>()
 
-    override suspend fun run(request: Request): Resource<Unit, Unit> {
-        repository.delete(request.id)
+@Inject
+@ContributesBinding(AppScope::class)
+internal class DeleteCollectionUseCaseImpl(private val repository: CollectionRepository) :
+    DeleteCollectionUseCase() {
+
+    override suspend fun run(request: CollectionId): Resource<Unit, Unit> {
+        repository.delete(request)
         return Resource.Success(Unit)
     }
 }

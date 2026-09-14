@@ -8,16 +8,19 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.repository.file.BookFileReaderManager
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+abstract class CloseBookUseCase : OneShotUseCase<Book, Unit, Unit>()
+
 @Inject
-class CloseBookUseCase(private val bookFileReaderManager: BookFileReaderManager) :
-    OneShotUseCase<CloseBookUseCase.Request, Unit, Unit>() {
+@ContributesBinding(AppScope::class)
+internal class CloseBookUseCaseImpl(private val bookFileReaderManager: BookFileReaderManager) :
+    CloseBookUseCase() {
 
-    data class Request(val book: Book) : OneShotUseCase.Request
-
-    override suspend fun run(request: Request): Resource<Unit, Unit> {
-        bookFileReaderManager.close(request.book)
+    override suspend fun run(request: Book): Resource<Unit, Unit> {
+        bookFileReaderManager.close(request)
         return Resource.Success(Unit)
     }
 }

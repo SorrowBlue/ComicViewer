@@ -78,21 +78,13 @@ internal class BasicCollectionAddViewModel(
 
     fun addCollection(id: CollectionId) {
         viewModelScope.launch {
-            addCollectionFileUseCase(
-                AddCollectionFileUseCase.Request(
-                    CollectionFile(id, bookshelfId, path),
-                ),
-            )
+            addCollectionFileUseCase(CollectionFile(id, bookshelfId, path))
         }
     }
 
     fun removeCollection(id: CollectionId) {
         viewModelScope.launch {
-            removeCollectionFileUseCase(
-                RemoveCollectionFileUseCase.Request(
-                    CollectionFile(id, bookshelfId, path),
-                ),
-            )
+            removeCollectionFileUseCase(CollectionFile(id, bookshelfId, path))
         }
     }
 

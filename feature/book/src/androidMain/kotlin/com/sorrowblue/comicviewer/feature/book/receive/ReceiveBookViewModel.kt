@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.scan
@@ -56,10 +56,12 @@ internal class ReceiveBookViewModel(
     val viewerSettingsFlow = manageViewerSettingsUseCase.settings
         .shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
-    val bookFlow = if (uri == null) {
-        flowOf(null)
-    } else {
-        getIntentBookUseCase(GetIntentBookUseCase.Request(uri)).map { it.dataOrNull() }
+    val bookFlow = flow {
+        if (uri == null) {
+            emit(null)
+        } else {
+            emit(getIntentBookUseCase(uri).dataOrNull())
+        }
     }.shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
     val pageItemListFlow: StateFlow<List<PageItem>> = merge(
@@ -69,15 +71,25 @@ internal class ReceiveBookViewModel(
         when (action) {
             is PageAction.Init -> {
                 createInitialBookPagesUseCase(
-                    totalPageCount = action.bookFile.totalPageCount,
-                    pageFormat = BookSettings.PageFormat.Default,
-                    isCompactWindow = false,
-                )
+                    CreateInitialBookPagesUseCase.Request(
+                        totalPageCount = action.bookFile.totalPageCount,
+                        pageFormat = BookSettings.PageFormat.Default,
+                        isCompactWindow = false,
+                    ),
+                ).dataOrNull()
             }
 
             is PageAction.PageLoaded -> {
-                resolveBookPageLayoutUseCase(currentList, action.unratedPage, action.isPortrait)
+                resolveBookPageLayoutUseCase(
+                    ResolveBookPageLayoutUseCase.Request(
+                        currentList = currentList,
+                        unratedPage = action.unratedPage,
+                        isPortrait = action.isPortrait,
+                    ),
+                ).dataOrNull()
             }
+        }.let {
+            requireNotNull(it)
         }
     }.stateIn(
         scope = viewModelScope,

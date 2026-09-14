@@ -12,8 +12,8 @@ import kotlin.test.assertEquals
 
 class BookPageUseCaseTest {
 
-    private val createInitialUseCase = CreateInitialBookPagesUseCase()
-    private val resolveUseCase = ResolveBookPageLayoutUseCase()
+    private val createInitialUseCase = CreateInitialBookPagesUseCaseImpl()
+    private val resolveUseCase = ResolveBookPageLayoutUseCaseImpl()
 
     @Test
     fun createInitialBookPagesUseCase_delegatesToService() {

@@ -60,9 +60,7 @@ internal class BookshelfEditorViewModel(
             }
 
             is BookshelfEditType.Edit -> {
-                getBookshelfInfoUseCase(
-                    GetBookshelfInfoUseCase.Request(editType.bookshelfId),
-                ).mapNotNull { it.dataOrNull() }
+                getBookshelfInfoUseCase(editType.bookshelfId).mapNotNull { it.dataOrNull() }
                     .map {
                         when (val bookshelf = it.bookshelf) {
                             is DeviceStorage -> {
@@ -171,11 +169,8 @@ internal class BookshelfEditorViewModel(
         }
     }
 
-    private suspend fun getBookshelf(id: BookshelfId): Bookshelf = requireNotNull(
-        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(id))
-            .first()
-            .dataOrNull(),
-    ).bookshelf
+    private suspend fun getBookshelf(id: BookshelfId): Bookshelf =
+        requireNotNull(getBookshelfInfoUseCase(id).first().dataOrNull()).bookshelf
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey

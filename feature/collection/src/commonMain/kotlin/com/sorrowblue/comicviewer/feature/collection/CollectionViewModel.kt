@@ -33,7 +33,7 @@ internal class CollectionViewModel(
 ) : ViewModel() {
 
     val uiState =
-        getCollectionUseCase(GetCollectionUseCase.Request(id)).mapNotNull { it.dataOrNull() }
+        getCollectionUseCase(id).mapNotNull { it.dataOrNull() }
             .map {
                 CollectionScreenUiState(
                     collection = it,
@@ -42,7 +42,7 @@ internal class CollectionViewModel(
             }.stateIn(viewModelScope, SharingStarted.Eagerly, CollectionScreenUiState())
 
     val pagingDataFlow = pagingCollectionFileUseCase(
-        PagingCollectionFileUseCase.Request(PagingConfig(20), id),
+        PagingCollectionFileUseCase.Request(id, PagingConfig(20)),
     ).cachedIn(viewModelScope)
 
     @AssistedFactory

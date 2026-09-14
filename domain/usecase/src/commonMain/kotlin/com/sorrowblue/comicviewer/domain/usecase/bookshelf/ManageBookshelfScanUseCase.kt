@@ -6,26 +6,15 @@ package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.repository.bookshelf.BookshelfScanManager
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
 /**
  * Manage bookshelf scanning tasks and their execution status.
  */
-class ManageBookshelfScanUseCase(
-    private val isScanningFileAction: (BookshelfId) -> Flow<Boolean>,
-    private val isScanningThumbnailAction: (BookshelfId) -> Flow<Boolean>,
-    private val scanFileAction: (BookshelfId) -> Unit,
-    private val scanThumbnailAction: (BookshelfId) -> Unit,
-) {
-
-    @Inject
-    constructor(scanManager: BookshelfScanManager) : this(
-        isScanningFileAction = scanManager::isScanningFile,
-        isScanningThumbnailAction = scanManager::isScanningThumbnail,
-        scanFileAction = scanManager::scanFile,
-        scanThumbnailAction = scanManager::scanThumbnail,
-    )
+interface ManageBookshelfScanUseCase {
 
     /**
      * Observe whether a file scan is currently running for the specified bookshelf.
@@ -33,7 +22,7 @@ class ManageBookshelfScanUseCase(
      * @param bookshelfId target bookshelf ID
      * @return flow of boolean indicating if file scanning is active
      */
-    fun isScanningFile(bookshelfId: BookshelfId): Flow<Boolean> = isScanningFileAction(bookshelfId)
+    fun isScanningFile(bookshelfId: BookshelfId): Flow<Boolean>
 
     /**
      * Observe whether a thumbnail generation scan is currently running for the specified bookshelf.
@@ -41,24 +30,39 @@ class ManageBookshelfScanUseCase(
      * @param bookshelfId target bookshelf ID
      * @return flow of boolean indicating if thumbnail scanning is active
      */
-    fun isScanningThumbnail(bookshelfId: BookshelfId): Flow<Boolean> =
-        isScanningThumbnailAction(bookshelfId)
+    fun isScanningThumbnail(bookshelfId: BookshelfId): Flow<Boolean>
 
     /**
      * Request a file scan for the specified bookshelf.
      *
      * @param bookshelfId target bookshelf ID
      */
-    fun scanFile(bookshelfId: BookshelfId) {
-        scanFileAction(bookshelfId)
-    }
+    fun scanFile(bookshelfId: BookshelfId)
 
     /**
      * Request thumbnail generation for the specified bookshelf.
      *
      * @param bookshelfId target bookshelf ID
      */
-    fun scanThumbnail(bookshelfId: BookshelfId) {
-        scanThumbnailAction(bookshelfId)
+    fun scanThumbnail(bookshelfId: BookshelfId)
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class ManageBookshelfScanUseCaseImpl(private val scanManager: BookshelfScanManager) :
+    ManageBookshelfScanUseCase {
+
+    override fun isScanningFile(bookshelfId: BookshelfId): Flow<Boolean> =
+        scanManager.isScanningFile(bookshelfId)
+
+    override fun isScanningThumbnail(bookshelfId: BookshelfId): Flow<Boolean> =
+        scanManager.isScanningThumbnail(bookshelfId)
+
+    override fun scanFile(bookshelfId: BookshelfId) {
+        scanManager.scanFile(bookshelfId)
+    }
+
+    override fun scanThumbnail(bookshelfId: BookshelfId) {
+        scanManager.scanThumbnail(bookshelfId)
     }
 }
