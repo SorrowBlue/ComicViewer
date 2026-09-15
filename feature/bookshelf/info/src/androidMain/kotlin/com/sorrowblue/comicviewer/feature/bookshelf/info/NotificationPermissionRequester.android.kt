@@ -10,6 +10,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -22,7 +23,7 @@ import androidx.core.content.ContextCompat
 import logcat.logcat
 
 @Composable
-internal fun rememberNotificationPermissionRequester(
+internal actual fun rememberNotificationPermissionRequester(
     onResult: (Boolean) -> Unit,
 ): NotificationPermissionRequester {
     @SuppressLint("ContextCastToActivity")
@@ -32,17 +33,17 @@ internal fun rememberNotificationPermissionRequester(
     val intentLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     return remember(activity, permissionLauncher, intentLauncher) {
-        NotificationPermissionRequester(activity, permissionLauncher, intentLauncher)
+        AndroidNotificationPermissionRequester(activity, permissionLauncher, intentLauncher)
     }
 }
 
-internal class NotificationPermissionRequester(
+internal class AndroidNotificationPermissionRequester(
     private val activity: Activity,
     private val permissionLauncher: ManagedActivityResultLauncher<String, Boolean>,
-    intentLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>,
-) {
+    private val intentLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>,
+) : NotificationPermissionRequester {
 
-    fun requestPermission(action: () -> Unit, showInContextUI: () -> Unit) = when {
+    override fun requestPermission(action: () -> Unit, showInContextUI: () -> Unit) = when {
         ContextCompat.checkSelfPermission(activity, POST_NOTIFICATIONS) == PERMISSION_GRANTED -> {
             logcat { "android.permission.POST_NOTIFICATIONS is granted" }
             action()
@@ -60,7 +61,7 @@ internal class NotificationPermissionRequester(
         }
     }
 
-    fun checkNotificationPermission(): Boolean =
+    override fun checkNotificationPermission(): Boolean =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
                 activity,
@@ -70,7 +71,14 @@ internal class NotificationPermissionRequester(
             true
         }
 
-    fun launchNotification() {
+    override fun openNotificationSettings() {
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+            putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
+        }
+        intentLauncher.launch(intent)
+    }
+
+    private fun launchNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissionLauncher.launch(POST_NOTIFICATIONS)
         }
