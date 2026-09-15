@@ -37,7 +37,7 @@ class FileHierarchyScanServiceTest {
             "/root/sub/sub_01.zip",
             50,
             0,
-            false
+            false,
         )
 
         val filesMap = mapOf(
