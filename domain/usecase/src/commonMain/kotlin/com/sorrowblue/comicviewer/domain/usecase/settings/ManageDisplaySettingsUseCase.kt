@@ -6,12 +6,19 @@ package com.sorrowblue.comicviewer.domain.usecase.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
+interface ManageDisplaySettingsUseCase : ManageSettingsUseCase<DisplaySettings>
+
 @Inject
-class ManageDisplaySettingsUseCase(private val settingsRepository: SettingsRepository) :
-    ManageSettingsUseCase<DisplaySettings> {
+@ContributesBinding(AppScope::class)
+internal class ManageDisplaySettingsUseCaseImpl(
+    private val settingsRepository: SettingsRepository,
+) : ManageDisplaySettingsUseCase {
+
     override val settings: Flow<DisplaySettings> = settingsRepository.displaySettings
 
     override suspend fun edit(action: (DisplaySettings) -> DisplaySettings) {

@@ -35,9 +35,8 @@ abstract class CreateInitialBookPagesUseCase :
 
 @Inject
 @ContributesBinding(AppScope::class)
-internal class CreateInitialBookPagesUseCaseImpl(
-    private val service: BookPageLayoutService = BookPageLayoutService(),
-) : CreateInitialBookPagesUseCase() {
+internal class CreateInitialBookPagesUseCaseImpl(private val service: BookPageLayoutService) :
+    CreateInitialBookPagesUseCase() {
 
     override suspend fun run(request: Request): Resource<List<BookPage>, Unit> {
         val bookPages = service.createInitialPages(

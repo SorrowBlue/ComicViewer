@@ -194,11 +194,14 @@ private open class FakeBookshelfRepository : BookshelfRepository {
         bookshelf: Bookshelf,
         transaction: suspend (Bookshelf) -> Unit,
     ): Bookshelf? = TODO()
+
     override suspend fun delete(bookshelfId: BookshelfId): Resource<Unit, Resource.SystemError> =
         TODO()
+
     override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = TODO()
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> =
         TODO()
+
     override fun allBookshelf(): Resource<Flow<List<Bookshelf>>, Resource.SystemError> = TODO()
     override suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean) = TODO()
 }
@@ -210,17 +213,20 @@ private open class FakeFileRepository : FileRepository {
         file: File,
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>> = TODO()
+
     override fun pagingSourceBookThumbnail(
         pagingConfig: PagingConfig,
         bookshelf: Bookshelf,
         file: File,
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<BookThumbnail>> = TODO()
+
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
         bookshelfId: BookshelfId?,
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>> = TODO()
+
     override suspend fun addUpdate(fileModel: File) = TODO()
     override suspend fun updateHistory(
         path: String,
@@ -228,12 +234,14 @@ private open class FakeFileRepository : FileRepository {
         lastReadPage: Int,
         lastReading: Long,
     ) = TODO()
+
     override suspend fun updateAdditionalInfo(
         path: String,
         bookshelfId: BookshelfId,
         cacheKey: String,
         totalPage: Int,
     ) = TODO()
+
     override suspend fun updateSimpleAll(list: List<File>) = TODO()
     override suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError> = TODO()
     override suspend fun selectByNotPaths(
@@ -241,12 +249,14 @@ private open class FakeFileRepository : FileRepository {
         path: String,
         list: List<String>,
     ): List<File> = TODO()
+
     override suspend fun deleteAll(list: List<File>) = TODO()
     override suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean = TODO()
     override fun pagingSource(
         bookshelfId: BookshelfId,
         pagingConfig: PagingConfig,
     ): Flow<PagingData<BookThumbnail>> = TODO()
+
     override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = TODO()
     override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = TODO()
     override fun nextFileModel(
@@ -254,33 +264,39 @@ private open class FakeFileRepository : FileRepository {
         path: String,
         sortType: SortType,
     ): Flow<File?> = TODO()
+
     override fun nextFileModel(
         bookshelfId: BookshelfId,
         path: String,
         searchCondition: SearchCondition,
         sortType: SortType,
     ): Flow<File?> = TODO()
+
     override fun prevFileModel(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): Flow<File?> = TODO()
+
     override fun prevFileModel(
         bookshelfId: BookshelfId,
         path: String,
         searchCondition: SearchCondition,
         sortType: SortType,
     ): Flow<File?> = TODO()
+
     override suspend fun getCacheKeys(
         bookshelfId: BookshelfId,
         parent: String,
         limit: Int,
         folderThumbnailOrderModel: FolderThumbnailOrder,
     ): List<String> = TODO()
+
     override suspend fun removeCacheKey(diskCacheKey: String) = TODO()
     override suspend fun root(id: BookshelfId): Folder? = TODO()
     override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>> =
         TODO()
+
     override suspend fun deleteThumbnails() = TODO()
     override suspend fun clearCacheKey(bookshelfId: BookshelfId) = TODO()
     override suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>): Unit = TODO()
@@ -291,6 +307,7 @@ private open class FakeFileRepository : FileRepository {
     override fun lastHistory(): Flow<File?> = TODO()
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> =
         TODO()
+
     override suspend fun count(bookshelfId: BookshelfId): Long = TODO()
     override suspend fun updateFileType(file: File) = TODO()
 }
@@ -303,6 +320,7 @@ private open class FakeRemoteStorageClient : RemoteStorageClient {
         resolveImageFolder: Boolean,
         filter: (File) -> Boolean,
     ): List<File> = TODO()
+
     override suspend fun file(path: String, resolveImageFolder: Boolean): File = TODO()
     override suspend fun pageCount(book: Book): Int = TODO()
     override suspend fun getAttribute(path: String): FileAttribute? = TODO()
@@ -313,30 +331,37 @@ private open class FakeSettingsRepository : SettingsRepository {
     override val settings: Flow<Settings> get() = TODO()
     override suspend fun updateSettings(transform: suspend (Settings) -> Settings): Settings =
         TODO()
+
     override val displaySettings: Flow<DisplaySettings> get() = TODO()
     override suspend fun updateDisplaySettings(
         transform: suspend (DisplaySettings) -> DisplaySettings,
     ): DisplaySettings = TODO()
+
     override val viewerSettings: Flow<ViewerSettings> get() = TODO()
     override suspend fun updateViewerSettings(
         transform: suspend (ViewerSettings) -> ViewerSettings,
     ): ViewerSettings = TODO()
+
     override val bookSettings: Flow<BookSettings> get() = TODO()
     override suspend fun updateBookSettings(
         transform: suspend (BookSettings) -> BookSettings,
     ): BookSettings = TODO()
+
     override val folderDisplaySettings: Flow<FolderDisplaySettings> get() = TODO()
     override suspend fun updateFolderDisplaySettings(
         transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings,
     ): FolderDisplaySettings = TODO()
+
     override val folderSettings: Flow<FolderSettings> get() = TODO()
     override suspend fun updateFolderSettings(
         transform: suspend (FolderSettings) -> FolderSettings,
     ): FolderSettings = TODO()
+
     override val securitySettings: Flow<SecuritySettings> get() = TODO()
     override suspend fun updateSecuritySettings(
         transform: suspend (SecuritySettings) -> SecuritySettings,
     ): SecuritySettings = TODO()
+
     override val collectionSettings: Flow<CollectionSettings> get() = TODO()
     override suspend fun updateCollectionSettings(
         transform: suspend (CollectionSettings) -> CollectionSettings,

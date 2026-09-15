@@ -35,9 +35,8 @@ abstract class ResolveBookPageLayoutUseCase :
 
 @Inject
 @ContributesBinding(AppScope::class)
-internal class ResolveBookPageLayoutUseCaseImpl(
-    private val service: BookPageLayoutService = BookPageLayoutService(),
-) : ResolveBookPageLayoutUseCase() {
+internal class ResolveBookPageLayoutUseCaseImpl(private val service: BookPageLayoutService) :
+    ResolveBookPageLayoutUseCase() {
 
     override suspend fun run(request: Request): Resource<List<PageItem>, Unit> {
         val pageItems = service.resolvePage(

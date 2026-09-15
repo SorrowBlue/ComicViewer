@@ -8,6 +8,9 @@ import com.sorrowblue.comicviewer.domain.model.book.BookPage
 import com.sorrowblue.comicviewer.domain.model.book.PageItem
 import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 
 /**
  * コミックページの展開、見開き結合、および分割レイアウトの計算を行うドメインサービス。
@@ -41,15 +44,10 @@ interface BookPageLayoutService {
         unratedPage: UnratedPage,
         isPortrait: Boolean,
     ): List<PageItem>
-
-    companion object {
-        /**
-         * [BookPageLayoutService] のインスタンスを生成して返します。
-         */
-        operator fun invoke(): BookPageLayoutService = BookPageLayoutServiceImpl()
-    }
 }
 
+@Inject
+@ContributesBinding(AppScope::class)
 internal class BookPageLayoutServiceImpl : BookPageLayoutService {
 
     override fun createInitialPages(
