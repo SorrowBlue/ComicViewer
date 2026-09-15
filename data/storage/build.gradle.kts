@@ -10,6 +10,7 @@ kotlin {
         commonMain {
             dependencies {
                 api(projects.domain.repository)
+                implementation(projects.domain.service)
                 api(libs.kotlinx.io)
             }
         }
