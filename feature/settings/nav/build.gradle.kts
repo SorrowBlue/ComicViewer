@@ -1,9 +1,14 @@
 plugins {
-    alias(libs.plugins.comicviewer.multiplatformFeature)
+    alias(libs.plugins.comicviewer.multiplatformLibrary)
 }
 
 kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.feature.settings.nav"
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.androidx.navigation3Runtime)
+        }
     }
 }

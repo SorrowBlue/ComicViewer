@@ -4,66 +4,13 @@
 
 package com.sorrowblue.comicviewer.data.reader.zip.impl
 
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
-import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
-import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
-import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
-import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.ContributesIntoMap
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.io.Sink
-import kotlinx.io.Source
+import com.sorrowblue.kioarch.ArchiveEntry
+import platform.Foundation.NSString
+import platform.Foundation.localizedStandardCompare
 
-@AssistedInject
-internal actual class ZipFileReader(
-    @Assisted private val seekableInputStream: SeekableInputStream,
-    @ImageExtension supportedException: Set<String>,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : FileReader {
-    @ContributesIntoMap(AppScope::class)
-    @FileReaderKey(FileReaderType.Zip)
-    @AssistedFactory
-    actual fun interface Factory : FileReaderFactory {
-        actual override fun create(
-            seekableInputStream: SeekableInputStream,
-        ): ZipFileReader
-    }
-
-    val iosZipFileReader = IosZipFileReader.factory.create(seekableInputStream, supportedException)
-
-    private val mutex = Mutex()
-
-    actual override fun close() {
-        iosZipFileReader.close()
-    }
-
-    actual override suspend fun pageCount(): Int = iosZipFileReader.pageCount()
-
-    actual override suspend fun source(pageIndex: Int): Source {
-        return mutex.withLock {
-            iosZipFileReader.source(pageIndex)
-        }
-    }
-
-    actual override suspend fun extractTo(pageIndex: Int, sink: Sink) {
-        mutex.withLock {
-            iosZipFileReader.source(pageIndex).use { source ->
-                sink.transferFrom(source)
-            }
-        }
-    }
-
-    actual override suspend fun fileSize(pageIndex: Int): Long =
-        iosZipFileReader.fileSize(pageIndex)
-
-    actual override suspend fun fileName(pageIndex: Int): String =
-        iosZipFileReader.fileName(pageIndex)
+internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> {
+    return sortedWith(Comparator { a, b ->
+        @Suppress("CAST_NEVER_SUCCEEDS")
+        (a.name as NSString).localizedStandardCompare(b.name).toInt()
+    })
 }
