@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.ui.navigation
+package com.sorrowblue.comicviewer.framework.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

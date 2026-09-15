@@ -2,18 +2,13 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.ui.navigation
+package com.sorrowblue.comicviewer.framework.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
 import logcat.logcat
-
-val LocalNavigator = staticCompositionLocalOf<Navigator> {
-    error("No AdaptiveNavigationSuiteState provided")
-}
 
 @Composable
 fun rememberNavigator(

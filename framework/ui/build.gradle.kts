@@ -14,6 +14,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.framework.designsystem)
+                implementation(projects.framework.navigation)
                 implementation(projects.domain.model)
 
                 implementation(libs.androidx.navigation3UI)

@@ -9,9 +9,9 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.authentication.AuthenticationScreenRoot
 import com.sorrowblue.comicviewer.feature.authentication.nav.AuthenticationNavKey
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

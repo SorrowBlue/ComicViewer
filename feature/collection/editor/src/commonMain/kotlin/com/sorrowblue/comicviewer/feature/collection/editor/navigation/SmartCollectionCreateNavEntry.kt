@@ -10,8 +10,8 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionCreateScreenRoot
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

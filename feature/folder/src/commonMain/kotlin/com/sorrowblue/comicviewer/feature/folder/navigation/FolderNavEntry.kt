@@ -17,11 +17,11 @@ import com.sorrowblue.comicviewer.feature.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.framework.ui.file.navigation.fileInfoEntry
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 private const val SCENE_KEY_FOLDER = "Folder"

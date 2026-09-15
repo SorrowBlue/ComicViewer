@@ -10,9 +10,9 @@ import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.book.BookScreenRoot
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

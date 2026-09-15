@@ -19,9 +19,9 @@ import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionEditNavK
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 import kotlinx.serialization.Serializable
 
 @Serializable

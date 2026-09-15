@@ -20,9 +20,9 @@ import com.sorrowblue.comicviewer.feature.settings.info.navigation.InfoSettingsN
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecuritySettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
+import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
+import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation.Navigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.NavigationEntry
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

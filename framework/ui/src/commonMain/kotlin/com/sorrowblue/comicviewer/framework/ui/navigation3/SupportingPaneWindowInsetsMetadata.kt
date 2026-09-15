@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
-import com.sorrowblue.comicviewer.framework.ui.navigation.LocalNavigator
 import kotlin.reflect.KClass
 
 class SupportingPaneWindowInsetsMetadata<T : NavKey>(val clazz: KClass<T>)
