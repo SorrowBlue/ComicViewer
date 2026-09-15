@@ -6,12 +6,19 @@ package com.sorrowblue.comicviewer.domain.usecase.settings
 
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
+interface ManageSecuritySettingsUseCase : ManageSettingsUseCase<SecuritySettings>
+
 @Inject
-class ManageSecuritySettingsUseCase(private val settingsRepository: SettingsRepository) :
-    ManageSettingsUseCase<SecuritySettings> {
+@ContributesBinding(AppScope::class)
+internal class ManageSecuritySettingsUseCaseImpl(
+    private val settingsRepository: SettingsRepository,
+) : ManageSecuritySettingsUseCase {
+
     override val settings: Flow<SecuritySettings> = settingsRepository.securitySettings
 
     override suspend fun edit(action: (SecuritySettings) -> SecuritySettings) {

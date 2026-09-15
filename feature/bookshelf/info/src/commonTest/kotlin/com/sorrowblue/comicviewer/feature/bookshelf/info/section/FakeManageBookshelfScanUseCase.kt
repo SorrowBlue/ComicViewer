@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
-internal class FakeManageBookshelfScanUseCase : ManageBookshelfScanUseCase() {
+internal class FakeManageBookshelfScanUseCase : ManageBookshelfScanUseCase {
 
     val scanningFiles = MutableStateFlow<Set<BookshelfId>>(emptySet())
     val scanningThumbnails = MutableStateFlow<Set<BookshelfId>>(emptySet())

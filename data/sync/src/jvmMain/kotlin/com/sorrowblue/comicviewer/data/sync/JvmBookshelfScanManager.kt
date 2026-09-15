@@ -66,7 +66,7 @@ internal class JvmBookshelfScanManager(
     }
 
     private suspend fun getDisplayName(bookshelfId: BookshelfId): String =
-        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
+        getBookshelfInfoUseCase(bookshelfId)
             .first()
             .dataOrNull()?.bookshelf?.displayName.orEmpty()
 

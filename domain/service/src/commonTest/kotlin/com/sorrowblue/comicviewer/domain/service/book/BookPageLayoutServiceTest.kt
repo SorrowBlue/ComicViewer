@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 class BookPageLayoutServiceTest {
 
-    private val service = BookPageLayoutService()
+    private val service = BookPageLayoutServiceImpl()
 
     @Test
     fun createInitialPages_withZeroOrNegativeCount_returnsEmptyList() {
