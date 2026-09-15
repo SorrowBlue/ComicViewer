@@ -27,13 +27,16 @@ import comicviewer.feature.folder.generated.resources.folder_label_file_size
 import comicviewer.feature.folder.generated.resources.folder_label_name
 import comicviewer.feature.folder.generated.resources.folder_label_update_date
 import comicviewer.feature.folder.generated.resources.folder_sorttype_label_apply_to_folder_only
+import comicviewer.feature.folder.generated.resources.folder_sorttype_label_include_subfolders
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SortTypeItem(
     sortType: SortType,
     folderScopeOnly: Boolean,
+    includeSubfolders: Boolean,
     onFolderScopeOnlyClick: () -> Unit,
+    onIncludeSubfoldersClick: () -> Unit,
     onClick: (SortType) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -71,6 +74,23 @@ internal fun SortTypeItem(
             },
             onClick = {
                 onFolderScopeOnlyClick()
+            },
+        )
+        DropdownMenuItem(
+            text = {
+                Text(text = stringResource(Res.string.folder_sorttype_label_include_subfolders))
+            },
+            leadingIcon = {
+                Checkbox(
+                    checked = includeSubfolders,
+                    onCheckedChange = { onIncludeSubfoldersClick() },
+                    enabled = folderScopeOnly,
+                    modifier = Modifier.focusable(false),
+                )
+            },
+            enabled = folderScopeOnly,
+            onClick = {
+                onIncludeSubfoldersClick()
             },
         )
         HorizontalDivider()

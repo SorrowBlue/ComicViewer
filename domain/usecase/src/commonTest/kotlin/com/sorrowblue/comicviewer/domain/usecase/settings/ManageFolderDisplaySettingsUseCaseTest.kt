@@ -68,6 +68,23 @@ class ManageFolderDisplaySettingsUseCaseTest {
         assertTrue(afterRemove.folderScopeOnlyList.isEmpty())
     }
 
+    @Test
+    fun testToggleIncludeSubfolders() = runTest {
+        val fakeRepo = FakeSettingsRepository(FolderDisplaySettings(sortType = SortType.Name(true)))
+        val service = FolderSortSettingsServiceImpl()
+        val useCase = ManageFolderDisplaySettingsUseCase(fakeRepo, service)
+
+        useCase.toggleIncludeSubfolders(bookshelfId, path)
+        val afterAdd = fakeRepo.folderDisplaySettings.first()
+        assertEquals(1, afterAdd.folderScopeOnlyList.size)
+        assertTrue(afterAdd.folderScopeOnlyList[0].includeSubfolders)
+
+        useCase.toggleIncludeSubfolders(bookshelfId, path)
+        val afterToggle = fakeRepo.folderDisplaySettings.first()
+        assertEquals(1, afterToggle.folderScopeOnlyList.size)
+        assertFalse(afterToggle.folderScopeOnlyList[0].includeSubfolders)
+    }
+
     private class FakeSettingsRepository(
         initialFolderDisplaySettings: FolderDisplaySettings = FolderDisplaySettings(),
     ) : SettingsRepository {
@@ -88,27 +105,27 @@ class ManageFolderDisplaySettingsUseCaseTest {
             TODO()
         override val displaySettings: Flow<DisplaySettings> get() = TODO()
         override suspend fun updateDisplaySettings(
-            transform: suspend (DisplaySettings) -> DisplaySettings
+            transform: suspend (DisplaySettings) -> DisplaySettings,
         ): DisplaySettings = TODO()
         override val viewerSettings: Flow<ViewerSettings> get() = TODO()
         override suspend fun updateViewerSettings(
-            transform: suspend (ViewerSettings) -> ViewerSettings
+            transform: suspend (ViewerSettings) -> ViewerSettings,
         ): ViewerSettings = TODO()
         override val bookSettings: Flow<BookSettings> get() = TODO()
         override suspend fun updateBookSettings(
-            transform: suspend (BookSettings) -> BookSettings
+            transform: suspend (BookSettings) -> BookSettings,
         ): BookSettings = TODO()
         override val folderSettings: Flow<FolderSettings> get() = TODO()
         override suspend fun updateFolderSettings(
-            transform: suspend (FolderSettings) -> FolderSettings
+            transform: suspend (FolderSettings) -> FolderSettings,
         ): FolderSettings = TODO()
         override val securitySettings: Flow<SecuritySettings> get() = TODO()
         override suspend fun updateSecuritySettings(
-            transform: suspend (SecuritySettings) -> SecuritySettings
+            transform: suspend (SecuritySettings) -> SecuritySettings,
         ): SecuritySettings = TODO()
         override val collectionSettings: Flow<CollectionSettings> get() = TODO()
         override suspend fun updateCollectionSettings(
-            transform: suspend (CollectionSettings) -> CollectionSettings
+            transform: suspend (CollectionSettings) -> CollectionSettings,
         ): CollectionSettings = TODO()
     }
 }

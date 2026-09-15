@@ -57,6 +57,7 @@ fun FolderScreenRoot(
         onFileInfoClick = dropUnlessResumed(block = onFileInfoClick),
         onSortClick = viewModel::onSortClick,
         onFolderScopeOnlyClick = viewModel::onFolderScopeOnlyClick,
+        onIncludeSubfoldersClick = viewModel::onIncludeSubfoldersClick,
         onSettingsClick = dropUnlessResumed(block = onSettingsClick),
         onRefresh = state::onRefresh,
         modifier = modifier.testTag("FolderScreenRoot"),

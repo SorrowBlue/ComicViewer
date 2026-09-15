@@ -71,4 +71,20 @@ class ManageFolderDisplaySettingsUseCase(
             )
         }
     }
+
+    /**
+     * 指定されたフォルダーの子フォルダー適用フラグをトグルします。
+     *
+     * @param bookshelfId 本棚ID
+     * @param path フォルダーパス
+     */
+    suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String) {
+        edit { current ->
+            folderSortSettingsService.toggleIncludeSubfolders(
+                settings = current,
+                bookshelfId = bookshelfId,
+                path = path,
+            )
+        }
+    }
 }

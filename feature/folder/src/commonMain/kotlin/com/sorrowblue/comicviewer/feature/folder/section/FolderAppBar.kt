@@ -43,6 +43,7 @@ internal fun FolderAppBar(
     onSearchClick: () -> Unit,
     onSortClick: (SortType) -> Unit,
     onFolderScopeOnlyClick: () -> Unit,
+    onIncludeSubfoldersClick: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
@@ -82,8 +83,12 @@ internal fun FolderAppBar(
                     SortTypeItem(
                         sortType = uiState.sortType,
                         folderScopeOnly = uiState.folderScopeOnly,
+                        includeSubfolders = uiState.includeSubfolders,
                         onFolderScopeOnlyClick = {
                             onFolderScopeOnlyClick()
+                        },
+                        onIncludeSubfoldersClick = {
+                            onIncludeSubfoldersClick()
                         },
                         onClick = {
                             onSortClick(it)
@@ -114,6 +119,7 @@ private fun FolderAppBarPreview() {
             onSearchClick = {},
             onSortClick = {},
             onFolderScopeOnlyClick = {},
+            onIncludeSubfoldersClick = {},
             onSettingsClick = {},
         )
     }

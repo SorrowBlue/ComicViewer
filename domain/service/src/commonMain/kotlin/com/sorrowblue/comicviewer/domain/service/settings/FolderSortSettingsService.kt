@@ -64,6 +64,20 @@ interface FolderSortSettingsService {
     ): UpdateResult
 
     /**
+     * 指定されたフォルダーが子フォルダーへの適用を有効にしているかを判定します。
+     *
+     * @param settings フォルダ表示設定
+     * @param bookshelfId 本棚ID
+     * @param path フォルダーパス
+     * @return 子フォルダーへの適用が有効な場合は true
+     */
+    fun isIncludeSubfolders(
+        settings: FolderDisplaySettings,
+        bookshelfId: BookshelfId,
+        path: String,
+    ): Boolean
+
+    /**
      * 指定されたフォルダーの個別設定モードをトグルします。
      * 個別設定が存在すれば削除し、存在しなければ現在の全体ソート設定を引き継いで個別設定を追加します。
      *
@@ -73,6 +87,21 @@ interface FolderSortSettingsService {
      * @return 更新後のフォルダ表示設定
      */
     fun toggleFolderScopeOnly(
+        settings: FolderDisplaySettings,
+        bookshelfId: BookshelfId,
+        path: String,
+    ): FolderDisplaySettings
+
+    /**
+     * 指定されたフォルダーの子フォルダー適用フラグをトグルします。
+     * 個別設定が存在すればフラグを反転し、存在しなければ子フォルダー適用を有効にした個別設定を追加します。
+     *
+     * @param settings 現在のフォルダ表示設定
+     * @param bookshelfId 本棚ID
+     * @param path フォルダーパス
+     * @return 更新後のフォルダ表示設定
+     */
+    fun toggleIncludeSubfolders(
         settings: FolderDisplaySettings,
         bookshelfId: BookshelfId,
         path: String,
@@ -96,6 +125,12 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
         bookshelfId: BookshelfId,
         path: String,
     ): Boolean = settings.isFolderScopeOnly(bookshelfId, path)
+
+    override fun isIncludeSubfolders(
+        settings: FolderDisplaySettings,
+        bookshelfId: BookshelfId,
+        path: String,
+    ): Boolean = settings.isIncludeSubfolders(bookshelfId, path)
 
     override fun resolveSortType(
         settings: FolderDisplaySettings,
@@ -154,7 +189,35 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
             settings.folderScopeOnlyList + FolderScopeOnly(
                 bookshelfId = bookshelfId,
                 path = path,
-                sortType = settings.sortType,
+                sortType = resolveSortType(settings, bookshelfId, path),
+                includeSubfolders = false,
+            )
+        }
+        return settings.copy(folderScopeOnlyList = newList)
+    }
+
+    override fun toggleIncludeSubfolders(
+        settings: FolderDisplaySettings,
+        bookshelfId: BookshelfId,
+        path: String,
+    ): FolderDisplaySettings {
+        val existing = settings.folderScopeOnlyList.find {
+            it.bookshelfId == bookshelfId && it.path == path
+        }
+        val newList = if (existing != null) {
+            settings.folderScopeOnlyList.map {
+                if (it.bookshelfId == bookshelfId && it.path == path) {
+                    it.copy(includeSubfolders = !it.includeSubfolders)
+                } else {
+                    it
+                }
+            }
+        } else {
+            settings.folderScopeOnlyList + FolderScopeOnly(
+                bookshelfId = bookshelfId,
+                path = path,
+                sortType = resolveSortType(settings, bookshelfId, path),
+                includeSubfolders = true,
             )
         }
         return settings.copy(folderScopeOnlyList = newList)

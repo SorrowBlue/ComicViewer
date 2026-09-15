@@ -98,6 +98,7 @@ internal class FolderViewModel(
                 title = title,
                 showSearch = showSearch,
                 folderScopeOnly = folderDisplaySettings.isFolderScopeOnly(bookshelfId, path),
+                includeSubfolders = folderDisplaySettings.isIncludeSubfolders(bookshelfId, path),
                 sortType = folderDisplaySettings.currentSortType(bookshelfId, path),
             ),
             folderListUiState = FolderListUiState(
@@ -132,6 +133,12 @@ internal class FolderViewModel(
     fun onFolderScopeOnlyClick() {
         viewModelScope.launch {
             folderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
+        }
+    }
+
+    fun onIncludeSubfoldersClick() {
+        viewModelScope.launch {
+            folderDisplaySettingsUseCase.toggleIncludeSubfolders(bookshelfId, path)
         }
     }
 

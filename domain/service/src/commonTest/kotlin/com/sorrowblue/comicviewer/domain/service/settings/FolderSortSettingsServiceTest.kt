@@ -41,7 +41,7 @@ class FolderSortSettingsServiceTest {
         val defaultSettings = FolderDisplaySettings(sortType = SortType.Name(true))
         assertEquals(
             SortType.Name(true),
-            service.resolveSortType(defaultSettings, bookshelfId, path)
+            service.resolveSortType(defaultSettings, bookshelfId, path),
         )
 
         val scopedSettings = defaultSettings.copy(
@@ -51,11 +51,11 @@ class FolderSortSettingsServiceTest {
         )
         assertEquals(
             SortType.Date(false),
-            service.resolveSortType(scopedSettings, bookshelfId, path)
+            service.resolveSortType(scopedSettings, bookshelfId, path),
         )
         assertEquals(
             SortType.Name(true),
-            service.resolveSortType(scopedSettings, BookshelfId(2), path)
+            service.resolveSortType(scopedSettings, BookshelfId(2), path),
         )
     }
 
@@ -72,7 +72,7 @@ class FolderSortSettingsServiceTest {
             initialSettings,
             bookshelfId,
             path,
-            SortType.Date(false)
+            SortType.Date(false),
         )
         assertTrue(result.isChanged)
         assertEquals(SortType.Name(true), result.settings.sortType)
@@ -93,7 +93,7 @@ class FolderSortSettingsServiceTest {
             initialSettings,
             bookshelfId,
             path,
-            SortType.Date(false)
+            SortType.Date(false),
         )
         assertFalse(result.isChanged)
         assertEquals(initialSettings, result.settings)
@@ -107,7 +107,7 @@ class FolderSortSettingsServiceTest {
             initialSettings,
             bookshelfId,
             path,
-            SortType.Size(false)
+            SortType.Size(false),
         )
         assertTrue(result.isChanged)
         assertEquals(SortType.Size(false), result.settings.sortType)
@@ -145,5 +145,127 @@ class FolderSortSettingsServiceTest {
 
         val updated = service.toggleFolderScopeOnly(initialSettings, bookshelfId, path)
         assertTrue(updated.folderScopeOnlyList.isEmpty())
+    }
+
+    @Test
+    fun testResolveSortType_inheritance_subfolder() {
+        val scopedSettings = FolderDisplaySettings(
+            sortType = SortType.Name(true),
+            folderScopeOnlyList = listOf(
+                FolderScopeOnly(
+                    bookshelfId = bookshelfId,
+                    path = "/manga",
+                    sortType = SortType.Date(false),
+                    includeSubfolders = true,
+                ),
+            ),
+        )
+        // 子フォルダに親の設定が継承される
+        assertEquals(
+            SortType.Date(false),
+            service.resolveSortType(scopedSettings, bookshelfId, "/manga/vol1"),
+        )
+        // 孫フォルダにも継承される
+        assertEquals(
+            SortType.Date(false),
+            service.resolveSortType(scopedSettings, bookshelfId, "/manga/vol1/ch1"),
+        )
+        // 異なるパスには継承されない
+        assertEquals(
+            SortType.Name(true),
+            service.resolveSortType(scopedSettings, bookshelfId, "/novel/vol1"),
+        )
+        // 前方一致だがディレクトリ境界が異なる（/manga2）には継承されない
+        assertEquals(
+            SortType.Name(true),
+            service.resolveSortType(scopedSettings, bookshelfId, "/manga2"),
+        )
+    }
+
+    @Test
+    fun testResolveSortType_nearestAncestorWins() {
+        val scopedSettings = FolderDisplaySettings(
+            sortType = SortType.Name(true),
+            folderScopeOnlyList = listOf(
+                FolderScopeOnly(
+                    bookshelfId = bookshelfId,
+                    path = "/manga",
+                    sortType = SortType.Date(false),
+                    includeSubfolders = true,
+                ),
+                FolderScopeOnly(
+                    bookshelfId = bookshelfId,
+                    path = "/manga/action",
+                    sortType = SortType.Size(true),
+                    includeSubfolders = true,
+                ),
+            ),
+        )
+        // 最も近い祖先（/manga/action）の設定が優先される
+        assertEquals(
+            SortType.Size(true),
+            service.resolveSortType(scopedSettings, bookshelfId, "/manga/action/hero"),
+        )
+        // 自分自身に個別設定があれば最優先
+        val withSelfSettings = scopedSettings.copy(
+            folderScopeOnlyList = scopedSettings.folderScopeOnlyList + FolderScopeOnly(
+                bookshelfId = bookshelfId,
+                path = "/manga/action/hero",
+                sortType = SortType.Name(false),
+                includeSubfolders = false,
+            ),
+        )
+        assertEquals(
+            SortType.Name(false),
+            service.resolveSortType(withSelfSettings, bookshelfId, "/manga/action/hero"),
+        )
+    }
+
+    @Test
+    fun testResolveSortType_subfolderNotInheritedWhenFalse() {
+        val scopedSettings = FolderDisplaySettings(
+            sortType = SortType.Name(true),
+            folderScopeOnlyList = listOf(
+                FolderScopeOnly(
+                    bookshelfId = bookshelfId,
+                    path = "/manga",
+                    sortType = SortType.Date(false),
+                    includeSubfolders = false,
+                ),
+            ),
+        )
+        // includeSubfolders = false のため子フォルダには継承されない
+        assertEquals(
+            SortType.Name(true),
+            service.resolveSortType(scopedSettings, bookshelfId, "/manga/vol1"),
+        )
+    }
+
+    @Test
+    fun testToggleIncludeSubfolders_whenExists_togglesFlag() {
+        val initialSettings = FolderDisplaySettings(
+            sortType = SortType.Name(true),
+            folderScopeOnlyList = listOf(
+                FolderScopeOnly(bookshelfId, path, SortType.Date(true), includeSubfolders = false),
+            ),
+        )
+
+        val updated = service.toggleIncludeSubfolders(initialSettings, bookshelfId, path)
+        assertTrue(service.isIncludeSubfolders(updated, bookshelfId, path))
+        assertEquals(1, updated.folderScopeOnlyList.size)
+
+        val toggledBack = service.toggleIncludeSubfolders(updated, bookshelfId, path)
+        assertFalse(service.isIncludeSubfolders(toggledBack, bookshelfId, path))
+    }
+
+    @Test
+    fun testToggleIncludeSubfolders_whenNotExists_addsWithTrue() {
+        val initialSettings = FolderDisplaySettings(sortType = SortType.Name(true))
+
+        val updated = service.toggleIncludeSubfolders(initialSettings, bookshelfId, path)
+        assertTrue(service.isIncludeSubfolders(updated, bookshelfId, path))
+        assertTrue(service.isFolderScopeOnly(updated, bookshelfId, path))
+        assertEquals(1, updated.folderScopeOnlyList.size)
+        assertEquals(SortType.Name(true), updated.folderScopeOnlyList[0].sortType)
     }
 }
