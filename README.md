@@ -68,6 +68,7 @@ graph LR
 | app     | jvmApp         |              | JVM (Desktop) Application |
 | app     | ios            |              | iOS Application |
 | app     | share          |              | Platform shared entry point |
+| app     | sync           |              | Background data synchronization and scan implementations |
 | domain  | model          |              | Domain models and entities (Core) |
 | domain  | repository     |              | Repository interfaces and ports (Data access abstractions) |
 | domain  | service        |              | Domain services and pure business logic |
@@ -80,7 +81,6 @@ graph LR
 | data    | storage        |              | File storage client abstractions |
 | data    | storage        | device       | Local device storage implementations |
 | data    | storage        | smb          | SMB network storage implementations |
-| data    | sync           |              | Background data synchronization and scan implementations |
 | feature | authentication |              | Login/Authentication screen |
 | feature | authentication | nav          | Authentication navigation |
 | feature | book           |              | Comic viewer screen |
@@ -130,17 +130,22 @@ ComicViewer adheres to the principles of **Onion Architecture**, placing the Dom
 - **Layer 3: Application Services / Use Cases**: Concrete use cases orchestrating domain logic, domain services, and repository abstractions (`:domain:usecase`).
 - **Layer 4: Outer Ring (Infrastructure, Presentation & Composition Root)**:
   - **Presentation (UI)**: UI screens and viewmodels (`:feature:*`), shared design system (`:framework:designsystem`), and UI components (`:framework:ui`).
-  - **Infrastructure**: Database (`:data:database`), storage/network (`:data:storage:*`), image loading (`:data:coil`), data synchronization (`:data:sync`), and platform services (`:framework:background`, `:framework:notification`, `:framework:permission`, `:framework:startup`).
-  - **Composition Root**: Application entry points and Metro DI wiring (`:app:share`, `:app:androidApp`, `:app:jvmApp`, `:app:ios`).
+  - **Infrastructure**: Database (`:data:database`), storage/network (`:data:storage:*`), image loading (`:data:coil`), and platform services (`:framework:background`, `:framework:notification`, `:framework:permission`, `:framework:startup`).
+  - **Composition Root & Platform Shell**: Application entry points, background synchronization, and Metro DI wiring (`:app:share`, `:app:sync`, `:app:androidApp`, `:app:jvmApp`, `:app:ios`).
 
 ## Module dependencies
 
 ```mermaid
 graph TD
-    subgraph app [app - Composition Root]
+    subgraph app [app - Composition Root & Platform Shell]
         :app:androidApp --> :app:share
         :app:jvmApp --> :app:share
         :app:ios --> :app:share
+        :app:share --> :app:sync
+        :app:sync --> :domain:repository
+        :app:sync --> :domain:usecase
+        :app:sync --> :framework:background
+        :app:sync --> :framework:notification
     end
 
     subgraph feature [feature - Presentation]
@@ -184,10 +189,6 @@ graph TD
         :data:storage:smb --> :data:storage
         :data:storage --> :domain:repository
         :data:storage --> :domain:service
-        :data:sync --> :domain:repository
-        :data:sync --> :domain:usecase
-        :data:sync --> :framework:background
-        :data:sync --> :framework:notification
     end
 
     subgraph framework [framework - UI & Platform Infrastructure]

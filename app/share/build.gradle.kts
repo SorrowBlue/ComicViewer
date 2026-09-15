@@ -68,6 +68,7 @@ kotlin {
                         logger.lifecycle("Skipping empty or non-source module: ${it.path}")
                     }
                 }
+                api(projects.app.sync)
 
                 implementation(libs.androidx.navigation3UI)
 

@@ -109,7 +109,7 @@ dependencies {
     dokka(projects.data.storage)
     dokka(projects.data.storage.device)
     dokka(projects.data.storage.smb)
-    dokka(projects.data.sync)
+    dokka(projects.app.sync)
     dokka(projects.domain.model)
     dokka(projects.domain.repository)
     dokka(projects.domain.service)
@@ -173,7 +173,7 @@ moduleGraphConfig {
         ":data:storage",
         ":data:storage:device",
         ":data:storage:smb",
-        ":data:sync",
+        ":app:sync",
         ":domain:model",
         ":domain:repository",
         ":domain:service",
