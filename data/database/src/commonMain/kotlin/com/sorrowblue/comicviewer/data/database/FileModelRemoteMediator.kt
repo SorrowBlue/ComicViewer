@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.common.PagingException
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
@@ -18,7 +19,6 @@ import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.service.file.FileSortService
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject

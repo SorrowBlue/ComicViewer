@@ -10,6 +10,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.domain.model)
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.ui)
                 implementation(libs.androidx.navigation3Runtime)

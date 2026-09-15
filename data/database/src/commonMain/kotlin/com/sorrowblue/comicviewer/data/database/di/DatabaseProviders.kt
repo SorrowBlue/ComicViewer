@@ -12,7 +12,7 @@ import com.sorrowblue.comicviewer.data.database.dao.CollectionFileDao
 import com.sorrowblue.comicviewer.data.database.dao.FileDao
 import com.sorrowblue.comicviewer.data.database.dao.ReadLaterFileDao
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPasswordConverters
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo

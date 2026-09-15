@@ -9,12 +9,12 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
 import com.sorrowblue.comicviewer.data.storage.client.fileClient
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory

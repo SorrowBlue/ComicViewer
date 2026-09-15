@@ -18,7 +18,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory

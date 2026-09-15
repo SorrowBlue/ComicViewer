@@ -23,6 +23,7 @@ import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileInfoEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileTypeInfoEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
@@ -35,7 +36,6 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOr
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.CoroutineDispatcher

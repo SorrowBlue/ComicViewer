@@ -8,7 +8,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioStorage
 import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import dev.zacsweers.metro.Inject
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.filesDir

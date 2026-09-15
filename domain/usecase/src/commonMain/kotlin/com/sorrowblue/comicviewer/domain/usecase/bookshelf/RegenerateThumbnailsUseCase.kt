@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
@@ -13,7 +14,6 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.ThumbnailRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import com.sorrowblue.comicviewer.domain.usecase.limitedCoroutineScope
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject

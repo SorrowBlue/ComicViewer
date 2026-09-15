@@ -1,7 +1,7 @@
 package com.sorrowblue.comicviewer.data.storage.smb
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Multibinds

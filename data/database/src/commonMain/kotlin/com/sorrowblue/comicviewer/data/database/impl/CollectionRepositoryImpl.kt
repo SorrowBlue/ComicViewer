@@ -19,8 +19,8 @@ import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.CoroutineDispatcher

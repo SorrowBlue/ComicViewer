@@ -9,6 +9,9 @@ kotlin {
     }
 
     sourceSets {
+        commonMain.dependencies {
+            implementation(projects.domain.model)
+        }
         androidMain {
             dependencies {
                 implementation(projects.framework.startup)
