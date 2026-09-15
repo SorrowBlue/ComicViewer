@@ -78,6 +78,7 @@ graph LR
 | data    | storage        |              | File storage client abstractions |
 | data    | storage        | device       | Local device storage implementations |
 | data    | storage        | smb          | SMB network storage implementations |
+| data    | sync           |              | Background data synchronization and scan implementations |
 | feature | authentication |              | Login/Authentication screen |
 | feature | authentication | nav          | Authentication navigation |
 | feature | book           |              | Comic viewer screen |
@@ -127,7 +128,7 @@ ComicViewer adheres to the principles of **Onion Architecture**, placing the Dom
 - **Layer 3: Application Services / Use Cases**: Use case definitions and application workflow orchestration (`:domain:usecase`, `:domain:service` interactors).
 - **Layer 4: Outer Ring (Infrastructure, Presentation & Composition Root)**:
   - **Presentation (UI)**: UI screens and viewmodels (`:feature:*`), shared design system (`:framework:designsystem`), and UI components (`:framework:ui`).
-  - **Infrastructure**: Database (`:data:database`), storage/network (`:data:storage:*`), image loading (`:data:coil`), and platform services (`:framework:background`, `:framework:notification`, `:framework:permission`, `:framework:startup`).
+  - **Infrastructure**: Database (`:data:database`), storage/network (`:data:storage:*`), image loading (`:data:coil`), data synchronization (`:data:sync`), and platform services (`:framework:background`, `:framework:notification`, `:framework:permission`, `:framework:startup`).
   - **Composition Root**: Application entry points and Metro DI wiring (`:app:share`, `:app:androidApp`, `:app:jvmApp`, `:app:ios`).
 
 ## Module dependencies
@@ -158,15 +159,15 @@ graph TD
         :feature:folder --> :feature:collection:nav
         :feature:folder --> :feature:search:nav
         :feature:folder --> :feature:settings:nav
-        :feature:history --> :feature:collection:nav
+        :feature:history --> :feature:book:nav
         :feature:history --> :feature:folder:nav
-        :feature:readlater --> :feature:collection:nav
+        :feature:readlater --> :feature:book:nav
         :feature:readlater --> :feature:folder:nav
-        :feature:search --> :feature:collection:nav
-        :feature:search --> :feature:folder:nav
         :feature:search --> :feature:search:nav
-        :feature:settings --> :feature:settings:common
+        :feature:search --> :feature:book:nav
+        :feature:search --> :feature:folder:nav
         :feature:settings --> :feature:settings:nav
+        :feature:settings --> :feature:settings:common
         :feature:settings:display --> :feature:settings:common
         :feature:settings:folder --> :feature:settings:common
         :feature:settings:info --> :feature:settings:common
@@ -197,6 +198,10 @@ graph TD
         :data:storage:device --> :data:storage
         :data:storage:smb --> :data:storage
         :data:storage --> :domain:service
+        :data:sync --> :domain:service
+        :data:sync --> :domain:usecase
+        :data:sync --> :framework:background
+        :data:sync --> :framework:notification
     end
 
     subgraph framework [framework - UI & Platform Infrastructure]
@@ -215,6 +220,7 @@ graph TD
     :app:share --> framework
 
     feature --> :domain:usecase
+    feature --> :domain:service
     feature --> :framework:designsystem
     feature --> :framework:ui
     feature --> :framework:ui:file

@@ -6,4 +6,11 @@
 <resources>
     <string name="framework_notification_channel_name_bookshelf_scan">scan of bookshelf</string>
     <string name="framework_notification_channel_description_bookshelf_scan">Notifications for scanning bookshelves</string>
+
+    <string name="framework_notification_file_scan_title">File scan</string>
+    <string name="framework_notification_file_scan_cancelled">File scan was cancelled</string>
+    <string name="framework_notification_file_scan_completed">File scan completed</string>
+    <string name="framework_notification_thumbnail_scan_title">Thumbnail scan</string>
+    <string name="framework_notification_thumbnail_scan_cancelled">Thumbnail scan was cancelled</string>
+    <string name="framework_notification_thumbnail_scan_completed">Thumbnail scan completed</string>
 </resources>

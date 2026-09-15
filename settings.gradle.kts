@@ -95,6 +95,7 @@ include(":data:reader:document")
 include(":data:storage")
 include(":data:storage:smb")
 include(":data:storage:device")
+include(":data:sync")
 
 include(":feature:authentication")
 include(":feature:authentication:nav")
