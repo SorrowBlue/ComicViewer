@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
@@ -54,10 +57,12 @@ internal fun rememberBasicCollectionEditScreenState(
     val coroutineScope = rememberCoroutineScope()
     val formState =
         rememberFormState(initialValue = BasicCollectionForm(), saver = kSerializableSaver())
-    return remember(viewModel) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(viewModel, lifecycle) {
         BasicCollectionEditScreenStateImpl(
             coroutineScope = coroutineScope,
             formState = formState,
+            lifecycle = lifecycle,
             collectionFlow = viewModel.collectionFlow,
             eventFlow = viewModel.event,
             delete = viewModel::onDeleteClick,
@@ -73,6 +78,7 @@ internal fun rememberBasicCollectionEditScreenState(
 private class BasicCollectionEditScreenStateImpl(
     coroutineScope: CoroutineScope,
     private val formState: FormState<BasicCollectionForm>,
+    lifecycle: Lifecycle,
     collectionFlow: SharedFlow<BasicCollection>,
     eventFlow: SharedFlow<BasicCollectionEditViewModelEvent>,
     private val delete: (File) -> Unit,
@@ -87,17 +93,22 @@ private class BasicCollectionEditScreenStateImpl(
 
     init {
         uiState = uiState.copy(isLoading = true)
-        collectionFlow.onEach { collection ->
-            formState.reset(BasicCollectionForm(name = collection.name))
-            uiState = uiState.copy(isLoading = false)
-        }.launchIn(coroutineScope)
-        eventFlow.onEach { event ->
-            when (event) {
-                BasicCollectionEditViewModelEvent.EditComplete -> {
-                    events.tryEmit(BasicCollectionEditScreenStateEvent.EditComplete)
+        collectionFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { collection ->
+                formState.reset(BasicCollectionForm(name = collection.name))
+                uiState = uiState.copy(isLoading = false)
+            }
+            .launchIn(coroutineScope)
+        eventFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { event ->
+                when (event) {
+                    BasicCollectionEditViewModelEvent.EditComplete -> {
+                        events.tryEmit(BasicCollectionEditScreenStateEvent.EditComplete)
+                    }
                 }
             }
-        }
             .launchIn(coroutineScope)
     }
 

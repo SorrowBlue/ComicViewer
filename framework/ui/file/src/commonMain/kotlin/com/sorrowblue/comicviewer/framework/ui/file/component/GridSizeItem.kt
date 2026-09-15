@@ -12,7 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
@@ -52,11 +55,13 @@ fun rememberGridSizeItemState(
     viewModel: GridSizeItemViewModel = metroViewModel(),
 ): GridSizeItemState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(viewModel, coroutineScope) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(viewModel, coroutineScope, lifecycle) {
         GridSizeItemStateImpl(
             fileListDisplayFlow = viewModel.fileListDisplayFlow,
             toggleGridColumnSize = viewModel::toggleGridColumnSize,
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
         )
     }
 }
@@ -71,11 +76,14 @@ private class GridSizeItemStateImpl(
     fileListDisplayFlow: SharedFlow<FileListDisplay>,
     private val toggleGridColumnSize: () -> Unit,
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
 ) : GridSizeItemState {
     override var fileListDisplay by mutableStateOf(FileListDisplay.Grid)
 
     init {
-        fileListDisplayFlow.onEach { fileListDisplay = it }.launchIn(coroutineScope)
+        fileListDisplayFlow.flowWithLifecycle(lifecycle)
+            .onEach { fileListDisplay = it }
+            .launchIn(coroutineScope)
     }
 
     override fun onClick() {

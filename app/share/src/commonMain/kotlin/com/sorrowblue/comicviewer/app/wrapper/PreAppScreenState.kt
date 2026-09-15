@@ -13,6 +13,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,9 +34,11 @@ internal fun rememberPreAppScreenState(
     viewModel: PreAppViewModel = metroViewModel<PreAppViewModel>(),
 ): PreAppScreenState {
     val coroutineScope = rememberCoroutineScope()
-    val state = remember(coroutineScope, viewModel) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val state = remember(coroutineScope, lifecycle, viewModel) {
         PreAppScreenStateImpl(
             scope = coroutineScope,
+            lifecycle = lifecycle,
             tutorialRequired = viewModel.tutorialRequired,
             authRequired = viewModel.authRequired,
             lockOnBackground = viewModel.lockOnBackground,
@@ -55,6 +59,7 @@ internal interface PreAppScreenState {
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 internal class PreAppScreenStateImpl(
     scope: CoroutineScope,
+    lifecycle: Lifecycle? = null,
     tutorialRequired: SharedFlow<Boolean>,
     authRequired: SharedFlow<Boolean>,
     private val lockOnBackground: StateFlow<Boolean>,
@@ -65,7 +70,7 @@ internal class PreAppScreenStateImpl(
         private set
 
     init {
-        combine(tutorialRequired, authRequired) { tutorialRequired1, authRequired1 ->
+        val flow = combine(tutorialRequired, authRequired) { tutorialRequired1, authRequired1 ->
             uiState = when {
                 tutorialRequired1 -> PreAppUiState.TutorialRequired
 
@@ -80,6 +85,11 @@ internal class PreAppScreenStateImpl(
 
                 else -> PreAppUiState.NoAuthRequired
             }
+        }
+        if (lifecycle != null) {
+            flow.flowWithLifecycle(lifecycle)
+        } else {
+            flow
         }.launchIn(scope)
     }
 

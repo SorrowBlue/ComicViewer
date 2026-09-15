@@ -12,7 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -53,9 +56,11 @@ fun rememberHiddenFilesToggleableItemState(
     viewModel: HiddenFilesToggleableItemViewModel = metroViewModel(),
 ): HiddenFilesToggleableItemState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(coroutineScope, viewModel, lifecycle) {
         HiddenFilesToggleableItemStateImpl(
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             hiddenFilesFlow = viewModel.hiddenFilesFlow,
             setHiddenFiles = viewModel::setHiddenFiles,
         )
@@ -70,6 +75,7 @@ interface HiddenFilesToggleableItemState {
 
 private class HiddenFilesToggleableItemStateImpl(
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     hiddenFilesFlow: SharedFlow<Boolean>,
     private val setHiddenFiles: (Boolean) -> Unit,
 ) : HiddenFilesToggleableItemState {
@@ -77,7 +83,9 @@ private class HiddenFilesToggleableItemStateImpl(
     override var showHiddenFile: Boolean by mutableStateOf(false)
 
     init {
-        hiddenFilesFlow.onEach { showHiddenFile = it }.launchIn(coroutineScope)
+        hiddenFilesFlow.flowWithLifecycle(lifecycle)
+            .onEach { showHiddenFile = it }
+            .launchIn(coroutineScope)
     }
 
     override fun onCheckedChange(checked: Boolean) {

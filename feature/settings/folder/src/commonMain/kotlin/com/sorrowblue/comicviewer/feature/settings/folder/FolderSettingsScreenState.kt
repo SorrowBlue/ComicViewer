@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
@@ -56,9 +59,11 @@ internal fun rememberFolderSettingsScreenState(
     viewModel: FolderSettingsViewModel = metroViewModel(),
 ): FolderSettingsScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(coroutineScope) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(coroutineScope, lifecycle) {
         FolderSettingsScreenStateImpl(
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             folderSettingsFlow = viewModel.folderSettingsFlow,
             folderDisplaySettingsFlow = viewModel.folderDisplaySettingsFlow,
             updateFolderSettings = { viewModel.updateFolderSettings(it) },
@@ -69,6 +74,7 @@ internal fun rememberFolderSettingsScreenState(
 
 private class FolderSettingsScreenStateImpl(
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     folderSettingsFlow: SharedFlow<FolderSettings>,
     folderDisplaySettingsFlow: SharedFlow<FolderDisplaySettings>,
     private val updateFolderSettings: ((FolderSettings) -> FolderSettings) -> Unit,
@@ -100,7 +106,8 @@ private class FolderSettingsScreenStateImpl(
                 fontSize = folderDisplaySettings.fontSize,
                 folderThumbnailOrder = folderDisplaySettings.folderThumbnailOrder,
             )
-        }.launchIn(coroutineScope)
+        }.flowWithLifecycle(lifecycle)
+            .launchIn(coroutineScope)
     }
 
     override fun onChangeOpenImageFolder(value: Boolean) {

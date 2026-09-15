@@ -23,6 +23,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_msg_desabled_bio_auth
@@ -50,10 +53,12 @@ internal actual fun rememberSecuritySettingsScreenState(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val androidContext = LocalContext.current
-    val state = remember(scope, snackbarHostState, androidContext, viewModel) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val state = remember(scope, snackbarHostState, androidContext, viewModel, lifecycle) {
         SecuritySettingsScreenStateImpl(
             context = androidContext,
             scope = scope,
+            lifecycle = lifecycle,
             snackbarHostState = snackbarHostState,
             settingsFlow = viewModel.settingsFlow,
             updateSettings = viewModel::updateSettings,
@@ -69,6 +74,7 @@ internal actual fun rememberSecuritySettingsScreenState(
 private class SecuritySettingsScreenStateImpl(
     private val context: Context,
     private val scope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val snackbarHostState: SnackbarHostState,
     private val settingsFlow: StateFlow<SecuritySettings>,
     private val updateSettings: ((SecuritySettings) -> SecuritySettings) -> Unit,
@@ -86,13 +92,14 @@ private class SecuritySettingsScreenStateImpl(
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
     init {
-        settingsFlow.onEach {
-            uiState = uiState.copy(
-                isAuthEnabled = it.password != null,
-                isBackgroundLockEnabled = it.lockOnBackground,
-                isBiometricEnabled = it.useBiometrics,
-            )
-        }.launchIn(scope)
+        settingsFlow.flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(
+                    isAuthEnabled = it.password != null,
+                    isBackgroundLockEnabled = it.lockOnBackground,
+                    isBiometricEnabled = it.useBiometrics,
+                )
+            }.launchIn(scope)
         val state = BiometricManager
             .from(
                 context,

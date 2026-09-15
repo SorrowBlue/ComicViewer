@@ -10,7 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
@@ -46,9 +49,11 @@ internal fun rememberBookshelfDeleteScreenState(
         assistedMetroViewModel<BookshelfDeleteViewModel, BookshelfDeleteViewModel.Factory> {
             create(bookshelfId)
         }
-    return remember(viewModel) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(viewModel, lifecycle) {
         BookshelfDeleteScreenStateImpl(
             scope = coroutineScope,
+            lifecycle = lifecycle,
             viewModel = viewModel,
         )
     }
@@ -56,15 +61,19 @@ internal fun rememberBookshelfDeleteScreenState(
 
 private class BookshelfDeleteScreenStateImpl(
     scope: CoroutineScope,
+    lifecycle: Lifecycle,
     private val viewModel: BookshelfDeleteViewModel,
 ) : BookshelfDeleteScreenState {
     override var uiState by mutableStateOf(BookshelfDeleteScreenUiState())
         private set
 
     init {
-        viewModel.bookshelfFlow.onEach {
-            uiState = uiState.copy(title = it.displayName)
-        }.launchIn(scope)
+        viewModel.bookshelfFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(title = it.displayName)
+            }
+            .launchIn(scope)
     }
 
     override fun onConfirmClick(done: () -> Unit) {

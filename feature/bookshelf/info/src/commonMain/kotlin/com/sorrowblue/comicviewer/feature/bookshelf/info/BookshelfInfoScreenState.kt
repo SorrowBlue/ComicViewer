@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -31,9 +34,11 @@ internal fun rememberBookshelfInfoScreenState(
         },
 ): BookshelfInfoScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(lifecycle) {
         BookshelfInfoScreenStateImpl(
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             bookshelfInfoFlow = viewModel.bookshelfInfoFlow,
         )
     }
@@ -41,6 +46,7 @@ internal fun rememberBookshelfInfoScreenState(
 
 private class BookshelfInfoScreenStateImpl(
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     bookshelfInfoFlow: SharedFlow<BookshelfFolder?>,
 ) : BookshelfInfoScreenState {
     override var uiState by mutableStateOf<BookshelfInfoSheetUiState>(
@@ -49,12 +55,15 @@ private class BookshelfInfoScreenStateImpl(
         private set
 
     init {
-        bookshelfInfoFlow.onEach {
-            uiState = if (it != null) {
-                BookshelfInfoSheetUiState.Loaded(it)
-            } else {
-                BookshelfInfoSheetUiState.Error
+        bookshelfInfoFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = if (it != null) {
+                    BookshelfInfoSheetUiState.Loaded(it)
+                } else {
+                    BookshelfInfoSheetUiState.Error
+                }
             }
-        }.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
     }
 }

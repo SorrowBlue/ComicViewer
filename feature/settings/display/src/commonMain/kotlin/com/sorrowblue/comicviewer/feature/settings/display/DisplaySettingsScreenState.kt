@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -30,9 +33,11 @@ internal fun rememberDisplaySettingsScreenState(
     viewModel: DisplaySettingsViewModel = metroViewModel(),
 ): DisplaySettingsScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember(coroutineScope) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(coroutineScope, lifecycle) {
         DisplaySettingsScreenStateImpl(
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             settingsFlow = viewModel.settingsFlow,
             updateSettings = viewModel::updateSettings,
         )
@@ -41,6 +46,7 @@ internal fun rememberDisplaySettingsScreenState(
 
 private class DisplaySettingsScreenStateImpl(
     coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     settingsFlow: SharedFlow<DisplaySettings>,
     private val updateSettings: ((DisplaySettings) -> DisplaySettings) -> Unit,
 ) : DisplaySettingsScreenState {
@@ -48,12 +54,13 @@ private class DisplaySettingsScreenStateImpl(
         private set
 
     init {
-        settingsFlow.onEach { settings ->
-            uiState = uiState.copy(
-                darkMode = settings.darkMode,
-                restoreOnLaunch = settings.restoreOnLaunch,
-            )
-        }.launchIn(coroutineScope)
+        settingsFlow.flowWithLifecycle(lifecycle)
+            .onEach { settings ->
+                uiState = uiState.copy(
+                    darkMode = settings.darkMode,
+                    restoreOnLaunch = settings.restoreOnLaunch,
+                )
+            }.launchIn(coroutineScope)
     }
 
     override fun onRestoreOnLaunchChange(value: Boolean) {
