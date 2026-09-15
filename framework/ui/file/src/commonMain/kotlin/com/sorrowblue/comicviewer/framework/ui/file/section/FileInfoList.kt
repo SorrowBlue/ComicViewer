@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import kotlin.math.pow
 import kotlin.math.roundToInt
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -65,7 +64,6 @@ private fun Float.format(decimalPlaces: Int = 2): String {
     return ((this * multiplier).roundToInt() / multiplier).toString()
 }
 
-@OptIn(ExperimentalTime::class)
 val Long.asDateTime: String
     get() = Instant
         .fromEpochMilliseconds(this)
@@ -78,7 +76,6 @@ val Long.asDateTime: String
             },
         )
 
-@OptIn(ExperimentalTime::class)
 val Long.asDate: String
     get() = Instant
         .fromEpochMilliseconds(this)
@@ -89,7 +86,6 @@ val Long.asDate: String
             },
         )
 
-@OptIn(ExperimentalTime::class)
 val Long.asTime: String
     get() {
         val systemZone = TimeZone.currentSystemDefault()

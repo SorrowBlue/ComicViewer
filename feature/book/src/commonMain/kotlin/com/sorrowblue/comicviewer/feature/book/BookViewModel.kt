@@ -76,10 +76,13 @@ internal class BookViewModel(
         when (action) {
             is PageAction.FormatChange -> {
                 val pages = createInitialBookPagesUseCase(
-                    totalPageCount = book.totalPageCount,
-                    pageFormat = action.pageFormat,
-                    isCompactWindow = isCompactWindowClass,
-                )
+                    CreateInitialBookPagesUseCase.Request(
+                        totalPageCount = book.totalPageCount,
+                        pageFormat = action.pageFormat,
+                        isCompactWindow = isCompactWindowClass,
+                    ),
+                ).dataOrNull()
+                requireNotNull(pages)
                 val prevBooks = getNextBookUseCase.execute(false)
                 val nextBooks = getNextBookUseCase.execute(true)
                 buildList {
@@ -90,7 +93,15 @@ internal class BookViewModel(
             }
 
             is PageAction.PageLoaded -> {
-                resolveBookPageLayoutUseCase(currentList, action.unratedPage, action.isPortrait)
+                resolveBookPageLayoutUseCase(
+                    ResolveBookPageLayoutUseCase.Request(
+                        currentList,
+                        action.unratedPage,
+                        action.isPortrait,
+                    ),
+                ).dataOrNull().let {
+                    requireNotNull(it)
+                }
             }
         }
     }.stateIn(
@@ -145,7 +156,7 @@ internal class BookViewModel(
 
     fun release() {
         viewModelScope.launch {
-            closeBookUseCase(CloseBookUseCase.Request(book))
+            closeBookUseCase(book)
         }
     }
 

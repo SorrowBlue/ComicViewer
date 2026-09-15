@@ -4,28 +4,35 @@
 
 package com.sorrowblue.comicviewer.domain.usecase
 
-import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-@Inject
-class GetNavigationHistoryUseCase(
-    private val fileRepository: FileRepository,
-    private val bookshelfRepository: BookshelfRepository,
-) : UseCase<EmptyRequest, NavigationHistory, GetNavigationHistoryUseCase.Error>() {
+abstract class GetNavigationHistoryUseCase :
+    UseCase<Unit, NavigationHistory, GetNavigationHistoryUseCase.Error>() {
+
     sealed interface Error : Resource.AppError {
         data object System : Error
     }
+}
 
-    override fun run(request: EmptyRequest): Flow<Resource<NavigationHistory, Error>> {
+@Inject
+@ContributesBinding(AppScope::class)
+internal class GetNavigationHistoryUseCaseImpl(
+    private val fileRepository: FileRepository,
+    private val bookshelfRepository: BookshelfRepository,
+) : GetNavigationHistoryUseCase() {
+
+    override fun run(request: Unit): Flow<Resource<NavigationHistory, Error>> {
         return fileRepository.lastHistory().map { file ->
             if (file != null) {
                 val bookshelf = bookshelfRepository.flow(file.bookshelfId).first()

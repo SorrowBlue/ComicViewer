@@ -11,20 +11,25 @@ import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
+abstract class GetBookshelfImageCacheInfoUseCase :
+    UseCase<Unit, List<BookshelfImageCacheInfo>, Unit>()
+
 @Inject
-class GetBookshelfImageCacheInfoUseCase(
+@ContributesBinding(AppScope::class)
+internal class GetBookshelfImageCacheInfoUseCaseImpl(
     private val bookshelfRepository: BookshelfRepository,
     private val imageCacheRepository: ImageCacheRepository,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
-) : UseCase<GetBookshelfImageCacheInfoUseCase.Request, List<BookshelfImageCacheInfo>, Unit>() {
-    data object Request : UseCase.Request
+) : GetBookshelfImageCacheInfoUseCase() {
 
-    override fun run(request: Request): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> =
+    override fun run(request: Unit): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> =
         bookshelfRepository.allBookshelf().fold(
             onSuccess = { flow -> flow.map { Resource.Success(imageCacheInfoList(it)) } },
             onError = {

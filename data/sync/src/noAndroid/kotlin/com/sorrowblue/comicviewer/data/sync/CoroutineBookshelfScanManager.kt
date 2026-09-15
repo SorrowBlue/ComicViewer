@@ -6,8 +6,6 @@ package com.sorrowblue.comicviewer.data.sync
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.repository.bookshelf.BookshelfScanManager
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +20,8 @@ import logcat.asLog
 import logcat.logcat
 
 internal class CoroutineBookshelfScanManager(
-    private val scanBookshelfUseCase: ScanBookshelfUseCase,
-    private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
+    private val scanBookshelf: suspend (BookshelfId) -> Unit = {},
+    private val regenerateThumbnails: suspend (BookshelfId) -> Unit = {},
     private val onFileScanComplete: suspend (BookshelfId) -> Unit = {},
     private val onThumbnailScanComplete: suspend (BookshelfId) -> Unit = {},
 ) : BookshelfScanManager {
@@ -43,9 +41,7 @@ internal class CoroutineBookshelfScanManager(
         scanningFiles.update { it + bookshelfId }
         coroutineScope.launch {
             try {
-                scanBookshelfUseCase(
-                    ScanBookshelfUseCase.Request(bookshelfId = bookshelfId) { _, _ -> },
-                )
+                scanBookshelf.invoke(bookshelfId)
                 onFileScanComplete(bookshelfId)
             } catch (e: CancellationException) {
                 throw e
@@ -61,9 +57,7 @@ internal class CoroutineBookshelfScanManager(
         scanningThumbnails.update { it + bookshelfId }
         coroutineScope.launch {
             try {
-                regenerateThumbnailsUseCase(
-                    RegenerateThumbnailsUseCase.Request(bookshelfId = bookshelfId) { _, _, _ -> },
-                )
+                regenerateThumbnails(bookshelfId)
                 onThumbnailScanComplete(bookshelfId)
             } catch (e: CancellationException) {
                 throw e

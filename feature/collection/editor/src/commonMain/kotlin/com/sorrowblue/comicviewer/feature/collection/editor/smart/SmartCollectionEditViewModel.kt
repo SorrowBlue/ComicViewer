@@ -6,7 +6,6 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sorrowblue.comicviewer.domain.EmptyRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
@@ -15,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.GetCollectionUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.UpdateCollectionUseCase
+import com.sorrowblue.comicviewer.domain.usecase.invoke
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -42,11 +42,11 @@ internal class SmartCollectionEditViewModel(
     val event: SharedFlow<SmartCollectionEditViewModelEvent>
         field = MutableSharedFlow()
 
-    val bookshelfListFlow = flowBookshelfListUseCase(EmptyRequest).map {
+    val bookshelfListFlow = flowBookshelfListUseCase().map {
         it.dataOrNull()
     }.shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
-    val collectionFlow = getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
+    val collectionFlow = getCollectionUseCase(collectionId)
         .map { it.dataOrNull() as? SmartCollection }
         .shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
@@ -54,16 +54,14 @@ internal class SmartCollectionEditViewModel(
         viewModelScope.launch {
             val collection = collectionFlow.first() ?: return@launch
             updateCollectionUseCase(
-                UpdateCollectionUseCase.Request(
-                    collection.copy(
-                        name = formData.name,
-                        bookshelfId = if (formData.bookshelfId == BookshelfId()) {
-                            null
-                        } else {
-                            formData.bookshelfId
-                        },
-                        searchCondition = formData.searchCondition,
-                    ),
+                collection.copy(
+                    name = formData.name,
+                    bookshelfId = if (formData.bookshelfId == BookshelfId()) {
+                        null
+                    } else {
+                        formData.bookshelfId
+                    },
+                    searchCondition = formData.searchCondition,
                 ),
             ).fold(
                 onSuccess = {

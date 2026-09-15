@@ -19,6 +19,10 @@ internal class IosBookshelfScanManager(
     scanBookshelfUseCase: ScanBookshelfUseCase,
     regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
 ) : BookshelfScanManager by CoroutineBookshelfScanManager(
-    scanBookshelfUseCase = scanBookshelfUseCase,
-    regenerateThumbnailsUseCase = regenerateThumbnailsUseCase,
+    scanBookshelf = {
+        scanBookshelfUseCase.invoke(ScanBookshelfUseCase.Request(it) { _, _ -> })
+    },
+    regenerateThumbnails = {
+        regenerateThumbnailsUseCase.invoke(RegenerateThumbnailsUseCase.Request(it) { _, _, _ -> })
+    },
 )

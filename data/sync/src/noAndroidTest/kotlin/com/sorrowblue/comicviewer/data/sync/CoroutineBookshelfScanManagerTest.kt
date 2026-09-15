@@ -6,13 +6,10 @@ package com.sorrowblue.comicviewer.data.sync
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
-import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.RegenerateThumbnailsUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.ScanBookshelfUseCase
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -24,16 +21,10 @@ class CoroutineBookshelfScanManagerTest {
     fun scanFile_executesAndCompletes() = runTest {
         var scanCalled = false
         var fileCompleted = false
-        val scanUseCase = ScanBookshelfUseCase {
-            scanCalled = true
-            Resource.Success(emptyList())
-        }
-        val regenUseCase = RegenerateThumbnailsUseCase {
-            Resource.Success(Unit)
-        }
         val manager = CoroutineBookshelfScanManager(
-            scanBookshelfUseCase = scanUseCase,
-            regenerateThumbnailsUseCase = regenUseCase,
+            scanBookshelf = {
+                scanCalled = true
+            },
             onFileScanComplete = { fileCompleted = true },
         )
         val id = BookshelfId(1)
@@ -41,8 +32,8 @@ class CoroutineBookshelfScanManagerTest {
         assertFalse(manager.isScanningFile(id).first())
         manager.scanFile(id)
 
-        while (!fileCompleted) {
-            delay(10)
+        while (!fileCompleted || manager.isScanningFile(id).first()) {
+            delay(10.milliseconds)
         }
 
         assertTrue(scanCalled)
@@ -54,16 +45,10 @@ class CoroutineBookshelfScanManagerTest {
     fun scanThumbnail_executesAndCompletes() = runTest {
         var regenCalled = false
         var thumbnailCompleted = false
-        val scanUseCase = ScanBookshelfUseCase {
-            Resource.Success(emptyList())
-        }
-        val regenUseCase = RegenerateThumbnailsUseCase {
-            regenCalled = true
-            Resource.Success(Unit)
-        }
         val manager = CoroutineBookshelfScanManager(
-            scanBookshelfUseCase = scanUseCase,
-            regenerateThumbnailsUseCase = regenUseCase,
+            regenerateThumbnails = {
+                regenCalled = true
+            },
             onThumbnailScanComplete = { thumbnailCompleted = true },
         )
         val id = BookshelfId(1)
@@ -71,8 +56,8 @@ class CoroutineBookshelfScanManagerTest {
         assertFalse(manager.isScanningThumbnail(id).first())
         manager.scanThumbnail(id)
 
-        while (!thumbnailCompleted) {
-            delay(10)
+        while (!thumbnailCompleted || manager.isScanningThumbnail(id).first()) {
+            delay(10.milliseconds)
         }
 
         assertTrue(regenCalled)

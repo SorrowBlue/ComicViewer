@@ -7,15 +7,18 @@ package com.sorrowblue.comicviewer.domain.usecase.file
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+abstract class ClearAllHistoryUseCase : OneShotUseCase<Unit, Unit, Unit>()
+
 @Inject
-class ClearAllHistoryUseCase(private val fileRepository: FileRepository) :
-    OneShotUseCase<ClearAllHistoryUseCase.Request, Unit, Unit>() {
+@ContributesBinding(AppScope::class)
+internal class ClearAllHistoryUseCaseImpl(private val fileRepository: FileRepository) :
+    ClearAllHistoryUseCase() {
 
-    data object Request : OneShotUseCase.Request
-
-    override suspend fun run(request: Request): Resource<Unit, Unit> {
+    override suspend fun run(request: Unit): Resource<Unit, Unit> {
         fileRepository.deleteAllHistory()
         return Resource.Success(Unit)
     }

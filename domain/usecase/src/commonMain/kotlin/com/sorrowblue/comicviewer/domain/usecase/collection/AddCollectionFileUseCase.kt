@@ -9,23 +9,23 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 
+abstract class AddCollectionFileUseCase : OneShotUseCase<CollectionFile, Unit, Unit>()
+
 @Inject
-class AddCollectionFileUseCase(
+@ContributesBinding(AppScope::class)
+internal class AddCollectionFileUseCaseImpl(
     private val collectionRepository: CollectionRepository,
     private val collectionFileRepository: CollectionFileRepository,
-) : OneShotUseCase<AddCollectionFileUseCase.Request, Unit, AddCollectionFileUseCase.Error>() {
-    data class Request(val file: CollectionFile) : OneShotUseCase.Request
+) : AddCollectionFileUseCase() {
 
-    sealed interface Error : Resource.AppError {
-        data object System : Error
-    }
-
-    override suspend fun run(request: Request): Resource<Unit, Error> {
-        collectionFileRepository.add(request.file)
-        collectionRepository.flow(request.file.id).first()?.let {
+    override suspend fun run(request: CollectionFile): Resource<Unit, Unit> {
+        collectionFileRepository.add(request)
+        collectionRepository.flow(request.id).first()?.let {
             collectionRepository.update(it)
         }
         return Resource.Success(Unit)

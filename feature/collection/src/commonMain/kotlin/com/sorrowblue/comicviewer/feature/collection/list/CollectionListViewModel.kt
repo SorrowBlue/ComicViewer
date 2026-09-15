@@ -18,9 +18,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 internal class CollectionListViewModel(pagingCollectionUseCase: PagingCollectionUseCase) :
     ViewModel() {
 
-    val pagingDataFlow = pagingCollectionUseCase(
-        PagingCollectionUseCase.Request(PagingConfig(PageSize)),
-    ).cachedIn(viewModelScope)
+    val pagingDataFlow = pagingCollectionUseCase(PagingConfig(PageSize)).cachedIn(viewModelScope)
 }
 
 private const val PageSize = 20

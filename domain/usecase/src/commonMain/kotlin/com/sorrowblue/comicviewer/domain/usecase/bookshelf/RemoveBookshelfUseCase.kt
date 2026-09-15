@@ -15,26 +15,29 @@ import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+abstract class RemoveBookshelfUseCase : OneShotUseCase<BookshelfId, Unit, Unit>()
+
 @Inject
-class RemoveBookshelfUseCase(
+@ContributesBinding(AppScope::class)
+internal class RemoveBookshelfUseCaseImpl(
     private val bookshelfRepository: BookshelfRepository,
     private val imageCacheRepository: ImageCacheRepository,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
-) : OneShotUseCase<RemoveBookshelfUseCase.Request, Unit, Unit>() {
+) : RemoveBookshelfUseCase() {
 
-    data class Request(val bookshelfId: BookshelfId) : OneShotUseCase.Request
-
-    override suspend fun run(request: Request): Resource<Unit, Unit> =
-        bookshelfRepository.delete(request.bookshelfId).fold(
+    override suspend fun run(request: BookshelfId): Resource<Unit, Unit> =
+        bookshelfRepository.delete(request).fold(
             onSuccess = { _ ->
                 val pageResult = imageCacheRepository.clearImageCache(
-                    request.bookshelfId,
+                    request,
                     BookPageImageCache(0, 0),
                 )
                 val thumbnailResult = imageCacheRepository.clearImageCache(
-                    request.bookshelfId,
+                    request,
                     ThumbnailImageCache(0, 0),
                 )
                 if (pageResult.isSuccess && thumbnailResult.isSuccess) {

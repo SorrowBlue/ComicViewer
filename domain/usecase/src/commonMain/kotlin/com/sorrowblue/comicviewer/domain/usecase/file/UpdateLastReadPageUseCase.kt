@@ -8,21 +8,26 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
-@Inject
-class UpdateLastReadPageUseCase(private val fileRepository: FileRepository) :
+abstract class UpdateLastReadPageUseCase :
     OneShotUseCase<UpdateLastReadPageUseCase.Request, Unit, Unit>() {
 
-    @OptIn(ExperimentalTime::class)
     data class Request(
         val bookshelfId: BookshelfId,
         val path: String,
         val lastReadPage: Int,
         val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
-    ) : OneShotUseCase.Request
+    )
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class UpdateLastReadPageUseCaseImpl(private val fileRepository: FileRepository) :
+    UpdateLastReadPageUseCase() {
 
     override suspend fun run(request: Request): Resource<Unit, Unit> {
         fileRepository.updateHistory(

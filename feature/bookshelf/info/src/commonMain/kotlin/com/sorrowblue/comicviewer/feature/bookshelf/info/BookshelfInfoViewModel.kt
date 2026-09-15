@@ -27,7 +27,7 @@ internal class BookshelfInfoViewModel(
 ) : ViewModel() {
 
     val bookshelfInfoFlow =
-        getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId = bookshelfId))
+        getBookshelfInfoUseCase(bookshelfId)
             .map { it.dataOrNull() }
             .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 

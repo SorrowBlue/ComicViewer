@@ -9,19 +9,24 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-@Inject
-class GetFileUseCase(private val fileRepository: FileRepository) :
-    UseCase<GetFileUseCase.Request, File, GetFileUseCase.Error>() {
+abstract class GetFileUseCase : UseCase<GetFileUseCase.Request, File, GetFileUseCase.Error>() {
 
-    data class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+    data class Request(val bookshelfId: BookshelfId, val path: String)
 
     enum class Error : Resource.AppError {
         NOT_FOUND,
     }
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class GetFileUseCaseImpl(private val fileRepository: FileRepository) : GetFileUseCase() {
 
     override fun run(request: Request): Flow<Resource<File, Error>> = flow {
         runCatching {

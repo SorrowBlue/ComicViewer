@@ -114,6 +114,13 @@ interface FolderSortSettingsService {
      * @property isChanged 設定値に変更があった場合は true
      */
     data class UpdateResult(val settings: FolderDisplaySettings, val isChanged: Boolean)
+
+    companion object {
+        /**
+         * [FolderSortSettingsService] のインスタンスを生成して返します。
+         */
+        operator fun invoke(): FolderSortSettingsService = FolderSortSettingsServiceImpl()
+    }
 }
 
 @ContributesBinding(AppScope::class)

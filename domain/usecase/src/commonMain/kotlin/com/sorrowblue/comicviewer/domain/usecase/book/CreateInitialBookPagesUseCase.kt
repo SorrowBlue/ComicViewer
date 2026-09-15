@@ -5,35 +5,46 @@
 package com.sorrowblue.comicviewer.domain.usecase.book
 
 import com.sorrowblue.comicviewer.domain.model.book.BookPage
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.service.book.BookPageLayoutService
+import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 /**
  * コミックの初期ページ一覧を生成するユースケース。
- *
- * @property service ページレイアウト計算を行うドメインサービス
  */
-@Inject
-class CreateInitialBookPagesUseCase(
-    private val service: BookPageLayoutService = BookPageLayoutService(),
-) {
+abstract class CreateInitialBookPagesUseCase :
+    OneShotUseCase<CreateInitialBookPagesUseCase.Request, List<BookPage>, Unit>() {
 
     /**
-     * 表示設定と総ページ数に基づき、初期ページリストを生成します。
+     * ページリスト生成リクエスト
      *
-     * @param totalPageCount 総ページ数
-     * @param pageFormat ページフォーマット設定
-     * @param isCompactWindow コンパクト画面（スマートフォン等）かどうか
-     * @return 初期ページリスト
+     * @property totalPageCount 総ページ数
+     * @property pageFormat ページフォーマット設定
+     * @property isCompactWindow コンパクト画面（スマートフォン等）かどうか
      */
-    operator fun invoke(
-        totalPageCount: Int,
-        pageFormat: BookSettings.PageFormat,
-        isCompactWindow: Boolean,
-    ): List<BookPage> = service.createInitialPages(
-        totalPageCount = totalPageCount,
-        pageFormat = pageFormat,
-        isCompactWindow = isCompactWindow,
+    data class Request(
+        val totalPageCount: Int,
+        val pageFormat: BookSettings.PageFormat,
+        val isCompactWindow: Boolean,
     )
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class CreateInitialBookPagesUseCaseImpl(
+    private val service: BookPageLayoutService = BookPageLayoutService(),
+) : CreateInitialBookPagesUseCase() {
+
+    override suspend fun run(request: Request): Resource<List<BookPage>, Unit> {
+        val bookPages = service.createInitialPages(
+            totalPageCount = request.totalPageCount,
+            pageFormat = request.pageFormat,
+            isCompactWindow = request.isCompactWindow,
+        )
+        return Resource.Success(bookPages)
+    }
 }

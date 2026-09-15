@@ -49,12 +49,12 @@ import logcat.logcat
 
 @AssistedInject
 internal class ThumbnailScanWorker(
-    appContext: Context,
+    context: Context,
     @Assisted params: WorkerParameters,
     private val getBookshelfInfoUseCase: GetBookshelfInfoUseCase,
     private val regenerateThumbnailsUseCase: RegenerateThumbnailsUseCase,
     private val notificationManager: NotificationManagerCompat,
-) : CoroutineWorker(appContext, params) {
+) : CoroutineWorker(context.applicationContext, params) {
 
     @ContributesIntoMap(AppScope::class)
     @WorkerKey(ThumbnailScanWorker::class)
@@ -68,10 +68,9 @@ internal class ThumbnailScanWorker(
     override suspend fun doWork(): Result {
         @OptIn(InternalDataApi::class)
         val bookshelfId = BookshelfId(inputData.getInt(BOOKSHELF_ID, 0))
-        val bookshelfInfo =
-            getBookshelfInfoUseCase(GetBookshelfInfoUseCase.Request(bookshelfId))
-                .first()
-                .dataOrNull() ?: return Result.failure()
+        val bookshelfInfo = getBookshelfInfoUseCase(bookshelfId)
+            .first()
+            .dataOrNull() ?: return Result.failure()
         setForeground(createForegroundInfo(bookshelfInfo.bookshelf.displayName, 0, 0, true))
         return try {
             innerWork(bookshelfInfo)

@@ -9,22 +9,29 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@Inject
-class GetFileSizeUseCase(
-    private val bookshelfRepository: BookshelfRepository,
-    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
-) : UseCase<GetFileSizeUseCase.Request, Long, GetFileSizeUseCase.Error>() {
+abstract class GetFileSizeUseCase :
+    UseCase<GetFileSizeUseCase.Request, Long, GetFileSizeUseCase.Error>() {
+
+    data class Request(val bookshelfId: BookshelfId, val path: String)
 
     sealed interface Error : Resource.AppError {
         data object NotFound : Error
         data object System : Error
     }
+}
 
-    data class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+@Inject
+@ContributesBinding(AppScope::class)
+internal class GetFileSizeUseCaseImpl(
+    private val bookshelfRepository: BookshelfRepository,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
+) : GetFileSizeUseCase() {
 
     override fun run(request: Request): Flow<Resource<Long, Error>> =
         bookshelfRepository.flow(request.bookshelfId).map { bookshelf ->

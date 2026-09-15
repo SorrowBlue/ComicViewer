@@ -11,40 +11,43 @@ import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@Inject
-class GetBookshelfInfoUseCase(
-    private val bookshelfRepository: BookshelfRepository,
-    private val fileRepository: FileRepository,
-    private val sendFatalErrorUseCase: SendFatalErrorUseCase,
-) : UseCase<GetBookshelfInfoUseCase.Request, BookshelfFolder, GetBookshelfInfoUseCase.Error>() {
-
-    data class Request(val bookshelfId: BookshelfId) : UseCase.Request
+abstract class GetBookshelfInfoUseCase :
+    UseCase<BookshelfId, BookshelfFolder, GetBookshelfInfoUseCase.Error>() {
 
     sealed interface Error : Resource.AppError {
         data object NotFound : Error
 
         data object System : Error
     }
+}
 
-    override fun run(request: Request): Flow<Resource<BookshelfFolder, Error>> =
-        bookshelfRepository.flow(request.bookshelfId).map { bookshelf ->
-            if (bookshelf != null) {
-                val folder = fileRepository.root(request.bookshelfId)
-                if (folder != null) {
-                    Resource.Success(BookshelfFolder(bookshelf, folder))
-                } else {
-                    sendFatalErrorUseCase(
-                        SendFatalErrorUseCase.Request(RuntimeException("NotFound")),
-                    )
-                    Resource.Error(Error.NotFound)
-                }
+@Inject
+@ContributesBinding(AppScope::class)
+internal class GetBookshelfInfoUseCaseImpl(
+    private val bookshelfRepository: BookshelfRepository,
+    private val fileRepository: FileRepository,
+    private val sendFatalErrorUseCase: SendFatalErrorUseCase,
+) : GetBookshelfInfoUseCase() {
+
+    override fun run(request: BookshelfId) = bookshelfRepository.flow(request).map { bookshelf ->
+        if (bookshelf != null) {
+            val folder = fileRepository.root(request)
+            if (folder != null) {
+                Resource.Success(BookshelfFolder(bookshelf, folder))
             } else {
-                sendFatalErrorUseCase(SendFatalErrorUseCase.Request(RuntimeException("NotFound")))
+                sendFatalErrorUseCase(
+                    SendFatalErrorUseCase.Request(RuntimeException("NotFound")),
+                )
                 Resource.Error(Error.NotFound)
             }
+        } else {
+            sendFatalErrorUseCase(SendFatalErrorUseCase.Request(RuntimeException("NotFound")))
+            Resource.Error(Error.NotFound)
         }
+    }
 }

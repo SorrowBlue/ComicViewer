@@ -15,19 +15,16 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import logcat.asLog
 import logcat.logcat
 
-@Inject
-class RegisterBookshelfUseCase(
-    private val fileRepository: FileRepository,
-    private val bookshelfRepository: BookshelfRepository,
-    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
-    private val imageCacheRepository: ImageCacheRepository,
-) : OneShotUseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfUseCase.Error>() {
+abstract class RegisterBookshelfUseCase :
+    OneShotUseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfUseCase.Error>() {
 
-    data class Request(val bookshelf: Bookshelf, val path: String) : OneShotUseCase.Request
+    data class Request(val bookshelf: Bookshelf, val path: String)
 
     sealed interface Error : Resource.AppError {
         data object Host : Error
@@ -40,6 +37,16 @@ class RegisterBookshelfUseCase(
 
         data object System : Error
     }
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class RegisterBookshelfUseCaseImpl(
+    private val fileRepository: FileRepository,
+    private val bookshelfRepository: BookshelfRepository,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
+    private val imageCacheRepository: ImageCacheRepository,
+) : RegisterBookshelfUseCase() {
 
     override suspend fun run(request: Request): Resource<Bookshelf, Error> = runCatching {
         remoteStorageClientFactory.create(request.bookshelf).connect(request.path)

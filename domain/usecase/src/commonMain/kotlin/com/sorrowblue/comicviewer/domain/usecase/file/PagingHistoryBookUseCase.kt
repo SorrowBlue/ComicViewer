@@ -5,20 +5,19 @@
 package com.sorrowblue.comicviewer.domain.usecase.file
 
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.Flow
+
+fun interface PagingHistoryBookUseCase : PagingUseCase<PagingConfig, Book>
 
 @Inject
-class PagingHistoryBookUseCase(private val fileRepository: FileRepository) :
-    PagingUseCase<PagingHistoryBookUseCase.Request, Book>() {
+@ContributesBinding(AppScope::class)
+internal class PagingHistoryBookUseCaseImpl(private val fileRepository: FileRepository) :
+    PagingHistoryBookUseCase {
 
-    class Request(val pagingConfig: PagingConfig) : BaseRequest
-
-    override fun run(request: Request): Flow<PagingData<Book>> =
-        fileRepository.pagingHistoryBookSource(request.pagingConfig)
+    override fun invoke(request: PagingConfig) = fileRepository.pagingHistoryBookSource(request)
 }

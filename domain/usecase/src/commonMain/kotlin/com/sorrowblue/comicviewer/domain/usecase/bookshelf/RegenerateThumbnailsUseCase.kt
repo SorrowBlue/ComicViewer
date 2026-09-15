@@ -14,6 +14,8 @@ import com.sorrowblue.comicviewer.domain.repository.ThumbnailRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import com.sorrowblue.comicviewer.domain.usecase.limitedCoroutineScope
 import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.awaitAll
@@ -23,16 +25,29 @@ import kotlinx.coroutines.sync.withLock
 
 private const val MaxParallelCoroutines = 6
 
-class RegenerateThumbnailsUseCase(private val action: suspend (Request) -> Resource<Unit, Error>) :
+abstract class RegenerateThumbnailsUseCase :
     OneShotUseCase<RegenerateThumbnailsUseCase.Request, Unit, RegenerateThumbnailsUseCase.Error>() {
 
-    @Inject
-    constructor(
-        bookshelfRepository: BookshelfRepository,
-        fileRepository: FileRepository,
-        thumbnailRepository: ThumbnailRepository,
-        @IoDispatcher dispatcher: CoroutineDispatcher,
-    ) : this({ request ->
+    data class Request(
+        val bookshelfId: BookshelfId,
+        val process: suspend (Bookshelf, progress: Long, max: Long) -> Unit,
+    )
+
+    enum class Error : Resource.AppError {
+        System,
+    }
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class RegenerateThumbnailsUseCaseImpl(
+    private val bookshelfRepository: BookshelfRepository,
+    private val fileRepository: FileRepository,
+    private val thumbnailRepository: ThumbnailRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+) : RegenerateThumbnailsUseCase() {
+
+    override suspend fun run(request: Request): Resource<Unit, Error> {
         val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
         if (bookshelf != null) {
             val mutex = Mutex()
@@ -62,17 +77,6 @@ class RegenerateThumbnailsUseCase(private val action: suspend (Request) -> Resou
                 }.awaitAll()
             }
         }
-        Resource.Success(Unit)
-    })
-
-    data class Request(
-        val bookshelfId: BookshelfId,
-        val process: suspend (Bookshelf, progress: Long, max: Long) -> Unit,
-    ) : OneShotUseCase.Request
-
-    enum class Error : Resource.AppError {
-        System,
+        return Resource.Success(Unit)
     }
-
-    override suspend fun run(request: Request): Resource<Unit, Error> = action(request)
 }

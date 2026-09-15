@@ -18,6 +18,8 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -25,21 +27,25 @@ import kotlinx.coroutines.flow.map
 import logcat.asLog
 import logcat.logcat
 
-@Inject
-class GetBookUseCase(
-    private val bookshelfRepository: BookshelfRepository,
-    private val fileRepository: FileRepository,
-    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
-    private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
-) : UseCase<GetBookUseCase.Request, Book, GetBookUseCase.Error>() {
+abstract class GetBookUseCase : UseCase<GetBookUseCase.Request, Book, GetBookUseCase.Error>() {
 
-    data class Request(val bookshelfId: BookshelfId, val path: String) : UseCase.Request
+    data class Request(val bookshelfId: BookshelfId, val path: String)
 
     sealed interface Error : Resource.IError {
         data object NotFound : Error
 
         data object ReportedSystemError : Error
     }
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class GetBookUseCaseImpl(
+    private val bookshelfRepository: BookshelfRepository,
+    private val fileRepository: FileRepository,
+    private val remoteStorageClientFactory: RemoteStorageClient.Factory,
+    private val manageFolderSettingsUseCase: ManageFolderSettingsUseCase,
+) : GetBookUseCase() {
 
     override fun run(request: Request): Flow<Resource<Book, Error>> =
         bookshelfRepository.flow(request.bookshelfId).map {

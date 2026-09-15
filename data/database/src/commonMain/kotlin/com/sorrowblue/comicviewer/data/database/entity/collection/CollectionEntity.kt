@@ -17,7 +17,6 @@ import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.DateTimeComponents
@@ -25,7 +24,6 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.parse
 import kotlinx.datetime.toLocalDateTime
 
-@OptIn(ExperimentalTime::class)
 @Entity(
     tableName = "collection",
     foreignKeys = [

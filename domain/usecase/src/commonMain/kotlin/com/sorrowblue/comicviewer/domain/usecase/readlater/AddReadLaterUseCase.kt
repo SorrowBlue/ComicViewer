@@ -10,17 +10,24 @@ import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
-@Inject
-class AddReadLaterUseCase(
-    private val readLaterFileRepository: ReadLaterFileRepository,
-    private val sendFatalErrorUseCase: SendFatalErrorUseCase,
-) : OneShotUseCase<AddReadLaterUseCase.Request, ReadLaterFile, Unit>() {
-    data class Request private constructor(val readLaterFile: ReadLaterFile) :
-        OneShotUseCase.Request {
+abstract class AddReadLaterUseCase :
+    OneShotUseCase<AddReadLaterUseCase.Request, ReadLaterFile, Unit>() {
+
+    data class Request private constructor(val readLaterFile: ReadLaterFile) {
         constructor(bookshelfId: BookshelfId, path: String) : this(ReadLaterFile(bookshelfId, path))
     }
+}
+
+@Inject
+@ContributesBinding(AppScope::class)
+internal class AddReadLaterUseCaseImpl(
+    private val readLaterFileRepository: ReadLaterFileRepository,
+    private val sendFatalErrorUseCase: SendFatalErrorUseCase,
+) : AddReadLaterUseCase() {
 
     override suspend fun run(request: Request): Resource<ReadLaterFile, Unit> =
         when (val result = readLaterFileRepository.updateOrAdd(request.readLaterFile)) {

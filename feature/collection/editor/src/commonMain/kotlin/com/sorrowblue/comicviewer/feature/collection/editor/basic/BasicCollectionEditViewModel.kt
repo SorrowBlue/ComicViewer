@@ -53,19 +53,17 @@ internal class BasicCollectionEditViewModel(
         ),
     ).cachedIn(viewModelScope)
 
-    val collectionFlow = getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
+    val collectionFlow = getCollectionUseCase(collectionId)
         .mapNotNull { it.dataOrNull() as? BasicCollection }
         .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     fun onDeleteClick(file: File) {
         viewModelScope.launch {
             removeCollectionFileUseCase(
-                RemoveCollectionFileUseCase.Request(
-                    CollectionFile(
-                        collectionId,
-                        file.bookshelfId,
-                        file.path,
-                    ),
+                CollectionFile(
+                    collectionId,
+                    file.bookshelfId,
+                    file.path,
                 ),
             )
         }
@@ -73,12 +71,10 @@ internal class BasicCollectionEditViewModel(
 
     fun onSubmit(formData: BasicCollectionForm) {
         viewModelScope.launch {
-            val collection = getCollectionUseCase(GetCollectionUseCase.Request(collectionId))
+            val collection = getCollectionUseCase(collectionId)
                 .mapNotNull { it.dataOrNull() as? BasicCollection }
                 .first()
-            updateCollectionUseCase(
-                UpdateCollectionUseCase.Request(collection.copy(name = formData.name)),
-            ).fold(
+            updateCollectionUseCase(collection.copy(name = formData.name)).fold(
                 onSuccess = {
                     event.emit(BasicCollectionEditViewModelEvent.EditComplete)
                 },
