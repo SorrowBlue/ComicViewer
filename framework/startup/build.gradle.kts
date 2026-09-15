@@ -7,6 +7,9 @@ kotlin {
         namespace = "com.sorrowblue.comicviewer.framework.startup"
     }
     sourceSets {
+        commonMain.dependencies {
+            implementation(projects.domain.model)
+        }
         androidMain.dependencies {
             api(libs.androidx.startupRuntime)
         }

@@ -60,7 +60,7 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            if (project.path != ":framework:common") {
+            if (project.path != ":framework:common" && !project.path.startsWith(":domain")) {
                 implementation(project(":framework:common"))
             }
         }

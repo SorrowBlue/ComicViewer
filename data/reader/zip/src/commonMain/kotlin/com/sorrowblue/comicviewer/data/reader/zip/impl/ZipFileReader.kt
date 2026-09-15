@@ -10,7 +10,7 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.kioarch.ArchiveEntry
 import com.sorrowblue.kioarch.KioArch
 import dev.zacsweers.metro.AppScope

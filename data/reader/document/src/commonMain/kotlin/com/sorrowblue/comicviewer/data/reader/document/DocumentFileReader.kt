@@ -9,7 +9,7 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.framework.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.kpdfium.PdfDocument
 import com.sorrowblue.kpdfium.PdfExtractor
 import dev.zacsweers.metro.AppScope
