@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings.PageFormat
 import com.sorrowblue.comicviewer.feature.book.section.PageFormat2
@@ -25,9 +28,11 @@ internal fun rememberBookMenuScreenState(
     viewModel: BookMenuViewModel = metroViewModel(),
 ): BookMenuScreenState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(lifecycle) {
         BookMenuScreenStateImpl(
             coroutineScope = coroutineScope,
+            lifecycle = lifecycle,
             bookSettingsFlow = viewModel.bookSettingsFlow,
             updateBookSettings = viewModel::updateBookSettings,
         )
@@ -44,6 +49,7 @@ internal interface BookMenuScreenState {
 
 private class BookMenuScreenStateImpl(
     private val coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     private val bookSettingsFlow: SharedFlow<BookSettings>,
     private val updateBookSettings: (BookSettings) -> Unit,
 ) : BookMenuScreenState {
@@ -52,24 +58,26 @@ private class BookMenuScreenStateImpl(
         private set
 
     init {
-        bookSettingsFlow.onEach {
-            uiState = uiState.copy(
-                pageFormat2 = when (it.pageFormat) {
-                    PageFormat.Default -> PageFormat2.Default
-                    PageFormat.Spread -> PageFormat2.Spread
-                    PageFormat.Split -> PageFormat2.Split
-                    PageFormat.Auto -> PageFormat2.SplitSpread
-                },
-                pageScale = when (it.pageScale) {
-                    BookSettings.PageScale.Fit -> PageScale.Fit
-                    BookSettings.PageScale.FillWidth -> PageScale.FillWidth
-                    BookSettings.PageScale.FillHeight -> PageScale.FillHeight
-                    BookSettings.PageScale.Inside -> PageScale.Inside
-                    BookSettings.PageScale.None -> PageScale.None
-                    BookSettings.PageScale.FillBounds -> PageScale.FillBounds
-                },
-            )
-        }.launchIn(coroutineScope)
+        bookSettingsFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                uiState = uiState.copy(
+                    pageFormat2 = when (it.pageFormat) {
+                        PageFormat.Default -> PageFormat2.Default
+                        PageFormat.Spread -> PageFormat2.Spread
+                        PageFormat.Split -> PageFormat2.Split
+                        PageFormat.Auto -> PageFormat2.SplitSpread
+                    },
+                    pageScale = when (it.pageScale) {
+                        BookSettings.PageScale.Fit -> PageScale.Fit
+                        BookSettings.PageScale.FillWidth -> PageScale.FillWidth
+                        BookSettings.PageScale.FillHeight -> PageScale.FillHeight
+                        BookSettings.PageScale.Inside -> PageScale.Inside
+                        BookSettings.PageScale.None -> PageScale.None
+                        BookSettings.PageScale.FillBounds -> PageScale.FillBounds
+                    },
+                )
+            }.launchIn(coroutineScope)
     }
 
     override fun onPageFormatChange(pageFormat2: PageFormat2) {

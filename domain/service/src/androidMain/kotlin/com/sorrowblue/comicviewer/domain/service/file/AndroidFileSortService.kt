@@ -11,8 +11,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import java.util.Locale
 import java.text.Collator as JavaCollator
+import java.util.Locale
 
 @ContributesBinding(AppScope::class)
 @Inject
@@ -38,7 +38,7 @@ internal class AndroidFileSortService : FileSortService {
     }
 
     override val compareFile: Comparator<File> = compareBy<File> { if (it is BookFile) 1 else 0 }
-        .thenBy(collator, { it.name })
+        .thenComparator { a, b -> collator(a.name, b.name) }
 }
 
 internal actual fun defaultFileSortService(): FileSortService = AndroidFileSortService()

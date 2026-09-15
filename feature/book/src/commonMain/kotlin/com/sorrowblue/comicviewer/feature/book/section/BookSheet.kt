@@ -27,6 +27,10 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import coil3.Bitmap
+import com.sorrowblue.comicviewer.domain.model.book.BookPage
+import com.sorrowblue.comicviewer.domain.model.book.NextPage
+import com.sorrowblue.comicviewer.domain.model.book.PageItem
+import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import kotlinx.coroutines.launch
 

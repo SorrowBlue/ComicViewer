@@ -18,27 +18,28 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import com.sorrowblue.comicviewer.domain.model.book.PageItem
+import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
-import com.sorrowblue.comicviewer.feature.book.section.BookPage
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
-import com.sorrowblue.comicviewer.feature.book.section.PageItem
-import com.sorrowblue.comicviewer.feature.book.section.UnratedPage
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import comicviewer.feature.book.generated.resources.Res
 import comicviewer.feature.book.generated.resources.book_error_file_not_opened
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.jetbrains.compose.resources.getString
 
 internal interface ReceiveBookScreenState {
@@ -67,15 +68,19 @@ internal fun rememberReceiveBookScreenState(
     val currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { currentList.size })
     val systemUiController = rememberSystemUiController()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(lifecycle) {
         ReceiveBookScreenStateImpl(
             context = appContext,
             coroutineScope = scope,
+            lifecycle = lifecycle,
             pagerState = pagerState,
             systemUiController = systemUiController,
             currentList = currentList,
             viewerSettingsFlow = viewModel.viewerSettingsFlow,
             bookFlow = viewModel.bookFlow,
+            pageItemListFlow = viewModel.pageItemListFlow,
+            onPageLoaded = viewModel::onPageLoaded,
         )
     }
 }
@@ -83,39 +88,42 @@ internal fun rememberReceiveBookScreenState(
 private class ReceiveBookScreenStateImpl(
     context: Context,
     private val coroutineScope: CoroutineScope,
+    lifecycle: Lifecycle,
     override val pagerState: PagerState,
     override val systemUiController: SystemUiController,
     override val currentList: SnapshotStateList<PageItem>,
     viewerSettingsFlow: SharedFlow<ViewerSettings>,
     bookFlow: SharedFlow<BookFile?>,
+    pageItemListFlow: Flow<List<PageItem>>,
+    private val onPageLoaded: (UnratedPage, Boolean) -> Unit,
 ) : ReceiveBookScreenState {
     init {
-        bookFlow.onEach { bookFile ->
-            if (bookFile != null) {
-                uiState = BookScreenUiState.Loaded(
-                    bookFile,
-                    CollectionId(),
-                    BookSheetUiState(bookFile),
-                    alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
-                )
+        pageItemListFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach {
                 currentList.clear()
-                currentList.addAll(
-                    buildList {
-                        addAll(
-                            (1..bookFile.totalPageCount).map {
-                                BookPage.Default(it - 1)
-                            },
-                        )
-                    },
-                )
-            } else {
-                Toast.makeText(
-                    context,
-                    getString(Res.string.book_error_file_not_opened),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                currentList.addAll(it)
             }
-        }.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
+        bookFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { bookFile ->
+                if (bookFile != null) {
+                    uiState = BookScreenUiState.Loaded(
+                        bookFile,
+                        CollectionId(),
+                        BookSheetUiState(bookFile),
+                        alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
+                    )
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(Res.string.book_error_file_not_opened),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+            .launchIn(coroutineScope)
     }
 
     override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(""))
@@ -136,84 +144,7 @@ private class ReceiveBookScreenStateImpl(
         }
     }
 
-    val mutex = Mutex()
-
     override fun onPageLoaded(unratedPage: UnratedPage, bitmap: Bitmap) {
-        coroutineScope.launch {
-            mutex.withLock {
-                when (unratedPage) {
-                    is BookPage.Spread.Unrated -> {
-                        onSpreadPageLoad(unratedPage, bitmap)
-                    }
-
-                    is BookPage.Split.Unrated -> onSplitPageLoad(unratedPage, bitmap)
-                }
-            }
-        }
-    }
-
-    private fun onSplitPageLoad(split: BookPage.Split.Unrated, bitmap: Bitmap) {
-        val index = currentList.indexOf(split)
-        if (0 < index) {
-            if (bitmap.width < bitmap.height) {
-                currentList[index] = BookPage.Split.Single(split.index)
-            } else {
-                currentList[index] = BookPage.Split.Right(split.index)
-                currentList.add(index + 1, BookPage.Split.Left(split.index))
-            }
-        }
-    }
-
-    private fun onSpreadPageLoad(spread: BookPage.Spread.Unrated, bitmap: Bitmap) {
-        val index = currentList.indexOf(spread)
-        if (bitmap.width < bitmap.height) {
-            currentList[index] = BookPage.Spread.Single(spread.index)
-        } else {
-            // 横
-            currentList[index] = BookPage.Spread.Spread2(spread.index)
-        }
-
-        val skipIndex = mutableListOf<Int>()
-        val newList = mutableListOf<PageItem>()
-        var nextSingle: BookPage.Spread.Single? = null
-        currentList.forEachIndexed { index1, bookItem ->
-            if (skipIndex.contains(index1)) return@forEachIndexed
-            when (val item = nextSingle ?: bookItem) {
-                is BookPage.Spread.Combine -> newList.add(item)
-
-                is BookPage.Spread.Single -> {
-                    if (item.index == 0) {
-                        newList.add(item)
-                        nextSingle = null
-                    } else {
-                        when (val nextItem = currentList[index1 + 1]) {
-                            is BookPage.Spread.Single -> {
-                                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                                skipIndex += index1 + 1
-                                nextSingle = null
-                            }
-
-                            is BookPage.Spread.Combine -> {
-                                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                                nextSingle = BookPage.Spread.Single(nextItem.nextIndex)
-                            }
-
-                            else -> {
-                                newList.add(item)
-                                nextSingle = null
-                            }
-                        }
-                    }
-                }
-
-                is BookPage.Spread.Spread2 -> newList.add(item)
-
-                is BookPage.Spread.Unrated -> newList.add(item)
-
-                else -> newList.add(item)
-            }
-        }
-        currentList.clear()
-        currentList.addAll(newList)
+        onPageLoaded(unratedPage, bitmap.width < bitmap.height)
     }
 }

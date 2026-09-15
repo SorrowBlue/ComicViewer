@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -39,10 +42,12 @@ internal fun rememberBookScreenWrapperState(
         },
 ): BookScreenWrapperState {
     val coroutineScope = rememberCoroutineScope()
-    return remember {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return remember(lifecycle) {
         BookScreenWrapperStateImpl(
             name = name,
             collectionId = collectionId,
+            lifecycle = lifecycle,
             coroutineScope = coroutineScope,
             bookFlow = viewModel.bookFlow,
             viewerSettingsFlow = viewModel.viewerSettingsFlow,
@@ -53,6 +58,7 @@ internal fun rememberBookScreenWrapperState(
 private class BookScreenWrapperStateImpl(
     name: String,
     collectionId: CollectionId,
+    lifecycle: Lifecycle,
     coroutineScope: CoroutineScope,
     bookFlow: SharedFlow<Book?>,
     viewerSettingsFlow: SharedFlow<ViewerSettings>,
@@ -62,17 +68,20 @@ private class BookScreenWrapperStateImpl(
         private set
 
     init {
-        bookFlow.onEach { book ->
-            uiState = if (book != null) {
-                BookScreenUiState.Loaded(
-                    book = book,
-                    collectionId = collectionId,
-                    bookSheetUiState = BookSheetUiState(book),
-                    alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
-                )
-            } else {
-                BookScreenUiState.Error(name)
+        bookFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { book ->
+                uiState = if (book != null) {
+                    BookScreenUiState.Loaded(
+                        book = book,
+                        collectionId = collectionId,
+                        bookSheetUiState = BookSheetUiState(book),
+                        alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
+                    )
+                } else {
+                    BookScreenUiState.Error(name)
+                }
             }
-        }.launchIn(coroutineScope)
+            .launchIn(coroutineScope)
     }
 }
