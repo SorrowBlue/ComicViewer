@@ -69,9 +69,8 @@ graph LR
 | app     | ios            |              | iOS Application |
 | app     | share          |              | Platform shared entry point |
 | domain  | model          |              | Domain models and entities (Core) |
-| domain  | repository     |              | Repository interfaces (Data access abstractions) |
-| domain  | service        |              | Usecase implementations (Interactors) and domain services |
-| domain  | usecase        |              | Usecase definitions and interfaces (Application API) |
+| domain  | repository     |              | Repository interfaces and ports (Data access abstractions) |
+| domain  | usecase        |              | Concrete use cases and application workflow orchestration |
 | data    | coil           |              | Thumbnail and image loading implementations |
 | data    | database       |              | Room database implementations |
 | data    | datastore      |              | Datastore for settings and status persistence |
@@ -126,8 +125,8 @@ graph LR
 ComicViewer adheres to the principles of **Onion Architecture**, placing the Domain Model at its core with all dependencies pointing inward:
 
 - **Layer 1: Domain Model (Core)**: Pure Kotlin entities, value objects, and domain errors (`:domain:model`).
-- **Layer 2: Domain Services & Repositories**: Domain-specific services (`:domain:service`) and repository interfaces (`:domain:repository`).
-- **Layer 3: Application Services / Use Cases**: Use case definitions and application workflow orchestration (`:domain:usecase`, `:domain:service` interactors).
+- **Layer 2: Repositories & Ports**: Gateway/Port interfaces (`:domain:repository`) abstracting data access, storage, and background tasks.
+- **Layer 3: Application Services / Use Cases**: Concrete use cases orchestrating domain logic and repository abstractions (`:domain:usecase`).
 - **Layer 4: Outer Ring (Infrastructure, Presentation & Composition Root)**:
   - **Presentation (UI)**: UI screens and viewmodels (`:feature:*`), shared design system (`:framework:designsystem`), and UI components (`:framework:ui`).
   - **Infrastructure**: Database (`:data:database`), storage/network (`:data:storage:*`), image loading (`:data:coil`), data synchronization (`:data:sync`), and platform services (`:framework:background`, `:framework:notification`, `:framework:permission`, `:framework:startup`).
@@ -144,32 +143,16 @@ graph TD
     end
 
     subgraph feature [feature - Presentation]
-        :feature:authentication --> :feature:authentication:nav
-        :feature:book --> :feature:book:nav
-        :feature:bookshelf --> :feature:bookshelf:nav
-        :feature:bookshelf --> :feature:collection:nav
-        :feature:bookshelf --> :feature:search:nav
-        :feature:bookshelf --> :feature:folder:nav
-        :feature:bookshelf:edit --> :feature:bookshelf:nav
-        :feature:bookshelf:info --> :feature:bookshelf:nav
-        :feature:collection --> :feature:collection:nav
-        :feature:collection --> :feature:folder:nav
-        :feature:collection:add --> :feature:collection:nav
-        :feature:collection:editor --> :feature:collection:nav
-        :feature:folder --> :feature:folder:nav
-        :feature:folder --> :feature:book:nav
-        :feature:folder --> :feature:collection:nav
-        :feature:folder --> :feature:search:nav
-        :feature:folder --> :feature:settings:nav
-        :feature:history --> :feature:book:nav
-        :feature:history --> :feature:folder:nav
-        :feature:readlater --> :feature:book:nav
-        :feature:readlater --> :feature:folder:nav
-        :feature:search --> :feature:search:nav
-        :feature:search --> :feature:book:nav
-        :feature:search --> :feature:folder:nav
-        :feature:settings --> :feature:settings:nav
-        :feature:settings --> :feature:settings:common
+        :feature:bookshelf:info --> :feature:bookshelf:common
+        :feature:bookshelf:info --> :feature:bookshelf:edit
+        :feature:bookshelf:edit --> :feature:bookshelf:common
+        :feature:bookshelf --> :feature:bookshelf:common
+        :feature:bookshelf --> :feature:bookshelf:info
+        :feature:collection:add --> :feature:collection:common
+        :feature:collection:editor --> :feature:collection:common
+        :feature:collection --> :feature:collection:common
+        :feature:collection --> :feature:collection:editor
+        :feature:settings:common --> :feature:settings:nav
         :feature:settings:display --> :feature:settings:common
         :feature:settings:folder --> :feature:settings:common
         :feature:settings:info --> :feature:settings:common
@@ -182,25 +165,21 @@ graph TD
     end
 
     subgraph domain [domain - Core & Application]
-        :domain:service --> :domain:usecase
-        :domain:service --> :domain:repository
-        :domain:service --> :domain:model
-        :domain:repository --> :domain:model
+        :domain:usecase --> :domain:repository
         :domain:usecase --> :domain:model
+        :domain:repository --> :domain:model
     end
 
     subgraph data [data - Infrastructure]
         :data:coil --> :domain:repository
-        :data:coil --> :domain:service
         :data:database --> :domain:repository
-        :data:database --> :domain:service
         :data:datastore --> :domain:repository
         :data:reader:document --> :data:storage
         :data:reader:zip --> :data:storage
         :data:storage:device --> :data:storage
         :data:storage:smb --> :data:storage
-        :data:storage --> :domain:service
-        :data:sync --> :domain:service
+        :data:storage --> :domain:repository
+        :data:sync --> :domain:repository
         :data:sync --> :domain:usecase
         :data:sync --> :framework:background
         :data:sync --> :framework:notification
@@ -222,7 +201,6 @@ graph TD
     :app:share --> framework
 
     feature --> :domain:usecase
-    feature --> :domain:service
     feature --> :framework:designsystem
     feature --> :framework:ui
     feature --> :framework:ui:file

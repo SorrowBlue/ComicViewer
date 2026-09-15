@@ -5,13 +5,30 @@
 package com.sorrowblue.comicviewer.domain.usecase.file
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
+import com.sorrowblue.comicviewer.domain.model.collection.CollectionFile
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
+import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
+import com.sorrowblue.comicviewer.domain.repository.FileRepository
+import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
+import logcat.logcat
 
-abstract class GetNextBookUseCase :
-    OneShotUseCase<GetNextBookUseCase.Request, Book, GetNextBookUseCase.Error>() {
+@Inject
+class GetNextBookUseCase(
+    private val settingsRepository: SettingsRepository,
+    private val fileRepository: FileRepository,
+    private val collectionFileRepository: CollectionFileRepository,
+    private val collectionRepository: CollectionRepository,
+) : OneShotUseCase<GetNextBookUseCase.Request, Book, GetNextBookUseCase.Error>() {
+
     data class Request(
         val bookshelfId: BookshelfId,
         val path: String,
@@ -28,5 +45,112 @@ abstract class GetNextBookUseCase :
     enum class Error : Resource.AppError {
         System,
         NotFound,
+    }
+
+    override suspend fun run(request: Request): Resource<Book, Error> {
+        val settings = settingsRepository.folderDisplaySettings.first()
+        return when (val location = request.location) {
+            is Location.Collection -> collection(
+                request.isNext,
+                location.collectionId,
+                request.bookshelfId,
+                request.path,
+                settings.sortType,
+            )
+
+            Location.Folder -> folder(
+                request.isNext,
+                request.bookshelfId,
+                request.path,
+                settings.sortType,
+            )
+        }
+    }
+
+    private suspend fun folder(
+        isNext: Boolean,
+        bookshelfId: BookshelfId,
+        path: String,
+        sortType: SortType,
+    ): Resource<Book, Error> = runCatching {
+        if (isNext) {
+            fileRepository.nextFileModel(bookshelfId, path, sortType)
+        } else {
+            fileRepository.prevFileModel(bookshelfId, path, sortType)
+        }
+    }.fold({ modelFlow ->
+        modelFlow.first().let {
+            if (it is Book) {
+                Resource.Success(it)
+            } else {
+                Resource.Error(Error.NotFound)
+            }
+        }
+    }, {
+        Resource.Error(Error.System)
+    })
+
+    private suspend fun collection(
+        isNext: Boolean,
+        collectionId: CollectionId,
+        bookshelfId: BookshelfId,
+        path: String,
+        sortType: SortType,
+    ): Resource<Book, Error> {
+        logcat { "#collection $bookshelfId $collectionId" }
+        val collection = collectionRepository.flow(collectionId).first()
+            ?: return Resource.Error(Error.NotFound)
+
+        logcat { "collection: $collection" }
+
+        return runCatching {
+            when (collection) {
+                is BasicCollection -> {
+                    if (isNext) {
+                        collectionFileRepository.flowNextCollectionFile(
+                            CollectionFile(collectionId, bookshelfId, path),
+                            sortType,
+                        )
+                    } else {
+                        collectionFileRepository.flowPrevCollectionFile(
+                            CollectionFile(collectionId, bookshelfId, path),
+                            sortType,
+                        )
+                    }
+                }
+
+                is SmartCollection -> {
+                    if (isNext) {
+                        fileRepository.nextFileModel(
+                            bookshelfId,
+                            path,
+                            collection.searchCondition,
+                            sortType,
+                        )
+                    } else {
+                        fileRepository.prevFileModel(
+                            bookshelfId,
+                            path,
+                            collection.searchCondition,
+                            sortType,
+                        )
+                    }
+                }
+            }
+        }.onFailure {
+            logcat { "GetNextBookInteractor: $it" }
+        }.fold({ modelFlow ->
+            modelFlow.first().let {
+                logcat { "modelFlow.first(): $it" }
+                if (it is Book) {
+                    Resource.Success(it)
+                } else {
+                    Resource.Error(Error.NotFound)
+                }
+            }
+        }, {
+            logcat { "GetNextBookInteractor: $it" }
+            Resource.Error(Error.System)
+        })
     }
 }

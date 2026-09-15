@@ -8,7 +8,7 @@ import androidx.work.WorkManager
 import com.sorrowblue.comicviewer.data.sync.worker.FileScanWorker
 import com.sorrowblue.comicviewer.data.sync.worker.ThumbnailScanWorker
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.service.bookshelf.BookshelfScanManager
+import com.sorrowblue.comicviewer.domain.repository.bookshelf.BookshelfScanManager
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject

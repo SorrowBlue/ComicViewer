@@ -2,12 +2,13 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.storage
+package com.sorrowblue.comicviewer.domain.repository.storage
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import kotlin.coroutines.cancellation.CancellationException
 
 interface RemoteStorageClient {

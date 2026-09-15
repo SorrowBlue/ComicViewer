@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.domain.service.bookshelf
+package com.sorrowblue.comicviewer.domain.repository.bookshelf
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import kotlinx.coroutines.flow.Flow

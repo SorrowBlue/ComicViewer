@@ -32,7 +32,9 @@ graph TB
     :domain:usecase["usecase"]
     :domain:usecase["usecase"]
     :domain:model["model"]
+    :domain:repository["repository"]
     :domain:model["model"]
+    :domain:repository["repository"]
   end
 
   :feature:history --> :domain:usecase
@@ -41,9 +43,11 @@ graph TB
   :feature:history --> :feature:folder:nav
   :feature:history --> :feature:settings:nav
   :domain:usecase --> :domain:model
+  :domain:usecase --> :domain:repository
   :feature:folder:nav --> :domain:model
   :feature:book:nav --> :domain:model
   :feature:collection:nav --> :domain:model
+  :domain:repository --> :domain:model
 
 classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
 class :feature:history kotlin-multiplatform
@@ -53,5 +57,6 @@ class :feature:collection:nav kotlin-multiplatform
 class :feature:folder:nav kotlin-multiplatform
 class :feature:settings:nav kotlin-multiplatform
 class :domain:model kotlin-multiplatform
+class :domain:repository kotlin-multiplatform
 
 ```

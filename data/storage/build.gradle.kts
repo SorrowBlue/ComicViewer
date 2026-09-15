@@ -9,7 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(projects.domain.service)
+                api(projects.domain.repository)
                 api(libs.kotlinx.io)
             }
         }

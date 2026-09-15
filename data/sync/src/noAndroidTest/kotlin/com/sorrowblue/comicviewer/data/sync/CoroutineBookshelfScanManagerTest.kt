@@ -24,15 +24,12 @@ class CoroutineBookshelfScanManagerTest {
     fun scanFile_executesAndCompletes() = runTest {
         var scanCalled = false
         var fileCompleted = false
-        val scanUseCase = object : ScanBookshelfUseCase() {
-            override suspend fun run(request: Request): Resource<List<File>, Error> {
-                scanCalled = true
-                return Resource.Success(emptyList())
-            }
+        val scanUseCase = ScanBookshelfUseCase {
+            scanCalled = true
+            Resource.Success(emptyList())
         }
-        val regenUseCase = object : RegenerateThumbnailsUseCase() {
-            override suspend fun run(request: Request): Resource<Unit, Error> =
-                Resource.Success(Unit)
+        val regenUseCase = RegenerateThumbnailsUseCase {
+            Resource.Success(Unit)
         }
         val manager = CoroutineBookshelfScanManager(
             scanBookshelfUseCase = scanUseCase,
@@ -57,15 +54,12 @@ class CoroutineBookshelfScanManagerTest {
     fun scanThumbnail_executesAndCompletes() = runTest {
         var regenCalled = false
         var thumbnailCompleted = false
-        val scanUseCase = object : ScanBookshelfUseCase() {
-            override suspend fun run(request: Request): Resource<List<File>, Error> =
-                Resource.Success(emptyList())
+        val scanUseCase = ScanBookshelfUseCase {
+            Resource.Success(emptyList())
         }
-        val regenUseCase = object : RegenerateThumbnailsUseCase() {
-            override suspend fun run(request: Request): Resource<Unit, Error> {
-                regenCalled = true
-                return Resource.Success(Unit)
-            }
+        val regenUseCase = RegenerateThumbnailsUseCase {
+            regenCalled = true
+            Resource.Success(Unit)
         }
         val manager = CoroutineBookshelfScanManager(
             scanBookshelfUseCase = scanUseCase,
