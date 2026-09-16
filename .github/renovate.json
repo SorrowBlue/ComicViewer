@@ -78,18 +78,19 @@
       ]
     },
     {
-      "groupName": "com.sorrowblue.cmpdestinations",
-      "groupSlug": "com.sorrowblue.cmpdestinations",
-      "matchPackageNames": [
-        "com.sorrowblue.cmpdestinations{/,}**"
-      ]
-    },
-    {
       "groupName": "detekt",
       "groupSlug": "detekt",
       "matchPackageNames": [
         "dev.detekt{/,}**",
         "io.nlopez.compose.rules{/,}**"
+      ]
+    },
+    {
+      "groupName": "dependency-analysis",
+      "groupSlug": "dependency-analysis",
+      "matchPackageNames": [
+        "com.autonomousapps.dependency-analysis{/,}**",
+        "com.autonomousapps:dependency-analysis-gradle-plugin{/,}**"
       ]
     }
   ]
