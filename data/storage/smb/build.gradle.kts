@@ -33,9 +33,6 @@ kotlin {
         }
         androidMain {
             dependsOn(androidJvm)
-            dependencies {
-                runtimeOnly(libs.slf4j.android)
-            }
         }
         getByName("androidHostTest") {
             dependsOn(androidJvmTest)

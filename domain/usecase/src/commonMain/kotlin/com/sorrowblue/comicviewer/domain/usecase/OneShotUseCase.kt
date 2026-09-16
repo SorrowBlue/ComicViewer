@@ -10,7 +10,7 @@ import logcat.logcat
 abstract class OneShotUseCase<in R : Any, out D, out E> {
 
     suspend operator fun invoke(request: R): Resource<D, E> {
-        logcat { "invoke(request: $request)" }
+        logcat { "#invoke request: $request" }
         return run(request)
     }
 

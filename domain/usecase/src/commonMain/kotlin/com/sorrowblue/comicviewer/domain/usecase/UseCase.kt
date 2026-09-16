@@ -11,7 +11,7 @@ import logcat.logcat
 abstract class UseCase<in R : Any, out D, out E> {
 
     operator fun invoke(request: R): Flow<Resource<D, E>> {
-        logcat { "invoke(request: $request)" }
+        logcat { "#invoke request: $request" }
         return run(request)
     }
 

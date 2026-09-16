@@ -61,7 +61,6 @@ multiplatform-core = "1.1.0-alpha03"
 multiplatform-navigation3 = "1.2.0-beta01"
 navgraph = "0.2.1"
 robolectric = "4.17"
-slf4j-android = "2.0.17-0"
 soil = "1.0.0-alpha15"
 targetSdk = "37"
 versionCatalogLinter = "1.1.0"
@@ -168,7 +167,6 @@ metro-viewmodel = { group = "dev.zacsweers.metro", name = "metrox-viewmodel", ve
 metro-viewmodelCompose = { group = "dev.zacsweers.metro", name = "metrox-viewmodel-compose", version.ref = "metro" }
 navgraph-gradlePlugin = { group = "com.github.skydoves", name = "compose-nav-graph-gradle", version.ref = "navgraph" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
-slf4j-android = { group = "uk.uuid.slf4j", name = "slf4j-android", version.ref = "slf4j-android" }
 soil-form = { group = "com.soil-kt.soil", name = "form", version.ref = "soil" }
 
 [bundles]
