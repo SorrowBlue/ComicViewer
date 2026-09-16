@@ -9,7 +9,6 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.ui.file)
                 implementation(projects.feature.bookshelf.nav)
                 implementation(projects.feature.folder.nav)
                 implementation(projects.feature.settings.nav)

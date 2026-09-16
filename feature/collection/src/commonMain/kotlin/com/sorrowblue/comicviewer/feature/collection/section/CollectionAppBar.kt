@@ -10,10 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
-import com.sorrowblue.comicviewer.framework.ui.file.component.fileListDisplayItem
-import com.sorrowblue.comicviewer.framework.ui.file.component.gridSizeItem
-import com.sorrowblue.comicviewer.framework.ui.file.component.rememberFileListDisplayItemState
-import com.sorrowblue.comicviewer.framework.ui.file.component.rememberGridSizeItemState
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileListDisplayItem
+import com.sorrowblue.comicviewer.framework.ui.component.file.GridSizeItem
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import com.sorrowblue.comicviewer.framework.ui.material3.settingsItem
@@ -29,13 +27,13 @@ internal fun CollectionAppBar(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onFileListDisplayClick: () -> Unit,
+    onGridSizeClick: () -> Unit,
 ) {
     AdaptiveAppBar(
         title = { Text(text = uiState.title) },
         navigationIcon = { BackIconButton(onClick = onBackClick) },
         actions = {
-            val gridSizeItemState = rememberGridSizeItemState()
-            val fileListDisplayItemState = rememberFileListDisplayItemState()
             AppBarRow(maxItemCount = 3) {
                 clickableItem(
                     icon = { Icon(ComicIcons.Edit, null) },
@@ -49,8 +47,14 @@ internal fun CollectionAppBar(
                     onClick = onDeleteClick,
                     testTag = "DeleteButton",
                 )
-                fileListDisplayItemState.fileListDisplayItem()
-                gridSizeItemState.gridSizeItem()
+                FileListDisplayItem(
+                    fileListDisplay = uiState.fileListDisplay,
+                    onClick = onFileListDisplayClick,
+                )
+                GridSizeItem(
+                    fileListDisplay = uiState.fileListDisplay,
+                    onClick = onGridSizeClick,
+                )
                 settingsItem(onClick = onSettingsClick)
             }
         },

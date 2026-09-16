@@ -24,7 +24,9 @@ import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBarUiState
@@ -37,7 +39,6 @@ import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLoca
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
@@ -58,6 +59,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     onFolderScopeOnlyClick: () -> Unit,
     onIncludeSubfoldersClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onGridSizeClick: () -> Unit,
+    onHiddenFilesChange: (Boolean) -> Unit,
+    onFileListDisplayChange: (FileListDisplay) -> Unit,
     onRefresh: () -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
@@ -88,6 +92,9 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
                     onFolderScopeOnlyClick = onFolderScopeOnlyClick,
                     onIncludeSubfoldersClick = onIncludeSubfoldersClick,
                     onSettingsClick = onSettingsClick,
+                    onGridSizeClick = onGridSizeClick,
+                    onHiddenFilesChange = onHiddenFilesChange,
+                    onFileListDisplayChange = onFileListDisplayChange,
                     scrollBehavior = scrollBehavior,
                     scrollBehavior2 = scrollBehavior2,
                 )
@@ -136,6 +143,9 @@ private fun FolderScreenPreview() = PreviewTheme {
         onFolderScopeOnlyClick = {},
         onIncludeSubfoldersClick = {},
         onSettingsClick = {},
+        onGridSizeClick = {},
+        onHiddenFilesChange = {},
+        onFileListDisplayChange = {},
         onRefresh = {},
         snackbarHostState = SnackbarHostState(),
     )

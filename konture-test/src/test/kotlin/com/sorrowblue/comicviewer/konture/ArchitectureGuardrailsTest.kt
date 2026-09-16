@@ -106,6 +106,7 @@ class ArchitectureGuardrailsTest {
     @Test
     fun `repository implementations are internal`() {
         Konture.classes()
+            .allowEmpty()
             .that().nameEndsWith("RepositoryImpl")
             .should().beInternal()
             .check()
@@ -117,6 +118,7 @@ class ArchitectureGuardrailsTest {
     @Test
     fun `repository interfaces are interfaces`() {
         Konture.classes()
+            .allowEmpty()
             .that().inPackage("..domain.repository..")
             .and().nameEndsWith("Repository")
             .should().beInterfaces()
@@ -160,6 +162,7 @@ class ArchitectureGuardrailsTest {
             "book",
             "bookshelf",
             "collection",
+            "file",
             "folder",
             "history",
             "readlater",

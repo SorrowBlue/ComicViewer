@@ -19,8 +19,8 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawFileSearching
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileLazyVerticalGrid
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileLazyVerticalGridUiState
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileLazyVerticalGrid
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import comicviewer.feature.search.generated.resources.Res
 import comicviewer.feature.search.generated.resources.search_label_not_found

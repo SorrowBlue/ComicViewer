@@ -25,6 +25,7 @@ import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavKey
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiState
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
@@ -32,7 +33,6 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteS
 import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalNavigationItems
 import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationItems
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
@@ -49,6 +49,8 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onFileListDisplayClick: () -> Unit,
+    onGridSizeClick: () -> Unit,
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
     modifier: Modifier = Modifier,
@@ -62,6 +64,8 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
                     onEditClick = onEditClick,
                     onDeleteClick = onDeleteClick,
                     onSettingsClick = onSettingsClick,
+                    onFileListDisplayClick = onFileListDisplayClick,
+                    onGridSizeClick = onGridSizeClick,
                 )
             },
         ) { contentPadding ->
@@ -133,6 +137,8 @@ private fun CollectionScreenPreview() {
                 onEditClick = {},
                 onDeleteClick = {},
                 onSettingsClick = {},
+                onFileListDisplayClick = {},
+                onGridSizeClick = {},
                 onFileClick = {},
                 onFileInfoClick = {},
             )

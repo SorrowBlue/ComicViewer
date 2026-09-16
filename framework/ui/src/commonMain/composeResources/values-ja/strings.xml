@@ -4,4 +4,16 @@
     <string name="ok">OK</string>
     <string name="cancel">キャンセル</string>
     <string name="label_settings">設定</string>
+    <string name="file_list_label_switch_grid_view">グリッド表示に切り替え</string>
+    <string name="file_list_label_switch_list_view">リスト表示に切り替え</string>
+    <string name="file_desc_open_file_info">ファイル情報を見る</string>
+    <string name="file_action_change_grid_size">グリッドサイズ</string>
+    <string name="file_action_show_hidden">隠しファイルを表示</string>
+    <string name="file_label_folder">フォルダ</string>
+    <string name="file_label_read_completed">読了</string>
+    <string name="file_label_read_percent">%1$d%% 既読</string>
+
+    <plurals name="file_label_file_count">
+        <item quantity="other">%1$d個のファイル</item>
+    </plurals>
 </resources>

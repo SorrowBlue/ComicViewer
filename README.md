@@ -93,6 +93,8 @@ graph LR
 | feature | collection      | add          | Add collection screen |
 | feature | collection      | editor       | Edit collection screen |
 | feature | collection      | nav          | Collection navigation |
+| feature | file           |              | File information screen |
+| feature | file           | nav          | File information navigation |
 | feature | folder         |              | Folder navigation screen |
 | feature | folder         | nav          | Folder navigation |
 | feature | history        |              | Reading history screen |
@@ -118,7 +120,6 @@ graph LR
 | framework| startup       |              | Application startup initialization |
 | framework| test          |              | Testing utilities |
 | framework| ui            |              | Shared UI components |
-| framework| ui            | file         | Shared file UI components and detail pane |
 | framework| navkey-processor|            | Navigation key processor |
 
 ## Architecture Overview (Onion Architecture Mapping)
@@ -194,8 +195,6 @@ graph TD
     subgraph framework [framework - UI & Platform Infrastructure]
         :framework:ui --> :framework:designsystem
         :framework:ui --> :framework:common
-        :framework:ui:file --> :framework:ui
-        :framework:ui:file --> :domain:usecase
         :framework:permission --> :framework:ui
         :framework:permission --> :framework:designsystem
         :framework:notification --> :framework:startup
@@ -209,7 +208,6 @@ graph TD
     feature --> :domain:usecase
     feature --> :framework:designsystem
     feature --> :framework:ui
-    feature --> :framework:ui:file
 
     data --> domain
 ```

@@ -45,7 +45,7 @@ import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetwork
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileThumbnailsCarousel
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileThumbnailsCarousel
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus

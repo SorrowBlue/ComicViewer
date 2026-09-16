@@ -11,7 +11,7 @@ kotlin {
             dependencies {
                 implementation(projects.feature.book.nav)
                 implementation(projects.feature.collection.nav)
-                implementation(projects.framework.ui.file)
+                implementation(projects.feature.file.nav)
                 implementation(projects.feature.folder.nav)
                 implementation(projects.feature.settings.nav)
             }

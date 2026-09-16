@@ -25,6 +25,7 @@ import com.github.skydoves.navgraph.annotations.NavGraphRoot
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavKey
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
@@ -34,9 +35,8 @@ import com.sorrowblue.comicviewer.framework.ui.EmptyContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileLazyVerticalGrid
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileLazyVerticalGridUiState
-import com.sorrowblue.comicviewer.framework.ui.file.navigation.FileInfoNavKey
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileLazyVerticalGrid
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.paging.isEmptyData
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
