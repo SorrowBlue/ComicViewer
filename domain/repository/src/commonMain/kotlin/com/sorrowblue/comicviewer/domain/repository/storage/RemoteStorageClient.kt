@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import kotlin.coroutines.cancellation.CancellationException
 
 interface RemoteStorageClient {
@@ -33,6 +34,8 @@ interface RemoteStorageClient {
     suspend fun file(path: String, resolveImageFolder: Boolean = false): File
 
     suspend fun pageCount(book: Book): Int
+
+    suspend fun fileReader(book: Book): BookFileReader
 
     suspend fun getAttribute(path: String): FileAttribute?
 

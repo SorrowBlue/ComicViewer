@@ -34,6 +34,7 @@ import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.service.file.FileHierarchyScanService
 import kotlin.test.Test
@@ -323,6 +324,7 @@ private open class FakeRemoteStorageClient : RemoteStorageClient {
 
     override suspend fun file(path: String, resolveImageFolder: Boolean): File = TODO()
     override suspend fun pageCount(book: Book): Int = TODO()
+    override suspend fun fileReader(book: Book): BookFileReader = TODO()
     override suspend fun getAttribute(path: String): FileAttribute? = TODO()
     override suspend fun getFileSize(path: String): Long = TODO()
 }

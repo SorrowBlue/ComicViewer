@@ -12,7 +12,6 @@ kotlin {
             dependencies {
                 implementation(projects.domain.repository)
                 implementation(projects.framework.startup)
-                implementation(projects.data.storage)
                 api(libs.coil3.core)
                 implementation(libs.coil3)
                 implementation(libs.kotlinx.io)

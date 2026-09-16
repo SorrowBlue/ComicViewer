@@ -4,11 +4,11 @@
 
 package com.sorrowblue.comicviewer.data.storage.smb
 
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -19,7 +19,7 @@ import kotlinx.io.Source
 
 @AssistedInject
 internal class FakeFileReader(@Assisted private val seekableInputStream: SeekableInputStream) :
-    FileReader {
+    BookFileReader {
     override suspend fun pageCount(): Int {
         TODO("Not yet implemented")
     }

@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -119,6 +120,8 @@ internal class RemoteStorageClientImpl(
     override suspend fun pageCount(book: Book): Int = fileClient.fileReader(book).use {
         it.pageCount()
     }
+
+    override suspend fun fileReader(book: Book): BookFileReader = fileClient.fileReader(book)
 
     override suspend fun getAttribute(path: String): FileAttribute = runCatching {
         withContext(dispatcher) {

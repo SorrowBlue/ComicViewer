@@ -5,10 +5,10 @@
 package com.sorrowblue.comicviewer.data.storage.client.impl
 
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import com.sorrowblue.comicviewer.domain.service.file.FileSortService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -20,7 +20,7 @@ internal class ImageFolderFileReader(
     private val fileClient: FileClient<*>,
     private val file: File,
     private val fileSortService: FileSortService = FileSortService(),
-) : FileReader {
+) : BookFileReader {
     private var list: List<File>? = null
 
     private suspend fun list(): List<File> = withContext(dispatcher) {

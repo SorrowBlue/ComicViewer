@@ -13,18 +13,13 @@ import org.slf4j.spi.LoggerFactoryBinder
 internal class StaticLoggerBinder : LoggerFactoryBinder {
     private val loggerFactory: ILoggerFactory = object : ILoggerFactory {
         private val map: ConcurrentMap<String?, Logger?> = ConcurrentHashMap<String, Logger>()
-        override fun getLogger(name: String?): Logger? {
-            return map.computeIfAbsent(name, ::LogcatLoggerAdapter)
-        }
+        override fun getLogger(name: String?): Logger? =
+            map.computeIfAbsent(name, ::LogcatLoggerAdapter)
     }
 
-    override fun getLoggerFactory(): ILoggerFactory {
-        return loggerFactory
-    }
+    override fun getLoggerFactory(): ILoggerFactory = loggerFactory
 
-    override fun getLoggerFactoryClassStr(): String {
-        return loggerFactory.javaClass.getName()
-    }
+    override fun getLoggerFactoryClassStr(): String = loggerFactory.javaClass.getName()
 
     companion object {
         @JvmStatic

@@ -17,13 +17,13 @@ import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.resizeImage
-import com.sorrowblue.comicviewer.data.storage.client.impl.BookFileReaderManagerImpl
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.ShareContents
 import com.sorrowblue.comicviewer.domain.model.file.BookPageImage
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFormat
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReaderManager
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ClassKey
@@ -41,7 +41,7 @@ internal class BookPageImageFetcher(
     private val remoteStorageClientFactory: RemoteStorageClient.Factory,
     private val bookshelfRepository: BookshelfRepository,
     private val settingsRepository: SettingsRepository,
-    private val bookFileReaderManager: BookFileReaderManagerImpl,
+    private val bookFileReaderManager: BookFileReaderManager,
 ) : BaseFetcher<BookPageImage, BookPageImageMetadata>(data, options, diskCacheLazy) {
 
     override val diskCacheKey
@@ -127,7 +127,7 @@ internal class BookPageImageFetcher(
         private val remoteStorageClientFactory: RemoteStorageClient.Factory,
         private val bookshelfRepository: BookshelfRepository,
         private val settingsRepository: SettingsRepository,
-        private val bookFileReaderManager: BookFileReaderManagerImpl,
+        private val bookFileReaderManager: BookFileReaderManager,
     ) : Fetcher.Factory<BookPageImage> {
         override fun create(data: BookPageImage, options: Options, imageLoader: ImageLoader) =
             BookPageImageFetcher(
