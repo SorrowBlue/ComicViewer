@@ -4,4 +4,9 @@
 
 package com.sorrowblue.comicviewer.feature.collection.section
 
-internal data class CollectionAppBarUiState(val title: String = "")
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+
+internal data class CollectionAppBarUiState(
+    val title: String = "",
+    val fileListDisplay: FileListDisplay = FileListDisplay.Grid,
+)

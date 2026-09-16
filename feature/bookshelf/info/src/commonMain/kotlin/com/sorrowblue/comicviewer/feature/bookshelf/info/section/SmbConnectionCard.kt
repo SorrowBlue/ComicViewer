@@ -32,9 +32,9 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.LockPerson
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileInfoCardTitle
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileInfoDataText
-import com.sorrowblue.comicviewer.framework.ui.file.section.createClipEntry
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileInfoCardTitle
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileInfoDataText
+import com.sorrowblue.comicviewer.framework.ui.platform.createClipEntry
 import comicviewer.feature.bookshelf.info.generated.resources.Res
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_Id_password
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_auth_method

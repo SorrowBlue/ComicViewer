@@ -39,6 +39,8 @@ internal fun CollectionScreenRoot(
         onDeleteClick = dropUnlessResumed { onDeleteClick(id) },
         onEditClick = dropUnlessResumed { uiState.collection?.let { onEditClick(it) } },
         onSettingsClick = dropUnlessResumed(block = onSettingsClick),
+        onFileListDisplayClick = viewModel::onFileListDisplayClick,
+        onGridSizeClick = viewModel::onGridSizeClick,
         onFileClick = dropUnlessResumed(block = onFileClick),
         onFileInfoClick = dropUnlessResumed(block = onFileInfoClick),
         modifier = Modifier.testTag("CollectionScreenRoot"),

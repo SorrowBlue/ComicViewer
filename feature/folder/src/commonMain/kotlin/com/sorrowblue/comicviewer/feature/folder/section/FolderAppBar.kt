@@ -19,15 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.folder.component.SortTypeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveAppBar
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileListDisplayItem
-import com.sorrowblue.comicviewer.framework.ui.file.component.gridSizeItem
-import com.sorrowblue.comicviewer.framework.ui.file.component.hiddenFilesToggleableItem
-import com.sorrowblue.comicviewer.framework.ui.file.component.rememberGridSizeItemState
-import com.sorrowblue.comicviewer.framework.ui.file.component.rememberHiddenFilesToggleableItemState
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileListDisplayItem
+import com.sorrowblue.comicviewer.framework.ui.component.file.GridSizeItem
+import com.sorrowblue.comicviewer.framework.ui.component.file.HiddenFilesToggleableItem
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.material3.clickableItem
 import com.sorrowblue.comicviewer.framework.ui.material3.settingsItem
@@ -45,6 +44,9 @@ internal fun FolderAppBar(
     onFolderScopeOnlyClick: () -> Unit,
     onIncludeSubfoldersClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onGridSizeClick: () -> Unit,
+    onHiddenFilesChange: (Boolean) -> Unit,
+    onFileListDisplayChange: (FileListDisplay) -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     scrollBehavior2: TopAppBarScrollBehavior? = null,
@@ -56,8 +58,6 @@ internal fun FolderAppBar(
                 BackIconButton(onClick = onBackClick)
             },
             actions = {
-                val gridSizeItemState = rememberGridSizeItemState()
-                val hiddenFilesToggleableItemState = rememberHiddenFilesToggleableItemState()
                 AppBarRow(maxItemCount = 2, modifier = Modifier.testTag("AppBarMenu")) {
                     clickableItem(
                         onClick = onSearchClick,
@@ -70,8 +70,14 @@ internal fun FolderAppBar(
                         label = { stringResource(Res.string.folder_label_search) },
                         testTag = "SearchButton",
                     )
-                    gridSizeItemState.gridSizeItem()
-                    hiddenFilesToggleableItemState.hiddenFilesToggleableItem()
+                    GridSizeItem(
+                        fileListDisplay = uiState.fileListDisplay,
+                        onClick = onGridSizeClick,
+                    )
+                    HiddenFilesToggleableItem(
+                        checked = uiState.showHiddenFiles,
+                        onCheckedChange = onHiddenFilesChange,
+                    )
                     settingsItem(onClick = onSettingsClick)
                 }
             },
@@ -95,7 +101,10 @@ internal fun FolderAppBar(
                         },
                     )
                     Spacer(Modifier.weight(1f))
-                    FileListDisplayItem()
+                    FileListDisplayItem(
+                        fileListDisplay = uiState.fileListDisplay,
+                        onDisplayChange = onFileListDisplayChange,
+                    )
                 }
             },
             scrollBehavior = scrollBehavior2,
@@ -121,6 +130,9 @@ private fun FolderAppBarPreview() {
             onFolderScopeOnlyClick = {},
             onIncludeSubfoldersClick = {},
             onSettingsClick = {},
+            onGridSizeClick = {},
+            onHiddenFilesChange = {},
+            onFileListDisplayChange = {},
         )
     }
 }

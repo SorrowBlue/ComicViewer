@@ -4,7 +4,7 @@
 
 package com.sorrowblue.comicviewer.feature.folder.section
 
-import com.sorrowblue.comicviewer.framework.ui.file.component.FileLazyVerticalGridUiState
+import com.sorrowblue.comicviewer.framework.ui.component.file.FileLazyVerticalGridUiState
 
 internal data class FolderListUiState(
     val title: String = "",

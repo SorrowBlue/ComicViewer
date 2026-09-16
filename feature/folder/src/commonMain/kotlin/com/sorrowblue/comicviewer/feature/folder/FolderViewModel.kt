@@ -13,6 +13,8 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.GetFileUseCase
@@ -99,6 +101,8 @@ internal class FolderViewModel(
                 folderScopeOnly = folderDisplaySettings.isFolderScopeOnly(bookshelfId, path),
                 includeSubfolders = folderDisplaySettings.isIncludeSubfolders(bookshelfId, path),
                 sortType = folderDisplaySettings.currentSortType(bookshelfId, path),
+                fileListDisplay = folderDisplaySettings.fileListDisplay,
+                showHiddenFiles = folderDisplaySettings.showHiddenFiles,
             ),
             folderListUiState = FolderListUiState(
                 emphasisPath = restorePath.orEmpty(),
@@ -138,6 +142,35 @@ internal class FolderViewModel(
     fun onIncludeSubfoldersClick() {
         viewModelScope.launch {
             folderDisplaySettingsUseCase.toggleIncludeSubfolders(bookshelfId, path)
+        }
+    }
+
+    fun onFileListDisplayChange(fileListDisplay: FileListDisplay) {
+        viewModelScope.launch {
+            folderDisplaySettingsUseCase.edit {
+                it.copy(fileListDisplay = fileListDisplay)
+            }
+        }
+    }
+
+    fun onGridSizeClick() {
+        viewModelScope.launch {
+            folderDisplaySettingsUseCase.edit {
+                it.copy(
+                    gridColumnSize = when (it.gridColumnSize) {
+                        GridColumnSize.Medium -> GridColumnSize.Large
+                        GridColumnSize.Large -> GridColumnSize.Medium
+                    },
+                )
+            }
+        }
+    }
+
+    fun onHiddenFilesChange(checked: Boolean) {
+        viewModelScope.launch {
+            folderDisplaySettingsUseCase.edit {
+                it.copy(showHiddenFiles = checked)
+            }
         }
     }
 
