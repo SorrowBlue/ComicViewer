@@ -92,6 +92,14 @@
         "com.autonomousapps.dependency-analysis{/,}**",
         "com.autonomousapps:dependency-analysis-gradle-plugin{/,}**"
       ]
+    },
+    {
+      "groupName": "androidx.navigation3",
+      "groupSlug": "androidx.navigation3",
+      "matchPackageNames": [
+        "org.jetbrains.androidx.navigation3{/,}**",
+        "androidx.navigation3{/,}**"
+      ]
     }
   ]
 }
