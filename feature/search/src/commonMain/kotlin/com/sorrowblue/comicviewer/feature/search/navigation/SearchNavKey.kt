@@ -20,11 +20,13 @@ import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 
+internal const val SCENE_KEY_SEARCH = "Search"
+
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
 internal fun searchNavEntry(navigator: Navigator) {
     scope.entry<SearchNavKey>(
-        metadata = SupportingPaneSceneStrategy.mainPane("Search") +
+        metadata = SupportingPaneSceneStrategy.mainPane(SCENE_KEY_SEARCH) +
             NavDisplay.transitionMaterialSharedAxisX(),
     ) { navKey ->
         SearchScreenRoot(

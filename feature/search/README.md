@@ -22,6 +22,10 @@ graph TB
   end
   subgraph :feature
     :feature:search["search"]
+    subgraph :file
+      :feature:file:nav["nav"]
+      :feature:file:nav["nav"]
+    end
     subgraph :folder
       :feature:folder:nav["nav"]
       :feature:folder:nav["nav"]
@@ -47,6 +51,7 @@ graph TB
   :domain:usecase --> :domain:repository
   :domain:usecase --> :domain:service
   :domain:service --> :domain:model
+  :feature:file:nav --> :domain:model
   :feature:folder:nav --> :domain:model
   :feature:book:nav --> :domain:model
   :feature:collection:nav --> :domain:model
@@ -55,6 +60,7 @@ graph TB
   :feature:search --> :domain:usecase
   :feature:search --> :feature:book:nav
   :feature:search --> :feature:collection:nav
+  :feature:search --> :feature:file:nav
   :feature:search --> :feature:folder:nav
   :feature:search --> :feature:search:nav
   :feature:search --> :feature:settings:nav
@@ -64,6 +70,7 @@ class :domain:usecase kotlin-multiplatform
 class :domain:model kotlin-multiplatform
 class :domain:repository kotlin-multiplatform
 class :domain:service kotlin-multiplatform
+class :feature:file:nav kotlin-multiplatform
 class :feature:folder:nav kotlin-multiplatform
 class :feature:book:nav kotlin-multiplatform
 class :feature:collection:nav kotlin-multiplatform

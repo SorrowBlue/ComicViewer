@@ -29,13 +29,16 @@ internal class NavKeyProcessor(
 
     private fun processNavKeys(resolver: Resolver) {
         val symbols = resolver.getSymbolsWithAnnotation("kotlinx.serialization.Serializable")
-        
+
         val navKeys = symbols
             .filterIsInstance<KSClassDeclaration>()
             .filter { it.implementsNavKey() }
             .toList()
 
         if (navKeys.isEmpty()) return
+
+        val fileInfoNavKeys = navKeys.filter { it.implementsFileInfoNavKey() }
+        val hasFileInfoNavKeys = fileInfoNavKeys.isNotEmpty()
 
         val firstKey = navKeys.first()
         val keyPackage = firstKey.packageName.asString()
@@ -62,6 +65,7 @@ internal class NavKeyProcessor(
 
         val className = "Generated${moduleName}NavKeyModule"
         val methodName = "provide${moduleName}NavKeySubclassMap"
+        val fileInfoMethodName = "provide${moduleName}FileInfoNavKeySubclassMap"
 
         val fileSpec = buildString {
             appendLine("/*")
@@ -74,6 +78,9 @@ internal class NavKeyProcessor(
                 appendLine("import ${key.qualifiedName?.asString()}")
             }
             appendLine("import androidx.navigation3.runtime.NavKey")
+            if (hasFileInfoNavKeys) {
+                appendLine("import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey")
+            }
             appendLine("import com.sorrowblue.comicviewer.framework.navigation.NavKeyEntry")
             appendLine("import dev.zacsweers.metro.AppScope")
             appendLine("import dev.zacsweers.metro.BindingContainer")
@@ -96,6 +103,17 @@ internal class NavKeyProcessor(
                 appendLine("        ($name::class as KClass<NavKey>) to ($name.serializer() as KSerializer<NavKey>),")
             }
             appendLine("    )")
+            if (hasFileInfoNavKeys) {
+                appendLine()
+                appendLine("    @Provides")
+                appendLine("    @ElementsIntoSet")
+                appendLine("    public fun $fileInfoMethodName(): Set<KClass<out FileInfoNavKey>> = setOf(")
+                fileInfoNavKeys.forEach { key ->
+                    val name = key.simpleName.asString()
+                    appendLine("        $name::class,")
+                }
+                appendLine("    )")
+            }
             appendLine("}")
         }
 
@@ -170,7 +188,10 @@ internal class NavKeyProcessor(
         }
     }
 
-    private fun KSClassDeclaration.implementsNavKey(): Boolean {
+    private fun KSClassDeclaration.implementsNavKey(
+        visited: MutableSet<KSClassDeclaration> = mutableSetOf(),
+    ): Boolean {
+        if (!visited.add(this)) return false
         for (superType in superTypes) {
             val resolved = try {
                 superType.resolve()
@@ -184,7 +205,29 @@ internal class NavKeyProcessor(
             ) {
                 return true
             }
-            if (decl.implementsNavKey()) {
+            if (decl.implementsNavKey(visited)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun KSClassDeclaration.implementsFileInfoNavKey(
+        visited: MutableSet<KSClassDeclaration> = mutableSetOf(),
+    ): Boolean {
+        if (!visited.add(this)) return false
+        for (superType in superTypes) {
+            val resolved = try {
+                superType.resolve()
+            } catch (e: Exception) {
+                null
+            } ?: continue
+            val decl = resolved.declaration as? KSClassDeclaration ?: continue
+            val qualifiedName = decl.qualifiedName?.asString()
+            if (qualifiedName == "com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey") {
+                return true
+            }
+            if (decl.implementsFileInfoNavKey(visited)) {
                 return true
             }
         }

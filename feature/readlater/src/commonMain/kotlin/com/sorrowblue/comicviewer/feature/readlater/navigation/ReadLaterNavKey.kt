@@ -28,6 +28,8 @@ import dev.zacsweers.metro.binding
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
+internal const val SCENE_KEY_READ_LATER = "ReadLater"
+
 @ContributesIntoSet(AppScope::class, binding = binding<NavigationKey>())
 @Serializable
 internal data object ReadLaterNavKey : NavigationKey {
@@ -43,7 +45,7 @@ internal data object ReadLaterNavKey : NavigationKey {
 context(scope: EntryProviderScope<NavKey>)
 internal fun readLaterNavEntry(navigator: Navigator) {
     scope.entry<ReadLaterNavKey>(
-        metadata = SupportingPaneSceneStrategy.mainPane("ReadLater") +
+        metadata = SupportingPaneSceneStrategy.mainPane(SCENE_KEY_READ_LATER) +
             NavDisplay.transitionMaterialFadeThrough(),
     ) {
         ReadLaterScreenRoot(
