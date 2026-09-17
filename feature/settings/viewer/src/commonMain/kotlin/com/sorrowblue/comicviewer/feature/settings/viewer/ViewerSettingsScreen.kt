@@ -26,8 +26,8 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.feature.settings.nav.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.BindingDirectionNavKey
-import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection.displayName
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme

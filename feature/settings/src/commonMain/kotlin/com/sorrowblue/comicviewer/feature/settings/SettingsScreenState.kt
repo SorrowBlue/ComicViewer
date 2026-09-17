@@ -10,15 +10,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ExtensionSettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.InfoSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.DisplaySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.ExtensionSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.FolderSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.InfoSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.SecuritySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.navigation.InAppLanguagePickerNavKey
-import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecuritySettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.utils.AppLocaleSettingsLauncher
 import com.sorrowblue.comicviewer.feature.settings.utils.rememberAppLocaleSettingsLauncher
-import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
 
 internal interface SettingsScreenState {

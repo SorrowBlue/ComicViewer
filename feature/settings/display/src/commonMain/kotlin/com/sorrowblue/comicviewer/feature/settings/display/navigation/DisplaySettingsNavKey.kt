@@ -10,13 +10,10 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
+import com.sorrowblue.comicviewer.feature.settings.nav.DisplaySettingsNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object DisplaySettingsNavKey : NavKey
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

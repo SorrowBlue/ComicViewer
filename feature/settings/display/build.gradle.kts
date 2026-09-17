@@ -10,6 +10,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.settings.common)
+                implementation(projects.feature.settings.nav)
             }
         }
         androidMain {

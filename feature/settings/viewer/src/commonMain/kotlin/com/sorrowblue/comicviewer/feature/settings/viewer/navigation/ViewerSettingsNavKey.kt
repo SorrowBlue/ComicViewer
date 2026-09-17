@@ -9,14 +9,11 @@ import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
+import com.sorrowblue.comicviewer.feature.settings.nav.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.viewer.ViewerSettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object ViewerSettingsNavKey : NavKey
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
