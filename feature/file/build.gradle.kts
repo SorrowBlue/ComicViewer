@@ -10,6 +10,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlinx.datetime)
+                implementation(projects.feature.file.nav)
+                implementation(projects.feature.collection.nav)
+                implementation(projects.feature.folder.nav)
             }
         }
     }

@@ -15,6 +15,7 @@ graph TB
   end
   subgraph :domain
     :domain:repository["repository"]
+    :domain:repository["repository"]
     :domain:model["model"]
   end
 
@@ -22,8 +23,8 @@ graph TB
   :domain:repository --> :domain:model
 
 classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
+class :data:coil kotlin-multiplatform
 class :domain:repository kotlin-multiplatform
 class :domain:model kotlin-multiplatform
-class :data:coil kotlin-multiplatform
 
 ```

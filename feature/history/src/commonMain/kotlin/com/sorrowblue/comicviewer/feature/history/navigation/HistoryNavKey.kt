@@ -26,6 +26,8 @@ import dev.zacsweers.metro.binding
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
+internal const val SCENE_KEY_HISTORY = "History"
+
 @ContributesIntoSet(AppScope::class, binding = binding<NavigationKey>())
 @Serializable
 internal data object HistoryNavKey : NavigationKey {
@@ -44,7 +46,7 @@ internal fun historyNavEntry(navigator: Navigator) {
     scope.entry<HistoryNavKey>(
         metadata = metadata {
             transitionMaterialFadeThrough()
-        } + SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>("History"),
+        } + SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>(SCENE_KEY_HISTORY),
     ) {
         HistoryScreenRoot(
             onDeleteAllClick = {
