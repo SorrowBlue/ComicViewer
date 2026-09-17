@@ -4,13 +4,13 @@
 
 package com.sorrowblue.comicviewer.data.reader.zip.impl
 
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import com.sorrowblue.kioarch.ArchiveEntry
 import com.sorrowblue.kioarch.KioArch
 import dev.zacsweers.metro.AppScope
@@ -34,7 +34,7 @@ internal class ZipFileReader(
     @Assisted private val seekableInputStream: SeekableInputStream,
     @ImageExtension supportedException: Set<String>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : FileReader {
+) : BookFileReader {
 
     @ContributesIntoMap(AppScope::class)
     @FileReaderKey(FileReaderType.Zip)

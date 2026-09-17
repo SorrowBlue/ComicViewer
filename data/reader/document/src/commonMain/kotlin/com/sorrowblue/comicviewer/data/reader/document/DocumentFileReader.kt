@@ -4,12 +4,12 @@
 
 package com.sorrowblue.comicviewer.data.reader.document
 
-import com.sorrowblue.comicviewer.data.storage.client.FileReader
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactory
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import com.sorrowblue.kpdfium.PdfDocument
 import com.sorrowblue.kpdfium.PdfExtractor
 import dev.zacsweers.metro.AppScope
@@ -30,7 +30,7 @@ import kotlinx.io.Source
 internal class DocumentFileReader(
     @Assisted private val seekableInputStream: SeekableInputStream,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-) : FileReader {
+) : BookFileReader {
 
     private val source = RealSeekableSource(seekableInputStream)
     private var document: PdfDocument? = null

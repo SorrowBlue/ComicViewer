@@ -87,7 +87,7 @@ internal class LogcatLoggerAdapter(private val tag: String?) : MarkerIgnoringBas
                 "VERBOSE" -> return
                 "ASSERT" -> return
                 else -> return
-            }
+            },
         ) { "${message.orEmpty()} ${t?.asLog()}" }
     }
 }

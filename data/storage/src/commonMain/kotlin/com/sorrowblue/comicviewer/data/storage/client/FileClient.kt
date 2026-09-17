@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
+import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import dev.zacsweers.metro.DefaultBinding
 import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.MapKey
@@ -85,7 +86,7 @@ abstract class FileClient<T : Bookshelf>(
 
     abstract suspend fun fileSize(path: String): Long
 
-    suspend fun fileReader(book: Book): FileReader = withContext(dispatcher) {
+    suspend fun fileReader(book: Book): BookFileReader = withContext(dispatcher) {
         runCatching {
             when (book) {
                 is BookFile -> {

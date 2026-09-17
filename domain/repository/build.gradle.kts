@@ -12,6 +12,7 @@ kotlin {
                 api(projects.domain.model)
                 api(libs.androidx.pagingCommon)
                 api(libs.kotlinx.coroutinesCore)
+                api(libs.kotlinx.io)
             }
         }
     }

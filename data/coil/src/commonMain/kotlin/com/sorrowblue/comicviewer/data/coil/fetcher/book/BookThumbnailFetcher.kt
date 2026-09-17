@@ -16,8 +16,6 @@ import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
 import com.sorrowblue.comicviewer.data.coil.resizeImage
-import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
-import com.sorrowblue.comicviewer.data.storage.client.getFileClient
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
@@ -41,7 +39,6 @@ internal class BookThumbnailFetcher(
     private val bookshelfRepository: BookshelfRepository,
     private val fileRepository: FileRepository,
     private val settingsRepository: SettingsRepository,
-    private val fileClientFactory: FileClientFactory,
 ) : BaseFetcher<BookThumbnail, BookThumbnailMetadata>(data, options, diskCache) {
 
     override suspend fun doFetch(): FetchResult {
@@ -69,7 +66,7 @@ internal class BookThumbnailFetcher(
                 }
 
             val fetchResult =
-                fileClientFactory.getFileClient(bookshelf).fileReader(book).use { fileReader ->
+                storageClient.fileReader(book).use { fileReader ->
                     check(fileReader.pageCount() != 0) {
                         "Only 0 pages"
                     }
@@ -160,7 +157,6 @@ internal class BookThumbnailFetcher(
         private val bookshelfRepository: BookshelfRepository,
         private val fileRepository: FileRepository,
         private val settingsRepository: SettingsRepository,
-        private val fileClientFactory: FileClientFactory,
     ) : Fetcher.Factory<BookThumbnail> {
         override fun create(
             data: BookThumbnail,
@@ -176,7 +172,6 @@ internal class BookThumbnailFetcher(
             bookshelfRepository = bookshelfRepository,
             fileRepository = fileRepository,
             settingsRepository = settingsRepository,
-            fileClientFactory = fileClientFactory,
         )
     }
 }
