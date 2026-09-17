@@ -13,6 +13,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.settings.common)
+                implementation(projects.feature.settings.nav)
                 implementation(projects.feature.tutorial.nav)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.aboutlibraries.compose)

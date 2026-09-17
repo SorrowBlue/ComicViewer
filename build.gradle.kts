@@ -165,31 +165,7 @@ tasks.updateDaemonJvm {
 }
 
 moduleGraphConfig {
-    listOf(
-        ":data:coil",
-        ":data:database",
-        ":data:datastore",
-        ":data:reader:document",
-        ":data:reader:zip",
-        ":data:storage",
-        ":data:storage:device",
-        ":data:storage:smb",
-        ":app:sync",
-        ":domain:model",
-        ":domain:repository",
-        ":domain:service",
-        ":domain:usecase",
-        ":feature:authentication",
-        ":feature:book",
-        ":feature:bookshelf",
-        ":feature:collection",
-        ":feature:folder",
-        ":feature:history",
-        ":feature:readlater",
-        ":feature:search",
-        ":feature:settings",
-        ":feature:tutorial",
-    ).forEach {
+    subprojects.filter { it.projectDir.resolve("src").exists() }.map { it.path }.forEach {
         graph(
             readmePath = "${it.split(":").filter { it.isNotEmpty() }.joinToString("/")}/README.md",
             heading = "## Module dependency graph",

@@ -16,7 +16,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.DisplaySettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.display.generated.resources.Res

@@ -10,14 +10,11 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.authentication.nav.AuthenticationNavKey
 import com.sorrowblue.comicviewer.feature.authentication.nav.ScreenType
+import com.sorrowblue.comicviewer.feature.settings.nav.SecuritySettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.security.SecuritySettingsScreenRoot
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object SecuritySettingsNavKey : NavKey
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)

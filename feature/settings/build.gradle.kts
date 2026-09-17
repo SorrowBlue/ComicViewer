@@ -10,13 +10,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.settings.common)
-                implementation(projects.feature.settings.display)
-                implementation(projects.feature.settings.folder)
-                implementation(projects.feature.settings.info)
                 implementation(projects.feature.settings.nav)
-                implementation(projects.feature.settings.security)
-                implementation(projects.feature.settings.extension)
-                implementation(projects.feature.settings.viewer)
                 implementation(libs.androidx.coreUri)
             }
         }

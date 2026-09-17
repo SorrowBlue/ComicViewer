@@ -15,7 +15,7 @@ import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecuritySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.SecuritySettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.security.generated.resources.Res
 import comicviewer.feature.settings.security.generated.resources.settings_security_label_app_lock

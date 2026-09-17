@@ -11,30 +11,29 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.settings.SettingsItem
 import com.sorrowblue.comicviewer.feature.settings.SettingsScreenRoot
-import com.sorrowblue.comicviewer.feature.settings.display.DisplaySettingsScreenRoot
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.DarkModeNavKey
-import com.sorrowblue.comicviewer.feature.settings.display.navigation.DisplaySettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.extension.navigation.ExtensionSettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.InfoSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPlaceholder
+import com.sorrowblue.comicviewer.feature.settings.nav.DisplaySettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.ExtensionSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.FolderSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.InfoSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.SecuritySettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.security.navigation.SecuritySettingsNavKey
-import com.sorrowblue.comicviewer.feature.settings.viewer.navigation.ViewerSettingsNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.ViewerSettingsNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
-internal fun settingsNavEntry(navigator: Navigator) {
+internal fun settingsNavEntry(
+    navigator: Navigator,
+    settingsDetailPlaceholder: SettingsDetailPlaceholder,
+) {
     scope.entry<SettingsNavKey>(
         metadata = ListDetailSceneStrategy.listPane(
             "Settings",
             detailPlaceholder = {
-                DisplaySettingsScreenRoot(
-                    onBackClick = dropUnlessResumed { navigator.goBack() },
-                    onDarkModeClick = dropUnlessResumed { navigator.navigate(DarkModeNavKey) },
-                )
+                settingsDetailPlaceholder(navigator)
             },
         ) + NavDisplay.transitionMaterialFadeThrough(),
     ) {

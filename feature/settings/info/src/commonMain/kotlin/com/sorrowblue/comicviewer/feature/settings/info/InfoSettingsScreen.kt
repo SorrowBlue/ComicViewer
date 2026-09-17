@@ -14,8 +14,8 @@ import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
-import com.sorrowblue.comicviewer.feature.settings.info.navigation.InfoSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.LicenseNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.InfoSettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.info.generated.resources.Res

@@ -20,7 +20,6 @@ import com.sorrowblue.comicviewer.feature.settings.common.SettingsCategory
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SliderSetting
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
-import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.FolderThumbnailOrderNavKey
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageFilterQualityNavKey
 import com.sorrowblue.comicviewer.feature.settings.folder.navigation.ImageFormatNavKey
@@ -31,6 +30,7 @@ import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.sortorder.di
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailformat.displayName
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailorder.displayText
 import com.sorrowblue.comicviewer.feature.settings.folder.subscreen.thumbnailscale.displayText
+import com.sorrowblue.comicviewer.feature.settings.nav.FolderSettingsNavKey
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.folder.generated.resources.Res
 import comicviewer.feature.settings.folder.generated.resources.settings_folder_label_font_size
