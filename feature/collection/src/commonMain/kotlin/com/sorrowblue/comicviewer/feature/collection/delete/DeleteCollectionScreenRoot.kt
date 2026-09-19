@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.dropUnlessResumed
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 
@@ -26,7 +25,7 @@ internal fun DeleteCollectionScreenRoot(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     DeleteCollectionScreen(
         uiState = uiState,
-        onBackClick = dropUnlessResumed(block = onBackClick),
+        onBackClick = onBackClick,
         onConfirm = { viewModel.delete(onComplete) },
         modifier = Modifier.testTag("DeleteCollectionScreenRoot"),
     )

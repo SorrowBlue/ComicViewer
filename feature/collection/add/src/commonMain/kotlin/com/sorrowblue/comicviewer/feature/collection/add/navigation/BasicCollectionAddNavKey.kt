@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.feature.collection.add.navigation
 
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -23,8 +24,8 @@ internal fun basicCollectionAddNavEntry(navigator: Navigator) {
         BasicCollectionAddScreenRoot(
             bookshelfId = it.bookshelfId,
             path = it.path,
-            onBackClick = navigator::goBack,
-            onCollectionCreateClick = { id, path ->
+            onBackClick = dropUnlessResumed(block = navigator::goBack),
+            onCollectionCreateClick = dropUnlessResumed { id, path ->
                 navigator.navigate(BasicCollectionCreateNavKey(id, path))
             },
         )

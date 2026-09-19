@@ -1,5 +1,3 @@
-import com.sorrowblue.comicviewer.libs
-
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
@@ -16,6 +14,7 @@ kotlin {
                 implementation(projects.framework.designsystem)
                 implementation(projects.framework.navigation)
                 implementation(projects.framework.ui)
+                implementation(projects.framework.ui.preview)
 
 
                 implementation(libs.androidx.windowCore)

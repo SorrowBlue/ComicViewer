@@ -41,3 +41,20 @@ fun <T : Any> rememberListSaveable(
     ),
     init = init,
 )
+
+@Composable
+inline fun <T : Any, reified R : Any?> rememberSaveable(
+    vararg inputs: Any?,
+    crossinline save: (T) -> R,
+    crossinline restore: T.(R) -> Unit,
+    noinline init: () -> T,
+): T = rememberSaveable(
+    inputs = inputs,
+    saver = Saver(
+        save = {
+            save(it)?.encodeToByteArray()
+        },
+        restore = { init().apply { restore(it.decodeTo()) } },
+    ),
+    init = init,
+)

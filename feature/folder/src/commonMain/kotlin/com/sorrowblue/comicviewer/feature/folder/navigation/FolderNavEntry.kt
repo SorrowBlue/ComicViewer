@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.feature.folder.navigation
 
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
@@ -34,13 +35,13 @@ internal fun folderNavEntry(navigator: Navigator) {
             path = navKey.path,
             restorePath = navKey.restorePath,
             showSearch = navKey.showSearch,
-            onBackClick = {
+            onBackClick = dropUnlessResumed {
                 navigator.pop<FolderNavKey>(inclusive = true)
             },
-            onSearchClick = {
+            onSearchClick = dropUnlessResumed {
                 navigator.navigate(SearchNavKey(navKey.bookshelfId, navKey.path))
             },
-            onFileClick = { file ->
+            onFileClick = dropUnlessResumed { file ->
                 when (file) {
                     is Book -> {
                         navigator.navigate(
@@ -63,12 +64,12 @@ internal fun folderNavEntry(navigator: Navigator) {
                     }
                 }
             },
-            onFileInfoClick = { file ->
+            onFileInfoClick = dropUnlessResumed { file ->
                 navigator.popNavigate<FolderFileInfoNavKey>(
                     FolderFileInfoNavKey(file.key()),
                 )
             },
-            onSettingsClick = {
+            onSettingsClick = dropUnlessResumed {
                 navigator.navigate(SettingsNavKey)
             },
             onRestoreComplete = {

@@ -1,5 +1,3 @@
-import com.sorrowblue.comicviewer.libs
-
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
@@ -13,25 +11,29 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.common)
                 implementation(projects.framework.designsystem)
                 implementation(projects.framework.navigation)
                 implementation(projects.domain.model)
 
-                implementation(libs.androidx.navigation3UI)
+                implementation(libs.kotlinx.serializationCbor)
+
                 implementation(libs.androidx.lifecycleViewmodelCompose)
+                implementation(libs.androidx.navigation3UI)
                 implementation(libs.androidx.pagingCompose)
-                implementation(libs.coil3.compose)
-                implementation(libs.composables.composeunstyledScrollbars)
+
                 implementation(libs.compose.componentsResources)
-                implementation(libs.compose.preview)
+                implementation(libs.compose.edgeToEdgePreview)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material3Adaptive)
                 implementation(libs.compose.material3AdaptiveLayout)
                 implementation(libs.compose.material3AdaptiveNavigation3)
                 implementation(libs.compose.material3AdaptiveNavigationSuite)
-                implementation(libs.kotlinx.serializationCbor)
+                implementation(libs.compose.preview)
+
+                implementation(libs.coil3.compose)
+                implementation(libs.composables.composeunstyledScrollbars)
                 implementation(libs.metro.viewmodelCompose)
-                implementation(libs.compose.edgeToEdgePreview)
             }
         }
         androidMain {

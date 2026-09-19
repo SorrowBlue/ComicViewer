@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.feature.collection.navigation
 
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
@@ -38,10 +39,10 @@ internal fun collectionNavEntry(navigator: Navigator) {
     ) { detail ->
         CollectionScreenRoot(
             id = detail.id,
-            onBackClick = {
+            onBackClick = dropUnlessResumed {
                 navigator.pop<CollectionNavKey>(inclusive = true)
             },
-            onFileClick = { file ->
+            onFileClick = dropUnlessResumed { file ->
                 when (file) {
                     is Book -> {
                         navigator.navigate(
@@ -64,23 +65,23 @@ internal fun collectionNavEntry(navigator: Navigator) {
                     }
                 }
             },
-            onFileInfoClick = {
+            onFileInfoClick = dropUnlessResumed { file ->
                 navigator.popNavigate<CollectionFileInfoNavKey>(
-                    CollectionFileInfoNavKey(it.key()),
+                    CollectionFileInfoNavKey(file.key()),
                 )
             },
-            onEditClick = {
+            onEditClick = dropUnlessResumed { collection ->
                 navigator.navigate(
-                    when (it) {
-                        is BasicCollection -> BasicCollectionEditNavKey(it.id)
-                        is SmartCollection -> SmartCollectionEditNavKey(it.id)
+                    when (collection) {
+                        is BasicCollection -> BasicCollectionEditNavKey(collection.id)
+                        is SmartCollection -> SmartCollectionEditNavKey(collection.id)
                     },
                 )
             },
-            onDeleteClick = {
-                navigator.navigate(CollectionDeleteNavKey(it))
+            onDeleteClick = dropUnlessResumed { id ->
+                navigator.navigate(CollectionDeleteNavKey(id))
             },
-            onSettingsClick = {
+            onSettingsClick = dropUnlessResumed {
                 navigator.navigate(SettingsNavKey)
             },
         )

@@ -33,6 +33,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":framework:designsystem"))
             implementation(project(":framework:ui"))
+            implementation(project(":framework:ui:preview"))
             implementation(project(":domain:usecase"))
 
             // Image

@@ -60,8 +60,8 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            if (project.path != ":framework:common" && !project.path.startsWith(":domain")) {
-                implementation(project(":framework:common"))
+            if (project.path != ":core:logger") {
+                implementation(project(":core:logger"))
             }
         }
     }

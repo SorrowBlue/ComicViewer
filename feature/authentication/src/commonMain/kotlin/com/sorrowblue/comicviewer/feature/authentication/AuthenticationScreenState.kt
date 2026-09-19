@@ -10,18 +10,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import com.sorrowblue.comicviewer.feature.authentication.nav.ScreenType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import com.sorrowblue.comicviewer.framework.ui.saveable.decodeTo
-import com.sorrowblue.comicviewer.framework.ui.saveable.encodeToByteArray
-import com.sorrowblue.comicviewer.framework.ui.saveable.rememberListSaveable
+import com.sorrowblue.comicviewer.framework.ui.saveable.rememberSaveable
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import logcat.logcat
 
@@ -38,19 +36,14 @@ internal fun rememberAuthenticationScreenState(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val biometricManager = rememberBiometricManager()
-    val pinInputFlowStateHolder = remember { PinInputFlowStateHolder() }
+    val pinInputFlowStateHolder =
+        rememberSaveable(saver = PinInputFlowStateHolder.saver()) { PinInputFlowStateHolder() }
     val lifecycleOwner = LocalLifecycleOwner.current
-    return rememberListSaveable(
+    return rememberSaveable(
         screenType,
-        save = {
-            arrayListOf(
-                it.pinInputFlowStateHolder.getTemporaryPin(),
-                it.uiState.encodeToByteArray(),
-            )
-        },
-        restore = {
-            pinInputFlowStateHolder.storeTemporaryPin(it[0] as String)
-            uiState = (it[1] as ByteArray).decodeTo()
+        save = { it.uiState },
+        restore = { screenUiState ->
+            uiState = screenUiState
         },
     ) {
         AuthenticationScreenStateImpl(
@@ -127,13 +120,17 @@ private class AuthenticationScreenStateImpl(
         }
     }
 
+    private suspend fun complete() {
+        events.subscriptionCount.first { it > 0 }
+        events.emit(AuthenticationScreenEvent.Complete)
+    }
+
     private suspend fun handleBiometricAuthentication() {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            logcat { "#handleBiometricAuthentication" }
-            when (val result = biometricManager.authenticate()) {
-                is AuthenticationResult.Error -> snackbarHostState.showSnackbar(result.message)
-                AuthenticationResult.Success -> events.tryEmit(AuthenticationScreenEvent.Complete)
-            }
+        val result = biometricManager.authenticate()
+        logcat { "#handleBiometricAuthentication result=$result" }
+        when (result) {
+            is AuthenticationResult.Error -> snackbarHostState.showSnackbar(result.message)
+            AuthenticationResult.Success -> complete()
         }
     }
 
@@ -154,7 +151,7 @@ private class AuthenticationScreenStateImpl(
         scope.launch {
             if (viewModel.verifyPin(uiState.pin)) {
                 uiState = currentUiState.copy(loading = true)
-                events.tryEmit(AuthenticationScreenEvent.Complete)
+                complete()
             } else {
                 uiState = AuthenticationScreenUiState.Authentication(
                     pin = "",
@@ -169,7 +166,7 @@ private class AuthenticationScreenStateImpl(
             if (viewModel.verifyPin(uiState.pin)) {
                 viewModel.removePin()
                 uiState = currentUiState.copy(loading = true)
-                events.tryEmit(AuthenticationScreenEvent.Complete)
+                complete()
             } else {
                 uiState = AuthenticationScreenUiState.Erase(
                     pin = "",
@@ -217,7 +214,7 @@ private class AuthenticationScreenStateImpl(
             scope.launch {
                 viewModel.savePin(uiState.pin)
                 uiState = currentUiState.copy(loading = true)
-                events.tryEmit(AuthenticationScreenEvent.Complete)
+                complete()
             }
         } else {
             uiState = AuthenticationScreenUiState.Change.Input(
@@ -253,7 +250,7 @@ private class AuthenticationScreenStateImpl(
             scope.launch {
                 viewModel.savePin(uiState.pin)
                 uiState = currentUiState.copy(loading = true)
-                events.tryEmit(AuthenticationScreenEvent.Complete)
+                complete()
             }
         } else {
             pinInputFlowStateHolder.clearTemporaryPin()

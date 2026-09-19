@@ -32,12 +32,14 @@ fun <EVENT> EventEffect(
     block: suspend CoroutineScope.(EVENT) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+    val currentBlock by rememberUpdatedState(block)
     SafeLaunchedEffect(eventFlow) {
         supervisorScope {
             eventFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collect { event ->
                     launch {
-                        block(event)
+                        logcat { "event: $event" }
+                        currentBlock(event)
                     }
                 }
         }

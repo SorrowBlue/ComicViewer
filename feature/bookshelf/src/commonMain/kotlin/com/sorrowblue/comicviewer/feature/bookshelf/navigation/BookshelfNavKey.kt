@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.feature.bookshelf.navigation
 
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
@@ -49,16 +50,16 @@ internal fun bookshelfNavEntry(navigator: Navigator) {
             NavDisplay.transitionMaterialFadeThrough(),
     ) {
         BookshelfScreenRoot(
-            onSettingsClick = {
+            onSettingsClick = dropUnlessResumed {
                 navigator.navigate(SettingsNavKey)
             },
-            onFabClick = {
+            onFabClick = dropUnlessResumed {
                 navigator.navigate(BookshelfWizardNavKey.Selection)
             },
-            onBookshelfClick = { id, path ->
+            onBookshelfClick = dropUnlessResumed { id, path ->
                 navigator.navigate(FolderNavKey(id, path, showSearch = true))
             },
-            onBookshelfInfoClick = { bookshelfFolder ->
+            onBookshelfInfoClick = dropUnlessResumed { bookshelfFolder ->
                 navigator.popNavigate<BookshelfInfoNavKey>(
                     BookshelfInfoNavKey(bookshelfFolder.bookshelf.id),
                 )

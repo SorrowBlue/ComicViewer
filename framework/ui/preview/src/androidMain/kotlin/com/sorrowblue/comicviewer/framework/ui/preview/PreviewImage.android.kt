@@ -4,6 +4,7 @@
 
 package com.sorrowblue.comicviewer.framework.ui.preview
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidedValue
@@ -15,8 +16,6 @@ import coil3.Image
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImagePreviewHandler
 import coil3.compose.LocalAsyncImagePreviewHandler
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.ui.R
 
 @OptIn(ExperimentalCoilApi::class)
 internal actual val provideAsyncImagePreviewHandler: ProvidedValue<AsyncImagePreviewHandler>
@@ -27,7 +26,7 @@ internal actual val provideAsyncImagePreviewHandler: ProvidedValue<AsyncImagePre
         return LocalAsyncImagePreviewHandler provides previewHandler
     }
 
-private class PreviewImage(context: PlatformContext) : Image {
+private class PreviewImage(context: Context) : Image {
     private val bitmap =
         requireNotNull(ContextCompat.getDrawable(context, nextSampleAvatar)).toBitmap()
 

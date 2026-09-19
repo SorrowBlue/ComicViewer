@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
-    alias(libs.plugins.comicviewer.navigationLibrary)
 }
 
 kotlin {
@@ -10,6 +9,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.domain.model)
+            implementation(libs.androidx.navigation3Runtime)
         }
     }
 }

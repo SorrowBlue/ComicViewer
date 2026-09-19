@@ -9,6 +9,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.common)
                 implementation(projects.domain.repository)
                 api(libs.androidx.datastoreCoreOkio)
                 implementation(libs.filekit.core)

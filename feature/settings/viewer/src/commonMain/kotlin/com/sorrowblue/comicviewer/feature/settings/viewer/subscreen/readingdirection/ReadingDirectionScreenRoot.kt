@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.feature.settings.viewer.subscreen.readingdirection
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 
@@ -17,11 +16,11 @@ internal fun ReadingDirectionScreenRoot(
     val resultBus = LocalResultEventBus.current
     ReadingDirectionScreen(
         bindingDirection = bindingDirection,
-        onBindingDirectionChange = dropUnlessResumed { direction ->
+        onBindingDirectionChange = { direction ->
             resultBus.sendResult(direction)
             onDismissRequest()
         },
-        onDismissRequest = dropUnlessResumed {
+        onDismissRequest = {
             onDismissRequest()
         },
     )

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
@@ -23,9 +22,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -36,10 +33,6 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -175,46 +168,5 @@ fun rememberLazyPagingColumnType(
                 }
             },
         )
-    }
-}
-
-@PreviewMultiplatform
-@Composable
-private fun GridFileLazyGridPreview() {
-    val lazyPagingItems = PagingData.flowData<File> {
-        fakeBookFile(bookshelfId = it, index = it)
-    }.collectAsLazyPagingItems()
-    PreviewTheme {
-        Scaffold {
-            @OptIn(ExperimentalFoundationApi::class)
-            FileLazyVerticalGrid(
-                uiState = FileLazyVerticalGridUiState(imageScale = ImageScale.Crop),
-                lazyPagingItems = lazyPagingItems,
-                onItemClick = {},
-                onItemInfoClick = {},
-                contentPadding = it,
-            )
-        }
-    }
-}
-
-@PreviewMultiplatform
-@Composable
-private fun GridFileLazyListPreview() {
-    val lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }.collectAsLazyPagingItems()
-    PreviewTheme {
-        Scaffold {
-            @OptIn(ExperimentalFoundationApi::class)
-            FileLazyVerticalGrid(
-                uiState = FileLazyVerticalGridUiState(
-                    fileListDisplay = FileListDisplay.List,
-                    imageScale = ImageScale.Crop,
-                ),
-                lazyPagingItems = lazyPagingItems,
-                onItemClick = {},
-                onItemInfoClick = {},
-                contentPadding = it,
-            )
-        }
     }
 }

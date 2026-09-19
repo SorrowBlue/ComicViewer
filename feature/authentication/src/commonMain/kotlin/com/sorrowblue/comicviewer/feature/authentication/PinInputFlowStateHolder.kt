@@ -4,6 +4,8 @@
 
 package com.sorrowblue.comicviewer.feature.authentication
 
+import androidx.compose.runtime.saveable.Saver
+
 /**
  * Manages PIN input flow state transitions.
  * Handles the progression through different stages of PIN entry
@@ -35,4 +37,15 @@ internal class PinInputFlowStateHolder {
      * Gets the stored temporary PIN.
      */
     fun getTemporaryPin(): String = temporaryPin
+
+    companion object {
+        fun saver() = Saver<PinInputFlowStateHolder, String>(
+            save = { it.getTemporaryPin() },
+            restore = {
+                PinInputFlowStateHolder().apply {
+                    storeTemporaryPin(it)
+                }
+            },
+        )
+    }
 }

@@ -1,5 +1,4 @@
 import com.github.skydoves.navgraph.gradle.RenderBackend
-import com.sorrowblue.comicviewer.libs
 
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)

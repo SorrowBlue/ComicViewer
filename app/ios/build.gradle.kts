@@ -1,5 +1,4 @@
 import com.sorrowblue.comicviewer.configureKotlin
-import com.sorrowblue.comicviewer.libs
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {

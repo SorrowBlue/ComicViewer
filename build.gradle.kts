@@ -32,7 +32,7 @@ dependencyAnalysis {
                 exclude("dev.zacsweers.metro:runtime")
                 exclude("org.jetbrains.compose.hot-reload:hot-reload-runtime-api")
                 excludeRegex("org\\.jetbrains\\.compose\\.desktop:desktop.*")
-                exclude(":framework:common")
+                exclude(":core:logger")
             }
         }
     }
@@ -63,10 +63,23 @@ dependencyAnalysis {
             includeGroup("org.jetbrains.compose.desktop")
         }
         bundle("org.jetbrains.compose.ui") {
+            includeGroup("androidx.compose.ui")
             includeGroup("org.jetbrains.compose.ui")
         }
         bundle("androidx.compose.runtime") {
             includeGroup("androidx.compose.runtime")
+        }
+        bundle("androidx.compose.material3") {
+            includeGroup("androidx.compose.material3")
+            includeGroup("org.jetbrains.compose.material3")
+        }
+        bundle("androidx.compose.foundation") {
+            includeGroup("androidx.compose.foundation")
+            includeGroup("org.jetbrains.compose.foundation")
+        }
+        bundle("org.jetbrains.compose.material") {
+            includeGroup("androidx.compose.material")
+            includeGroup("org.jetbrains.compose.material")
         }
         bundle("org.jetbrains.compose.components:components-animatedimage") {
             include("org\\.jetbrains\\.compose\\.components:components-animatedimage.*")

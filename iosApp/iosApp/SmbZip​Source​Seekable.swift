@@ -4,40 +4,40 @@ import Foundation
 import SwiftZip
 
 class SmbZipSourceSeekable : ZipSourceSeekable {
-    
+
     let seekable: IosSeekableInputStream
-    
+
     init(seekable: IosSeekableInputStream) throws {
         self.seekable = seekable
     }
-    
+
     func open() throws {
         self.seekable.open()
     }
-    
+
     func read(to buffer: UnsafeMutableRawPointer, count: Int) throws -> Int {
         return Int(self.seekable.read(pointer: buffer, count: Int32(count)))
     }
-    
+
     func close() throws {
         self.seekable.close()
     }
-    
+
     func stat() throws -> ZipStat {
         return ZipStat(size: Int(self.seekable.length()))
     }
-    
+
     func seek(offset: Int, relativeTo whence: ZipWhence) throws {
         self.seekable.seek(offset: Int64(offset), whence: whence.rawValue)
     }
-    
+
     func tell() throws -> Int {
         return Int(self.seekable.position())
     }
 }
 
 extension ZipWhence {
-    
+
     func asSeekWhence() -> SMB2FileHandle.SeekWhence {
         return switch self {
         case .origin: SMB2FileHandle.SeekWhence.set

@@ -4,6 +4,7 @@
 
 package com.sorrowblue.comicviewer.feature.collection.navigation
 
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -27,7 +28,7 @@ internal fun deleteCollectionNavEntry(navigator: Navigator) {
         DeleteCollectionScreenRoot(
             id = it.id,
             onBackClick = navigator::goBack,
-            onComplete = {
+            onComplete = dropUnlessResumed {
                 navigator.pop<CollectionListNavKey>(false)
             },
         )

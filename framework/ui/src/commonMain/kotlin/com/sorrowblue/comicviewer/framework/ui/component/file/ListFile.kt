@@ -8,7 +8,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -32,26 +31,18 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.imageBackground
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import comicviewer.framework.ui.generated.resources.Res
 import comicviewer.framework.ui.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
@@ -156,10 +147,10 @@ fun ListFile(
 }
 
 /**
- * ファイル惁E��をカードで表示する ファイル惁E��をリストアイチE��で表示する
+ * ファイル惁E��をカードで表示する ファイル惁E��をリストアイチE��で表示する
  *
  * @param file ファイル
- * @param onClick クリチE��時�E処琁E * @param onInfoClick 惁E��ボタンクリチE��時�E処琁E * @param showThumbnail サムネイル表示するぁE * @param fontSize
+ * @param onClick クリチE��時�E処琁E * @param onInfoClick 惁E��ボタンクリチE��時�E処琁E * @param showThumbnail サムネイル表示するぁE * @param fontSize
  * @param contentScale
  * @param filterQuality
  * @param modifier Modifier
@@ -186,62 +177,4 @@ fun ListFileCard(
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         )
     }
-}
-
-@Preview
-@PreviewLightDark
-@Composable
-private fun FileListPreview(@PreviewParameter(BooleanProvider::class) showThumbnail: Boolean) {
-    PreviewTheme {
-        Column {
-            ListFile(
-                file = fakeBookFile(),
-                onInfoClick = {},
-                showThumbnail = showThumbnail,
-                fontSize = FolderDisplaySettingsDefaults.FontSize,
-                contentScale = ContentScale.Crop,
-                filterQuality = FilterQuality.None,
-            )
-            ListFile(
-                file = fakeFolder(),
-                onInfoClick = {},
-                showThumbnail = showThumbnail,
-                fontSize = FolderDisplaySettingsDefaults.FontSize,
-                contentScale = ContentScale.Crop,
-                filterQuality = FilterQuality.None,
-            )
-        }
-    }
-}
-
-@Preview
-@PreviewLightDark
-@Composable
-private fun FileListCardPreview(@PreviewParameter(BooleanProvider::class) showThumbnail: Boolean) {
-    PreviewTheme {
-        Column {
-            ListFileCard(
-                file = fakeBookFile(),
-                onClick = {},
-                onInfoClick = {},
-                showThumbnail = showThumbnail,
-                fontSize = FolderDisplaySettingsDefaults.FontSize,
-                contentScale = ContentScale.Crop,
-                filterQuality = FilterQuality.None,
-            )
-            ListFileCard(
-                file = fakeFolder(),
-                onClick = {},
-                onInfoClick = {},
-                showThumbnail = showThumbnail,
-                fontSize = FolderDisplaySettingsDefaults.FontSize,
-                contentScale = ContentScale.Crop,
-                filterQuality = FilterQuality.None,
-            )
-        }
-    }
-}
-
-private class BooleanProvider : PreviewParameterProvider<Boolean> {
-    override val values = sequenceOf(true, false)
 }

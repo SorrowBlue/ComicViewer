@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.dropUnlessResumed
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
@@ -51,14 +50,14 @@ fun FolderScreenRoot(
         lazyGridState = state.lazyGridState,
         localNetworkPermissionRequester = permissionRequester,
         snackbarHostState = state.snackbarHostState,
-        onBackClick = dropUnlessResumed(block = onBackClick),
-        onSearchClick = dropUnlessResumed(block = onSearchClick),
-        onFileClick = dropUnlessResumed(block = onFileClick),
-        onFileInfoClick = dropUnlessResumed(block = onFileInfoClick),
+        onBackClick = onBackClick,
+        onSearchClick = onSearchClick,
+        onFileClick = onFileClick,
+        onFileInfoClick = onFileInfoClick,
         onSortClick = viewModel::onSortClick,
         onFolderScopeOnlyClick = viewModel::onFolderScopeOnlyClick,
         onIncludeSubfoldersClick = viewModel::onIncludeSubfoldersClick,
-        onSettingsClick = dropUnlessResumed(block = onSettingsClick),
+        onSettingsClick = onSettingsClick,
         onGridSizeClick = viewModel::onGridSizeClick,
         onHiddenFilesChange = viewModel::onHiddenFilesChange,
         onFileListDisplayChange = viewModel::onFileListDisplayChange,

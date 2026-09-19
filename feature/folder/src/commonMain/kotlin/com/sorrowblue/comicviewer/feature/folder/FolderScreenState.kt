@@ -132,7 +132,7 @@ private class FolderScreenStateImpl(
                         )
 
                         is PagingException.InvalidServer -> snackbarHostState.showSnackbar(
-                            "サーバ�Eエラー",
+                            "サーバーエラー",
                         )
 
                         is PagingException.NoNetwork -> snackbarHostState.showSnackbar(

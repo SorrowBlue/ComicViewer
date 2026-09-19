@@ -39,6 +39,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.common)
                 implementation(projects.domain.repository)
                 implementation(projects.domain.service)
                 implementation(libs.androidx.pagingCommon)

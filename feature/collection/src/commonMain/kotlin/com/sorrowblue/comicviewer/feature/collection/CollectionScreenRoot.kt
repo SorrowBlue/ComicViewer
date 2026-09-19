@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
@@ -35,14 +34,14 @@ internal fun CollectionScreenRoot(
     scaffoldState.CollectionScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
-        onBackClick = dropUnlessResumed(block = onBackClick),
-        onDeleteClick = dropUnlessResumed { onDeleteClick(id) },
-        onEditClick = dropUnlessResumed { uiState.collection?.let { onEditClick(it) } },
-        onSettingsClick = dropUnlessResumed(block = onSettingsClick),
+        onBackClick = onBackClick,
+        onDeleteClick = { onDeleteClick(id) },
+        onEditClick = { uiState.collection?.let { onEditClick(it) } },
+        onSettingsClick = onSettingsClick,
         onFileListDisplayClick = viewModel::onFileListDisplayClick,
         onGridSizeClick = viewModel::onGridSizeClick,
-        onFileClick = dropUnlessResumed(block = onFileClick),
-        onFileInfoClick = dropUnlessResumed(block = onFileInfoClick),
+        onFileClick = onFileClick,
+        onFileInfoClick = onFileInfoClick,
         modifier = Modifier.testTag("CollectionScreenRoot"),
     )
 }

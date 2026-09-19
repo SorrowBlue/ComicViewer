@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
@@ -44,7 +43,7 @@ internal fun BasicCollectionAddScreenRoot(
             }
         },
         onClickCollectionSort = viewModel::updateCollectionSort,
-        onCollectionCreateClick = dropUnlessResumed {
+        onCollectionCreateClick = {
             onCollectionCreateClick(bookshelfId, path)
         },
         modifier = Modifier.testTag("BasicCollectionAddScreenRoot"),

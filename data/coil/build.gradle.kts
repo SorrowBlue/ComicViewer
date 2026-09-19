@@ -10,6 +10,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(projects.framework.common)
                 implementation(projects.domain.repository)
                 implementation(projects.framework.startup)
                 api(libs.coil3.core)

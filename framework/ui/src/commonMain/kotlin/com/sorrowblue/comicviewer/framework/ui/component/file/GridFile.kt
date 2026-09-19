@@ -44,9 +44,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
@@ -54,15 +51,11 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettingsDefaults
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughIn
 import com.sorrowblue.comicviewer.framework.ui.animation.materialFadeThroughOut
-import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import comicviewer.framework.ui.generated.resources.Res
 import comicviewer.framework.ui.generated.resources.file_desc_open_file_info
 import comicviewer.framework.ui.generated.resources.file_label_file_count
@@ -73,10 +66,10 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * ファイル惁E��をグリチE��アイチE��で表示する
+ * ファイル惁E��をグリチE��アイチE��で表示する
  *
  * @param file ファイル
- * @param onClick クリチE��時�E処琁E * @param onInfoClick インフォクリチE��時�E処琁E * @param showThumbnail サムネイル表示を有効にするぁE * @param modifier Modifier
+ * @param onClick クリチE��時�E処琁E * @param onInfoClick インフォクリチE��時�E処琁E * @param showThumbnail サムネイル表示を有効にするぁE * @param modifier Modifier
  */
 @Composable
 fun GridFile(
@@ -271,75 +264,4 @@ private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
             )
         }
     }
-}
-
-@Preview(widthDp = 120, showBackground = true)
-@Preview(widthDp = 160, showBackground = true)
-@Preview(widthDp = 180, showBackground = true)
-@Preview(widthDp = 200, showBackground = true)
-@Composable
-private fun FileGridPreview() {
-    PreviewTheme {
-        GridFile(
-            file = fakeBookFile(),
-            onClick = {},
-            onInfoClick = {},
-            showThumbnail = true,
-            fontSize = FolderDisplaySettingsDefaults.FontSize,
-            contentScale = ContentScale.Crop,
-            filterQuality = FilterQuality.None,
-        )
-    }
-}
-
-@Preview(widthDp = 120, showBackground = true)
-@Preview(widthDp = 160, showBackground = true)
-@Preview(widthDp = 180, showBackground = true)
-@Preview(widthDp = 200, showBackground = true)
-@Composable
-private fun FileGridFolderPreview() {
-    PreviewTheme {
-        GridFile(
-            file = fakeFolder(),
-            onClick = {},
-            onInfoClick = {},
-            showThumbnail = true,
-            fontSize = FolderDisplaySettingsDefaults.FontSize,
-            contentScale = ContentScale.Crop,
-            filterQuality = FilterQuality.None,
-        )
-    }
-}
-
-@Preview(widthDp = 200, showBackground = true)
-@Composable
-private fun FileGridNoPreview(
-    @PreviewParameter(
-        PageCountProvider::class,
-    ) pageCount: Pair<Int, Int>,
-) {
-    PreviewTheme {
-        GridFile(
-            file = fakeBookFile()
-                .copy(
-                    lastPageRead = pageCount.first,
-                    totalPageCount = pageCount.second,
-                ),
-            onClick = {},
-            onInfoClick = {},
-            showThumbnail = true,
-            fontSize = FolderDisplaySettingsDefaults.FontSize,
-            contentScale = ContentScale.Crop,
-            filterQuality = FilterQuality.None,
-        )
-    }
-}
-
-internal class PageCountProvider : PreviewParameterProvider<Pair<Int, Int>> {
-    override val values = sequenceOf(
-        0 to 0,
-        0 to 999,
-        444 to 999,
-        999 to 999,
-    )
 }

@@ -7,7 +7,6 @@ package com.sorrowblue.comicviewer.feature.settings.viewer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.result.ResultEffect
 import com.sorrowblue.comicviewer.domain.model.settings.BindingDirection
 
@@ -20,16 +19,16 @@ internal fun ViewerSettingsScreenRoot(
     ViewerSettingsScreen(
         uiState = state.uiState,
         onBackClick = onBackClick,
-        onStatusBarShowChange = dropUnlessResumed(block = state::onStatusBarShowChange),
-        onNavigationBarShowChange = dropUnlessResumed(block = state::onNavigationBarShowChange),
-        onTurnOnScreenChange = dropUnlessResumed(block = state::onTurnOnScreenChange),
-        onCutWhitespaceChange = dropUnlessResumed(block = state::onCutWhitespaceChange),
-        onDisplayFirstPageChange = dropUnlessResumed(block = state::onDisplayFirstPageChange),
+        onStatusBarShowChange = state::onStatusBarShowChange,
+        onNavigationBarShowChange = state::onNavigationBarShowChange,
+        onTurnOnScreenChange = state::onTurnOnScreenChange,
+        onCutWhitespaceChange = state::onCutWhitespaceChange,
+        onDisplayFirstPageChange = state::onDisplayFirstPageChange,
         onBindingDirectionClick = { onBindingDirectionClick(state.uiState.bindingDirection) },
-        onPreloadPagesChange = dropUnlessResumed(block = state::onPreloadPagesChange),
-        onImageQualityChange = dropUnlessResumed(block = state::onImageQualityChange),
-        onFixScreenBrightnessChange = dropUnlessResumed(block = state::onFixScreenBrightnessChange),
-        onScreenBrightnessChange = dropUnlessResumed(block = state::onScreenBrightnessChange),
+        onPreloadPagesChange = state::onPreloadPagesChange,
+        onImageQualityChange = state::onImageQualityChange,
+        onFixScreenBrightnessChange = state::onFixScreenBrightnessChange,
+        onScreenBrightnessChange = state::onScreenBrightnessChange,
         modifier = Modifier.testTag("ViewerSettingsRoot"),
     )
     ResultEffect<BindingDirection>(onResult = state::onBindingDirectionScreenResult)

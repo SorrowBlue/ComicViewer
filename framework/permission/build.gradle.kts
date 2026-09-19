@@ -12,9 +12,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.domain.model)
                 implementation(projects.framework.designsystem)
                 implementation(projects.framework.ui)
+                implementation(projects.framework.ui.preview)
                 implementation(libs.compose.componentsResources)
                 implementation(libs.compose.preview)
                 implementation(libs.compose.material3)
