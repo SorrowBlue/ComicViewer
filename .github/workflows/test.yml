@@ -115,6 +115,7 @@ jobs:
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run Instrumentation tests
+        timeout-minutes: 20
         run: ./gradlew pixel7pro35AndroidDeviceTest --continue
             -PsmbHost=10.0.2.2
             -PsmbPort=445
