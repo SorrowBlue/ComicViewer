@@ -5,11 +5,7 @@
 package com.sorrowblue.comicviewer.feature.settings
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.sorrowblue.comicviewer.feature.settings.nav.DisplaySettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.ExtensionSettingsNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.FolderSettingsNavKey
@@ -31,11 +27,8 @@ internal interface SettingsScreenState {
 internal fun rememberSettingsScreenState(): SettingsScreenState {
     val appLocaleSettingsLauncher = rememberAppLocaleSettingsLauncher()
     val navigator = LocalNavigator.current
-    val state = remember(appLocaleSettingsLauncher) {
-        SettingsScreenStateImpl(appLocaleSettingsLauncher = appLocaleSettingsLauncher)
-    }
-    SideEffect(navigator.backStack.lastOrNull()) {
-        when (navigator.backStack.lastOrNull()) {
+    val currentSettings = navigator.backStack.reversed().firstNotNullOfOrNull { key ->
+        when (key) {
             is DisplaySettingsNavKey -> SettingsItem.DISPLAY
             is FolderSettingsNavKey -> SettingsItem.FOLDER
             is ViewerSettingsNavKey -> SettingsItem.VIEWER
@@ -44,20 +37,25 @@ internal fun rememberSettingsScreenState(): SettingsScreenState {
             is ExtensionSettingsNavKey -> SettingsItem.EXTENSION
             is InfoSettingsNavKey -> SettingsItem.HELP
             else -> null
-        }?.let {
-            state.uiState = state.uiState.copy(currentSettings = it)
         }
+    } ?: SettingsItem.DISPLAY
+    return remember(appLocaleSettingsLauncher, currentSettings) {
+        SettingsScreenStateImpl(
+            currentSettings = currentSettings,
+            appLocaleSettingsLauncher = appLocaleSettingsLauncher,
+        )
     }
-    return state
 }
 
 private class SettingsScreenStateImpl(
+    currentSettings: SettingsItem,
     private val appLocaleSettingsLauncher: AppLocaleSettingsLauncher,
 ) : SettingsScreenState {
-    override var uiState by mutableStateOf(SettingsScreenUiState())
+    override val uiState: SettingsScreenUiState = SettingsScreenUiState(
+        currentSettings = currentSettings,
+    )
 
     override fun onSettingsClick(item: SettingsItem, onSettingsClick: (SettingsItem) -> Unit) {
-        uiState = uiState.copy(currentSettings = item)
         when (item) {
             SettingsItem.LANGUAGE -> appLocaleSettingsLauncher.launch {
                 onSettingsClick(item)
