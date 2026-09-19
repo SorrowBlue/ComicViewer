@@ -9,7 +9,7 @@ import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +22,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
+@Suppress("UnnecessaryLaunchedEffect")
 @Composable
 internal actual fun PinDrawable(
     index: Int,
@@ -55,7 +56,9 @@ internal actual fun PinDrawable(
             },
         ),
     )
-    SideEffect(Unit) {
-        atEnd = true
+    LaunchedEffect(animate) {
+        if (animate) {
+            atEnd = true
+        }
     }
 }
