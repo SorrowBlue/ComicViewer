@@ -21,12 +21,11 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavEdge
-import com.github.skydoves.navgraph.annotations.NavGraphRoot
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
-import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
+import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterFileInfoNavKey
 import com.sorrowblue.comicviewer.feature.readlater.navigation.ReadLaterNavKey
 import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -47,9 +46,8 @@ import comicviewer.feature.readlater.generated.resources.readlater_label_nothing
 import org.jetbrains.compose.resources.stringResource
 
 @NavEdge(FolderNavKey::class)
-@NavEdge(FileInfoNavKey::class)
+@NavEdge(ReadLaterFileInfoNavKey::class)
 @NavDestination(ReadLaterNavKey::class)
-@NavGraphRoot
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,

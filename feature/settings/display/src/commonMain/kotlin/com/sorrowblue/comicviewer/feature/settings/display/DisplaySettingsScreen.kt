@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
+import com.sorrowblue.comicviewer.feature.settings.display.navigation.DarkModeNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.DisplaySettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -30,6 +32,7 @@ import comicviewer.feature.settings.display.generated.resources.settings_display
 import org.jetbrains.compose.resources.stringResource
 
 @NavDestination(DisplaySettingsNavKey::class)
+@NavEdge(DarkModeNavKey::class)
 @Composable
 internal fun DisplaySettingsScreen(
     uiState: SettingsDisplayScreenUiState,

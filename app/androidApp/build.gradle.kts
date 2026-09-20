@@ -1,7 +1,12 @@
+import com.github.skydoves.navgraph.gradle.RenderBackend
+
 plugins {
     alias(libs.plugins.comicviewer.androidApplication)
     alias(libs.plugins.metro)
     id("comicviewer.primitive.android-version-name-code")
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.navgraph)
 }
 
 android {
@@ -62,6 +67,7 @@ dependencies {
     implementation(libs.androidx.workRuntime)
     implementation(libs.metro.android)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.navigation3Runtime)
     implementation(project(":framework:ui"))
 }
 
@@ -69,4 +75,14 @@ aboutLibraries {
     export {
         outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/androidMain/composeResources/files/aboutlibraries.json"))
     }
+}
+
+ksp {
+    arg("navgraph.annotatedOnly", "true")
+}
+
+navgraph {
+    variant.set("debug")
+    renderBackend.set(RenderBackend.ROBOLECTRIC)
+    galleryRenderBackend.set(RenderBackend.ROBOLECTRIC)
 }

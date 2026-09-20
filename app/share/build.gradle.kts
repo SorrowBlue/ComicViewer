@@ -15,6 +15,7 @@ tasks.configureEach {
         dependsOn(":app:androidApp:mergeDebugAssets")
     }
 }
+
 tasks.withType<Test>().configureEach {
     if (name.contains("AndroidHostTest")) {
         filter {
@@ -129,6 +130,10 @@ buildConfig {
     buildConfigField("SMB_DOMAIN", project.findProperty("smbDomain")?.toString().orEmpty())
     buildConfigField("SMB_PASSWORD", project.findProperty("smbPassword")?.toString().orEmpty())
     buildConfigField("SMB_PATH", project.findProperty("smbPath")?.toString().orEmpty())
+}
+
+ksp {
+    arg("navgraph.annotatedOnly", "true")
 }
 
 navgraph {

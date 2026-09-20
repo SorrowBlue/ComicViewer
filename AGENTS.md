@@ -155,6 +155,15 @@ chmod +x gradlew
 
 # Version Catalog Lint
 ./gradlew versionCatalogLint
+
+# Navigation baseline drift check
+./gradlew navCheck
+
+# Update navigation baseline (.nav)
+./gradlew navDump
+
+# Export navigation diff image / html
+./gradlew exportNavDiffImage exportNavDiffHtml
 ```
 
 ### Important Notices
@@ -407,6 +416,9 @@ Execute the following before committing:
 
 # 4. Run tests
 ./gradlew allTests
+
+# 5. Navigation baseline check
+./gradlew navCheck
 ```
 
 ### Writing PR Descriptions
@@ -439,6 +451,7 @@ Fixed #123
 - [x] Detekt executed
 - [x] Lint executed
 - [x] Tests executed
+- [x] Navigation baseline checked
 - [x] Documentation updated
 ```
 
@@ -455,6 +468,7 @@ All PRs must pass:
 2. **Detekt**: Static code analysis
 3. **Test**: Unit tests
 4. **Build**: Successful build
+5. **NavCheck**: Navigation baseline drift check
 
 These are executed automatically via `.github/workflows/lint-test-build.yml`.
 
