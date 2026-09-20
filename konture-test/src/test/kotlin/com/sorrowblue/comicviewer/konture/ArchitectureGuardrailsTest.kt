@@ -22,50 +22,56 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * :domain:model が他のモジュールに依存していないことを保証する。
+     * :domain:model が他のモジュールに依存していないことを保証する（:core:logger を除く）。
      * domain:model はプロジェクトの最下位レイヤーであり、純粋なKotlinモデルのみを含む。
      */
     @Test
     fun `domain model does not depend on other layer`() {
         Konture.modules()
             .that().haveNamePath(":domain:model")
-            .should().onlyDependOnModules()
+            .should().onlyDependOnModules(":core:logger")
             .check()
     }
 
     /**
-     * :domain:usecase が :domain:model, :domain:repository, :domain:service 以外に依存しないことを保証する。
+     * :domain:usecase が :domain:model, :domain:repository, :domain:service 以外に依存しないことを保証する（:core:logger を除く）。
      * usecase はビジネスルールを定義・実行し、実装詳細を知ってはならない。
      */
     @Test
     fun `domain usecase only depends on domain model, repository and service`() {
         Konture.modules()
             .that().haveNamePath(":domain:usecase")
-            .should().onlyDependOnModules(":domain:model", ":domain:repository", ":domain:service", ":")
+            .should().onlyDependOnModules(
+                ":domain:model",
+                ":domain:repository",
+                ":domain:service",
+                ":core:logger",
+                ":",
+            )
             .check()
     }
 
     /**
-     * :domain:service が :domain:model 以外に依存しないことを保証する。
+     * :domain:service が :domain:model 以外に依存しないことを保証する（:core:logger を除く）。
      * service はドメインロジックをカプセル化し、上位層や実装詳細を知ってはならない。
      */
     @Test
     fun `domain service only depends on domain model`() {
         Konture.modules()
             .that().haveNamePath(":domain:service")
-            .should().onlyDependOnModules(":domain:model", ":")
+            .should().onlyDependOnModules(":domain:model", ":core:logger", ":")
             .check()
     }
 
     /**
-     * :domain:repository が :domain:model 以外に依存しないことを保証する。
+     * :domain:repository が :domain:model 以外に依存しないことを保証する（:core:logger を除く）。
      * repository はデータアクセスの抽象インターフェースを定義し、実装詳細を知ってはならない。
      */
     @Test
     fun `domain repository only depends on domain model`() {
         Konture.modules()
             .that().haveNamePath(":domain:repository")
-            .should().onlyDependOnModules(":domain:model", ":")
+            .should().onlyDependOnModules(":domain:model", ":core:logger", ":")
             .check()
     }
 

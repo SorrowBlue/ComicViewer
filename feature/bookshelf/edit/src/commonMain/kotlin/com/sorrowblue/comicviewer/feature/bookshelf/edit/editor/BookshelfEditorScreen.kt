@@ -9,9 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -35,6 +36,7 @@ import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialShare
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 internal fun EntryProviderScope<NavKey>.bookshelfEditorEntry(
     eventFlow: EventFlow<BookshelfEditScreenEvent>,
@@ -141,8 +143,12 @@ private fun BookshelfEditorScreen(
         )
     }
     val currentUpdateCanSubmit by rememberUpdatedState(updateCanSubmit)
-    SideEffect(state.formState.value) {
-        currentUpdateCanSubmit(state.formState.meta.canSubmit)
+    LaunchedEffect(state.formState) {
+        snapshotFlow { state.formState.meta.canSubmit }
+            .distinctUntilChanged()
+            .collect { canSubmit ->
+                currentUpdateCanSubmit(canSubmit)
+            }
     }
     EventEffect(state.events) {
         when (it) {

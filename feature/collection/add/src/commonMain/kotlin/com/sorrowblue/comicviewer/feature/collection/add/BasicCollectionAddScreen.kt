@@ -24,14 +24,8 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onLayoutRectChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
@@ -79,8 +73,6 @@ internal fun BasicCollectionAddScreen(
         contentWindowInsets = { WindowInsets(0) },
         modifier = modifier.statusBarsPadding(),
     ) {
-        var buttonHeight by remember { mutableStateOf(0.dp) }
-        val density = LocalDensity.current
         Scaffold(
             topBar = { CollectionAddAppBar(onCloseClick = onDismissRequest) },
             floatingActionButton = {
@@ -92,12 +84,6 @@ internal fun BasicCollectionAddScreen(
                         Icon(imageVector = ComicIcons.Add, contentDescription = null)
                     },
                     onClick = onCollectionCreateClick,
-                    modifier = Modifier
-                        .onLayoutRectChanged {
-                            with(density) {
-                                buttonHeight = it.height.toDp() + FabSpacing
-                            }
-                        },
                 )
             },
             contentWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
@@ -107,7 +93,7 @@ internal fun BasicCollectionAddScreen(
                     state = lazyListState,
                     lazyPagingItems = lazyPagingItems,
                     contentPadding = contentPadding.plus(
-                        PaddingValues(top = ButtonDefaults.MinHeight, bottom = buttonHeight),
+                        PaddingValues(top = ButtonDefaults.MinHeight, bottom = FabBottomPadding),
                     ),
                     onClick = onClick,
                 )
@@ -125,7 +111,9 @@ internal fun BasicCollectionAddScreen(
     }
 }
 
+private val FabHeight = 56.dp
 private val FabSpacing = 16.dp
+private val FabBottomPadding = FabHeight + FabSpacing
 
 @NavPreview(BasicCollectionAddNavKey::class, primary = true)
 @Preview

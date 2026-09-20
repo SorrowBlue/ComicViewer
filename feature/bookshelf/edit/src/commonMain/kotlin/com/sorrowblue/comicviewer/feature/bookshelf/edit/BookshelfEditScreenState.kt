@@ -116,7 +116,9 @@ private class BookshelfEditScreenStateImpl(
     }
 
     override fun updateCanSubmit(value: Boolean) {
-        uiState = uiState.copy(canSubmit = value)
+        if (uiState.canSubmit != value) {
+            uiState = uiState.copy(canSubmit = value)
+        }
     }
 
     override fun onSourceClick(type: BookshelfType) {
