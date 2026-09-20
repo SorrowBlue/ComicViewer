@@ -28,6 +28,23 @@ kotlin {
     }
 }
 
+val enableComposeCompilerReports = providers.gradleProperty("enableComposeCompilerReports")
+    .map(String::toBoolean)
+    .orElse(false)
+
+composeCompiler {
+    if (enableComposeCompilerReports.get()) {
+        reportsDestination = layout.buildDirectory.dir("compose_compiler/reports")
+        metricsDestination = layout.buildDirectory.dir("compose_compiler/metrics")
+    }
+    val stabilityConfigFile = rootProject.layout.projectDirectory.file(
+        "config/compose/compose_compiler_config.conf",
+    )
+    if (stabilityConfigFile.asFile.exists()) {
+        stabilityConfigurationFiles.add(stabilityConfigFile)
+    }
+}
+
 dependencies {
     if (pluginManager.hasPlugin(libs.plugins.androidMultiplatform)) {
         add("androidRuntimeClasspath", libs.compose.uiTooling)

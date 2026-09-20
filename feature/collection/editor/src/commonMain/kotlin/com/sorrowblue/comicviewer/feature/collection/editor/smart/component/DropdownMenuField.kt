@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.feature.collection.editor.component.supportingText
+import kotlinx.collections.immutable.PersistentList
 import soil.form.compose.FormField
 import soil.form.compose.hasError
 
@@ -26,7 +27,7 @@ internal fun <T> DropdownMenuField(
     field: FormField<T>,
     value: @Composable T.() -> String,
     label: @Composable () -> Unit,
-    menus: List<T>,
+    menus: PersistentList<T>,
     modifier: Modifier = Modifier,
     fillMaxWidth: Boolean = true,
     text: @Composable (T) -> Unit = { Text(text = value(it)) },

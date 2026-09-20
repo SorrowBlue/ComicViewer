@@ -16,6 +16,7 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_period_month1
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_period_none
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_period_week1
+import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Field
@@ -38,7 +39,7 @@ internal fun Form<SmartCollectionForm>.PeriodField(
                 Text(stringResource(Res.string.collection_editor_label_period))
             },
             value = { stringResource(displayText) },
-            menus = remember { SearchCondition.Period.entries },
+            menus = remember { SearchCondition.Period.entries.toPersistentList() },
             modifier = modifier,
         )
     }

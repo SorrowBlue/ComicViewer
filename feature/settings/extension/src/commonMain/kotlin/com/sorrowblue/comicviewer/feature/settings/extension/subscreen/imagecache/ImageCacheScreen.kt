@@ -26,6 +26,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeDeviceStorage
 import comicviewer.feature.settings.extension.generated.resources.Res
 import comicviewer.feature.settings.extension.generated.resources.settings_extension_imagecache_title
 import kotlin.math.floor
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 
 @NavDestination(ImageCacheNavKey::class)
@@ -73,7 +74,7 @@ val Long.megaByte get() = floor(this / Byte / Byte * 100.0) / 100.0
 private fun ImageCacheScreenPreview() {
     ImageCacheScreen(
         uiState = ThumbnailScreenUiState(
-            imageCacheInfos = listOf(
+            imageCacheInfos = persistentListOf(
                 BookshelfImageCacheInfo(
                     fakeDeviceStorage(),
                     ThumbnailImageCache(50 * Byte * Byte, 100 * Byte * Byte),

@@ -21,6 +21,7 @@ import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
+import kotlinx.collections.immutable.toPersistentList
 
 internal fun EntryProviderScope<NavKey>.bookshelfTypeEntry(
     eventFlow: EventFlow<BookshelfEditScreenEvent>,
@@ -56,7 +57,7 @@ private fun BookshelfTypeScreen(
             is BookshelfEditScreenEvent.SubmitClick -> {}
         }
     }
-    val items = remember { BookshelfType.entries.toList() }
+    val items = remember { BookshelfType.entries.toPersistentList() }
     SelectionList(
         items = items,
         onSourceClick = onTypeClick,

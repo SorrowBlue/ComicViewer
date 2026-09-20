@@ -19,6 +19,7 @@ import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
 import com.sorrowblue.comicviewer.domain.model.cache.OtherImageCache
 import dev.zacsweers.metrox.viewmodel.metroViewModel
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
@@ -70,7 +71,7 @@ private class ImageCacheScreenStateImpl(
             otherImageCacheInfoFlow,
         ) { bookshelfImageCacheInfos, otherImageCache ->
             uiState = ThumbnailScreenUiState(
-                imageCacheInfos = bookshelfImageCacheInfos,
+                imageCacheInfos = bookshelfImageCacheInfos.toPersistentList(),
                 otherImageCache = otherImageCache,
             )
         }.flowWithLifecycle(lifecycle)

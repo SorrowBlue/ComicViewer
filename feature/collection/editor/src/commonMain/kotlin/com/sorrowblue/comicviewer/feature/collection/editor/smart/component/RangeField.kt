@@ -15,6 +15,7 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_range_bookshelf
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_range_in_folder
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_range_sub_folder
+import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Field
@@ -35,7 +36,7 @@ internal fun Form<SmartCollectionForm>.RangeField(
             field = field,
             label = { Text(stringResource(Res.string.collection_editor_label_range)) },
             value = { stringResource(displayText) },
-            menus = remember { SearchCondition.Range.entries },
+            menus = remember { SearchCondition.Range.entries.toPersistentList() },
             modifier = modifier,
         )
     }
