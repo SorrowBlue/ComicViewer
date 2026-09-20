@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.navgraph.annotations.NavDestination
-import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 import com.sorrowblue.comicviewer.feature.settings.display.label
@@ -32,7 +31,6 @@ import comicviewer.feature.settings.display.generated.resources.settings_display
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
-@NavEdge(DarkModeNavKey::class)
 @NavDestination(DarkModeNavKey::class)
 @Composable
 internal fun DarkModeScreen(

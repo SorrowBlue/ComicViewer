@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - 'main'
+  schedule:
+    # 毎日 午前4:00 (JST) / 19:00 (UTC) に main のビルドキャッシュを自動更新
+    - cron: '0 19 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -36,6 +39,13 @@ jobs:
       - name: Check if should run
         id: check
         run: |
+          if [ "${{ github.event_name }}" = "schedule" ] || \
+             [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "Decision: Running workflow (triggered by ${{ github.event_name }})"
+            exit 0
+          fi
+          
           IS_AUTO_COMMIT=false
           if [ "${{ github.event_name }}" = "push" ] && \
              [ "${{ github.event.head_commit.committer.name }}" = "GitHub" ]; then

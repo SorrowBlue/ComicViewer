@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
+import com.sorrowblue.comicviewer.feature.authentication.nav.AuthenticationNavKey
 import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.common.SwitchSetting
@@ -28,6 +30,7 @@ import comicviewer.feature.settings.security.generated.resources.settings_securi
 import org.jetbrains.compose.resources.stringResource
 
 @NavDestination(SecuritySettingsNavKey::class)
+@NavEdge(AuthenticationNavKey::class)
 @Composable
 internal fun SecuritySettingsScreen(
     uiState: SecuritySettingsScreenUiState,

@@ -26,12 +26,15 @@ import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
+import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
+import com.sorrowblue.comicviewer.feature.folder.navigation.FolderFileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.feature.folder.section.FolderList
 import com.sorrowblue.comicviewer.feature.folder.section.FolderListUiState
+import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
+import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionScreen
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
@@ -43,7 +46,11 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
-@NavEdge(FileInfoNavKey::class)
+@NavEdge(BookNavKey::class)
+@NavEdge(SettingsNavKey::class)
+@NavEdge(FolderNavKey::class)
+@NavEdge(SearchNavKey::class)
+@NavEdge(FolderFileInfoNavKey::class)
 @NavDestination(FolderNavKey::class)
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(

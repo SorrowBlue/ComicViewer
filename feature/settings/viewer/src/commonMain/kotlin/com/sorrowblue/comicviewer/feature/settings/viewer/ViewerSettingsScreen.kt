@@ -45,7 +45,7 @@ import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_l
 import comicviewer.feature.settings.viewer.generated.resources.settings_viewer_title
 import org.jetbrains.compose.resources.stringResource
 
-@NavEdge(BindingDirectionNavKey::class, label = "onBindingDirectionClick")
+@NavEdge(BindingDirectionNavKey::class)
 @NavDestination(ViewerSettingsNavKey::class)
 @Composable
 internal fun ViewerSettingsScreen(

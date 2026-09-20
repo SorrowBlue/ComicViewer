@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.feature.settings.display
 import androidx.compose.runtime.Composable
 
 @Composable
-fun DisplaySettingsScreenRoot(onBackClick: () -> Unit, onDarkModeClick: () -> Unit) {
+internal fun DisplaySettingsScreenRoot(onBackClick: () -> Unit, onDarkModeClick: () -> Unit) {
     val state = rememberDisplaySettingsScreenState()
     DisplaySettingsScreen(
         uiState = state.uiState,

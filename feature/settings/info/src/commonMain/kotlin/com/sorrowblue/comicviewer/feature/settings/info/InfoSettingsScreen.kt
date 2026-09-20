@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.feature.settings.common.Setting
 import com.sorrowblue.comicviewer.feature.settings.common.SettingsDetailPane
 import com.sorrowblue.comicviewer.feature.settings.info.navigation.LicenseNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.InfoSettingsNavKey
+import com.sorrowblue.comicviewer.feature.tutorial.nav.TutorialNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.settings.info.generated.resources.Res
@@ -28,8 +29,9 @@ import comicviewer.feature.settings.info.generated.resources.settings_info_rate_
 import comicviewer.feature.settings.info.generated.resources.settings_info_title
 import org.jetbrains.compose.resources.stringResource
 
-@NavEdge(LicenseNavKey::class)
 @NavDestination(InfoSettingsNavKey::class)
+@NavEdge(LicenseNavKey::class)
+@NavEdge(TutorialNavKey::class)
 @Composable
 internal fun InfoSettingsScreen(
     uiState: InfoSettingsScreenUiState,

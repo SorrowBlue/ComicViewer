@@ -18,7 +18,7 @@ plugins {
 tasks.configureEach {
     if (name == "renderNavGraphGalleryLayoutlib" || name == "renderNavGraphLayoutlib") {
         // navgraphのlayoutlib描画がandroidAppのマージ済みassetsを参照するため、実行順依存を明示する
-        dependsOn(":app:android:mergeDebugAssets")
+        dependsOn(":app:androidApp:mergeDebugAssets")
     }
 }
 
@@ -72,6 +72,10 @@ kotlin {
             }
         }
     }
+}
+
+ksp {
+    arg("navgraph.annotatedOnly", "true")
 }
 
 navgraph {
