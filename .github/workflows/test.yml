@@ -71,7 +71,7 @@ jobs:
         uses: ./.github/actions/setup-java-gradle
       - name: Run Android Host Tests
         run: >
-          ./gradlew testAndroidHostTest --continue
+          ./gradlew testAndroidHostTest :app:androidApp:testDebugUnitTest --continue
           -PsmbHost=localhost
           -PsmbPort=445
           -PsmbUsername=testuser
@@ -93,6 +93,8 @@ jobs:
           path: |
             **/build/reports/tests/testAndroidHostTest/**/*
             **/build/test-results/testAndroidHostTest/**/*
+            **/build/reports/tests/testDebugUnitTest/**/*
+            **/build/test-results/testDebugUnitTest/**/*
           if-no-files-found: ignore
 
   instrumentation-test:
