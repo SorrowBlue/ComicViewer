@@ -28,11 +28,12 @@ import com.sorrowblue.comicviewer.feature.settings.SettingsItem
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import comicviewer.feature.settings.generated.resources.Res
 import comicviewer.feature.settings.generated.resources.settings_title
+import kotlinx.collections.immutable.ImmutableList
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SettingsListPane(
-    settingsList: List<SettingsItem>,
+    settingsList: ImmutableList<SettingsItem>,
     currentSettings: SettingsItem?,
     onSettingsClick: (SettingsItem) -> Unit,
     onBackClick: () -> Unit,

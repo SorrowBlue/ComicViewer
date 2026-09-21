@@ -19,12 +19,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun <T> DropdownMenuChip(
     text: String,
     onChangeSelect: (T) -> Unit,
-    menus: List<T>,
+    menus: PersistentList<T>,
     modifier: Modifier = Modifier,
     content: @Composable (T) -> Unit,
 ) {

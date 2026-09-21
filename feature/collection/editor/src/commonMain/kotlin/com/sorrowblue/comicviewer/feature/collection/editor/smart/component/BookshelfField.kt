@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartC
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_all_bookshelf
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_bookshelf
+import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.stringResource
 import soil.form.annotation.InternalSoilFormApi
 import soil.form.compose.Field
@@ -39,7 +40,7 @@ internal fun Form<SmartCollectionForm>.BookshelfField(
             value = {
                 bookshelf[this] ?: stringResource(Res.string.collection_editor_label_all_bookshelf)
             },
-            menus = remember(bookshelf) { bookshelf.map { it.key } },
+            menus = remember(bookshelf) { bookshelf.map { it.key }.toPersistentList() },
             modifier = modifier,
         )
     }

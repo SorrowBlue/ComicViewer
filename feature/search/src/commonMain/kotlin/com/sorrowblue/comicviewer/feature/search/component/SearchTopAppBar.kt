@@ -57,6 +57,7 @@ import comicviewer.feature.search.generated.resources.search_sorttype_label_name
 import comicviewer.feature.search.generated.resources.search_sorttype_label_name_desc
 import comicviewer.feature.search.generated.resources.search_sorttype_label_size_asc
 import comicviewer.feature.search.generated.resources.search_sorttype_label_size_desc
+import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -126,21 +127,21 @@ internal fun SearchTopAppBar(
                     DropdownMenuChip(
                         text = stringResource(searchCondition.range.displayText),
                         onChangeSelect = onRangeClick,
-                        menus = remember { SearchCondition.Range.entries },
+                        menus = remember { SearchCondition.Range.entries.toPersistentList() },
                     ) {
                         Text(stringResource(it.displayText))
                     }
                     DropdownMenuChip(
                         text = stringResource(searchCondition.period.displayText),
                         onChangeSelect = onPeriodClick,
-                        menus = remember { SearchCondition.Period.entries },
+                        menus = remember { SearchCondition.Period.entries.toPersistentList() },
                     ) {
                         Text(stringResource(it.displayText))
                     }
                     DropdownMenuChip(
                         text = stringResource(searchCondition.sortType.displayText),
                         onChangeSelect = onSortTypeClick,
-                        menus = remember { SortType.entries },
+                        menus = remember { SortType.entries.toPersistentList() },
                     ) {
                         Text(text = stringResource(it.displayText))
                     }

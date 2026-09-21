@@ -18,6 +18,7 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_sort_name_desc
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_sort_size_asc
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_sort_size_desc
+import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.Field
@@ -40,7 +41,7 @@ internal fun Form<SmartCollectionForm>.SortTypeField(
                 Text(stringResource(Res.string.collection_editor_label_sort))
             },
             value = { stringResource(displayText) },
-            menus = remember { SortType.entries },
+            menus = remember { SortType.entries.toPersistentList() },
             modifier = modifier,
         )
     }

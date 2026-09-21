@@ -24,6 +24,8 @@ import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheet
 import com.sorrowblue.comicviewer.feature.tutorial.section.DirectionSheetUiState
 import com.sorrowblue.comicviewer.feature.tutorial.section.WelcomeSheet
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
 
 internal enum class TutorialSheet {
     WELCOME,
@@ -32,7 +34,7 @@ internal enum class TutorialSheet {
 }
 
 internal data class TutorialScreenUiState(
-    val list: List<TutorialSheet> = TutorialSheet.entries,
+    val list: PersistentList<TutorialSheet> = TutorialSheet.entries.toPersistentList(),
     val bindingDirection: BindingDirection = BindingDirection.RTL,
 )
 

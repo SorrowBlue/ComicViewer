@@ -54,6 +54,7 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_lab
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_save
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_title_register
 import comicviewer.feature.bookshelf.edit.generated.resources.cancel
+import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.stringResource
 import soil.form.compose.rememberForm
 
@@ -210,7 +211,7 @@ private fun BookshelfEditScreenSelectionPreview() {
             onBackClick = {},
             onSaveClick = {},
         ) { contentPadding ->
-            val items = remember { BookshelfType.entries.toList() }
+            val items = remember { BookshelfType.entries.toPersistentList() }
             SelectionList(
                 items = items,
                 onSourceClick = {},
