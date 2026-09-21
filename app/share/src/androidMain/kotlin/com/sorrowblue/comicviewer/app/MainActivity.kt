@@ -13,7 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.lifecycle.ViewModel
@@ -67,6 +67,7 @@ internal class MainActivity(private val metroViewModelFactory: MetroViewModelFac
             null
         }
 
+    @Suppress("UnnecessaryLaunchedEffect")
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
             enableEdgeToEdge(
@@ -80,17 +81,16 @@ internal class MainActivity(private val metroViewModelFactory: MetroViewModelFac
         setContent {
             MetroContent {
                 val navigator = rememberAppNavigator()
+                val bookData = receivedBookData
                 ComicViewerApp(
                     finishApp = ::finish,
                     navigator = navigator,
-                    allowNavigationRestored = receivedBookData.isNullOrEmpty(),
+                    allowNavigationRestored = bookData.isNullOrEmpty(),
                 )
-                SideEffect(receivedBookData.isNullOrEmpty()) {
-                    receivedBookData?.let { data ->
-                        if (data.isNotEmpty()) {
-                            navigator.navigate(ReceiveBookNavKey(data))
-                            viewModel.completeInit()
-                        }
+                LaunchedEffect(bookData) {
+                    if (!bookData.isNullOrEmpty()) {
+                        navigator.navigate(ReceiveBookNavKey(bookData))
+                        viewModel.completeInit()
                     }
                 }
             }

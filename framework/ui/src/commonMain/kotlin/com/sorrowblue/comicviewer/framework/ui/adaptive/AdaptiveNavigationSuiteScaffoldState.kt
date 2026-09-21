@@ -13,9 +13,8 @@ import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSui
 import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
 
 interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
     fun onNavigationReSelect()
@@ -32,16 +31,24 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
     val wideNavigationRailState = rememberWideNavigationRailState()
     val floatingActionButtonState = rememberFloatingActionButtonState()
-    return remember {
+    val windowAdaptiveInfo = currentWindowAdaptiveInfoV2()
+    val navigationSuiteType = remember(windowAdaptiveInfo) {
+        NavigationSuiteScaffoldDefaults.navigationSuiteType(windowAdaptiveInfo)
+    }
+    val currentOnNavigationReSelect by rememberUpdatedState(onNavigationReSelect)
+    return remember(
+        navigationSuiteScaffoldState,
+        wideNavigationRailState,
+        floatingActionButtonState,
+        navigationSuiteType,
+    ) {
         AdaptiveNavigationSuiteScaffoldStateImpl(
             navigationSuiteScaffoldState = navigationSuiteScaffoldState,
             wideNavigationRailState = wideNavigationRailState,
             floatingActionButtonState = floatingActionButtonState,
-            onNavigationReSelect = onNavigationReSelect,
+            navigationSuiteType = navigationSuiteType,
+            onNavigationReSelect = { currentOnNavigationReSelect() },
         )
-    }.apply {
-        navigationSuiteType =
-            NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfoV2())
     }
 }
 
@@ -49,10 +56,10 @@ private class AdaptiveNavigationSuiteScaffoldStateImpl(
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,
     override val wideNavigationRailState: WideNavigationRailState,
     override val floatingActionButtonState: FloatingActionButtonState,
+    override val navigationSuiteType: NavigationSuiteType,
     private val onNavigationReSelect: () -> Unit,
 ) : AdaptiveNavigationSuiteScaffoldState,
     NavigationSuiteScaffoldState by navigationSuiteScaffoldState {
-    override var navigationSuiteType by mutableStateOf(NavigationSuiteType.None)
 
     override fun onNavigationReSelect() {
         onNavigationReSelect.invoke()
