@@ -46,6 +46,8 @@ import org.jetbrains.compose.resources.getString
 internal sealed interface BookshelfInfoContentsEvent {
     data class ShowNotificationPermissionRationale(val type: ScanType) :
         BookshelfInfoContentsEvent
+
+    data object ShowLocalNetworkPermissionRationale : BookshelfInfoContentsEvent
 }
 
 internal interface BookshelfInfoContentsState {
@@ -134,6 +136,7 @@ private class BookshelfInfoContentsStateImpl(
             is SmbServer -> localNetworkPermissionRequester.checkPermission()
         }
         if (!hasPermission) {
+            events.tryEmit(BookshelfInfoContentsEvent.ShowLocalNetworkPermissionRationale)
             return
         }
         currentScanType = ScanType.File
@@ -156,6 +159,7 @@ private class BookshelfInfoContentsStateImpl(
             is SmbServer -> localNetworkPermissionRequester.checkPermission()
         }
         if (!hasPermission) {
+            events.tryEmit(BookshelfInfoContentsEvent.ShowLocalNetworkPermissionRationale)
             return
         }
         currentScanType = ScanType.Thumbnail

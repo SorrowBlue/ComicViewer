@@ -224,6 +224,8 @@ class NavigationTest {
         onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
 
         onAllNodesWithTag("FileListItem").onFirst().performClick()
+        advanceClock()
+        waitUntilAtLeastOneExists(hasTestTag("FolderScreenRoot"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
 
         onNodeWithTag("SearchButton").performClick()

@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.folder.FolderScreenRoot
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
+import com.sorrowblue.comicviewer.feature.permission.nav.localNetworkPermission
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
@@ -26,9 +27,12 @@ internal const val SCENE_KEY_FOLDER = "Folder"
 context(scope: EntryProviderScope<NavKey>)
 internal fun folderNavEntry(navigator: Navigator) {
     scope.entry<FolderNavKey>(
-        clazzContentKey = { it.toString() },
-        metadata = metadata { transitionMaterialSharedAxisZ() } +
-            SupportingPaneSceneStrategy.mainPane(SCENE_KEY_FOLDER),
+        metadata = { navKey ->
+            metadata {
+                transitionMaterialSharedAxisZ()
+                localNetworkPermission(navKey.bookshelfId)
+            } + SupportingPaneSceneStrategy.mainPane(SCENE_KEY_FOLDER)
+        },
     ) { navKey ->
         FolderScreenRoot(
             bookshelfId = navKey.bookshelfId,

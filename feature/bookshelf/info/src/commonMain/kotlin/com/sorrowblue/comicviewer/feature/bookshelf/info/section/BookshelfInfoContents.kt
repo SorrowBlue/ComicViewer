@@ -4,9 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -40,8 +37,6 @@ import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
 import com.sorrowblue.comicviewer.feature.bookshelf.info.notification.ScanType
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionDialog
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffoldDefaults
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
@@ -58,6 +53,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun BookshelfInfoContents(
     bookshelfFolder: BookshelfFolder,
     showNotificationPermissionRationale: (ScanType) -> Unit,
+    showLocalNetworkPermissionRationale: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     contentPadding: PaddingValues,
@@ -75,24 +71,13 @@ internal fun BookshelfInfoContents(
         modifier = modifier,
     )
 
-    AnimatedVisibility(
-        state.localNetworkPermissionRequester.state is LocalNetworkPermissionState.Rationale ||
-            state.localNetworkPermissionRequester.state is LocalNetworkPermissionState.DeniedPermanent,
-        enter = slideInVertically { it },
-        exit = slideOutVertically { it },
-    ) {
-        LocalNetworkAccessPermissionDialog(
-            state.localNetworkPermissionRequester.state is LocalNetworkPermissionState.Rationale,
-            onConfirmClick = state.localNetworkPermissionRequester::onPermissionConfirmClick,
-            onDismissClick = state.localNetworkPermissionRequester::reset,
-        )
-    }
-
     EventEffect(state.events) {
         when (it) {
             is BookshelfInfoContentsEvent.ShowNotificationPermissionRationale -> showNotificationPermissionRationale(
                 it.type,
             )
+
+            BookshelfInfoContentsEvent.ShowLocalNetworkPermissionRationale -> showLocalNetworkPermissionRationale()
         }
     }
 }

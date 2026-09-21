@@ -35,6 +35,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoCo
 import com.sorrowblue.comicviewer.feature.bookshelf.info.section.BookshelfInfoContentsUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkAccessPermissionNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.ExtraPaneScaffold
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -65,6 +66,7 @@ internal sealed interface BookshelfInfoSheetUiState {
 @NavEdge(to = BookshelfWizardNavKey.Edit::class)
 @NavEdge(to = BookshelfDeleteNavKey::class)
 @NavEdge(to = BookshelfNotificationNavKey::class)
+@NavEdge(to = LocalNetworkAccessPermissionNavKey::class)
 @NavDestination(route = BookshelfInfoNavKey::class)
 @Composable
 internal fun BookshelfInfoScreen(

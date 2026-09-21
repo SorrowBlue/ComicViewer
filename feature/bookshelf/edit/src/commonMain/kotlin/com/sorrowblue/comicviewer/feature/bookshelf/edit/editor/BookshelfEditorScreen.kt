@@ -28,8 +28,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.DeviceEditorCon
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditorContents
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.drawDivider
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkAccessPermissionDialog
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
@@ -155,20 +153,6 @@ private fun BookshelfEditorScreen(
             BookshelfEditorScreenEvent.Complete -> {
                 onComplete()
             }
-        }
-    }
-
-    if (state is SmbEditorScreenState) {
-        val permissionState = state.permissionRequester.state
-        if (
-            permissionState is LocalNetworkPermissionState.Rationale ||
-            permissionState is LocalNetworkPermissionState.DeniedPermanent
-        ) {
-            LocalNetworkAccessPermissionDialog(
-                isRationale = permissionState is LocalNetworkPermissionState.Rationale,
-                onConfirmClick = state::onPermissionConfirmClick,
-                onDismissClick = onBack,
-            )
         }
     }
 }

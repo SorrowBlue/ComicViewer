@@ -2,7 +2,7 @@
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
-package com.sorrowblue.comicviewer.framework.permission.localnetwork
+package com.sorrowblue.comicviewer.feature.permission
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -30,18 +30,26 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.LocalAcces
 import com.sorrowblue.comicviewer.framework.designsystem.icon.symbols.ShieldLock
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
-import comicviewer.framework.permission.generated.resources.Res
-import comicviewer.framework.permission.generated.resources.permission_localnetwork_action_cancel
-import comicviewer.framework.permission.generated.resources.permission_localnetwork_action_continue
-import comicviewer.framework.permission.generated.resources.permission_localnetwork_action_open_settings
-import comicviewer.framework.permission.generated.resources.permission_localnetwork_desc
-import comicviewer.framework.permission.generated.resources.permission_localnetwork_headline
-import comicviewer.framework.permission.generated.resources.permission_localnetwork_privacy_desc
-import comicviewer.framework.permission.generated.resources.permission_localnetwork_privacy_title
+import comicviewer.feature.permission.generated.resources.Res
+import comicviewer.feature.permission.generated.resources.permission_localnetwork_action_cancel
+import comicviewer.feature.permission.generated.resources.permission_localnetwork_action_continue
+import comicviewer.feature.permission.generated.resources.permission_localnetwork_action_open_settings
+import comicviewer.feature.permission.generated.resources.permission_localnetwork_desc
+import comicviewer.feature.permission.generated.resources.permission_localnetwork_headline
+import comicviewer.feature.permission.generated.resources.permission_localnetwork_privacy_desc
+import comicviewer.feature.permission.generated.resources.permission_localnetwork_privacy_title
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Content composable explaining local network access permission.
+ *
+ * @param isRationale Whether the permission is in rationale state.
+ * @param onConfirmClick Callback when confirm button is clicked.
+ * @param onDismissClick Callback when dismiss/cancel button is clicked.
+ * @param modifier Modifier to be applied to the content.
+ */
 @Composable
-fun LocalNetworkAccessPermissionContent(
+internal fun LocalNetworkAccessPermissionContent(
     isRationale: Boolean,
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,

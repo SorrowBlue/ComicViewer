@@ -11,6 +11,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.feature.bookshelf.info.BookshelfInfoScreenRoot
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkAccessPermissionNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
@@ -30,6 +31,9 @@ internal fun bookshelfInfoNavEntry(navigator: Navigator) {
             },
             showNotificationPermissionRationale = { scanType ->
                 navigator.navigate(BookshelfNotificationNavKey(scanType))
+            },
+            showLocalNetworkPermissionRationale = {
+                navigator.navigate(LocalNetworkAccessPermissionNavKey)
             },
             onEditClick = { id, type ->
                 navigator.navigate(BookshelfWizardNavKey.Edit(id, type))
