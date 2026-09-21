@@ -98,6 +98,8 @@ graph LR
 | feature | folder         |              | Folder navigation screen |
 | feature | folder         | nav          | Folder navigation |
 | feature | history        |              | Reading history screen |
+| feature | permission     |              | Permission request screen |
+| feature | permission     | nav          | Permission navigation |
 | feature | readlater      |              | Read later screen |
 | feature | search         |              | Search and discovery screen |
 | feature | search         | nav          | Search navigation |

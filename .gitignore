@@ -102,7 +102,6 @@ output.json
 
 # IntelliJ
 .idea/*
-misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
@@ -127,6 +126,7 @@ google-services.json
 !.idea/encodings.xml
 !.idea/dictionaries/
 !.idea/inspectionProfiles/
+!.idea/misc.xml
 !.idea/copyright/
 *.aab
 /docs/*.bkp

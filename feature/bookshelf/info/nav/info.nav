@@ -5,6 +5,8 @@ dest BookshelfDeleteNavKey  args=(id: BookshelfId)
 dest BookshelfInfoNavKey  args=(id: BookshelfId)
 dest BookshelfNotificationNavKey  args=(scanType: ScanType)
 dest Edit
+dest LocalNetworkAccessPermissionNavKey
 edge BookshelfInfoNavKey -> BookshelfDeleteNavKey
 edge BookshelfInfoNavKey -> BookshelfNotificationNavKey
 edge BookshelfInfoNavKey -> Edit
+edge BookshelfInfoNavKey -> LocalNetworkAccessPermissionNavKey

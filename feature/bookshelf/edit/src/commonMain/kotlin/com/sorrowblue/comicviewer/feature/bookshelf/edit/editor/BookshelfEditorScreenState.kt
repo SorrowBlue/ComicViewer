@@ -24,8 +24,6 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.HostField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathFieldName
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
@@ -67,7 +65,6 @@ internal fun rememberBookshelfEditorScreenState(
 ): BookshelfEditorScreenState {
     val coroutineScope = rememberCoroutineScope()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val permissionRequester = rememberLocalNetworkPermissionRequester()
     val state = when (editType.bookshelfType) {
         BookshelfType.SMB -> {
             val formState =
@@ -106,7 +103,6 @@ internal fun rememberBookshelfEditorScreenState(
                 )
             }.apply {
                 form = rememberForm(state = formState, onSubmit = ::onSubmit)
-                this.permissionRequester = permissionRequester
             }
         }
 
@@ -161,9 +157,6 @@ internal sealed interface BookshelfEditorScreenState : IBookshelfEditorScreenSta
 internal interface SmbEditorScreenState : BookshelfEditorScreenState {
     override val formState: FormState<SmbEditorForm>
     override val form: Form<SmbEditorForm>
-    val permissionRequester: LocalNetworkPermissionRequester
-
-    fun onPermissionConfirmClick()
 }
 
 private class SmbEditorScreenStateImpl(
@@ -187,12 +180,6 @@ private class SmbEditorScreenStateImpl(
 ),
     SmbEditorScreenState {
     override lateinit var form: Form<SmbEditorForm>
-
-    override lateinit var permissionRequester: LocalNetworkPermissionRequester
-
-    override fun onPermissionConfirmClick() {
-        permissionRequester.onPermissionConfirmClick()
-    }
 
     companion object {
         fun saver(

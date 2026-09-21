@@ -5,24 +5,19 @@ plugins {
 
 kotlin {
     android {
-        androidResources.enable = true
         namespace = "com.sorrowblue.comicviewer.framework.permission"
     }
 
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.designsystem)
-                implementation(projects.framework.ui)
-                implementation(projects.framework.ui.preview)
-                implementation(libs.compose.componentsResources)
-                implementation(libs.compose.preview)
-                implementation(libs.compose.material3)
+                implementation(libs.compose.runtime)
             }
         }
         androidMain {
             dependencies {
                 implementation(libs.androidx.activityCompose)
+                implementation(libs.compose.ui)
             }
         }
     }

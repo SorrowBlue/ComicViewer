@@ -4,17 +4,13 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.sorrowblue.comicviewer.feature.bookshelf.edit"
+        namespace = "com.sorrowblue.comicviewer.feature.permission"
     }
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.feature.bookshelf.nav)
                 implementation(projects.feature.permission.nav)
                 implementation(projects.framework.permission)
-                implementation(libs.soil.form)
-                implementation(libs.filekit.compose)
-                implementation(libs.kotlinx.serializationJson)
             }
         }
     }

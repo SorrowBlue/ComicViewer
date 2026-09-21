@@ -24,6 +24,7 @@ internal fun BookshelfInfoScreenRoot(
     onBackClick: () -> Unit,
     onRemoveClick: () -> Unit,
     showNotificationPermissionRationale: (ScanType) -> Unit,
+    showLocalNetworkPermissionRationale: () -> Unit,
     onEditClick: (BookshelfId, BookshelfType) -> Unit,
 ) {
     val state = rememberBookshelfInfoScreenState(bookshelfId = bookshelfId)
@@ -37,6 +38,7 @@ internal fun BookshelfInfoScreenRoot(
                 BookshelfInfoContents(
                     bookshelfFolder = uiState.bookshelfFolder,
                     showNotificationPermissionRationale = showNotificationPermissionRationale,
+                    showLocalNetworkPermissionRationale = showLocalNetworkPermissionRationale,
                     onEditClick = {
                         if (state.uiState is BookshelfInfoSheetUiState.Loaded) {
                             onEditClick(
