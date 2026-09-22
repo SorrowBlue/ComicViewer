@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
  * @param underlying ラップ元の [CoroutineScope]
  * @param limit 最大同時実行数
  */
-internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int,) :
+internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int) :
     CoroutineScope by underlying {
 
     private val semaphore = Semaphore(limit)
