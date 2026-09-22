@@ -38,6 +38,10 @@ graph TB
       :feature:collection:nav["nav"]
       :feature:collection:nav["nav"]
     end
+    subgraph :permission
+      :feature:permission:nav["nav"]
+      :feature:permission:nav["nav"]
+    end
     subgraph :search
       :feature:search:nav["nav"]
       :feature:search:nav["nav"]
@@ -59,10 +63,12 @@ graph TB
   :feature:folder --> :feature:book:nav
   :feature:folder --> :feature:collection:nav
   :feature:folder --> :feature:folder:nav
+  :feature:folder --> :feature:permission:nav
   :feature:folder --> :feature:search:nav
   :feature:folder --> :feature:settings:nav
   :feature:folder --> :feature:file:nav
   :domain:repository --> :domain:model
+  :feature:permission:nav --> :domain:model
   :feature:search:nav --> :domain:model
 
 classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
@@ -75,6 +81,7 @@ class :feature:file:nav kotlin-multiplatform
 class :feature:book:nav kotlin-multiplatform
 class :feature:collection:nav kotlin-multiplatform
 class :feature:folder kotlin-multiplatform
+class :feature:permission:nav kotlin-multiplatform
 class :feature:search:nav kotlin-multiplatform
 class :feature:settings:nav kotlin-multiplatform
 

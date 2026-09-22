@@ -19,6 +19,7 @@ graph TB
     :feature:folder["folder"]
     :feature:bookshelf["bookshelf"]
     :feature:file["file"]
+    :feature:permission["permission"]
     :feature:authentication["authentication"]
     :feature:book["book"]
     :feature:bookshelf["bookshelf"]
@@ -26,6 +27,7 @@ graph TB
     :feature:file["file"]
     :feature:folder["folder"]
     :feature:history["history"]
+    :feature:permission["permission"]
     :feature:readlater["readlater"]
     :feature:search["search"]
     :feature:settings["settings"]
@@ -91,6 +93,11 @@ graph TB
       :feature:folder:nav["nav"]
       :feature:folder:nav["nav"]
       :feature:folder:nav["nav"]
+    end
+    subgraph :permission
+      :feature:permission:nav["nav"]
+      :feature:permission:nav["nav"]
+      :feature:permission:nav["nav"]
     end
     subgraph :search
       :feature:search:nav["nav"]
@@ -206,6 +213,7 @@ graph TB
   :feature:folder --> :feature:book:nav
   :feature:folder --> :feature:collection:nav
   :feature:folder --> :feature:folder:nav
+  :feature:folder --> :feature:permission:nav
   :feature:folder --> :feature:search:nav
   :feature:folder --> :feature:settings:nav
   :feature:folder --> :feature:file:nav
@@ -220,8 +228,11 @@ graph TB
   :feature:file --> :feature:file:nav
   :feature:file --> :feature:collection:nav
   :feature:file --> :feature:folder:nav
+  :feature:permission --> :domain:usecase
+  :feature:permission --> :feature:permission:nav
   :feature:bookshelf:info --> :domain:usecase
   :feature:bookshelf:info --> :feature:bookshelf:nav
+  :feature:bookshelf:info --> :feature:permission:nav
   :feature:settings:viewer --> :domain:usecase
   :feature:settings:viewer --> :feature:settings:common
   :feature:settings:viewer --> :feature:settings:nav
@@ -241,6 +252,7 @@ graph TB
   :app:share --> :feature:file
   :app:share --> :feature:folder
   :app:share --> :feature:history
+  :app:share --> :feature:permission
   :app:share --> :feature:readlater
   :app:share --> :feature:search
   :app:share --> :feature:settings
@@ -259,6 +271,7 @@ graph TB
   :app:share --> :feature:collection:nav
   :app:share --> :feature:file:nav
   :app:share --> :feature:folder:nav
+  :app:share --> :feature:permission:nav
   :app:share --> :feature:search:nav
   :app:share --> :feature:settings:common
   :app:share --> :feature:settings:display
@@ -270,6 +283,7 @@ graph TB
   :app:share --> :feature:settings:viewer
   :app:share --> :feature:tutorial:nav
   :app:share --> :app:sync
+  :feature:permission:nav --> :domain:model
   :data:storage:smb --> :data:storage
   :feature:search --> :domain:usecase
   :feature:search --> :feature:book:nav
@@ -282,6 +296,7 @@ graph TB
   :feature:tutorial --> :feature:tutorial:nav
   :feature:book --> :domain:usecase
   :feature:book --> :feature:book:nav
+  :feature:book --> :feature:permission:nav
   :feature:book --> :feature:settings:nav
   :feature:collection:add --> :domain:usecase
   :feature:collection:add --> :feature:collection:nav
@@ -298,6 +313,7 @@ graph TB
   :feature:search:nav --> :domain:model
   :feature:bookshelf:edit --> :domain:usecase
   :feature:bookshelf:edit --> :feature:bookshelf:nav
+  :feature:bookshelf:edit --> :feature:permission:nav
 
 classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
 class :feature:bookshelf:nav kotlin-multiplatform
@@ -331,11 +347,13 @@ class :app:share kotlin-multiplatform
 class :feature:history kotlin-multiplatform
 class :feature:collection kotlin-multiplatform
 class :feature:folder kotlin-multiplatform
+class :feature:permission:nav kotlin-multiplatform
 class :feature:search:nav kotlin-multiplatform
 class :data:database kotlin-multiplatform
 class :data:reader:document kotlin-multiplatform
 class :feature:bookshelf kotlin-multiplatform
 class :feature:file kotlin-multiplatform
+class :feature:permission kotlin-multiplatform
 class :feature:bookshelf:info kotlin-multiplatform
 class :feature:settings:viewer kotlin-multiplatform
 class :feature:book kotlin-multiplatform

@@ -1,5 +1,4 @@
-# :framework:notification
-
+# :feature:tutorial:nav
 ## Module dependency graph
 
 ```mermaid

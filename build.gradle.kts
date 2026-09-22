@@ -189,7 +189,7 @@ moduleGraphConfig {
             showFullPath = false
             showTransitiveDependencies = true
             orientation = Orientation.TOP_TO_BOTTOM
-            excludedModulesRegex = ":|:framework.*"
+            excludedModulesRegex = ":|:framework.*|:core:logger"
         }
     }
 }

@@ -1,4 +1,4 @@
-# :feature:book:nav
+# :feature:tutorial:nav
 
 ## Module dependency graph
 
@@ -10,19 +10,19 @@
 }%%
 
 graph TB
-  subgraph :feature
-    subgraph :book
-      :feature:book:nav["nav"]
+  subgraph :framework
+    subgraph :ui
+      :framework:ui:preview["preview"]
     end
   end
   subgraph :domain
     :domain:model["model"]
   end
 
-  :feature:book:nav --> :domain:model
+  :framework:ui:preview --> :domain:model
 
 classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
-class :feature:book:nav kotlin-multiplatform
+class :framework:ui:preview kotlin-multiplatform
 class :domain:model kotlin-multiplatform
 
 ```

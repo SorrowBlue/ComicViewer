@@ -10,17 +10,19 @@
 }%%
 
 graph TB
-  subgraph :feature:permission
-    :feature:permission:nav["nav"]
+  subgraph :feature
+    subgraph :permission
+      :feature:permission:nav["nav"]
+    end
   end
-  subgraph :framework
-    :framework:navigation["navigation"]
+  subgraph :domain
+    :domain:model["model"]
   end
 
-  :feature:permission:nav --> :framework:navigation
+  :feature:permission:nav --> :domain:model
 
 classDef kotlin-multiplatform fill:#C792EA,stroke:#fff,stroke-width:2px,color:#fff;
 class :feature:permission:nav kotlin-multiplatform
-class :framework:navigation kotlin-multiplatform
+class :domain:model kotlin-multiplatform
 
 ```
