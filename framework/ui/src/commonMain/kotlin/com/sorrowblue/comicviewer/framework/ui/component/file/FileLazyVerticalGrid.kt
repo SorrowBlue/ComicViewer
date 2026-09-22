@@ -13,9 +13,6 @@ import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
@@ -47,25 +44,21 @@ fun <T : File> FileLazyVerticalGrid(
     state: LazyGridState = rememberLazyGridState(cacheWindow),
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val contentScale by remember(uiState.imageScale) {
-        mutableStateOf(
-            when (uiState.imageScale) {
-                ImageScale.Crop -> ContentScale.Crop
-                ImageScale.Fit -> ContentScale.Fit
-            },
-        )
+    val contentScale = remember(uiState.imageScale) {
+        when (uiState.imageScale) {
+            ImageScale.Crop -> ContentScale.Crop
+            ImageScale.Fit -> ContentScale.Fit
+        }
     }
-    val filterQuality by remember(uiState.imageFilterQuality) {
-        mutableStateOf(
-            when (uiState.imageFilterQuality) {
-                ImageFilterQuality.None -> FilterQuality.None
-                ImageFilterQuality.Low -> FilterQuality.Low
-                ImageFilterQuality.Medium -> FilterQuality.Medium
-                ImageFilterQuality.High -> FilterQuality.High
-            },
-        )
+    val filterQuality = remember(uiState.imageFilterQuality) {
+        when (uiState.imageFilterQuality) {
+            ImageFilterQuality.None -> FilterQuality.None
+            ImageFilterQuality.Low -> FilterQuality.Low
+            ImageFilterQuality.Medium -> FilterQuality.Medium
+            ImageFilterQuality.High -> FilterQuality.High
+        }
     }
-    val type by rememberLazyPagingColumnType(
+    val type = rememberLazyPagingColumnType(
         fileListDisplay = uiState.fileListDisplay,
         gridColumnSize = uiState.columnSize,
     )
@@ -132,41 +125,38 @@ fun <T : File> FileLazyVerticalGrid(
 fun rememberLazyPagingColumnType(
     fileListDisplay: FileListDisplay,
     gridColumnSize: GridColumnSize,
-): State<LazyPagingColumn> {
-    val windowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
-    val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(
-        currentWindowAdaptiveInfoV2(),
-    )
-    return remember(fileListDisplay, gridColumnSize) {
-        mutableStateOf(
-            when (fileListDisplay) {
-                FileListDisplay.List -> if (navigationSuiteType.isNavigationBar) {
-                    LazyPagingColumn.List
-                } else {
-                    LazyPagingColumn.ListMedium
+): LazyPagingColumn {
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val windowSizeClass = adaptiveInfo.windowSizeClass
+    val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(adaptiveInfo)
+    return remember(fileListDisplay, gridColumnSize, windowSizeClass, navigationSuiteType) {
+        when (fileListDisplay) {
+            FileListDisplay.List -> if (navigationSuiteType.isNavigationBar) {
+                LazyPagingColumn.List
+            } else {
+                LazyPagingColumn.ListMedium
+            }
+
+            FileListDisplay.Grid -> when {
+                windowSizeClass.isWidthAtLeastBreakpoint(
+                    WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
+                ) -> when (gridColumnSize) {
+                    GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
+                    GridColumnSize.Large -> LazyPagingColumn.Grid(200)
                 }
 
-                FileListDisplay.Grid -> when {
-                    windowSizeClass.isWidthAtLeastBreakpoint(
-                        WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
-                    ) -> when (gridColumnSize) {
-                        GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
-                        GridColumnSize.Large -> LazyPagingColumn.Grid(200)
-                    }
-
-                    windowSizeClass.isWidthAtLeastBreakpoint(
-                        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
-                    ) -> when (gridColumnSize) {
-                        GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
-                        GridColumnSize.Large -> LazyPagingColumn.Grid(200)
-                    }
-
-                    else -> when (gridColumnSize) {
-                        GridColumnSize.Medium -> LazyPagingColumn.FixedGrid(3)
-                        GridColumnSize.Large -> LazyPagingColumn.FixedGrid(2)
-                    }
+                windowSizeClass.isWidthAtLeastBreakpoint(
+                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
+                ) -> when (gridColumnSize) {
+                    GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
+                    GridColumnSize.Large -> LazyPagingColumn.Grid(200)
                 }
-            },
-        )
+
+                else -> when (gridColumnSize) {
+                    GridColumnSize.Medium -> LazyPagingColumn.FixedGrid(3)
+                    GridColumnSize.Large -> LazyPagingColumn.FixedGrid(2)
+                }
+            }
+        }
     }
 }

@@ -64,7 +64,7 @@ internal actual fun rememberSecuritySettingsScreenState(
             updateSettings = viewModel::updateSettings,
         )
     }
-    state.resultLauncherState.value = rememberLauncherForActivityResult(
+    state.resultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { state.activityResult() },
     )
@@ -81,13 +81,7 @@ private class SecuritySettingsScreenStateImpl(
 ) : SecuritySettingsScreenState {
     private val biometricManager = BiometricManager.from(context)
 
-    val resultLauncherState =
-        mutableStateOf<ManagedActivityResultLauncher<Intent, ActivityResult>?>(null)
-    private val resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
-        get() = resultLauncherState.value
-            ?: error(
-                "resultLauncher not initialized. Make sure rememberSecuritySettingsScreenState is called.",
-            )
+    lateinit var resultLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
 
     override var uiState by mutableStateOf(SecuritySettingsScreenUiState())
 
