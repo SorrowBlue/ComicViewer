@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
  * @param underlying ラップ元の [CoroutineScope]
  * @param limit 最大同時実行数
  */
-internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int,) :
+internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int) :
     CoroutineScope by underlying {
 
     private val semaphore = Semaphore(limit)
@@ -40,10 +40,9 @@ internal class LimitedCoroutineScope(private val underlying: CoroutineScope, lim
      * @param transform 各要素に対して並行実行する処理
      * @return 変換結果のリスト
      */
-    suspend fun <T, R> Iterable<T>.mapParallel(transform: suspend (T) -> R,): List<R> =
-        map { item ->
-            async { transform(item) }
-        }.awaitAll()
+    suspend fun <T, R> Iterable<T>.mapParallel(transform: suspend (T) -> R): List<R> = map { item ->
+        async { transform(item) }
+    }.awaitAll()
 }
 
 /**

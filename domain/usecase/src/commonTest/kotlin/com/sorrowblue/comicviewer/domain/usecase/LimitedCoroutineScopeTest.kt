@@ -42,7 +42,7 @@ class LimitedCoroutineScopeTest {
         assertEquals(items.map { it * 2 }, results)
         assertTrue(
             maxConcurrent <= limit,
-            "Max concurrent executions ($maxConcurrent) should not exceed limit ($limit)"
+            "Max concurrent executions ($maxConcurrent) should not exceed limit ($limit)",
         )
     }
 }
