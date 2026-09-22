@@ -4,9 +4,9 @@
 dest BasicCollectionCreateNavKey  args=(bookshelfId: BookshelfId = …, path: PathString = …)
 dest BasicCollectionEditNavKey  args=(collectionId: CollectionId)
 dest CollectionDeleteNavKey  args=(id: CollectionId)
-dest CollectionFileInfoNavKey  args=(fileKey: Key, isOpenFolderEnabled: Boolean = …, sceneKey: String = …)
 dest CollectionListNavKey
 dest CollectionNavKey  args=(id: CollectionId)
+dest FileInfoNavKey
 dest FolderNavKey  args=(bookshelfId: BookshelfId, path: String, restorePath: String? = …, showSearch: Boolean = …)
 dest SmartCollectionCreateNavKey  args=(bookshelfId: BookshelfId? = …, searchCondition: SearchCondition = …)
 dest SmartCollectionEditNavKey  args=(collectionId: CollectionId)
@@ -16,5 +16,5 @@ edge CollectionListNavKey -> CollectionDeleteNavKey
 edge CollectionListNavKey -> CollectionNavKey
 edge CollectionListNavKey -> SmartCollectionCreateNavKey
 edge CollectionListNavKey -> SmartCollectionEditNavKey
-edge CollectionNavKey -> CollectionFileInfoNavKey
+edge CollectionNavKey -> FileInfoNavKey
 edge CollectionNavKey -> FolderNavKey
