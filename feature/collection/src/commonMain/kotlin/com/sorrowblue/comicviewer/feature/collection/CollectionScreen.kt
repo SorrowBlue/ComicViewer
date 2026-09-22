@@ -21,11 +21,11 @@ import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionFileInfoNavKey
 import com.sorrowblue.comicviewer.feature.collection.navigation.CollectionNavKey
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBar
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiState
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
@@ -38,7 +38,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
-@NavEdge(to = CollectionFileInfoNavKey::class)
+@NavEdge(to = FileInfoNavKey::class)
 @NavEdge(to = FolderNavKey::class)
 @NavDestination(CollectionNavKey::class)
 @Composable

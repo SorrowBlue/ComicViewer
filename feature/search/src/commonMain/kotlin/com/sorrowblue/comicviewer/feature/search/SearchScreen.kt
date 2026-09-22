@@ -23,10 +23,10 @@ import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBar
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
-import com.sorrowblue.comicviewer.feature.search.navigation.SearchFileInfoNavKey
 import com.sorrowblue.comicviewer.feature.search.section.SearchList
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
@@ -37,7 +37,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
 @NavDestination(SearchNavKey::class)
 @NavEdge(FolderNavKey::class)
-@NavEdge(SearchFileInfoNavKey::class)
+@NavEdge(FileInfoNavKey::class)
 @Composable
 internal fun SearchScreen(
     uiState: SearchScreenUiState,

@@ -18,9 +18,9 @@ import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryClearAllNavKey
-import com.sorrowblue.comicviewer.feature.history.navigation.HistoryFileInfoNavKey
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavKey
 import com.sorrowblue.comicviewer.feature.history.section.HistoryBookList
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
@@ -32,7 +32,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 
 @NavEdge(FolderNavKey::class)
-@NavEdge(HistoryFileInfoNavKey::class)
+@NavEdge(FileInfoNavKey::class)
 @NavEdge(HistoryClearAllNavKey::class)
 @NavDestination(HistoryNavKey::class)
 @Composable

@@ -31,9 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
+import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionAddNavKey
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.file.section.FileAttributeCard
 import com.sorrowblue.comicviewer.feature.file.section.FileInfoButtons
 import com.sorrowblue.comicviewer.feature.file.section.FileInfoButtonsUiState
@@ -63,6 +68,8 @@ internal fun LoadingContents() {
     CircularProgressIndicator()
 }
 
+@NavDestination(FileInfoNavKey::class)
+@NavEdge(BasicCollectionAddNavKey::class)
 @Composable
 internal fun FileInfoScreen(
     uiState: FileInfoScreenUiState,
@@ -132,6 +139,7 @@ internal fun FileInfoScreen(
     }
 }
 
+@NavPreview(FileInfoNavKey::class)
 @Preview(heightDp = 1600)
 @Composable
 private fun FileInfoScreenPreview(

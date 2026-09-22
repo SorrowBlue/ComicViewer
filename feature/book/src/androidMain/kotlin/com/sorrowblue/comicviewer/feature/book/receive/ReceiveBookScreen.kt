@@ -9,16 +9,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.feature.book.BookScreen
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
+import com.sorrowblue.comicviewer.feature.book.navigation.BookMenuNavKey
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 
 @NavDestination(ReceiveBookNavKey::class)
+@NavEdge(BookMenuNavKey::class)
 @Composable
 internal fun ReceiveBookScreenRoot(uri: String, onBackClick: () -> Unit) {
     val state: ReceiveBookScreenState = rememberReceiveBookScreenState(uri = uri)
