@@ -38,7 +38,6 @@ fun rememberLocalNetworkPermissionDecorator(
 ): NavEntryDecorator<NavKey> {
     val permissionRequester = rememberLocalNetworkPermissionRequester(initCheck = true)
     val currentIsSmbBookshelf by rememberUpdatedState(isSmbBookshelf)
-
     return remember(permissionRequester) {
         NavEntryDecorator(
             decorate = { entry ->
@@ -91,7 +90,7 @@ private fun LocalNetworkPermissionGuard(
                 .fillMaxSize()
                 .background(ComicTheme.colorScheme.background),
         ) {
-            LocalNetworkAccessPermissionDialog(
+            LocalNetworkAccessPermissionScreen(
                 isRationale = permissionRequester.state is LocalNetworkPermissionState.Rationale,
                 onConfirmClick = permissionRequester::onPermissionConfirmClick,
                 onDismissClick = { navigator.goBack() },
