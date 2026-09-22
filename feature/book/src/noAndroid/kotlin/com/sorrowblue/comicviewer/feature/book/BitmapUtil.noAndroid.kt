@@ -17,10 +17,14 @@ internal actual fun org.jetbrains.skia.Bitmap.createSplitBitmap(
     val height = original.height
     val halfWidth = width / 2
 
-    val leftHalfRect = IRect.makeLTRB(0, 0, halfWidth, height)
-    val leftHalfBitmap = org.jetbrains.skia.Bitmap()
-    original.extractSubset(leftHalfBitmap, leftHalfRect)
-    return leftHalfBitmap
+    val rect = if (isLeft) {
+        IRect.makeLTRB(0, 0, halfWidth, height)
+    } else {
+        IRect.makeLTRB(halfWidth, 0, width, height)
+    }
+    val splitBitmap = org.jetbrains.skia.Bitmap()
+    original.extractSubset(splitBitmap, rect)
+    return splitBitmap
 }
 
 internal actual fun Bitmap.asImageBitmap(): ImageBitmap = asComposeImageBitmap()
