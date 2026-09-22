@@ -4,10 +4,15 @@
 
 package com.sorrowblue.comicviewer.feature.book.menu
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -32,8 +37,10 @@ internal fun BookMenuScreen(
     onDismissRequest: () -> Unit,
     onPageFormatChange: (PageFormat2) -> Unit,
     onPageScaleChange: (PageScale) -> Unit,
+    sheetState: SheetState = rememberBottomSheetState(SheetValue.Hidden),
 ) {
     ModalBottomSheet(
+        sheetState = sheetState,
         onDismissRequest = onDismissRequest,
         contentWindowInsets = { PaddingValues().asWindowInsets() },
     ) {
@@ -57,13 +64,16 @@ internal fun BookMenuScreen(
 @Preview
 @Composable
 private fun BookMenuScreenPreview() = PreviewTheme {
-    BookMenuScreen(
-        uiState = BookMenuScreenUiState(
-            pageFormat2 = PageFormat2.Default,
-            pageScale = PageScale.FillWidth,
-        ),
-        onDismissRequest = {},
-        onPageFormatChange = {},
-        onPageScaleChange = {},
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        BookMenuScreen(
+            sheetState = rememberBottomSheetState(SheetValue.Expanded),
+            uiState = BookMenuScreenUiState(
+                pageFormat2 = PageFormat2.Default,
+                pageScale = PageScale.FillWidth,
+            ),
+            onDismissRequest = {},
+            onPageFormatChange = {},
+            onPageScaleChange = {},
+        )
+    }
 }

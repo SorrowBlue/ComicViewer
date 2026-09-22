@@ -5,3 +5,4 @@ dest BookMenuNavKey
 dest BookNavKey  args=(bookshelfId: BookshelfId, path: PathString, name: String, collectionId: CollectionId = …)
 dest ReceiveBookNavKey  args=(uri: String)
 edge BookNavKey -> BookMenuNavKey
+edge ReceiveBookNavKey -> BookMenuNavKey

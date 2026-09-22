@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -77,7 +76,7 @@ internal fun PinTextField(
             },
         contentAlignment = Alignment.Center,
     ) {
-        val pinCount by remember(pin) { mutableIntStateOf(pin.count()) }
+        val pinCount = pin.count()
         val focusRequester = remember { FocusRequester() }
         val scrollState = rememberLazyListState()
         var hasFocus by remember { mutableStateOf(false) }

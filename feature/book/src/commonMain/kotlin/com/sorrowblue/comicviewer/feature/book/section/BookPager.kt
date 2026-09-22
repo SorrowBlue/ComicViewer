@@ -21,7 +21,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -102,18 +101,16 @@ private fun DefaultBookPage(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalPlatformContext.current
-    val request by remember(bookPage.index, cutWhitespace) {
-        mutableStateOf(
-            ImageRequest
-                .Builder(context)
-                .data(BookPageImage(book to bookPage.index))
-                .apply {
-                    if (cutWhitespace) {
-                        transformations(WhiteTrimTransformation)
-                    }
+    val request = remember(bookPage.index, cutWhitespace) {
+        ImageRequest
+            .Builder(context)
+            .data(BookPageImage(book to bookPage.index))
+            .apply {
+                if (cutWhitespace) {
+                    transformations(WhiteTrimTransformation)
                 }
-                .build(),
-        )
+            }
+            .build()
     }
     val painter = rememberAsyncImagePainter(
         model = request,

@@ -23,8 +23,6 @@ import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,9 +43,7 @@ fun ExtraPaneScaffold(
     scrollState: ScrollState? = null,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val singlePane by remember(scaffoldDirective.maxHorizontalPartitions) {
-        mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
-    }
+    val singlePane = scaffoldDirective.maxHorizontalPartitions == 1
     val scrollBehavior = if (singlePane) TopAppBarDefaults.pinnedScrollBehavior() else null
     val containerColor by animateColorAsState(
         if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainerHigh,

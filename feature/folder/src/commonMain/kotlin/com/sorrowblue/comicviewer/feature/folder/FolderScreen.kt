@@ -24,8 +24,8 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
+import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
-import com.sorrowblue.comicviewer.feature.folder.navigation.FolderFileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBar
 import com.sorrowblue.comicviewer.feature.folder.section.FolderAppBarUiState
 import com.sorrowblue.comicviewer.feature.folder.section.FolderList
@@ -43,7 +43,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 @NavEdge(SettingsNavKey::class)
 @NavEdge(FolderNavKey::class)
 @NavEdge(SearchNavKey::class)
-@NavEdge(FolderFileInfoNavKey::class)
+@NavEdge(FileInfoNavKey::class)
 @NavDestination(FolderNavKey::class)
 @Composable
 internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(

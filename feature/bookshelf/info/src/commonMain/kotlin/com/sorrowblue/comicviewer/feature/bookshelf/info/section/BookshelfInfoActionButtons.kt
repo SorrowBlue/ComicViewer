@@ -27,8 +27,6 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -42,9 +40,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun BottomActions(enabled: Boolean, onRemoveClick: () -> Unit, onEditClick: () -> Unit) {
     val scaffoldDirective = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
-    val singlePane by remember(scaffoldDirective.maxHorizontalPartitions) {
-        mutableStateOf(scaffoldDirective.maxHorizontalPartitions == 1)
-    }
+    val singlePane = scaffoldDirective.maxHorizontalPartitions == 1
     val containerColor by animateColorAsState(
         if (singlePane) ComicTheme.colorScheme.surface else ComicTheme.colorScheme.surfaceContainerHigh,
     )
