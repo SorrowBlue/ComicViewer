@@ -152,15 +152,13 @@ graph TD
     end
 
     subgraph feature [feature - Presentation]
-        :feature:bookshelf:info --> :feature:bookshelf:common
-        :feature:bookshelf:info --> :feature:bookshelf:edit
-        :feature:bookshelf:edit --> :feature:bookshelf:common
-        :feature:bookshelf --> :feature:bookshelf:common
-        :feature:bookshelf --> :feature:bookshelf:info
-        :feature:collection:add --> :feature:collection:common
-        :feature:collection:editor --> :feature:collection:common
-        :feature:collection --> :feature:collection:common
-        :feature:collection --> :feature:collection:editor
+        :feature:bookshelf --> :feature:bookshelf:nav
+        :feature:bookshelf:edit --> :feature:bookshelf:nav
+        :feature:bookshelf:info --> :feature:bookshelf:nav
+        :feature:collection --> :feature:collection:nav
+        :feature:collection:add --> :feature:collection:nav
+        :feature:collection:editor --> :feature:collection:nav
+        :feature:permission --> :feature:permission:nav
         :feature:settings:common --> :feature:settings:nav
         :feature:settings:display --> :feature:settings:common
         :feature:settings:folder --> :feature:settings:common
@@ -197,9 +195,8 @@ graph TD
     subgraph framework [framework - UI & Platform Infrastructure]
         :framework:ui --> :framework:designsystem
         :framework:ui --> :framework:common
-        :framework:permission --> :framework:ui
-        :framework:permission --> :framework:designsystem
         :framework:notification --> :framework:startup
+        :framework:permission
     end
 
     :app:share --> feature
@@ -210,6 +207,7 @@ graph TD
     feature --> :domain:usecase
     feature --> :framework:designsystem
     feature --> :framework:ui
+    feature --> :framework:permission
 
     data --> domain
 ```
