@@ -4,9 +4,9 @@
 
 package com.sorrowblue.comicviewer.domain.repository
 
+import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.FileThumbnail
-import kotlinx.coroutines.Deferred
 
 interface ThumbnailRepository {
-    fun load(fileThumbnail: FileThumbnail): Deferred<Any>
+    suspend fun load(fileThumbnail: FileThumbnail): Resource<Unit, Resource.SystemError>
 }

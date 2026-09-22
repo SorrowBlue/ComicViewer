@@ -87,8 +87,6 @@ internal class RegenerateThumbnailsUseCaseImpl(
     }
 
     private suspend fun loadThumbnail(file: File) {
-        runCatching {
-            thumbnailRepository.load(FileThumbnail.from(file)).await()
-        }
+        thumbnailRepository.load(FileThumbnail.from(file))
     }
 }
