@@ -17,7 +17,7 @@ import java.util.Locale
 @Inject
 internal class JvmFileSortService : FileSortService {
 
-    private val collator: Collator by lazy {
+    private val collatorThreadLocal: ThreadLocal<Collator> = ThreadLocal.withInitial {
         val us = Collator.getInstance(Locale.US) as RuleBasedCollator
         val lo = Collator.getInstance(Locale.getDefault()) as RuleBasedCollator
         RuleBasedCollator(us.rules + lo.rules).apply {
@@ -26,7 +26,7 @@ internal class JvmFileSortService : FileSortService {
     }
 
     override val compareFile: Comparator<File> = compareBy<File> { if (it is BookFile) 1 else 0 }
-        .thenBy(collator::compare, File::name)
+        .thenComparator { a, b -> requireNotNull(collatorThreadLocal.get()).compare(a.name, b.name) }
 }
 
 internal actual fun defaultFileSortService(): FileSortService = JvmFileSortService()

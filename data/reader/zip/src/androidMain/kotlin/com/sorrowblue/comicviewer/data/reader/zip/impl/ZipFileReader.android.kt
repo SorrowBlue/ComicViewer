@@ -9,11 +9,14 @@ import android.icu.text.RuleBasedCollator
 import com.sorrowblue.kioarch.ArchiveEntry
 import java.util.Locale
 
-private val collator =
+private val collatorThreadLocal = ThreadLocal.withInitial {
     RuleBasedCollator((Collator.getInstance(Locale.US) as RuleBasedCollator).rules).apply {
         strength = Collator.PRIMARY
         numericCollation = true
     }
+}
 
-internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> =
-    sortedWith(Comparator.comparing(ArchiveEntry::name, collator::compare))
+internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> {
+    val collator = requireNotNull(collatorThreadLocal.get())
+    return sortedWith(Comparator.comparing(ArchiveEntry::name, collator::compare))
+}

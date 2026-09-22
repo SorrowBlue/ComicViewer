@@ -9,10 +9,14 @@ import java.text.Collator
 import java.text.RuleBasedCollator
 import java.util.Locale
 
-private val collator =
+private val collatorThreadLocal = ThreadLocal.withInitial {
     RuleBasedCollator((Collator.getInstance(Locale.US) as RuleBasedCollator).rules).apply {
         strength = Collator.PRIMARY
     }
+}
 
-internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> =
-    sortedWith(Comparator.comparing(ArchiveEntry::name, collator::compare))
+internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> {
+    val collator = requireNotNull(collatorThreadLocal.get())
+    return sortedWith(Comparator.comparing(ArchiveEntry::name, collator::compare))
+}
+
