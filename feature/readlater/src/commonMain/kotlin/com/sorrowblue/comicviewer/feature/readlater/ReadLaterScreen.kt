@@ -31,9 +31,6 @@ import com.sorrowblue.comicviewer.feature.readlater.section.ReadLaterTopAppBar
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.undraw.UndrawSaveBookmarks
 import com.sorrowblue.comicviewer.framework.ui.EmptyContent
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.component.file.FileLazyVerticalGrid
 import com.sorrowblue.comicviewer.framework.ui.component.file.FileLazyVerticalGridUiState
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
@@ -49,7 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 @NavEdge(FileInfoNavKey::class)
 @NavDestination(ReadLaterNavKey::class)
 @Composable
-internal fun AdaptiveNavigationSuiteScaffoldState.ReadLaterScreen(
+internal fun ReadLaterScreen(
     lazyPagingItems: LazyPagingItems<File>,
     lazyGridState: LazyGridState,
     onClearAllClick: () -> Unit,
@@ -58,28 +55,24 @@ internal fun AdaptiveNavigationSuiteScaffoldState.ReadLaterScreen(
     onFileInfoClick: (File) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold(
-        modifier = modifier,
-    ) {
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-        Scaffold(
-            topBar = {
-                ReadLaterTopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    onClearAllClick = onClearAllClick,
-                    onSettingsClick = onSettingsClick,
-                )
-            },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        ) { contentPadding ->
-            ReadLaterContents(
-                lazyPagingItems = lazyPagingItems,
-                lazyGridState = lazyGridState,
-                onItemClick = onFileClick,
-                onItemInfoClick = onFileInfoClick,
-                contentPadding = contentPadding,
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    Scaffold(
+        topBar = {
+            ReadLaterTopAppBar(
+                scrollBehavior = scrollBehavior,
+                onClearAllClick = onClearAllClick,
+                onSettingsClick = onSettingsClick,
             )
-        }
+        },
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { contentPadding ->
+        ReadLaterContents(
+            lazyPagingItems = lazyPagingItems,
+            lazyGridState = lazyGridState,
+            onItemClick = onFileClick,
+            onItemInfoClick = onFileInfoClick,
+            contentPadding = contentPadding,
+        )
     }
 }
 
@@ -119,8 +112,7 @@ private fun ReadLaterContents(
 @Composable
 private fun ReadLaterScreenPreview() {
     PreviewTheme {
-        val state = rememberAdaptiveNavigationSuiteScaffoldState()
-        state.ReadLaterScreen(
+        ReadLaterScreen(
             lazyPagingItems = PagingData.flowData<File> {
                 fakeBookFile()
             }.collectAsLazyPagingItems(),

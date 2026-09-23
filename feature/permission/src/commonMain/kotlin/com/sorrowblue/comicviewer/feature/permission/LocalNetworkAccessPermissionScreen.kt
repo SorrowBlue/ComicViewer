@@ -65,9 +65,9 @@ internal fun LocalNetworkAccessPermissionScreen(
                     title = title,
                     navigationIcon = {
                         CloseIconButton(onDismissClick)
-                    }
+                    },
                 )
-            }
+            },
         ) { contentPadding ->
             content(contentPadding)
         }

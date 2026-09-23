@@ -23,7 +23,10 @@ internal fun BookshelfScreenRoot(
 ) {
     val state = rememberBookshelfScreenState()
     val lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
-    state.scaffoldState.BookshelfScreen(
+    com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationReSelectEffect(
+        state::onNavigationReSelect,
+    )
+    BookshelfScreen(
         lazyPagingItems = lazyPagingItems,
         lazyGridState = state.lazyGridState,
         onFabClick = onFabClick,

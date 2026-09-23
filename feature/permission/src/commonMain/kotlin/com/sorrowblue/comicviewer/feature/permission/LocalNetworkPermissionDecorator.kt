@@ -38,9 +38,8 @@ import kotlinx.coroutines.flow.map
 internal class LocalNetworkPermissionDecorator : NavEntryDecoratorProvider {
 
     @Composable
-    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> {
-        return rememberLocalNetworkPermissionDecorator()
-    }
+    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> =
+        rememberLocalNetworkPermissionDecorator()
 }
 
 /**
@@ -105,7 +104,6 @@ internal class LocalNetworkPermissionViewModel(
         flowBookshelfUseCase(bookshelfId).map { resource ->
             resource.dataOrNull()?.type == BookshelfType.SMB
         }
-
 }
 
 @Composable

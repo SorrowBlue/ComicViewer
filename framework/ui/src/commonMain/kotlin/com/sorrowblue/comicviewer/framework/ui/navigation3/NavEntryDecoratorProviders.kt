@@ -17,23 +17,20 @@ import dev.zacsweers.metro.ContributesIntoSet
 @ContributesIntoSet(AppScope::class)
 internal class SaveableStateHolderNavEntryDecorator : NavEntryDecoratorProvider {
     @Composable
-    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> {
-        return rememberSaveableStateHolderNavEntryDecorator()
-    }
+    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> =
+        rememberSaveableStateHolderNavEntryDecorator()
 }
 
 @ContributesIntoSet(AppScope::class)
 internal class ResultEventBusNavEntryDecorator : NavEntryDecoratorProvider {
     @Composable
-    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> {
-        return rememberResultEventBusNavEntryDecorator()
-    }
+    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> =
+        rememberResultEventBusNavEntryDecorator()
 }
 
 @ContributesIntoSet(AppScope::class)
 internal class ViewModelStoreNavEntryDecorator : NavEntryDecoratorProvider {
     @Composable
-    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> {
-        return rememberViewModelStoreNavEntryDecorator()
-    }
+    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> =
+        rememberViewModelStoreNavEntryDecorator()
 }

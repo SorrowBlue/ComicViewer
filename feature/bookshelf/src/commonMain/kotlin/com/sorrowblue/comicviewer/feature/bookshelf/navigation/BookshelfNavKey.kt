@@ -20,6 +20,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Shelv
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import comicviewer.feature.bookshelf.generated.resources.Res
@@ -47,7 +48,8 @@ context(scope: EntryProviderScope<NavKey>)
 internal fun bookshelfNavEntry(navigator: Navigator) {
     scope.entry<BookshelfNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane<BookshelfInfoNavKey>("Bookshelf") +
-            NavDisplay.transitionMaterialFadeThrough(),
+            NavDisplay.transitionMaterialFadeThrough() +
+            navigationSuite(),
     ) {
         BookshelfScreenRoot(
             onSettingsClick = dropUnlessResumed {

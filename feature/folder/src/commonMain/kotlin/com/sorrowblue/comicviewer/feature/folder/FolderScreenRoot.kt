@@ -12,7 +12,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 
 @Composable
@@ -33,14 +32,13 @@ fun FolderScreenRoot(
         create(bookshelfId, path, restorePath, showSearch)
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     val state = rememberFolderScreenState(
         bookshelfId = bookshelfId,
         path = path,
         restorePath = restorePath,
         showSearch = showSearch,
     )
-    scaffoldState.FolderScreen(
+    FolderScreen(
         uiState = uiState,
         lazyPagingItems = state.lazyPagingItems,
         lazyGridState = state.lazyGridState,

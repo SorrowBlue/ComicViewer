@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
+import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationReSelectEffect
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 
 @Composable
@@ -23,7 +24,8 @@ internal fun CollectionListScreenRoot(
 ) {
     val state = rememberCollectionListScreenState()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    state.scaffoldState.CollectionListScreen(
+    NavigationReSelectEffect(state::onNavigationReSelect)
+    CollectionListScreen(
         lazyPagingItems = lazyPagingItems,
         lazyListState = state.lazyListState,
         onItemClick = onItemClick,

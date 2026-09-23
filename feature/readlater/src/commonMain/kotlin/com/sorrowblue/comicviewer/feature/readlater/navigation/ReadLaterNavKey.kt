@@ -19,6 +19,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_title
@@ -46,7 +47,8 @@ context(scope: EntryProviderScope<NavKey>)
 internal fun readLaterNavEntry(navigator: Navigator) {
     scope.entry<ReadLaterNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane(SCENE_KEY_READ_LATER) +
-            NavDisplay.transitionMaterialFadeThrough(),
+            NavDisplay.transitionMaterialFadeThrough() +
+            navigationSuite(),
     ) {
         ReadLaterScreenRoot(
             onSettingsClick = {

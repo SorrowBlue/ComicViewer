@@ -16,6 +16,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
 import comicviewer.feature.history.generated.resources.Res
@@ -46,6 +47,7 @@ internal fun historyNavEntry(navigator: Navigator) {
     scope.entry<HistoryNavKey>(
         metadata = metadata {
             transitionMaterialFadeThrough()
+            navigationSuite()
         } + SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>(SCENE_KEY_HISTORY),
     ) {
         HistoryScreenRoot(

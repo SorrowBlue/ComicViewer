@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.navigation3.runtime.result.ResultEffect
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationReSelectEffect
 
 @Composable
 internal fun HistoryScreenRoot(
@@ -18,7 +19,8 @@ internal fun HistoryScreenRoot(
     onBookInfoClick: (Book) -> Unit,
 ) {
     val state = rememberHistoryScreenState()
-    state.scaffoldState.HistoryScreen(
+    NavigationReSelectEffect(state::onNavigationReSelect)
+    HistoryScreen(
         lazyPagingItems = state.lazyPagingItems,
         lazyGridState = state.lazyGridState,
         onDeleteAllClick = onDeleteAllClick,

@@ -13,7 +13,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 
 @Composable
@@ -30,8 +29,7 @@ internal fun CollectionScreenRoot(
         assistedMetroViewModel<CollectionViewModel, CollectionViewModel.Factory> { create(id) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-    scaffoldState.CollectionScreen(
+    CollectionScreen(
         uiState = uiState,
         lazyPagingItems = lazyPagingItems,
         onBackClick = onBackClick,

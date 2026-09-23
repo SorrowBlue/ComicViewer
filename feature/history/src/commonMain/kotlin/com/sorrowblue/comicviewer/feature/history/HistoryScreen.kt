@@ -24,9 +24,6 @@ import com.sorrowblue.comicviewer.feature.history.navigation.HistoryClearAllNavK
 import com.sorrowblue.comicviewer.feature.history.navigation.HistoryNavKey
 import com.sorrowblue.comicviewer.feature.history.section.HistoryBookList
 import com.sorrowblue.comicviewer.feature.history.section.HistoryTopAppBar
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
@@ -36,7 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 @NavEdge(HistoryClearAllNavKey::class)
 @NavDestination(HistoryNavKey::class)
 @Composable
-internal fun AdaptiveNavigationSuiteScaffoldState.HistoryScreen(
+internal fun HistoryScreen(
     lazyPagingItems: LazyPagingItems<Book>,
     lazyGridState: LazyGridState,
     onDeleteAllClick: () -> Unit,
@@ -46,27 +43,23 @@ internal fun AdaptiveNavigationSuiteScaffoldState.HistoryScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    AdaptiveNavigationSuiteScaffold(
-        modifier = modifier,
-    ) {
-        Scaffold(
-            topBar = {
-                HistoryTopAppBar(
-                    onDeleteAllClick = onDeleteAllClick,
-                    onSettingsClick = onSettingsClick,
-                    scrollBehavior = scrollBehavior,
-                )
-            },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        ) { contentPadding ->
-            HistoryBookList(
-                lazyPagingItems = lazyPagingItems,
-                onItemClick = onBookClick,
-                onItemInfoClick = onBookInfoClick,
-                lazyGridState = lazyGridState,
-                contentPadding = contentPadding,
+    Scaffold(
+        topBar = {
+            HistoryTopAppBar(
+                onDeleteAllClick = onDeleteAllClick,
+                onSettingsClick = onSettingsClick,
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { contentPadding ->
+        HistoryBookList(
+            lazyPagingItems = lazyPagingItems,
+            onItemClick = onBookClick,
+            onItemInfoClick = onBookInfoClick,
+            lazyGridState = lazyGridState,
+            contentPadding = contentPadding,
+        )
     }
 }
 
@@ -74,8 +67,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.HistoryScreen(
 @Preview
 @Composable
 private fun HistoryScreenPreview() = PreviewTheme {
-    val state = rememberAdaptiveNavigationSuiteScaffoldState()
-    state.HistoryScreen(
+    HistoryScreen(
         lazyPagingItems = PagingData.flowData<Book> { fakeBookFile() }.collectAsLazyPagingItems(),
         lazyGridState = LazyGridState(),
         onDeleteAllClick = {},

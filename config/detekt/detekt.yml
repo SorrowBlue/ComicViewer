@@ -104,6 +104,9 @@ Compose:
       'LocalNavigator',
       'LocalPlatformContext',
       'LocalSharedTransitionScope',
+      'LocalAdaptiveNavigationSuiteScaffoldState',
+      'LocalPrimaryActionSlot',
+      'LocalNavigationReSelectRegistry',
     ]
   CompositionLocalNaming:
     active: true

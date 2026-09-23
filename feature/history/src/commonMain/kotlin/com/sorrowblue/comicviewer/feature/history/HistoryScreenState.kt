@@ -15,16 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
 internal interface HistoryScreenState {
     val lazyPagingItems: LazyPagingItems<Book>
     val lazyGridState: LazyGridState
-    val scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
+    fun onNavigationReSelect()
     fun onNavResult(result: ClearAllHistoryScreenResult)
 }
 
@@ -36,20 +34,17 @@ internal fun rememberHistoryScreenState(
     val cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
     val lazyGridState = rememberLazyGridState(cacheWindow)
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
-        onNavigationReSelect = {
-            if (lazyGridState.canScrollBackward) {
-                scope.launch {
-                    lazyGridState.animateScrollToItem(0)
-                }
-            }
-        },
-    )
-    return remember(lazyGridState, scaffoldState) {
+    return remember(lazyGridState) {
         HistoryScreenStateImpl(
             lazyGridState = lazyGridState,
-            scaffoldState = scaffoldState,
             clearAll = viewModel::clearAll,
+            navigationReSelect = {
+                if (lazyGridState.canScrollBackward) {
+                    scope.launch {
+                        lazyGridState.animateScrollToItem(0)
+                    }
+                }
+            },
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -58,11 +53,15 @@ internal fun rememberHistoryScreenState(
 
 private class HistoryScreenStateImpl(
     override val lazyGridState: LazyGridState,
-    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
     private var clearAll: () -> Unit,
+    private val navigationReSelect: () -> Unit,
 ) : HistoryScreenState {
 
     override lateinit var lazyPagingItems: LazyPagingItems<Book>
+
+    override fun onNavigationReSelect() {
+        navigationReSelect()
+    }
 
     override fun onNavResult(result: ClearAllHistoryScreenResult) {
         if (result.confirmed) {

@@ -22,6 +22,7 @@ import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
 import kotlinx.serialization.Serializable
 
@@ -35,7 +36,8 @@ context(scope: EntryProviderScope<NavKey>)
 internal fun collectionNavEntry(navigator: Navigator) {
     scope.entry<CollectionNavKey>(
         metadata = SupportingPaneSceneStrategy.mainPane(SCENE_KEY_COLLECTION) +
-            NavDisplay.transitionMaterialSharedAxisZ(),
+            NavDisplay.transitionMaterialSharedAxisZ() +
+            navigationSuite(),
     ) { detail ->
         CollectionScreenRoot(
             id = detail.id,

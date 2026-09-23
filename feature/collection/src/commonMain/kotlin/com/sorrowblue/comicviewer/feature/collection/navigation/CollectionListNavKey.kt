@@ -20,6 +20,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
@@ -44,7 +45,9 @@ internal data object CollectionListNavKey : NavigationKey {
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
 internal fun collectionListNavEntry(navigator: Navigator) {
-    scope.entry<CollectionListNavKey>(metadata = NavDisplay.transitionMaterialFadeThrough()) {
+    scope.entry<CollectionListNavKey>(
+        metadata = NavDisplay.transitionMaterialFadeThrough() + navigationSuite(),
+    ) {
         CollectionListScreenRoot(
             onItemClick = { collection -> navigator.navigate(CollectionNavKey(collection.id)) },
             onEditClick = { collection ->

@@ -33,7 +33,6 @@ inline fun <reified T : NavKey> SupportingPaneSceneStrategy.Companion.mainPane(s
     SupportingPaneSceneStrategy.mainPane(sceneKey) +
         mapOf(SupportingPaneWindowInsetsKey to SupportingPaneWindowInsetsMetadata(T::class))
 
-
 @ContributesIntoSet(AppScope::class)
 internal class SupportingPaneWindowInsets : NavEntryDecoratorProvider {
     @Composable

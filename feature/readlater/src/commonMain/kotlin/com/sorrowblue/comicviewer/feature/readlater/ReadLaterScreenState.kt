@@ -15,16 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.launch
 
 internal interface ReadLaterScreenState {
-    val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
 
+    fun onNavigationReSelect()
     fun onClearAllClick()
 }
 
@@ -36,20 +34,17 @@ internal fun rememberReadLaterScreenState(
     val cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
     val lazyGridState = rememberLazyGridState(cacheWindow)
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState(
-        onNavigationReSelect = {
-            if (lazyGridState.canScrollBackward) {
-                scope.launch {
-                    lazyGridState.animateScrollToItem(0)
-                }
-            }
-        },
-    )
     return remember {
         ReadLaterScreenStateImpl(
             lazyGridState = lazyGridState,
-            scaffoldState = scaffoldState,
             clearAll = viewModel::clearAll,
+            navigationReSelect = {
+                if (lazyGridState.canScrollBackward) {
+                    scope.launch {
+                        lazyGridState.animateScrollToItem(0)
+                    }
+                }
+            },
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -58,11 +53,15 @@ internal fun rememberReadLaterScreenState(
 
 private class ReadLaterScreenStateImpl(
     override val lazyGridState: LazyGridState,
-    override val scaffoldState: AdaptiveNavigationSuiteScaffoldState,
     private val clearAll: () -> Unit,
+    private val navigationReSelect: () -> Unit,
 ) : ReadLaterScreenState {
 
     override lateinit var lazyPagingItems: LazyPagingItems<File>
+
+    override fun onNavigationReSelect() {
+        navigationReSelect()
+    }
 
     override fun onClearAllClick() {
         clearAll()

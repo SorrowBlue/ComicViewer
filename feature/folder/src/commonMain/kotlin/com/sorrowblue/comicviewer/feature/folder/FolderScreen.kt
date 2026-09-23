@@ -32,9 +32,6 @@ import com.sorrowblue.comicviewer.feature.folder.section.FolderList
 import com.sorrowblue.comicviewer.feature.folder.section.FolderListUiState
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
@@ -46,7 +43,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 @NavEdge(FileInfoNavKey::class)
 @NavDestination(FolderNavKey::class)
 @Composable
-internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
+internal fun FolderScreen(
     uiState: FolderScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     lazyGridState: LazyGridState,
@@ -65,43 +62,41 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold(modifier = modifier) {
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-        val scrollBehavior2 = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        Scaffold(
-            topBar = {
-                FolderAppBar(
-                    uiState = uiState.folderAppBarUiState,
-                    onBackClick = onBackClick,
-                    onSearchClick = onSearchClick,
-                    onSortClick = onSortClick,
-                    onFolderScopeOnlyClick = onFolderScopeOnlyClick,
-                    onIncludeSubfoldersClick = onIncludeSubfoldersClick,
-                    onSettingsClick = onSettingsClick,
-                    onGridSizeClick = onGridSizeClick,
-                    onHiddenFilesChange = onHiddenFilesChange,
-                    onFileListDisplayChange = onFileListDisplayChange,
-                    scrollBehavior = scrollBehavior,
-                    scrollBehavior2 = scrollBehavior2,
-                )
-            },
-            snackbarHost = {
-                SnackbarHost(snackbarHostState)
-            },
-            modifier = Modifier
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .nestedScroll(scrollBehavior2.nestedScrollConnection),
-        ) { contentPadding ->
-            FolderList(
-                uiState = uiState.folderListUiState,
-                lazyPagingItems = lazyPagingItems,
-                lazyGridState = lazyGridState,
-                contentPadding = contentPadding,
-                onRefresh = onRefresh,
-                onFileClick = onFileClick,
-                onFileInfoClick = onFileInfoClick,
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior2 = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        topBar = {
+            FolderAppBar(
+                uiState = uiState.folderAppBarUiState,
+                onBackClick = onBackClick,
+                onSearchClick = onSearchClick,
+                onSortClick = onSortClick,
+                onFolderScopeOnlyClick = onFolderScopeOnlyClick,
+                onIncludeSubfoldersClick = onIncludeSubfoldersClick,
+                onSettingsClick = onSettingsClick,
+                onGridSizeClick = onGridSizeClick,
+                onHiddenFilesChange = onHiddenFilesChange,
+                onFileListDisplayChange = onFileListDisplayChange,
+                scrollBehavior = scrollBehavior,
+                scrollBehavior2 = scrollBehavior2,
             )
-        }
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
+        modifier = modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .nestedScroll(scrollBehavior2.nestedScrollConnection),
+    ) { contentPadding ->
+        FolderList(
+            uiState = uiState.folderListUiState,
+            lazyPagingItems = lazyPagingItems,
+            lazyGridState = lazyGridState,
+            contentPadding = contentPadding,
+            onRefresh = onRefresh,
+            onFileClick = onFileClick,
+            onFileInfoClick = onFileInfoClick,
+        )
     }
 }
 
@@ -109,8 +104,7 @@ internal fun AdaptiveNavigationSuiteScaffoldState.FolderScreen(
 @Preview
 @Composable
 private fun FolderScreenPreview() = PreviewTheme {
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-    scaffoldState.FolderScreen(
+    FolderScreen(
         uiState = FolderScreenUiState(
             folderAppBarUiState = FolderAppBarUiState(
                 title = "Folder Name",

@@ -13,4 +13,3 @@ interface NavEntryDecoratorProvider {
     @Composable
     fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey>
 }
-
