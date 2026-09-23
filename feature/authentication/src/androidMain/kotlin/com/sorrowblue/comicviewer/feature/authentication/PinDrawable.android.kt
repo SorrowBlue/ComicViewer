@@ -21,8 +21,8 @@ import androidx.compose.ui.layout.ContentScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.yield
 
-@Suppress("UnnecessaryLaunchedEffect")
 @Composable
 internal actual fun PinDrawable(
     index: Int,
@@ -58,6 +58,7 @@ internal actual fun PinDrawable(
     )
     LaunchedEffect(animate) {
         if (animate) {
+            yield()
             atEnd = true
         }
     }

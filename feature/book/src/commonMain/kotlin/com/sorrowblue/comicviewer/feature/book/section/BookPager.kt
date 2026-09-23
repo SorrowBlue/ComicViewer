@@ -20,13 +20,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -131,26 +133,7 @@ private fun DefaultBookPage(
         val state by painter.state.collectAsStateWithLifecycle()
         when (state) {
             is AsyncImagePainter.State.Error -> {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    Icon(
-                        modifier = Modifier.size(96.dp),
-                        painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
-                        contentDescription = null,
-                    )
-                    Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
-                    Text(
-                        text = stringResource(Res.string.book_msg_page_not_loaded),
-                        style = ComicTheme.typography.bodyLarge,
-                    )
-
-                    OutlinedButton(onClick = { painter.restart() }) {
-                        Text(text = stringResource(Res.string.book_action_reload))
-                    }
-                }
+                PageErrorContent(onReload = { painter.restart() })
             }
 
             is AsyncImagePainter.State.Loading -> {
@@ -175,25 +158,85 @@ private fun SplitBookPage(
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AsyncImage(
-        model = BookPageImage(book to bookPage.index),
-        contentDescription = null,
-        transform = when (bookPage) {
-            is BookPage.Split.Unrated -> SpreadSplitTransformation.unrated {
-                onPageLoad(bookPage, it)
-            }
-
-            is BookPage.Split.Single -> SpreadSplitTransformation.Single
-
-            is BookPage.Split.Left -> SpreadSplitTransformation.left()
-
-            is BookPage.Split.Right -> SpreadSplitTransformation.right()
-        },
+    val context = LocalPlatformContext.current
+    val request = remember(bookPage.index) {
+        ImageRequest
+            .Builder(context)
+            .data(BookPageImage(book to bookPage.index))
+            .build()
+    }
+    val painter = rememberAsyncImagePainter(
+        model = request,
         contentScale = pageScale.contentScale,
+        filterQuality = FilterQuality.None,
+    )
+    val state by painter.state.collectAsStateWithLifecycle()
+    val currentOnPageLoad by rememberUpdatedState(onPageLoad)
+
+    if (bookPage is BookPage.Split.Unrated && state is AsyncImagePainter.State.Success) {
+        key(state) {
+            SideEffect {
+                val bitmap = (state as AsyncImagePainter.State.Success).result.image.toBitmap()
+                currentOnPageLoad(bookPage, bitmap)
+            }
+        }
+    }
+
+    val splitBitmap = remember(state, bookPage) {
+        if (state is AsyncImagePainter.State.Success) {
+            val original = (state as AsyncImagePainter.State.Success).result.image.toBitmap()
+            when (bookPage) {
+                is BookPage.Split.Left -> original.createSplitBitmap(isLeft = true)
+                is BookPage.Split.Right -> original.createSplitBitmap(isLeft = false)
+                else -> null
+            }
+        } else {
+            null
+        }
+    }
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .then(modifier),
-    )
+    ) {
+        when {
+            splitBitmap != null -> {
+                Image(
+                    bitmap = splitBitmap.asImageBitmap(),
+                    contentDescription = null,
+                    contentScale = pageScale.contentScale,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+
+            bookPage !is BookPage.Split.Left && bookPage !is BookPage.Split.Right -> {
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    contentScale = pageScale.contentScale,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+        }
+
+        when (state) {
+            is AsyncImagePainter.State.Error -> {
+                PageErrorContent(onReload = { painter.restart() })
+            }
+
+            is AsyncImagePainter.State.Loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .wrapContentSize()
+                        .padding(ComicTheme.dimension.margin),
+                )
+            }
+
+            AsyncImagePainter.State.Empty, is AsyncImagePainter.State.Success -> Unit
+        }
+    }
 }
 
 @Composable
@@ -234,79 +277,84 @@ private fun SpreadBookPage(
             )
         }
     } else {
-        AsyncImage(
-            model = BookPageImage(book to bookPage.index),
-            contentDescription = null,
+        val context = LocalPlatformContext.current
+        val request = remember(bookPage.index) {
+            ImageRequest
+                .Builder(context)
+                .data(BookPageImage(book to bookPage.index))
+                .build()
+        }
+        val painter = rememberAsyncImagePainter(
+            model = request,
             contentScale = pageScale.contentScale,
-            transform = when (bookPage) {
-                is BookPage.Spread.Single -> SpreadCombineTransformation.Single
+            filterQuality = FilterQuality.None,
+        )
+        val state by painter.state.collectAsStateWithLifecycle()
+        val currentOnPageLoad by rememberUpdatedState(onPageLoad)
 
-                is BookPage.Spread.Spread2 -> SpreadCombineTransformation.Spread2
-
-                is BookPage.Spread.Unrated -> SpreadCombineTransformation.unrated {
-                    onPageLoad(bookPage, it)
+        if (bookPage is BookPage.Spread.Unrated && state is AsyncImagePainter.State.Success) {
+            key(state) {
+                SideEffect {
+                    val bitmap = (state as AsyncImagePainter.State.Success).result.image.toBitmap()
+                    currentOnPageLoad(bookPage, bitmap)
                 }
-            },
+            }
+        }
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .then(modifier),
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = pageScale.contentScale,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            when (state) {
+                is AsyncImagePainter.State.Error -> {
+                    PageErrorContent(onReload = { painter.restart() })
+                }
+
+                is AsyncImagePainter.State.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .wrapContentSize()
+                            .padding(ComicTheme.dimension.margin),
+                    )
+                }
+
+                AsyncImagePainter.State.Empty, is AsyncImagePainter.State.Success -> Unit
+            }
+        }
+    }
+}
+
+@Composable
+private fun PageErrorContent(onReload: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier),
+    ) {
+        Icon(
+            modifier = Modifier.size(96.dp),
+            painter = rememberVectorPainter(image = ComicIcons.BrokenImage),
+            contentDescription = null,
         )
-    }
-}
+        Spacer(modifier = Modifier.size(ComicTheme.dimension.padding))
+        Text(
+            text = stringResource(Res.string.book_msg_page_not_loaded),
+            style = ComicTheme.typography.bodyLarge,
+        )
 
-object SpreadCombineTransformation {
-    fun unrated(change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
-        if (state is AsyncImagePainter.State.Success) {
-            change(state.result.image.toBitmap())
-            state
-        } else {
-            state
-        }
-    }
-
-    val Single = AsyncImagePainter.DefaultTransform
-    val Spread2 = AsyncImagePainter.DefaultTransform
-}
-
-object SpreadSplitTransformation {
-    fun unrated(change: (Bitmap) -> Unit) = { state: AsyncImagePainter.State ->
-        if (state is AsyncImagePainter.State.Success) {
-            change(state.result.image.toBitmap())
-            state
-        } else {
-            state
-        }
-    }
-
-    val Single = AsyncImagePainter.DefaultTransform
-
-    fun left() = { state: AsyncImagePainter.State ->
-        if (state is AsyncImagePainter.State.Success) {
-            state.copy(
-                painter = BitmapPainter(
-                    state.result.image
-                        .toBitmap()
-                        .createSplitBitmap(true)
-                        .asImageBitmap(),
-                ),
-            )
-        } else {
-            state
-        }
-    }
-
-    fun right() = { state: AsyncImagePainter.State ->
-        if (state is AsyncImagePainter.State.Success) {
-            state.copy(
-                painter = BitmapPainter(
-                    state.result.image
-                        .toBitmap()
-                        .createSplitBitmap(false)
-                        .asImageBitmap(),
-                ),
-            )
-        } else {
-            state
+        OutlinedButton(onClick = onReload) {
+            Text(text = stringResource(Res.string.book_action_reload))
         }
     }
 }

@@ -65,22 +65,22 @@ sealed interface BookPage : PageItem {
         data class Unrated(override val index: Int) :
             Spread,
             UnratedPage {
-            override val key: String = "Spread:$index"
+            override val key: String = "Spread:unrated:$index"
         }
 
         /** 2つの縦長ページが結合された状態 */
         data class Combine(override val index: Int, val nextIndex: Int) : Spread {
-            override val key: String = "Spread:$index:$nextIndex"
+            override val key: String = "Spread:combine:$index:$nextIndex"
         }
 
         /** 表紙や奇数残りなどの単一ページ状態 */
         data class Single(override val index: Int) : Spread {
-            override val key: String = "Spread:$index"
+            override val key: String = "Spread:single:$index"
         }
 
         /** 単体で横長のページ（見開き相当） */
         data class Spread2(override val index: Int) : Spread {
-            override val key: String = "Spread:$index"
+            override val key: String = "Spread:spread2:$index"
         }
     }
 
@@ -94,22 +94,22 @@ sealed interface BookPage : PageItem {
         data class Unrated(override val index: Int) :
             Split,
             UnratedPage {
-            override val key: String = "Split:$index"
+            override val key: String = "Split:unrated:$index"
         }
 
         /** 縦長のため分割不要な単一ページ状態 */
         data class Single(override val index: Int) : Split {
-            override val key: String = "Split:$index"
+            override val key: String = "Split:single:$index"
         }
 
         /** 横長画像の左半分 */
         data class Left(override val index: Int) : Split {
-            override val key: String = "Split:$index"
+            override val key: String = "Split:left:$index"
         }
 
         /** 横長画像の右半分 */
         data class Right(override val index: Int) : Split {
-            override val key: String = "Split:$index:r"
+            override val key: String = "Split:right:$index"
         }
     }
 }

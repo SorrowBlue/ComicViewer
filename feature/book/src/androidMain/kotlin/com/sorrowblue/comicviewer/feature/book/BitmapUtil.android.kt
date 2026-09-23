@@ -16,9 +16,7 @@ internal actual fun Bitmap.createSplitBitmap(isLeft: Boolean): Bitmap = Bitmap
         0,
         this.width / 2,
         this.height,
-    ).apply {
-        this@createSplitBitmap.recycle()
-    }
+    )
 
 internal actual fun Bitmap.asImageBitmap(): ImageBitmap = asImageBitmap()
 

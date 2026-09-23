@@ -18,7 +18,7 @@ import java.util.Locale
 @Inject
 internal class AndroidFileSortService : FileSortService {
 
-    private val collator: (String, String) -> Int by lazy {
+    private val collatorThreadLocal = ThreadLocal.withInitial<(String, String) -> Int> {
         try {
             val us = Collator.getInstance(Locale.US) as RuleBasedCollator
             val lo = Collator.getInstance(Locale.getDefault()) as RuleBasedCollator
@@ -26,19 +26,21 @@ internal class AndroidFileSortService : FileSortService {
                 strength = Collator.PRIMARY
                 numericCollation = true
             }
-            return@lazy { a: String, b: String -> icuCollator.compare(a, b) }
+            val compareFunc: (String, String) -> Int = { a, b -> icuCollator.compare(a, b) }
+            compareFunc
         } catch (_: Throwable) {
             val us = JavaCollator.getInstance(Locale.US) as java.text.RuleBasedCollator
             val lo = JavaCollator.getInstance(Locale.getDefault()) as java.text.RuleBasedCollator
             val javaCollator = java.text.RuleBasedCollator(us.rules + lo.rules).apply {
                 strength = JavaCollator.PRIMARY
             }
-            return@lazy { a: String, b: String -> javaCollator.compare(a, b) }
+            val compareFunc: (String, String) -> Int = { a, b -> javaCollator.compare(a, b) }
+            compareFunc
         }
     }
 
     override val compareFile: Comparator<File> = compareBy<File> { if (it is BookFile) 1 else 0 }
-        .thenComparator { a, b -> collator(a.name, b.name) }
+        .thenComparator { a, b -> requireNotNull(collatorThreadLocal.get()).invoke(a.name, b.name) }
 }
 
 internal actual fun defaultFileSortService(): FileSortService = AndroidFileSortService()

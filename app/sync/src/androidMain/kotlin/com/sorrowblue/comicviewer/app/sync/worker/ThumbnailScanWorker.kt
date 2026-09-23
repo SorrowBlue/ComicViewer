@@ -105,11 +105,16 @@ internal class ThumbnailScanWorker(
     }
 
     private suspend fun innerWork(bookshelfInfo: BookshelfFolder): Result {
+        var lastUpdateTime = 0L
         val useCaseRequest =
             RegenerateThumbnailsUseCase.Request(
                 bookshelfInfo.bookshelf.id,
             ) { bookshelf, progress, max ->
-                setForeground(createForegroundInfo(bookshelf.displayName, progress, max))
+                val currentTime = System.currentTimeMillis()
+                if (progress == 1L || progress == max || currentTime - lastUpdateTime >= 500) {
+                    lastUpdateTime = currentTime
+                    setForeground(createForegroundInfo(bookshelf.displayName, progress, max))
+                }
             }
         return regenerateThumbnailsUseCase(useCaseRequest).fold({
             val notification =
