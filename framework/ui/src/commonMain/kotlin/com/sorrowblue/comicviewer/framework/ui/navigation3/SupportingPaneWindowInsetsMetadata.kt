@@ -10,13 +10,18 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.PaneScaffoldDirective
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
+import com.sorrowblue.comicviewer.framework.navigation.NavEntryDecoratorProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
 import kotlin.reflect.KClass
 
 class SupportingPaneWindowInsetsMetadata<T : NavKey>(val clazz: KClass<T>)
@@ -28,8 +33,18 @@ inline fun <reified T : NavKey> SupportingPaneSceneStrategy.Companion.mainPane(s
     SupportingPaneSceneStrategy.mainPane(sceneKey) +
         mapOf(SupportingPaneWindowInsetsKey to SupportingPaneWindowInsetsMetadata(T::class))
 
+
+@ContributesIntoSet(AppScope::class)
+internal class SupportingPaneWindowInsets : NavEntryDecoratorProvider {
+    @Composable
+    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> {
+        val directive = calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2())
+        return rememberSupportingPaneWindowInsetsDecorator(directive = directive)
+    }
+}
+
 @Composable
-fun <T : Any> rememberSupportingPaneWindowInsetsDecorator(
+internal fun <T : Any> rememberSupportingPaneWindowInsetsDecorator(
     directive: PaneScaffoldDirective,
 ): NavEntryDecorator<T> = remember(directive) { SupportingPaneWindowInsetsDecorator(directive) }
 

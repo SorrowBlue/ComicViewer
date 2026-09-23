@@ -5,15 +5,12 @@
 package com.sorrowblue.comicviewer.feature.folder
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -37,7 +34,6 @@ fun FolderScreenRoot(
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-    val permissionRequester = rememberLocalNetworkPermissionRequester(true)
     val state = rememberFolderScreenState(
         bookshelfId = bookshelfId,
         path = path,
@@ -64,9 +60,6 @@ fun FolderScreenRoot(
         modifier = modifier.testTag("FolderScreenRoot"),
     )
 
-    SideEffect(permissionRequester.state) {
-        viewModel.updatePermission(permissionRequester.state == LocalNetworkPermissionState.Granted)
-    }
     EventEffect(state.events) {
         when (it) {
             FolderScreenEvent.Restore -> onRestoreComplete()

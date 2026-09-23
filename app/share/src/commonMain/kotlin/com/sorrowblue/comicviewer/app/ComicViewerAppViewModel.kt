@@ -7,12 +7,9 @@ package com.sorrowblue.comicviewer.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
-import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfUseCase
 import com.sorrowblue.comicviewer.domain.usecase.invoke
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import dev.zacsweers.metro.AppScope
@@ -24,12 +21,10 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
@@ -39,7 +34,6 @@ internal class ComicViewerAppViewModel(
     @Assisted allowNavigationRestored: Boolean,
     val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
     val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
-    private val flowBookshelfUseCase: FlowBookshelfUseCase,
 ) : ViewModel() {
 
     val shouldKeepSplash = MutableStateFlow(true)
@@ -166,11 +160,6 @@ internal class ComicViewerAppViewModel(
         shouldKeepSplash.value = false
         isInitialized.value = true
     }
-
-    fun isSmbBookshelf(bookshelfId: BookshelfId): Flow<Boolean?> =
-        flowBookshelfUseCase(bookshelfId).map { resource ->
-            resource.dataOrNull()?.type == BookshelfType.SMB
-        }
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey

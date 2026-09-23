@@ -24,18 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.sorrowblue.comicviewer.app.wrapper.PreAppScreen
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
-import com.sorrowblue.comicviewer.feature.permission.rememberLocalNetworkPermissionDecorator
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.appGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -46,7 +42,6 @@ import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionSc
 import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.locale.ProvideLocalAppLocaleIso
 import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
-import com.sorrowblue.comicviewer.framework.ui.navigation3.rememberSupportingPaneWindowInsetsDecorator
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import logcat.logcat
 
@@ -59,6 +54,11 @@ internal fun ComicViewerApp(
     entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         context.appGraph<NavigationGraph>().navigationEntryProvider.forEach { provider ->
             provider(navigator = navigator)
+        }
+    },
+    navEntryDecorators: @Composable () -> List<NavEntryDecorator<NavKey>> = {
+        context.appGraph<NavigationGraph>().navEntryDecoratorProviders.map {
+            it.rememberNavEntryDecorator()
         }
     },
 ) {
@@ -78,14 +78,8 @@ internal fun ComicViewerApp(
             }, finishApp = finishApp) {
                 ComicViewerApp(
                     navigator = navigator,
-                    isSmbBookshelf = { bookshelfId ->
-                        val flow = remember(bookshelfId) {
-                            viewModel.isSmbBookshelf(bookshelfId)
-                        }
-                        val isSmb by flow.collectAsStateWithLifecycle(initialValue = null)
-                        isSmb
-                    },
                     entryProvider = entryProvider,
+                    navEntryDecorators = navEntryDecorators,
                 )
             }
         }
@@ -106,8 +100,8 @@ internal fun ComicViewerApp(
 @Composable
 private fun ComicViewerApp(
     navigator: Navigator,
-    isSmbBookshelf: @Composable (BookshelfId) -> Boolean?,
     entryProvider: (NavKey) -> NavEntry<NavKey>,
+    navEntryDecorators: @Composable () -> List<NavEntryDecorator<NavKey>>,
 ) {
     val appState = LocalAppState.current
     val lifecycle = LocalLifecycleOwner.current
@@ -144,12 +138,6 @@ private fun ComicViewerApp(
                         directive = directive,
                     )
                 val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
-                val windowInsetsDecorator =
-                    rememberSupportingPaneWindowInsetsDecorator<NavKey>(directive = directive)
-                val localNetworkPermissionDecorator =
-                    rememberLocalNetworkPermissionDecorator(
-                        isSmbBookshelf = isSmbBookshelf,
-                    )
                 val sceneStrategies = remember(
                     supportingPaneSceneStrategy,
                     listDetailSceneStrategy,
@@ -165,13 +153,7 @@ private fun ComicViewerApp(
                 Transitions.motionScheme = ComicTheme.motionScheme
                 NavDisplay(
                     entries = navigator.state.toDecoratedEntries(
-                        entryDecorators = listOf(
-                            rememberSaveableStateHolderNavEntryDecorator(),
-                            rememberResultEventBusNavEntryDecorator(),
-                            rememberViewModelStoreNavEntryDecorator(),
-                            windowInsetsDecorator,
-                            localNetworkPermissionDecorator,
-                        ),
+                        entryDecorators = navEntryDecorators(),
                         entryProvider = entryProvider,
                     ),
                     sceneStrategies = sceneStrategies,

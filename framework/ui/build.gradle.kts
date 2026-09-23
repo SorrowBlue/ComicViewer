@@ -19,6 +19,7 @@ kotlin {
                 implementation(libs.kotlinx.serializationCbor)
 
                 implementation(libs.androidx.lifecycleViewmodelCompose)
+                implementation(libs.androidx.lifecycleViewmodelNavigation3)
                 implementation(libs.androidx.navigation3UI)
                 implementation(libs.androidx.pagingCompose)
 

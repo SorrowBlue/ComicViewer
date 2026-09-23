@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.appGraph
+import com.sorrowblue.comicviewer.framework.navigation.NavEntryDecoratorProvider
 import com.sorrowblue.comicviewer.framework.navigation.NavKeyEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntryProvider
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
@@ -40,6 +41,7 @@ expect interface AppGraph :
 
 interface NavigationGraph {
     val navigationEntryProvider: Set<NavigationEntryProvider>
+    val navEntryDecoratorProviders: Set<NavEntryDecoratorProvider>
     val navKeySubclassMap: Set<NavKeyEntry>
     val navigationKeys: Set<NavigationKey>
 }

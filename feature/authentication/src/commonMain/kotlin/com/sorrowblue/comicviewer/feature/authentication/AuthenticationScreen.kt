@@ -21,7 +21,6 @@ import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationC
 import com.sorrowblue.comicviewer.feature.authentication.section.AuthenticationRowContents
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.DetectOrientation
-import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewMultiplatform
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.authentication.generated.resources.Res
@@ -125,15 +124,13 @@ internal fun AuthenticationScreen(
     onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isCompactWindowClass = isCompactWindowClass()
     DetectOrientation(modifier.fillMaxSize()) { isLandscape ->
-        val isCompactLandscape = isCompactWindowClass && isLandscape
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             containerColor = ComicTheme.colorScheme.surfaceContainer,
             contentWindowInsets = WindowInsets.safeDrawing,
         ) { contentPadding ->
-            if (isCompactLandscape) {
+            if (isLandscape) {
                 AuthenticationRowContents(
                     uiState = uiState,
                     onBackClick = onBackClick,
