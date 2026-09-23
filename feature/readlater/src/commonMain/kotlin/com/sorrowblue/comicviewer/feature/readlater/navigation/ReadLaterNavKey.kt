@@ -8,7 +8,7 @@ import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrate
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
@@ -21,6 +21,7 @@ import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
+import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_title
 import dev.zacsweers.metro.AppScope
@@ -46,9 +47,10 @@ internal data object ReadLaterNavKey : NavigationKey {
 context(scope: EntryProviderScope<NavKey>)
 internal fun readLaterNavEntry(navigator: Navigator) {
     scope.entry<ReadLaterNavKey>(
-        metadata = SupportingPaneSceneStrategy.mainPane(SCENE_KEY_READ_LATER) +
-            NavDisplay.transitionMaterialFadeThrough() +
-            navigationSuite(),
+        metadata = metadata {
+            transitionMaterialFadeThrough()
+            navigationSuite()
+        } + SupportingPaneSceneStrategy.mainPaneV2<ReadLaterNavKey>(SCENE_KEY_READ_LATER),
     ) {
         ReadLaterScreenRoot(
             onSettingsClick = {

@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.feature.collection.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenRoot
@@ -46,7 +46,10 @@ internal data object CollectionListNavKey : NavigationKey {
 context(scope: EntryProviderScope<NavKey>)
 internal fun collectionListNavEntry(navigator: Navigator) {
     scope.entry<CollectionListNavKey>(
-        metadata = NavDisplay.transitionMaterialFadeThrough() + navigationSuite(),
+        metadata = metadata {
+            transitionMaterialFadeThrough()
+            navigationSuite()
+        },
     ) {
         CollectionListScreenRoot(
             onItemClick = { collection -> navigator.navigate(CollectionNavKey(collection.id)) },

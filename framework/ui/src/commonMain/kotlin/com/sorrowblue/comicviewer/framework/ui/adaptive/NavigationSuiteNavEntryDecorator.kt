@@ -25,7 +25,6 @@ import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.NavMetadataKey
 import androidx.navigation3.runtime.get
-import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.framework.navigation.NavEntryDecoratorProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
@@ -40,13 +39,6 @@ data object NavigationSuiteKey : NavMetadataKey<Unit>
  * Adds navigation suite scaffolding to this navigation entry within a [MetadataScope].
  */
 fun MetadataScope.navigationSuite() = put(NavigationSuiteKey, Unit)
-
-/**
- * Returns a metadata map containing [NavigationSuiteKey].
- */
-fun navigationSuite(): Map<String, Any> = metadata {
-    navigationSuite()
-}
 
 val LocalAdaptiveNavigationSuiteScaffoldState =
     staticCompositionLocalOf<AdaptiveNavigationSuiteScaffoldState?> { null }
@@ -117,15 +109,13 @@ fun PrimaryActionButton(
     visible: Boolean = true,
 ) {
     val scaffoldState = LocalAdaptiveNavigationSuiteScaffoldState.current
-    if (scaffoldState != null) {
-        scaffoldState.PrimaryActionButton(
-            onClick = onClick,
-            text = text,
-            icon = icon,
-            modifier = modifier,
-            visible = visible,
-        )
-    }
+    scaffoldState?.PrimaryActionButton(
+        onClick = onClick,
+        text = text,
+        icon = icon,
+        modifier = modifier,
+        visible = visible,
+    )
 }
 
 /**

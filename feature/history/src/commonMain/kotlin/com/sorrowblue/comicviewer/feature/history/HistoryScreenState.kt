@@ -16,6 +16,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import dev.zacsweers.metrox.viewmodel.metroViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 internal interface HistoryScreenState {
@@ -33,18 +34,12 @@ internal fun rememberHistoryScreenState(
 ): HistoryScreenState {
     val cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
     val lazyGridState = rememberLazyGridState(cacheWindow)
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     return remember(lazyGridState) {
         HistoryScreenStateImpl(
             lazyGridState = lazyGridState,
+            coroutineScope = coroutineScope,
             clearAll = viewModel::clearAll,
-            navigationReSelect = {
-                if (lazyGridState.canScrollBackward) {
-                    scope.launch {
-                        lazyGridState.animateScrollToItem(0)
-                    }
-                }
-            },
         )
     }.apply {
         lazyPagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -53,14 +48,18 @@ internal fun rememberHistoryScreenState(
 
 private class HistoryScreenStateImpl(
     override val lazyGridState: LazyGridState,
+    private val coroutineScope: CoroutineScope,
     private var clearAll: () -> Unit,
-    private val navigationReSelect: () -> Unit,
 ) : HistoryScreenState {
 
     override lateinit var lazyPagingItems: LazyPagingItems<Book>
 
     override fun onNavigationReSelect() {
-        navigationReSelect()
+        if (lazyGridState.canScrollBackward) {
+            coroutineScope.launch {
+                lazyGridState.animateScrollToItem(0)
+            }
+        }
     }
 
     override fun onNavResult(result: ClearAllHistoryScreenResult) {
