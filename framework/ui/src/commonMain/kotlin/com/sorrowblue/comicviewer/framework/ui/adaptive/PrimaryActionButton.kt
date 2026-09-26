@@ -22,6 +22,7 @@ import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -147,6 +148,7 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButtonMenu(
 }
 
 private val FloatingActionButtonTransitionEnter
+    @ReadOnlyComposable
     @Composable
     get() = scaleIn(
         animationSpec = ComicTheme.motionScheme.fastSpatialSpec(),
@@ -157,6 +159,7 @@ private val FloatingActionButtonTransitionEnter
     )
 
 private val FloatingActionButtonTransitionExit
+    @ReadOnlyComposable
     @Composable
     get() = scaleOut(
         animationSpec = ComicTheme.motionScheme.fastSpatialSpec(),

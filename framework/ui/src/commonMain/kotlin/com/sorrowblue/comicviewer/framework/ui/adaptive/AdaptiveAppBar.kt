@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
@@ -105,6 +106,7 @@ data object TopAppBarSharedElementKey
 data object TopAppBarTitleSharedElementKey
 
 internal val AppBarTitleTransitionEnter
+    @ReadOnlyComposable
     @Composable
     get() = fadeIn(
         animationSpec = ComicTheme.motionScheme.slowSpatialSpec(),
@@ -112,6 +114,7 @@ internal val AppBarTitleTransitionEnter
     )
 
 internal val AppBarTitleTransitionExit
+    @ReadOnlyComposable
     @Composable
     get() = fadeOut(
         animationSpec = ComicTheme.motionScheme.defaultSpatialSpec(),

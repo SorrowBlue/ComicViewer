@@ -7,8 +7,10 @@ package com.sorrowblue.comicviewer.framework.designsystem.theme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
 
+@ReadOnlyComposable
 @Composable
 internal actual fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean) = when {
     dynamicColor -> {
