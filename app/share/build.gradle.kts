@@ -20,10 +20,12 @@ tasks.configureEach {
 tasks.withType<Test>().configureEach {
     if (name.contains("AndroidHostTest")) {
         filter {
+            isFailOnNoMatchingTests = false
             excludeTestsMatching("com.sorrowblue.comicviewer.app.NavigationTest")
         }
     }
 }
+
 kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.app"
