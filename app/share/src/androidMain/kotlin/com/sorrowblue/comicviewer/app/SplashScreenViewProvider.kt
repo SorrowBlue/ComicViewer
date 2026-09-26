@@ -6,42 +6,25 @@ package com.sorrowblue.comicviewer.app
 
 import android.animation.ObjectAnimator
 import android.view.View
-import android.view.animation.AnticipateInterpolator
+import android.view.animation.AccelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreenViewProvider
 
 /** Start shrinking animation */
 internal fun SplashScreenViewProvider.startShrinkingAnimation() {
     runCatching {
+        // 残りアニメーション時間の計算
+        val remainingDuration =
+            iconAnimationDurationMillis - System.currentTimeMillis() + iconAnimationStartMillis
+        val animDuration = if (remainingDuration < 0) 300L else remainingDuration
+
         ObjectAnimator
-            .ofFloat(view, View.SCALE_X, 1f, 0f)
+            .ofFloat(view, View.TRANSLATION_Y, 0f, view.height.toFloat())
             .apply {
-                interpolator = AnticipateInterpolator()
+                interpolator = AccelerateInterpolator()
+                duration = animDuration
                 doOnEnd { remove() }
-                duration =
-                    if (iconAnimationDurationMillis - System.currentTimeMillis() +
-                        iconAnimationStartMillis < 0
-                    ) {
-                        300
-                    } else {
-                        iconAnimationDurationMillis - System.currentTimeMillis() +
-                            iconAnimationStartMillis
-                    }
-            }.start()
-        ObjectAnimator
-            .ofFloat(view, View.SCALE_Y, 1f, 0f)
-            .apply {
-                interpolator = AnticipateInterpolator()
-                doOnEnd { remove() }
-                duration =
-                    if (iconAnimationDurationMillis - System.currentTimeMillis() +
-                        iconAnimationStartMillis < 0
-                    ) {
-                        300
-                    } else {
-                        iconAnimationDurationMillis - System.currentTimeMillis() +
-                            iconAnimationStartMillis
-                    }
-            }.start()
+            }
+            .start()
     }.onFailure { remove() }
 }

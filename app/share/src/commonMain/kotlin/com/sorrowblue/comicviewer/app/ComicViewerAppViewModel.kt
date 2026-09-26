@@ -13,48 +13,57 @@ import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.invoke
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import logcat.logcat
 
-@AssistedInject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
 internal class ComicViewerAppViewModel(
-    @Assisted allowNavigationRestored: Boolean,
-    val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
-    val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
+    private val manageDisplaySettingsUseCase: ManageDisplaySettingsUseCase,
+    private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
 ) : ViewModel() {
 
-    val shouldKeepSplash = MutableStateFlow(true)
-    val isInitialized = MutableStateFlow(false)
-
-    init {
+    fun restore(allowNavigationRestored: Boolean) {
         if (allowNavigationRestored) {
             viewModelScope.launch {
                 if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
                     restoreNavigationWithTimeout()
                 } else {
-                    completeInit()
+                    completeNavigationRestore()
                 }
             }
-        } else if (allowNavigationRestored) {
-            completeInit()
+        } else {
+            completeNavigationRestore()
         }
     }
 
+    val shouldKeepSplash: StateFlow<Boolean>
+        field = MutableStateFlow(true)
+
+    val isInitializedNavigation: StateFlow<Boolean>
+        field = MutableStateFlow(false)
+
     val restoreNavigation: SharedFlow<RestoreNavigation>
         field = MutableSharedFlow<RestoreNavigation>()
+
+    fun completeScreenInitialize() {
+        shouldKeepSplash.value = false
+    }
+
+    fun completeNavigationRestore() {
+        isInitializedNavigation.value = true
+        completeScreenInitialize()
+    }
 
     private fun restoreNavigationWithTimeout() {
         val restorationJob = viewModelScope.launch {
@@ -63,14 +72,14 @@ internal class ComicViewerAppViewModel(
         viewModelScope.launch {
             delay(RESTORE_TIMEOUT_MILLIS.milliseconds)
             restorationJob.cancel()
-            completeInit()
+            completeNavigationRestore()
         }
     }
 
     private suspend fun restoreNavigation() {
         val history = getNavigationHistoryUseCase().first().fold({ it }, { null })
         if (history?.folderList.isNullOrEmpty()) {
-            completeInit()
+            completeNavigationRestore()
             return
         }
 
@@ -94,7 +103,7 @@ internal class ComicViewerAppViewModel(
                 bookshelfId = bookshelfId,
                 path = path,
                 restorePath = bookPath,
-                onRestoreComplete = ::completeInit,
+                onRestoreComplete = ::completeNavigationRestore,
             ),
         )
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
@@ -148,24 +157,12 @@ internal class ComicViewerAppViewModel(
                 bookshelfId = bookshelfId,
                 path = folderList.last().path,
                 restorePath = bookPath,
-                onRestoreComplete = ::completeInit,
+                onRestoreComplete = ::completeNavigationRestore,
             ),
         )
         logcat("RESTORE_NAVIGATION", LogPriority.INFO) {
             "-> folder(${folderList.last().path}), $bookPath"
         }
-    }
-
-    fun completeInit() {
-        shouldKeepSplash.value = false
-        isInitialized.value = true
-    }
-
-    @AssistedFactory
-    @ManualViewModelAssistedFactoryKey
-    @ContributesIntoMap(AppScope::class)
-    interface Factory : ManualViewModelAssistedFactory {
-        fun create(allowNavigationRestored: Boolean = true): ComicViewerAppViewModel
     }
 }
 

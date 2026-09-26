@@ -18,6 +18,7 @@ import androidx.compose.material3.adaptive.navigation3.rememberSupportingPaneSce
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -30,19 +31,20 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import com.sorrowblue.comicviewer.app.wrapper.PreAppScreen
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import com.sorrowblue.comicviewer.framework.common.appGraph
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.navigation.NestedAppContents
 import com.sorrowblue.comicviewer.framework.ui.EventEffect
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.LocalFinishApp
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
 import com.sorrowblue.comicviewer.framework.ui.animation.Transitions
 import com.sorrowblue.comicviewer.framework.ui.locale.ProvideLocalAppLocaleIso
 import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
-import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import logcat.logcat
 
 @Composable
@@ -51,49 +53,54 @@ internal fun ComicViewerApp(
     finishApp: () -> Unit,
     navigator: Navigator = rememberAppNavigator(),
     allowNavigationRestored: Boolean = true,
-    entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
-        context.appGraph<NavigationGraph>().navigationEntryProvider.forEach { provider ->
+    viewModel: ComicViewerAppViewModel = metroViewModel<ComicViewerAppViewModel>(),
+) {
+    val entryProvider = entryProvider {
+        context.appGraph<NavigationGraph>().navigationEntryProviders.forEach { provider ->
             provider(navigator = navigator)
         }
-    },
-    navEntryDecorators: @Composable () -> List<NavEntryDecorator<NavKey>> = {
+    }
+    val navEntryDecorators: @Composable () -> List<NavEntryDecorator<NavKey>> = {
         context.appGraph<NavigationGraph>().navEntryDecoratorProviders.map {
             it.rememberNavEntryDecorator()
         }
-    },
-) {
-    val viewModel: ComicViewerAppViewModel =
-        assistedMetroViewModel<ComicViewerAppViewModel, ComicViewerAppViewModel.Factory> {
-            create(allowNavigationRestored = allowNavigationRestored)
-        }
-    val isInitialized by viewModel.isInitialized.collectAsStateWithLifecycle()
+    }
+    val appContentDecorators = context.appGraph<NavigationGraph>().appContentDecoratorProviders
     CompositionLocalProvider(
         LocalNavigator provides navigator,
+        LocalFinishApp provides finishApp,
         ProvidesAppState,
         ProvideLocalAppLocaleIso,
     ) {
         ComicTheme {
-            PreAppScreen(isInitialized = isInitialized, onInitialize = {
-                viewModel.shouldKeepSplash.value = false
-            }, finishApp = finishApp) {
+            val isInitialized by viewModel.isInitializedNavigation.collectAsStateWithLifecycle()
+            val sortedAppContents =
+                remember(appContentDecorators) { appContentDecorators.sortedBy { it.order } }
+            sortedAppContents.NestedAppContents(
+                isInitialized = isInitialized,
+                onInitialize = viewModel::completeScreenInitialize,
+            ) {
                 ComicViewerApp(
                     navigator = navigator,
                     entryProvider = entryProvider,
                     navEntryDecorators = navEntryDecorators,
                 )
+                SideEffect(Unit) {
+                    viewModel.restore(allowNavigationRestored)
+                }
+                EventEffect(viewModel.restoreNavigation) {
+                    navigator.navigate(
+                        FolderNavKey(
+                            bookshelfId = it.bookshelfId,
+                            path = it.path,
+                            restorePath = it.restorePath,
+                            showSearch = true,
+                            onRestoreComplete = it.onRestoreComplete,
+                        ),
+                    )
+                }
             }
         }
-    }
-    EventEffect(viewModel.restoreNavigation) {
-        navigator.navigate(
-            FolderNavKey(
-                bookshelfId = it.bookshelfId,
-                path = it.path,
-                restorePath = it.restorePath,
-                showSearch = true,
-                onRestoreComplete = it.onRestoreComplete,
-            ),
-        )
     }
 }
 

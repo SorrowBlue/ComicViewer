@@ -107,6 +107,7 @@ Compose:
       'LocalAdaptiveNavigationSuiteScaffoldState',
       'LocalPrimaryActionSlot',
       'LocalNavigationReSelectRegistry',
+      'LocalFinishApp',
     ]
   CompositionLocalNaming:
     active: true

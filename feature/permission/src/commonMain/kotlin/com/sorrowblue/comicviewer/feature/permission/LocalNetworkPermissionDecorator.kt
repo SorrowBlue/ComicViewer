@@ -50,9 +50,10 @@ internal class LocalNetworkPermissionDecorator : NavEntryDecoratorProvider {
  * @return A [NavEntryDecorator] protecting SMB routes.
  */
 @Composable
-private fun rememberLocalNetworkPermissionDecorator(): NavEntryDecorator<NavKey> {
+private fun rememberLocalNetworkPermissionDecorator(
+    viewModel: LocalNetworkPermissionViewModel = metroViewModel<LocalNetworkPermissionViewModel>(),
+): NavEntryDecorator<NavKey> {
     val permissionRequester = rememberLocalNetworkPermissionRequester(initCheck = true)
-    val viewModel = metroViewModel<LocalNetworkPermissionViewModel>()
     return remember(permissionRequester, viewModel) {
         NavEntryDecorator(
             decorate = { entry ->

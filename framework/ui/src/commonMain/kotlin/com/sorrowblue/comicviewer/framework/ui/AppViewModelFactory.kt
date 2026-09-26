@@ -5,10 +5,12 @@
 package com.sorrowblue.comicviewer.framework.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
@@ -16,6 +18,7 @@ import kotlin.reflect.KClass
 
 @Inject
 @ContributesBinding(AppScope::class)
+@ContributesBinding(AppScope::class, binding<ViewModelProvider.Factory>())
 @SingleIn(AppScope::class)
 internal class AppViewModelFactory(
     override val viewModelProviders: Map<KClass<out ViewModel>, () -> ViewModel>,

@@ -12,6 +12,11 @@ kotlin {
                 implementation(projects.feature.authentication.nav)
             }
         }
+        commonTest {
+            dependencies {
+                implementation(libs.kotlinx.coroutinesTest)
+            }
+        }
         androidMain {
             dependencies {
                 implementation(libs.androidx.biometric)

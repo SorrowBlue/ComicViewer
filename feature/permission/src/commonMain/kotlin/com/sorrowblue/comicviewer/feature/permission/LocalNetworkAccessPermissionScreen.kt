@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,16 +47,20 @@ internal fun LocalNetworkAccessPermissionScreen(
     modifier: Modifier = Modifier,
 ) {
     val titleText = stringResource(Res.string.permission_localnetwork_title)
-    val title = movableContentOf {
-        Text(titleText)
+    val title = remember {
+        movableContentOf {
+            Text(titleText)
+        }
     }
-    val content = movableContentOf<PaddingValues> { contentPadding ->
-        LocalNetworkAccessPermissionContent(
-            isRationale = isRationale,
-            onConfirmClick = onConfirmClick,
-            onDismissClick = onDismissClick,
-            modifier = Modifier.padding(contentPadding + PaddingValues(16.dp)),
-        )
+    val content = remember {
+        movableContentOf<PaddingValues> { contentPadding ->
+            LocalNetworkAccessPermissionContent(
+                isRationale = isRationale,
+                onConfirmClick = onConfirmClick,
+                onDismissClick = onDismissClick,
+                modifier = Modifier.padding(contentPadding + PaddingValues(16.dp)),
+            )
+        }
     }
     val isFullScreenDialog = isCompactWindowClass()
     if (isFullScreenDialog) {
