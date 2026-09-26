@@ -53,7 +53,7 @@ object DefaultNavigationItems : NavigationItems {
 }
 
 @Composable
-fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
+internal fun AdaptiveNavigationSuiteScaffoldState.AdaptiveNavigationSuiteScaffold(
     modifier: Modifier = Modifier,
     navigationItems: @Composable () -> Unit = {
         LocalNavigationItems.current.Content(::onNavigationReSelect)

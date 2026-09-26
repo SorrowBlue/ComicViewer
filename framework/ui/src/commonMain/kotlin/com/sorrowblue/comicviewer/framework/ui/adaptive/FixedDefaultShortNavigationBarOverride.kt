@@ -33,7 +33,7 @@ import kotlin.math.roundToInt
  * @see androidx.compose.material3.DefaultShortNavigationBarOverride
  */
 @ExperimentalMaterial3ComponentOverrideApi
-object FixedDefaultShortNavigationBarOverride : ShortNavigationBarOverride {
+internal object FixedDefaultShortNavigationBarOverride : ShortNavigationBarOverride {
     @Composable
     override fun ShortNavigationBarOverrideScope.ShortNavigationBar() {
         Surface(color = containerColor, contentColor = contentColor, modifier = modifier) {

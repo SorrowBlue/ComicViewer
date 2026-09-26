@@ -32,6 +32,28 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.layout.WindowInsets
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 
+/**
+ * An adaptive scaffold designed for extra or secondary panes in a multi-pane layout.
+ *
+ * This scaffold adapts its appearance and layout behavior based on whether it is displayed
+ * in a single-pane or multi-pane configuration (determined by [scaffoldDirective]):
+ * - **Single-pane layout**: Acts like a standard full-screen scaffold with a pinned [TopAppBar],
+ *   a surface container color, and full safe drawing insets.
+ * - **Multi-pane layout**: Renders as a floating card-style pane with a higher surface container color
+ *   ([ComicTheme.colorScheme.surfaceContainerHigh]), clipped to [ComicTheme.shapes.large],
+ *   with appropriate margins and window insets applied. When [scrollState] is provided and content
+ *   is scrolled, a [HorizontalDivider] is displayed beneath the top bar.
+ *
+ * @param title The title composable displayed in the [TopAppBar].
+ * @param onCloseClick Callback invoked when the close icon button is clicked.
+ * @param modifier The [Modifier] to be applied to the scaffold.
+ * @param actions The composable displayed in the bottom bar slot (e.g. action buttons).
+ * @param scaffoldDirective The [PaneScaffoldDirective] specifying pane layout configuration,
+ * defaults to calculating from [currentWindowAdaptiveInfoV2].
+ * @param scrollState The [ScrollState] of the inner content, used in multi-pane mode to display
+ * a divider under the top app bar when scrolled backward. Pass `null` if scrolling is not tracked.
+ * @param content The main content of the scaffold, receiving the scaffold's [PaddingValues].
+ */
 @Composable
 fun ExtraPaneScaffold(
     title: @Composable () -> Unit,
@@ -98,20 +120,17 @@ fun ExtraPaneScaffold(
                 ).clip(ComicTheme.shapes.large)
         },
         bottomBar = actions,
-    ) {
-//            Column(modifier = Modifier.weight(1f)) {
-        content(it)
-//            }
-//            if (actions != null) {
-//                HorizontalDivider()
-//                Spacer(Modifier.height(16.dp))
-//                Spacer(Modifier.height(24.dp)
-//                    .padding(it.only(PaddingValuesSides.Bottom))
-//                )
-//            }
-    }
+        content = content,
+    )
 }
 
+/**
+ * Default values used by [ExtraPaneScaffold].
+ */
 object ExtraPaneScaffoldDefaults {
+
+    /**
+     * Default content padding value for the extra pane.
+     */
     val Padding = 24.dp
 }

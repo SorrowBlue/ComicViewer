@@ -36,7 +36,6 @@ import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButton
-import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.currentNavigationSuiteType
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
@@ -64,14 +63,6 @@ internal fun BookshelfScreen(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    PrimaryActionContent {
-        PrimaryActionButton(
-            text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
-            icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
-            onClick = onFabClick,
-            modifier = Modifier.testTag("BookshelfFab"),
-        )
-    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
@@ -100,6 +91,12 @@ internal fun BookshelfScreen(
             contentPadding = contentPadding + additionalPaddings,
         )
     }
+    PrimaryActionButton(
+        text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
+        icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
+        onClick = onFabClick,
+        modifier = Modifier.testTag("BookshelfFab"),
+    )
 }
 
 @NavPreview(route = BookshelfNavKey::class, primary = true)

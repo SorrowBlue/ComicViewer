@@ -10,40 +10,66 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.FloatingActionButtonMenu
-import androidx.compose.material3.FloatingActionButtonMenuScope
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SmallExtendedFloatingActionButton
-import androidx.compose.material3.ToggleFloatingActionButton
-import androidx.compose.material3.ToggleFloatingActionButtonDefaults
-import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
-import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
+/**
+ * Convenience wrapper for [PrimaryActionButton] using [LocalAdaptiveNavigationSuiteScaffoldState].
+ */
 @Composable
-fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButton(
+fun PrimaryActionButton(
+    onClick: () -> Unit,
+    text: @Composable () -> Unit,
+    icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    visible: Boolean = true,
+) {
+    PrimaryActionContent {
+        val scaffoldState = LocalAdaptiveNavigationSuiteScaffoldState.current
+        scaffoldState?.PrimaryActionButton(
+            onClick = onClick,
+            text = text,
+            icon = icon,
+            modifier = modifier,
+            visible = visible,
+        )
+    }
+}
+
+/**
+ * Provides content to the primary action slot (e.g. Floating Action Button) of the enclosing
+ * [AdaptiveNavigationSuiteScaffold].
+ */
+@Composable
+private fun PrimaryActionContent(content: @Composable () -> Unit) {
+    val slot = LocalPrimaryActionSlot.current ?: return
+    DisposableEffect(content) {
+        slot.value = content
+        onDispose {
+            slot.value = null
+        }
+    }
+}
+
+@Composable
+private fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButton(
     onClick: () -> Unit,
     text: @Composable () -> Unit,
     icon: @Composable () -> Unit,
@@ -87,73 +113,7 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButton(
     }
 }
 
-@Composable
-fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButtonMenu(
-    modifier: Modifier = Modifier,
-    visible: Boolean = true,
-    content: @Composable FloatingActionButtonMenuScope.() -> Unit,
-) {
-    FloatingActionButtonMenu(
-        expanded = floatingActionButtonState.menuExpanded,
-        button = {
-            with(LocalNavAnimatedContentScope.current) {
-                ToggleFloatingActionButton(
-                    modifier =
-                        Modifier
-                            .semantics {
-                                traversalIndex = -1f
-                                stateDescription =
-                                    if (floatingActionButtonState.menuExpanded) "Expanded" else "Collapsed"
-                                contentDescription = "Toggle menu"
-                            }.animateFloatingActionButton(
-                                visible =
-                                    visible &&
-                                        (
-                                            floatingActionButtonState.targetValue.isVisible ||
-                                                floatingActionButtonState.menuExpanded
-                                            ),
-                                alignment = Alignment.BottomEnd,
-                            ).animateEnterExit(
-                                enter = FloatingActionButtonTransitionEnter,
-                                exit = FloatingActionButtonTransitionExit,
-                            ),
-                    checked = floatingActionButtonState.menuExpanded,
-                    containerSize = if (navigationSuiteType.isNavigationRail) {
-                        ToggleFloatingActionButtonDefaults
-                            .containerSizeMedium()
-                    } else {
-                        ToggleFloatingActionButtonDefaults
-                            .containerSize()
-                    },
-                    onCheckedChange = floatingActionButtonState::toggleMenu,
-                ) {
-                    val imageVector by remember(checkedProgress) {
-                        derivedStateOf {
-                            if (checkedProgress > 0.5f) ComicIcons.Close else ComicIcons.Add
-                        }
-                    }
-                    Icon(
-                        imageVector,
-                        contentDescription = null,
-                        modifier = Modifier.animateIcon(
-                            checkedProgress = { checkedProgress },
-                            size = if (navigationSuiteType.isNavigationRail) {
-                                ToggleFloatingActionButtonDefaults
-                                    .iconSizeMedium()
-                            } else {
-                                ToggleFloatingActionButtonDefaults.iconSize()
-                            },
-                        ),
-                    )
-                }
-            }
-        },
-        content = content,
-        modifier = modifier.offset(16.dp, 16.dp), // FloatingActionButtonMenuの余分なPadding対策
-    )
-}
-
-private val FloatingActionButtonTransitionEnter
+internal val FloatingActionButtonTransitionEnter
     @ReadOnlyComposable
     @Composable
     get() = scaleIn(
@@ -164,7 +124,7 @@ private val FloatingActionButtonTransitionEnter
         initialAlpha = 0f,
     )
 
-private val FloatingActionButtonTransitionExit
+internal val FloatingActionButtonTransitionExit
     @ReadOnlyComposable
     @Composable
     get() = scaleOut(

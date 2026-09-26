@@ -25,6 +25,7 @@ import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.ShortNavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.WideNavigationRailDefaults
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveComponentOverrideApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuite
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteColors
@@ -33,6 +34,8 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldWithPrimaryActionOverride
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldWithPrimaryActionOverrideScope
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
@@ -42,12 +45,55 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
+//@OptIn(ExperimentalMaterial3AdaptiveComponentOverrideApi::class)
+//object AnimatedNavigationSuiteScaffoldWithPrimaryActionOverride :
+//    NavigationSuiteScaffoldWithPrimaryActionOverride {
+//    @Composable
+//    override fun NavigationSuiteScaffoldWithPrimaryActionOverrideScope.NavigationSuiteScaffoldWithPrimaryAction() {
+//        Surface(modifier = modifier, color = containerColor, contentColor = contentColor) {
+//            NavigationSuiteScaffoldLayout(
+//                navigationSuite = {
+//                    CompositionLocalProvider(
+//                        LocalShortNavigationBarOverride provides FixedDefaultShortNavigationBarOverride,
+//                    ) {
+//                    NavigationSuite(
+//                        navigationSuiteType = navigationSuiteType,
+//                        colors = navigationSuiteColors,
+//                        primaryActionContent = primaryActionContent,
+//                        verticalArrangement = navigationItemVerticalArrangement,
+//                        content = navigationItems,
+//                        modifier = Modifier.navigationSuiteScaffoldSharedElement(
+//                            navigationSuiteType,
+//                            visibilityScope,
+//                            transitionScope,
+//                        ),
+//                    )
+//                },
+//                navigationSuiteType = navigationSuiteType,
+//                state = state,
+//                primaryActionContent = primaryActionContent,
+//                primaryActionContentHorizontalAlignment = primaryActionContentHorizontalAlignment,
+//                content = {
+//                    Box(
+//                        Modifier.navigationSuiteScaffoldConsumeWindowInsets(
+//                            navigationSuiteType,
+//                            state
+//                        ),
+//                    ) {
+//                        content()
+//                    }
+//                },
+//            )
+//        }
+//    }
+//}
+
 /**
  * @see androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
  */
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ComponentOverrideApi::class)
+@OptIn(ExperimentalMaterial3ComponentOverrideApi::class)
 @Composable
-fun AnimatedNavigationSuiteScaffold(
+internal fun AnimatedNavigationSuiteScaffold(
     visibilityScope: AnimatedVisibilityScope,
     transitionScope: SharedTransitionScope,
     navigationItems: @Composable () -> Unit,

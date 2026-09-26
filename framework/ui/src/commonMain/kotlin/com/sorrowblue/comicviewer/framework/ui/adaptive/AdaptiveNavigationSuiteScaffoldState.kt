@@ -15,17 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.staticCompositionLocalOf
 
-interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
-    fun onNavigationReSelect()
-
+internal interface AdaptiveNavigationSuiteScaffoldState : NavigationSuiteScaffoldState {
     val navigationSuiteType: NavigationSuiteType
     val wideNavigationRailState: WideNavigationRailState
     val floatingActionButtonState: FloatingActionButtonState
+    fun onNavigationReSelect()
 }
 
 @Composable
-fun rememberAdaptiveNavigationSuiteScaffoldState(
+internal fun rememberAdaptiveNavigationSuiteScaffoldState(
     onNavigationReSelect: () -> Unit = {},
 ): AdaptiveNavigationSuiteScaffoldState {
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
@@ -51,6 +51,9 @@ fun rememberAdaptiveNavigationSuiteScaffoldState(
         )
     }
 }
+
+internal val LocalAdaptiveNavigationSuiteScaffoldState =
+    staticCompositionLocalOf<AdaptiveNavigationSuiteScaffoldState?> { null }
 
 private class AdaptiveNavigationSuiteScaffoldStateImpl(
     navigationSuiteScaffoldState: NavigationSuiteScaffoldState,

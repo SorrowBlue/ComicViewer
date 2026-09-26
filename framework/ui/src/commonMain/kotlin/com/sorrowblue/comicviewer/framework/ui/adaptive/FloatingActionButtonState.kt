@@ -6,15 +6,18 @@ package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
+import androidx.compose.material3.FloatingActionButtonMenuScope
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.ui.adaptive.FloatingActionButtonStateImpl.Companion.saver
 
 enum class FloatingActionButtonValue {
@@ -40,8 +43,9 @@ interface FloatingActionButtonState {
     fun toggleMenu(force: Boolean)
 }
 
+
 @Composable
-fun rememberFloatingActionButtonState(
+internal fun rememberFloatingActionButtonState(
     initialValue: FloatingActionButtonValue = FloatingActionButtonValue.Visible,
 ): FloatingActionButtonState = rememberSaveable(saver = saver()) {
     FloatingActionButtonStateImpl(initialValue = initialValue)

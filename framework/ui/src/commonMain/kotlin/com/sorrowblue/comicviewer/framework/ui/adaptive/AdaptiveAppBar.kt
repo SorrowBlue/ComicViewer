@@ -101,11 +101,11 @@ fun AdaptiveAppBar(
     }
 }
 
-data object TopAppBarSharedElementKey
+private data object TopAppBarSharedElementKey
 
-data object TopAppBarTitleSharedElementKey
+private data object TopAppBarTitleSharedElementKey
 
-internal val AppBarTitleTransitionEnter
+private val AppBarTitleTransitionEnter
     @ReadOnlyComposable
     @Composable
     get() = fadeIn(
@@ -113,7 +113,7 @@ internal val AppBarTitleTransitionEnter
         initialAlpha = 0.0f,
     )
 
-internal val AppBarTitleTransitionExit
+private val AppBarTitleTransitionExit
     @ReadOnlyComposable
     @Composable
     get() = fadeOut(
