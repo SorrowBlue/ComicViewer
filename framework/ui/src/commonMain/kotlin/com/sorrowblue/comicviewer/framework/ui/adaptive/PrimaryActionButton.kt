@@ -8,8 +8,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.FloatingActionButtonMenu
@@ -66,6 +71,7 @@ fun AdaptiveNavigationSuiteScaffoldState.PrimaryActionButton(
             FloatingActionButton(
                 onClick = onClick,
                 modifier = modifier
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.End))
                     .animateFloatingActionButton(
                         visible = visible && floatingActionButtonState.targetValue.isVisible,
                         alignment = Alignment.BottomEnd,

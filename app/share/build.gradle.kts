@@ -1,4 +1,5 @@
 import com.github.skydoves.navgraph.gradle.RenderBackend
+import com.sorrowblue.comicviewer.libs
 
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
@@ -19,10 +20,12 @@ tasks.configureEach {
 tasks.withType<Test>().configureEach {
     if (name.contains("AndroidHostTest")) {
         filter {
+            isFailOnNoMatchingTests = false
             excludeTestsMatching("com.sorrowblue.comicviewer.app.NavigationTest")
         }
     }
 }
+
 kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.app"
@@ -71,7 +74,6 @@ kotlin {
                 api(projects.app.sync)
 
                 implementation(libs.androidx.navigation3UI)
-
                 implementation(libs.androidx.lifecycleViewmodelNavigation3)
                 implementation(libs.compose.componentsResources)
                 implementation(libs.compose.preview)
@@ -80,6 +82,7 @@ kotlin {
                 implementation(libs.compose.material3AdaptiveNavigation3)
                 implementation(libs.compose.material3AdaptiveNavigationSuite)
                 implementation(libs.metro.viewmodelCompose)
+                implementation(libs.kotlinx.collectionsImmutable)
                 api(libs.metro.viewmodel)
             }
         }

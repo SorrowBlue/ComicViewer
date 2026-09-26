@@ -7,7 +7,7 @@ package com.sorrowblue.comicviewer.feature.collection.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenRoot
@@ -20,6 +20,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
 import comicviewer.feature.collection.generated.resources.Res
 import comicviewer.feature.collection.generated.resources.collection_title
@@ -44,7 +45,12 @@ internal data object CollectionListNavKey : NavigationKey {
 @NavigationEntry
 context(scope: EntryProviderScope<NavKey>)
 internal fun collectionListNavEntry(navigator: Navigator) {
-    scope.entry<CollectionListNavKey>(metadata = NavDisplay.transitionMaterialFadeThrough()) {
+    scope.entry<CollectionListNavKey>(
+        metadata = metadata {
+            transitionMaterialFadeThrough()
+            navigationSuite()
+        },
+    ) {
         CollectionListScreenRoot(
             onItemClick = { collection -> navigator.navigate(CollectionNavKey(collection.id)) },
             onEditClick = { collection ->

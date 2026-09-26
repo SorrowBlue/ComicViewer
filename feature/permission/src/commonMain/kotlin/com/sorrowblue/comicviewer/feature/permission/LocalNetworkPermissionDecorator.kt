@@ -8,37 +8,53 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.get
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
+import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfUseCase
 import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkPermissionKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.navigation.NavEntryDecoratorProvider
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+@ContributesIntoSet(AppScope::class)
+internal class LocalNetworkPermissionDecorator : NavEntryDecoratorProvider {
+
+    @Composable
+    override fun rememberNavEntryDecorator(): NavEntryDecorator<NavKey> =
+        rememberLocalNetworkPermissionDecorator()
+}
 
 /**
  * Creates and remembers a [NavEntryDecorator] that intercepts navigation entries requiring
  * local network access permission (specified via [LocalNetworkPermissionKey]),
  * covering them with the permission request UI until permission is granted.
  *
- * @param isSmbBookshelf Function to determine whether the given [BookshelfId] corresponds to an SMB bookshelf.
- * Returns null if the bookshelf information is still loading.
  * @return A [NavEntryDecorator] protecting SMB routes.
  */
 @Composable
-fun rememberLocalNetworkPermissionDecorator(
-    isSmbBookshelf: @Composable (BookshelfId) -> Boolean?,
+private fun rememberLocalNetworkPermissionDecorator(
+    viewModel: LocalNetworkPermissionViewModel = metroViewModel<LocalNetworkPermissionViewModel>(),
 ): NavEntryDecorator<NavKey> {
     val permissionRequester = rememberLocalNetworkPermissionRequester(initCheck = true)
-    val currentIsSmbBookshelf by rememberUpdatedState(isSmbBookshelf)
-    return remember(permissionRequester) {
+    return remember(permissionRequester, viewModel) {
         NavEntryDecorator(
             decorate = { entry ->
                 val metadata = entry.metadata[LocalNetworkPermissionKey]
@@ -47,7 +63,8 @@ fun rememberLocalNetworkPermissionDecorator(
                 } else {
                     val bookshelfId = metadata.bookshelfId
                     val isSmb = if (bookshelfId != null) {
-                        currentIsSmbBookshelf(bookshelfId)
+                        viewModel.isSmbBookshelf(bookshelfId)
+                            .collectAsStateWithLifecycle(null).value
                     } else {
                         true
                     }
@@ -76,6 +93,18 @@ fun rememberLocalNetworkPermissionDecorator(
             onPop = {},
         )
     }
+}
+
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+internal class LocalNetworkPermissionViewModel(
+    private val flowBookshelfUseCase: FlowBookshelfUseCase,
+) : ViewModel() {
+
+    fun isSmbBookshelf(bookshelfId: BookshelfId): Flow<Boolean> =
+        flowBookshelfUseCase(bookshelfId).map { resource ->
+            resource.dataOrNull()?.type == BookshelfType.SMB
+        }
 }
 
 @Composable

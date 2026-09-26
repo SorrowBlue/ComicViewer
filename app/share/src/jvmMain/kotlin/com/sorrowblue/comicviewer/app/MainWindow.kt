@@ -21,7 +21,7 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.icon.Launcher
 import com.sorrowblue.comicviewer.framework.ui.FrameworkResString
 import comicviewer.framework.ui.generated.resources.app_name
-import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import java.awt.GraphicsEnvironment
 import java.awt.Rectangle
 import org.jetbrains.compose.resources.stringResource
@@ -51,7 +51,7 @@ context(appGraph: AppGraph)
 fun MainWindow(exitApplication: () -> Unit) {
     val state = rememberMainWindowState()
 
-    @Suppress("LeakLensFlowLifecycleLeak")
+    @Suppress("LLFLOWLIFECYCLELEAK")
     val initialSettings by state.windowSettings.collectAsState()
     val settings = initialSettings ?: return
     val windowState = rememberWindowState2(settings)
@@ -69,8 +69,7 @@ fun MainWindow(exitApplication: () -> Unit) {
     ) {
         context(appGraph.context) {
             MetroContent {
-                val viewModel =
-                    assistedMetroViewModel<ComicViewerAppViewModel, ComicViewerAppViewModel.Factory> { create() }
+                val viewModel = metroViewModel<ComicViewerAppViewModel>()
                 Application(finishApp = exitApplication)
                 SplashScreen(keepOnScreenCondition = { viewModel.shouldKeepSplash.value })
             }

@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenRoot
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfInfoNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
@@ -20,8 +20,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.composeicons.Shelv
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
+import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
 import dev.zacsweers.metro.AppScope
@@ -46,8 +47,10 @@ data object BookshelfNavKey : NavigationKey {
 context(scope: EntryProviderScope<NavKey>)
 internal fun bookshelfNavEntry(navigator: Navigator) {
     scope.entry<BookshelfNavKey>(
-        metadata = SupportingPaneSceneStrategy.mainPane<BookshelfInfoNavKey>("Bookshelf") +
-            NavDisplay.transitionMaterialFadeThrough(),
+        metadata = metadata {
+            transitionMaterialFadeThrough()
+            navigationSuite()
+        } + SupportingPaneSceneStrategy.mainPaneV2<BookshelfInfoNavKey>("Bookshelf"),
     ) {
         BookshelfScreenRoot(
             onSettingsClick = dropUnlessResumed {

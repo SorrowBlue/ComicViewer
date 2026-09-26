@@ -16,8 +16,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPane
+import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 import comicviewer.feature.history.generated.resources.Res
 import comicviewer.feature.history.generated.resources.history_title
 import dev.zacsweers.metro.AppScope
@@ -46,7 +47,8 @@ internal fun historyNavEntry(navigator: Navigator) {
     scope.entry<HistoryNavKey>(
         metadata = metadata {
             transitionMaterialFadeThrough()
-        } + SupportingPaneSceneStrategy.mainPane<HistoryFileInfoNavKey>(SCENE_KEY_HISTORY),
+            navigationSuite()
+        } + SupportingPaneSceneStrategy.mainPaneV2<HistoryFileInfoNavKey>(SCENE_KEY_HISTORY),
     ) {
         HistoryScreenRoot(
             onDeleteAllClick = {

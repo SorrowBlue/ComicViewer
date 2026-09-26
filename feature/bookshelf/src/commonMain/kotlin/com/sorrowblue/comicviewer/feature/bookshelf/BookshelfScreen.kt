@@ -35,11 +35,10 @@ import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButton
+import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionContent
+import com.sorrowblue.comicviewer.framework.ui.adaptive.currentNavigationSuiteType
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
@@ -56,7 +55,7 @@ import org.jetbrains.compose.resources.stringResource
 @NavEdge(to = BookshelfWizardNavKey.Edit::class)
 @NavEdge(to = BookshelfWizardNavKey.Selection::class)
 @Composable
-internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
+internal fun BookshelfScreen(
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     lazyGridState: LazyGridState,
     onFabClick: () -> Unit,
@@ -65,45 +64,41 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold(
-        modifier = modifier,
-        primaryActionContent = {
-            PrimaryActionButton(
-                text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
-                icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
-                onClick = onFabClick,
-                modifier = Modifier.testTag("BookshelfFab"),
+    PrimaryActionContent {
+        PrimaryActionButton(
+            text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
+            icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
+            onClick = onFabClick,
+            modifier = Modifier.testTag("BookshelfFab"),
+        )
+    }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    Scaffold(
+        topBar = {
+            BookshelfAppBar(
+                onSettingsClick = onSettingsClick,
+                scrollBehavior = scrollBehavior,
             )
         },
-    ) {
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-        Scaffold(
-            topBar = {
-                BookshelfAppBar(
-                    onSettingsClick = onSettingsClick,
-                    scrollBehavior = scrollBehavior,
-                )
-            },
-            containerColor = ComicTheme.colorScheme.surface,
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        ) { contentPadding ->
-            val additionalPaddings = if (navigationSuiteType.isNavigationRail) {
-                PaddingValues(ComicTheme.dimension.margin)
-            } else {
-                PaddingValues(
-                    start = ComicTheme.dimension.margin,
-                    end = ComicTheme.dimension.margin,
-                    bottom = ComicTheme.dimension.margin + 68.dp,
-                )
-            }
-            BookshelfSheet(
-                lazyPagingItems = lazyPagingItems,
-                lazyGridState = lazyGridState,
-                onBookshelfClick = onBookshelfClick,
-                onBookshelfInfoClick = onBookshelfInfoClick,
-                contentPadding = contentPadding + additionalPaddings,
+        containerColor = ComicTheme.colorScheme.surface,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { contentPadding ->
+        val additionalPaddings = if (currentNavigationSuiteType().isNavigationRail) {
+            PaddingValues(ComicTheme.dimension.margin)
+        } else {
+            PaddingValues(
+                start = ComicTheme.dimension.margin,
+                end = ComicTheme.dimension.margin,
+                bottom = ComicTheme.dimension.margin + 68.dp,
             )
         }
+        BookshelfSheet(
+            lazyPagingItems = lazyPagingItems,
+            lazyGridState = lazyGridState,
+            onBookshelfClick = onBookshelfClick,
+            onBookshelfInfoClick = onBookshelfInfoClick,
+            contentPadding = contentPadding + additionalPaddings,
+        )
     }
 }
 
@@ -113,9 +108,8 @@ internal fun AdaptiveNavigationSuiteScaffoldState.BookshelfScreen(
 @Preview(device = Devices.TABLET)
 @Composable
 internal fun BookshelfScreenPreview() {
-    val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
     PreviewTheme {
-        scaffoldState.BookshelfScreen(
+        BookshelfScreen(
             lazyPagingItems = PagingData.flowData {
                 BookshelfFolder(fakeSmbServer(), fakeFolder())
             }.collectAsLazyPagingItems(),

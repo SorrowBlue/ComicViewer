@@ -32,7 +32,6 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -60,34 +59,20 @@ internal class FolderViewModel(
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : ViewModel() {
 
-    private val isPermissionGranted = MutableStateFlow(false)
-
-    fun updatePermission(isGranted: Boolean) {
-        isPermissionGranted.value = isGranted
-    }
-
     val events = EventFlow<FolderScreenUiEvent>()
 
-    val pagingFlow: Flow<PagingData<File>> = combine(
+    val pagingFlow: Flow<PagingData<File>> =
         getBookshelfInfoUseCase(bookshelfId).map { resource ->
             if (resource is Resource.Success) resource.data.bookshelf else null
-        }.distinctUntilChanged(),
-        isPermissionGranted,
-    ) { bookshelf, permissionState ->
-        bookshelf to permissionState
-    }.flatMapLatest { (bookshelf, permissionState) ->
-        if (bookshelf == null) {
-            emptyFlow()
-        } else if (bookshelf.type == BookshelfType.SMB) {
-            if (permissionState) {
+        }.distinctUntilChanged().flatMapLatest { bookshelf ->
+            if (bookshelf == null) {
+                emptyFlow()
+            } else if (bookshelf.type == BookshelfType.SMB) {
                 pagingFileUseCase(PagingFileUseCase.Request(PagingConfig(20), bookshelfId, path))
             } else {
-                emptyFlow()
+                pagingFileUseCase(PagingFileUseCase.Request(PagingConfig(20), bookshelfId, path))
             }
-        } else {
-            pagingFileUseCase(PagingFileUseCase.Request(PagingConfig(20), bookshelfId, path))
-        }
-    }.cachedIn(viewModelScope)
+        }.cachedIn(viewModelScope)
 
     val uiState: StateFlow<FolderScreenUiState> = combine(
         folderDisplaySettingsUseCase.settings.distinctUntilChanged(),

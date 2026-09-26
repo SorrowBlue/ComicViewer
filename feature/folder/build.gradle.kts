@@ -15,7 +15,6 @@ kotlin {
                 implementation(projects.feature.permission.nav)
                 implementation(projects.feature.search.nav)
                 implementation(projects.feature.settings.nav)
-                implementation(projects.framework.permission)
                 implementation(projects.feature.file.nav)
             }
         }

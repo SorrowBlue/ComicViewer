@@ -19,7 +19,9 @@ import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
+import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 
 internal const val SCENE_KEY_FOLDER = "Folder"
 
@@ -31,7 +33,8 @@ internal fun folderNavEntry(navigator: Navigator) {
             metadata {
                 transitionMaterialSharedAxisZ()
                 localNetworkPermission(navKey.bookshelfId)
-            } + SupportingPaneSceneStrategy.mainPane(SCENE_KEY_FOLDER)
+                navigationSuite()
+            } + SupportingPaneSceneStrategy.mainPaneV2<FolderNavKey>(SCENE_KEY_FOLDER)
         },
     ) { navKey ->
         FolderScreenRoot(

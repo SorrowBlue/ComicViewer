@@ -141,9 +141,6 @@ chmod +x gradlew
 # Detekt for build-logic
 ./gradlew :build-logic:detektAll
 
-# Code formatting
-./gradlew detektFormat
-
 # Android Lint - Debug
 ./gradlew :app:androidApp:lintDebug
 
@@ -405,19 +402,16 @@ Closes #123
 Execute the following before committing:
 
 ```bash
-# 1. Code formatting
-./gradlew detektFormat
-
-# 2. Static code analysis
+# 1. Static code analysis
 ./gradlew reportMerge
 
-# 3. Lint check
+# 2. Lint check
 ./gradlew :app:androidApp:lintDebug
 
-# 4. Run tests
+# 3. Run tests
 ./gradlew allTests
 
-# 5. Navigation baseline check
+# 4. Navigation baseline check
 ./gradlew navCheck
 ```
 
@@ -620,15 +614,10 @@ For details, refer to [docs/release-automation.md](./docs/release-automation.md)
 
 ### Detekt Failures
 
-```bash
-# Automatically fix code formatting issues
-./gradlew detektFormat
-```
-
 **Common issues:**
 
 - **Missing trailing commas**: Add a comma after the last element/parameter of collections and functions.
-- **Import ordering**: Reorder imports using IDE tools or detekt automatic fixes.
+- **Import ordering**: Reorder imports using IDE tools.
 - **Complex functions**: Break down functions exceeding complexity thresholds.
 
 ### Android Lint Failures

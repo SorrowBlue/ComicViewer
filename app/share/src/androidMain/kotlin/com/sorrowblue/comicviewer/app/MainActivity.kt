@@ -16,47 +16,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.sorrowblue.comicviewer.app.ComicViewerAppViewModel.Factory
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.android.ActivityKey
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
-import dev.zacsweers.metrox.viewmodel.MetroViewModelFactory
 
 /**
  * Main activity
  */
 @ContributesIntoMap(AppScope::class, binding<Activity>())
 @ActivityKey
-internal class MainActivity(private val metroViewModelFactory: MetroViewModelFactory) :
+internal class MainActivity(private val viewModelFactory: ViewModelProvider.Factory) :
     AppCompatActivity() {
 
-    override val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
-        val superFactory = super.defaultViewModelProviderFactory
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T = runCatching {
-                metroViewModelFactory.create(modelClass)
-            }.getOrElse { superFactory.create(modelClass) }
+    private val viewModel by viewModels<ComicViewerAppViewModel>()
 
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T =
-                runCatching {
-                    metroViewModelFactory.create(modelClass, extras)
-                }.getOrElse {
-                    superFactory.create(modelClass, extras)
-                }
-        }
-    }
-
-    private val viewModel: ComicViewerAppViewModel by metroViewModel { factory: Factory ->
-        factory.create(receivedBookData.isNullOrEmpty())
-    }
-
-    val receivedBookData
+    private val receivedBookData
         get() = if (intent.action == Intent.ACTION_VIEW &&
             intent.isAllowedCategory() &&
             intent.scheme in listOf("file", "content") &&
@@ -66,6 +43,8 @@ internal class MainActivity(private val metroViewModelFactory: MetroViewModelFac
         } else {
             null
         }
+
+    override val defaultViewModelProviderFactory get() = viewModelFactory
 
     @Suppress("UnnecessaryLaunchedEffect")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +69,7 @@ internal class MainActivity(private val metroViewModelFactory: MetroViewModelFac
                 LaunchedEffect(bookData) {
                     if (!bookData.isNullOrEmpty()) {
                         navigator.navigate(ReceiveBookNavKey(bookData))
-                        viewModel.completeInit()
+                        viewModel.completeNavigationRestore()
                     }
                 }
             }
@@ -101,26 +80,4 @@ internal class MainActivity(private val metroViewModelFactory: MetroViewModelFac
         categories == null || allowedCategories.any { hasCategory(it) }
 
     private val allowedCategories = listOf(Intent.CATEGORY_BROWSABLE, Intent.CATEGORY_DEFAULT)
-
-    private inline fun <reified T : ManualViewModelAssistedFactory, reified VM : ViewModel> metroViewModel(
-        crossinline creationCallback: (T) -> VM,
-    ): Lazy<VM> = viewModels<VM> {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val factory = metroViewModelFactory
-                @Suppress("UNCHECKED_CAST")
-                return creationCallback(
-                    factory.createManuallyAssistedFactory(T::class).invoke(),
-                ) as T
-            }
-
-            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                val factory = metroViewModelFactory
-                @Suppress("UNCHECKED_CAST")
-                return creationCallback(
-                    factory.createManuallyAssistedFactory(T::class).invoke(),
-                ) as T
-            }
-        }
-    }
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.domain.model.file.File
+import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationReSelectEffect
 
 @Composable
 internal fun ReadLaterScreenRoot(
@@ -16,7 +17,8 @@ internal fun ReadLaterScreenRoot(
     onFileInfoClick: (File) -> Unit,
 ) {
     val state = rememberReadLaterScreenState()
-    state.scaffoldState.ReadLaterScreen(
+    NavigationReSelectEffect(state::onNavigationReSelect)
+    ReadLaterScreen(
         lazyPagingItems = state.lazyPagingItems,
         lazyGridState = state.lazyGridState,
         onClearAllClick = state::onClearAllClick,

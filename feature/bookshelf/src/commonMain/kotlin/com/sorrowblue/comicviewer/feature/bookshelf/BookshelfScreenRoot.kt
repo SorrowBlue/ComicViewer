@@ -11,6 +11,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
+import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationReSelectEffect
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 
 @Composable
@@ -23,7 +24,8 @@ internal fun BookshelfScreenRoot(
 ) {
     val state = rememberBookshelfScreenState()
     val lazyPagingItems = viewModel.bookshelfPagingFlow.collectAsLazyPagingItems()
-    state.scaffoldState.BookshelfScreen(
+    NavigationReSelectEffect(state::onNavigationReSelect)
+    BookshelfScreen(
         lazyPagingItems = lazyPagingItems,
         lazyGridState = state.lazyGridState,
         onFabClick = onFabClick,

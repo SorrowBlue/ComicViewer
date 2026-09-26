@@ -5,13 +5,20 @@
 package com.sorrowblue.comicviewer.feature.permission
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkAccessPermissionNavKey
@@ -39,25 +46,48 @@ internal fun LocalNetworkAccessPermissionScreen(
     onDismissClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isFullScreenDialog = isCompactWindowClass()
     val titleText = stringResource(Res.string.permission_localnetwork_title)
-    AdaptiveAlertDialog(
-        title = {
+    val title = remember {
+        movableContentOf {
             Text(titleText)
-        },
-        onBackClick = onDismissClick,
-        isFullScreenDialog = isFullScreenDialog,
-        navigationIcon = {
-            CloseIconButton(onClick = onDismissClick)
-        },
-        modifier = modifier,
-    ) { contentPadding ->
-        LocalNetworkAccessPermissionContent(
-            isRationale = isRationale,
-            onConfirmClick = onConfirmClick,
-            onDismissClick = onDismissClick,
-            modifier = Modifier.padding(contentPadding),
-        )
+        }
+    }
+    val content = remember {
+        movableContentOf<PaddingValues> { contentPadding ->
+            LocalNetworkAccessPermissionContent(
+                isRationale = isRationale,
+                onConfirmClick = onConfirmClick,
+                onDismissClick = onDismissClick,
+                modifier = Modifier.padding(contentPadding + PaddingValues(16.dp)),
+            )
+        }
+    }
+    val isFullScreenDialog = isCompactWindowClass()
+    if (isFullScreenDialog) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = title,
+                    navigationIcon = {
+                        CloseIconButton(onDismissClick)
+                    },
+                )
+            },
+        ) { contentPadding ->
+            content(contentPadding)
+        }
+    } else {
+        AdaptiveAlertDialog(
+            title = title,
+            onBackClick = onDismissClick,
+            isFullScreenDialog = isFullScreenDialog,
+            navigationIcon = {
+                CloseIconButton(onClick = onDismissClick)
+            },
+            modifier = modifier,
+        ) { contentPadding ->
+            content(contentPadding)
+        }
     }
 }
 

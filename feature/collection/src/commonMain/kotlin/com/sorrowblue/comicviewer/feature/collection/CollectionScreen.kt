@@ -5,11 +5,8 @@
 package com.sorrowblue.comicviewer.feature.collection
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,12 +24,6 @@ import com.sorrowblue.comicviewer.feature.collection.section.CollectionAppBarUiS
 import com.sorrowblue.comicviewer.feature.collection.section.CollectionContents
 import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffold
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalNavigationItems
-import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationItems
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
@@ -42,7 +33,7 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 @NavEdge(to = FolderNavKey::class)
 @NavDestination(CollectionNavKey::class)
 @Composable
-internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
+internal fun CollectionScreen(
     uiState: CollectionScreenUiState,
     lazyPagingItems: LazyPagingItems<File>,
     onBackClick: () -> Unit,
@@ -55,28 +46,27 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
     onFileInfoClick: (File) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AdaptiveNavigationSuiteScaffold(modifier = modifier) {
-        Scaffold(
-            topBar = {
-                CollectionAppBar(
-                    uiState = uiState.appBarUiState,
-                    onBackClick = onBackClick,
-                    onEditClick = onEditClick,
-                    onDeleteClick = onDeleteClick,
-                    onSettingsClick = onSettingsClick,
-                    onFileListDisplayClick = onFileListDisplayClick,
-                    onGridSizeClick = onGridSizeClick,
-                )
-            },
-        ) { contentPadding ->
-            CollectionContents(
-                fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,
-                lazyPagingItems = lazyPagingItems,
-                onItemClick = onFileClick,
-                onItemInfoClick = onFileInfoClick,
-                contentPadding = contentPadding + PaddingValues(16.dp),
+    Scaffold(
+        topBar = {
+            CollectionAppBar(
+                uiState = uiState.appBarUiState,
+                onBackClick = onBackClick,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
+                onSettingsClick = onSettingsClick,
+                onFileListDisplayClick = onFileListDisplayClick,
+                onGridSizeClick = onGridSizeClick,
             )
-        }
+        },
+        modifier = modifier,
+    ) { contentPadding ->
+        CollectionContents(
+            fileLazyVerticalGridUiState = uiState.fileLazyVerticalGridUiState,
+            lazyPagingItems = lazyPagingItems,
+            onItemClick = onFileClick,
+            onItemInfoClick = onFileInfoClick,
+            contentPadding = contentPadding + PaddingValues(16.dp),
+        )
     }
 }
 
@@ -84,64 +74,23 @@ internal fun AdaptiveNavigationSuiteScaffoldState.CollectionScreen(
 @Preview
 @Composable
 private fun CollectionScreenPreview() {
-    CompositionLocalProvider(
-        LocalNavigationItems provides object : NavigationItems {
-            @Composable
-            override fun Content(onNavigationReSelect: () -> Unit) {
-                NavigationSuiteItem(
-                    selected = true,
-                    onClick = {},
-                    icon = {
-                        Icon(ComicIcons.Favorite, null)
-                    },
-                    label = null,
+    PreviewTheme {
+        CollectionScreen(
+            uiState = remember {
+                CollectionScreenUiState(
+                    appBarUiState = CollectionAppBarUiState(title = "Collection Preview"),
                 )
-                NavigationSuiteItem(
-                    selected = true,
-                    onClick = {},
-                    icon = {
-                        Icon(ComicIcons.Favorite, null)
-                    },
-                    label = null,
-                )
-                NavigationSuiteItem(
-                    selected = true,
-                    onClick = {},
-                    icon = {
-                        Icon(ComicIcons.Favorite, null)
-                    },
-                    label = null,
-                )
-                NavigationSuiteItem(
-                    selected = true,
-                    onClick = {},
-                    icon = {
-                        Icon(ComicIcons.Favorite, null)
-                    },
-                    label = null,
-                )
-            }
-        },
-    ) {
-        PreviewTheme {
-            val scaffoldState = rememberAdaptiveNavigationSuiteScaffoldState()
-            scaffoldState.CollectionScreen(
-                uiState = remember {
-                    CollectionScreenUiState(
-                        appBarUiState = CollectionAppBarUiState(title = "Collection Preview"),
-                    )
-                },
-                lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }
-                    .collectAsLazyPagingItems(),
-                onBackClick = {},
-                onEditClick = {},
-                onDeleteClick = {},
-                onSettingsClick = {},
-                onFileListDisplayClick = {},
-                onGridSizeClick = {},
-                onFileClick = {},
-                onFileInfoClick = {},
-            )
-        }
+            },
+            lazyPagingItems = PagingData.flowData<File> { fakeBookFile(it) }
+                .collectAsLazyPagingItems(),
+            onBackClick = {},
+            onEditClick = {},
+            onDeleteClick = {},
+            onSettingsClick = {},
+            onFileListDisplayClick = {},
+            onGridSizeClick = {},
+            onFileClick = {},
+            onFileInfoClick = {},
+        )
     }
 }

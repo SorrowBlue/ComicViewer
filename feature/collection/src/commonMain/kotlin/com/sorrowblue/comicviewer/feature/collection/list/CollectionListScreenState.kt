@@ -10,16 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.sorrowblue.comicviewer.framework.ui.adaptive.AdaptiveNavigationSuiteScaffoldState
-import com.sorrowblue.comicviewer.framework.ui.adaptive.rememberAdaptiveNavigationSuiteScaffoldState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 internal interface CollectionListScreenState {
-    val scaffoldState: AdaptiveNavigationSuiteScaffoldState
     val lazyListState: LazyListState
 
-    fun onNavClick()
+    fun onNavigationReSelect()
 }
 
 @Composable
@@ -31,9 +28,6 @@ internal fun rememberCollectionListScreenState(): CollectionListScreenState {
             coroutineScope = coroutineScope,
             lazyListState = lazyListState,
         )
-    }.apply {
-        scaffoldState =
-            rememberAdaptiveNavigationSuiteScaffoldState(onNavigationReSelect = ::onNavClick)
     }
 }
 
@@ -42,9 +36,8 @@ private class CollectionListScreenStateImpl(
     private val coroutineScope: CoroutineScope,
     override val lazyListState: LazyListState,
 ) : CollectionListScreenState {
-    override lateinit var scaffoldState: AdaptiveNavigationSuiteScaffoldState
 
-    override fun onNavClick() {
+    override fun onNavigationReSelect() {
         if (lazyListState.canScrollBackward) {
             coroutineScope.launch {
                 lazyListState.scrollToItem(0)

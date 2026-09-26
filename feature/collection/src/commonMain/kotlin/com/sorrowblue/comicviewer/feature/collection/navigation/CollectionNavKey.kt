@@ -8,7 +8,7 @@ import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrate
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
@@ -22,7 +22,9 @@ import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
+import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisZ
+import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 import kotlinx.serialization.Serializable
 
 internal const val SCENE_KEY_COLLECTION = "Collection"
@@ -34,8 +36,10 @@ internal data class CollectionNavKey(val id: CollectionId) : NavKey
 context(scope: EntryProviderScope<NavKey>)
 internal fun collectionNavEntry(navigator: Navigator) {
     scope.entry<CollectionNavKey>(
-        metadata = SupportingPaneSceneStrategy.mainPane(SCENE_KEY_COLLECTION) +
-            NavDisplay.transitionMaterialSharedAxisZ(),
+        metadata = metadata {
+            transitionMaterialSharedAxisZ()
+            navigationSuite()
+        } + SupportingPaneSceneStrategy.mainPaneV2<CollectionNavKey>(SCENE_KEY_COLLECTION),
     ) { detail ->
         CollectionScreenRoot(
             id = detail.id,
