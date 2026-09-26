@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -160,6 +161,7 @@ fun AdaptiveAlertDialog2(
 }
 
 private val ContentWindowInsets
+    @ReadOnlyComposable
     @Composable
     get() = ComicTheme.dimension.run {
         WindowInsets(left = margin, right = margin, bottom = margin)
