@@ -8,6 +8,6 @@ group :jekyll_plugins do
   gem "jekyll-optional-front-matter", "~> 0.3.2"
   gem "jekyll-readme-index", "~> 0.4.0"
   gem "jekyll-relative-links", "~> 0.8.0"
-  gem "jekyll-include-cache", "~> 0.2.2"
+  gem "jekyll-include-cache", "~> 0.3.0"
 end
 
