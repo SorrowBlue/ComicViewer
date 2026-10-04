@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,6 +26,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageFilterQuality
 import com.sorrowblue.comicviewer.domain.model.settings.folder.ImageScale
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.currentNavigationSuiteType
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
@@ -128,7 +128,7 @@ fun rememberLazyPagingColumnType(
 ): LazyPagingColumn {
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     val windowSizeClass = adaptiveInfo.windowSizeClass
-    val navigationSuiteType = NavigationSuiteScaffoldDefaults.navigationSuiteType(adaptiveInfo)
+    val navigationSuiteType = currentNavigationSuiteType()
     return remember(fileListDisplay, gridColumnSize, windowSizeClass, navigationSuiteType) {
         when (fileListDisplay) {
             FileListDisplay.List -> if (navigationSuiteType.isNavigationBar) {

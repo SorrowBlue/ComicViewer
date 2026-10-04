@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -29,6 +27,7 @@ import com.sorrowblue.comicviewer.feature.search.component.SearchTopAppBar
 import com.sorrowblue.comicviewer.feature.search.nav.SearchNavKey
 import com.sorrowblue.comicviewer.feature.search.section.SearchList
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.currentNavigationSuiteType
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -73,8 +72,7 @@ internal fun SearchScreen(
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
-        val navigationSuiteType =
-            NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfoV2())
+        val navigationSuiteType = currentNavigationSuiteType()
         val additionalPaddings = if (navigationSuiteType.isNavigationRail) {
             PaddingValues(ComicTheme.dimension.margin)
         } else {
