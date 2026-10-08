@@ -31,7 +31,7 @@ jobs:
           ORG_GRADLE_PROJECT_androidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           ORG_GRADLE_PROJECT_androidSigningKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: android
           path: app/androidApp/build/outputs/
@@ -50,7 +50,7 @@ jobs:
       - name: Run packageDistributionForCurrentOS
         run: ./gradlew packageDistributionForCurrentOS
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: jvm-Ubuntu
           path: app/jvmApp/build/compose/binaries/main/
