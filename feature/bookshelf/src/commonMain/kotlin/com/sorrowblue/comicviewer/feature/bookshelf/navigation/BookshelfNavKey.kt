@@ -12,7 +12,6 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.feature.bookshelf.BookshelfScreenRoot
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfInfoNavKey
-import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -22,7 +21,6 @@ import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 import comicviewer.feature.bookshelf.generated.resources.Res
 import comicviewer.feature.bookshelf.generated.resources.bookshelf_label_bookshelf
 import dev.zacsweers.metro.AppScope
@@ -50,14 +48,11 @@ internal fun bookshelfNavEntry(navigator: Navigator) {
         metadata = metadata {
             transitionMaterialFadeThrough()
             navigationSuite()
-        } + SupportingPaneSceneStrategy.mainPaneV2<BookshelfInfoNavKey>("Bookshelf"),
+        } + SupportingPaneSceneStrategy.mainPane("Bookshelf"),
     ) {
         BookshelfScreenRoot(
             onSettingsClick = dropUnlessResumed {
                 navigator.navigate(SettingsNavKey)
-            },
-            onFabClick = dropUnlessResumed {
-                navigator.navigate(BookshelfWizardNavKey.Selection)
             },
             onBookshelfClick = dropUnlessResumed { id, path ->
                 navigator.navigate(FolderNavKey(id, path, showSearch = true))

@@ -7,14 +7,11 @@ package com.sorrowblue.comicviewer.feature.bookshelf
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,10 +30,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
 import com.sorrowblue.comicviewer.feature.bookshelf.section.BookshelfSheet
 import com.sorrowblue.comicviewer.feature.folder.nav.FolderNavKey
-import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionButton
-import com.sorrowblue.comicviewer.framework.ui.adaptive.PrimaryActionContent
 import com.sorrowblue.comicviewer.framework.ui.adaptive.currentNavigationSuiteType
 import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationRail
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
@@ -44,9 +38,6 @@ import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeFolder
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeSmbServer
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
-import comicviewer.feature.bookshelf.generated.resources.Res
-import comicviewer.feature.bookshelf.generated.resources.bookshelf_btn_add
-import org.jetbrains.compose.resources.stringResource
 
 @NavGraphRoot
 @NavDestination(route = BookshelfNavKey::class)
@@ -54,24 +45,16 @@ import org.jetbrains.compose.resources.stringResource
 @NavEdge(to = BookshelfInfoNavKey::class)
 @NavEdge(to = BookshelfWizardNavKey.Edit::class)
 @NavEdge(to = BookshelfWizardNavKey.Selection::class)
+@Suppress("MultipleEmitters")
 @Composable
 internal fun BookshelfScreen(
     lazyPagingItems: LazyPagingItems<BookshelfFolder>,
     lazyGridState: LazyGridState,
-    onFabClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onBookshelfClick: (BookshelfId, String) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    PrimaryActionContent {
-        PrimaryActionButton(
-            text = { Text(text = stringResource(Res.string.bookshelf_btn_add)) },
-            icon = { Icon(imageVector = ComicIcons.Add, contentDescription = null) },
-            onClick = onFabClick,
-            modifier = Modifier.testTag("BookshelfFab"),
-        )
-    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
@@ -114,7 +97,6 @@ internal fun BookshelfScreenPreview() {
                 BookshelfFolder(fakeSmbServer(), fakeFolder())
             }.collectAsLazyPagingItems(),
             lazyGridState = rememberLazyGridState(),
-            onFabClick = {},
             onSettingsClick = {},
             onBookshelfClick = { _, _ -> },
             onBookshelfInfoClick = {},

@@ -12,8 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sorrowblue.comicviewer.feature.authentication.nav.ScreenType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberSaveable
@@ -38,7 +36,6 @@ internal fun rememberAuthenticationScreenState(
     val biometricManager = rememberBiometricManager()
     val pinInputFlowStateHolder =
         rememberSaveable(saver = PinInputFlowStateHolder.saver()) { PinInputFlowStateHolder() }
-    val lifecycleOwner = LocalLifecycleOwner.current
     return rememberSaveable(
         screenType,
         save = { it.uiState },
@@ -53,7 +50,6 @@ internal fun rememberAuthenticationScreenState(
             biometricManager = biometricManager,
             viewModel = viewModel,
             pinInputFlowStateHolder = pinInputFlowStateHolder,
-            lifecycleOwner = lifecycleOwner,
         )
     }
 }
@@ -97,7 +93,6 @@ private class AuthenticationScreenStateImpl(
     private val biometricManager: BiometricManager,
     private val viewModel: AuthenticationViewModel,
     val pinInputFlowStateHolder: PinInputFlowStateHolder,
-    private val lifecycleOwner: LifecycleOwner,
 ) : AuthenticationScreenState {
     override val events = EventFlow<AuthenticationScreenEvent>()
 

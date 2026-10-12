@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.app
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -14,13 +13,15 @@ import com.sorrowblue.comicviewer.framework.ui.SnackbarEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+internal val ProvidesAppState
+    @Composable
+    get() = LocalAppState provides rememberAppState()
+
 @Composable
-fun rememberAppState(): AppState = remember {
+private fun rememberAppState(): AppState = remember {
     AppStateImpl()
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 private class AppStateImpl : AppState {
 
     override val snackbarEvents: SharedFlow<SnackbarEvent>
@@ -44,7 +45,3 @@ private class AppStateImpl : AppState {
         )
     }
 }
-
-internal val ProvidesAppState
-    @Composable
-    get() = LocalAppState provides rememberAppState()

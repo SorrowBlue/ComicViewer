@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.framework.ui
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.coroutines.flow.SharedFlow
@@ -13,7 +12,6 @@ val LocalAppState = staticCompositionLocalOf<AppState> {
     error("No AppState provided")
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 interface AppState {
     val snackbarEvents: SharedFlow<SnackbarEvent>
     fun showSnackbar(

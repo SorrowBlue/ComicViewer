@@ -11,13 +11,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.file.PathString
+import com.sorrowblue.comicviewer.feature.bookshelf.navigation.BookshelfNavKey
+import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalFloatingActionButtonState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationReSelectEffect
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 
 @Composable
 internal fun BookshelfScreenRoot(
     onSettingsClick: () -> Unit,
-    onFabClick: () -> Unit,
     onBookshelfClick: (BookshelfId, PathString) -> Unit,
     onBookshelfInfoClick: (BookshelfFolder) -> Unit,
     viewModel: BookshelfViewModel = metroViewModel(),
@@ -28,10 +29,11 @@ internal fun BookshelfScreenRoot(
     BookshelfScreen(
         lazyPagingItems = lazyPagingItems,
         lazyGridState = state.lazyGridState,
-        onFabClick = onFabClick,
         onSettingsClick = onSettingsClick,
         onBookshelfClick = onBookshelfClick,
         onBookshelfInfoClick = onBookshelfInfoClick,
         modifier = Modifier.testTag("BookshelfScreenRoot"),
     )
+    val fstate = LocalFloatingActionButtonState.current.getValue(BookshelfNavKey::class)
+    fstate.expand = !state.lazyGridState.canScrollForward || !state.lazyGridState.canScrollBackward
 }

@@ -19,7 +19,6 @@ import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialSharedAxisX
-import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 
 internal const val SCENE_KEY_SEARCH = "Search"
 
@@ -29,7 +28,7 @@ internal fun searchNavEntry(navigator: Navigator) {
     scope.entry<SearchNavKey>(
         metadata = metadata {
             transitionMaterialSharedAxisX()
-        } + SupportingPaneSceneStrategy.mainPaneV2<SearchNavKey>(SCENE_KEY_SEARCH),
+        } + SupportingPaneSceneStrategy.mainPane(SCENE_KEY_SEARCH),
     ) { navKey ->
         SearchScreenRoot(
             bookshelfId = navKey.bookshelfId,

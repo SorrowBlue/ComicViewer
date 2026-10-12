@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import com.github.skydoves.navgraph.annotations.NavDestination
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkAccessPermissionNavKey
-import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import com.sorrowblue.comicviewer.framework.ui.material3.AdaptiveAlertDialog
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
@@ -62,32 +59,16 @@ internal fun LocalNetworkAccessPermissionScreen(
             )
         }
     }
-    val isFullScreenDialog = isCompactWindowClass()
-    if (isFullScreenDialog) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = title,
-                    navigationIcon = {
-                        CloseIconButton(onDismissClick)
-                    },
-                )
-            },
-        ) { contentPadding ->
-            content(contentPadding)
-        }
-    } else {
-        AdaptiveAlertDialog(
-            title = title,
-            onBackClick = onDismissClick,
-            isFullScreenDialog = isFullScreenDialog,
-            navigationIcon = {
-                CloseIconButton(onClick = onDismissClick)
-            },
-            modifier = modifier,
-        ) { contentPadding ->
-            content(contentPadding)
-        }
+    AdaptiveAlertDialog(
+        title = title,
+        onBackClick = onDismissClick,
+        isFullScreenDialog = true,
+        navigationIcon = {
+            CloseIconButton(onClick = onDismissClick)
+        },
+        modifier = modifier,
+    ) { contentPadding ->
+        content(contentPadding)
     }
 }
 
