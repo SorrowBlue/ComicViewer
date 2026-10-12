@@ -4,12 +4,9 @@
 
 package com.sorrowblue.comicviewer.feature.settings.section
 
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -31,6 +28,7 @@ import comicviewer.feature.settings.generated.resources.settings_title
 import kotlinx.collections.immutable.ImmutableList
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun SettingsListPane(
     settingsList: ImmutableList<SettingsItem>,
@@ -40,17 +38,8 @@ internal fun SettingsListPane(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    PermanentDrawerSheet(
-        modifier = modifier,
-        windowInsets = WindowInsets(0),
-    ) {
-        LazyColumn(
-            state = lazyListState,
-            contentPadding = WindowInsets.safeDrawing
-                .only(
-                    WindowInsetsSides.Start + WindowInsetsSides.Vertical,
-                ).asPaddingValues(),
-        ) {
+    PermanentDrawerSheet(modifier = modifier) {
+        LazyColumn(state = lazyListState) {
             item {
                 TopAppBar(
                     title = { Text(text = stringResource(Res.string.settings_title)) },

@@ -21,7 +21,6 @@ import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.adaptive.navigationSuite
 import com.sorrowblue.comicviewer.framework.ui.animation.transitionMaterialFadeThrough
-import com.sorrowblue.comicviewer.framework.ui.navigation3.mainPaneV2
 import comicviewer.feature.readlater.generated.resources.Res
 import comicviewer.feature.readlater.generated.resources.readlater_title
 import dev.zacsweers.metro.AppScope
@@ -50,7 +49,7 @@ internal fun readLaterNavEntry(navigator: Navigator) {
         metadata = metadata {
             transitionMaterialFadeThrough()
             navigationSuite()
-        } + SupportingPaneSceneStrategy.mainPaneV2<ReadLaterNavKey>(SCENE_KEY_READ_LATER),
+        } + SupportingPaneSceneStrategy.mainPane(SCENE_KEY_READ_LATER),
     ) {
         ReadLaterScreenRoot(
             onSettingsClick = {

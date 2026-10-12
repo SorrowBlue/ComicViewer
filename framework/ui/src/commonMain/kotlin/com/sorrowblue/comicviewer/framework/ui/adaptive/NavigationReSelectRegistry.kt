@@ -4,18 +4,13 @@
 
 package com.sorrowblue.comicviewer.framework.ui.adaptive
 
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 
-/**
- * Registers an action to be invoked when the current navigation tab is re-selected.
- */
 @Composable
 fun NavigationReSelectEffect(onReSelect: () -> Unit) {
     val registry = LocalNavigationReSelectRegistry.current ?: return
@@ -27,3 +22,28 @@ fun NavigationReSelectEffect(onReSelect: () -> Unit) {
         }
     }
 }
+
+fun provideNavigationReSelectRegistry(registry: NavigationReSelectRegistry): ProvidedValue<*> =
+    LocalNavigationReSelectRegistry provides registry
+
+class NavigationReSelectRegistry {
+
+    private var callback: (() -> Unit)? = null
+
+    fun register(callback: () -> Unit) {
+        this.callback = callback
+    }
+
+    fun unregister(callback: () -> Unit) {
+        if (this.callback == callback) {
+            this.callback = null
+        }
+    }
+
+    fun onReSelect() {
+        callback?.invoke()
+    }
+}
+
+private val LocalNavigationReSelectRegistry =
+    compositionLocalOf<NavigationReSelectRegistry?> { null }

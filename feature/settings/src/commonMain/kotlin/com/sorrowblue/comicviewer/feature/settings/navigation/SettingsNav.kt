@@ -4,7 +4,14 @@
 
 package com.sorrowblue.comicviewer.feature.settings.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -33,7 +40,13 @@ internal fun settingsNavEntry(
         metadata = ListDetailSceneStrategy.listPane(
             "Settings",
             detailPlaceholder = {
-                settingsDetailPlaceholder(navigator)
+                Box(
+                    modifier = Modifier.consumeWindowInsets(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Start),
+                    ),
+                ) {
+                    settingsDetailPlaceholder(navigator)
+                }
             },
         ) + NavDisplay.transitionMaterialFadeThrough(),
     ) {

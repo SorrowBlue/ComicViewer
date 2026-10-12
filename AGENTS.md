@@ -489,6 +489,7 @@ This section defines boundary conditions to accelerate decision-making during im
 - Commit secrets (keys, tokens, passwords) to source code.
 - Merge without resolving deleted tests.
 - Add direct dependencies between feature modules.
+- Perform automated device operations (tap, swipe, key events, screenshots, screen recording, etc.) without explicit user permission.
 
 ---
 

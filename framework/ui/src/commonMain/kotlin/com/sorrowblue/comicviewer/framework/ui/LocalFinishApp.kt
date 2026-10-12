@@ -9,4 +9,4 @@ import androidx.compose.runtime.staticCompositionLocalOf
 /**
  * CompositionLocal containing the action to finish or exit the application.
  */
-val LocalFinishApp = staticCompositionLocalOf<() -> Unit> { {} }
+val LocalFinishApp = staticCompositionLocalOf { {} }

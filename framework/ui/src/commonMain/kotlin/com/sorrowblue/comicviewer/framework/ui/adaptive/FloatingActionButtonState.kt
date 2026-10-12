@@ -6,19 +6,21 @@ package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
-import androidx.compose.material3.FloatingActionButtonMenuScope
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.navigation3.runtime.NavKey
 import com.sorrowblue.comicviewer.framework.ui.adaptive.FloatingActionButtonStateImpl.Companion.saver
+import kotlin.reflect.KClass
 
 enum class FloatingActionButtonValue {
     Visible,
@@ -28,8 +30,14 @@ enum class FloatingActionButtonValue {
 val FloatingActionButtonValue.isVisible
     get() = this == FloatingActionButtonValue.Visible
 
+val LocalFloatingActionButtonState =
+    compositionLocalOf<SnapshotStateMap<KClass<out NavKey>, FloatingActionButtonState>> {
+        mutableStateMapOf()
+    }
+
 @Stable
 interface FloatingActionButtonState {
+    var expand: Boolean
     val isAnimating: Boolean
 
     val targetValue: FloatingActionButtonValue
@@ -43,9 +51,8 @@ interface FloatingActionButtonState {
     fun toggleMenu(force: Boolean)
 }
 
-
 @Composable
-internal fun rememberFloatingActionButtonState(
+fun rememberFloatingActionButtonState(
     initialValue: FloatingActionButtonValue = FloatingActionButtonValue.Visible,
 ): FloatingActionButtonState = rememberSaveable(saver = saver()) {
     FloatingActionButtonStateImpl(initialValue = initialValue)
@@ -53,6 +60,8 @@ internal fun rememberFloatingActionButtonState(
 
 private class FloatingActionButtonStateImpl(var initialValue: FloatingActionButtonValue) :
     FloatingActionButtonState {
+    override var expand: Boolean by mutableStateOf(false)
+
     private val internalValue: Float = if (initialValue.isVisible) Visible else Hidden
     private val internalState = Animatable(internalValue, Float.VectorConverter)
 

@@ -114,17 +114,11 @@ private fun LocalNetworkPermissionGuard(
 ) {
     if (permissionRequester.state !is LocalNetworkPermissionState.Granted) {
         val navigator = LocalNavigator.current
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(ComicTheme.colorScheme.background),
-        ) {
-            LocalNetworkAccessPermissionScreen(
-                isRationale = permissionRequester.state is LocalNetworkPermissionState.Rationale,
-                onConfirmClick = permissionRequester::onPermissionConfirmClick,
-                onDismissClick = { navigator.goBack() },
-            )
-        }
+        LocalNetworkAccessPermissionScreen(
+            isRationale = permissionRequester.state is LocalNetworkPermissionState.Rationale,
+            onConfirmClick = permissionRequester::onPermissionConfirmClick,
+            onDismissClick = { navigator.goBack() },
+        )
     } else {
         content()
     }

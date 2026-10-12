@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -18,6 +19,8 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
@@ -39,8 +42,11 @@ fun AdaptiveAppBar(
         TopAppBarDefaults.topAppBarColors()
     } else {
         TopAppBarDefaults.topAppBarColors(
-            containerColor = ComicTheme.colorScheme.surfaceContainer,
-            scrolledContainerColor = ComicTheme.colorScheme.surfaceContainer,
+            containerColor = Color.Transparent,
+            scrolledContainerColor = Color.Transparent,
+            titleContentColor = ComicTheme.colorScheme.onSurface,
+            navigationIconContentColor = ComicTheme.colorScheme.onSurface,
+            actionIconContentColor = ComicTheme.colorScheme.onSurface,
         )
     }
     with(LocalSharedTransitionScope.current) {
@@ -81,18 +87,27 @@ fun AdaptiveAppBar(
                 colors = colors,
                 scrollBehavior = scrollBehavior,
                 windowInsets = windowInsets,
-                modifier = modifier.then(
-                    if (sharedAnimation) {
-                        Modifier.sharedElement(
-                            animatedVisibilityScope = this,
-                            sharedContentState = rememberSharedContentState(
-                                TopAppBarSharedElementKey,
+                modifier = modifier
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colorStops = arrayOf(
+                                0.0f to ComicTheme.colorScheme.background,
+                                0.2f to ComicTheme.colorScheme.surfaceContainer,
                             ),
-                        )
-                    } else {
-                        Modifier
-                    },
-                ),
+                        ),
+                    )
+                    .then(
+                        if (sharedAnimation) {
+                            Modifier.sharedElement(
+                                animatedVisibilityScope = this,
+                                sharedContentState = rememberSharedContentState(
+                                    TopAppBarSharedElementKey,
+                                ),
+                            )
+                        } else {
+                            Modifier
+                        },
+                    ),
             )
         }
     }

@@ -11,9 +11,7 @@ import androidx.navigation3.runtime.metadata
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.feature.collection.list.CollectionListScreenRoot
-import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionCreateNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionEditNavKey
-import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNavKey
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.feature.settings.nav.SettingsNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -69,12 +67,6 @@ internal fun collectionListNavEntry(navigator: Navigator) {
             },
             onSettingsClick = {
                 navigator.navigate(SettingsNavKey)
-            },
-            onCreateBasicCollectionClick = {
-                navigator.navigate(BasicCollectionCreateNavKey())
-            },
-            onCreateSmartCollectionClick = {
-                navigator.navigate(SmartCollectionCreateNavKey())
             },
         )
     }

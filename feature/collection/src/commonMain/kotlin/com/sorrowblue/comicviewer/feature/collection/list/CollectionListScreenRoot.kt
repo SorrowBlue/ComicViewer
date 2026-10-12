@@ -18,8 +18,6 @@ internal fun CollectionListScreenRoot(
     onEditClick: (Collection) -> Unit,
     onDeleteClick: (Collection) -> Unit,
     onSettingsClick: () -> Unit,
-    onCreateBasicCollectionClick: () -> Unit,
-    onCreateSmartCollectionClick: () -> Unit,
     viewModel: CollectionListViewModel = metroViewModel(),
 ) {
     val state = rememberCollectionListScreenState()
@@ -32,8 +30,6 @@ internal fun CollectionListScreenRoot(
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
         onSettingsClick = onSettingsClick,
-        onCreateBasicCollectionClick = onCreateBasicCollectionClick,
-        onCreateSmartCollectionClick = onCreateSmartCollectionClick,
         modifier = Modifier.testTag("CollectionListScreenRoot"),
     )
 }

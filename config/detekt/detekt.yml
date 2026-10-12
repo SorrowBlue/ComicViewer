@@ -108,6 +108,8 @@ Compose:
       'LocalPrimaryActionSlot',
       'LocalNavigationReSelectRegistry',
       'LocalFinishApp',
+      'LocalNavigationSuiteScaffoldState',
+      'LocalFloatingActionButtonState',
     ]
   CompositionLocalNaming:
     active: true
