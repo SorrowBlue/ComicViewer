@@ -8,6 +8,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -33,6 +35,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -53,11 +56,19 @@ internal fun rememberBookScreenState(
     val coroutineScope = rememberCoroutineScope()
     val systemUiController = rememberSystemUiController()
     val currentList: SnapshotStateList<PageItem> = retain { mutableStateListOf() }
+    val targetPage = if (initialUiState.alwaysOpenFromFirstPage) {
+        1
+    } else {
+        (initialUiState.book.lastPageRead + 1).coerceIn(
+            1,
+            maxOf(1, initialUiState.book.totalPageCount),
+        )
+    }
     val pagerState = rememberPagerState(
-        initialPage = if (initialUiState.alwaysOpenFromFirstPage) {
-            1
+        initialPage = if (currentList.isNotEmpty()) {
+            currentList.findPagerIndex(targetPage, initialUiState.book.totalPageCount)
         } else {
-            initialUiState.book.lastPageRead + 1
+            0
         },
         pageCount = { currentList.size },
     )
@@ -69,8 +80,12 @@ internal fun rememberBookScreenState(
         }
     }
 
+    SideEffect(isCompactWindowClass) {
+        viewModel.updateIsCompactWindow(isCompactWindowClass)
+    }
+
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val state = remember(isCompactWindowClass, lifecycle) {
+    val state = remember(lifecycle) {
         BookScreenStateImpl(
             initialUiState = initialUiState,
             currentList = currentList,
@@ -92,6 +107,7 @@ internal fun rememberBookScreenState(
         }
     }
     LifecycleEventEffect(event = Lifecycle.Event.ON_PAUSE, onEvent = state::onStop)
+    LifecycleEventEffect(event = Lifecycle.Event.ON_STOP, onEvent = state::onStop)
     return state
 }
 
@@ -127,12 +143,48 @@ private class BookScreenStateImpl(
     override var uiState by mutableStateOf(initialUiState)
         private set
 
+    private var isInitialized = false
+
     init {
         pageItemListFlow
             .flowWithLifecycle(lifecycle)
             .onEach {
+                val isFirstLoad = currentList.isEmpty() && it.isNotEmpty()
+                val currentItem = currentList.getOrNull(pagerState.currentPage)
+                val currentDisplayPage = if (isFirstLoad) {
+                    if (initialUiState.alwaysOpenFromFirstPage) {
+                        1
+                    } else {
+                        (initialUiState.book.lastPageRead + 1).coerceIn(
+                            1,
+                            maxOf(1, initialUiState.book.totalPageCount),
+                        )
+                    }
+                } else {
+                    currentItem?.toDisplayPage(initialUiState.book.totalPageCount) ?: 1
+                }
                 currentList.clear()
                 currentList.addAll(it)
+                val newPagerIndex = it.findPagerIndexFor(
+                    currentItem = currentItem,
+                    targetDisplayPage = currentDisplayPage,
+                    totalPageCount = initialUiState.book.totalPageCount,
+                )
+                if (isFirstLoad || pagerState.currentPage != newPagerIndex) {
+                    pagerState.scrollToPage(newPagerIndex)
+                }
+                if (isFirstLoad) {
+                    isInitialized = true
+                    updateLastReadPage()
+                }
+            }
+            .launchIn(coroutineScope)
+        snapshotFlow { pagerState.settledPage }
+            .distinctUntilChanged()
+            .onEach {
+                if (isInitialized && currentList.isNotEmpty()) {
+                    updateLastReadPage()
+                }
             }
             .launchIn(coroutineScope)
         bookSettingsFlow
@@ -171,10 +223,6 @@ private class BookScreenStateImpl(
                 }
             }
         }
-        // Save the initial page position when screen opens
-        coroutineScope.launch {
-            updateLastReadPage()
-        }
     }
 
     private fun mapPageScale(pageScale: BookSettings.PageScale): PageScale = when (pageScale) {
@@ -186,8 +234,17 @@ private class BookScreenStateImpl(
         BookSettings.PageScale.FillBounds -> PageScale.FillBounds
     }
 
+    private fun calculateLastReadPage(): Int {
+        if (currentList.isEmpty()) {
+            return uiState.book.lastPageRead.coerceIn(0, maxOf(0, uiState.book.totalPageCount - 1))
+        }
+        val currentPage = pagerState.currentPage.coerceIn(0, currentList.lastIndex)
+        return currentList[currentPage].toLastReadPage(uiState.book.totalPageCount)
+    }
+
     private fun updateLastReadPage() {
-        updateLastReadPage(pagerState.currentPage)
+        val lastReadPage = calculateLastReadPage()
+        updateLastReadPage(lastReadPage)
     }
 
     override fun toggleTooltip() {
@@ -210,21 +267,21 @@ private class BookScreenStateImpl(
 
     override fun onScreenDispose() {
         systemUiController.isSystemBarsVisible = true
+        updateLastReadPage()
     }
 
     override fun onStop() {
-        coroutineScope.launch {
-            updateLastReadPage()
-        }
+        updateLastReadPage()
     }
 
     override fun onPageChange(page: Int) {
         coroutineScope.launch {
-            pagerState.animateScrollToPage(page)
+            val pagerIndex = currentList.findPagerIndex(page, uiState.book.totalPageCount)
+            pagerState.animateScrollToPage(pagerIndex)
         }
     }
 
     override fun onPageLoad(unratedPage: UnratedPage, bitmap: Bitmap) {
-        onPageLoaded(unratedPage, bitmap.imageWidth < bitmap.imageHeight)
+        onPageLoaded(unratedPage, bitmap.imageWidth <= bitmap.imageHeight)
     }
 }

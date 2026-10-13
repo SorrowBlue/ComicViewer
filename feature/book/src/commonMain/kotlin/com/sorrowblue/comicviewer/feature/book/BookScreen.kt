@@ -93,9 +93,19 @@ internal fun BookScreen(
                 enter = slideInVertically { it },
                 exit = slideOutVertically { it },
             ) {
+                val currentPage = currentList.getOrNull(pagerState.currentPage)
+                    ?.toDisplayPage(uiState.book.totalPageCount)
+                    ?: if (uiState.alwaysOpenFromFirstPage) {
+                        1
+                    } else {
+                        (uiState.book.lastPageRead + 1).coerceIn(
+                            1,
+                            maxOf(1, uiState.book.totalPageCount),
+                        )
+                    }
                 BookBottomBar(
-                    pageRange = 1f..uiState.book.totalPageCount.toFloat(),
-                    currentPage = pagerState.currentPage,
+                    pageRange = 1f..maxOf(1, uiState.book.totalPageCount).toFloat(),
+                    currentPage = currentPage,
                     onPageChange = onPageChange,
                 )
             }

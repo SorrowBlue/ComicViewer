@@ -27,7 +27,9 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
+import com.sorrowblue.comicviewer.feature.book.findPagerIndex
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
+import com.sorrowblue.comicviewer.feature.book.toDisplayPage
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
 import com.sorrowblue.comicviewer.framework.ui.rememberSystemUiController
 import comicviewer.feature.book.generated.resources.Res
@@ -101,8 +103,22 @@ private class ReceiveBookScreenStateImpl(
         pageItemListFlow
             .flowWithLifecycle(lifecycle)
             .onEach {
+                val totalPageCount =
+                    (uiState as? BookScreenUiState.Loaded)?.book?.totalPageCount ?: 0
+                val isFirstLoad = currentList.isEmpty() && it.isNotEmpty()
+                val currentDisplayPage = if (isFirstLoad) {
+                    1
+                } else {
+                    currentList.getOrNull(
+                        pagerState.currentPage,
+                    )?.toDisplayPage(totalPageCount) ?: 1
+                }
                 currentList.clear()
                 currentList.addAll(it)
+                val newPagerIndex = it.findPagerIndex(currentDisplayPage, totalPageCount)
+                if (isFirstLoad || pagerState.currentPage != newPagerIndex) {
+                    pagerState.scrollToPage(newPagerIndex)
+                }
             }
             .launchIn(coroutineScope)
         bookFlow
@@ -140,11 +156,13 @@ private class ReceiveBookScreenStateImpl(
 
     override fun onPageChange(page: Int) {
         coroutineScope.launch {
-            pagerState.animateScrollToPage(page)
+            val totalPageCount = (uiState as? BookScreenUiState.Loaded)?.book?.totalPageCount ?: 0
+            val pagerIndex = currentList.findPagerIndex(page, totalPageCount)
+            pagerState.animateScrollToPage(pagerIndex)
         }
     }
 
     override fun onPageLoaded(unratedPage: UnratedPage, bitmap: Bitmap) {
-        onPageLoaded(unratedPage, bitmap.width < bitmap.height)
+        onPageLoaded(unratedPage, bitmap.width <= bitmap.height)
     }
 }
