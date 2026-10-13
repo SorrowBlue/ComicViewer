@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
@@ -28,10 +28,11 @@ import com.sorrowblue.comicviewer.framework.ui.component.file.FileInfoCardTitle
 import com.sorrowblue.comicviewer.framework.ui.component.file.FileInfoDataText
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import com.sorrowblue.comicviewer.framework.ui.preview.fake.fakeBookFile
-import kotlin.math.floor
 
 @Composable
 internal fun ReadingInsight(book: Book) {
+    val isRead = book.totalPageCount > 0 && book.lastReadTime > 0L
+    val isCompleted = isRead && book.lastPageRead + 1 >= book.totalPageCount
     OutlinedCard {
         Column(modifier = Modifier.padding(32.dp)) {
             FileInfoCardTitle(
@@ -49,35 +50,41 @@ internal fun ReadingInsight(book: Book) {
                 FileInfoDataText(
                     overlineContent = { Text(text = "PROGRESS") },
                     headlineContent = {
-                        Text(
-                            text = "${
-                                floor(
-                                    book.lastPageRead.toFloat() / book.totalPageCount.toFloat() * 100,
-                                ).toInt()
-                            }%",
-                        )
+                        val progressText = when {
+                            !isRead -> "-"
+
+                            isCompleted -> "100%"
+
+                            else -> "${((book.lastPageRead + 1).toFloat() / book.totalPageCount * 100).toInt().coerceIn(
+                                0,
+                                100,
+                            )}%"
+                        }
+                        Text(text = progressText)
                     },
                 )
                 Spacer(Modifier.weight(1f))
                 FileInfoDataText(
                     overlineContent = { Text(text = "LAST PAGE") },
                     headlineContent = {
-                        Text(
-                            text = if (book.lastPageRead <=
-                                0
-                            ) {
-                                "-"
-                            } else {
-                                "Page ${book.lastPageRead + 1}"
-                            },
-                        )
+                        val pageText = when {
+                            !isRead -> "-"
+                            else -> "Page ${minOf(book.lastPageRead + 1, book.totalPageCount)}"
+                        }
+                        Text(text = pageText)
                     },
                 )
             }
             Spacer(modifier = Modifier.size(16.dp))
             val color = ProgressIndicatorDefaults.linearColor
             LinearProgressIndicator(
-                progress = { book.lastPageRead.toFloat() / book.totalPageCount.toFloat() },
+                progress = {
+                    if (isRead) {
+                        minOf((book.lastPageRead + 1).toFloat() / book.totalPageCount, 1f)
+                    } else {
+                        0f
+                    }
+                },
                 strokeCap = StrokeCap.Round,
                 gapSize = 0.dp,
                 drawStopIndicator = {
@@ -93,7 +100,9 @@ internal fun ReadingInsight(book: Book) {
             Spacer(modifier = Modifier.size(16.dp))
             FileInfoDataText(
                 overlineContent = { Text(text = "LAST ACCESSED") },
-                headlineContent = { Text(text = "2024/01/15 22:15") },
+                headlineContent = {
+                    Text(text = if (book.lastReadTime == 0L) "-" else book.lastReadTime.asDateTime)
+                },
                 modifier = Modifier.fillMaxWidth(),
             )
         }

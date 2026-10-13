@@ -12,7 +12,7 @@
     <string name="file_action_show_hidden">Show hidden files</string>
     <string name="file_label_folder">Folder</string>
     <string name="file_label_read_completed">Completed</string>
-    <string name="file_label_read_percent">%1$d%% Read</string>
+    <string name="file_label_read_percent">%1$d% Read</string>
 
     <plurals name="file_label_file_count">
         <item quantity="one">%1$d File</item>
