@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.framework.ui.component.file
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -47,7 +46,18 @@ import comicviewer.framework.ui.generated.resources.Res
 import comicviewer.framework.ui.generated.resources.file_desc_open_file_info
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+/**
+ * Displays file information as a list item.
+ *
+ * @param file The file to display.
+ * @param onInfoClick Callback invoked when the info button is clicked.
+ * @param showThumbnail Whether to display the thumbnail.
+ * @param fontSize Font size for the file name text.
+ * @param contentScale Content scale for the thumbnail image.
+ * @param filterQuality Filter quality for the thumbnail image.
+ * @param modifier Modifier to be applied to the layout.
+ * @param colors Colors for the list item.
+ */
 @Composable
 fun ListFile(
     file: File,
@@ -147,13 +157,16 @@ fun ListFile(
 }
 
 /**
- * ファイル惁E��をカードで表示する ファイル惁E��をリストアイチE��で表示する
+ * Displays file information inside a card.
  *
- * @param file ファイル
- * @param onClick クリチE��時�E処琁E * @param onInfoClick 惁E��ボタンクリチE��時�E処琁E * @param showThumbnail サムネイル表示するぁE * @param fontSize
- * @param contentScale
- * @param filterQuality
- * @param modifier Modifier
+ * @param file The file to display.
+ * @param onClick Callback invoked when the card is clicked.
+ * @param onInfoClick Callback invoked when the info button is clicked.
+ * @param showThumbnail Whether to display the thumbnail.
+ * @param fontSize Font size for the file name text.
+ * @param contentScale Content scale for the thumbnail image.
+ * @param filterQuality Filter quality for the thumbnail image.
+ * @param modifier Modifier to be applied to the layout.
  */
 @Composable
 fun ListFileCard(
