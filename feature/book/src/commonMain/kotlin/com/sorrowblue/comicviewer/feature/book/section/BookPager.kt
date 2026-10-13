@@ -33,7 +33,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.Bitmap
-import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
@@ -76,6 +75,7 @@ internal fun BookPage(
             book = book,
             bookPage = page,
             pageScale = pageScale,
+            cutWhitespace = cutWhitespace,
             onPageLoad = onPageLoad,
         )
 
@@ -83,6 +83,7 @@ internal fun BookPage(
             book = book,
             bookPage = page,
             pageScale = pageScale,
+            cutWhitespace = cutWhitespace,
             onPageLoad = onPageLoad,
         )
     }
@@ -155,14 +156,20 @@ private fun SplitBookPage(
     book: Book,
     bookPage: BookPage.Split,
     pageScale: PageScale,
+    cutWhitespace: Boolean,
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalPlatformContext.current
-    val request = remember(bookPage.index) {
+    val request = remember(bookPage.index, cutWhitespace) {
         ImageRequest
             .Builder(context)
             .data(BookPageImage(book to bookPage.index))
+            .apply {
+                if (cutWhitespace) {
+                    transformations(WhiteTrimTransformation)
+                }
+            }
             .build()
     }
     val painter = rememberAsyncImagePainter(
@@ -244,44 +251,111 @@ private fun SpreadBookPage(
     book: Book,
     bookPage: BookPage.Spread,
     pageScale: PageScale,
+    cutWhitespace: Boolean,
     onPageLoad: (UnratedPage, Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (bookPage is BookPage.Spread.Combine) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxHeight()
-                .then(modifier),
-        ) {
-            AsyncImage(
-                model = BookPageImage(book to bookPage.nextIndex),
-                contentDescription = null,
-                contentScale = pageScale.contentScale,
-                error = rememberVectorPainter(ComicIcons.BrokenImage),
-                alignment = Alignment.CenterEnd,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-            )
-            AsyncImage(
-                model = BookPageImage(book to bookPage.index),
-                contentDescription = null,
-                contentScale = pageScale.contentScale,
-                error = rememberVectorPainter(ComicIcons.BrokenImage),
-                alignment = Alignment.CenterStart,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-            )
-        }
-    } else {
         val context = LocalPlatformContext.current
-        val request = remember(bookPage.index) {
+        val leftRequest = remember(bookPage.nextIndex, cutWhitespace) {
+            ImageRequest
+                .Builder(context)
+                .data(BookPageImage(book to bookPage.nextIndex))
+                .apply {
+                    if (cutWhitespace) {
+                        transformations(WhiteTrimTransformation)
+                    }
+                }
+                .build()
+        }
+        val rightRequest = remember(bookPage.index, cutWhitespace) {
             ImageRequest
                 .Builder(context)
                 .data(BookPageImage(book to bookPage.index))
+                .apply {
+                    if (cutWhitespace) {
+                        transformations(WhiteTrimTransformation)
+                    }
+                }
+                .build()
+        }
+
+        val leftPainter = rememberAsyncImagePainter(
+            model = leftRequest,
+            contentScale = pageScale.contentScale,
+            filterQuality = FilterQuality.None,
+        )
+        val rightPainter = rememberAsyncImagePainter(
+            model = rightRequest,
+            contentScale = pageScale.contentScale,
+            filterQuality = FilterQuality.None,
+        )
+
+        val leftState by leftPainter.state.collectAsStateWithLifecycle()
+        val rightState by rightPainter.state.collectAsStateWithLifecycle()
+
+        val isBothSuccess = leftState is AsyncImagePainter.State.Success &&
+            rightState is AsyncImagePainter.State.Success
+        val hasError = leftState is AsyncImagePainter.State.Error ||
+            rightState is AsyncImagePainter.State.Error
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .then(modifier),
+        ) {
+            if (isBothSuccess) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxHeight(),
+                ) {
+                    Image(
+                        painter = leftPainter,
+                        contentDescription = null,
+                        contentScale = pageScale.contentScale,
+                        alignment = Alignment.CenterEnd,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f),
+                    )
+                    Image(
+                        painter = rightPainter,
+                        contentDescription = null,
+                        contentScale = pageScale.contentScale,
+                        alignment = Alignment.CenterStart,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f),
+                    )
+                }
+            } else if (hasError) {
+                PageErrorContent(
+                    onReload = {
+                        leftPainter.restart()
+                        rightPainter.restart()
+                    },
+                )
+            } else {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .wrapContentSize()
+                        .padding(ComicTheme.dimension.margin),
+                )
+            }
+        }
+    } else {
+        val context = LocalPlatformContext.current
+        val request = remember(bookPage.index, cutWhitespace) {
+            ImageRequest
+                .Builder(context)
+                .data(BookPageImage(book to bookPage.index))
+                .apply {
+                    if (cutWhitespace) {
+                        transformations(WhiteTrimTransformation)
+                    }
+                }
                 .build()
         }
         val painter = rememberAsyncImagePainter(
@@ -306,12 +380,14 @@ private fun SpreadBookPage(
                 .fillMaxSize()
                 .then(modifier),
         ) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                contentScale = pageScale.contentScale,
-                modifier = Modifier.fillMaxSize(),
-            )
+            if (bookPage !is BookPage.Spread.Unrated) {
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    contentScale = pageScale.contentScale,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
 
             when (state) {
                 is AsyncImagePainter.State.Error -> {
@@ -327,7 +403,16 @@ private fun SpreadBookPage(
                     )
                 }
 
-                AsyncImagePainter.State.Empty, is AsyncImagePainter.State.Success -> Unit
+                AsyncImagePainter.State.Empty, is AsyncImagePainter.State.Success -> {
+                    if (bookPage is BookPage.Spread.Unrated) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .wrapContentSize()
+                                .padding(ComicTheme.dimension.margin),
+                        )
+                    }
+                }
             }
         }
     }

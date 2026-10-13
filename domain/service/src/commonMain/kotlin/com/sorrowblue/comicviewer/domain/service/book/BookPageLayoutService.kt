@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.domain.service.book
 
 import com.sorrowblue.comicviewer.domain.model.book.BookPage
+import com.sorrowblue.comicviewer.domain.model.book.NextPage
 import com.sorrowblue.comicviewer.domain.model.book.PageItem
 import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
@@ -114,95 +115,122 @@ internal class BookPageLayoutServiceImpl : BookPageLayoutService {
         spread: BookPage.Spread.Unrated,
         isPortrait: Boolean,
     ): List<PageItem> {
-        val index = currentList.indexOf(spread)
-        if (index < 0) return currentList
+        val orientations = mutableMapOf<Int, PageOrientation>()
+        currentList.forEach { item ->
+            when (item) {
+                is BookPage.Spread.Unrated -> orientations[item.index] = PageOrientation.Unrated
 
-        val workingList = currentList.toMutableList()
-        workingList[index] = if (isPortrait) {
-            BookPage.Spread.Single(spread.index)
-        } else {
-            BookPage.Spread.Spread2(spread.index)
-        }
+                is BookPage.Spread.Single -> orientations[item.index] = PageOrientation.Portrait
 
-        return updateSpreadPageList(workingList)
-    }
+                is BookPage.Spread.Spread2 -> orientations[item.index] = PageOrientation.Landscape
 
-    private fun updateSpreadPageList(currentList: List<PageItem>): List<PageItem> {
-        val skipIndex = mutableSetOf<Int>()
-        val newList = mutableListOf<PageItem>()
-        var nextSingle: BookPage.Spread.Single? = null
-
-        currentList.forEachIndexed { index, bookItem ->
-            if (index in skipIndex) return@forEachIndexed
-
-            when (val item = nextSingle ?: bookItem) {
                 is BookPage.Spread.Combine -> {
-                    newList.add(item)
-                    nextSingle = null
+                    orientations[item.index] = PageOrientation.Portrait
+                    orientations[item.nextIndex] = PageOrientation.Portrait
                 }
 
-                is BookPage.Spread.Single -> {
-                    if (item.index == 0) {
-                        newList.add(item)
-                        nextSingle = null
-                    } else {
-                        nextSingle = processSingleSpreadPage(
-                            item = item,
-                            currentIndex = index,
-                            currentList = currentList,
-                            newList = newList,
-                            skipIndex = skipIndex,
-                        )
-                    }
-                }
-
-                is BookPage.Spread.Spread2 -> {
-                    newList.add(item)
-                    nextSingle = null
-                }
-
-                is BookPage.Spread.Unrated -> {
-                    newList.add(item)
-                    nextSingle = null
-                }
-
-                else -> {
-                    newList.add(item)
-                    nextSingle = null
-                }
+                else -> Unit
             }
         }
-        return newList
+        orientations[spread.index] =
+            if (isPortrait) PageOrientation.Portrait else PageOrientation.Landscape
+        if (orientations.isEmpty()) return currentList
+
+        val minIndex = orientations.keys.min()
+        val maxIndex = orientations.keys.max()
+
+        val prefix = currentList.takeWhile { it is NextPage }
+        val suffix = currentList.takeLastWhile { it is NextPage }
+
+        val spreadPages = mutableListOf<PageItem>()
+        var page = minIndex
+        while (page <= maxIndex) {
+            page += processSpreadSlot(page, maxIndex, orientations, spreadPages)
+        }
+
+        return prefix + spreadPages + suffix
     }
 
-    private fun processSingleSpreadPage(
-        item: BookPage.Spread.Single,
-        currentIndex: Int,
-        currentList: List<PageItem>,
-        newList: MutableList<PageItem>,
-        skipIndex: MutableSet<Int>,
-    ): BookPage.Spread.Single? {
-        if (currentIndex + 1 >= currentList.size) {
-            newList.add(item)
-            return null
+    private fun processSpreadSlot(
+        page: Int,
+        maxIndex: Int,
+        orientations: Map<Int, PageOrientation>,
+        destination: MutableList<PageItem>,
+    ): Int {
+        val orientation1 = orientations[page] ?: PageOrientation.Unrated
+        return when {
+            page == 0 -> {
+                val coverPage = when (orientation1) {
+                    PageOrientation.Unrated -> BookPage.Spread.Unrated(0)
+                    PageOrientation.Portrait -> BookPage.Spread.Single(0)
+                    PageOrientation.Landscape -> BookPage.Spread.Spread2(0)
+                }
+                destination.add(coverPage)
+                1
+            }
+
+            orientation1 == PageOrientation.Landscape -> {
+                destination.add(BookPage.Spread.Spread2(page))
+                1
+            }
+
+            page + 1 > maxIndex -> {
+                val lastPage = if (orientation1 == PageOrientation.Portrait) {
+                    BookPage.Spread.Single(page)
+                } else {
+                    BookPage.Spread.Unrated(page)
+                }
+                destination.add(lastPage)
+                1
+            }
+
+            else -> processPairSlot(
+                page = page,
+                orientation1 = orientation1,
+                orientation2 = orientations[page + 1] ?: PageOrientation.Unrated,
+                destination = destination,
+            )
         }
+    }
 
-        return when (val nextItem = currentList[currentIndex + 1]) {
-            is BookPage.Spread.Single -> {
-                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                skipIndex.add(currentIndex + 1)
-                null
+    private fun processPairSlot(
+        page: Int,
+        orientation1: PageOrientation,
+        orientation2: PageOrientation,
+        destination: MutableList<PageItem>,
+    ): Int {
+        if (orientation2 == PageOrientation.Landscape) {
+            val p1 = if (orientation1 == PageOrientation.Portrait) {
+                BookPage.Spread.Single(page)
+            } else {
+                BookPage.Spread.Unrated(page)
             }
-
-            is BookPage.Spread.Combine -> {
-                newList.add(BookPage.Spread.Combine(item.index, nextItem.index))
-                BookPage.Spread.Single(nextItem.nextIndex)
+            destination.add(p1)
+            destination.add(BookPage.Spread.Spread2(page + 1))
+        } else if (orientation1 == PageOrientation.Portrait &&
+            orientation2 == PageOrientation.Portrait
+        ) {
+            destination.add(BookPage.Spread.Combine(page, page + 1))
+        } else {
+            val p1 = if (orientation1 == PageOrientation.Portrait) {
+                BookPage.Spread.Single(page)
+            } else {
+                BookPage.Spread.Unrated(page)
             }
-
-            else -> {
-                newList.add(item)
-                null
+            val p2 = if (orientation2 == PageOrientation.Portrait) {
+                BookPage.Spread.Single(page + 1)
+            } else {
+                BookPage.Spread.Unrated(page + 1)
             }
+            destination.add(p1)
+            destination.add(p2)
         }
+        return 2
+    }
+
+    private sealed interface PageOrientation {
+        data object Unrated : PageOrientation
+        data object Portrait : PageOrientation
+        data object Landscape : PageOrientation
     }
 }

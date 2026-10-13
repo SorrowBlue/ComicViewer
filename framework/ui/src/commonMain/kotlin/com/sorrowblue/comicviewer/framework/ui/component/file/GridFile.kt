@@ -66,10 +66,17 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * ファイル惁E��をグリチE��アイチE��で表示する
+ * Displays file information as a grid item.
  *
- * @param file ファイル
- * @param onClick クリチE��時�E処琁E * @param onInfoClick インフォクリチE��時�E処琁E * @param showThumbnail サムネイル表示を有効にするぁE * @param modifier Modifier
+ * @param file The file to display.
+ * @param onClick Callback invoked when the item is clicked.
+ * @param onInfoClick Callback invoked when the info button is clicked.
+ * @param showThumbnail Whether to display the thumbnail.
+ * @param fontSize Font size for the file name text.
+ * @param contentScale Content scale for the thumbnail image.
+ * @param filterQuality Filter quality for the thumbnail image.
+ * @param modifier Modifier to be applied to the layout.
+ * @param colors Colors for the card.
  */
 @Composable
 fun GridFile(
@@ -163,74 +170,28 @@ fun GridFile(
                 )
             }
         }
-        Text(
-            text = file.name,
-            style = ComicTheme.typography.bodyLarge.copy(
-                fontSize = fontSize.sp,
-                lineHeight = (fontSize + 4).sp,
-            ),
-            textAlign = TextAlign.Start,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 2,
-            minLines = 2,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(ComicTheme.dimension.padding),
+        FileNameText(
+            name = file.name,
+            fontSize = fontSize,
         )
         if (file is Folder) {
-            Text(
-                text = pluralStringResource(
-                    Res.plurals.file_label_file_count,
-                    file.count,
-                    file.count,
-                ),
-                style = ComicTheme.typography.labelSmall.copy(),
-                color = ComicTheme.colorScheme.onSurface,
-            )
+            FolderCountText(count = file.count)
         }
         if (file is Book) {
+            val isRead = file.totalPageCount > 0 && file.lastReadTime > 0L
+            val isCompleted = isRead && file.lastPageRead + 1 >= file.totalPageCount
             Row {
-                Text(
-                    text = if (file.totalPageCount == file.lastPageRead + 1) {
-                        stringResource(Res.string.file_label_read_completed)
-                    } else {
-                        stringResource(
-                            Res.string.file_label_read_percent,
-                            ((file.lastPageRead + 1).toFloat() / file.totalPageCount * 100).toInt(),
-                        )
-                    },
-                    style = ComicTheme.typography.labelSmall.copy(),
-                    color = ComicTheme.colorScheme.onSurface,
-                    modifier = Modifier.visible(file.totalPageCount > 0),
+                BookReadStatusText(
+                    book = file,
+                    isRead = isRead,
+                    isCompleted = isCompleted,
                 )
                 Spacer(Modifier.weight(1f))
-                val text = if (file.totalPageCount == 0) {
-                    "- / -"
-                } else {
-                    "${if (file.lastPageRead == 0) "-" else file.lastPageRead + 1} / ${file.totalPageCount}"
-                }
-                Text(
-                    text = text,
-                    style = ComicTheme.typography.labelSmall.copy(),
-                    color = ComicTheme.colorScheme.onSurface,
-                )
+                BookPageCountText(book = file)
             }
-            val color = ProgressIndicatorDefaults.linearColor
-            LinearProgressIndicator(
-                progress = { (file.lastPageRead + 1).toFloat() / file.totalPageCount },
-                strokeCap = StrokeCap.Round,
-                gapSize = 0.dp,
-                drawStopIndicator = {
-                    drawStopIndicator(
-                        drawScope = this,
-                        stopSize = 0.dp,
-                        color = color,
-                        strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .visible(file.totalPageCount > 0),
+            BookProgressIndicator(
+                book = file,
+                visible = isRead,
             )
         }
     }
@@ -264,4 +225,104 @@ private fun GridFileIcon(file: File, modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+@Composable
+private fun FileNameText(name: String, fontSize: Int, modifier: Modifier = Modifier) {
+    Text(
+        text = name,
+        style = ComicTheme.typography.bodyLarge.copy(
+            fontSize = fontSize.sp,
+            lineHeight = (fontSize + 4).sp,
+        ),
+        textAlign = TextAlign.Start,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2,
+        minLines = 2,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(ComicTheme.dimension.padding),
+    )
+}
+
+@Composable
+internal fun FolderCountText(count: Int, modifier: Modifier = Modifier) {
+    Text(
+        text = pluralStringResource(
+            Res.plurals.file_label_file_count,
+            count,
+            count,
+        ),
+        style = ComicTheme.typography.labelSmall.copy(),
+        color = ComicTheme.colorScheme.onSurface,
+        modifier = modifier,
+    )
+}
+
+@Composable
+internal fun BookReadStatusText(
+    book: Book,
+    isRead: Boolean,
+    isCompleted: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = if (isCompleted) {
+            stringResource(Res.string.file_label_read_completed)
+        } else {
+            val percent = if (book.totalPageCount > 0) {
+                ((book.lastPageRead + 1).toFloat() / book.totalPageCount * 100)
+                    .toInt()
+                    .coerceIn(0, 100)
+            } else {
+                0
+            }
+            stringResource(Res.string.file_label_read_percent, percent)
+        },
+        style = ComicTheme.typography.labelSmall.copy(),
+        color = ComicTheme.colorScheme.onSurface,
+        modifier = modifier.visible(isRead),
+    )
+}
+
+@Composable
+internal fun BookPageCountText(book: Book, modifier: Modifier = Modifier) {
+    val text = when {
+        book.totalPageCount <= 0 -> "- / -"
+        book.lastReadTime == 0L -> "- / ${book.totalPageCount}"
+        else -> "${minOf(book.lastPageRead + 1, book.totalPageCount)} / ${book.totalPageCount}"
+    }
+    Text(
+        text = text,
+        style = ComicTheme.typography.labelSmall.copy(),
+        color = ComicTheme.colorScheme.onSurface,
+        modifier = modifier,
+    )
+}
+
+@Composable
+internal fun BookProgressIndicator(book: Book, visible: Boolean, modifier: Modifier = Modifier) {
+    val color = ProgressIndicatorDefaults.linearColor
+    LinearProgressIndicator(
+        progress = {
+            if (book.totalPageCount > 0) {
+                minOf((book.lastPageRead + 1).toFloat() / book.totalPageCount, 1f)
+            } else {
+                0f
+            }
+        },
+        strokeCap = StrokeCap.Round,
+        gapSize = 0.dp,
+        drawStopIndicator = {
+            drawStopIndicator(
+                drawScope = this,
+                stopSize = 0.dp,
+                color = color,
+                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+            )
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .visible(visible),
+    )
 }

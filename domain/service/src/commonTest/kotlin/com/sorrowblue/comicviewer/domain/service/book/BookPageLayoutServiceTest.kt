@@ -217,4 +217,91 @@ class BookPageLayoutServiceTest {
             afterPage1,
         )
     }
+
+    @Test
+    fun resolveSpreadPage_outOfOrderLoading_doesNotCombineAcrossSlots() {
+        val initialList: List<PageItem> = listOf(
+            BookPage.Spread.Unrated(0),
+            BookPage.Spread.Unrated(1),
+            BookPage.Spread.Unrated(2),
+            BookPage.Spread.Unrated(3),
+        )
+
+        // Page 2 and Page 3 load first (portrait)
+        val afterPage2 = service.resolvePage(initialList, BookPage.Spread.Unrated(2), true)
+        val afterPage3 = service.resolvePage(afterPage2, BookPage.Spread.Unrated(3), true)
+
+        // Pages 2 and 3 should NOT combine into a spread because they belong to different slots
+        assertEquals(
+            listOf(
+                BookPage.Spread.Unrated(0),
+                BookPage.Spread.Unrated(1),
+                BookPage.Spread.Single(2),
+                BookPage.Spread.Single(3),
+            ),
+            afterPage3,
+        )
+
+        // Delayed Page 1 loads (portrait) -> combines with Page 2
+        val afterPage1 = service.resolvePage(afterPage3, BookPage.Spread.Unrated(1), true)
+        assertEquals(
+            listOf(
+                BookPage.Spread.Unrated(0),
+                BookPage.Spread.Combine(1, 2),
+                BookPage.Spread.Single(3),
+            ),
+            afterPage1,
+        )
+    }
+
+    @Test
+    fun resolveSpreadPage_portraitFollowedByLandscape() {
+        val initialList: List<PageItem> = listOf(
+            BookPage.Spread.Unrated(0),
+            BookPage.Spread.Unrated(1),
+            BookPage.Spread.Unrated(2),
+            BookPage.Spread.Unrated(3),
+            BookPage.Spread.Unrated(4),
+        )
+
+        val p0 = service.resolvePage(initialList, BookPage.Spread.Unrated(0), true)
+        val p1 = service.resolvePage(p0, BookPage.Spread.Unrated(1), true)
+        val p2 = service.resolvePage(p1, BookPage.Spread.Unrated(2), false)
+        val p3 = service.resolvePage(p2, BookPage.Spread.Unrated(3), true)
+        val p4 = service.resolvePage(p3, BookPage.Spread.Unrated(4), true)
+
+        assertEquals(
+            listOf(
+                BookPage.Spread.Single(0),
+                BookPage.Spread.Single(1),
+                BookPage.Spread.Spread2(2),
+                BookPage.Spread.Combine(3, 4),
+            ),
+            p4,
+        )
+    }
+
+    @Test
+    fun resolveSpreadPage_landscapeFollowedByPortraits() {
+        val initialList: List<PageItem> = listOf(
+            BookPage.Spread.Unrated(0),
+            BookPage.Spread.Unrated(1),
+            BookPage.Spread.Unrated(2),
+            BookPage.Spread.Unrated(3),
+        )
+
+        val p0 = service.resolvePage(initialList, BookPage.Spread.Unrated(0), true)
+        val p1 = service.resolvePage(p0, BookPage.Spread.Unrated(1), false)
+        val p2 = service.resolvePage(p1, BookPage.Spread.Unrated(2), true)
+        val p3 = service.resolvePage(p2, BookPage.Spread.Unrated(3), true)
+
+        assertEquals(
+            listOf(
+                BookPage.Spread.Single(0),
+                BookPage.Spread.Spread2(1),
+                BookPage.Spread.Combine(2, 3),
+            ),
+            p3,
+        )
+    }
 }

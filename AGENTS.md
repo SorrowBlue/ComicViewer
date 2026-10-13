@@ -240,7 +240,7 @@ fun fetchUser(userId: String): User {
 // TODO(username): Clearly specify the owner for planned features
 ```
 
-- **Public APIs**: Add KDoc comments to all public functions and classes.
+- **Public APIs**: Add KDoc comments to all public functions and classes (must be written in English).
 - **Complex Logic**: Add explanatory comments for business logic.
 - **TODO**: Include owner information.
 - **Architectural Decisions**: Document multi-platform expect/actual implementations.

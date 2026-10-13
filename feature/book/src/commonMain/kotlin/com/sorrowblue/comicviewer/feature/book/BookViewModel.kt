@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.book.NextPage
 import com.sorrowblue.comicviewer.domain.model.book.PageItem
 import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
@@ -28,10 +29,15 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -41,7 +47,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 private sealed interface PageAction {
-    data class FormatChange(val pageFormat: BookSettings.PageFormat) : PageAction
+    data class FormatChange(
+        val pageFormat: BookSettings.PageFormat,
+        val isCompactWindow: Boolean,
+    ) : PageAction
+
     data class PageLoaded(val unratedPage: UnratedPage, val isPortrait: Boolean) : PageAction
 }
 
@@ -49,7 +59,8 @@ private sealed interface PageAction {
 internal class BookViewModel(
     @Assisted private val book: Book,
     @Assisted private val collectionId: CollectionId,
-    @Assisted private val isCompactWindowClass: Boolean,
+    @Assisted isCompactWindowClass: Boolean,
+    @IoDispatcher ioDispatcher: CoroutineDispatcher,
     manageBookSettingsUseCase: ManageBookSettingsUseCase,
     manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
     val getNextBookUseCase: GetNextBookUseCase,
@@ -58,6 +69,12 @@ internal class BookViewModel(
     private val createInitialBookPagesUseCase: CreateInitialBookPagesUseCase,
     private val resolveBookPageLayoutUseCase: ResolveBookPageLayoutUseCase,
 ) : ViewModel() {
+
+    private val isCompactWindowFlow = MutableStateFlow(isCompactWindowClass)
+
+    fun updateIsCompactWindow(isCompactWindow: Boolean) {
+        isCompactWindowFlow.value = isCompactWindow
+    }
 
     private val pageActionFlow = MutableSharedFlow<PageAction>(
         extraBufferCapacity = 64,
@@ -68,9 +85,22 @@ internal class BookViewModel(
         manageBookSettingsUseCase.settings.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     val pageItemListFlow: StateFlow<List<PageItem>> = merge(
-        bookSettingsFlow
-            .distinctUntilChanged { old, new -> old.pageFormat == new.pageFormat }
-            .map { PageAction.FormatChange(it.pageFormat) },
+        combine(
+            bookSettingsFlow.map { it.pageFormat },
+            isCompactWindowFlow,
+        ) { pageFormat, isCompactWindow ->
+            pageFormat to isCompactWindow
+        }.distinctUntilChanged { old, new ->
+            if (old.first != new.first) {
+                false
+            } else if (old.first == BookSettings.PageFormat.Auto) {
+                old.second == new.second
+            } else {
+                true
+            }
+        }.map { (pageFormat, isCompactWindow) ->
+            PageAction.FormatChange(pageFormat, isCompactWindow)
+        },
         pageActionFlow,
     ).scan(emptyList<PageItem>()) { currentList, action ->
         when (action) {
@@ -79,7 +109,7 @@ internal class BookViewModel(
                     CreateInitialBookPagesUseCase.Request(
                         totalPageCount = book.totalPageCount,
                         pageFormat = action.pageFormat,
-                        isCompactWindow = isCompactWindowClass,
+                        isCompactWindow = action.isCompactWindow,
                     ),
                 ).dataOrNull()
                 requireNotNull(pages)
@@ -142,20 +172,22 @@ internal class BookViewModel(
         }
     }
 
-    fun updateLastReadPage(page: Int) {
-        viewModelScope.launch {
+    private val saveScope = CoroutineScope(SupervisorJob() + ioDispatcher)
+
+    fun updateLastReadPage(lastPageRead: Int) {
+        saveScope.launch {
             updateLastReadPageUseCase(
                 UpdateLastReadPageUseCase.Request(
                     book.bookshelfId,
                     book.path,
-                    page - 1,
+                    lastPageRead,
                 ),
             )
         }
     }
 
     fun release() {
-        viewModelScope.launch {
+        saveScope.launch {
             closeBookUseCase(book)
         }
     }
