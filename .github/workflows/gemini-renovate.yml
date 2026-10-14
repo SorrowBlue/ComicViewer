@@ -1,0 +1,198 @@
+name: Gemini Renovate Investigation
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Target Pull Request number to investigate'
+        required: true
+        type: number
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || inputs.pr_number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  investigate-and-fix:
+    name: Investigate & Fix Renovate PR
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        startsWith(github.head_ref, 'renovate/') &&
+        github.actor != 'github-actions[bot]' &&
+        !contains(github.event.pull_request.body, '**Automerge**: Enabled') &&
+        github.event.pull_request.auto_merge == null
+      )
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Prepare PR context and check commit author
+        id: prepare
+        env:
+          GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            gh pr checkout "$PR_NUMBER"
+          fi
+
+          LAST_AUTHOR=$(git log -1 --format='%an')
+          if [ "$EVENT_NAME" = "pull_request" ] && [ "$LAST_AUTHOR" = "github-actions[bot]" ]; then
+            echo "Latest commit was authored by github-actions[bot]. Skipping to prevent loop."
+            echo "should-run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          BASE_REF=$(gh pr view "$PR_NUMBER" --json baseRefName --jq '.baseRefName')
+          HEAD_REF=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName')
+          PR_TITLE=$(gh pr view "$PR_NUMBER" --json title --jq '.title')
+
+          gh pr view "$PR_NUMBER" --json body --jq '.body' > /tmp/pr-body.md
+          git fetch origin "$BASE_REF"
+          git diff "origin/${BASE_REF}...HEAD" > /tmp/pr-diff.patch
+
+          {
+            echo "should-run=true"
+            echo "pr-number=${PR_NUMBER}"
+            echo "base-ref=${BASE_REF}"
+            echo "head-ref=${HEAD_REF}"
+            echo "pr-title=${PR_TITLE}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Setup JDK and Gradle
+        if: steps.prepare.outputs.should-run == 'true'
+        uses: ./.github/actions/setup-java-gradle
+
+      - name: Run Gemini CLI to investigate and fix
+        id: gemini
+        if: steps.prepare.outputs.should-run == 'true'
+        uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
+        env:
+          GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.prepare.outputs.pr-number }}
+          BASE_REF: ${{ steps.prepare.outputs.base-ref }}
+          HEAD_REF: ${{ steps.prepare.outputs.head-ref }}
+          PR_TITLE: ${{ steps.prepare.outputs.pr-title }}
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          github_pr_number: ${{ steps.prepare.outputs.pr-number }}
+          settings: |-
+            {
+              "model": {
+                "maxSessionTurns": 40
+              },
+              "telemetry": {
+                "enabled": false
+              },
+              "tools": {
+                "core": [
+                  "read_file",
+                  "write_file",
+                  "replace",
+                  "glob",
+                  "grep_search",
+                  "list_directory",
+                  "web_fetch",
+                  "google_web_search",
+                  "run_shell_command"
+                ]
+              }
+            }
+          prompt: |-
+            あなたは ComicViewer プロジェクトのシニアエンジニア AI エージェントです。
+            Renovate によって作成されたパッチ以外のライブラリ更新 PR（マイナー更新・メジャー更新等）について、変更点の調査、影響範囲の特定、および必要に応じた修正を実施してください。
+
+            ## コンテキスト情報
+            - PR 番号: #${{ steps.prepare.outputs.pr-number }}
+            - PR タイトル: ${{ steps.prepare.outputs.pr-title }}
+            - PR 本文ファイル: `/tmp/pr-body.md`
+            - PR 差分ファイル: `/tmp/pr-diff.patch`
+
+            ## 実行手順
+            1. **変更内容の確認**
+               - `/tmp/pr-diff.patch` および `/tmp/pr-body.md` を読み取り、更新されたライブラリ・プラグイン名とバージョン変化（更新前 -> 更新後）を正確に把握してください。
+            2. **リリースノート・変更点の調査**
+               - `/tmp/pr-body.md` に含まれる Release Notes / Changelog や、必要に応じて `google_web_search` / `web_fetch` を用いて、該当バージョンの破壊的変更（Breaking Changes）、非推奨化（Deprecations）、挙動変更、新機能を調査してください。
+            3. **プロジェクト内の利用箇所と影響範囲の特定**
+               - `grep_search` / `glob` / `read_file` を使用して、更新対象ライブラリがリポジトリ内のどのモジュール・クラスで使用されているかを検索し、影響の有無を分析してください。
+            4. **ビルド・静的解析による検証とコード修正**
+               - 影響を受けるモジュールのコンパイル・テスト、または `./gradlew checkVersionCatalog` や `./gradlew reportMerge` 等を実行して問題が発生しないか確認してください。
+               - 破壊的変更への追従、非推奨 API の置き換え、設定ファイルの調整など、コード修正が必要な場合は、`AGENTS.md` の規約（末尾カンマ、import 順序、KDoc 等）に従ってファイルを修正し、再度 `./gradlew` で検証してください。
+               - ファイルを修正した場合は、コミットメッセージ（英語・Conventional Commits 形式、例: `fix: adapt to <library> <version> API changes`）を `/tmp/gemini-commit-message.txt` に書き出してください（自身で `git push` は行わず、ワークツリーに変更を残すかローカルコミットまでとしてください）。
+            5. **調査レポートの作成**
+               - 調査結果および対応内容を以下の構成で **日本語** の Markdown ファイル `/tmp/gemini-renovate-report.md` に出力してください：
+                 - `## 🤖 Gemini ライブラリ更新調査レポート`
+                 - `### 📦 更新対象`（ライブラリ名・更新前後のバージョン）
+                 - `### 🔍 主な変更点・破壊的変更`（リリースノートや Changelog から判明した重要事項）
+                 - `### 🎯 プロジェクトへの影響範囲`（該当ライブラリの利用箇所と影響の有無）
+                 - `### 🛠️ 修正・検証結果`（実施したコード修正の内容、または修正不要と判断した根拠と実行した検証コマンドの結果）
+
+      - name: Commit and push fixes if needed
+        id: commit_fix
+        if: steps.prepare.outputs.should-run == 'true'
+        env:
+          HEAD_REF: ${{ steps.prepare.outputs.head-ref }}
+        run: |
+          rm -rf .gemini gha-creds-*.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            COMMIT_MSG="fix: apply adjustments for dependency update"
+            if [ -s /tmp/gemini-commit-message.txt ]; then
+              COMMIT_MSG=$(cat /tmp/gemini-commit-message.txt)
+            fi
+            git add -A
+            git commit -m "$COMMIT_MSG"
+          fi
+
+          AHEAD_COUNT=$(git rev-list "origin/${HEAD_REF}..HEAD" --count)
+          if [ "$AHEAD_COUNT" -gt 0 ]; then
+            echo "Pushing $AHEAD_COUNT commit(s) to origin/${HEAD_REF}..."
+            git push origin "HEAD:refs/heads/${HEAD_REF}"
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No code modifications were required."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post investigation report to PR
+        if: steps.prepare.outputs.should-run == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.prepare.outputs.pr-number }}
+          GEMINI_SUMMARY: ${{ steps.gemini.outputs.summary }}
+        run: |
+          REPORT_FILE="/tmp/gemini-renovate-report.md"
+          if [ ! -s "$REPORT_FILE" ] && [ -n "$GEMINI_SUMMARY" ]; then
+            printf "## 🤖 Gemini ライブラリ更新調査レポート\n\n%s\n" "$GEMINI_SUMMARY" > "$REPORT_FILE"
+          fi
+
+          if [ -s "$REPORT_FILE" ]; then
+            gh pr comment "$PR_NUMBER" --body-file "$REPORT_FILE"
+          else
+            echo "No report content generated."
+          fi
