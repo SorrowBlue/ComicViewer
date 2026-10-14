@@ -17,6 +17,16 @@
   "recreateWhen": "never",
   "packageRules": [
     {
+      "description": "Automerge patch, pin, and digest updates",
+      "matchUpdateTypes": [
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
       "groupName": "Android Gradle Plugin",
       "groupSlug": "android_gradle_plugin",
       "matchPackageNames": [
