@@ -90,6 +90,7 @@ jobs:
         if: steps.prepare.outputs.should-run == 'true'
         uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
         env:
+          GEMINI_CLI_TRUST_WORKSPACE: 'true'
           GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.prepare.outputs.pr-number }}
           BASE_REF: ${{ steps.prepare.outputs.base-ref }}
