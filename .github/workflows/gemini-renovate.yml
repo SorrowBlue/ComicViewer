@@ -69,9 +69,10 @@ jobs:
           HEAD_REF=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName')
           PR_TITLE=$(gh pr view "$PR_NUMBER" --json title --jq '.title')
 
-          gh pr view "$PR_NUMBER" --json body --jq '.body' > /tmp/pr-body.md
+          mkdir -p .gemini
+          gh pr view "$PR_NUMBER" --json body --jq '.body' > .gemini/pr-body.md
           git fetch origin "$BASE_REF"
-          git diff "origin/${BASE_REF}...HEAD" > /tmp/pr-diff.patch
+          git diff "origin/${BASE_REF}...HEAD" > .gemini/pr-diff.patch
 
           {
             echo "should-run=true"
@@ -88,6 +89,7 @@ jobs:
       - name: Run Gemini CLI to investigate and fix
         id: gemini
         if: steps.prepare.outputs.should-run == 'true'
+        continue-on-error: true
         uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
         env:
           GEMINI_CLI_TRUST_WORKSPACE: 'true'
@@ -128,22 +130,22 @@ jobs:
             ## コンテキスト情報
             - PR 番号: #${{ steps.prepare.outputs.pr-number }}
             - PR タイトル: ${{ steps.prepare.outputs.pr-title }}
-            - PR 本文ファイル: `/tmp/pr-body.md`
-            - PR 差分ファイル: `/tmp/pr-diff.patch`
+            - PR 本文ファイル: `.gemini/pr-body.md`
+            - PR 差分ファイル: `.gemini/pr-diff.patch`
 
             ## 実行手順
             1. **変更内容の確認**
-               - `/tmp/pr-diff.patch` および `/tmp/pr-body.md` を読み取り、更新されたライブラリ・プラグイン名とバージョン変化（更新前 -> 更新後）を正確に把握してください。
+               - `.gemini/pr-diff.patch` および `.gemini/pr-body.md` を読み取り、更新されたライブラリ・プラグイン名とバージョン変化（更新前 -> 更新後）を正確に把握してください。
             2. **リリースノート・変更点の調査**
-               - `/tmp/pr-body.md` に含まれる Release Notes / Changelog や、必要に応じて `google_web_search` / `web_fetch` を用いて、該当バージョンの破壊的変更（Breaking Changes）、非推奨化（Deprecations）、挙動変更、新機能を調査してください。
+               - `.gemini/pr-body.md` に含まれる Release Notes / Changelog や、必要に応じて `google_web_search` / `web_fetch` を用いて、該当バージョンの破壊的変更（Breaking Changes）、非推奨化（Deprecations）、挙動変更、新機能を調査してください。
             3. **プロジェクト内の利用箇所と影響範囲の特定**
                - `grep_search` / `glob` / `read_file` を使用して、更新対象ライブラリがリポジトリ内のどのモジュール・クラスで使用されているかを検索し、影響の有無を分析してください。
             4. **ビルド・静的解析による検証とコード修正**
                - 影響を受けるモジュールのコンパイル・テスト、または `./gradlew checkVersionCatalog` や `./gradlew reportMerge` 等を実行して問題が発生しないか確認してください。
                - 破壊的変更への追従、非推奨 API の置き換え、設定ファイルの調整など、コード修正が必要な場合は、`AGENTS.md` の規約（末尾カンマ、import 順序、KDoc 等）に従ってファイルを修正し、再度 `./gradlew` で検証してください。
-               - ファイルを修正した場合は、コミットメッセージ（英語・Conventional Commits 形式、例: `fix: adapt to <library> <version> API changes`）を `/tmp/gemini-commit-message.txt` に書き出してください（自身で `git push` は行わず、ワークツリーに変更を残すかローカルコミットまでとしてください）。
+               - ファイルを修正した場合は、コミットメッセージ（英語・Conventional Commits 形式、例: `fix: adapt to <library> <version> API changes`）を `.gemini/commit-message.txt` に書き出してください（自身で `git push` は行わず、ワークツリーに変更を残すかローカルコミットまでとしてください）。
             5. **調査レポートの作成**
-               - 調査結果および対応内容を以下の構成で **日本語** の Markdown ファイル `/tmp/gemini-renovate-report.md` に出力してください：
+               - 調査結果および対応内容を以下の構成で **日本語** の Markdown ファイル `.gemini/renovate-report.md` に出力してください：
                  - `## 🤖 Gemini ライブラリ更新調査レポート`
                  - `### 📦 更新対象`（ライブラリ名・更新前後のバージョン）
                  - `### 🔍 主な変更点・破壊的変更`（リリースノートや Changelog から判明した重要事項）
@@ -156,16 +158,20 @@ jobs:
         env:
           HEAD_REF: ${{ steps.prepare.outputs.head-ref }}
         run: |
+          COMMIT_MSG="fix: apply adjustments for dependency update"
+          if [ -s .gemini/commit-message.txt ]; then
+            COMMIT_MSG=$(cat .gemini/commit-message.txt)
+          fi
+          if [ -s .gemini/renovate-report.md ]; then
+            cp .gemini/renovate-report.md /tmp/gemini-renovate-report.md
+          fi
+
           rm -rf .gemini gha-creds-*.json
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           if [ -n "$(git status --porcelain)" ]; then
-            COMMIT_MSG="fix: apply adjustments for dependency update"
-            if [ -s /tmp/gemini-commit-message.txt ]; then
-              COMMIT_MSG=$(cat /tmp/gemini-commit-message.txt)
-            fi
             git add -A
             git commit -m "$COMMIT_MSG"
           fi
