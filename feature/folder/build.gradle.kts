@@ -10,7 +10,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.book.nav)
-                implementation(projects.feature.collection.nav)
                 implementation(projects.feature.folder.nav)
                 implementation(projects.feature.permission.nav)
                 implementation(projects.feature.search.nav)

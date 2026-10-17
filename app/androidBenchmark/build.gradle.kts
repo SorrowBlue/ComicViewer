@@ -6,7 +6,6 @@ android {
     namespace = "com.sorrowblue.comicviewer.benchmark.test"
 
     defaultConfig {
-        targetSdk = libs.versions.targetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

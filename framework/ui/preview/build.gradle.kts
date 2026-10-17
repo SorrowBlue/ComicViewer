@@ -24,11 +24,5 @@ kotlin {
                 implementation(libs.compose.edgeToEdgePreview)
             }
         }
-        androidMain {
-            dependencies {
-            }
-        }
-        jvmMain.dependencies {
-        }
     }
 }

@@ -19,11 +19,6 @@ kotlin {
                 implementation(libs.aboutlibraries.compose)
             }
         }
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.browser)
-            }
-        }
     }
 }
 

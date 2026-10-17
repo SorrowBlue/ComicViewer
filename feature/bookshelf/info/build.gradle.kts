@@ -12,7 +12,6 @@ kotlin {
                 implementation(projects.framework.permission)
                 implementation(projects.feature.bookshelf.nav)
                 implementation(projects.feature.permission.nav)
-                implementation(libs.androidx.coreUri)
             }
         }
         commonTest {

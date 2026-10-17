@@ -13,10 +13,5 @@ kotlin {
                 implementation(projects.feature.settings.nav)
             }
         }
-        jvmMain {
-            dependencies {
-                implementation(libs.filekit.compose)
-            }
-        }
     }
 }

@@ -55,7 +55,6 @@ kotlin {
                 implementation(projects.framework.test)
                 implementation(libs.kotlin.test)
                 implementation(libs.androidx.pagingTesting)
-                implementation(libs.androidx.room3Testing)
                 implementation(libs.kotlinx.coroutinesTest)
             }
         }

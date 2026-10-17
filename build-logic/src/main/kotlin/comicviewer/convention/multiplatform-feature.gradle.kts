@@ -43,21 +43,17 @@ kotlin {
 
             implementation(libs.compose.componentsResources)
             implementation(libs.compose.preview)
-            implementation(libs.compose.uiBackhandler)
             implementation(libs.kotlinx.collectionsImmutable)
             implementation(libs.androidx.lifecycleCommon)
 
             // Adaptive
-            implementation(libs.androidx.windowCore)
             implementation(libs.compose.material3)
             implementation(libs.compose.material3Adaptive)
             implementation(libs.compose.material3AdaptiveLayout)
             implementation(libs.compose.material3AdaptiveNavigation3)
-            implementation(libs.compose.material3AdaptiveNavigationSuite)
 
             // Navigation
             implementation(libs.androidx.lifecycleCompose)
-            implementation(libs.androidx.lifecycleViewmodelNavigation3)
             implementation(libs.androidx.navigation3UI)
             implementation(libs.androidx.navigationeventCompose)
             implementation(libs.kotlinx.serializationCore)
