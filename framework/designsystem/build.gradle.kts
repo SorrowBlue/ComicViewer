@@ -10,7 +10,6 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.compose.componentsResources)
                 implementation(libs.compose.preview)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material3Adaptive)

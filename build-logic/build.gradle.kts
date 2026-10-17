@@ -3,7 +3,6 @@ import dev.detekt.gradle.Detekt
 plugins {
     `kotlin-dsl`
     alias(libs.plugins.detekt)
-    alias(libs.plugins.dependencyAnalysis) apply false
 }
 
 group = "com.sorrowblue.comicviewer.buildlogic"
@@ -23,7 +22,6 @@ tasks {
 }
 
 dependencies {
-    implementation("com.autonomousapps:dependency-analysis-gradle-plugin:3.19.2")
     compileOnly(libs.bundles.plugins)
     compileOnly(files(currentLibs.javaClass.superclass.protectionDomain.codeSource.location))
     detektPlugins(libs.bundles.detekt)

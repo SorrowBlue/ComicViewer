@@ -20,9 +20,6 @@ import com.sorrowblue.comicviewer.framework.navigation.NavigationEntryProvider
 import com.sorrowblue.comicviewer.framework.navigation.NavigationKey
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
 import com.sorrowblue.comicviewer.framework.ui.FloatingActionContent
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.DependencyGraph
-import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 
@@ -69,16 +66,10 @@ internal fun rememberNavEntryDecorators(): @Composable () -> List<NavEntryDecora
     }
 }
 
-@DependencyGraph(scope = AppScope::class)
 expect interface AppGraph :
     ViewModelGraph,
     NavigationGraph {
     val context: PlatformContext
-
-    @DependencyGraph.Factory
-    fun interface Factory {
-        fun createAppGraph(@Provides applicationContext: PlatformContext): AppGraph
-    }
 }
 
 interface NavigationGraph {

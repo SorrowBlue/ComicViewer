@@ -1,9 +1,7 @@
-import com.sorrowblue.comicviewer.configureKotlin
+import com.sorrowblue.comicviewer.diSubprojects
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.comicviewer.multiplatformCompose)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.comicviewer.di)
@@ -14,15 +12,12 @@ plugins {
     id("comicviewer.primitive.jvm-app-version")
 }
 
-configureKotlin<KotlinMultiplatformExtension>()
-
 kotlin {
     jvm()
     applyDefaultHierarchyTemplate()
     sourceSets {
         jvmMain.dependencies {
-            implementation(projects.app.share)
-            implementation(projects.framework.common)
+            diSubprojects.forEach(::implementation)
 
             implementation(compose.desktop.currentOs)
 

@@ -19,7 +19,6 @@ kotlin {
                 implementation(projects.framework.background)
                 implementation(projects.framework.notification)
                 implementation(libs.androidx.workRuntime)
-                implementation(libs.metro.android)
                 implementation(libs.androidx.coreKtx)
             }
         }

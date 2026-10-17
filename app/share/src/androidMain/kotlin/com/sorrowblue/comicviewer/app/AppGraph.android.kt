@@ -8,13 +8,10 @@ import android.content.Context
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.android.MetroAppComponentProviders
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 
-@DependencyGraph(scope = AppScope::class)
 actual interface AppGraph :
     ViewModelGraph,
     NavigationGraph,
@@ -26,9 +23,4 @@ actual interface AppGraph :
     @Provides
     fun providesWorkManager(application: Context): WorkManager =
         WorkManager.getInstance(application)
-
-    @DependencyGraph.Factory
-    actual fun interface Factory {
-        actual fun createAppGraph(@Provides applicationContext: PlatformContext): AppGraph
-    }
 }

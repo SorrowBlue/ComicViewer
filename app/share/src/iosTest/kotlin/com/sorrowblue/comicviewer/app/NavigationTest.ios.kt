@@ -6,6 +6,10 @@ package com.sorrowblue.comicviewer.app
 
 import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
 import com.sorrowblue.comicviewer.framework.common.IosContext
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
 
 actual fun setupTest() {
@@ -20,8 +24,16 @@ actual fun createAppGraph(): AppGraph {
     return IosApplication().appGraph
 }
 
+@DependencyGraph(scope = AppScope::class)
+internal interface TestAppGraph : AppGraph {
+    @DependencyGraph.Factory
+    fun interface Factory {
+        fun createTestAppGraph(@Provides applicationContext: PlatformContext): TestAppGraph
+    }
+}
+
 internal class IosApplication : IosContext(), AppGraphProvider<AppGraph> {
     override val appGraph: AppGraph by lazy {
-        createGraphFactory<AppGraph.Factory>().createAppGraph(this)
+        createGraphFactory<TestAppGraph.Factory>().createTestAppGraph(this)
     }
 }

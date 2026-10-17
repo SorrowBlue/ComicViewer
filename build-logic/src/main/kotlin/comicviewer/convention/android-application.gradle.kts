@@ -64,5 +64,6 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:logger"))
     implementation(project(":framework:common"))
 }

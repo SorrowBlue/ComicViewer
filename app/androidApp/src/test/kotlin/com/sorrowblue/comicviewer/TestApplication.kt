@@ -27,7 +27,7 @@ internal class TestApplication :
     }
 
     override val appGraph: AppGraph by lazy {
-        createGraphFactory<AppGraph.Factory>().createAppGraph(
+        createGraphFactory<AndroidAppGraph.Factory>().createAndroidAppGraph(
             this,
         )
     }

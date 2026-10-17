@@ -14,7 +14,6 @@ kotlin {
                 implementation(projects.feature.file.nav)
                 implementation(projects.feature.folder.nav)
                 implementation(projects.feature.settings.nav)
-                implementation(libs.soil.form)
             }
         }
     }

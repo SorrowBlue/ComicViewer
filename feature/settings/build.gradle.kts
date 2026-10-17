@@ -11,7 +11,6 @@ kotlin {
             dependencies {
                 implementation(projects.feature.settings.common)
                 implementation(projects.feature.settings.nav)
-                implementation(libs.androidx.coreUri)
             }
         }
         androidMain {

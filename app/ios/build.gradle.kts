@@ -1,17 +1,12 @@
-import com.sorrowblue.comicviewer.configureKotlin
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import com.sorrowblue.comicviewer.diSubprojects
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.comicviewer.multiplatformCompose)
     alias(libs.plugins.comicviewer.di)
     alias(libs.plugins.comicviewer.primitive.dokka)
     alias(libs.plugins.comicviewer.primitive.detekt)
     alias(libs.plugins.comicviewer.primitive.aboutlibraries)
 }
-
-configureKotlin<KotlinMultiplatformExtension>()
 
 kotlin {
     listOf(
@@ -31,9 +26,8 @@ kotlin {
     }
     sourceSets {
         iosMain.dependencies {
-            implementation(projects.app.share)
-            implementation(projects.framework.common)
-            implementation(projects.framework.startup)
+            diSubprojects.forEach(::implementation)
+            api(projects.data.storage)
             api(projects.data.storage.smb)
             api(projects.data.storage.device)
             api(projects.data.reader.zip)

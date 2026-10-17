@@ -5,7 +5,6 @@ androidx-activity = "1.13.0"
 androidx-appcompat = "1.8.0"
 androidx-benchmark = "1.5.0"
 androidx-biometric = "1.4.0-alpha07"
-androidx-browser = "1.10.0"
 androidx-compose-material = "1.7.3"
 androidx-core = "1.19.1"
 androidx-coreSplashscreen = "1.2.0"
@@ -19,12 +18,9 @@ androidx-room3 = "3.0.3"
 androidx-sqlite = "2.7.1"
 androidx-startup = "1.2.0"
 androidx-test-espresso = "3.7.0"
-androidx-testCore = "1.7.0"
 androidx-testExtJunit = "1.3.0"
 androidx-testOrchestrator = "1.6.1"
-androidx-testRules = "1.7.0"
 androidx-testRunner = "1.7.0"
-androidx-uiautomator = "2.4.0"
 androidx-window = "1.5.1"
 androidx-work = "2.12.0"
 buildconfig = "6.1.2"
@@ -33,7 +29,6 @@ composables = "2.10.1"
 compose-animationGraphics = "1.12.1"
 compose-material3 = "1.12.0-alpha03"
 compose-material3Adaptive = "1.3.0"
-compose-ui = "1.12.1"
 composeHotReload = "1.2.0"
 composeMultiplatform = "1.12.2"
 dependencyAnalysis = "3.19.2"
@@ -53,16 +48,12 @@ kotlinx-collectionsImmutable = "0.5.2"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
 kotlinx-serialization = "1.11.0"
-kotlinxKover = "0.9.11"
 ksp = "2.3.12"
 metro = "1.4.5"
-modulegraph = "0.15.0"
-multiplatform-core = "1.1.0-alpha03"
 multiplatform-navigation3 = "1.2.0-rc01"
 navgraph = "0.3.0"
 robolectric = "4.17"
 soil = "1.0.0-alpha15"
-targetSdk = "37"
 versionCatalogLinter = "1.1.0"
 
 [libraries]
@@ -73,15 +64,12 @@ androidx-activityCompose = { group = "androidx.activity", name = "activity-compo
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-benchmarkMacroJunit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "androidx-biometric" }
-androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
 androidx-coreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-coreSplashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-coreSplashscreen" }
-androidx-coreUri = { group = "org.jetbrains.androidx.core", name = "core-uri", version.ref = "multiplatform-core" }
 androidx-datastoreCoreOkio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "androidx-datastore" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "androidx-documentfile" }
 androidx-lifecycleCommon = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-common", version.ref = "androidx-lifecycle" }
 androidx-lifecycleCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
-androidx-lifecycleViewmodelCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycleViewmodelNavigation3 = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
 androidx-navigation3Runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "androidx-navigation3" }
 androidx-navigation3UI = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "multiplatform-navigation3" }
@@ -97,12 +85,9 @@ androidx-room3Testing = { group = "androidx.room3", name = "room3-testing", vers
 androidx-sqliteBundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-startupRuntime = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx-startup" }
 androidx-test-espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
-androidx-testCoreKtx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx-testCore" }
 androidx-testExtJunit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-testExtJunit" }
 androidx-testOrchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidx-testOrchestrator" }
-androidx-testRules = { group = "androidx.test", name = "rules", version.ref = "androidx-testRules" }
 androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "androidx-testRunner" }
-androidx-testUiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-uiautomator" }
 androidx-windowCore = { group = "androidx.window", name = "window-core", version.ref = "androidx-window" }
 androidx-workRuntime = { group = "androidx.work", name = "work-runtime", version.ref = "androidx-work" }
 coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
@@ -123,10 +108,7 @@ compose-materialIconsExtended = { group = "org.jetbrains.compose.material", name
 compose-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "composeMultiplatform" }
 compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
-compose-uiBackhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
 compose-uiTest = { group = "org.jetbrains.compose.ui", name = "ui-test", version.ref = "composeMultiplatform" }
-compose-uiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose-ui" }
-compose-uiTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose-ui" }
 compose-uiTooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling", version.ref = "composeMultiplatform" }
 dependencyAnalysis-gradlePlugin = { group = "com.autonomousapps", name = "dependency-analysis-gradle-plugin", version.ref = "dependencyAnalysis" }
 detekt-compose = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "detekt-compose" }
@@ -138,15 +120,13 @@ filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.re
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version.ref = "kioarch" }
-kmpfile-filekit = { group = "dev.zwander", name = "kmpfile-filekit", version.ref = "kmpfile" }
-kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
+kmpfile = { group = "dev.zwander", name = "kmpfile", version.ref = "kmpfile" }
 konture = { group = "io.github.baole", name = "konture", version.ref = "konture" }
 kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serializationGradlePlugin = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-collectionsImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collectionsImmutable" }
-kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -157,7 +137,6 @@ kotlinx-serializationCbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-s
 kotlinx-serializationCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serializationProtobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
-kover-gradlePlugin = { group = "org.jetbrains.kotlinx.kover", name = "org.jetbrains.kotlinx.kover.gradle.plugin", version.ref = "kotlinxKover" }
 kpdfium = { group = "com.sorrowblue.kpdfium", name = "kpdfium", version = "0.1.1" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
@@ -184,7 +163,6 @@ plugins = [
     "kotlin-composeCompilerGradlePlugin",
     "kotlin-gradlePlugin",
     "kotlin-serializationGradlePlugin",
-    "kover-gradlePlugin",
     "ksp-gradlePlugin",
     "metro-gradlePlugin",
     "navgraph-gradlePlugin"
