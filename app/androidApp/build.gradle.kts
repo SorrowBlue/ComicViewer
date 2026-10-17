@@ -1,19 +1,15 @@
-import com.github.skydoves.navgraph.gradle.RenderBackend
+import com.sorrowblue.comicviewer.diSubprojects
 
 plugins {
     alias(libs.plugins.comicviewer.androidApplication)
-    alias(libs.plugins.metro)
+    alias(libs.plugins.comicviewer.di)
     id("comicviewer.primitive.android-version-name-code")
-    alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.navgraph)
 }
 
 android {
     namespace = "com.sorrowblue.comicviewer"
     defaultConfig {
         applicationId = "com.sorrowblue.comicviewer"
-        targetSdk = libs.versions.targetSdk.get().toInt()
     }
     androidResources {
         @Suppress("UnstableApiUsage")
@@ -63,12 +59,10 @@ android {
 }
 
 dependencies {
-    implementation(projects.app.share)
+    diSubprojects.forEach(::implementation)
     implementation(libs.androidx.workRuntime)
     implementation(libs.metro.android)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.navigation3Runtime)
-    implementation(project(":framework:ui"))
 }
 
 aboutLibraries {
@@ -77,12 +71,6 @@ aboutLibraries {
     }
 }
 
-ksp {
-    arg("navgraph.annotatedOnly", "true")
-}
-
-navgraph {
-    variant.set("debug")
-    renderBackend.set(RenderBackend.ROBOLECTRIC)
-    galleryRenderBackend.set(RenderBackend.ROBOLECTRIC)
+tasks.withType<Test>().configureEach {
+    failOnNoDiscoveredTests = false
 }

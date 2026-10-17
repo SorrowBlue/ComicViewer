@@ -5,6 +5,7 @@
 package comicviewer.primitive
 
 val kotlinPluginIds = listOf(
+    "com.android.application",
     "org.jetbrains.kotlin.jvm",
     "org.jetbrains.kotlin.android",
     "org.jetbrains.kotlin.multiplatform",

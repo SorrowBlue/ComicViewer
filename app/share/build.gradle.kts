@@ -1,10 +1,9 @@
 import com.github.skydoves.navgraph.gradle.RenderBackend
-import com.sorrowblue.comicviewer.libs
+import com.sorrowblue.comicviewer.diSubprojects
 
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.comicviewer.multiplatformCompose)
-    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.ksp)
     alias(libs.plugins.navgraph)
@@ -59,40 +58,39 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                rootProject.subprojects.filterNot {
-                    it.path == project.path || it.path.startsWith(projects.app.path) ||
-                        it.path == projects.framework.navigation.processor.path ||
-                        it.path == projects.kontureTest.path
-                }.forEach {
-                    val hasSource = it.projectDir.resolve("src").exists()
-                    if (hasSource) {
-                        api(it)
-                    } else {
-                        logger.lifecycle("Skipping empty or non-source module: ${it.path}")
-                    }
-                }
-                api(projects.app.sync)
+                api(projects.domain.model)
+                api(projects.domain.usecase)
+                api(projects.framework.common)
+                api(projects.framework.navigation)
+                api(projects.framework.ui)
+                implementation(projects.feature.bookshelf)
+                implementation(projects.feature.folder.nav)
+                implementation(projects.framework.designsystem)
 
                 implementation(libs.androidx.navigation3UI)
-                implementation(libs.androidx.lifecycleViewmodelNavigation3)
                 implementation(libs.compose.componentsResources)
-                implementation(libs.compose.preview)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.material3AdaptiveLayout)
                 implementation(libs.compose.material3AdaptiveNavigation3)
-                implementation(libs.compose.material3AdaptiveNavigationSuite)
                 implementation(libs.metro.viewmodelCompose)
                 implementation(libs.kotlinx.collectionsImmutable)
                 api(libs.metro.viewmodel)
             }
         }
+        named("noAndroid") {
+            dependencies {
+                api(projects.framework.startup)
+            }
+        }
         commonTest.dependencies {
+            diSubprojects.forEach(::implementation)
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutinesTest)
             implementation(libs.compose.uiTest)
             implementation(libs.filekit.core)
         }
         androidMain.dependencies {
+            implementation(projects.feature.book)
             implementation(libs.metro.android)
             implementation(libs.androidx.workRuntime)
             implementation(libs.androidx.appcompat)
@@ -110,7 +108,6 @@ kotlin {
             dependencies {
                 implementation(libs.androidx.testRunner)
                 runtimeOnly(libs.androidx.test.espressoCore)
-                implementation(libs.filekit.core)
             }
         }
     }

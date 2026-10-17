@@ -8,11 +8,23 @@ import android.app.Application
 import androidx.work.Configuration
 import com.sorrowblue.comicviewer.app.AppGraph
 import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
+import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metrox.android.MetroAppComponentProviders
 import dev.zacsweers.metrox.android.MetroApplication
 import logcat.LogPriority
 import logcat.logcat
+
+@DependencyGraph(scope = AppScope::class)
+internal interface AndroidAppGraph : AppGraph {
+    @DependencyGraph.Factory
+    fun interface Factory {
+        fun createAndroidAppGraph(@Provides applicationContext: PlatformContext): AndroidAppGraph
+    }
+}
 
 @Suppress("Registered")
 internal class MainApplication :
@@ -22,7 +34,7 @@ internal class MainApplication :
     Configuration.Provider {
 
     override val appGraph: AppGraph by lazy {
-        createGraphFactory<AppGraph.Factory>().createAppGraph(
+        createGraphFactory<AndroidAppGraph.Factory>().createAndroidAppGraph(
             this,
         )
     }

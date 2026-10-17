@@ -16,3 +16,29 @@ val Project.libs: LibrariesForLibs
 
 fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean =
     hasPlugin(provider.get().pluginId)
+
+private val nonDiModulePaths = setOf(
+    ":core:logger",
+    ":konture-test",
+    ":framework:designsystem",
+    ":framework:navigation:processor",
+    ":framework:test",
+    ":framework:ui:preview",
+    ":framework:permission",
+    ":feature:file:nav",
+)
+
+/**
+ * Subprojects that contribute to the Metro dependency graph (`AppScope`).
+ */
+val Project.diSubprojects: List<Project>
+    get() = rootProject.subprojects.filter { subproject ->
+        subproject.path != path &&
+            subproject.path !in nonDiModulePaths &&
+            (
+                !subproject.path.startsWith(
+                    ":app:",
+                ) || subproject.path == ":app:share" || subproject.path == ":app:sync"
+                ) &&
+            subproject.projectDir.resolve("src").exists()
+    }
