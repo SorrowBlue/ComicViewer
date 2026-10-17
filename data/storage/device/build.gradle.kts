@@ -21,7 +21,7 @@ kotlin {
         }
         iosMain {
             dependencies {
-                implementation(libs.kmpfile.okio)
+                implementation(libs.kmpfile)
             }
         }
     }

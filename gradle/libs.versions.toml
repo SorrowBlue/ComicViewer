@@ -120,7 +120,7 @@ filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.re
 jcifs = { group = "org.codelibs", name = "jcifs", version.ref = "jcifs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kioarch = { group = "com.sorrowblue.kioarch", name = "kioarch", version.ref = "kioarch" }
-kmpfile-okio = { group = "dev.zwander", name = "kmpfile-okio", version.ref = "kmpfile" }
+kmpfile = { group = "dev.zwander", name = "kmpfile", version.ref = "kmpfile" }
 konture = { group = "io.github.baole", name = "konture", version.ref = "konture" }
 kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
