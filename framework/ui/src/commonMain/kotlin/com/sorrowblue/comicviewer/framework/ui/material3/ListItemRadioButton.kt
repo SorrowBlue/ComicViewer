@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.ListItemElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 
 @Composable
 fun ListItemRadioButton(
@@ -36,14 +36,12 @@ fun ListItemRadioButton(
             trailingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
         )
     },
-    tonalElevation: Dp = ListItemDefaults.Elevation,
-    shadowElevation: Dp = ListItemDefaults.Elevation,
+    elevation: ListItemElevation = ListItemDefaults.elevation(),
 ) {
     Box(
         modifier = modifier,
     ) {
         ListItem(
-            headlineContent = headlineContent,
             overlineContent = overlineContent,
             supportingContent = supportingContent,
             leadingContent = {
@@ -51,8 +49,8 @@ fun ListItemRadioButton(
             },
             trailingContent = trailingContent,
             colors = colors,
-            tonalElevation = tonalElevation,
-            shadowElevation = shadowElevation,
+            elevation = elevation,
+            content = headlineContent,
         )
         Box(
             Modifier

@@ -105,7 +105,6 @@ internal fun SettingsScreen(
             ) {
                 items(uiState.settingsList) { settings ->
                     ListItem(
-                        headlineContent = { Text(text = stringResource(settings.title)) },
                         leadingContent = {
                             Icon(
                                 imageVector = settings.icon,
@@ -115,7 +114,9 @@ internal fun SettingsScreen(
                         modifier = Modifier
                             .clickable(onClick = { onSettingsClick(settings) })
                             .testTag(settings.testTag),
-                    )
+                    ) {
+                        Text(text = stringResource(settings.title))
+                    }
                 }
             }
         } else {

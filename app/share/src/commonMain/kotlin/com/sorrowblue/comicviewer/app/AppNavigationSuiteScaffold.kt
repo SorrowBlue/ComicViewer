@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -18,10 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.adaptive.AnimatableNavigationSuiteScaffold
 import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalNavigationItems
 import com.sorrowblue.comicviewer.framework.ui.adaptive.LocalNavigationSuiteScaffoldState
 import com.sorrowblue.comicviewer.framework.ui.adaptive.NavigationReSelectRegistry
-import com.sorrowblue.comicviewer.framework.ui.adaptive.ProvideNavigationSuiteScaffoldWithPrimaryActionOverride
 import com.sorrowblue.comicviewer.framework.ui.adaptive.currentNavigationSuiteType
 import com.sorrowblue.comicviewer.framework.ui.adaptive.provideNavigationReSelectRegistry
 import com.sorrowblue.comicviewer.framework.ui.animation.LocalSharedTransitionScope
@@ -39,10 +38,9 @@ internal fun AppNavigationSuiteScaffold(
             LocalNavigationSuiteScaffoldState provides state,
             provideNavigationReSelectRegistry(registry),
             LocalSharedTransitionScope provides this,
-            ProvideNavigationSuiteScaffoldWithPrimaryActionOverride,
         ) {
             val navigationSuiteType = currentNavigationSuiteType()
-            NavigationSuiteScaffold(
+            AnimatableNavigationSuiteScaffold(
                 navigationSuiteType = navigationSuiteType,
                 state = state,
                 navigationItems = {

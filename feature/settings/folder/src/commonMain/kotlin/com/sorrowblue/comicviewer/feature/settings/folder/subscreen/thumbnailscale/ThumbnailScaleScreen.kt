@@ -45,11 +45,10 @@ internal fun ThumbnailScaleScreen(
                     leadingContent = {
                         RadioButton(selected = currentImageScale == imageScale, onClick = null)
                     },
-                    headlineContent = {
-                        Text(text = imageScale.displayText)
-                    },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
+                ) {
+                    Text(text = imageScale.displayText)
+                }
             }
         }
     }

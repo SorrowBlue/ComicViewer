@@ -84,7 +84,6 @@ internal fun BasicCollectionContent(
                 val item = lazyPagingItems[it]
                 if (item != null) {
                     ListItem(
-                        headlineContent = { Text(item.name) },
                         leadingContent = {
                             AsyncImage(
                                 model = FileThumbnail.from(item),
@@ -99,7 +98,9 @@ internal fun BasicCollectionContent(
                         },
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         modifier = Modifier.animateItem(),
-                    )
+                    ) {
+                        Text(item.name)
+                    }
                 }
             }
         }

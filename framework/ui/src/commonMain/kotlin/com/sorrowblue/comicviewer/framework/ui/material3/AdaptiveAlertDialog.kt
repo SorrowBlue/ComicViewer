@@ -12,16 +12,9 @@ import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.BasicAlertDialogOverride
-import androidx.compose.material3.BasicAlertDialogOverrideScope
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ComponentOverrideApi
-import androidx.compose.material3.LocalBasicAlertDialogOverride
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
@@ -35,34 +28,6 @@ import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 internal val DialogMinWidth = 280.dp
 internal val DialogMaxWidth = 560.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
-@ExperimentalMaterial3ComponentOverrideApi
-object FixedDefaultBasicAlertDialogOverride : BasicAlertDialogOverride {
-    @Composable
-    override fun BasicAlertDialogOverrideScope.BasicAlertDialog() {
-        Dialog(onDismissRequest = onDismissRequest, properties = properties) {
-            val isFullScreenDialog = isCompactWindowClass()
-            Box(
-                modifier =
-                    modifier.then(
-                        if (isFullScreenDialog) {
-                            Modifier
-                        } else {
-                            Modifier.sizeIn(
-                                minWidth = DialogMinWidth,
-                                maxWidth = DialogMaxWidth,
-                            ).sizeIn(maxHeight = DialogMaxWidth)
-                        },
-                    ),
-                propagateMinConstraints = true,
-            ) {
-                content()
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3ComponentOverrideApi::class)
 @Composable
 fun AdaptiveAlertDialog(
     title: @Composable () -> Unit,
@@ -75,41 +40,37 @@ fun AdaptiveAlertDialog(
     val movableContent = remember {
         movableContentOf { contentPadding: PaddingValues -> content(contentPadding) }
     }
-    CompositionLocalProvider(
-        LocalBasicAlertDialogOverride provides FixedDefaultBasicAlertDialogOverride,
+    AdaptiveBasicAlertDialog(
+        onDismissRequest = onBackClick,
+        isFullScreenDialog = isFullScreenDialog,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = modifier,
     ) {
-        BasicAlertDialog(
-            onDismissRequest = onBackClick,
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            modifier = modifier,
-        ) {
-            if (isFullScreenDialog) {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = title,
-                            navigationIcon = navigationIcon,
-                            windowInsets = WindowInsets.safeDrawing.only(AppBarWindowInsets),
-                        )
-                    },
-                    contentWindowInsets = WindowInsets.safeDrawing.add(ContentWindowInsets),
-                    content = movableContent,
-                )
-            } else {
-                AlertDialogContent(
-                    title = title,
-                    content = {
-                        movableContent(it)
-                    },
-                )
-            }
+        if (isFullScreenDialog) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = title,
+                        navigationIcon = navigationIcon,
+                        windowInsets = WindowInsets.safeDrawing.only(AppBarWindowInsets),
+                    )
+                },
+                contentWindowInsets = WindowInsets.safeDrawing.add(ContentWindowInsets),
+                content = movableContent,
+            )
+        } else {
+            AlertDialogContent(
+                title = title,
+                content = {
+                    movableContent(it)
+                },
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3ComponentOverrideApi::class)
 @Composable
-fun AdaptiveAlertDialog2(
+fun AdaptiveAlertDialog(
     title: @Composable () -> Unit,
     onDismissRequest: () -> Unit,
     actionButton: @Composable () -> Unit,
@@ -123,39 +84,64 @@ fun AdaptiveAlertDialog2(
     val movableContent = remember {
         movableContentOf { contentPadding: PaddingValues -> content(contentPadding) }
     }
-    CompositionLocalProvider(
-        LocalBasicAlertDialogOverride provides FixedDefaultBasicAlertDialogOverride,
+    AdaptiveBasicAlertDialog(
+        onDismissRequest = onDismissRequest,
+        isFullScreenDialog = isFullScreenDialog,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = modifier,
     ) {
-        BasicAlertDialog(
-            onDismissRequest = onDismissRequest,
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            modifier = modifier,
+        if (isFullScreenDialog) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = title,
+                        navigationIcon = navigationIcon,
+                        actions = {
+                            actionButton()
+                        },
+                        windowInsets = WindowInsets.safeDrawing.only(AppBarWindowInsets),
+                    )
+                },
+                contentWindowInsets = WindowInsets.safeDrawing.add(ContentWindowInsets),
+                content = movableContent,
+            )
+        } else {
+            AlertDialogContent(
+                title = title,
+                confirmButton = confirmButton,
+                dismissButton = dismissButton,
+                content = {
+                    movableContent(it)
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun AdaptiveBasicAlertDialog(
+    onDismissRequest: () -> Unit,
+    isFullScreenDialog: Boolean,
+    modifier: Modifier = Modifier,
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable () -> Unit,
+) {
+    Dialog(onDismissRequest = onDismissRequest, properties = properties) {
+        Box(
+            modifier =
+                modifier.then(
+                    if (isFullScreenDialog) {
+                        Modifier
+                    } else {
+                        Modifier.sizeIn(
+                            minWidth = DialogMinWidth,
+                            maxWidth = DialogMaxWidth,
+                        ).sizeIn(maxHeight = DialogMaxWidth)
+                    },
+                ),
+            propagateMinConstraints = true,
         ) {
-            if (isFullScreenDialog) {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = title,
-                            navigationIcon = navigationIcon,
-                            actions = {
-                                actionButton()
-                            },
-                            windowInsets = WindowInsets.safeDrawing.only(AppBarWindowInsets),
-                        )
-                    },
-                    contentWindowInsets = WindowInsets.safeDrawing.add(ContentWindowInsets),
-                    content = movableContent,
-                )
-            } else {
-                AlertDialogContent(
-                    title = title,
-                    confirmButton = confirmButton,
-                    dismissButton = dismissButton,
-                    content = {
-                        movableContent(it)
-                    },
-                )
-            }
+            content()
         }
     }
 }

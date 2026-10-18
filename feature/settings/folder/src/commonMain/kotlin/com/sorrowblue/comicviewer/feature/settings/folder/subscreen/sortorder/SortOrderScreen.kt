@@ -49,11 +49,10 @@ internal fun SortOrderScreen(
                     leadingContent = {
                         RadioButton(selected = currentSortType == sortType, onClick = null)
                     },
-                    headlineContent = {
-                        Text(text = sortType.displayText)
-                    },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
+                ) {
+                    Text(text = sortType.displayText)
+                }
             }
         }
     }

@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.framework.ui.component.file
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -31,7 +29,6 @@ import com.sorrowblue.comicviewer.framework.ui.adaptive.isNavigationBar
 import com.sorrowblue.comicviewer.framework.ui.layout.blink
 import com.sorrowblue.comicviewer.framework.ui.paging.LazyPagingColumn
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T : File> FileLazyVerticalGrid(
     uiState: FileLazyVerticalGridUiState,
@@ -40,9 +37,13 @@ fun <T : File> FileLazyVerticalGrid(
     onItemInfoClick: (T) -> Unit,
     modifier: Modifier = Modifier,
     emphasisPath: String = "",
-    cacheWindow: LazyLayoutCacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp),
-    state: LazyGridState = rememberLazyGridState(cacheWindow),
+    state: LazyGridState = rememberLazyGridState(),
     contentPadding: PaddingValues = PaddingValues(),
+    type: LazyPagingColumn = rememberLazyPagingColumnType(
+        fileListDisplay = uiState.fileListDisplay,
+        gridColumnSize = uiState.columnSize,
+    ),
+    cacheWindow: LazyLayoutCacheWindow = type.cacheWindow,
 ) {
     val contentScale = remember(uiState.imageScale) {
         when (uiState.imageScale) {
@@ -58,12 +59,9 @@ fun <T : File> FileLazyVerticalGrid(
             ImageFilterQuality.High -> FilterQuality.High
         }
     }
-    val type = rememberLazyPagingColumnType(
-        fileListDisplay = uiState.fileListDisplay,
-        gridColumnSize = uiState.columnSize,
-    )
     LazyPagingColumn(
         state = state,
+        cacheWindow = cacheWindow,
         lazyPagingItems = lazyPagingItems,
         contentPadding = contentPadding,
         type = type,

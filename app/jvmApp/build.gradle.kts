@@ -1,4 +1,6 @@
 import com.sorrowblue.comicviewer.diSubprojects
+import java.util.zip.ZipFile
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -91,95 +93,123 @@ tasks.withType<JavaExec> {
     jvmArgs("-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
 }
 
-abstract class CopyConveyorInputsTask @Inject constructor(
-    private val fileSystemOperations: FileSystemOperations,
-) : DefaultTask() {
+abstract class InspectConveyorDependenciesTask : DefaultTask() {
 
-    @get:InputFile
-    abstract val configFile: RegularFileProperty
+    @get:InputFiles
+    @get:Classpath
+    abstract val runtimeJars: ConfigurableFileCollection
 
-    @get:OutputDirectory
-    abstract val outputDir: DirectoryProperty
+    @get:Input
+    abstract val jarPathToCoordinate: MapProperty<String, String>
+
+    @get:OutputFile
+    abstract val manifestOutputFile: RegularFileProperty
+
+    @get:OutputFile
+    abstract val errorsOutputFile: RegularFileProperty
 
     @TaskAction
     fun run() {
-        val confFile = configFile.get().asFile
-        if (!confFile.exists()) {
-            throw GradleException("Conveyor config not found: ${confFile.path}")
-        }
+        val osNameRegex = Regex(
+            "(?:^|[-_.])(windows|win32|win64|linux|macos|osx|darwin)(?:[-_.]|$)",
+            RegexOption.IGNORE_CASE,
+        )
+        val versionedSoRegex = Regex("""\.so(\.\d+)+$""", RegexOption.IGNORE_CASE)
 
-        val outDir = outputDir.get().asFile
-        outDir.deleteRecursively()
-        outDir.mkdirs()
+        val dependencies = sortedSetOf<String>()
+        val nativeErrors = sortedSetOf<String>()
 
-        var isTargetSection = false
-        val triggerComment = "// Inputs from dependency configurations and the JAR task."
+        jarPathToCoordinate.get().forEach { (jarPath, coord) ->
+            dependencies.add(coord)
+            val artifact = coord.split(":").getOrElse(1) { File(jarPath).name }
 
-        // 正規表現の解説:
-        // 1. (?:"([^"]+)"|([^\s"\[\],]+)) :
-        //    - "で囲まれた中身 (グループ1) OR 引用符なしの文字列 (グループ2)
-        // 2. (?:\s*->\s*(?:(?:"([^"]+)")|([^\s"\[\],]+)))? :
-        //    - オプションで "->" の後に続く 引用符あり (グループ3) OR 引用符なし (グループ4) のエイリアス
-        val regex = """(?:"([^"]+)"|([^\s"\[\],]+))(?:\s*->\s*(?:(?:"([^"]+)")|([^\s"\[\],]+)))?""".toRegex()
+            if (osNameRegex.containsMatchIn(artifact)) {
+                nativeErrors.add(
+                    "[OS-Specific Artifact Name] $coord (matched OS token in artifact name)",
+                )
+            }
 
-        confFile.useLines { lines ->
-            lines.forEach { line ->
-                val trimmed = line.trim()
+            val jarFile = File(jarPath)
+            if (!jarFile.exists()) {
+                nativeErrors.add("[JAR File Not Found] $coord ($jarPath)")
+                return@forEach
+            }
 
-                // セクションの開始判定
-                if (!isTargetSection) {
-                    if (trimmed == triggerComment) isTargetSection = true
-                    return@forEach
-                }
+            runCatching {
+                ZipFile(jarFile).use { zip ->
+                    val entryNames = zip.entries().asSequence()
+                        .filterNot { it.isDirectory }
+                        .map { it.name.lowercase() }
+                        .toList()
 
-                // セクション内での不要な行（コメント、空行、ブロック記号のみ）をスキップ
-                if (trimmed.isEmpty() || trimmed.startsWith("//") || trimmed == "[" || trimmed == "]") {
-                    return@forEach
-                }
+                    val dllCount = entryNames.count { it.endsWith(".dll") }
+                    val soCount = entryNames.count {
+                        it.endsWith(".so") || versionedSoRegex.containsMatchIn(it)
+                    }
+                    val dylibCount = entryNames.count {
+                        it.endsWith(".dylib") || it.endsWith(".jnilib")
+                    }
 
-                // app.inputs += などの接頭辞を除去して解析しやすくする
-                val cleanLine = trimmed
-                    .replaceFirst("app.inputs\\s*\\+?=\\s*\\$\\{app\\.inputs\\}\\s*\\[".toRegex(), "")
-                    .replaceFirst("app.inputs\\s*\\+?=\\s*".toRegex(), "")
-                    .trim()
+                    val hasWin = dllCount > 0
+                    val hasLinux = soCount > 0
+                    val hasMac = dylibCount > 0
 
-                val match = regex.find(cleanLine)
-                if (match != null) {
-                    // グループ1(引用符あり)かグループ2(引用符なし)からパスを取得
-                    val rawSrcPath = match.groups[1]?.value ?: match.groups[2]?.value ?: return@forEach
-                    val srcPath = rawSrcPath.replace("\\\\", "\\") // Windowsエスケープ対策
-
-                    // グループ3(引用符ありエイリアス)かグループ4(引用符なしエイリアス)からエイリアス名を取得
-                    val aliasName = match.groups[3]?.value ?: match.groups[4]?.value
-
-                    val srcFile = File(srcPath)
-                    if (srcFile.exists()) {
-                        val targetFileName = aliasName?.trim() ?: srcFile.name
-                        logger.lifecycle("Copying: ${srcFile.name} -> $targetFileName")
-
-                        fileSystemOperations.copy {
-                            from(srcFile)
-                            into(outDir)
-                            rename { targetFileName }
-                            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+                    if ((hasWin || hasLinux || hasMac) && !(hasWin && hasLinux && hasMac)) {
+                        val missing = buildList {
+                            if (!hasWin) add("Windows(.dll)")
+                            if (!hasLinux) add("Linux(.so)")
+                            if (!hasMac) add("macOS(.dylib/.jnilib)")
                         }
-                    } else {
-                        // GitHub Actions上では絶対パスが異なる場合があるためのログ
-                        logger.warn("File not found: $srcPath")
+                        nativeErrors.add(
+                            "[Missing Target OS Native Binary] $coord " +
+                                "(missing: ${missing.joinToString(", ")} | " +
+                                "found: dll=$dllCount, so=$soCount, dylib/jnilib=$dylibCount)",
+                        )
                     }
                 }
+            }.onFailure { e ->
+                nativeErrors.add("[JAR Inspection Error] $coord: ${e.message}")
             }
         }
-        logger.lifecycle("All files copied to: ${outDir.path}")
+
+        val manifestFile = manifestOutputFile.get().asFile
+        manifestFile.parentFile.mkdirs()
+        manifestFile.writeText(
+            if (dependencies.isEmpty()) "" else dependencies.joinToString("\n", postfix = "\n"),
+        )
+        logger.lifecycle("Successfully extracted ${dependencies.size} dependencies to ${manifestFile.path}")
+
+        val errorsFile = errorsOutputFile.get().asFile
+        errorsFile.parentFile.mkdirs()
+        errorsFile.writeText(
+            if (nativeErrors.isEmpty()) "" else nativeErrors.joinToString("\n", postfix = "\n"),
+        )
+        logger.lifecycle("Native binary inspection complete: ${nativeErrors.size} issue(s) written to ${errorsFile.path}")
     }
 }
 
-tasks.register<CopyConveyorInputsTask>("copyConveyorInputs") {
-    description = "Conveyorのconfigからapp.inputsを解析し、リネームを考慮して特定のディレクトリにコピーします"
-    group = "distribution"
+val jvmRuntimeClasspath = configurations.named("jvmRuntimeClasspath")
 
-    dependsOn("writeConveyorConfig", "jvmJar")
+tasks.register<InspectConveyorDependenciesTask>("inspectConveyorDependencies") {
+    description = "Extracts external JVM runtime dependencies and inspects JARs for OS-specific native binary drift."
+    group = "verification"
 
-    configFile.set(layout.projectDirectory.file("generated.conveyor.conf"))
-    outputDir.set(layout.buildDirectory.dir("all-libs"))
+    val externalArtifacts = jvmRuntimeClasspath.map { config ->
+        config.incoming.artifactView {
+            componentFilter { it is ModuleComponentIdentifier }
+        }.artifacts
+    }
+
+    runtimeJars.from(externalArtifacts.map { it.artifactFiles })
+    jarPathToCoordinate.set(
+        externalArtifacts.map { artifacts ->
+            artifacts.resolvedArtifacts.get().mapNotNull { artifact ->
+                val id = artifact.id.componentIdentifier as? ModuleComponentIdentifier
+                    ?: return@mapNotNull null
+                artifact.file.absolutePath to "${id.group}:${id.module}:${id.version}"
+            }.toMap()
+        },
+    )
+    manifestOutputFile.set(layout.buildDirectory.file("conveyor/deps.txt"))
+    errorsOutputFile.set(layout.buildDirectory.file("conveyor/native-errors.txt"))
 }

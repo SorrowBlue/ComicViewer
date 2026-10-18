@@ -54,11 +54,10 @@ internal fun FilterQualityScreen(
                             onClick = null,
                         )
                     },
-                    headlineContent = {
-                        Text(text = stringResource(imageFilterQuality.displayText))
-                    },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
+                ) {
+                    Text(text = stringResource(imageFilterQuality.displayText))
+                }
             }
         }
     }
