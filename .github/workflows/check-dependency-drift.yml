@@ -8,6 +8,17 @@ on:
       - 'gradle/libs.versions.toml'
       - '**/build.gradle.kts'
       - 'settings.gradle.kts'
+      - 'config/conveyor/**'
+      - '.github/workflows/check-dependency-drift.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'gradle/libs.versions.toml'
+      - '**/build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'config/conveyor/**'
+      - '.github/workflows/check-dependency-drift.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +27,7 @@ permissions:
 
 jobs:
   check-drift:
-    name: Check Drift on ${{ matrix.os-name }}
+    name: Extract Deps on ${{ matrix.os-name }}
     strategy:
       matrix:
         include:
@@ -33,52 +44,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 2
 
       - name: Setup JDK and Gradle
         uses: ./.github/actions/setup-java-gradle
 
-      - name: Generate current dependency manifest
+      - name: Inspect Conveyor dependencies and JAR native binaries
         run: |
-          ./gradlew :app:jvmApp:writeConveyorConfig
-          # チェックアウト時に消えないように親ディレクトリに退避させておく
-          cp extract_deps.py ../extract_deps.py
-          if [ -f app/jvmApp/generated.conveyor.conf ]; then
-            python extract_deps.py app/jvmApp/generated.conveyor.conf ./dependency-manifest-new.txt
-          else
-            echo "Current conveyor config not found."
-            touch ./dependency-manifest-new.txt
-          fi
+          ./gradlew :app:jvmApp:inspectConveyorDependencies
+          cp app/jvmApp/build/conveyor/deps.txt "./deps-${{ matrix.os-name }}.txt"
+          cp app/jvmApp/build/conveyor/native-errors.txt "./native-errors-${{ matrix.os-name }}.txt"
 
-      - name: Generate previous dependency manifest (HEAD~1)
-        run: |
-          git checkout HEAD~1
-          ./gradlew :app:jvmApp:writeConveyorConfig || true
-          if [ -f app/jvmApp/generated.conveyor.conf ]; then
-            python ../extract_deps.py app/jvmApp/generated.conveyor.conf ./dependency-manifest-old.txt
-          else
-            echo "Previous conveyor config not found. Creating empty fallback."
-            touch ./dependency-manifest-old.txt
-          fi
-
-      - name: Compare manifests and create artifact
-        run: |
-          diff -u ./dependency-manifest-old.txt ./dependency-manifest-new.txt > ./diff-${{ matrix.os-name }}.txt || true
-          # 差分がない場合はファイル自体を削除（アップロード対象外にする）
-          if [ ! -s ./diff-${{ matrix.os-name }}.txt ]; then
-            rm -f ./diff-${{ matrix.os-name }}.txt
-          fi
-
-      - name: Upload diff artifact
+      - name: Upload dependency check artifacts
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: diff-${{ matrix.os-name }}
-          path: ./diff-${{ matrix.os-name }}.txt
-          if-no-files-found: ignore
+          name: deps-${{ matrix.os-name }}
+          path: |
+            ./deps-${{ matrix.os-name }}.txt
+            ./native-errors-${{ matrix.os-name }}.txt
+          if-no-files-found: error
 
-  create-issue:
-    name: Create Unified Issue
+  verify-dependencies:
+    name: Verify Multi-OS Dependencies
     needs: [ check-drift ]
     runs-on: ubuntu-latest
     permissions:
@@ -87,44 +73,60 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Download all diff artifacts
+      - name: Download all dependency artifacts
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          path: ./diffs
+          path: ./artifacts
           merge-multiple: true
 
-      - name: Check and unify diffs
+      - name: Verify cross-OS consistency (Method 1) and JAR native completeness (Method 2)
         run: |
-          HAS_DIFF=false
+          HAS_ERROR=false
           BODY_FILE="./issue_body.md"
-          
-          # 本文のヘッダーを作成 (英語・絵文字なし)
-          cat << 'EOF' > "$BODY_FILE"
-          ## Dependency changes detected
 
-          Dependency changes (additions, removals, or version updates) affecting the Conveyor build configuration have been detected.
-          Please verify the distribution settings and perform verification testing.
+          cat << 'EOF' > "$BODY_FILE"
+          ## OS-specific dependency detected
+
+          A dependency that differs across target OSes or lacks native binaries for all target desktop platforms (Windows, Linux, macOS) was detected.
+          Please verify the Conveyor configuration (`config/conveyor/conveyor.conf`) and Gradle dependencies (`app/jvmApp/build.gradle.kts`).
 
           EOF
-          
-          # 各OSの差分ファイルを順番にマージ
-          for OS in "Windows" "macOS" "Linux"; do
-            FILE="./diffs/diff-${OS}.txt"
-            if [ -s "$FILE" ]; then
-              HAS_DIFF=true
-              echo "### Diffs for ${OS}" >> "$BODY_FILE"
+
+          # 方法1: Linux を基準に macOS / Windows との解決結果の不一致をチェック
+          for TARGET_OS in "macOS" "Windows"; do
+            DIFF_FILE="./diff-Linux-vs-${TARGET_OS}.txt"
+            diff -u "./artifacts/deps-Linux.txt" "./artifacts/deps-${TARGET_OS}.txt" > "$DIFF_FILE" || true
+            if [ -s "$DIFF_FILE" ]; then
+              HAS_ERROR=true
+              echo "### [Method 1] Dependency resolution mismatch: Linux vs ${TARGET_OS}" >> "$BODY_FILE"
               echo "\`\`\`diff" >> "$BODY_FILE"
-              cat "$FILE" >> "$BODY_FILE"
-              echo -e "\n\`\`\`" >> "$BODY_FILE"
-              echo "" >> "$BODY_FILE"
+              cat "$DIFF_FILE" >> "$BODY_FILE"
+              echo -e "\n\`\`\`\n" >> "$BODY_FILE"
             fi
           done
-          
-          if [ "$HAS_DIFF" = true ]; then
-            echo "Creating unified Issue..."
-            gh issue create --title "[Dependency Update] Distribution configuration check required" --body-file "$BODY_FILE"
+
+          # 方法2: 各 OS で解決された JAR 内のネイティブバイナリ欠落・OS固有アーティファクト名をチェック
+          for OS in "Linux" "macOS" "Windows"; do
+            ERR_FILE="./artifacts/native-errors-${OS}.txt"
+            if [ -s "$ERR_FILE" ]; then
+              HAS_ERROR=true
+              echo "### [Method 2] JAR native binary / artifact name issues on ${OS}" >> "$BODY_FILE"
+              echo "\`\`\`text" >> "$BODY_FILE"
+              cat "$ERR_FILE" >> "$BODY_FILE"
+              echo -e "\n\`\`\`\n" >> "$BODY_FILE"
+            fi
+          done
+
+          if [ "$HAS_ERROR" = true ]; then
+            cat "$BODY_FILE" >> "$GITHUB_STEP_SUMMARY"
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "Creating GitHub Issue for main branch push..."
+              gh issue create --title "[Dependency Check] OS-specific dependency detected" --body-file "$BODY_FILE"
+            fi
+            echo "OS-specific dependency issue detected. Failing check."
+            exit 1
           else
-            echo "No dependency changes detected across all platforms."
+            echo "All dependencies are consistent across Linux, macOS, and Windows, and all native JARs bundle binaries for all 3 OSes."
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
