@@ -186,7 +186,8 @@ internal class BookViewModel(
         }
     }
 
-    fun release() {
+    override fun onCleared() {
+        super.onCleared()
         saveScope.launch {
             closeBookUseCase(book)
         }
