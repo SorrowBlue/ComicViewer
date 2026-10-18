@@ -143,8 +143,6 @@ private class BookScreenStateImpl(
         private set
 
     private var isInitialized = false
-    private var currentPageFormat = BookSettings.PageFormat.Default
-    private var readAheadPageCount = initialUiState.bookSheetUiState.beyondViewportPageCount
 
     init {
         pageItemListFlow
@@ -193,11 +191,9 @@ private class BookScreenStateImpl(
         bookSettingsFlow
             .flowWithLifecycle(lifecycle)
             .onEach { settings ->
-                currentPageFormat = settings.pageFormat
                 uiState = uiState.copy(
                     bookSheetUiState = uiState.bookSheetUiState.copy(
                         pageScale = mapPageScale(settings.pageScale),
-                        beyondViewportPageCount = resolveBeyondViewportPageCount(),
                     ),
                 )
             }
@@ -205,7 +201,6 @@ private class BookScreenStateImpl(
         viewerSettingsFlow
             .flowWithLifecycle(lifecycle)
             .onEach { settings ->
-                readAheadPageCount = settings.readAheadPageCount
                 systemUiController.keepScreenOn = settings.keepOnScreen
                 if (settings.enableBrightnessControl) {
                     systemUiController.screenBrightness = settings.screenBrightness
@@ -213,7 +208,7 @@ private class BookScreenStateImpl(
                 uiState = uiState.copy(
                     bookSheetUiState = uiState.bookSheetUiState.copy(
                         cutWhitespace = settings.cutWhitespace,
-                        beyondViewportPageCount = resolveBeyondViewportPageCount(),
+                        beyondViewportPageCount = settings.readAheadPageCount.coerceAtLeast(1),
                     ),
                 )
             }
@@ -229,17 +224,6 @@ private class BookScreenStateImpl(
                 }
             }
         }
-    }
-
-    private fun resolveBeyondViewportPageCount(): Int {
-        val minReadAhead = if (currentPageFormat == BookSettings.PageFormat.Spread ||
-            currentPageFormat == BookSettings.PageFormat.Auto
-        ) {
-            1
-        } else {
-            0
-        }
-        return maxOf(minReadAhead, readAheadPageCount)
     }
 
     private fun mapPageScale(pageScale: BookSettings.PageScale): PageScale = when (pageScale) {

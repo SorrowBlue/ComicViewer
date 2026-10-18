@@ -122,7 +122,7 @@ internal fun ViewerSettingsScreen(
             },
             value = uiState.preloadPages,
             onValueChange = onPreloadPagesChange,
-            valueRange = 0f..10f,
+            valueRange = 1f..10f,
             steps = 8,
         )
         SliderSetting(

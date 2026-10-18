@@ -93,7 +93,7 @@ private class ViewerSettingsScreenStateImpl(
                     isTurnOnScreen = it.keepOnScreen,
                     isDisplayFirstPage = it.alwaysOpenFromFirstPage,
                     isCutWhitespace = it.cutWhitespace,
-                    preloadPages = it.readAheadPageCount.toFloat(),
+                    preloadPages = it.readAheadPageCount.coerceAtLeast(1).toFloat(),
                     imageQuality = it.imageQuality.toFloat(),
                     imageFormat = it.imageFormat,
                     isFixScreenBrightness = it.enableBrightnessControl,
@@ -148,7 +148,7 @@ private class ViewerSettingsScreenStateImpl(
 
     override fun onPreloadPagesChange(value: Float) {
         updateSettings {
-            it.copy(readAheadPageCount = value.toInt())
+            it.copy(readAheadPageCount = value.toInt().coerceAtLeast(1))
         }
     }
 
