@@ -22,7 +22,6 @@ import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfUseCase
 import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkPermissionKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.navigation.NavEntryDecoratorProvider
-import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionState
 import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
 import com.sorrowblue.comicviewer.framework.ui.navigation3.LocalNavigator
@@ -52,47 +51,43 @@ internal class LocalNetworkPermissionDecorator : NavEntryDecoratorProvider {
 @Composable
 private fun rememberLocalNetworkPermissionDecorator(
     viewModel: LocalNetworkPermissionViewModel = metroViewModel<LocalNetworkPermissionViewModel>(),
-): NavEntryDecorator<NavKey> {
-    val permissionRequester = rememberLocalNetworkPermissionRequester(initCheck = true)
-    return remember(permissionRequester, viewModel) {
-        NavEntryDecorator(
-            decorate = { entry ->
-                val metadata = entry.metadata[LocalNetworkPermissionKey]
-                if (metadata == null) {
-                    entry.Content()
+): NavEntryDecorator<NavKey> = remember(viewModel) {
+    NavEntryDecorator(
+        decorate = { entry ->
+            val metadata = entry.metadata[LocalNetworkPermissionKey]
+            if (metadata == null) {
+                entry.Content()
+            } else {
+                val bookshelfId = metadata.bookshelfId
+                val isSmb = if (bookshelfId != null) {
+                    viewModel.isSmbBookshelf(bookshelfId)
+                        .collectAsStateWithLifecycle(null).value
                 } else {
-                    val bookshelfId = metadata.bookshelfId
-                    val isSmb = if (bookshelfId != null) {
-                        viewModel.isSmbBookshelf(bookshelfId)
-                            .collectAsStateWithLifecycle(null).value
-                    } else {
-                        true
+                    true
+                }
+                when (isSmb) {
+                    true -> {
+                        LocalNetworkPermissionGuard(
+                            content = { entry.Content() },
+                        )
                     }
-                    when (isSmb) {
-                        true -> {
-                            LocalNetworkPermissionGuard(
-                                permissionRequester = permissionRequester,
-                                content = { entry.Content() },
-                            )
-                        }
 
-                        false -> {
-                            entry.Content()
-                        }
+                    false -> {
+                        entry.Content()
+                    }
 
-                        null -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(ComicTheme.colorScheme.background),
-                            )
-                        }
+                    null -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(ComicTheme.colorScheme.background),
+                        )
                     }
                 }
-            },
-            onPop = {},
-        )
-    }
+            }
+        },
+        onPop = {},
+    )
 }
 
 @ViewModelKey
@@ -109,9 +104,9 @@ internal class LocalNetworkPermissionViewModel(
 
 @Composable
 private fun LocalNetworkPermissionGuard(
-    permissionRequester: LocalNetworkPermissionRequester,
     content: @Composable () -> Unit,
 ) {
+    val permissionRequester = rememberLocalNetworkPermissionRequester(initCheck = true)
     if (permissionRequester.state !is LocalNetworkPermissionState.Granted) {
         val navigator = LocalNavigator.current
         LocalNetworkAccessPermissionScreen(

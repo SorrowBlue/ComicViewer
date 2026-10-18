@@ -6,9 +6,14 @@ package com.sorrowblue.comicviewer.feature.bookshelf.edit
 
 import androidx.compose.runtime.Composable
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.framework.ui.EventEffect
 
 @Composable
-internal fun BookshelfEditScreenRoot(key: BookshelfWizardNavKey, onBack: () -> Unit) {
+internal fun BookshelfEditScreenRoot(
+    key: BookshelfWizardNavKey,
+    onBack: () -> Unit,
+    showLocalNetworkPermissionRationale: () -> Unit = {},
+) {
     val state = rememberBookshelfEditScreenState(key)
     BookshelfEditScreen(
         uiState = state.uiState,
@@ -38,4 +43,11 @@ internal fun BookshelfEditScreenRoot(key: BookshelfWizardNavKey, onBack: () -> U
             }
         },
     )
+
+    EventEffect(state.events) {
+        when (it) {
+            BookshelfEditScreenRootEvent.ShowLocalNetworkPermissionRationale ->
+                showLocalNetworkPermissionRationale()
+        }
+    }
 }

@@ -17,6 +17,9 @@ import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSe
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.LocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.permission.localnetwork.rememberLocalNetworkPermissionRequester
+import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_selection_label_device
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_selection_label_smb
@@ -33,6 +36,10 @@ import kotlinx.serialization.modules.subclass
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
+internal sealed interface BookshelfEditScreenRootEvent {
+    data object ShowLocalNetworkPermissionRationale : BookshelfEditScreenRootEvent
+}
+
 internal interface BookshelfEditScreenState {
     fun onSourceClick(type: BookshelfType)
     fun updateCanSubmit(value: Boolean)
@@ -41,6 +48,7 @@ internal interface BookshelfEditScreenState {
 
     val uiState: BookshelfEditScreenUiState
     val backStack: NavBackStack<NavKey>
+    val events: EventFlow<BookshelfEditScreenRootEvent>
 }
 
 @Composable
@@ -70,6 +78,7 @@ internal fun rememberBookshelfEditScreenState(
     val state = remember(key, backStack, coroutineScope) {
         BookshelfEditScreenStateImpl(key, backStack, coroutineScope)
     }
+    state.localNetworkPermissionRequester = rememberLocalNetworkPermissionRequester(false)
     return state
 }
 
@@ -78,6 +87,10 @@ private class BookshelfEditScreenStateImpl(
     override val backStack: NavBackStack<NavKey>,
     private val coroutineScope: CoroutineScope,
 ) : BookshelfEditScreenState {
+
+    lateinit var localNetworkPermissionRequester: LocalNetworkPermissionRequester
+
+    override val events = EventFlow<BookshelfEditScreenRootEvent>()
 
     override var uiState by mutableStateOf(BookshelfEditScreenUiState())
 
@@ -122,6 +135,10 @@ private class BookshelfEditScreenStateImpl(
     }
 
     override fun onSourceClick(type: BookshelfType) {
+        if (type == BookshelfType.SMB && !localNetworkPermissionRequester.checkPermission()) {
+            events.tryEmit(BookshelfEditScreenRootEvent.ShowLocalNetworkPermissionRationale)
+            return
+        }
         val editPage = when (type) {
             BookshelfType.SMB -> BookshelfEditPage.WizardEdit(
                 BookshelfEditType.Register(
