@@ -14,17 +14,17 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 /**
- * コミックページの展開、見開き結合、および分割レイアウトの計算を行うドメインサービス。
+ * Domain service that calculates initial book page items, spread combinations, and split layouts.
  */
 interface BookPageLayoutService {
 
     /**
-     * 表示設定と総ページ数に基づき、初期ページリストを生成します。
+     * Creates the initial list of book pages based on the display format and total page count.
      *
-     * @param totalPageCount 総ページ数
-     * @param pageFormat ページフォーマット設定
-     * @param isCompactWindow コンパクト画面（スマートフォン等）かどうか（Auto 判定で使用）
-     * @return 初期ページリスト
+     * @param totalPageCount Total number of pages in the book.
+     * @param pageFormat Page display format setting.
+     * @param isCompactWindow Whether the current window is compact (used to resolve [BookSettings.PageFormat.Auto]).
+     * @return Initial list of [BookPage] items.
      */
     fun createInitialPages(
         totalPageCount: Int,
@@ -33,12 +33,12 @@ interface BookPageLayoutService {
     ): List<BookPage>
 
     /**
-     * 画像読み込み完了時に未評価ページの縦横比を判定し、ページリストを更新して返します。
+     * Resolves an unrated page once its aspect ratio is determined and returns the updated page list.
      *
-     * @param currentList 現在のページアイテム一覧
-     * @param unratedPage 縦横比が確定した未評価ページ
-     * @param isPortrait 画像が縦長の場合は true、横長の場合は false
-     * @return 更新後のページアイテム一覧
+     * @param currentList Current list of page items.
+     * @param unratedPage The unrated page whose aspect ratio has been resolved.
+     * @param isPortrait True if the page image is portrait or square, false if landscape.
+     * @return Updated list of [PageItem]s.
      */
     fun resolvePage(
         currentList: List<PageItem>,
