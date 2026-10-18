@@ -52,7 +52,8 @@ private fun AuthGuardEntryContent(
     val currentOnInitialize by rememberUpdatedState(onInitialize)
     val authState by authSession.authState.collectAsStateWithLifecycle()
     val finishApp = LocalFinishApp.current
-    if (authState is AuthState.NoAuthRequired ||
+    if (isInitialized ||
+        authState is AuthState.NoAuthRequired ||
         (authState as? AuthState.AuthRequired)?.authed == true
     ) {
         content()

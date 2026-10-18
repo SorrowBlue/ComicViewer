@@ -28,6 +28,7 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
 import com.sorrowblue.comicviewer.feature.book.findPagerIndex
+import com.sorrowblue.comicviewer.feature.book.findPagerIndexFor
 import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import com.sorrowblue.comicviewer.feature.book.toDisplayPage
 import com.sorrowblue.comicviewer.framework.ui.SystemUiController
@@ -38,6 +39,8 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -100,22 +103,29 @@ private class ReceiveBookScreenStateImpl(
     private val onPageLoaded: (UnratedPage, Boolean) -> Unit,
 ) : ReceiveBookScreenState {
     init {
-        pageItemListFlow
+        combine(
+            bookFlow.filterNotNull(),
+            pageItemListFlow,
+        ) { bookFile, pageItems ->
+            bookFile to pageItems
+        }
             .flowWithLifecycle(lifecycle)
-            .onEach {
-                val totalPageCount =
-                    (uiState as? BookScreenUiState.Loaded)?.book?.totalPageCount ?: 0
-                val isFirstLoad = currentList.isEmpty() && it.isNotEmpty()
+            .onEach { (bookFile, pageItems) ->
+                val totalPageCount = bookFile.totalPageCount
+                val isFirstLoad = currentList.isEmpty() && pageItems.isNotEmpty()
+                val currentItem = currentList.getOrNull(pagerState.currentPage)
                 val currentDisplayPage = if (isFirstLoad) {
                     1
                 } else {
-                    currentList.getOrNull(
-                        pagerState.currentPage,
-                    )?.toDisplayPage(totalPageCount) ?: 1
+                    currentItem?.toDisplayPage(totalPageCount) ?: 1
                 }
                 currentList.clear()
-                currentList.addAll(it)
-                val newPagerIndex = it.findPagerIndex(currentDisplayPage, totalPageCount)
+                currentList.addAll(pageItems)
+                val newPagerIndex = pageItems.findPagerIndexFor(
+                    currentItem = currentItem,
+                    targetDisplayPage = currentDisplayPage,
+                    totalPageCount = totalPageCount,
+                )
                 if (isFirstLoad || pagerState.currentPage != newPagerIndex) {
                     pagerState.scrollToPage(newPagerIndex)
                 }

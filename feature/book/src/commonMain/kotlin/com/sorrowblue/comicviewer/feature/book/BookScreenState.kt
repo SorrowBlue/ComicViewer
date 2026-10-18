@@ -103,7 +103,6 @@ internal fun rememberBookScreenState(
     DisposableEffect(Unit) {
         onDispose {
             state.onScreenDispose()
-            viewModel.release()
         }
     }
     LifecycleEventEffect(event = Lifecycle.Event.ON_PAUSE, onEvent = state::onStop)
@@ -173,9 +172,11 @@ private class BookScreenStateImpl(
                 if (isFirstLoad || pagerState.currentPage != newPagerIndex) {
                     pagerState.scrollToPage(newPagerIndex)
                 }
-                if (isFirstLoad) {
+                if (it.isNotEmpty()) {
                     isInitialized = true
-                    updateLastReadPage()
+                    if (isFirstLoad) {
+                        updateLastReadPage()
+                    }
                 }
             }
             .launchIn(coroutineScope)
@@ -207,7 +208,7 @@ private class BookScreenStateImpl(
                 uiState = uiState.copy(
                     bookSheetUiState = uiState.bookSheetUiState.copy(
                         cutWhitespace = settings.cutWhitespace,
-                        beyondViewportPageCount = settings.readAheadPageCount,
+                        beyondViewportPageCount = settings.readAheadPageCount.coerceAtLeast(1),
                     ),
                 )
             }

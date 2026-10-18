@@ -217,7 +217,7 @@ private fun SplitBookPage(
                 )
             }
 
-            bookPage !is BookPage.Split.Left && bookPage !is BookPage.Split.Right -> {
+            bookPage is BookPage.Split.Single -> {
                 Image(
                     painter = painter,
                     contentDescription = null,
@@ -241,7 +241,16 @@ private fun SplitBookPage(
                 )
             }
 
-            AsyncImagePainter.State.Empty, is AsyncImagePainter.State.Success -> Unit
+            AsyncImagePainter.State.Empty, is AsyncImagePainter.State.Success -> {
+                if (bookPage is BookPage.Split.Unrated) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .wrapContentSize()
+                            .padding(ComicTheme.dimension.margin),
+                    )
+                }
+            }
         }
     }
 }
