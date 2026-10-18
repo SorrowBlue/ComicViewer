@@ -26,9 +26,6 @@ kotlin {
             implementation(libs.compose.ui)
 
             runtimeOnly(libs.kotlinx.coroutinesSwing)
-            if (System.getProperty("os.name").lowercase().contains("win")) {
-                runtimeOnly("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:0.150.2")
-            }
         }
     }
 }
