@@ -33,7 +33,11 @@ internal class ComicViewerAppViewModel(
     private val getNavigationHistoryUseCase: GetNavigationHistoryUseCase,
 ) : ViewModel() {
 
+    private var isNavigationRestored = false
+
     fun restore(allowNavigationRestored: Boolean) {
+        if (isNavigationRestored) return
+        isNavigationRestored = true
         if (allowNavigationRestored) {
             viewModelScope.launch {
                 if (manageDisplaySettingsUseCase.settings.first().restoreOnLaunch) {
@@ -117,13 +121,6 @@ internal class ComicViewerAppViewModel(
         bookPath: String,
     ) {
         // Navigate to first folder
-        restoreNavigation.emit(
-            RestoreNavigation(
-                bookshelfId = bookshelfId,
-                path = folderList.first().path,
-                restorePath = null,
-            ),
-        )
         restoreNavigation.emit(
             RestoreNavigation(
                 bookshelfId = bookshelfId,
