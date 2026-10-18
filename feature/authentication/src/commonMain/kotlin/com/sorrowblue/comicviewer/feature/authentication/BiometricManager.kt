@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 @Composable
 internal expect fun rememberBiometricManager(): BiometricManager
 
-internal expect class BiometricManager {
+internal interface BiometricManager {
     suspend fun authenticate(): AuthenticationResult
 }
 

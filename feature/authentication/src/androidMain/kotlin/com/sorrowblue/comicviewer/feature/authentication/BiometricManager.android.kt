@@ -18,8 +18,9 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import logcat.logcat
 import org.jetbrains.compose.resources.getString
 
-internal actual class BiometricManager(private val context: Context) {
-    actual suspend fun authenticate(): AuthenticationResult {
+private class BiometricManagerImpl(private val context: Context) :
+    com.sorrowblue.comicviewer.feature.authentication.BiometricManager {
+    override suspend fun authenticate(): AuthenticationResult {
         val title = getString(Res.string.authentication_title_fingerprint_auth)
         val cancelText = getString(Res.string.authentication_biometric_cancel)
         return suspendCancellableCoroutine { continuation ->
@@ -31,7 +32,9 @@ internal actual class BiometricManager(private val context: Context) {
                     ) {
                         super.onAuthenticationSucceeded(result)
                         logcat { "onAuthenticationSucceeded result=$result" }
-                        continuation.resume(AuthenticationResult.Success) { cause, _, _ -> }
+                        if (continuation.isActive) {
+                            continuation.resume(AuthenticationResult.Success) { _, _, _ -> }
+                        }
                     }
 
                     override fun onAuthenticationFailed() {
@@ -42,9 +45,11 @@ internal actual class BiometricManager(private val context: Context) {
                     override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                         logcat { "onAuthenticationError errorCode=$errorCode errString=$errString" }
                         super.onAuthenticationError(errorCode, errString)
-                        continuation.resume(
-                            AuthenticationResult.Error(errString.toString()),
-                        ) { cause, _, _ -> }
+                        if (continuation.isActive) {
+                            continuation.resume(
+                                AuthenticationResult.Error(errString.toString()),
+                            ) { _, _, _ -> }
+                        }
                     }
                 },
             )
@@ -55,6 +60,9 @@ internal actual class BiometricManager(private val context: Context) {
                 .setNegativeButtonText(cancelText)
                 .build()
             biometricPrompt.authenticate(promptInfo)
+            continuation.invokeOnCancellation {
+                biometricPrompt.cancelAuthentication()
+            }
         }
     }
 }
@@ -62,5 +70,5 @@ internal actual class BiometricManager(private val context: Context) {
 @Composable
 internal actual fun rememberBiometricManager(): com.sorrowblue.comicviewer.feature.authentication.BiometricManager {
     val context = LocalContext.current
-    return remember { BiometricManager(context) }
+    return remember { BiometricManagerImpl(context) }
 }

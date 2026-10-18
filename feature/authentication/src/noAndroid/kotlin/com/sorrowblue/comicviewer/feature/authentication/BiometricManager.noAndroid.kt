@@ -8,10 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 @Composable
-internal actual fun rememberBiometricManager(): BiometricManager = remember { BiometricManager() }
+internal actual fun rememberBiometricManager(): BiometricManager =
+    remember { BiometricManagerImpl() }
 
-internal actual class BiometricManager {
-    actual suspend fun authenticate(): AuthenticationResult {
+private class BiometricManagerImpl : BiometricManager {
+    override suspend fun authenticate(): AuthenticationResult {
         // FEATURE Android以外では生体認証はサポートしない
         return AuthenticationResult.Error("not support")
     }
