@@ -27,6 +27,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.github.skydoves.navgraph.annotations.NavDestination
+import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
@@ -41,6 +42,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.SmbEditorConten
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.section.drawDivider
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.type.bookshelfTypeEntry
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkAccessPermissionNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
@@ -185,6 +187,7 @@ private fun BookshelfEditScreen(
 }
 
 @Suppress("unused")
+@NavEdge(to = LocalNetworkAccessPermissionNavKey::class)
 @NavDestination(BookshelfWizardNavKey.Selection::class)
 @Composable
 private fun BookshelfWizardSelectionScreen() {

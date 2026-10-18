@@ -11,6 +11,7 @@ kotlin {
             dependencies {
                 implementation(projects.feature.bookshelf.nav)
                 implementation(projects.feature.permission.nav)
+                implementation(projects.framework.permission)
                 implementation(libs.soil.form)
                 implementation(libs.filekit.compose)
             }

@@ -13,6 +13,7 @@ import androidx.navigation3.scene.DialogSceneStrategy.Companion.DialogKey
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.BookshelfEditScreenRoot
 import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
+import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkAccessPermissionNavKey
 import com.sorrowblue.comicviewer.feature.permission.nav.localNetworkPermission
 import com.sorrowblue.comicviewer.framework.navigation.NavigationEntry
 import com.sorrowblue.comicviewer.framework.navigation.Navigator
@@ -30,6 +31,9 @@ internal fun bookshelfWizardNavEntry(navigator: Navigator) {
         BookshelfEditScreenRoot(
             key = it,
             onBack = navigator::goBack,
+            showLocalNetworkPermissionRationale = {
+                navigator.navigate(LocalNetworkAccessPermissionNavKey)
+            },
         )
     }
     scope.entry<BookshelfWizardNavKey.Edit>(
