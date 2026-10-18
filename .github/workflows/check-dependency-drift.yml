@@ -107,8 +107,8 @@ jobs:
             if [ "${{ github.event_name }}" = "pull_request" ]; then
               echo "Posting comment to Pull Request #${{ github.event.pull_request.number }}..."
               gh pr comment "${{ github.event.pull_request.number }}" --body-file "$BODY_FILE"
-            elif [ "${{ github.event_name }}" = "push" ]; then
-              echo "Creating GitHub Issue for main branch push..."
+            elif [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+              echo "Creating GitHub Issue for main branch..."
               gh issue create --title "[Dependency Check] OS-specific dependency detected" --body-file "$BODY_FILE"
             fi
             echo "OS-specific dependency issue detected. Failing check."

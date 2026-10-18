@@ -51,17 +51,11 @@ jobs:
       - name: Check if should run
         id: check
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ] || \
+             [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "should-run=true" >> $GITHUB_OUTPUT
             echo "should-run-deps=true" >> $GITHUB_OUTPUT
             echo "Decision: Running workflow and dependency drift check (triggered by ${{ github.event_name }})"
-            exit 0
-          fi
-
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "should-run=true" >> $GITHUB_OUTPUT
-            echo "should-run-deps=false" >> $GITHUB_OUTPUT
-            echo "Decision: Running workflow only (triggered by ${{ github.event_name }})"
             exit 0
           fi
 
