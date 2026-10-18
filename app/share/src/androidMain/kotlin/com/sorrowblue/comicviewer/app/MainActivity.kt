@@ -16,12 +16,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.sorrowblue.comicviewer.feature.book.navigation.ReceiveBookNavKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.android.ActivityKey
+import kotlin.reflect.KClass
 
 /**
  * Main activity
@@ -44,7 +47,30 @@ internal class MainActivity(private val viewModelFactory: ViewModelProvider.Fact
             null
         }
 
-    override val defaultViewModelProviderFactory get() = viewModelFactory
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory by lazy {
+        val superFactory = super.defaultViewModelProviderFactory
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = runCatching {
+                viewModelFactory.create(modelClass)
+            }.getOrElse {
+                superFactory.create(modelClass)
+            }
+
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T =
+                runCatching {
+                    viewModelFactory.create(modelClass, extras)
+                }.getOrElse {
+                    superFactory.create(modelClass, extras)
+                }
+
+            override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T =
+                runCatching {
+                    viewModelFactory.create(modelClass, extras)
+                }.getOrElse {
+                    superFactory.create(modelClass, extras)
+                }
+        }
+    }
 
     @Suppress("UnnecessaryLaunchedEffect")
     override fun onCreate(savedInstanceState: Bundle?) {
