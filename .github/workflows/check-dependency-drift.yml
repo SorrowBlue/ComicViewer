@@ -68,6 +68,13 @@ jobs:
         run: |
           HAS_ERROR=false
           BODY_FILE="./issue_body.md"
+          RAW_COORDS_FILE="./raw_coords.txt"
+          > "$RAW_COORDS_FILE"
+
+          normalize_lib_key() {
+            local ga="${1%:*}"
+            echo "$ga" | sed -E 's/[-_.](windows|win32|win64|linux|macos|osx|darwin)([-_.][a-zA-Z0-9_]+)*$//I'
+          }
 
           cat << 'EOF' > "$BODY_FILE"
           ## OS-specific dependency detected
@@ -83,6 +90,7 @@ jobs:
             diff -u "./artifacts/deps-Linux.txt" "./artifacts/deps-${TARGET_OS}.txt" > "$DIFF_FILE" || true
             if [ -s "$DIFF_FILE" ]; then
               HAS_ERROR=true
+              grep -E '^[+-][^+-]' "$DIFF_FILE" | sed 's/^[+-]//' >> "$RAW_COORDS_FILE" || true
               echo "### [Method 1] Dependency resolution mismatch: Linux vs ${TARGET_OS}" >> "$BODY_FILE"
               echo "\`\`\`diff" >> "$BODY_FILE"
               cat "$DIFF_FILE" >> "$BODY_FILE"
@@ -95,6 +103,7 @@ jobs:
             ERR_FILE="./artifacts/native-errors-${OS}.txt"
             if [ -s "$ERR_FILE" ]; then
               HAS_ERROR=true
+              sed -E 's/^\[[^]]+\] ([^ ]+).*/\1/' "$ERR_FILE" >> "$RAW_COORDS_FILE" || true
               echo "### [Method 2] JAR native binary / artifact name issues on ${OS}" >> "$BODY_FILE"
               echo "\`\`\`text" >> "$BODY_FILE"
               cat "$ERR_FILE" >> "$BODY_FILE"
@@ -108,8 +117,56 @@ jobs:
               echo "Posting comment to Pull Request #${{ github.event.pull_request.number }}..."
               gh pr comment "${{ github.event.pull_request.number }}" --body-file "$BODY_FILE"
             elif [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "schedule" ]; then
-              echo "Creating GitHub Issue for main branch..."
-              gh issue create --title "[Dependency Check] OS-specific dependency detected" --body-file "$BODY_FILE"
+              LIB_KEYS_FILE="./lib_keys.txt"
+              > "$LIB_KEYS_FILE"
+              while IFS= read -r coord; do
+                [ -z "$coord" ] && continue
+                normalize_lib_key "$coord" >> "$LIB_KEYS_FILE"
+              done < "$RAW_COORDS_FILE"
+              sort -u "$LIB_KEYS_FILE" -o "$LIB_KEYS_FILE"
+
+              while IFS= read -r LIB_KEY; do
+                [ -z "$LIB_KEY" ] && continue
+                LIB_BODY_FILE="./issue_body_lib.md"
+                cat << EOF > "$LIB_BODY_FILE"
+          ## OS-specific dependency detected: \`${LIB_KEY}\`
+
+          A dependency associated with \`${LIB_KEY}\` differs across target OSes or lacks native binaries for all target desktop platforms (Windows, Linux, macOS).
+          Please verify the Conveyor configuration (\`config/conveyor/conveyor.conf\`) and Gradle dependencies (\`app/jvmApp/build.gradle.kts\`).
+
+          EOF
+
+                for TARGET_OS in "macOS" "Windows"; do
+                  DIFF_FILE="./diff-Linux-vs-${TARGET_OS}.txt"
+                  if [ -s "$DIFF_FILE" ] && grep -E '^[+-][^+-]' "$DIFF_FILE" | grep -Fq "$LIB_KEY"; then
+                    echo "### [Method 1] Dependency resolution mismatch: Linux vs ${TARGET_OS}" >> "$LIB_BODY_FILE"
+                    echo "\`\`\`diff" >> "$LIB_BODY_FILE"
+                    grep -E "^(---|\\+\\+\\+|@@|[+-].*${LIB_KEY})" "$DIFF_FILE" >> "$LIB_BODY_FILE" || true
+                    echo -e "\n\`\`\`\n" >> "$LIB_BODY_FILE"
+                  fi
+                done
+
+                for OS in "Linux" "macOS" "Windows"; do
+                  ERR_FILE="./artifacts/native-errors-${OS}.txt"
+                  if [ -s "$ERR_FILE" ] && grep -Fq "$LIB_KEY" "$ERR_FILE"; then
+                    echo "### [Method 2] JAR native binary / artifact name issues on ${OS}" >> "$LIB_BODY_FILE"
+                    echo "\`\`\`text" >> "$LIB_BODY_FILE"
+                    grep -F "$LIB_KEY" "$ERR_FILE" >> "$LIB_BODY_FILE" || true
+                    echo -e "\n\`\`\`\n" >> "$LIB_BODY_FILE"
+                  fi
+                done
+
+                ISSUE_TITLE="[Dependency Check] OS-specific dependency detected: ${LIB_KEY}"
+                EXISTING_ISSUE=$(gh issue list --state open --search "\"$ISSUE_TITLE\" in:title" --json number,title --jq ".[] | select(.title == \"$ISSUE_TITLE\") | .number" | head -n 1)
+
+                if [ -n "$EXISTING_ISSUE" ]; then
+                  echo "Open issue #$EXISTING_ISSUE already exists for ${LIB_KEY}. Updating body..."
+                  gh issue edit "$EXISTING_ISSUE" --body-file "$LIB_BODY_FILE"
+                else
+                  echo "Creating GitHub Issue for ${LIB_KEY}..."
+                  gh issue create --title "$ISSUE_TITLE" --body-file "$LIB_BODY_FILE"
+                fi
+              done < "$LIB_KEYS_FILE"
             fi
             echo "OS-specific dependency issue detected. Failing check."
             exit 1
