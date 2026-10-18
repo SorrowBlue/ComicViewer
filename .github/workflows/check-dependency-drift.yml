@@ -1,24 +1,7 @@
 name: Check Dependency Configuration Drift
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'gradle/libs.versions.toml'
-      - '**/build.gradle.kts'
-      - 'settings.gradle.kts'
-      - 'config/conveyor/**'
-      - '.github/workflows/check-dependency-drift.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'gradle/libs.versions.toml'
-      - '**/build.gradle.kts'
-      - 'settings.gradle.kts'
-      - 'config/conveyor/**'
-      - '.github/workflows/check-dependency-drift.yml'
+  workflow_call:
   workflow_dispatch:
 
 permissions:

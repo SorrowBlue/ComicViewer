@@ -17,6 +17,7 @@ concurrency:
 permissions:
   contents: read
   checks: write
+  issues: write
   pull-requests: write
   security-events: write
 
@@ -25,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should-run: ${{ steps.check.outputs.should-run }}
+      should-run-deps: ${{ steps.check.outputs.should-run-deps }}
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,12 +38,29 @@ jobs:
         with:
           files_ignore: |
             **/aboutlibraries.json
+      - name: Get changed dependency files
+        id: changed-dep-files
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        with:
+          files: |
+            gradle/libs.versions.toml
+            **/build.gradle.kts
+            settings.gradle.kts
+            config/conveyor/**
+            .github/workflows/check-dependency-drift.yml
       - name: Check if should run
         id: check
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ] || \
-             [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "should-run-deps=true" >> $GITHUB_OUTPUT
+            echo "Decision: Running workflow (triggered by ${{ github.event_name }})"
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "should-run-deps=false" >> $GITHUB_OUTPUT
             echo "Decision: Running workflow (triggered by ${{ github.event_name }})"
             exit 0
           fi
@@ -53,6 +72,7 @@ jobs:
           fi
           
           OTHER_FILES_CHANGED="${{ steps.changed-files.outputs.any_changed }}"
+          DEP_FILES_CHANGED="${{ steps.changed-dep-files.outputs.any_changed }}"
           
           if [ "$IS_AUTO_COMMIT" = "false" ] && [ "$OTHER_FILES_CHANGED" = "true" ]; then
             echo "should-run=true" >> $GITHUB_OUTPUT
@@ -63,6 +83,14 @@ jobs:
             echo "Reasoning:"
             echo "  - Is automated push: $IS_AUTO_COMMIT"
             echo "  - Other files changed: $OTHER_FILES_CHANGED"
+          fi
+
+          if [ "$IS_AUTO_COMMIT" = "false" ] && [ "$DEP_FILES_CHANGED" = "true" ]; then
+            echo "should-run-deps=true" >> $GITHUB_OUTPUT
+            echo "Decision: Running dependency drift check"
+          else
+            echo "should-run-deps=false" >> $GITHUB_OUTPUT
+            echo "Decision: Skipping dependency drift check"
           fi
 
   lint:
@@ -81,9 +109,14 @@ jobs:
     uses: ./.github/workflows/build.yml
     secrets: inherit
 
+  dependency-drift:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-run-deps == 'true'
+    uses: ./.github/workflows/check-dependency-drift.yml
+
   allchecks:
     name: All Checks Passed
-    needs: [ check-commit, lint, test, build ]
+    needs: [ check-commit, lint, test, build, dependency-drift ]
     if: always() && cancelled() != true && needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -91,4 +124,4 @@ jobs:
         with:
           poll: false
           delay: 0
-          checks_include: '^check-commit,^lint,^test,^build'
+          checks_include: '^check-commit,^lint,^test,^build,^dependency-drift'
