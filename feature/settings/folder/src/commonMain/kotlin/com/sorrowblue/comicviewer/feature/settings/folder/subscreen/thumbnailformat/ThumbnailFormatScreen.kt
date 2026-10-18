@@ -52,14 +52,15 @@ internal fun ThumbnailFormatScreen(
                     leadingContent = {
                         RadioButton(selected = imageFormat == currentImageFormat, onClick = null)
                     },
-                    headlineContent = { Text(imageFormat.displayName) },
                     supportingContent = { Text(imageFormat.explanatoryText) },
                     modifier = Modifier
                         .clickable { onImageFormatChange(imageFormat) }
                         .padding(it.copy(top = 0.dp, bottom = 0.dp))
                         .padding(vertical = 12.dp),
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
+                ) {
+                    Text(imageFormat.displayName)
+                }
             }
         }
     }

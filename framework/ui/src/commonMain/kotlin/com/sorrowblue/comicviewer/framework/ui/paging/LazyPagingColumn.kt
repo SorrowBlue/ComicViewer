@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
@@ -41,21 +42,26 @@ import kotlin.time.Duration.Companion.seconds
 
 sealed interface LazyPagingColumn {
     val columns: GridCells
+    val cacheWindow: LazyLayoutCacheWindow
 
     data object List : LazyPagingColumn {
         override val columns = GridCells.Fixed(1)
+        override val cacheWindow = LazyLayoutCacheWindow(ahead = 320.dp, behind = 200.dp)
     }
 
     data object ListMedium : LazyPagingColumn {
         override val columns = GridCells.Adaptive(500.dp)
+        override val cacheWindow = LazyLayoutCacheWindow(ahead = 360.dp, behind = 240.dp)
     }
 
     data class Grid(val minSize: Int) : LazyPagingColumn {
         override val columns = GridCells.Adaptive(minSize.dp)
+        override val cacheWindow = LazyLayoutCacheWindow(ahead = 500.dp, behind = 360.dp)
     }
 
     data class FixedGrid(val count: Int) : LazyPagingColumn {
         override val columns = GridCells.Fixed(count)
+        override val cacheWindow = LazyLayoutCacheWindow(ahead = 480.dp, behind = 320.dp)
     }
 }
 
@@ -65,6 +71,7 @@ fun <T : Any> LazyPagingColumn(
     type: LazyPagingColumn,
     modifier: Modifier = Modifier,
     state: LazyGridState = rememberLazyGridState(),
+    cacheWindow: LazyLayoutCacheWindow = type.cacheWindow,
     contentPadding: PaddingValues = PaddingValues(),
     fillWidth: Boolean = type is LazyPagingColumn.List,
     key: ((index: Int) -> Any)? = null,
@@ -76,6 +83,7 @@ fun <T : Any> LazyPagingColumn(
         LazyVerticalGrid(
             columns = type.columns,
             state = state,
+            cacheWindow = cacheWindow,
             contentPadding = contentPadding,
             verticalArrangement = if (fillWidth) {
                 Arrangement.Top

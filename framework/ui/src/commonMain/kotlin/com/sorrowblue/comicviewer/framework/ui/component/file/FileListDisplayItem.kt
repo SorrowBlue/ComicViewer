@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AppBarRowScope
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.FilledTonalToggleButton
+import androidx.compose.material3.FilledTonalToggleButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.TonalToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
@@ -35,8 +35,8 @@ fun FileListDisplayItem(
         modifier = modifier,
     ) {
         FileListDisplay.entries.forEachIndexed { index, option ->
-            TonalToggleButton(
-                colors = ToggleButtonDefaults.tonalToggleButtonColors(),
+            FilledTonalToggleButton(
+                colors = FilledTonalToggleButtonDefaults.colors(),
                 checked = option == fileListDisplay,
                 onCheckedChange = {
                     if (it) {

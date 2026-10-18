@@ -29,6 +29,7 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -54,7 +55,6 @@ fun Setting(
     enabled: Boolean = true,
 ) {
     ListItem(
-        headlineContent = { title() },
         supportingContent = summary?.let { { it() } },
         leadingContent = icon?.let { { it() } },
         trailingContent = widget?.let { { it() } },
@@ -72,6 +72,7 @@ fun Setting(
                 trailingIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
             )
         },
+        content = title,
     )
 }
 
@@ -154,11 +155,17 @@ fun SliderSetting(
     Setting(
         title = title,
         summary = {
+            val state = remember(steps, valueRange) {
+                SliderState(
+                    value = value,
+                    steps = steps,
+                    trackRange = valueRange,
+                )
+            }
+            state.value = value
             Slider(
-                value = value,
+                state = state,
                 onValueChange = { onValueChange(it) },
-                valueRange = valueRange,
-                steps = steps,
                 colors = colors,
                 thumb = {
                     val isDragged by interactionSource.collectIsDraggedAsState()
@@ -166,7 +173,7 @@ fun SliderSetting(
                     Label(
                         label = {
                             PlainTooltip {
-                                thumbText(value)
+                                thumbText(state.value)
                             }
                         },
                         isPersistent = isDragged || isPressed,

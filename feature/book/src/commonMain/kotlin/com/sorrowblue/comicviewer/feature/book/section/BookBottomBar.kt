@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -103,17 +104,23 @@ internal fun BookBottomBar(
             Spacer(Modifier.size(ComicTheme.dimension.padding))
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 if (0 < pageRange.endInclusive.toInt()) {
+                    val steps = max((pageRange.endInclusive.toInt() / 2) - 2, 0)
+                    val coercedPage = currentPage
+                        .coerceIn(
+                            pageRange.start.toInt(),
+                            pageRange.endInclusive.toInt(),
+                        ).toFloat()
+                    val sliderState = remember(steps, pageRange) {
+                        SliderState(
+                            value = coercedPage,
+                            steps = steps,
+                            trackRange = pageRange,
+                        )
+                    }
+                    sliderState.value = coercedPage
                     Slider(
-                        value = remember(currentPage, pageRange) {
-                            currentPage
-                                .coerceIn(
-                                    pageRange.start.toInt(),
-                                    pageRange.endInclusive.toInt(),
-                                ).toFloat()
-                        },
+                        state = sliderState,
                         onValueChange = { onPageChange(it.toInt()) },
-                        valueRange = pageRange,
-                        steps = max((pageRange.endInclusive.toInt() / 2) - 2, 0),
                         modifier = Modifier.weight(1f),
                     )
                 }

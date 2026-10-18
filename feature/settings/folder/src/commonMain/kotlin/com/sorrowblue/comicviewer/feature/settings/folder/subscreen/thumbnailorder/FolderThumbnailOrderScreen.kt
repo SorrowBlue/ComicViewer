@@ -46,11 +46,10 @@ internal fun FolderThumbnailOrderScreen(
                     leadingContent = {
                         RadioButton(selected = order == currentFolderThumbnailOrder, onClick = null)
                     },
-                    headlineContent = {
-                        Text(text = order.displayText)
-                    },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                )
+                ) {
+                    Text(text = order.displayText)
+                }
             }
         }
     }

@@ -46,7 +46,7 @@ import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
-import com.sorrowblue.comicviewer.framework.ui.material3.AdaptiveAlertDialog2
+import com.sorrowblue.comicviewer.framework.ui.material3.AdaptiveAlertDialog
 import com.sorrowblue.comicviewer.framework.ui.material3.BackIconButton
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
@@ -124,7 +124,7 @@ private fun BookshelfEditScreen(
     onSaveClick: () -> Unit,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    AdaptiveAlertDialog2(
+    AdaptiveAlertDialog(
         title = {
             Text(uiState.title)
         },

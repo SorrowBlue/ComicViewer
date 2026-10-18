@@ -36,13 +36,6 @@ import org.jetbrains.compose.resources.pluralStringResource
 @Composable
 internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick: () -> Unit) {
     ListItem(
-        headlineContent = {
-            Text(
-                text = collection.name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
         supportingContent = {
             Text(
                 text = pluralStringResource(
@@ -78,7 +71,13 @@ internal fun CollectionListItem(collection: Collection, exist: Boolean, onClick:
             }
         },
         modifier = Modifier.clickable(onClick = onClick),
-    )
+    ) {
+        Text(
+            text = collection.name,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
 }
 
 @Preview

@@ -110,9 +110,6 @@ private fun CollectionListItem(
 //                }
             }
         },
-        headlineContent = {
-            Text(text = collection.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        },
         supportingContent = {
 //            Text(
 //                text = pluralStringResource(
@@ -124,5 +121,7 @@ private fun CollectionListItem(
         },
         trailingContent = content,
         modifier = modifier,
-    )
+    ) {
+        Text(text = collection.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+    }
 }

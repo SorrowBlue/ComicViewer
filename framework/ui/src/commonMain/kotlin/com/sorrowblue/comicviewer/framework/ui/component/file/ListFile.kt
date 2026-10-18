@@ -120,9 +120,6 @@ fun ListFile(
                     }
                 }
             },
-            headlineContent = {
-                Text(text = file.name, fontSize = fontSize.sp)
-            },
             supportingContent = {
                 if (file is Book && 0 < file.lastPageRead) {
                     val color = ProgressIndicatorDefaults.linearColor
@@ -152,7 +149,9 @@ fun ListFile(
             },
             colors = colors,
             modifier = modifier,
-        )
+        ) {
+            Text(text = file.name, fontSize = fontSize.sp)
+        }
     }
 }
 
