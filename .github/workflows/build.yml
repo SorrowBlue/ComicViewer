@@ -36,24 +36,88 @@ jobs:
           name: android
           path: app/androidApp/build/outputs/
   jvm-build:
-    name: Ubuntu
+    name: JVM (Windows MSIX Build on Linux)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🖥️ ExportLibraryDefinitions
         run: ./gradlew :app:jvmApp:exportLibraryDefinitions
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run packageDistributionForCurrentOS
-        run: ./gradlew packageDistributionForCurrentOS
+      - name: Build JVM Jar
+        run: ./gradlew :app:jvmApp:jvmJar
+      - name: Build Windows MSIX Package
+        uses: hydraulic-software/conveyor/actions/build@7370ce828ff1cbc38b95426ffb2fd613492016d5 # v22.3
+        with:
+          command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[windows.amd64]' make windows-msix
+          signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+          agree_to_license: 1
+        env:
+          MS_STORE_IDENTITY_NAME: ${{ secrets.MS_STORE_IDENTITY_NAME }}
+          MS_STORE_PUBLISHER: ${{ secrets.MS_STORE_PUBLISHER }}
+          MS_STORE_PUBLISHER_DISPLAY_NAME: ${{ secrets.MS_STORE_PUBLISHER_DISPLAY_NAME }}
+          MS_STORE_APP_ID: ${{ secrets.MS_STORE_APP_ID }}
       - name: Upload artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: jvm-Ubuntu
-          path: app/jvmApp/build/compose/binaries/main/
+          name: jvm-windows-msix
+          path: output/*.msix
+
+  windows-smoke-test:
+    name: Windows Smoke Test
+    needs: jvm-build
+    runs-on: windows-latest
+    steps:
+      - name: Download Windows MSIX artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: jvm-windows-msix
+          path: output
+      - name: Extract MSIX and run smoke test
+        shell: pwsh
+        run: |
+          $msix = Get-ChildItem -Path output -Filter "*.msix" | Select-Object -First 1
+          if (-not $msix) {
+            throw "No .msix file found in output directory"
+          }
+          Write-Host "Extracting $($msix.FullName)..."
+          7z x $msix.FullName -oextracted -y | Out-Null
+
+          $exe = Get-ChildItem -Path extracted -Filter "*.exe" | Select-Object -First 1
+          if (-not $exe) {
+            throw "No .exe file found at root of extracted MSIX"
+          }
+
+          $errLog = Join-Path $PWD "smoke-test-error.log"
+          $env:COMICVIEWER_SMOKE_TEST = "true"
+          $env:COMICVIEWER_SMOKE_TEST_LOG = $errLog
+
+          Write-Host "Launching $($exe.FullName) --smoke-test ..."
+          $proc = Start-Process -FilePath $exe.FullName -ArgumentList "--smoke-test" -WorkingDirectory $exe.DirectoryName -PassThru
+
+          if (-not $proc.WaitForExit(45000)) {
+            $proc.Kill()
+            if (Test-Path $errLog) {
+              Write-Host "=== smoke-test-error.log ==="
+              Get-Content $errLog
+            }
+            throw "Smoke test timed out after 45 seconds."
+          }
+
+          if (Test-Path $errLog) {
+            Write-Host "=== smoke-test-error.log ==="
+            Get-Content $errLog
+          }
+
+          if ($proc.ExitCode -ne 0) {
+            throw "Smoke test failed with exit code $($proc.ExitCode)"
+          }
+          Write-Host "Smoke test passed successfully!"
 
   ios-build:
     name: iOS
