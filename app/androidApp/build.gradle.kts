@@ -12,8 +12,7 @@ android {
         applicationId = "com.sorrowblue.comicviewer"
     }
     androidResources {
-        @Suppress("UnstableApiUsage")
-        generateLocaleConfig = true
+        localeFilters += listOf("en", "ja")
     }
     buildTypes {
         debug {
