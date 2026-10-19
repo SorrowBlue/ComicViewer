@@ -79,6 +79,40 @@ class BookNavigationServiceTest {
     }
 
     @Test
+    fun testResolveFolderSortType_useGlobalAndNormalizedPaths() {
+        val settings = FolderDisplaySettings(
+            sortType = SortType.Name(false),
+            folderScopeOnlyList = listOf(
+                FolderScopeOnly(
+                    bookshelfId = bookshelfId,
+                    path = "/manga/",
+                    sortType = SortType.Size(false),
+                    includeSubfolders = true,
+                ),
+                FolderScopeOnly(
+                    bookshelfId = bookshelfId,
+                    path = "/manga/global_sub",
+                    sortType = SortType.Date(true),
+                    includeSubfolders = false,
+                    useGlobal = true,
+                ),
+            ),
+        )
+        assertEquals(
+            SortType.Size(false),
+            service.resolveFolderSortType(settings, bookshelfId, "/manga"),
+        )
+        assertEquals(
+            SortType.Size(false),
+            service.resolveFolderSortType(settings, bookshelfId, "/manga/other_sub/"),
+        )
+        assertEquals(
+            SortType.Name(false),
+            service.resolveFolderSortType(settings, bookshelfId, "/manga/global_sub"),
+        )
+    }
+
+    @Test
     fun testResolveCollectionSortType_smartCollection() {
         val smartCollection = SmartCollection(
             name = "Recent",
