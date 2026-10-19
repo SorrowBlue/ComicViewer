@@ -88,14 +88,14 @@ jobs:
           Write-Host "Extracting $($msix.FullName)..."
           7z x $msix.FullName -oextracted -y | Out-Null
 
-          Write-Host "Executables in extracted MSIX root:"
-          Get-ChildItem -Path extracted -Filter "*.exe" | ForEach-Object { Write-Host " - $($_.Name)" }
+          Write-Host "Executables in extracted MSIX:"
+          Get-ChildItem -Path extracted -Recurse -Filter "*.exe" | ForEach-Object { Write-Host " - $($_.FullName)" }
 
-          $exe = Get-ChildItem -Path extracted -Filter "*.exe" |
+          $exe = Get-ChildItem -Path extracted -Recurse -Filter "*.exe" |
             Where-Object { $_.Name -ne "updatecheck.exe" } |
             Select-Object -First 1
           if (-not $exe) {
-            throw "App executable not found in extracted MSIX root"
+            throw "App executable not found in extracted MSIX"
           }
 
           $errLog = Join-Path $PWD "smoke-test-error.log"
