@@ -64,43 +64,129 @@ data class FolderDisplaySettings(
      */
     fun currentSortType(bookshelfId: BookshelfId, path: String): SortType {
         val targetList = folderScopeOnlyList.filter { it.bookshelfId == bookshelfId }
-        targetList.find { it.path == path }?.let { return it.sortType }
+        targetList.find { isSameFolderPath(it.path, path) }?.let {
+            return if (it.useGlobal) sortType else it.sortType
+        }
         return targetList
-            .filter { it.includeSubfolders && isSubfolder(parent = it.path, child = path) }
-            .maxByOrNull { it.path.length }
+            .filter {
+                !it.useGlobal &&
+                    it.includeSubfolders &&
+                    isSubfolderPath(parent = it.path, child = path)
+            }
+            .maxByOrNull { normalizeFolderPath(it.path).length }
             ?.sortType
             ?: sortType
     }
 
     /**
-     * 指定されたフォルダーが個別ソート設定を持っているかを判定します。
+     * Returns the effective sort scope for the specified bookshelf and path.
      *
-     * @param bookshelfId 本棚ID
-     * @param path フォルダーパス
-     * @return 個別設定が存在する場合は true
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @return The [FolderSortScope] currently applied to the folder.
      */
-    fun isFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean = folderScopeOnlyList
-        .any { it.bookshelfId == bookshelfId && it.path == path }
+    fun currentSortScope(bookshelfId: BookshelfId, path: String): FolderSortScope {
+        val targetList = folderScopeOnlyList.filter { it.bookshelfId == bookshelfId }
+        targetList.find { isSameFolderPath(it.path, path) }?.let {
+            return when {
+                it.useGlobal -> FolderSortScope.Global
+                it.includeSubfolders -> FolderSortScope.Subfolders
+                else -> FolderSortScope.FolderOnly
+            }
+        }
+        val inheritedFromAncestor = targetList.any {
+            !it.useGlobal &&
+                it.includeSubfolders &&
+                isSubfolderPath(parent = it.path, child = path)
+        }
+        return if (inheritedFromAncestor) {
+            FolderSortScope.Subfolders
+        } else {
+            FolderSortScope.Global
+        }
+    }
 
     /**
-     * 指定されたフォルダーが子フォルダーへの適用を有効にしているかを判定します。
+     * Checks whether the specified folder has a folder-specific sort setting.
      *
-     * @param bookshelfId 本棚ID
-     * @param path フォルダーパス
-     * @return 子フォルダーへの適用が有効な場合は true
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @return True if a folder-specific setting exists, false otherwise.
      */
-    fun isIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean = folderScopeOnlyList
-        .find { it.bookshelfId == bookshelfId && it.path == path }
-        ?.includeSubfolders ?: false
+    fun isFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean =
+        currentSortScope(bookshelfId, path) != FolderSortScope.Global
+
+    /**
+     * Checks whether the specified folder has subfolder sort inheritance enabled.
+     *
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @return True if subfolder sort inheritance is enabled, false otherwise.
+     */
+    fun isIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean =
+        currentSortScope(bookshelfId, path) == FolderSortScope.Subfolders
 }
 
-private fun isSubfolder(parent: String, child: String): Boolean {
-    if (parent == child) return false
-    return if (parent == "/" || parent.endsWith("/")) {
-        child.startsWith(parent)
+/**
+ * Compares two folder paths for equality after normalizing path separators and trailing slashes.
+ *
+ * @param path1 The first folder path.
+ * @param path2 The second folder path.
+ * @return True if both paths refer to the same folder, false otherwise.
+ */
+fun isSameFolderPath(path1: String, path2: String): Boolean =
+    normalizeFolderPath(path1) == normalizeFolderPath(path2)
+
+/**
+ * Checks whether [child] is a subfolder of [parent] after normalizing path separators and trailing slashes.
+ *
+ * @param parent The ancestor folder path.
+ * @param child The candidate descendant folder path.
+ * @return True if [child] is strictly inside [parent], false otherwise.
+ */
+fun isSubfolderPath(parent: String, child: String): Boolean {
+    val normParent = normalizeFolderPath(parent)
+    val normChild = normalizeFolderPath(child)
+    if (normParent.isEmpty() || normChild.isEmpty() || normParent == normChild) return false
+    return if (normParent.endsWith("/")) {
+        normChild.startsWith(normParent)
     } else {
-        child.startsWith("$parent/")
+        normChild.startsWith("$normParent/")
     }
+}
+
+/**
+ * Normalizes a folder path by unifying separators (`\`, `%2F`) to `/` and removing trailing slashes.
+ *
+ * @param path The raw folder path.
+ * @return The normalized folder path.
+ */
+fun normalizeFolderPath(path: String): String {
+    if (path.isEmpty()) return ""
+    val normalized = path
+        .replace("\\", "/")
+        .replace("%2F", "/", ignoreCase = true)
+    val trimmed = normalized.trimEnd('/')
+    return when {
+        trimmed.isEmpty() -> "/"
+        trimmed.length == 2 && trimmed[1] == ':' && normalized.endsWith("/") -> "$trimmed/"
+        else -> trimmed
+    }
+}
+
+/**
+ * Represents the application scope of folder sort settings.
+ */
+@Serializable
+enum class FolderSortScope {
+    /** Apply sort settings globally to all folders without custom settings. */
+    Global,
+
+    /** Apply sort settings only to the current folder. */
+    FolderOnly,
+
+    /** Apply sort settings to the current folder and all of its subfolders. */
+    Subfolders,
 }
 
 /** Default values for [FolderDisplaySettings]. */
@@ -151,6 +237,9 @@ object FolderDisplaySettingsDefaults {
  * @property bookshelfId The ID of the bookshelf.
  * @property path The folder path.
  * @property sortType The sort type for the folder.
+ * @property includeSubfolders Whether to apply this sort type to subfolders.
+ * @property useGlobal Whether this folder explicitly uses the global sort type
+ *    even when an ancestor has [includeSubfolders] enabled.
  */
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
@@ -159,4 +248,5 @@ data class FolderScopeOnly(
     @ProtoNumber(2) val path: String,
     @ProtoNumber(3) val sortType: SortType,
     @ProtoNumber(4) val includeSubfolders: Boolean = false,
+    @ProtoNumber(5) val useGlobal: Boolean = false,
 )
