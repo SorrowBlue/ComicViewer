@@ -88,9 +88,11 @@ jobs:
           Write-Host "Extracting $($msix.FullName)..."
           7z x $msix.FullName -oextracted -y | Out-Null
 
-          $exe = Get-ChildItem -Path extracted -Filter "*.exe" | Select-Object -First 1
+          [xml]$manifest = Get-Content -Path "extracted\AppxManifest.xml"
+          $exeRelPath = $manifest.Package.Applications.Application.Executable
+          $exe = Get-Item -Path (Join-Path "extracted" $exeRelPath)
           if (-not $exe) {
-            throw "No .exe file found at root of extracted MSIX"
+            throw "Executable '$exeRelPath' declared in AppxManifest.xml not found in extracted MSIX"
           }
 
           $errLog = Join-Path $PWD "smoke-test-error.log"
