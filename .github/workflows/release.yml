@@ -36,7 +36,7 @@ jobs:
     needs: [ lint, test ]
     uses: ./.github/workflows/windows-publish.yml
     with:
-      channel: 'production'
+      channel: ${{ contains(github.ref_name, 'beta') && 'test-flight' || 'production' }}
     secrets: inherit
 
   jvm-publish:
