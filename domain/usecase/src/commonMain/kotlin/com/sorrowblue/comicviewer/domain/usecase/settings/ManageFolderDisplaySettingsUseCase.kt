@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.domain.usecase.settings
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.settings.FolderSortSettingsService
@@ -15,37 +16,51 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
 /**
- * フォルダ表示設定の取得・編集およびフォルダー別ソート設定の操作を行うユースケース。
+ * Use case for retrieving and editing folder display settings and folder-specific sort settings.
  */
 interface ManageFolderDisplaySettingsUseCase : ManageSettingsUseCase<FolderDisplaySettings> {
 
     /**
-     * 指定されたフォルダーのソート種別を更新します。
-     * 個別設定モードの場合は個別設定を、そうでない場合は全体設定を更新します。
+     * Updates the sort type for the specified folder according to its active scope.
      *
-     * @param bookshelfId 本棚ID
-     * @param path フォルダーパス
-     * @param sortType 新しいソート種別
-     * @return 値の変更が生じた場合は true、変更がなかった場合は false
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @param sortType The new sort type.
+     * @return True if the effective sort type for the folder changed, false otherwise.
      */
     suspend fun updateSortType(bookshelfId: BookshelfId, path: String, sortType: SortType): Boolean
 
     /**
-     * 指定されたフォルダーの個別設定モードをトグルします。
-     * 個別設定が存在すれば削除し、存在しなければ現在の全体ソート設定を引き継いで個別設定を追加します。
+     * Updates the sort scope for the specified folder.
      *
-     * @param bookshelfId 本棚ID
-     * @param path フォルダーパス
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @param scope The new [FolderSortScope] to apply.
+     * @return True if the effective sort type for the folder changed, false otherwise.
      */
-    suspend fun toggleFolderScopeOnly(bookshelfId: BookshelfId, path: String)
+    suspend fun updateSortScope(
+        bookshelfId: BookshelfId,
+        path: String,
+        scope: FolderSortScope,
+    ): Boolean
 
     /**
-     * 指定されたフォルダーの子フォルダー適用フラグをトグルします。
+     * Toggles the folder-specific sort setting for the specified folder.
      *
-     * @param bookshelfId 本棚ID
-     * @param path フォルダーパス
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @return True if the effective sort type for the folder changed, false otherwise.
      */
-    suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String)
+    suspend fun toggleFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean
+
+    /**
+     * Toggles the subfolder sort inheritance flag for the specified folder.
+     *
+     * @param bookshelfId The ID of the bookshelf.
+     * @param path The folder path.
+     * @return True if the effective sort type for the folder changed, false otherwise.
+     */
+    suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean
 }
 
 @Inject
@@ -66,7 +81,7 @@ internal class ManageFolderDisplaySettingsUseCaseImpl(
         path: String,
         sortType: SortType,
     ): Boolean {
-        var isChanged = false
+        var isSortTypeChanged = false
         edit { current ->
             val result = folderSortSettingsService.updateSortType(
                 settings = current,
@@ -74,29 +89,76 @@ internal class ManageFolderDisplaySettingsUseCaseImpl(
                 path = path,
                 sortType = sortType,
             )
-            isChanged = result.isChanged
+            isSortTypeChanged = result.isSortTypeChanged
             result.settings
         }
-        return isChanged
+        return isSortTypeChanged
     }
 
-    override suspend fun toggleFolderScopeOnly(bookshelfId: BookshelfId, path: String) {
+    override suspend fun updateSortScope(
+        bookshelfId: BookshelfId,
+        path: String,
+        scope: FolderSortScope,
+    ): Boolean {
+        var isSortTypeChanged = false
         edit { current ->
-            folderSortSettingsService.toggleFolderScopeOnly(
+            val result = folderSortSettingsService.updateSortScope(
+                settings = current,
+                bookshelfId = bookshelfId,
+                path = path,
+                scope = scope,
+            )
+            isSortTypeChanged = result.isSortTypeChanged
+            result.settings
+        }
+        return isSortTypeChanged
+    }
+
+    override suspend fun toggleFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean {
+        var isSortTypeChanged = false
+        edit { current ->
+            val previousSortType = folderSortSettingsService.resolveSortType(
                 settings = current,
                 bookshelfId = bookshelfId,
                 path = path,
             )
-        }
-    }
-
-    override suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String) {
-        edit { current ->
-            folderSortSettingsService.toggleIncludeSubfolders(
+            val newSettings = folderSortSettingsService.toggleFolderScopeOnly(
                 settings = current,
                 bookshelfId = bookshelfId,
                 path = path,
             )
+            val newSortType = folderSortSettingsService.resolveSortType(
+                settings = newSettings,
+                bookshelfId = bookshelfId,
+                path = path,
+            )
+            isSortTypeChanged = newSortType != previousSortType
+            newSettings
         }
+        return isSortTypeChanged
+    }
+
+    override suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean {
+        var isSortTypeChanged = false
+        edit { current ->
+            val previousSortType = folderSortSettingsService.resolveSortType(
+                settings = current,
+                bookshelfId = bookshelfId,
+                path = path,
+            )
+            val newSettings = folderSortSettingsService.toggleIncludeSubfolders(
+                settings = current,
+                bookshelfId = bookshelfId,
+                path = path,
+            )
+            val newSortType = folderSortSettingsService.resolveSortType(
+                settings = newSettings,
+                bookshelfId = bookshelfId,
+                path = path,
+            )
+            isSortTypeChanged = newSortType != previousSortType
+            newSettings
+        }
+        return isSortTypeChanged
     }
 }

@@ -5,10 +5,12 @@
 package com.sorrowblue.comicviewer.feature.folder.section
 
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 
 internal data class FolderAppBarUiState(
     val title: String = "",
+    val sortScope: FolderSortScope = FolderSortScope.Global,
     val folderScopeOnly: Boolean = false,
     val includeSubfolders: Boolean = false,
     val sortType: SortType = SortType.Name(true),

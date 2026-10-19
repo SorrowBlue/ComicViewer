@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.folder.component.SortTypeItem
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
@@ -41,8 +42,7 @@ internal fun FolderAppBar(
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     onSortClick: (SortType) -> Unit,
-    onFolderScopeOnlyClick: () -> Unit,
-    onIncludeSubfoldersClick: () -> Unit,
+    onSortScopeClick: (FolderSortScope) -> Unit,
     onSettingsClick: () -> Unit,
     onGridSizeClick: () -> Unit,
     onHiddenFilesChange: (Boolean) -> Unit,
@@ -88,13 +88,9 @@ internal fun FolderAppBar(
                 Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
                     SortTypeItem(
                         sortType = uiState.sortType,
-                        folderScopeOnly = uiState.folderScopeOnly,
-                        includeSubfolders = uiState.includeSubfolders,
-                        onFolderScopeOnlyClick = {
-                            onFolderScopeOnlyClick()
-                        },
-                        onIncludeSubfoldersClick = {
-                            onIncludeSubfoldersClick()
+                        sortScope = uiState.sortScope,
+                        onSortScopeClick = {
+                            onSortScopeClick(it)
                         },
                         onClick = {
                             onSortClick(it)
@@ -122,13 +118,13 @@ private fun FolderAppBarPreview() {
             uiState = FolderAppBarUiState(
                 title = "Folder Name",
                 sortType = SortType.Name(true),
+                sortScope = FolderSortScope.FolderOnly,
                 folderScopeOnly = true,
             ),
             onBackClick = {},
             onSearchClick = {},
             onSortClick = {},
-            onFolderScopeOnlyClick = {},
-            onIncludeSubfoldersClick = {},
+            onSortScopeClick = {},
             onSettingsClick = {},
             onGridSizeClick = {},
             onHiddenFilesChange = {},

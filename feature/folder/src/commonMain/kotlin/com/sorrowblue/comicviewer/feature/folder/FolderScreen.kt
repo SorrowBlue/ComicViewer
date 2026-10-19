@@ -22,6 +22,7 @@ import com.github.skydoves.navgraph.annotations.NavEdge
 import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.feature.book.nav.BookNavKey
 import com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey
@@ -52,8 +53,7 @@ internal fun FolderScreen(
     onFileClick: (File) -> Unit,
     onFileInfoClick: (File) -> Unit,
     onSortClick: (SortType) -> Unit,
-    onFolderScopeOnlyClick: () -> Unit,
-    onIncludeSubfoldersClick: () -> Unit,
+    onSortScopeClick: (FolderSortScope) -> Unit,
     onSettingsClick: () -> Unit,
     onGridSizeClick: () -> Unit,
     onHiddenFilesChange: (Boolean) -> Unit,
@@ -71,8 +71,7 @@ internal fun FolderScreen(
                 onBackClick = onBackClick,
                 onSearchClick = onSearchClick,
                 onSortClick = onSortClick,
-                onFolderScopeOnlyClick = onFolderScopeOnlyClick,
-                onIncludeSubfoldersClick = onIncludeSubfoldersClick,
+                onSortScopeClick = onSortScopeClick,
                 onSettingsClick = onSettingsClick,
                 onGridSizeClick = onGridSizeClick,
                 onHiddenFilesChange = onHiddenFilesChange,
@@ -108,6 +107,7 @@ private fun FolderScreenPreview() = PreviewTheme {
         uiState = FolderScreenUiState(
             folderAppBarUiState = FolderAppBarUiState(
                 title = "Folder Name",
+                sortScope = FolderSortScope.Global,
                 folderScopeOnly = false,
             ),
             folderListUiState = FolderListUiState(),
@@ -119,8 +119,7 @@ private fun FolderScreenPreview() = PreviewTheme {
         onFileClick = {},
         onFileInfoClick = {},
         onSortClick = {},
-        onFolderScopeOnlyClick = {},
-        onIncludeSubfoldersClick = {},
+        onSortScopeClick = {},
         onSettingsClick = {},
         onGridSizeClick = {},
         onHiddenFilesChange = {},

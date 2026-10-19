@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
 import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import dev.zacsweers.metro.AppScope
@@ -37,6 +38,7 @@ class ManageFolderDisplaySettingsUseCaseTest {
     private lateinit var manageFolderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase
     private val bookshelfId = BookshelfId(1)
     private val path = "/manga"
+    private val subPath = "/manga/sub"
 
     @BeforeTest
     fun setup() {
@@ -71,20 +73,93 @@ class ManageFolderDisplaySettingsUseCaseTest {
     }
 
     @Test
+    fun testUpdateSortScope_and_reloadReturnValues() = runTest {
+        manageFolderDisplaySettingsUseCase.edit {
+            it.copy(sortType = SortType.Name(true))
+        }
+
+        // Global(Name(true)) -> FolderOnly(Name(true)): スコープは変わるが実効ソート順は同じなので false
+        val sortChangedToFolderOnly = manageFolderDisplaySettingsUseCase.updateSortScope(
+            bookshelfId,
+            path,
+            FolderSortScope.FolderOnly,
+        )
+        assertFalse(sortChangedToFolderOnly)
+        assertEquals(
+            FolderSortScope.FolderOnly,
+            manageFolderDisplaySettingsUseCase.settings.first().currentSortScope(bookshelfId, path),
+        )
+
+        // FolderOnly で Date(false) に変更 -> 実効ソート順が変わるので true
+        val sortChangedInFolderOnly = manageFolderDisplaySettingsUseCase.updateSortType(
+            bookshelfId,
+            path,
+            SortType.Date(false),
+        )
+        assertTrue(sortChangedInFolderOnly)
+
+        // FolderOnly(Date(false)) -> Subfolders(Date(false)): 実効ソート順は同じなので false（子フォルダには波及）
+        val sortChangedToSubfolders = manageFolderDisplaySettingsUseCase.updateSortScope(
+            bookshelfId,
+            path,
+            FolderSortScope.Subfolders,
+        )
+        assertFalse(sortChangedToSubfolders)
+        assertEquals(
+            SortType.Date(false),
+            manageFolderDisplaySettingsUseCase.settings.first().currentSortType(
+                bookshelfId,
+                subPath
+            ),
+        )
+
+        // 子フォルダで Global(Name(true)) に切り替え -> 子フォルダの実効ソート順が Date(false) -> Name(true) に変わるので true
+        val subChangedToGlobal = manageFolderDisplaySettingsUseCase.updateSortScope(
+            bookshelfId,
+            subPath,
+            FolderSortScope.Global,
+        )
+        assertTrue(subChangedToGlobal)
+        assertEquals(
+            SortType.Name(true),
+            manageFolderDisplaySettingsUseCase.settings.first().currentSortType(
+                bookshelfId,
+                subPath
+            ),
+        )
+
+        // 親フォルダで Global(Name(true)) に切り替え -> 親の実効ソート順が Date(false) -> Name(true) に変わるので true
+        val parentChangedToGlobal = manageFolderDisplaySettingsUseCase.updateSortScope(
+            bookshelfId,
+            path,
+            FolderSortScope.Global,
+        )
+        assertTrue(parentChangedToGlobal)
+        assertTrue(
+            manageFolderDisplaySettingsUseCase.settings.first().folderScopeOnlyList.isEmpty()
+        )
+    }
+
+    @Test
     fun testToggleFolderScopeOnly() = runTest {
         manageFolderDisplaySettingsUseCase.edit {
             it.copy(sortType = SortType.Name(true))
         }
 
-        // 最初は空 -> トグルで個別設定が追加される
-        manageFolderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
+        // 最初は空 -> トグルで個別設定が追加される（ソート種別自体は同じなので false）
+        val sortChangedOnAdd =
+            manageFolderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
+        assertFalse(sortChangedOnAdd)
         val afterAdd = manageFolderDisplaySettingsUseCase.settings.first()
         assertEquals(1, afterAdd.folderScopeOnlyList.size)
         assertEquals(bookshelfId, afterAdd.folderScopeOnlyList[0].bookshelfId)
         assertEquals(path, afterAdd.folderScopeOnlyList[0].path)
 
-        // 再度トグル -> 個別設定が削除される
-        manageFolderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
+        // 個別設定のソート順を変更してからトグル解除 -> Global のソート順に戻るので true
+        manageFolderDisplaySettingsUseCase.updateSortType(bookshelfId, path, SortType.Size(false))
+        val sortChangedOnRemove =
+            manageFolderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
+        assertTrue(sortChangedOnRemove)
         val afterRemove = manageFolderDisplaySettingsUseCase.settings.first()
         assertTrue(afterRemove.folderScopeOnlyList.isEmpty())
     }

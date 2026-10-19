@@ -14,6 +14,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.GetBookshelfInfoUseCase
@@ -83,6 +84,7 @@ internal class FolderViewModel(
             folderAppBarUiState = FolderAppBarUiState(
                 title = title,
                 showSearch = showSearch,
+                sortScope = folderDisplaySettings.currentSortScope(bookshelfId, path),
                 folderScopeOnly = folderDisplaySettings.isFolderScopeOnly(bookshelfId, path),
                 includeSubfolders = folderDisplaySettings.isIncludeSubfolders(bookshelfId, path),
                 sortType = folderDisplaySettings.currentSortType(bookshelfId, path),
@@ -118,15 +120,27 @@ internal class FolderViewModel(
         }
     }
 
+    fun onSortScopeClick(scope: FolderSortScope) {
+        viewModelScope.launch {
+            if (folderDisplaySettingsUseCase.updateSortScope(bookshelfId, path, scope)) {
+                events.tryEmit(FolderScreenUiEvent.Reload)
+            }
+        }
+    }
+
     fun onFolderScopeOnlyClick() {
         viewModelScope.launch {
-            folderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
+            if (folderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)) {
+                events.tryEmit(FolderScreenUiEvent.Reload)
+            }
         }
     }
 
     fun onIncludeSubfoldersClick() {
         viewModelScope.launch {
-            folderDisplaySettingsUseCase.toggleIncludeSubfolders(bookshelfId, path)
+            if (folderDisplaySettingsUseCase.toggleIncludeSubfolders(bookshelfId, path)) {
+                events.tryEmit(FolderScreenUiEvent.Reload)
+            }
         }
     }
 
@@ -153,8 +167,13 @@ internal class FolderViewModel(
 
     fun onHiddenFilesChange(checked: Boolean) {
         viewModelScope.launch {
+            var isChanged = false
             folderDisplaySettingsUseCase.edit {
+                isChanged = it.showHiddenFiles != checked
                 it.copy(showHiddenFiles = checked)
+            }
+            if (isChanged) {
+                events.tryEmit(FolderScreenUiEvent.Reload)
             }
         }
     }
