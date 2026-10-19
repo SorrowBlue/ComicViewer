@@ -21,7 +21,9 @@ internal interface JvmAppGraph : AppGraph {
     }
 }
 
-internal class JvmApplication : DesktopContext(), AppGraphProvider<AppGraph> {
+internal class JvmApplication :
+    DesktopContext(),
+    AppGraphProvider<AppGraph> {
     override val appGraph: AppGraph by lazy {
         createGraphFactory<JvmAppGraph.Factory>().createJvmAppGraph(this)
     }
