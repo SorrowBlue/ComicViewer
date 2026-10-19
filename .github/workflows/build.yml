@@ -57,11 +57,6 @@ jobs:
           command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[windows.amd64]' make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
-        env:
-          MS_STORE_IDENTITY_NAME: ${{ secrets.MS_STORE_IDENTITY_NAME }}
-          MS_STORE_PUBLISHER: ${{ secrets.MS_STORE_PUBLISHER }}
-          MS_STORE_PUBLISHER_DISPLAY_NAME: ${{ secrets.MS_STORE_PUBLISHER_DISPLAY_NAME }}
-          MS_STORE_APP_ID: ${{ secrets.MS_STORE_APP_ID }}
       - name: Upload artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -88,18 +83,12 @@ jobs:
           Write-Host "Extracting $($msix.FullName)..."
           7z x $msix.FullName -oextracted -y | Out-Null
 
-          Write-Host "Executables in extracted MSIX:"
-          Get-ChildItem -Path extracted -Recurse -Filter "*.exe" | ForEach-Object { Write-Host " - $($_.FullName)" }
-
-          $exe = Get-ChildItem -Path extracted -Recurse -Filter "*.exe" |
-            Where-Object { $_.Name -ne "updatecheck.exe" } |
-            Select-Object -First 1
+          $exe = Get-ChildItem -Path "extracted\bin" -Filter "*.exe" | Select-Object -First 1
           if (-not $exe) {
-            throw "App executable not found in extracted MSIX"
+            throw "App executable not found in extracted\bin"
           }
 
           $errLog = Join-Path $PWD "smoke-test-error.log"
-          $env:COMICVIEWER_SMOKE_TEST = "true"
           $env:COMICVIEWER_SMOKE_TEST_LOG = $errLog
 
           Write-Host "Launching $($exe.FullName) --smoke-test ..."

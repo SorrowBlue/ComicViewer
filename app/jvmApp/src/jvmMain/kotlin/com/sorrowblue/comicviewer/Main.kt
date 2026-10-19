@@ -20,8 +20,7 @@ import kotlinx.coroutines.withTimeout
 
 @OptIn(InternalComposeUiApi::class)
 fun main(args: Array<String>) {
-    val isSmokeTest = args.contains("--smoke-test") ||
-        System.getenv("COMICVIEWER_SMOKE_TEST") == "true"
+    val isSmokeTest = args.contains("--smoke-test")
 
     if (isSmokeTest) {
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
