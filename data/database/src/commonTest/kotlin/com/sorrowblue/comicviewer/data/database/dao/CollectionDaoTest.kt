@@ -4,6 +4,7 @@ import com.sorrowblue.comicviewer.data.database.DatabaseTest
 import com.sorrowblue.comicviewer.data.database.entity.collection.CollectionEntity
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
+import com.sorrowblue.comicviewer.framework.test.MediumTest
 import com.sorrowblue.comicviewer.framework.test.MultiplatformAndroidJUnit4
 import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
 import kotlin.test.Test
@@ -12,6 +13,7 @@ import kotlin.test.assertNotEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
+@MediumTest
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 internal class CollectionDaoTest : DatabaseTest() {
     private val collectionDao: CollectionDao get() = database.collectionDao()

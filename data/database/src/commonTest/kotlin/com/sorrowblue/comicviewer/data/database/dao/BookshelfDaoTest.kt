@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPassword
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.EmbeddedBookshelfFileCountEntity
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.framework.test.MediumTest
 import com.sorrowblue.comicviewer.framework.test.MultiplatformAndroidJUnit4
 import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
 import kotlin.test.Test
@@ -17,6 +18,7 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
+@MediumTest
 @MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
 internal class BookshelfDaoTest : DatabaseTest() {
     private val dao: BookshelfDao get() = database.bookshelfDao()
