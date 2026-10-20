@@ -2,6 +2,12 @@ name: Build
 
 on:
   workflow_call:
+    inputs:
+      full-check:
+        description: 'Whether to run full packaging builds (MSIX, Smoke Test, xcodebuild)'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   android-build:
@@ -20,23 +26,26 @@ jobs:
           fileName: 'android_keystore.jks'
           encodedString: ${{ secrets.ANDROID_STORE_FILE_BASE64 }}
       - name: 🤖 ExportLibraryDefinitions
+        if: ${{ inputs.full-check }}
         run: ./gradlew :app:androidApp:exportLibraryDefinitions
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run bundlePrerelease assemblePrerelease
-        run: ./gradlew bundlePrerelease assemblePrerelease
+      - name: Run assemblePrerelease
+        run: ./gradlew assemblePrerelease
         env:
           ORG_GRADLE_PROJECT_androidSigningStoreFile: ${{ steps.android_keystore.outputs.filePath }}
           ORG_GRADLE_PROJECT_androidSigningStorePassword: ${{ secrets.ANDROID_STORE_PASSWORD }}
           ORG_GRADLE_PROJECT_androidSigningKeyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           ORG_GRADLE_PROJECT_androidSigningKeyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
       - name: Upload artifact
+        if: ${{ inputs.full-check }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: android
           path: app/androidApp/build/outputs/
+
   jvm-build:
-    name: JVM (Windows MSIX Build on Linux)
+    name: ${{ inputs.full-check && 'JVM (Windows MSIX Build on Linux)' || 'JVM (Jar Build Check)' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,25 +55,38 @@ jobs:
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: 🖥️ ExportLibraryDefinitions
+        if: ${{ inputs.full-check }}
         run: ./gradlew :app:jvmApp:exportLibraryDefinitions
         env:
           ORG_GRADLE_PROJECT_githubApiToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Build JVM Jar
         run: ./gradlew :app:jvmApp:jvmJar
       - name: Build Windows MSIX Package
+        if: ${{ inputs.full-check }}
         uses: hydraulic-software/conveyor/actions/build@7370ce828ff1cbc38b95426ffb2fd613492016d5 # v22.3
         with:
           command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[windows.amd64]' make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           agree_to_license: 1
       - name: Upload artifact
+        if: ${{ inputs.full-check }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: jvm-windows-msix
           path: output/*.msix
+      - name: Clean up Conveyor caches to preserve Gradle cache quota
+        if: always() && inputs.full-check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for id in $(gh cache list --json id,key --jq '.[] | select(.key | startswith("conveyor-")) | .id'); do
+            echo "Deleting conveyor cache $id..."
+            gh cache delete "$id" || true
+          done
 
   windows-smoke-test:
     name: Windows Smoke Test
+    if: ${{ inputs.full-check }}
     needs: jvm-build
     runs-on: windows-latest
     steps:
@@ -113,8 +135,21 @@ jobs:
           }
           Write-Host "Smoke test passed successfully!"
 
+  ios-compile-check:
+    name: iOS (Kotlin Klib Check)
+    if: ${{ !inputs.full-check }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Compile iOS Kotlin Framework (Cross-Compile on Linux)
+        run: ./gradlew :app:ios:compileKotlinIosSimulatorArm64
+
   ios-build:
     name: iOS
+    if: ${{ inputs.full-check }}
     runs-on: macos-latest
     steps:
       - name: Checkout

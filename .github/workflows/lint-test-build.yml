@@ -1,4 +1,4 @@
-name:  Lint, Test, and Build
+name: Lint, Test, and Build
 
 on:
   workflow_dispatch:
@@ -26,20 +26,18 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should-run: ${{ steps.check.outputs.should-run }}
+      full-check: ${{ steps.check.outputs.full-check }}
       should-run-deps: ${{ steps.check.outputs.should-run-deps }}
+      should-run-db-test: ${{ steps.check.outputs.should-run-db-test }}
     steps:
       - name: Checkout code
-        if: >-
-          github.event_name == 'pull_request' ||
-          (github.event_name == 'push' && github.event.head_commit.committer.name != 'GitHub')
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 2
       - name: Get changed dependency files
         id: changed-dep-files
-        if: >-
-          github.event_name == 'pull_request' ||
-          (github.event_name == 'push' && github.event.head_commit.committer.name != 'GitHub')
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
         uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
           files: |
@@ -48,31 +46,30 @@ jobs:
             settings.gradle.kts
             config/conveyor/**
             .github/workflows/check-dependency-drift.yml
-      - name: Check if should run
+      - name: Get changed database files
+        id: changed-db-files
+        if: github.event_name == 'pull_request'
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        with:
+          files: |
+            data/database/**
+            gradle/libs.versions.toml
+      - name: Check execution mode
         id: check
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ] || \
-             [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "should-run=true" >> $GITHUB_OUTPUT
-            echo "should-run-deps=true" >> $GITHUB_OUTPUT
-            echo "Decision: Running workflow and dependency drift check (triggered by ${{ github.event_name }})"
-            exit 0
-          fi
-
-          # PRマージ等によるGitHub Web UI経由のpushはすべてスキップ（PR側で実行済みのため）
-          if [ "${{ github.event_name }}" = "push" ] && \
-             [ "${{ github.event.head_commit.committer.name }}" = "GitHub" ]; then
-            echo "should-run=false" >> $GITHUB_OUTPUT
-            echo "should-run-deps=false" >> $GITHUB_OUTPUT
-            echo "Decision: Skipping all checks (PR merge commit by GitHub)"
-            exit 0
-          fi
-
           echo "should-run=true" >> $GITHUB_OUTPUT
-          echo "Decision: Running workflow"
 
-          DEP_FILES_CHANGED="${{ steps.changed-dep-files.outputs.any_changed }}"
-          if [ "$DEP_FILES_CHANGED" = "true" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "full-check=false" >> $GITHUB_OUTPUT
+            echo "Decision: Running fast PR checks"
+          else
+            echo "full-check=true" >> $GITHUB_OUTPUT
+            echo "Decision: Running full checks and updating Gradle cache (triggered by ${{ github.event_name }})"
+          fi
+
+          if [ "${{ github.event_name }}" = "schedule" ] || \
+             [ "${{ github.event_name }}" = "workflow_dispatch" ] || \
+             [ "${{ steps.changed-dep-files.outputs.any_changed }}" = "true" ]; then
             echo "should-run-deps=true" >> $GITHUB_OUTPUT
             echo "Decision: Running dependency drift check"
           else
@@ -80,20 +77,34 @@ jobs:
             echo "Decision: Skipping dependency drift check"
           fi
 
+          if [ "${{ github.event_name }}" != "pull_request" ] || \
+             [ "${{ steps.changed-db-files.outputs.any_changed }}" = "true" ]; then
+            echo "should-run-db-test=true" >> $GITHUB_OUTPUT
+          else
+            echo "should-run-db-test=false" >> $GITHUB_OUTPUT
+          fi
+
   lint:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/lint.yml
+    with:
+      full-check: ${{ needs.check-commit.outputs.full-check == 'true' }}
 
   test:
     needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/test.yml
+    with:
+      full-check: ${{ needs.check-commit.outputs.full-check == 'true' }}
+      run-db-device-test: ${{ needs.check-commit.outputs.should-run-db-test == 'true' }}
 
   build:
-    needs: [ lint, test ]
+    needs: check-commit
     if: needs.check-commit.outputs.should-run == 'true'
     uses: ./.github/workflows/build.yml
+    with:
+      full-check: ${{ needs.check-commit.outputs.full-check == 'true' }}
     secrets: inherit
 
   dependency-drift:

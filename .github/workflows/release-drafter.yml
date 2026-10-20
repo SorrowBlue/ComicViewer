@@ -1,8 +1,10 @@
 name: Release Drafter
 
 on:
-  push:
-    # branches to consider in the event; optional, defaults to all
+  workflow_run:
+    workflows: ["Lint, Test, and Build"]
+    types:
+      - completed
     branches:
       - main
 
@@ -15,6 +17,7 @@ permissions:
 
 jobs:
   update_release_draft:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
       pull-requests: write
@@ -30,6 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update_prerelease_draft:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
       pull-requests: write

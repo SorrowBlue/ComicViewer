@@ -2,6 +2,12 @@ name: Lint
 
 on:
   workflow_call:
+    inputs:
+      full-check:
+        description: 'Whether to run all lint variants (true on main/schedule, false on PR)'
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -10,6 +16,7 @@ permissions:
 
 jobs:
   analyze:
+    if: ${{ inputs.full-check || !matrix.full_only }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,28 +25,35 @@ jobs:
             task: "reportMerge --continue"
             sarif_file: "build/reports/detekt/merge.sarif"
             category: "detekt"
+            full_only: false
           - name: "Detekt (build-logic)"
             task: ":build-logic:detektMain"
             sarif_file: "build-logic/build/reports/detekt/main.sarif"
             category: "detekt-build-logic"
+            full_only: false
           - name: "VersionCatalog"
             task: "checkVersionCatalog"
+            full_only: false
           - name: "lintDebug"
             task: "app:androidApp:lintDebug"
             sarif_file: "app/androidApp/build/reports/lint-results-debug.sarif"
             category: "android-lint-debug"
+            full_only: false
           - name: "lintInternal"
             task: "app:androidApp:lintInternal"
             sarif_file: "app/androidApp/build/reports/lint-results-internal.sarif"
             category: "android-lint-internal"
+            full_only: true
           - name: "lintPrerelease"
             task: "app:androidApp:lintPrerelease"
             sarif_file: "app/androidApp/build/reports/lint-results-prerelease.sarif"
             category: "android-lint-prerelease"
+            full_only: true
           - name: "lintRelease"
             task: "app:androidApp:lintRelease"
             sarif_file: "app/androidApp/build/reports/lint-results-release.sarif"
             category: "android-lint-release"
+            full_only: true
     name: 🔍️ ${{ matrix.name || matrix.task }}
     steps:
       - name: Checkout
