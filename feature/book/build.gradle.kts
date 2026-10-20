@@ -14,5 +14,10 @@ kotlin {
                 implementation(projects.feature.settings.nav)
             }
         }
+        commonTest {
+            dependencies {
+                implementation(libs.kotlinx.coroutinesTest)
+            }
+        }
     }
 }

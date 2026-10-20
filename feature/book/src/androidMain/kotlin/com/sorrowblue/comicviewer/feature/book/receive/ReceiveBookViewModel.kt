@@ -4,6 +4,8 @@
 
 package com.sorrowblue.comicviewer.feature.book.receive
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.book.PageItem
@@ -52,6 +54,12 @@ internal class ReceiveBookViewModel(
         extraBufferCapacity = 64,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
+
+    val currentList: SnapshotStateList<PageItem> = mutableStateListOf()
+
+    var isInitialized: Boolean = false
+
+    var currentPagerIndex: Int = 0
 
     val viewerSettingsFlow = manageViewerSettingsUseCase.settings
         .shareIn(viewModelScope, SharingStarted.Lazily, 1)

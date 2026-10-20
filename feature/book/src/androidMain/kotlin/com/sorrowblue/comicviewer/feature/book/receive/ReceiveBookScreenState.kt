@@ -11,11 +11,11 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
@@ -40,6 +40,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -70,8 +71,15 @@ internal fun rememberReceiveBookScreenState(
 ): ReceiveBookScreenState {
     val appContext = LocalContext.current
     val scope = rememberCoroutineScope()
-    val currentList: SnapshotStateList<PageItem> = remember { mutableStateListOf() }
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { currentList.size })
+    val currentList: SnapshotStateList<PageItem> = viewModel.currentList
+    val pagerState = rememberPagerState(
+        initialPage = if (viewModel.isInitialized) {
+            viewModel.currentPagerIndex.coerceIn(0, maxOf(0, currentList.lastIndex))
+        } else {
+            0
+        },
+        pageCount = { currentList.size },
+    )
     val systemUiController = rememberSystemUiController()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     return remember(lifecycle) {
@@ -85,6 +93,10 @@ internal fun rememberReceiveBookScreenState(
             viewerSettingsFlow = viewModel.viewerSettingsFlow,
             bookFlow = viewModel.bookFlow,
             pageItemListFlow = viewModel.pageItemListFlow,
+            isInitialized = { viewModel.isInitialized },
+            onInitialized = { viewModel.isInitialized = true },
+            savedPagerIndex = { viewModel.currentPagerIndex },
+            onPagerIndexChange = { viewModel.currentPagerIndex = it },
             onPageLoaded = viewModel::onPageLoaded,
         )
     }
@@ -100,8 +112,14 @@ private class ReceiveBookScreenStateImpl(
     viewerSettingsFlow: SharedFlow<ViewerSettings>,
     bookFlow: SharedFlow<BookFile?>,
     pageItemListFlow: Flow<List<PageItem>>,
+    private val isInitialized: () -> Boolean,
+    private val onInitialized: () -> Unit,
+    private val savedPagerIndex: () -> Int,
+    private val onPagerIndexChange: (Int) -> Unit,
     private val onPageLoaded: (UnratedPage, Boolean) -> Unit,
 ) : ReceiveBookScreenState {
+    private var isSynced = false
+
     init {
         combine(
             bookFlow.filterNotNull(),
@@ -112,15 +130,22 @@ private class ReceiveBookScreenStateImpl(
             .flowWithLifecycle(lifecycle)
             .onEach { (bookFile, pageItems) ->
                 val totalPageCount = bookFile.totalPageCount
-                val isFirstLoad = currentList.isEmpty() && pageItems.isNotEmpty()
-                val currentItem = currentList.getOrNull(pagerState.currentPage)
+                val isFirstLoad = !isInitialized() && pageItems.isNotEmpty()
+                val currentPagerIndex = if (isSynced) {
+                    pagerState.currentPage
+                } else {
+                    savedPagerIndex()
+                }
+                val currentItem = currentList.getOrNull(currentPagerIndex)
                 val currentDisplayPage = if (isFirstLoad) {
                     1
                 } else {
                     currentItem?.toDisplayPage(totalPageCount) ?: 1
                 }
-                currentList.clear()
-                currentList.addAll(pageItems)
+                if (currentList != pageItems) {
+                    currentList.clear()
+                    currentList.addAll(pageItems)
+                }
                 val newPagerIndex = pageItems.findPagerIndexFor(
                     currentItem = currentItem,
                     targetDisplayPage = currentDisplayPage,
@@ -128,6 +153,19 @@ private class ReceiveBookScreenStateImpl(
                 )
                 if (isFirstLoad || pagerState.currentPage != newPagerIndex) {
                     pagerState.scrollToPage(newPagerIndex)
+                }
+                if (pageItems.isNotEmpty()) {
+                    onInitialized()
+                    onPagerIndexChange(pagerState.currentPage)
+                    isSynced = true
+                }
+            }
+            .launchIn(coroutineScope)
+        snapshotFlow { pagerState.currentPage }
+            .distinctUntilChanged()
+            .onEach { page ->
+                if (isSynced && currentList.isNotEmpty()) {
+                    onPagerIndexChange(page)
                 }
             }
             .launchIn(coroutineScope)

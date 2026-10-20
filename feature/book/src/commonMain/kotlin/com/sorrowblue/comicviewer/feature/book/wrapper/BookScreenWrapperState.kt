@@ -15,14 +15,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.model.file.Book
-import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
-import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -38,49 +34,34 @@ internal fun rememberBookScreenWrapperState(
     collectionId: CollectionId,
     viewModel: BookWrapperViewModel =
         assistedMetroViewModel<BookWrapperViewModel, BookWrapperViewModel.Factory> {
-            create(bookshelfId, path, collectionId)
+            create(bookshelfId, path, name, collectionId)
         },
 ): BookScreenWrapperState {
     val coroutineScope = rememberCoroutineScope()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     return remember(lifecycle) {
         BookScreenWrapperStateImpl(
-            name = name,
-            collectionId = collectionId,
             lifecycle = lifecycle,
             coroutineScope = coroutineScope,
-            bookFlow = viewModel.bookFlow,
-            viewerSettingsFlow = viewModel.viewerSettingsFlow,
+            uiStateFlow = viewModel.uiStateFlow,
         )
     }
 }
 
 private class BookScreenWrapperStateImpl(
-    name: String,
-    collectionId: CollectionId,
     lifecycle: Lifecycle,
     coroutineScope: CoroutineScope,
-    bookFlow: SharedFlow<Book?>,
-    viewerSettingsFlow: SharedFlow<ViewerSettings>,
+    uiStateFlow: StateFlow<BookScreenUiState>,
 ) : BookScreenWrapperState {
 
-    override var uiState: BookScreenUiState by mutableStateOf(BookScreenUiState.Loading(name))
+    override var uiState: BookScreenUiState by mutableStateOf(uiStateFlow.value)
         private set
 
     init {
-        bookFlow
+        uiStateFlow
             .flowWithLifecycle(lifecycle)
-            .onEach { book ->
-                uiState = if (book != null) {
-                    BookScreenUiState.Loaded(
-                        book = book,
-                        collectionId = collectionId,
-                        bookSheetUiState = BookSheetUiState(book),
-                        alwaysOpenFromFirstPage = viewerSettingsFlow.first().alwaysOpenFromFirstPage,
-                    )
-                } else {
-                    BookScreenUiState.Error(name)
-                }
+            .onEach {
+                uiState = it
             }
             .launchIn(coroutineScope)
     }

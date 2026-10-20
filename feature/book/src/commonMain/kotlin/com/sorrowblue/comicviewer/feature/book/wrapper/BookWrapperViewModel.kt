@@ -11,6 +11,8 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.file.GetBookUseCase
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageViewerSettingsUseCase
+import com.sorrowblue.comicviewer.feature.book.BookScreenUiState
+import com.sorrowblue.comicviewer.feature.book.section.BookSheetUiState
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -19,24 +21,42 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 
 @AssistedInject
 internal class BookWrapperViewModel(
     @Assisted bookshelfId: BookshelfId,
     @Assisted path: String,
+    @Assisted name: String,
     @Assisted collectionId: CollectionId,
     getBookUseCase: GetBookUseCase,
     manageViewerSettingsUseCase: ManageViewerSettingsUseCase,
 ) : ViewModel() {
 
-    val viewerSettingsFlow =
-        manageViewerSettingsUseCase.settings.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
-
-    val bookFlow = getBookUseCase(GetBookUseCase.Request(bookshelfId, path))
-        .map { it.dataOrNull() }
-        .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+    val uiStateFlow: StateFlow<BookScreenUiState> =
+        getBookUseCase(GetBookUseCase.Request(bookshelfId, path))
+            .map { resource ->
+                val book = resource.dataOrNull()
+                if (book != null) {
+                    BookScreenUiState.Loaded(
+                        book = book,
+                        collectionId = collectionId,
+                        bookSheetUiState = BookSheetUiState(book),
+                        alwaysOpenFromFirstPage =
+                            manageViewerSettingsUseCase.settings.first().alwaysOpenFromFirstPage,
+                    )
+                } else {
+                    BookScreenUiState.Error(name)
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = BookScreenUiState.Loading(name),
+            )
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey
@@ -45,6 +65,7 @@ internal class BookWrapperViewModel(
         fun create(
             bookshelfId: BookshelfId,
             path: String,
+            name: String,
             collectionId: CollectionId,
         ): BookWrapperViewModel
     }
