@@ -25,8 +25,16 @@ kotlin {
 val gitTagProvider: Provider<String>
     get() = providers.of(GitTagValueSource::class) {}
 
+val gitCommitTimestampProvider: Provider<Long>
+    get() = providers.exec {
+        commandLine("git", "log", "-1", "--format=%ct")
+        isIgnoreExitValue = true
+    }.standardOutput.asText.map { output ->
+        output.trim().toLongOrNull()?.times(1000L) ?: 0L
+    }
+
 buildConfig {
     packageName = "om.sorrowblue.comicviewer.feature.settings"
     buildConfigField("VERSION_NAME", gitTagProvider.get())
-    buildConfigField("TIMESTAMP", System.currentTimeMillis())
+    buildConfigField("TIMESTAMP", gitCommitTimestampProvider.get())
 }

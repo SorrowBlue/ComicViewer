@@ -2,13 +2,64 @@ name: Internal Release
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Lint, Test, and Build"]
+    types:
+      - completed
+    branches:
+      - main
 
 permissions:
   contents: read
+  actions: write
   id-token: write
 
 jobs:
+  check-commit:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    outputs:
+      should-release: ${{ steps.check.outputs.should-release }}
+    steps:
+      - name: Checkout code
+        if: github.event_name == 'workflow_run'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 50
+      - name: Check commit message for Internal-release flag
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "should-release=true" >> $GITHUB_OUTPUT
+            echo "Decision: Triggered manually via workflow_dispatch. Running Internal Release."
+            exit 0
+          fi
+
+          HEAD_SHA="${{ github.event.workflow_run.head_sha }}"
+          if git rev-parse --verify "${HEAD_SHA}^2" >/dev/null 2>&1; then
+            COMMIT_MESSAGES=$(git log "${HEAD_SHA}^1..${HEAD_SHA}" --format=%B)
+          else
+            COMMIT_MESSAGES=$(git log -1 --format=%B "${HEAD_SHA}")
+          fi
+
+          echo "=== Commit Message(s) ==="
+          echo "$COMMIT_MESSAGES"
+          echo "========================="
+
+          if echo "$COMMIT_MESSAGES" | grep -iqE 'Internal-release:[[:space:]]*true'; then
+            echo "should-release=true" >> $GITHUB_OUTPUT
+            echo "Decision: Found 'Internal-release: true'. Running Internal Release."
+          else
+            echo "should-release=false" >> $GITHUB_OUTPUT
+            echo "Decision: 'Internal-release: true' not found. Skipping Internal Release."
+          fi
+
   android-publish:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-release == 'true'
     uses: ./.github/workflows/android-publish.yml
     with:
       build-task: 'bundleInternal'
@@ -20,6 +71,8 @@ jobs:
     secrets: inherit
 
   windows-publish:
+    needs: check-commit
+    if: needs.check-commit.outputs.should-release == 'true'
     uses: ./.github/workflows/windows-publish.yml
     with:
       channel: 'test-flight'

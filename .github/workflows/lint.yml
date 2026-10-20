@@ -2,6 +2,12 @@ name: Lint
 
 on:
   workflow_call:
+    inputs:
+      full-check:
+        description: 'Whether to run all lint variants (true on main/schedule, false on PR)'
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -28,6 +34,27 @@ jobs:
             task: "app:androidApp:lintDebug"
             sarif_file: "app/androidApp/build/reports/lint-results-debug.sarif"
             category: "android-lint-debug"
+    name: 🔍️ ${{ matrix.name || matrix.task }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
+        run: ./gradlew ${{ matrix.task }}
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
+        if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
+        with:
+          sarif_file: ${{ matrix.sarif_file }}
+          category: ${{ matrix.category }}
+
+  analyze-variants:
+    if: ${{ inputs.full-check }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
           - name: "lintInternal"
             task: "app:androidApp:lintInternal"
             sarif_file: "app/androidApp/build/reports/lint-results-internal.sarif"

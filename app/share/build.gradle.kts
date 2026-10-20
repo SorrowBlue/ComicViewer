@@ -84,6 +84,7 @@ kotlin {
         }
         commonTest.dependencies {
             diSubprojects.forEach(::implementation)
+            implementation(projects.framework.test)
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutinesTest)
             implementation(libs.compose.uiTest)

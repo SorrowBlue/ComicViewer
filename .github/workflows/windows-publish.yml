@@ -65,3 +65,13 @@ jobs:
         with:
           name: conveyor-output
           path: output/*
+
+      - name: Clean up Conveyor caches to preserve Gradle cache quota
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for id in $(gh cache list --json id,key --jq '.[] | select(.key | startswith("conveyor-")) | .id'); do
+            echo "Deleting conveyor cache $id..."
+            gh cache delete "$id" || true
+          done

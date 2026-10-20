@@ -25,6 +25,7 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.test.waitUntilAtLeastOneExists
 import androidx.compose.ui.test.waitUntilDoesNotExist
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
+import com.sorrowblue.comicviewer.framework.test.LargeTest
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -41,6 +42,7 @@ expect fun AppContent(appGraph: AppGraph)
 
 private const val TEST_TIMEOUT = 15000L
 
+@LargeTest
 @OptIn(ExperimentalTestApi::class)
 class NavigationTest {
 

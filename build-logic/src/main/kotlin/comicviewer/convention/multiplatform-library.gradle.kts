@@ -5,6 +5,8 @@
 package comicviewer.convention
 
 import com.sorrowblue.comicviewer.configureKotlin
+import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.named
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
@@ -63,6 +65,22 @@ kotlin {
             if (project.path != ":core:logger") {
                 implementation(project(":core:logger"))
             }
+        }
+    }
+}
+
+tasks.named<Test>("jvmTest") {
+    val testSize = providers.gradleProperty("testSize").orNull
+    val excludeTestSize = providers.gradleProperty("excludeTestSize").orNull
+    if (testSize != null || excludeTestSize != null) {
+        failOnNoDiscoveredTests.set(false)
+    }
+    useJUnitPlatform {
+        testSize?.let { size ->
+            includeTags(size)
+        }
+        excludeTestSize?.let { size ->
+            excludeTags(size)
         }
     }
 }
