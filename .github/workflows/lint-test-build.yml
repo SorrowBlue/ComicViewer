@@ -16,6 +16,7 @@ concurrency:
 
 permissions:
   contents: read
+  actions: write
   checks: write
   issues: write
   pull-requests: write
@@ -53,6 +54,7 @@ jobs:
         with:
           files: |
             data/database/**
+            !data/database/src/commonTest/**
             gradle/libs.versions.toml
       - name: Check execution mode
         id: check
