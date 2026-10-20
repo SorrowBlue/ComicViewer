@@ -109,7 +109,7 @@ class ManageFolderDisplaySettingsUseCaseTest {
             SortType.Date(false),
             manageFolderDisplaySettingsUseCase.settings.first().currentSortType(
                 bookshelfId,
-                subPath
+                subPath,
             ),
         )
 
@@ -124,7 +124,7 @@ class ManageFolderDisplaySettingsUseCaseTest {
             SortType.Name(true),
             manageFolderDisplaySettingsUseCase.settings.first().currentSortType(
                 bookshelfId,
-                subPath
+                subPath,
             ),
         )
 
@@ -136,7 +136,7 @@ class ManageFolderDisplaySettingsUseCaseTest {
         )
         assertTrue(parentChangedToGlobal)
         assertTrue(
-            manageFolderDisplaySettingsUseCase.settings.first().folderScopeOnlyList.isEmpty()
+            manageFolderDisplaySettingsUseCase.settings.first().folderScopeOnlyList.isEmpty(),
         )
     }
 
