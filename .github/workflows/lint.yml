@@ -16,7 +16,6 @@ permissions:
 
 jobs:
   analyze:
-    if: ${{ inputs.full-check || !matrix.full_only }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,35 +24,49 @@ jobs:
             task: "reportMerge --continue"
             sarif_file: "build/reports/detekt/merge.sarif"
             category: "detekt"
-            full_only: false
           - name: "Detekt (build-logic)"
             task: ":build-logic:detektMain"
             sarif_file: "build-logic/build/reports/detekt/main.sarif"
             category: "detekt-build-logic"
-            full_only: false
           - name: "VersionCatalog"
             task: "checkVersionCatalog"
-            full_only: false
           - name: "lintDebug"
             task: "app:androidApp:lintDebug"
             sarif_file: "app/androidApp/build/reports/lint-results-debug.sarif"
             category: "android-lint-debug"
-            full_only: false
+    name: 🔍️ ${{ matrix.name || matrix.task }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
+        run: ./gradlew ${{ matrix.task }}
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
+        if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
+        with:
+          sarif_file: ${{ matrix.sarif_file }}
+          category: ${{ matrix.category }}
+
+  analyze-variants:
+    if: ${{ inputs.full-check }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
           - name: "lintInternal"
             task: "app:androidApp:lintInternal"
             sarif_file: "app/androidApp/build/reports/lint-results-internal.sarif"
             category: "android-lint-internal"
-            full_only: true
           - name: "lintPrerelease"
             task: "app:androidApp:lintPrerelease"
             sarif_file: "app/androidApp/build/reports/lint-results-prerelease.sarif"
             category: "android-lint-prerelease"
-            full_only: true
           - name: "lintRelease"
             task: "app:androidApp:lintRelease"
             sarif_file: "app/androidApp/build/reports/lint-results-release.sarif"
             category: "android-lint-release"
-            full_only: true
     name: 🔍️ ${{ matrix.name || matrix.task }}
     steps:
       - name: Checkout
