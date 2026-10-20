@@ -10,11 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -55,7 +53,7 @@ internal fun rememberBookScreenState(
 ): BookScreenState {
     val coroutineScope = rememberCoroutineScope()
     val systemUiController = rememberSystemUiController()
-    val currentList: SnapshotStateList<PageItem> = retain { mutableStateListOf() }
+    val currentList: SnapshotStateList<PageItem> = viewModel.currentList
     val targetPage = if (initialUiState.alwaysOpenFromFirstPage) {
         1
     } else {
@@ -65,7 +63,9 @@ internal fun rememberBookScreenState(
         )
     }
     val pagerState = rememberPagerState(
-        initialPage = if (currentList.isNotEmpty()) {
+        initialPage = if (viewModel.isInitialized) {
+            viewModel.currentPagerIndex.coerceIn(0, maxOf(0, currentList.lastIndex))
+        } else if (currentList.isNotEmpty()) {
             currentList.findPagerIndex(targetPage, initialUiState.book.totalPageCount)
         } else {
             0
@@ -96,6 +96,10 @@ internal fun rememberBookScreenState(
             bookSettingsFlow = viewModel.bookSettingsFlow,
             viewerSettingsFlow = viewModel.viewerSettingsFlow,
             pageItemListFlow = viewModel.pageItemListFlow,
+            isInitialized = { viewModel.isInitialized },
+            onInitialized = { viewModel.isInitialized = true },
+            savedPagerIndex = { viewModel.currentPagerIndex },
+            onPagerIndexChange = { viewModel.currentPagerIndex = it },
             updateLastReadPage = viewModel::updateLastReadPage,
             onPageLoaded = viewModel::onPageLoaded,
         )
@@ -136,20 +140,29 @@ private class BookScreenStateImpl(
     bookSettingsFlow: SharedFlow<BookSettings>,
     private val viewerSettingsFlow: SharedFlow<ViewerSettings>,
     pageItemListFlow: Flow<List<PageItem>>,
+    private val isInitialized: () -> Boolean,
+    private val onInitialized: () -> Unit,
+    private val savedPagerIndex: () -> Int,
+    private val onPagerIndexChange: (Int) -> Unit,
     private val updateLastReadPage: (Int) -> Unit,
     private val onPageLoaded: (UnratedPage, Boolean) -> Unit,
 ) : BookScreenState {
     override var uiState by mutableStateOf(initialUiState)
         private set
 
-    private var isInitialized = false
+    private var isSynced = false
 
     init {
         pageItemListFlow
             .flowWithLifecycle(lifecycle)
             .onEach {
-                val isFirstLoad = currentList.isEmpty() && it.isNotEmpty()
-                val currentItem = currentList.getOrNull(pagerState.currentPage)
+                val isFirstLoad = !isInitialized() && it.isNotEmpty()
+                val currentPagerIndex = if (isSynced) {
+                    pagerState.currentPage
+                } else {
+                    savedPagerIndex()
+                }
+                val currentItem = currentList.getOrNull(currentPagerIndex)
                 val currentDisplayPage = if (isFirstLoad) {
                     if (initialUiState.alwaysOpenFromFirstPage) {
                         1
@@ -162,8 +175,10 @@ private class BookScreenStateImpl(
                 } else {
                     currentItem?.toDisplayPage(initialUiState.book.totalPageCount) ?: 1
                 }
-                currentList.clear()
-                currentList.addAll(it)
+                if (currentList != it) {
+                    currentList.clear()
+                    currentList.addAll(it)
+                }
                 val newPagerIndex = it.findPagerIndexFor(
                     currentItem = currentItem,
                     targetDisplayPage = currentDisplayPage,
@@ -173,17 +188,27 @@ private class BookScreenStateImpl(
                     pagerState.scrollToPage(newPagerIndex)
                 }
                 if (it.isNotEmpty()) {
-                    isInitialized = true
+                    onInitialized()
+                    onPagerIndexChange(pagerState.currentPage)
+                    isSynced = true
                     if (isFirstLoad) {
                         updateLastReadPage()
                     }
                 }
             }
             .launchIn(coroutineScope)
+        snapshotFlow { pagerState.currentPage }
+            .distinctUntilChanged()
+            .onEach { page ->
+                if (isSynced && currentList.isNotEmpty()) {
+                    onPagerIndexChange(page)
+                }
+            }
+            .launchIn(coroutineScope)
         snapshotFlow { pagerState.settledPage }
             .distinctUntilChanged()
             .onEach {
-                if (isInitialized && currentList.isNotEmpty()) {
+                if (isSynced && currentList.isNotEmpty()) {
                     updateLastReadPage()
                 }
             }
@@ -235,16 +260,11 @@ private class BookScreenStateImpl(
         BookSettings.PageScale.FillBounds -> PageScale.FillBounds
     }
 
-    private fun calculateLastReadPage(): Int {
-        if (currentList.isEmpty()) {
-            return uiState.book.lastPageRead.coerceIn(0, maxOf(0, uiState.book.totalPageCount - 1))
-        }
-        val currentPage = pagerState.currentPage.coerceIn(0, currentList.lastIndex)
-        return currentList[currentPage].toLastReadPage(uiState.book.totalPageCount)
-    }
-
     private fun updateLastReadPage() {
-        val lastReadPage = calculateLastReadPage()
+        if (!isSynced || currentList.isEmpty()) return
+        val currentPage = pagerState.currentPage.coerceIn(0, currentList.lastIndex)
+        onPagerIndexChange(currentPage)
+        val lastReadPage = currentList[currentPage].toLastReadPage(uiState.book.totalPageCount)
         updateLastReadPage(lastReadPage)
     }
 

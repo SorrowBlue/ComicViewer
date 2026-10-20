@@ -4,6 +4,8 @@
 
 package com.sorrowblue.comicviewer.feature.book
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorrowblue.comicviewer.domain.model.book.NextBook
@@ -71,6 +73,12 @@ internal class BookViewModel(
 ) : ViewModel() {
 
     private val isCompactWindowFlow = MutableStateFlow(isCompactWindowClass)
+
+    val currentList: SnapshotStateList<PageItem> = mutableStateListOf()
+
+    var isInitialized: Boolean = false
+
+    var currentPagerIndex: Int = 0
 
     fun updateIsCompactWindow(isCompactWindow: Boolean) {
         isCompactWindowFlow.value = isCompactWindow

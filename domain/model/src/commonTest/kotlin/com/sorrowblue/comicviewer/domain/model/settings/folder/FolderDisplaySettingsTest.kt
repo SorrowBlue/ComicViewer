@@ -348,7 +348,7 @@ class FolderDisplaySettingsTest {
         assertEquals(SortType.Date(false), settings.currentSortType(bookshelf1, "/manga"))
         assertEquals(
             FolderSortScope.Subfolders,
-            settings.currentSortScope(bookshelf1, "/manga/sub")
+            settings.currentSortScope(bookshelf1, "/manga/sub"),
         )
         assertEquals(SortType.Date(false), settings.currentSortType(bookshelf1, "/manga/sub"))
 

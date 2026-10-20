@@ -308,7 +308,7 @@ class FolderViewModelTest {
         settingsUseCase: ManageFolderDisplaySettingsUseCase,
     ): FolderViewModel {
         val fakeBookshelfInfoUseCase = object : GetBookshelfInfoUseCase() {
-            override fun run(request: BookshelfId,): Flow<Resource<BookshelfFolder, Error>> =
+            override fun run(request: BookshelfId): Flow<Resource<BookshelfFolder, Error>> =
                 emptyFlow()
         }
         val fakePagingFileUseCase = PagingFileUseCase { flowOf(PagingData.empty()) }

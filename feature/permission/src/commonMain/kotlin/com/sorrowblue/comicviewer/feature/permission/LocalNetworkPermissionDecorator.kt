@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.get
@@ -30,8 +31,10 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metrox.viewmodel.metroViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 @ContributesIntoSet(AppScope::class)
 internal class LocalNetworkPermissionDecorator : NavEntryDecoratorProvider {
@@ -61,7 +64,7 @@ private fun rememberLocalNetworkPermissionDecorator(
                 val bookshelfId = metadata.bookshelfId
                 val isSmb = if (bookshelfId != null) {
                     viewModel.isSmbBookshelf(bookshelfId)
-                        .collectAsStateWithLifecycle(null).value
+                        .collectAsStateWithLifecycle().value
                 } else {
                     true
                 }
@@ -96,16 +99,24 @@ internal class LocalNetworkPermissionViewModel(
     private val flowBookshelfUseCase: FlowBookshelfUseCase,
 ) : ViewModel() {
 
-    fun isSmbBookshelf(bookshelfId: BookshelfId): Flow<Boolean> =
-        flowBookshelfUseCase(bookshelfId).map { resource ->
-            resource.dataOrNull()?.type == BookshelfType.SMB
+    private val isSmbMap = mutableMapOf<BookshelfId, StateFlow<Boolean?>>()
+
+    fun isSmbBookshelf(bookshelfId: BookshelfId): StateFlow<Boolean?> =
+        isSmbMap.getOrPut(bookshelfId) {
+            flowBookshelfUseCase(bookshelfId)
+                .map { resource ->
+                    resource.dataOrNull()?.type == BookshelfType.SMB
+                }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.Eagerly,
+                    initialValue = null,
+                )
         }
 }
 
 @Composable
-private fun LocalNetworkPermissionGuard(
-    content: @Composable () -> Unit,
-) {
+private fun LocalNetworkPermissionGuard(content: @Composable () -> Unit) {
     val permissionRequester = rememberLocalNetworkPermissionRequester(initCheck = true)
     if (permissionRequester.state !is LocalNetworkPermissionState.Granted) {
         val navigator = LocalNavigator.current
