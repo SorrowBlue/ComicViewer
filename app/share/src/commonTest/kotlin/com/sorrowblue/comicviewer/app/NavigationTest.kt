@@ -201,6 +201,7 @@ class NavigationTest {
                 click(Offset(centerX, 10f))
             }
         advanceClock()
+        waitUntilAtLeastOneExists(hasTestTag("FolderScreenRoot"), timeoutMillis = TEST_TIMEOUT)
         onNodeWithTag("FolderScreenRoot").assertIsDisplayed()
 
         waitUntilAtLeastOneExists(hasTestTag("FileListItemMenu"), timeoutMillis = TEST_TIMEOUT)

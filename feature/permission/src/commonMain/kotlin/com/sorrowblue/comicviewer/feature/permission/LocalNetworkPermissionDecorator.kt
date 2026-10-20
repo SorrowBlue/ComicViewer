@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.get
@@ -31,10 +30,8 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metrox.viewmodel.metroViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 @ContributesIntoSet(AppScope::class)
 internal class LocalNetworkPermissionDecorator : NavEntryDecoratorProvider {
@@ -63,8 +60,12 @@ private fun rememberLocalNetworkPermissionDecorator(
             } else {
                 val bookshelfId = metadata.bookshelfId
                 val isSmb = if (bookshelfId != null) {
-                    viewModel.isSmbBookshelf(bookshelfId)
-                        .collectAsStateWithLifecycle().value
+                    val flow = remember(viewModel, bookshelfId) {
+                        viewModel.isSmbBookshelf(bookshelfId)
+                    }
+                    flow.collectAsStateWithLifecycle(
+                        initialValue = viewModel.cachedIsSmb(bookshelfId),
+                    ).value
                 } else {
                     true
                 }
@@ -99,19 +100,15 @@ internal class LocalNetworkPermissionViewModel(
     private val flowBookshelfUseCase: FlowBookshelfUseCase,
 ) : ViewModel() {
 
-    private val isSmbMap = mutableMapOf<BookshelfId, StateFlow<Boolean?>>()
+    private val isSmbCache = mutableMapOf<BookshelfId, Boolean>()
 
-    fun isSmbBookshelf(bookshelfId: BookshelfId): StateFlow<Boolean?> =
-        isSmbMap.getOrPut(bookshelfId) {
-            flowBookshelfUseCase(bookshelfId)
-                .map { resource ->
-                    resource.dataOrNull()?.type == BookshelfType.SMB
-                }
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.Eagerly,
-                    initialValue = null,
-                )
+    fun cachedIsSmb(bookshelfId: BookshelfId): Boolean? = isSmbCache[bookshelfId]
+
+    fun isSmbBookshelf(bookshelfId: BookshelfId): Flow<Boolean> = flowBookshelfUseCase(bookshelfId)
+        .map { resource ->
+            (resource.dataOrNull()?.type == BookshelfType.SMB).also {
+                isSmbCache[bookshelfId] = it
+            }
         }
 }
 
