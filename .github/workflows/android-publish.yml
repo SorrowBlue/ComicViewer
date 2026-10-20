@@ -3,6 +3,11 @@ name: Android Publish (Shared)
 on:
   workflow_call:
     inputs:
+      ref:
+        required: false
+        type: string
+        default: ""
+        description: "Git ref or SHA to checkout (defaults to current workflow ref)"
       build-task:
         required: true
         type: string
@@ -40,6 +45,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
