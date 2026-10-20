@@ -11,8 +11,20 @@ on:
     - cron: '0 19 * * *'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: >-
+    ${{
+      (github.event_name == 'push' &&
+       (contains(github.event.head_commit.message, 'internal-release: true') ||
+        contains(join(github.event.commits.*.message, ' '), 'internal-release: true'))) &&
+      format('{0}-{1}-internal-release-{2}', github.workflow, github.ref, github.run_id) ||
+      format('{0}-{1}', github.workflow, github.ref)
+    }}
+  cancel-in-progress: >-
+    ${{
+      !(github.event_name == 'push' &&
+        (contains(github.event.head_commit.message, 'internal-release: true') ||
+         contains(join(github.event.commits.*.message, ' '), 'internal-release: true')))
+    }}
 
 permissions:
   contents: read

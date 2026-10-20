@@ -62,6 +62,7 @@ jobs:
     if: needs.check-commit.outputs.should-release == 'true'
     uses: ./.github/workflows/android-publish.yml
     with:
+      ref: ${{ github.event.workflow_run.head_sha || '' }}
       build-task: 'bundleInternal'
       aab-path: 'app/androidApp/build/outputs/bundle/internal/androidApp-internal.aab'
       mapping-path: 'app/androidApp/build/outputs/mapping/internal/mapping.txt'
@@ -75,6 +76,7 @@ jobs:
     if: needs.check-commit.outputs.should-release == 'true'
     uses: ./.github/workflows/windows-publish.yml
     with:
+      ref: ${{ github.event.workflow_run.head_sha || '' }}
       channel: 'test-flight'
     secrets: inherit
 
