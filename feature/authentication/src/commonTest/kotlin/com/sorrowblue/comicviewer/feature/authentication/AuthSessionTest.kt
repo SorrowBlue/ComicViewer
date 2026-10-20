@@ -13,6 +13,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.TestScope
@@ -46,6 +47,31 @@ class AuthSessionTest {
         assertTrue(authSession.authRequired.value)
         assertEquals(AuthState.AuthRequired(authed = false), authSession.authState.value)
     }
+
+    @Test
+    fun `initial state - async settings emission with password stays Loading then requires lock`() =
+        testScope.runTest {
+            val asyncSettings = MutableSharedFlow<SecuritySettings>()
+            val asyncUseCase = object : ManageSecuritySettingsUseCase {
+                override val settings: Flow<SecuritySettings> = asyncSettings
+                override suspend fun edit(action: (SecuritySettings) -> SecuritySettings) = Unit
+            }
+
+            authSession = AuthSession(
+                manageSecuritySettingsUseCase = asyncUseCase,
+                scope = testScope.backgroundScope,
+            )
+            runCurrent()
+
+            // Before DataStore emits, authState must remain Loading (not NoAuthRequired)
+            assertEquals(AuthState.Loading, authSession.authState.value)
+
+            asyncSettings.emit(SecuritySettings(password = "1234"))
+            runCurrent()
+
+            assertTrue(authSession.authRequired.value)
+            assertEquals(AuthState.AuthRequired(authed = false), authSession.authState.value)
+        }
 
     @Test
     fun `initial state - without password does not require lock`() = testScope.runTest {

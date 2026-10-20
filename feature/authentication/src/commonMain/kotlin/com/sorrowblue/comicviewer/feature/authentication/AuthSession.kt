@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -38,18 +37,7 @@ class AuthSession(
     val authRequired: StateFlow<Boolean> = manageSecuritySettingsUseCase.settings
         .map { !it.password.isNullOrEmpty() }
         .distinctUntilChanged()
-        .stateIn(scope, SharingStarted.Eagerly, false)
-
-    val lockOnBackground: StateFlow<Boolean> = manageSecuritySettingsUseCase.settings
-        .map { it.lockOnBackground }
-        .distinctUntilChanged()
-        .onEach {
-            logcat { "lockOnBackground=$it" }
-        }
-        .stateIn(scope, SharingStarted.Eagerly, false)
-
-    init {
-        authRequired.onEach { required ->
+        .onEach { required ->
             logcat { "authRequired=$required, authState=${authState.value}" }
             if (required) {
                 authState.value = when (authState.value) {
@@ -60,8 +48,16 @@ class AuthSession(
             } else {
                 authState.value = AuthState.NoAuthRequired
             }
-        }.launchIn(scope)
-    }
+        }
+        .stateIn(scope, SharingStarted.Eagerly, false)
+
+    val lockOnBackground: StateFlow<Boolean> = manageSecuritySettingsUseCase.settings
+        .map { it.lockOnBackground }
+        .distinctUntilChanged()
+        .onEach {
+            logcat { "lockOnBackground=$it" }
+        }
+        .stateIn(scope, SharingStarted.Eagerly, false)
 
     fun onAuthComplete() {
         authState.value = AuthState.AuthRequired(true)
