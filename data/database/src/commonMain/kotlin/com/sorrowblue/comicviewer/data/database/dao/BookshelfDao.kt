@@ -32,15 +32,6 @@ internal abstract class BookshelfDao(val database: ComicViewerDatabase) {
     abstract suspend fun upsert(entity: BookshelfEntity): Long
 
     /**
-     * Delete a bookshelf by its ID.
-     *
-     * @param bookshelfId The ID of the bookshelf to delete.
-     * @return The number of rows deleted.
-     */
-    @Query("DELETE FROM bookshelf WHERE id = :bookshelfId")
-    abstract suspend fun delete(bookshelfId: Int): Int
-
-    /**
      * Update the deleted flag for a bookshelf.
      *
      * @param bookshelfId The ID of the bookshelf to update.

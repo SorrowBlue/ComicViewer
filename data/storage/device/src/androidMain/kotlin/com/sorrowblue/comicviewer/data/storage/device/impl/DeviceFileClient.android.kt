@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactoryMap
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
@@ -28,134 +29,87 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.io.Sink
 import kotlinx.io.Source
 import kotlinx.io.asSource
 import kotlinx.io.buffered
 
-@AssistedInject
-internal actual class DeviceFileClient(
-    @Assisted bookshelf: DeviceStorage,
-    private val context: Context,
+internal abstract class BaseAndroidFileClient<T : Bookshelf>(
+    bookshelf: T,
+    protected val context: Context,
     fileReaderFactoryMap: FileReaderFactoryMap,
-    @IoDispatcher dispatcher: CoroutineDispatcher,
-) : FileClient<DeviceStorage>(bookshelf, fileReaderFactoryMap, dispatcher) {
-    @ContributesIntoMap(AppScope::class)
-    @FileClientKey(DeviceStorage::class)
-    @AssistedFactory
-    actual fun interface Factory : FileClient.Factory<DeviceStorage> {
-        actual override fun create(bookshelf: DeviceStorage): DeviceFileClient
-    }
+    dispatcher: CoroutineDispatcher,
+) : FileClient<T>(bookshelf, fileReaderFactoryMap, dispatcher) {
 
     private val contentResolver = context.contentResolver
 
-    actual override suspend fun source(file: File): Source = kotlin
-        .runCatching {
-            ParcelFileDescriptor
-                .AutoCloseInputStream(
-                    contentResolver.openFileDescriptor(file.uri, "r"),
-                ).asSource().buffered()
-        }.getOrElse {
-            it.printStackTrace()
-            when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth()
-                is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                else -> throw it
-            }
-        }
+    protected val File.uri get() = path.toUri()
 
-    actual override suspend fun extractTo(file: File, sink: Sink) {
-        kotlin
-            .runCatching {
-                ParcelFileDescriptor
-                    .AutoCloseInputStream(
-                        contentResolver.openFileDescriptor(file.uri, "r"),
-                    ).asSource().buffered().transferTo(sink)
-            }.getOrElse {
-                it.printStackTrace()
-                throw when (it) {
-                    is SecurityException -> FileClientException.InvalidAuth()
-                    is IllegalArgumentException -> FileClientException.InvalidPath()
-                    else -> it
-                }
-            }
+    protected abstract fun documentFile(path: String): DocumentFile
+
+    override suspend fun source(file: File): Source = runCommand {
+        ParcelFileDescriptor
+            .AutoCloseInputStream(
+                contentResolver.openFileDescriptor(file.uri, "r"),
+            ).asSource().buffered()
     }
 
-    actual override suspend fun attribute(path: String): FileAttribute = FileAttribute()
+    override suspend fun attribute(path: String): FileAttribute = FileAttribute()
 
-    actual override suspend fun fileSize(path: String): Long = kotlin
-        .runCatching {
-            val file = documentFile(path)
-            file.listFiles().sumOf { fileSize(it.uri.toString()) }
-        }.getOrElse {
-            0
-        }
-
-    actual override suspend fun connect(path: String) {
-        kotlin
-            .runCatching {
-                documentFile(path).exists()
-            }.fold({
-                if (!it) {
-                    throw FileClientException.InvalidPath()
-                }
-            }) {
-                it.printStackTrace()
-                throw when (it) {
-                    is SecurityException -> FileClientException.InvalidAuth()
-                    is IllegalArgumentException -> FileClientException.InvalidPath()
-                    else -> it
-                }
-            }
-    }
-
-    actual override suspend fun exists(path: String): Boolean = kotlin
-        .runCatching {
+    override suspend fun connect(path: String) {
+        val exists = runCommand {
             documentFile(path).exists()
-        }.getOrElse {
-            it.printStackTrace()
-            when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth()
-                is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                else -> throw it
-            }
         }
-
-    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File = kotlin
-        .runCatching {
-            documentFile(path).toFileModel(resolveImageFolder)
-        }.getOrElse {
-            it.printStackTrace()
-            when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth()
-                is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                else -> throw it
-            }
+        if (!exists) {
+            throw FileClientException.InvalidPath()
         }
+    }
 
-    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> =
-        kotlin
-            .runCatching {
-                file.documentFile.listFiles().map { it.toFileModel(resolveImageFolder) }
-            }.getOrElse {
-                it.printStackTrace()
-                when (it) {
-                    is SecurityException -> throw FileClientException.InvalidAuth()
-                    is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                    else -> throw it
-                }
-            }
+    override suspend fun exists(path: String): Boolean = runCommand {
+        documentFile(path).exists()
+    }
 
-    actual override suspend fun seekableInputStream(file: File): SeekableInputStream = kotlin
-        .runCatching {
-            DeviceSeekableInputStream(context, file.uri)
-        }.getOrElse {
-            it.printStackTrace()
-            when (it) {
-                is SecurityException -> throw FileClientException.InvalidAuth()
-                is IllegalArgumentException -> throw FileClientException.InvalidPath()
-                else -> throw it
-            }
+    override suspend fun seekableInputStream(file: File): SeekableInputStream = runCommand {
+        DeviceSeekableInputStream(context, file.uri)
+    }
+
+    protected inline fun <R> runCommand(block: () -> R): R = runCatching(block).getOrElse {
+        it.printStackTrace()
+        throw when (it) {
+            is SecurityException -> FileClientException.InvalidAuth()
+            is IllegalArgumentException -> FileClientException.InvalidPath()
+            else -> it
+        }
+    }
+}
+
+@AssistedInject
+internal class DeviceFileClient(
+    @Assisted bookshelf: DeviceStorage,
+    context: Context,
+    fileReaderFactoryMap: FileReaderFactoryMap,
+    @IoDispatcher dispatcher: CoroutineDispatcher,
+) : BaseAndroidFileClient<DeviceStorage>(bookshelf, context, fileReaderFactoryMap, dispatcher) {
+    @ContributesIntoMap(AppScope::class)
+    @FileClientKey(DeviceStorage::class)
+    @AssistedFactory
+    fun interface Factory : FileClient.Factory<DeviceStorage> {
+        override fun create(bookshelf: DeviceStorage): DeviceFileClient
+    }
+
+    override suspend fun fileSize(path: String): Long = runCatching {
+        val file = documentFile(path)
+        file.listFiles().sumOf { fileSize(it.uri.toString()) }
+    }.getOrElse {
+        0
+    }
+
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File = runCommand {
+        documentFile(path).toFileModel(resolveImageFolder)
+    }
+
+    override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> =
+        runCommand {
+            documentFile(file.path).listFiles().map { it.toFileModel(resolveImageFolder) }
         }
 
     private fun DocumentFile.toFileModel(resolveImageFolder: Boolean = false): File =
@@ -195,11 +149,6 @@ internal actual class DeviceFileClient(
             )
         }
 
-    private val File.uri get() = path.toUri()
-
-    private fun documentFile(path: String): DocumentFile =
+    override fun documentFile(path: String): DocumentFile =
         requireNotNull(DocumentFile.fromTreeUri(context, path.toUri()))
-
-    private val File.documentFile: DocumentFile
-        get() = requireNotNull(DocumentFile.fromTreeUri(context, uri))
 }

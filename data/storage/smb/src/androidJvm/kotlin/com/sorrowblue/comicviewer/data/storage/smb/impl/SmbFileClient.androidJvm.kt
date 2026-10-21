@@ -33,10 +33,7 @@ import kotlin.io.path.Path
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
-import kotlinx.io.Sink
 import kotlinx.io.Source
-import kotlinx.io.asOutputStream
 import kotlinx.io.asSource
 import kotlinx.io.buffered
 import logcat.LogPriority
@@ -75,65 +72,16 @@ internal actual class SmbFileClient(
         smbFile(file.path).openInputStream().asSource().buffered()
     }
 
-    actual override suspend fun extractTo(file: File, sink: Sink) {
-        withContext(dispatcher) {
-            smbFile(file.path).openInputStream().transferTo(sink.asOutputStream())
-        }
-    }
-
     actual override suspend fun connect(path: String) {
-        kotlin
-            .runCatching {
-                smbFile(path).use {
-                    it.connect()
-                    it.exists()
-                }
-            }.fold({
-                if (!it) {
-                    throw FileClientException.InvalidPath()
-                }
-            }) {
-                throw when (it) {
-                    is SmbException -> {
-                        logcat(
-                            LogPriority.INFO,
-                        ) { "ntStatus=${ntStatusString(it.ntStatus)} ${it.asLog()}" }
-                        when (it.ntStatus) {
-                            NtStatus.NT_STATUS_BAD_NETWORK_NAME -> FileClientException.InvalidPath()
-
-                            NtStatus.NT_STATUS_LOGON_FAILURE -> FileClientException.InvalidAuth()
-
-                            NtStatus.NT_STATUS_INVALID_PARAMETER ->
-                                FileClientException
-                                    .InvalidPath()
-
-                            NtStatus.NT_STATUS_UNSUCCESSFUL -> {
-                                if (it.cause is ConnectionTimeoutException ||
-                                    it.cause is TransportException ||
-                                    it.cause is UnknownHostException
-                                ) {
-                                    FileClientException.InvalidServer()
-                                } else if (it.message ==
-                                    "IPC signing is enforced, but no signing is available"
-                                ) {
-                                    FileClientException.InvalidAuth()
-                                } else {
-                                    it
-                                }
-                            }
-
-                            else -> it
-                        }
-                    }
-
-                    is URISyntaxException -> FileClientException.InvalidPath()
-
-                    else -> {
-                        logcat(LogPriority.INFO) { it.asLog() }
-                        it
-                    }
-                }
+        val exists = runCommand {
+            smbFile(path).use {
+                it.connect()
+                it.exists()
             }
+        }
+        if (!exists) {
+            throw FileClientException.InvalidPath()
+        }
     }
 
     actual override suspend fun exists(path: String): Boolean = runCommand {
@@ -184,7 +132,7 @@ internal actual class SmbFileClient(
         }
 
     actual override suspend fun seekableInputStream(file: File): SeekableInputStream = runCommand {
-        SmbSeekableInputStream(smbFile(file.path), false)
+        SmbSeekableInputStream(smbFile(file.path))
     }
 
     private inline fun <R> runCommand(action: () -> R): R = runCatching {
@@ -204,7 +152,8 @@ internal actual class SmbFileClient(
 
                     NtStatus.NT_STATUS_UNSUCCESSFUL -> {
                         if (it.cause is ConnectionTimeoutException ||
-                            it.cause is TransportException
+                            it.cause is TransportException ||
+                            it.cause is UnknownHostException
                         ) {
                             FileClientException.InvalidServer()
                         } else if (it.message ==
@@ -230,6 +179,12 @@ internal actual class SmbFileClient(
     }
 
     private fun SmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
+        val parentPath = Path(url.path)
+            .parent
+            ?.toString()
+            .orEmpty()
+            .replace("\\", "/")
+            .removeSuffix("/") + "/"
         if (resolveImageFolder && isDirectory && runCatching {
                 children { it.isFile && it.name.extension in SUPPORTED_IMAGE }.asSequence().take(1)
                     .toList().isNotEmpty()
@@ -239,7 +194,7 @@ internal actual class SmbFileClient(
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path).parent.toString().replace("\\", "/") + "/",
+                parent = parentPath,
                 size = -1,
                 lastModifier = lastModified,
                 isHidden = isHidden,
@@ -250,12 +205,7 @@ internal actual class SmbFileClient(
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path)
-                    .parent
-                    ?.toString()
-                    .orEmpty()
-                    .replace("\\", "/")
-                    .removeSuffix("/") + "/",
+                parent = parentPath,
                 size = -1,
                 lastModifier = lastModified,
                 isHidden = isHidden,
@@ -265,12 +215,7 @@ internal actual class SmbFileClient(
                 path = url.path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(url.path)
-                    .parent
-                    ?.toString()
-                    .orEmpty()
-                    .replace("\\", "/")
-                    .removeSuffix("/") + "/",
+                parent = parentPath,
                 size = length(),
                 lastModifier = lastModified,
                 isHidden = isHidden,

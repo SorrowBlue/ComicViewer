@@ -139,9 +139,6 @@ internal interface CollectionDao {
     )
     fun flow(id: CollectionId): Flow<CollectionEntityCount?>
 
-    @Query("SELECT * FROM collection")
-    fun flowAll(): Flow<List<CollectionEntity>>
-
     @Query(
         """
             SELECT

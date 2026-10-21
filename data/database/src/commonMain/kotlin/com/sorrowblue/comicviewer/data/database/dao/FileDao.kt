@@ -76,8 +76,9 @@ internal interface FileDao {
 
         // existsFiles DBにある項目：更新対象
         // noExistsFiles DBにない項目：挿入対象
+        val existingPaths = findPathsByParent(entity.bookshelfId, entity.path).toSet()
         val (existsFiles, noExistsFiles) = entityList.partition {
-            find(it.bookshelfId, it.path) != null
+            it.path in existingPaths
         }
 
         // DBにない項目を挿入
@@ -119,6 +120,9 @@ internal interface FileDao {
         "SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)",
     )
     suspend fun findByNotPaths(id: Int, parent: String, paths: List<String>): List<FileEntity>
+
+    @Query("SELECT path FROM file WHERE bookshelf_id = :id AND parent = :parent")
+    suspend fun findPathsByParent(id: Int, parent: String): List<String>
 
     @RawQuery(observedEntities = [FileEntity::class])
     fun flowPrevNextFile(supportSQLiteQuery: RoomRawQuery): Flow<List<FileEntity>>
@@ -185,14 +189,6 @@ internal interface FileDao {
     )
     fun lastHistory(): Flow<FileEntity?>
 
-    @Query("UPDATE file SET cache_key = '' WHERE cache_key != ''")
-    suspend fun deleteAllCacheKey()
-
-    @Query(
-        "UPDATE file set last_read = 0, last_read_page = 0  WHERE bookshelf_id = :bookshelfId AND path IN (:list)",
-    )
-    suspend fun deleteHistory(bookshelfId: Int, list: Array<String>)
-
     @Query("DELETE FROM file WHERE bookshelf_id = :id")
     suspend fun deleteAll(id: Int)
 
@@ -221,56 +217,10 @@ internal fun FileDao.pagingSourceFileSearch(
             add("bookshelf_id = :bookshelfId")
             bindArgs += bookshelfId.value
         }
-
-        if (!searchCondition.showHidden) {
-            add("hidden = :hidden")
-            add("name NOT LIKE '.%'")
-            bindArgs += false
-        }
-
-        when (val range = searchCondition.range) {
-            is SearchCondition.Range.InFolder -> {
-                add("parent = :parent")
-                bindArgs += range.parent
-            }
-
-            is SearchCondition.Range.SubFolder -> {
-                add("parent LIKE :parent")
-                bindArgs += "${range.parent}%"
-            }
-
-            SearchCondition.Range.Bookshelf -> {
-                add("parent != ''")
-            }
-        }
-
-        if (searchCondition.query.isNotEmpty()) {
-            add("name LIKE :q")
-            bindArgs += "%${searchCondition.query}%"
-        }
-        when (searchCondition.period) {
-            SearchCondition.Period.None -> Unit
-
-            SearchCondition.Period.Hour24 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
-            )
-
-            SearchCondition.Period.Week1 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-7 days'))",
-            )
-
-            SearchCondition.Period.Month1 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-1 months'))",
-            )
-        }
+        addSearchConditionClauses(searchCondition, bindArgs)
     }
-    val sortStr = if (searchCondition.sortType.isAsc) "ASC" else "DESC"
-    val orderBy = when (searchCondition.sortType) {
-        is SortType.Name -> "file_type_order $sortStr, sort_index $sortStr"
-        is SortType.Date -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
-        is SortType.Size -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
-    }
-    val query = RoomRawQuery(
+    val orderBy = searchCondition.sortType.toOrderByClause()
+    val query = roomRawQuery(
         """
         SELECT
           *,
@@ -285,16 +235,8 @@ internal fun FileDao.pagingSourceFileSearch(
         ORDER BY
           $orderBy
         """.trimIndent(),
-    ) {
-        bindArgs.forEachIndexed { index, any ->
-            when (any) {
-                is Int -> it.bindInt(index + 1, any)
-                is Long -> it.bindLong(index + 1, any)
-                is String -> it.bindText(index + 1, any)
-                is Boolean -> it.bindBoolean(index + 1, any)
-            }
-        }
-    }
+        bindArgs,
+    )
     return pagingSourceFileSearch(query)
 }
 
@@ -306,68 +248,20 @@ internal suspend fun FileDao.bookshelfIdCacheKey(
     val bindArgs = mutableListOf<Any>()
     val selectionStr = buildList {
         add("cache_key != ''")
+        add("file_type != 'FOLDER'")
         if (bookshelfId != null) {
             add("bookshelf_id = :bookshelfId")
             bindArgs += bookshelfId.value
         }
-
-        if (!searchCondition.showHidden) {
-            add("hidden = :hidden")
-            add("name NOT LIKE '.%'")
-            bindArgs += false
-        }
-
-        when (val range = searchCondition.range) {
-            is SearchCondition.Range.InFolder -> {
-                add("parent = :parent")
-                bindArgs += range.parent
-            }
-
-            is SearchCondition.Range.SubFolder -> {
-                add("parent LIKE :parent")
-                bindArgs += "${range.parent}%"
-            }
-
-            SearchCondition.Range.Bookshelf -> {
-                add("parent != ''")
-            }
-        }
-
-        if (searchCondition.query.isNotEmpty()) {
-            add("name LIKE :q")
-            bindArgs += "%${searchCondition.query}%"
-        }
-        when (searchCondition.period) {
-            SearchCondition.Period.None -> Unit
-
-            SearchCondition.Period.Hour24 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
-            )
-
-            SearchCondition.Period.Week1 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-7 days'))",
-            )
-
-            SearchCondition.Period.Month1 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-1 months'))",
-            )
-        }
+        addSearchConditionClauses(searchCondition, bindArgs)
     }
-    val sortStr = if (searchCondition.sortType.isAsc) "ASC" else "DESC"
-    val orderBy = when (searchCondition.sortType) {
-        is SortType.Name -> "file_type_order $sortStr, sort_index $sortStr"
-        is SortType.Date -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
-        is SortType.Size -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
-    }
+    val orderBy = searchCondition.sortType.toOrderByClause()
     bindArgs += limit
-    val query = RoomRawQuery(
+    val query = roomRawQuery(
         """
         SELECT
-          *,
-          CASE
-            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
-            else 0
-          END count
+          bookshelf_id,
+          cache_key
         FROM
           file
         WHERE
@@ -376,16 +270,8 @@ internal suspend fun FileDao.bookshelfIdCacheKey(
           $orderBy
         LIMIT :limit
         """.trimIndent(),
-    ) {
-        bindArgs.forEachIndexed { index, any ->
-            when (any) {
-                is Int -> it.bindInt(index + 1, any)
-                is Long -> it.bindLong(index + 1, any)
-                is String -> it.bindText(index + 1, any)
-                is Boolean -> it.bindBoolean(index + 1, any)
-            }
-        }
-    }
+        bindArgs,
+    )
     return bookshelfIdCacheKey(query)
 }
 
@@ -416,52 +302,10 @@ internal fun FileDao.flowPrevNextFile(
         add("file_type != 'FOLDER'")
         add("path != c_path")
         add("($column $op c_$column OR ($column = c_$column AND path $op c_path))")
-
-        if (!searchCondition.showHidden) {
-            add("hidden = :hidden")
-            add("name NOT LIKE '.%'")
-            bindArgs += false
-        }
-
-        when (val range = searchCondition.range) {
-            is SearchCondition.Range.InFolder -> {
-                add("parent = :parent")
-                bindArgs += range.parent
-            }
-
-            is SearchCondition.Range.SubFolder -> {
-                add("parent LIKE :parent")
-                bindArgs += "${range.parent}%"
-            }
-
-            SearchCondition.Range.Bookshelf -> {
-                add("parent != ''")
-            }
-        }
-
-        if (searchCondition.query.isNotEmpty()) {
-            add("name LIKE :name")
-            bindArgs += "%${searchCondition.query}%"
-        }
-
-        when (searchCondition.period) {
-            SearchCondition.Period.None -> Unit
-
-            SearchCondition.Period.Hour24 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
-            )
-
-            SearchCondition.Period.Week1 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-7 days'))",
-            )
-
-            SearchCondition.Period.Month1 -> add(
-                "last_modified > strftime('%s000', datetime('now', '-1 months'))",
-            )
-        }
+        addSearchConditionClauses(searchCondition, bindArgs)
     }
 
-    val query = RoomRawQuery(
+    val query = roomRawQuery(
         """
         SELECT
           *
@@ -482,7 +326,70 @@ internal fun FileDao.flowPrevNextFile(
         LIMIT 1
         ;
         """.trimIndent(),
-    ) { statement ->
+        bindArgs,
+    )
+    return flowPrevNextFile(query)
+}
+
+private fun MutableList<String>.addSearchConditionClauses(
+    searchCondition: SearchCondition,
+    bindArgs: MutableList<Any>,
+) {
+    if (!searchCondition.showHidden) {
+        add("hidden = :hidden")
+        add("name NOT LIKE '.%'")
+        bindArgs += false
+    }
+
+    when (val range = searchCondition.range) {
+        is SearchCondition.Range.InFolder -> {
+            add("parent = :parent")
+            bindArgs += range.parent
+        }
+
+        is SearchCondition.Range.SubFolder -> {
+            add("parent LIKE :parent")
+            bindArgs += "${range.parent}%"
+        }
+
+        SearchCondition.Range.Bookshelf -> {
+            add("parent != ''")
+        }
+    }
+
+    if (searchCondition.query.isNotEmpty()) {
+        add("name LIKE :q")
+        bindArgs += "%${searchCondition.query}%"
+    }
+
+    when (searchCondition.period) {
+        SearchCondition.Period.None -> Unit
+
+        SearchCondition.Period.Hour24 -> add(
+            "last_modified > strftime('%s000', datetime('now', '-24 hours'))",
+        )
+
+        SearchCondition.Period.Week1 -> add(
+            "last_modified > strftime('%s000', datetime('now', '-7 days'))",
+        )
+
+        SearchCondition.Period.Month1 -> add(
+            "last_modified > strftime('%s000', datetime('now', '-1 months'))",
+        )
+    }
+}
+
+private fun SortType.toOrderByClause(): String {
+    val sortStr = if (isAsc) "ASC" else "DESC"
+    return when (this) {
+        is SortType.Name -> "file_type_order $sortStr, sort_index $sortStr"
+        is SortType.Date -> "file_type_order $sortStr, last_modified $sortStr, sort_index $sortStr"
+        is SortType.Size -> "file_type_order $sortStr, size $sortStr, sort_index $sortStr"
+    }
+}
+
+private fun roomRawQuery(sql: String, bindArgs: List<Any>): RoomRawQuery =
+    RoomRawQuery(sql) { statement ->
         bindArgs.forEachIndexed { index, any ->
             when (any) {
                 is Int -> statement.bindInt(index + 1, any)
@@ -492,5 +399,3 @@ internal fun FileDao.flowPrevNextFile(
             }
         }
     }
-    return flowPrevNextFile(query)
-}

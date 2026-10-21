@@ -582,7 +582,7 @@ class FolderSortSettingsServiceTest {
         val added = service.toggleFolderScopeOnly(
             initialSettings,
             bookshelfId,
-            "/manga/chapter1"
+            "/manga/chapter1",
         ).settings
         assertEquals(1, added.folderScopeOnlyList.size)
         assertTrue(service.isFolderScopeOnly(added, bookshelfId, "/manga/chapter1/"))
@@ -626,7 +626,7 @@ class FolderSortSettingsServiceTest {
         val toggledOff = service.toggleFolderScopeOnly(
             initialSettings,
             bookshelfId,
-            "/manga/sub"
+            "/manga/sub",
         ).settings
         assertFalse(service.isFolderScopeOnly(toggledOff, bookshelfId, "/manga/sub"))
         assertEquals(
@@ -642,7 +642,7 @@ class FolderSortSettingsServiceTest {
         val toggledOn = service.toggleFolderScopeOnly(
             toggledOff,
             bookshelfId,
-            "/manga/sub"
+            "/manga/sub",
         ).settings
         assertTrue(service.isFolderScopeOnly(toggledOn, bookshelfId, "/manga/sub"))
         assertEquals(

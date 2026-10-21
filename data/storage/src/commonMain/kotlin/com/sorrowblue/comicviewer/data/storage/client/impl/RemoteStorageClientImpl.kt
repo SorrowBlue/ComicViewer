@@ -7,7 +7,8 @@ package com.sorrowblue.comicviewer.data.storage.client.impl
 import com.sorrowblue.comicviewer.data.storage.client.FileClient
 import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientFactory
-import com.sorrowblue.comicviewer.data.storage.client.fileClient
+import com.sorrowblue.comicviewer.data.storage.client.getFileClient
+import com.sorrowblue.comicviewer.data.storage.client.toRemoteException
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.file.Book
@@ -39,8 +40,7 @@ internal class RemoteStorageClientImpl(
         override fun create(bookshelf: Bookshelf): RemoteStorageClientImpl
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private val fileClient: FileClient<out Bookshelf> by fileClientFactory.fileClient(bookshelf)
+    private val fileClient: FileClient<Bookshelf> = fileClientFactory.getFileClient(bookshelf)
 
     override suspend fun connect(path: String) {
         runCatching {
@@ -50,13 +50,7 @@ internal class RemoteStorageClientImpl(
         }.getOrElse {
             logcat { it.asLog() }
             throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                }
-
+                is FileClientException -> it.toRemoteException()
                 else -> RemoteException.Unknown()
             }
         }
@@ -68,13 +62,7 @@ internal class RemoteStorageClientImpl(
         }
     }.getOrElse {
         throw when (it) {
-            is FileClientException -> when (it) {
-                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                is FileClientException.InvalidPath -> RemoteException.NotFound()
-                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-            }
-
+            is FileClientException -> it.toRemoteException()
             else -> it
         }
     }
@@ -89,13 +77,7 @@ internal class RemoteStorageClientImpl(
         }
     }.getOrElse {
         throw when (it) {
-            is FileClientException -> when (it) {
-                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                is FileClientException.InvalidPath -> RemoteException.NotFound()
-                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-            }
-
+            is FileClientException -> it.toRemoteException()
             else -> it
         }
     }
@@ -106,13 +88,7 @@ internal class RemoteStorageClientImpl(
         }
     }.getOrElse {
         throw when (it) {
-            is FileClientException -> when (it) {
-                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                is FileClientException.InvalidPath -> RemoteException.NotFound()
-                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-            }
-
+            is FileClientException -> it.toRemoteException()
             else -> it
         }
     }
@@ -129,13 +105,7 @@ internal class RemoteStorageClientImpl(
         }
     }.getOrElse {
         throw when (it) {
-            is FileClientException -> when (it) {
-                is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                is FileClientException.InvalidPath -> RemoteException.NotFound()
-                is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-            }
-
+            is FileClientException -> it.toRemoteException()
             else -> RemoteException.Unknown()
         }
     }

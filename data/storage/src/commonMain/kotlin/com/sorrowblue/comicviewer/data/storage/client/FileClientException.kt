@@ -4,6 +4,8 @@
 
 package com.sorrowblue.comicviewer.data.storage.client
 
+import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
+
 sealed class FileClientException : RuntimeException() {
     class NoNetwork : FileClientException()
 
@@ -14,6 +16,9 @@ sealed class FileClientException : RuntimeException() {
     class InvalidPath : FileClientException()
 }
 
-sealed class FileReaderException : RuntimeException() {
-    class NotSupport(override val message: String) : FileReaderException()
+internal fun FileClientException.toRemoteException(): RemoteException = when (this) {
+    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
+    is FileClientException.InvalidPath -> RemoteException.NotFound()
+    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
+    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
 }

@@ -14,16 +14,13 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import dev.zacsweers.metro.DefaultBinding
 import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.MapKey
-import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.io.Sink
 import kotlinx.io.Source
 import logcat.asLog
 import logcat.logcat
@@ -32,19 +29,6 @@ import logcat.logcat
 annotation class FileClientKey(val value: KClass<out Bookshelf>)
 
 typealias FileClientFactory = Map<KClass<out Bookshelf>, FileClient.Factory<*>>
-
-@Suppress("UNCHECKED_CAST")
-fun FileClientFactory.fileClient(
-    bookshelf: Bookshelf,
-): ReadOnlyProperty<Any, FileClient<out Bookshelf>> =
-    ReadOnlyProperty<Any, FileClient<out Bookshelf>> { thisRef, property ->
-        val factory = when (bookshelf) {
-            is DeviceStorage -> getValue(DeviceStorage::class)
-            is SmbServer -> getValue(SmbServer::class)
-            ShareContents -> getValue(ShareContents::class)
-        } as FileClient.Factory<Bookshelf>
-        factory.create(bookshelf)
-    }
 
 @Suppress("UNCHECKED_CAST")
 fun FileClientFactory.getFileClient(bookshelf: Bookshelf): FileClient<Bookshelf> {
@@ -76,8 +60,6 @@ abstract class FileClient<T : Bookshelf>(
 
     abstract suspend fun source(file: File): Source
 
-    abstract suspend fun extractTo(file: File, sink: Sink)
-
     abstract suspend fun seekableInputStream(file: File): SeekableInputStream
 
     abstract suspend fun connect(path: String)
@@ -104,17 +86,7 @@ abstract class FileClient<T : Bookshelf>(
         }.getOrElse {
             logcat { it.asLog() }
             throw when (it) {
-                is FileClientException -> when (it) {
-                    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-                    is FileClientException.InvalidPath -> RemoteException.NotFound()
-                    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-                    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
-                }
-
-                is FileReaderException -> when (it) {
-                    is FileReaderException.NotSupport -> RemoteException.NotFound()
-                }
-
+                is FileClientException -> it.toRemoteException()
                 else -> it
             }
         }

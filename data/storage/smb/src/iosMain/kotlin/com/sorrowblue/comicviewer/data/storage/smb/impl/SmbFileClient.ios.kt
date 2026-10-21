@@ -25,9 +25,7 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.io.Sink
 import kotlinx.io.Source
-import kotlinx.io.buffered
 import kotlinx.io.files.Path
 
 @AssistedInject
@@ -59,10 +57,6 @@ internal actual class SmbFileClient(
 
     actual override suspend fun source(file: File): Source = iosSmbFileClient.source(file)
 
-    actual override suspend fun extractTo(file: File, sink: Sink) {
-        iosSmbFileClient.source(file).buffered().transferTo(sink)
-    }
-
     actual override suspend fun seekableInputStream(file: File): SeekableInputStream =
         iosSmbFileClient.seekableInputStream(file)
 
@@ -76,6 +70,12 @@ internal actual class SmbFileClient(
     actual override suspend fun fileSize(path: String): Long = iosSmbFileClient.fileSize(path)
 
     private suspend fun IosSmbFile.toFileModel(resolveImageFolder: Boolean = false): File {
+        val parentPath = Path(path)
+            .parent
+            ?.toString()
+            .orEmpty()
+            .replace("\\", "/")
+            .removeSuffix("/") + "/"
         if (resolveImageFolder && isDirectory && runCatching {
                 iosSmbFileClient.listDirectory(path)
                     .any { !it.isDirectory && it.name.extension in SUPPORTED_IMAGE }
@@ -85,7 +85,7 @@ internal actual class SmbFileClient(
                 path = path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(path).parent.toString().replace("\\", "/") + "/",
+                parent = parentPath,
                 size = 0,
                 lastModifier = contentModificationDate,
                 isHidden = false,
@@ -96,12 +96,7 @@ internal actual class SmbFileClient(
                 path = path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(path)
-                    .parent
-                    ?.toString()
-                    .orEmpty()
-                    .replace("\\", "/")
-                    .removeSuffix("/") + "/",
+                parent = parentPath,
                 size = 0,
                 lastModifier = contentModificationDate,
                 isHidden = false,
@@ -111,12 +106,7 @@ internal actual class SmbFileClient(
                 path = path,
                 bookshelfId = this@SmbFileClient.bookshelf.id,
                 name = name.removeSuffix("/"),
-                parent = Path(path)
-                    .parent
-                    ?.toString()
-                    .orEmpty()
-                    .replace("\\", "/")
-                    .removeSuffix("/") + "/",
+                parent = parentPath,
                 size = fileSize,
                 lastModifier = contentModificationDate,
                 isHidden = false,

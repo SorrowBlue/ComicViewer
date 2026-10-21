@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
-import kotlinx.io.Sink
 import kotlinx.io.Source
 
 internal expect class SmbFileClient : FileClient<SmbServer> {
@@ -24,8 +23,6 @@ internal expect class SmbFileClient : FileClient<SmbServer> {
     override suspend fun current(path: String, resolveImageFolder: Boolean): File
 
     override suspend fun source(file: File): Source
-
-    override suspend fun extractTo(file: File, sink: Sink)
 
     override suspend fun seekableInputStream(file: File): SeekableInputStream
 

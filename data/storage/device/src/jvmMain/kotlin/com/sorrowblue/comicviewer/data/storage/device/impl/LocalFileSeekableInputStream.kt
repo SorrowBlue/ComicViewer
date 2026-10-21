@@ -32,10 +32,7 @@ internal class LocalFileSeekableInputStream(path: Path) : SeekableInputStream {
     }
     override fun length(): Long = file.length()
 
-    private var isClosed = false
-
     override fun close() {
-        isClosed = true
         file.close()
     }
 }

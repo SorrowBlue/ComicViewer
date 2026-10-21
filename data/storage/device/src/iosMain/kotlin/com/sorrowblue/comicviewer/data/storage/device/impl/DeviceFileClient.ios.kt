@@ -9,15 +9,16 @@ import com.sorrowblue.comicviewer.data.storage.client.FileClientException
 import com.sorrowblue.comicviewer.data.storage.client.FileClientKey
 import com.sorrowblue.comicviewer.data.storage.client.FileReaderFactoryMap
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
-import com.sorrowblue.comicviewer.domain.model.file.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
-import com.sorrowblue.comicviewer.domain.model.file.extension
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.file.SUPPORTED_IMAGE
+import com.sorrowblue.comicviewer.domain.model.file.extension
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -33,7 +34,6 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.io.Sink
 import kotlinx.io.Source
 import logcat.LogPriority
 import logcat.asLog
@@ -46,20 +46,13 @@ import platform.Foundation.NSURLIsDirectoryKey
 import platform.Foundation.NSURLIsHiddenKey
 import platform.Foundation.NSURLIsVolumeKey
 
-@AssistedInject
-internal actual class DeviceFileClient(
-    @Assisted bookshelf: DeviceStorage,
+internal abstract class BaseIosFileClient<T : Bookshelf>(
+    bookshelf: T,
     fileReaderFactoryMap: FileReaderFactoryMap,
-    @IoDispatcher dispatcher: CoroutineDispatcher,
-) : FileClient<DeviceStorage>(bookshelf, fileReaderFactoryMap, dispatcher) {
-    @ContributesIntoMap(AppScope::class)
-    @FileClientKey(DeviceStorage::class)
-    @AssistedFactory
-    actual fun interface Factory : FileClient.Factory<DeviceStorage> {
-        actual override fun create(bookshelf: DeviceStorage): DeviceFileClient
-    }
+    dispatcher: CoroutineDispatcher,
+) : FileClient<T>(bookshelf, fileReaderFactoryMap, dispatcher) {
 
-    actual override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> =
+    override suspend fun listFiles(file: File, resolveImageFolder: Boolean): List<File> =
         FileUtils.fromString(
             input = file.path,
             isDirectory = !NSURL(fileURLWithPath = file.path).fileURL,
@@ -68,36 +61,29 @@ internal actual class DeviceFileClient(
                 it.toFileModel(resolveImageFolder)
             } ?: throw FileClientException.InvalidPath()
 
-    actual override suspend fun exists(path: String): Boolean = FileUtils.fromString(
+    override suspend fun exists(path: String): Boolean = FileUtils.fromString(
         input = path,
         isDirectory = !NSURL(fileURLWithPath = path).fileURL,
     )?.getExists() ?: false
 
-    actual override suspend fun current(path: String, resolveImageFolder: Boolean): File {
+    override suspend fun current(path: String, resolveImageFolder: Boolean): File {
         val file =
             FileUtils.fromString(input = path, isDirectory = !NSURL(fileURLWithPath = path).fileURL)
                 ?: throw FileClientException.InvalidPath()
         return file.toFileModel(resolveImageFolder)
     }
 
-    actual override suspend fun source(file: File): Source {
+    override suspend fun source(file: File): Source {
         val iPlatformFile =
             FileUtils.fromString(input = file.path, !NSURL(fileURLWithPath = file.path).fileURL)
                 ?: throw FileClientException.InvalidPath()
         return iPlatformFile.openInputStream()!!
     }
 
-    actual override suspend fun extractTo(file: File, sink: Sink) {
-        val iPlatformFile =
-            FileUtils.fromString(input = file.path, !NSURL(fileURLWithPath = file.path).fileURL)
-                ?: throw FileClientException.InvalidPath()
-        iPlatformFile.openInputStream()!!.transferTo(sink)
-    }
-
-    actual override suspend fun seekableInputStream(file: File): SeekableInputStream =
+    override suspend fun seekableInputStream(file: File): SeekableInputStream =
         DeviceSeekableInputStream(file.path)
 
-    actual override suspend fun connect(path: String) {
+    override suspend fun connect(path: String) {
         kotlin
             .runCatching {
                 exists(path)
@@ -115,7 +101,7 @@ internal actual class DeviceFileClient(
     }
 
     @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
-    actual override suspend fun attribute(path: String): FileAttribute {
+    override suspend fun attribute(path: String): FileAttribute {
         val fileManager = NSFileManager.defaultManager
         val url = NSURL.fileURLWithPath(path)
 
@@ -160,7 +146,7 @@ internal actual class DeviceFileClient(
         )
     }
 
-    actual override suspend fun fileSize(path: String): Long {
+    override suspend fun fileSize(path: String): Long {
         val file =
             FileUtils.fromString(input = path, isDirectory = !NSURL(fileURLWithPath = path).fileURL)
                 ?: throw FileClientException.InvalidPath()
@@ -210,5 +196,19 @@ internal actual class DeviceFileClient(
                 isHidden = false,
             )
         }
+    }
+}
+
+@AssistedInject
+internal class DeviceFileClient(
+    @Assisted bookshelf: DeviceStorage,
+    fileReaderFactoryMap: FileReaderFactoryMap,
+    @IoDispatcher dispatcher: CoroutineDispatcher,
+) : BaseIosFileClient<DeviceStorage>(bookshelf, fileReaderFactoryMap, dispatcher) {
+    @ContributesIntoMap(AppScope::class)
+    @FileClientKey(DeviceStorage::class)
+    @AssistedFactory
+    fun interface Factory : FileClient.Factory<DeviceStorage> {
+        override fun create(bookshelf: DeviceStorage): DeviceFileClient
     }
 }

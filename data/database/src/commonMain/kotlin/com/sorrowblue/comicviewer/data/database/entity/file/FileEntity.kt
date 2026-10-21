@@ -98,7 +98,7 @@ internal data class FileEntity(
         }
     }
 
-    fun toModel(): File = when (fileType) {
+    fun toModel(count: Int = 0): File = when (fileType) {
         Type.FILE -> BookFile(
             path = path,
             bookshelfId = BookshelfId(bookshelfId),
@@ -123,6 +123,7 @@ internal data class FileEntity(
             lastModifier = lastModified,
             isHidden = isHidden,
             sortIndex = sortIndex,
+            count = count,
         )
 
         Type.IMAGE_FOLDER -> BookFolder(
@@ -138,6 +139,7 @@ internal data class FileEntity(
             totalPageCount = info.totalPageCount,
             lastPageRead = history.lastReadPage,
             lastReadTime = history.lastReading,
+            count = count,
         )
     }
 

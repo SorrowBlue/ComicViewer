@@ -20,8 +20,7 @@ import kotlinx.io.buffered
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.SystemFileSystem
 
-internal abstract class BaseFetcher<T : Any, V : CoilMetadata>(
-    private val data: T,
+internal abstract class BaseFetcher<V : CoilMetadata>(
     protected val options: Options,
     private val diskCache: Lazy<DiskCache?>,
 ) : Fetcher {
@@ -107,17 +106,10 @@ internal abstract class BaseFetcher<T : Any, V : CoilMetadata>(
         null
     }
 
-    protected fun DiskCache.Snapshot.toImageSource(): ImageSource = ImageSource(
-        file = data.asKotlinxPath(),
-        fileSystem = fileSystem,
-        diskCacheKey = diskCacheKey,
-        closeable = this,
-    )
+    protected fun DiskCache.Snapshot.toImageSource(): ImageSource =
+        toImageSource(diskCacheKey = diskCacheKey)
 
-    protected fun Source.toImageSource(): ImageSource = ImageSource(
-        source = this,
-        fileSystem = fileSystem,
-    )
+    protected fun Source.toImageSource(): ImageSource = ImageSource(source = this)
 
     abstract val diskCacheKey: String
 
