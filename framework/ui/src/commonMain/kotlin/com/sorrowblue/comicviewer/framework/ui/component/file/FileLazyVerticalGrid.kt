@@ -135,22 +135,17 @@ fun rememberLazyPagingColumnType(
                 LazyPagingColumn.ListMedium
             }
 
-            FileListDisplay.Grid -> when {
-                windowSizeClass.isWidthAtLeastBreakpoint(
-                    WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
-                ) -> when (gridColumnSize) {
-                    GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
-                    GridColumnSize.Large -> LazyPagingColumn.Grid(200)
-                }
-
+            FileListDisplay.Grid -> if (
                 windowSizeClass.isWidthAtLeastBreakpoint(
                     WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
-                ) -> when (gridColumnSize) {
+                )
+            ) {
+                when (gridColumnSize) {
                     GridColumnSize.Medium -> LazyPagingColumn.Grid(160)
                     GridColumnSize.Large -> LazyPagingColumn.Grid(200)
                 }
-
-                else -> when (gridColumnSize) {
+            } else {
+                when (gridColumnSize) {
                     GridColumnSize.Medium -> LazyPagingColumn.FixedGrid(3)
                     GridColumnSize.Large -> LazyPagingColumn.FixedGrid(2)
                 }

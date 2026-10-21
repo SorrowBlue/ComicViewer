@@ -6,8 +6,6 @@ package com.sorrowblue.comicviewer.framework.ui.adaptive
 
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
-import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
-import androidx.compose.material3.adaptive.navigation3.SupportingPaneSceneStrategy
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
@@ -23,6 +21,8 @@ import androidx.navigation3.runtime.contains
 import androidx.navigation3.runtime.get
 import androidx.navigation3.scene.DialogSceneStrategy
 import com.sorrowblue.comicviewer.framework.navigation.NavEntryDecoratorProvider
+import com.sorrowblue.comicviewer.framework.ui.navigation3.isDetailPane
+import com.sorrowblue.comicviewer.framework.ui.navigation3.isSupportingExtraOrSupportingPane
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.coroutines.launch
@@ -36,30 +36,8 @@ val LocalNavigationSuiteScaffoldState = compositionLocalOf<NavigationSuiteScaffo
 const val SupportingPaneRoleKey: String =
     "androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole"
 
-private val MainMetadataClass =
-    requireNotNull(SupportingPaneSceneStrategy.mainPane()[SupportingPaneRoleKey])::class
-private val ExtraMetadataClass =
-    requireNotNull(SupportingPaneSceneStrategy.extraPane()[SupportingPaneRoleKey])::class
-private val SupportingMetadataClass =
-    requireNotNull(SupportingPaneSceneStrategy.supportingPane()[SupportingPaneRoleKey])::class
-
-private val NavEntry<*>.isSupportingOrExtraPane: Boolean
-    get() {
-        val clazz = metadata[SupportingPaneRoleKey]?.let { it::class }
-        return clazz == ExtraMetadataClass || clazz == SupportingMetadataClass
-    }
-
-private const val ListDetailRoleKey: String =
-    "androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole"
-
-private val DetailMetadataClass =
-    requireNotNull(ListDetailSceneStrategy.detailPane()[ListDetailRoleKey])::class
-
-private val NavEntry<*>.isDetailPane: Boolean
-    get() = metadata[ListDetailRoleKey]?.let { it::class } == DetailMetadataClass
-
 private val NavEntry<*>.isSubPane: Boolean
-    get() = isSupportingOrExtraPane || isDetailPane
+    get() = isSupportingExtraOrSupportingPane || isDetailPane
 
 private val NavEntry<*>.isDialog: Boolean
     get() = metadata.contains(DialogSceneStrategy.Companion.DialogKey)

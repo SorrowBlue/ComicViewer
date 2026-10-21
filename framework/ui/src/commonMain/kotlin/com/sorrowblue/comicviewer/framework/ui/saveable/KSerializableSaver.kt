@@ -19,30 +19,6 @@ inline fun <reified T : Any> T.encodeToByteArray(): ByteArray = Cbor.encodeToByt
 inline fun <reified T : Any> ByteArray.decodeTo(): T = Cbor.decodeFromByteArray<T>(this)
 
 @Composable
-fun <T : Any> rememberListSaveable(
-    vararg inputs: Any?,
-    save: (T) -> List<Any?>,
-    restore: T.(List<Any?>) -> Unit,
-    init: () -> T,
-): T = rememberSaveable(
-    inputs = inputs,
-    saver = Saver(
-        save = {
-            val list = save(it)
-            for (index in list.indices) {
-                val item = list[index]
-                if (item != null) {
-                    require(canBeSaved(item)) { "item can't be saved" }
-                }
-            }
-            if (list.isNotEmpty()) ArrayList(list) else null
-        },
-        restore = { init().apply { restore(it.toList()) } },
-    ),
-    init = init,
-)
-
-@Composable
 inline fun <T : Any, reified R : Any?> rememberSaveable(
     vararg inputs: Any?,
     crossinline save: (T) -> R,

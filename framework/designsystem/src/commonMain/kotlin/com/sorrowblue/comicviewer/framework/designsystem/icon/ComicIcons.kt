@@ -36,7 +36,6 @@ import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Lan
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Lock
@@ -49,7 +48,6 @@ import androidx.compose.material.icons.outlined.SdStorage
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.Start
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.WatchLater
@@ -73,7 +71,6 @@ object ComicIcons {
     val Close = Icons.Outlined.Close
     val Save = Icons.Outlined.Save
     val ArrowDropDown = Icons.Outlined.ArrowDropDown
-    val Key = Icons.Outlined.Key
     val DarkMode = Icons.Outlined.DarkMode
     val Star = Icons.Outlined.Star
     val Check = Icons.Outlined.Check
@@ -81,7 +78,6 @@ object ComicIcons {
     val ArrowBack = Icons.AutoMirrored.Outlined.ArrowBack
     val ArrowUpward = Icons.Outlined.ArrowUpward
     val ArrowDownward = Icons.Outlined.ArrowDownward
-    val Start = Icons.Outlined.Start
     val Language = Icons.Outlined.Language
     val Dataset = Icons.Outlined.Dataset
     val Info = Icons.Outlined.Info

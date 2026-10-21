@@ -130,7 +130,6 @@ fun GridFile(
                             .clip(CardDefaults.shape),
                     )
                 } else {
-                    val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                     GridFileIcon(
                         file = file,
                         modifier = Modifier
@@ -253,7 +252,7 @@ internal fun FolderCountText(count: Int, modifier: Modifier = Modifier) {
             count,
             count,
         ),
-        style = ComicTheme.typography.labelSmall.copy(),
+        style = ComicTheme.typography.labelSmall,
         color = ComicTheme.colorScheme.onSurface,
         modifier = modifier,
     )
@@ -279,7 +278,7 @@ internal fun BookReadStatusText(
             }
             stringResource(Res.string.file_label_read_percent, percent)
         },
-        style = ComicTheme.typography.labelSmall.copy(),
+        style = ComicTheme.typography.labelSmall,
         color = ComicTheme.colorScheme.onSurface,
         modifier = modifier.visible(isRead),
     )
@@ -294,7 +293,7 @@ internal fun BookPageCountText(book: Book, modifier: Modifier = Modifier) {
     }
     Text(
         text = text,
-        style = ComicTheme.typography.labelSmall.copy(),
+        style = ComicTheme.typography.labelSmall,
         color = ComicTheme.colorScheme.onSurface,
         modifier = modifier,
     )

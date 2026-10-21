@@ -9,17 +9,12 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MotionScheme
-import androidx.compose.material3.SegmentedButtonColors
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.window.core.layout.WindowSizeClass
 
 object ComicTheme {
@@ -48,8 +43,6 @@ object ComicTheme {
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.shapes
-
-    var fixedSegmentedButtonColorsCached: SegmentedButtonColors? = null
 }
 
 @Composable
@@ -60,37 +53,23 @@ fun ComicTheme(
 ) {
     val colorScheme = colorScheme(darkTheme, dynamicColor)
     val windowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
-    val dimension by remember(windowSizeClass) {
-        mutableStateOf(
-            when {
-                windowSizeClass.isWidthAtLeastBreakpoint(
-                    WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
-                ) -> expandedDimension
+    val dimension = when {
+        windowSizeClass.isWidthAtLeastBreakpoint(
+            WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
+        ) -> expandedDimension
 
-                windowSizeClass.isWidthAtLeastBreakpoint(
-                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
-                ) -> mediumDimension
+        windowSizeClass.isWidthAtLeastBreakpoint(
+            WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
+        ) -> mediumDimension
 
-                else -> compactDimension
-            },
-        )
+        else -> compactDimension
     }
-    if (LocalInspectionMode.current) {
-        CompositionLocalProvider(LocalDimension provides dimension) {
-            MaterialExpressiveTheme(
-                colorScheme = colorScheme,
-                typography = AppTypography,
-                content = content,
-            )
-        }
-    } else {
-        CompositionLocalProvider(LocalDimension provides dimension) {
-            MaterialExpressiveTheme(
-                colorScheme = colorScheme,
-                typography = AppTypography,
-                content = content,
-            )
-        }
+    CompositionLocalProvider(LocalDimension provides dimension) {
+        MaterialExpressiveTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content,
+        )
     }
 }
 

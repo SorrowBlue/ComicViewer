@@ -254,31 +254,19 @@ internal class NavKeyProcessor(
         return "$simpleName$typeArgsString$nullableSuffix"
     }
 
-    private fun KSClassDeclaration.implementsNavKey(
-        visited: MutableSet<KSClassDeclaration> = mutableSetOf(),
-    ): Boolean {
-        if (!visited.add(this)) return false
-        for (superType in superTypes) {
-            val resolved = try {
-                superType.resolve()
-            } catch (e: Exception) {
-                null
-            } ?: continue
-            val decl = resolved.declaration as? KSClassDeclaration ?: continue
-            val qualifiedName = decl.qualifiedName?.asString()
-            if (qualifiedName == "androidx.navigation3.runtime.NavKey" ||
-                qualifiedName == "com.sorrowblue.comicviewer.framework.navigation.NavigationKey"
-            ) {
-                return true
-            }
-            if (decl.implementsNavKey(visited)) {
-                return true
-            }
-        }
-        return false
-    }
+    private fun KSClassDeclaration.implementsNavKey(): Boolean = implementsAny(
+        setOf(
+            "androidx.navigation3.runtime.NavKey",
+            "com.sorrowblue.comicviewer.framework.navigation.NavigationKey",
+        ),
+    )
 
-    private fun KSClassDeclaration.implementsFileInfoNavKey(
+    private fun KSClassDeclaration.implementsFileInfoNavKey(): Boolean = implementsAny(
+        setOf("com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey"),
+    )
+
+    private fun KSClassDeclaration.implementsAny(
+        targetNames: Set<String>,
         visited: MutableSet<KSClassDeclaration> = mutableSetOf(),
     ): Boolean {
         if (!visited.add(this)) return false
@@ -289,11 +277,7 @@ internal class NavKeyProcessor(
                 null
             } ?: continue
             val decl = resolved.declaration as? KSClassDeclaration ?: continue
-            val qualifiedName = decl.qualifiedName?.asString()
-            if (qualifiedName == "com.sorrowblue.comicviewer.feature.file.nav.FileInfoNavKey") {
-                return true
-            }
-            if (decl.implementsFileInfoNavKey(visited)) {
+            if (decl.qualifiedName?.asString() in targetNames || decl.implementsAny(targetNames, visited)) {
                 return true
             }
         }
