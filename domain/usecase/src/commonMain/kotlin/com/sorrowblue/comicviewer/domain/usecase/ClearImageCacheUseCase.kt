@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.domain.usecase
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.cache.ImageCache
+import com.sorrowblue.comicviewer.domain.model.cache.ThumbnailImageCache
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
@@ -33,7 +34,9 @@ internal class ClearImageCacheUseCaseImpl(
     override suspend fun run(request: Request): Resource<Unit, Unit> {
         when (request) {
             is BookshelfRequest -> {
-                fileRepository.clearCacheKey(request.bookshelfId)
+                if (request.imageCache is ThumbnailImageCache) {
+                    fileRepository.clearCacheKey(request.bookshelfId)
+                }
                 imageCacheRepository.clearImageCache(request.bookshelfId, request.imageCache)
             }
 

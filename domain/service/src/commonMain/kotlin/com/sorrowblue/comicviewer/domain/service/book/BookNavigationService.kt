@@ -19,7 +19,7 @@ import dev.zacsweers.metro.Inject
 
 /**
  * コミック閲覧中の前後ブック移動における、探索ポリシー・ソート種別の解決、
- * 親フォルダーパス抽出、モデル検証、およびメモリ上ファイル一覧からの探索を司るドメインサービス。
+ * 親フォルダーパス抽出、およびモデル検証を司るドメインサービス。
  */
 interface BookNavigationService {
 
@@ -66,22 +66,6 @@ interface BookNavigationService {
      * @return 有効な [Book] の場合はそのインスタンス、それ以外または null の場合は null
      */
     fun validateBook(file: File?): Book?
-
-    /**
-     * メモリ上のファイル一覧から、ソート条件に従って指定されたパスの次または前の [Book] を探索します。
-     *
-     * @param files ファイル一覧
-     * @param currentPath 現在の本のパス
-     * @param isNext 次の本を探索する場合は true、前の本を探索する場合は false
-     * @param sortType ソート種別
-     * @return 探索された [Book]（見つからない場合や範囲外の場合は null）
-     */
-    fun findNextBook(
-        files: List<File>,
-        currentPath: String,
-        isNext: Boolean,
-        sortType: SortType,
-    ): Book?
 
     companion object {
         /**
@@ -132,44 +116,4 @@ class BookNavigationServiceImpl(private val folderSortSettingsService: FolderSor
     }
 
     override fun validateBook(file: File?): Book? = file as? Book
-
-    override fun findNextBook(
-        files: List<File>,
-        currentPath: String,
-        isNext: Boolean,
-        sortType: SortType,
-    ): Book? {
-        val comparator = when (sortType) {
-            is SortType.Name -> {
-                val base = compareBy<Book> {
-                    if (it.sortIndex >=
-                        0
-                    ) {
-                        it.sortIndex
-                    } else {
-                        Int.MAX_VALUE
-                    }
-                }
-                    .thenBy { it.name }
-                if (sortType.isAsc) base else base.reversed()
-            }
-
-            is SortType.Date -> {
-                val base = compareBy<Book> { it.lastModifier }.thenBy { it.name }
-                if (sortType.isAsc) base else base.reversed()
-            }
-
-            is SortType.Size -> {
-                val base = compareBy<Book> { it.size }.thenBy { it.name }
-                if (sortType.isAsc) base else base.reversed()
-            }
-        }
-
-        val books = files.filterIsInstance<Book>().sortedWith(comparator)
-        val currentIndex = books.indexOfFirst { it.path == currentPath }
-        if (currentIndex == -1) return null
-
-        val targetIndex = if (isNext) currentIndex + 1 else currentIndex - 1
-        return books.getOrNull(targetIndex)
-    }
 }

@@ -46,14 +46,6 @@ interface FileSortService {
             }
         }
 
-    /**
-     * ファイル一覧を自然順でソートします。
-     *
-     * @param list ソート対象のファイル一覧
-     * @return ソートされたファイル一覧
-     */
-    fun sort(list: List<File>): List<File> = list.sortedWith(compareFile)
-
     companion object {
         /**
          * 現在のプラットフォームに対応したデフォルトの [FileSortService] 実装を返します。

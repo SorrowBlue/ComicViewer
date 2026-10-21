@@ -48,54 +48,57 @@ internal class RegisterBookshelfUseCaseImpl(
     private val imageCacheRepository: ImageCacheRepository,
 ) : RegisterBookshelfUseCase() {
 
-    override suspend fun run(request: Request): Resource<Bookshelf, Error> = runCatching {
-        remoteStorageClientFactory.create(request.bookshelf).connect(request.path)
-    }.fold(
-        onFailure = {
-            logcat { "onFailure ${it.asLog()}" }
-            when (it as RemoteException) {
-                is RemoteException.InvalidAuth -> Resource.Error(Error.Auth)
-                is RemoteException.InvalidServer -> Resource.Error(Error.Host)
-                is RemoteException.NotFound -> Resource.Error(Error.Path)
-                is RemoteException.NoNetwork -> Resource.Error(Error.Network)
-                is RemoteException.Unknown -> Resource.Error(Error.System)
-            }
-        },
-        onSuccess = {
-            logcat { "onSuccess" }
-            runCatching {
-                remoteStorageClientFactory.create(request.bookshelf).file(request.path)
-            }.fold({ file ->
-                if (file is IFolder) {
-                    val root = fileRepository.root(request.bookshelf.id)
-                    if (root != null && root.path != file.path) {
-                        // 別の本棚を登録する場合、一旦削除
-                        imageCacheRepository.deleteThumbnails(
-                            fileRepository.getCacheKeyList(request.bookshelf.id),
-                        )
-                        fileRepository.deleteAll2(request.bookshelf.id)
-                    }
-                    val bookshelf =
-                        bookshelfRepository.updateOrCreate(
-                            request.bookshelf,
-                        ) { bookshelf ->
-                            val folder =
-                                remoteStorageClientFactory
-                                    .create(bookshelf)
-                                    .file(request.path) as IFolder
-                            val folderModel = when (folder) {
-                                is BookFolder -> folder.copy(parent = "")
-                                is Folder -> folder.copy(parent = "")
-                            }
-                            fileRepository.addUpdate(folderModel)
-                        }
-                    Resource.Success(requireNotNull(bookshelf))
-                } else {
-                    Resource.Error(Error.Network)
+    override suspend fun run(request: Request): Resource<Bookshelf, Error> {
+        val client = remoteStorageClientFactory.create(request.bookshelf)
+        return runCatching {
+            client.connect(request.path)
+        }.fold(
+            onFailure = {
+                logcat { "onFailure ${it.asLog()}" }
+                when (it as RemoteException) {
+                    is RemoteException.InvalidAuth -> Resource.Error(Error.Auth)
+                    is RemoteException.InvalidServer -> Resource.Error(Error.Host)
+                    is RemoteException.NotFound -> Resource.Error(Error.Path)
+                    is RemoteException.NoNetwork -> Resource.Error(Error.Network)
+                    is RemoteException.Unknown -> Resource.Error(Error.System)
                 }
-            }, {
-                Resource.Error(Error.System)
-            })
-        },
-    )
+            },
+            onSuccess = {
+                logcat { "onSuccess" }
+                runCatching {
+                    client.file(request.path)
+                }.fold({ file ->
+                    if (file is IFolder) {
+                        val root = fileRepository.root(request.bookshelf.id)
+                        if (root != null && root.path != file.path) {
+                            // 別の本棚を登録する場合、一旦削除
+                            imageCacheRepository.deleteThumbnails(
+                                fileRepository.getCacheKeyList(request.bookshelf.id),
+                            )
+                            fileRepository.deleteAll(request.bookshelf.id)
+                        }
+                        val bookshelf =
+                            bookshelfRepository.updateOrCreate(
+                                request.bookshelf,
+                            ) { bookshelf ->
+                                val folder =
+                                    remoteStorageClientFactory
+                                        .create(bookshelf)
+                                        .file(request.path) as IFolder
+                                val folderModel = when (folder) {
+                                    is BookFolder -> folder.copy(parent = "")
+                                    is Folder -> folder.copy(parent = "")
+                                }
+                                fileRepository.addUpdate(folderModel)
+                            }
+                        Resource.Success(requireNotNull(bookshelf))
+                    } else {
+                        Resource.Error(Error.Network)
+                    }
+                }, {
+                    Resource.Error(Error.System)
+                })
+            },
+        )
+    }
 }

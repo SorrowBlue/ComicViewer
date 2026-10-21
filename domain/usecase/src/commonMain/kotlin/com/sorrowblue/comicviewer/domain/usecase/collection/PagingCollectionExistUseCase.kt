@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.domain.usecase.collection
 
 import androidx.paging.PagingConfig
-import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionCriteria
@@ -16,8 +15,8 @@ import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseC
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flatMapLatest
 
 fun interface PagingCollectionExistUseCase :
     PagingUseCase<PagingCollectionExistUseCase.Request, Pair<Collection, Boolean>> {
@@ -27,7 +26,7 @@ fun interface PagingCollectionExistUseCase :
         val bookshelfId: BookshelfId,
         val path: String,
         val collectionType: CollectionType,
-    ) : BaseRequest
+    )
 }
 
 @Inject
@@ -36,13 +35,18 @@ internal class PagingCollectionExistUseCaseImpl(
     private val collectionRepository: CollectionRepository,
     private val collectionSettingsUseCase: CollectionSettingsUseCase,
 ) : PagingCollectionExistUseCase {
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(request: PagingCollectionExistUseCase.Request) =
-        collectionRepository.pagingDataFlow(
-            request.pagingConfig,
-            request.bookshelfId,
-            request.path,
-        ) {
-            val collectionSettings = runBlocking { collectionSettingsUseCase.settings.first() }
-            CollectionCriteria(type = request.collectionType, recent = collectionSettings.recent)
+        collectionSettingsUseCase.settings.flatMapLatest { collectionSettings ->
+            collectionRepository.pagingDataFlow(
+                request.pagingConfig,
+                request.bookshelfId,
+                request.path,
+            ) {
+                CollectionCriteria(
+                    type = request.collectionType,
+                    recent = collectionSettings.recent,
+                )
+            }
         }
 }

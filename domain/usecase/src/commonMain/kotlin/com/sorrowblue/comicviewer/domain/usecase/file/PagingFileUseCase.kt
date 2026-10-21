@@ -18,9 +18,7 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.runBlocking
 
 fun interface PagingFileUseCase : PagingUseCase<PagingFileUseCase.Request, File> {
 
@@ -43,16 +41,16 @@ internal class PagingFileUseCaseImpl(
     override fun invoke(request: PagingFileUseCase.Request) = bookshelfRepository
         .flow(request.bookshelfId).filterNotNull().flatMapLatest { bookshelf ->
             val file = fileRepository.findBy(request.bookshelfId, request.path) as IFolder
-            fileRepository.pagingDataFlow(request.pagingConfig, bookshelf, file) {
-                val settings =
-                    runBlocking { settingsRepository.folderDisplaySettings.first() }
-                SearchCondition(
-                    "",
-                    SearchCondition.Range.InFolder(file.path),
-                    SearchCondition.Period.None,
-                    settings.currentSortType(file.bookshelfId, file.path),
-                    settings.showHiddenFiles,
-                )
+            settingsRepository.folderDisplaySettings.flatMapLatest { settings ->
+                fileRepository.pagingDataFlow(request.pagingConfig, bookshelf, file) {
+                    SearchCondition(
+                        "",
+                        SearchCondition.Range.InFolder(file.path),
+                        SearchCondition.Period.None,
+                        settings.currentSortType(file.bookshelfId, file.path),
+                        settings.showHiddenFiles,
+                    )
+                }
             }
         }
 }

@@ -23,13 +23,16 @@ data class BasicCollection private constructor(
     )
 
     companion object {
-        operator fun invoke(name: String) = BasicCollection(
-            id = CollectionId(),
-            name = name,
-            count = 0,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        )
+        operator fun invoke(name: String): BasicCollection {
+            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            return BasicCollection(
+                id = CollectionId(),
+                name = name,
+                count = 0,
+                createdAt = now,
+                updatedAt = now,
+            )
+        }
 
         @InternalDataApi
         operator fun invoke(

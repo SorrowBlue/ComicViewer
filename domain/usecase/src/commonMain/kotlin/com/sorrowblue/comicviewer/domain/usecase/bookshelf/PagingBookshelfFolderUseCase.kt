@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
 import androidx.paging.PagingConfig
-import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
@@ -16,7 +15,7 @@ import dev.zacsweers.metro.Inject
 fun interface PagingBookshelfFolderUseCase :
     PagingUseCase<PagingBookshelfFolderUseCase.Request, BookshelfFolder> {
 
-    data class Request(val pagingConfig: PagingConfig) : BaseRequest
+    data class Request(val pagingConfig: PagingConfig)
 }
 
 @Inject

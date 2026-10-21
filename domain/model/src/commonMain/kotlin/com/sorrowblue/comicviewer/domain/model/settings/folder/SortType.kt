@@ -41,14 +41,13 @@ sealed interface SortType {
 
     companion object {
         /** List of all available sort type entries. */
-        val entries
-            get() = listOf(
-                Name(true),
-                Name(false),
-                Date(true),
-                Date(false),
-                Size(true),
-                Size(false),
-            )
+        val entries = listOf(
+            Name(true),
+            Name(false),
+            Date(true),
+            Date(false),
+            Size(true),
+            Size(false),
+        )
     }
 }

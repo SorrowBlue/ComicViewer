@@ -20,7 +20,7 @@ sealed interface PageItem {
  * @property nextBooks 候補となる次の本の一覧
  */
 data class NextPage(val isNext: Boolean, val nextBooks: List<NextBook>) : PageItem {
-    override val key: String = "next:$isNext"
+    override val key: String get() = "next:$isNext"
 }
 
 /**
@@ -52,7 +52,7 @@ sealed interface BookPage : PageItem {
      * @property index ページインデックス（0始まり）
      */
     data class Default(val index: Int) : BookPage {
-        override val key: String = "Default:$index"
+        override val key: String get() = "Default:$index"
     }
 
     /**
@@ -65,22 +65,22 @@ sealed interface BookPage : PageItem {
         data class Unrated(override val index: Int) :
             Spread,
             UnratedPage {
-            override val key: String = "Spread:unrated:$index"
+            override val key: String get() = "Spread:unrated:$index"
         }
 
         /** 2つの縦長ページが結合された状態 */
         data class Combine(override val index: Int, val nextIndex: Int) : Spread {
-            override val key: String = "Spread:combine:$index:$nextIndex"
+            override val key: String get() = "Spread:combine:$index:$nextIndex"
         }
 
         /** 表紙や奇数残りなどの単一ページ状態 */
         data class Single(override val index: Int) : Spread {
-            override val key: String = "Spread:single:$index"
+            override val key: String get() = "Spread:single:$index"
         }
 
         /** 単体で横長のページ（見開き相当） */
         data class Spread2(override val index: Int) : Spread {
-            override val key: String = "Spread:spread2:$index"
+            override val key: String get() = "Spread:spread2:$index"
         }
     }
 
@@ -94,22 +94,22 @@ sealed interface BookPage : PageItem {
         data class Unrated(override val index: Int) :
             Split,
             UnratedPage {
-            override val key: String = "Split:unrated:$index"
+            override val key: String get() = "Split:unrated:$index"
         }
 
         /** 縦長のため分割不要な単一ページ状態 */
         data class Single(override val index: Int) : Split {
-            override val key: String = "Split:single:$index"
+            override val key: String get() = "Split:single:$index"
         }
 
         /** 横長画像の左半分 */
         data class Left(override val index: Int) : Split {
-            override val key: String = "Split:left:$index"
+            override val key: String get() = "Split:left:$index"
         }
 
         /** 横長画像の右半分 */
         data class Right(override val index: Int) : Split {
-            override val key: String = "Split:right:$index"
+            override val key: String get() = "Split:right:$index"
         }
     }
 }

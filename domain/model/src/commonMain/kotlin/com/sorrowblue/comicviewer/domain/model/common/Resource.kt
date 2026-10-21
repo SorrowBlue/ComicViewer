@@ -17,12 +17,6 @@ sealed interface Resource<out D, out E> {
     class SystemError(val throwable: Throwable) : IError
 }
 
-val Resource<*, *>.isSuccess
-    get() = when (this) {
-        is Resource.Error -> false
-        is Resource.Success -> true
-    }
-
 inline fun <D, E, R> Resource<D, E>.fold(onSuccess: (D) -> R, onError: (E) -> R): R = when (this) {
     is Resource.Error -> onError(error)
     is Resource.Success -> onSuccess(data)

@@ -64,8 +64,7 @@ internal class GetBookUseCaseImpl(
         val localFile =
             runCatching {
                 when (val file = remoteStorageClient.file(path, resolveImageFolder)) {
-                    is BookFile -> fileRepository.updateSimple(file)
-                    is BookFolder -> fileRepository.updateSimple(file)
+                    is Book -> fileRepository.updateSimple(file)
                     is Folder -> return Resource.Error(Error.NotFound)
                 }
             }.getOrElse {
@@ -74,8 +73,7 @@ internal class GetBookUseCaseImpl(
         return localFile.fold(
             onSuccess = {
                 when (it) {
-                    is BookFile -> updateTotalPageCount(remoteStorageClient, it)
-                    is BookFolder -> updateTotalPageCount(remoteStorageClient, it)
+                    is Book -> updateTotalPageCount(remoteStorageClient, it)
                     is Folder -> Resource.Error(Error.NotFound)
                 }
             },

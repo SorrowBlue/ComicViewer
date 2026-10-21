@@ -116,13 +116,13 @@ interface FolderSortSettingsService {
      * @param settings The current folder display settings.
      * @param bookshelfId The ID of the bookshelf.
      * @param path The folder path.
-     * @return The updated [FolderDisplaySettings].
+     * @return The [UpdateResult] containing the updated settings and change flags.
      */
     fun toggleFolderScopeOnly(
         settings: FolderDisplaySettings,
         bookshelfId: BookshelfId,
         path: String,
-    ): FolderDisplaySettings
+    ): UpdateResult
 
     /**
      * Toggles the subfolder sort inheritance flag for the specified folder.
@@ -130,13 +130,13 @@ interface FolderSortSettingsService {
      * @param settings The current folder display settings.
      * @param bookshelfId The ID of the bookshelf.
      * @param path The folder path.
-     * @return The updated [FolderDisplaySettings].
+     * @return The [UpdateResult] containing the updated settings and change flags.
      */
     fun toggleIncludeSubfolders(
         settings: FolderDisplaySettings,
         bookshelfId: BookshelfId,
         path: String,
-    ): FolderDisplaySettings
+    ): UpdateResult
 
     /**
      * Represents the result of a sort setting or scope update.
@@ -276,21 +276,15 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
         val previousSortType = resolveSortType(settings, bookshelfId, path)
         val newList = when (scope) {
             FolderSortScope.Global -> {
-                val withoutSelf = settings.folderScopeOnlyList.filterNot {
-                    it.bookshelfId == bookshelfId && isSameFolderPath(it.path, path)
-                }
-                val cleaned = cleanupOrphanUseGlobalEntries(withoutSelf, bookshelfId)
-                val hasSubfoldersAncestor = cleaned.any {
+                val hasSubfoldersAncestor = settings.folderScopeOnlyList.any {
                     it.bookshelfId == bookshelfId &&
                         !it.useGlobal &&
                         it.includeSubfolders &&
                         isSubfolderPath(parent = it.path, child = path)
                 }
-                if (hasSubfoldersAncestor) {
+                val updated = if (hasSubfoldersAncestor) {
                     upsertScopeEntry(
-                        list = settings.folderScopeOnlyList.let {
-                            cleanupOrphanUseGlobalEntries(it, bookshelfId)
-                        },
+                        list = settings.folderScopeOnlyList,
                         entry = FolderScopeOnly(
                             bookshelfId = bookshelfId,
                             path = path,
@@ -300,8 +294,11 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
                         ),
                     )
                 } else {
-                    cleaned
+                    settings.folderScopeOnlyList.filterNot {
+                        it.bookshelfId == bookshelfId && isSameFolderPath(it.path, path)
+                    }
                 }
+                cleanupOrphanUseGlobalEntries(updated, bookshelfId)
             }
 
             FolderSortScope.FolderOnly -> {
@@ -348,28 +345,28 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
         settings: FolderDisplaySettings,
         bookshelfId: BookshelfId,
         path: String,
-    ): FolderDisplaySettings {
+    ): FolderSortSettingsService.UpdateResult {
         val isCurrentlyScoped = isFolderScopeOnly(settings, bookshelfId, path)
         val targetScope = if (isCurrentlyScoped) {
             FolderSortScope.Global
         } else {
             FolderSortScope.FolderOnly
         }
-        return updateSortScope(settings, bookshelfId, path, targetScope).settings
+        return updateSortScope(settings, bookshelfId, path, targetScope)
     }
 
     override fun toggleIncludeSubfolders(
         settings: FolderDisplaySettings,
         bookshelfId: BookshelfId,
         path: String,
-    ): FolderDisplaySettings {
+    ): FolderSortSettingsService.UpdateResult {
         val isCurrentlySubfolders = isIncludeSubfolders(settings, bookshelfId, path)
         val targetScope = if (isCurrentlySubfolders) {
             FolderSortScope.FolderOnly
         } else {
             FolderSortScope.Subfolders
         }
-        return updateSortScope(settings, bookshelfId, path, targetScope).settings
+        return updateSortScope(settings, bookshelfId, path, targetScope)
     }
 
     private fun upsertScopeEntry(

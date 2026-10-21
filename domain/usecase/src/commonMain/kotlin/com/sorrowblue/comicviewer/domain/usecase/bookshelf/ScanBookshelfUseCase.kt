@@ -20,7 +20,7 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 
 abstract class ScanBookshelfUseCase :
-    OneShotUseCase<ScanBookshelfUseCase.Request, List<File>, ScanBookshelfUseCase.Error>() {
+    OneShotUseCase<ScanBookshelfUseCase.Request, Unit, ScanBookshelfUseCase.Error>() {
 
     data class Request(
         val bookshelfId: BookshelfId,
@@ -42,7 +42,7 @@ internal class ScanBookshelfUseCaseImpl(
     private val fileHierarchyScanService: FileHierarchyScanService,
 ) : ScanBookshelfUseCase() {
 
-    override suspend fun run(request: Request): Resource<List<File>, Error> {
+    override suspend fun run(request: Request): Resource<Unit, Error> {
         val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
         if (bookshelf != null) {
             val rootFolder = fileRepository.root(request.bookshelfId)
@@ -55,7 +55,6 @@ internal class ScanBookshelfUseCaseImpl(
                 val client = remoteStorageClientFactory.create(bookshelf)
                 fileHierarchyScanService.scanHierarchy(
                     root = rootFolder,
-                    resolveImageFolder = resolveImageFolder,
                     supportExtensions = supportExtension,
                     listFiles = { file, filter ->
                         client.listFiles(file, resolveImageFolder, filter)
@@ -69,6 +68,6 @@ internal class ScanBookshelfUseCaseImpl(
                 )
             }
         }
-        return Resource.Success(emptyList())
+        return Resource.Success(Unit)
     }
 }

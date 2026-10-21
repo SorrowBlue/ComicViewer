@@ -37,15 +37,18 @@ data class SmartCollection private constructor(
             name: String,
             bookshelfId: BookshelfId?,
             searchCondition: SearchCondition,
-        ) = SmartCollection(
-            id = CollectionId(),
-            name = name,
-            count = 0,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-            bookshelfId = bookshelfId,
-            searchCondition = searchCondition,
-        )
+        ): SmartCollection {
+            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            return SmartCollection(
+                id = CollectionId(),
+                name = name,
+                count = 0,
+                createdAt = now,
+                updatedAt = now,
+                bookshelfId = bookshelfId,
+                searchCondition = searchCondition,
+            )
+        }
 
         @InternalDataApi
         operator fun invoke(

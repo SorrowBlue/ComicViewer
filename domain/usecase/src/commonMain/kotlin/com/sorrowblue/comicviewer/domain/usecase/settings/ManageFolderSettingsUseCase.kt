@@ -22,6 +22,6 @@ internal class ManageFolderSettingsUseCaseImpl(
     override val settings: Flow<FolderSettings> = settingsRepository.folderSettings
 
     override suspend fun edit(action: (FolderSettings) -> FolderSettings) {
-        settingsRepository.updateFolderSettings(action::invoke)
+        settingsRepository.updateFolderSettings(action)
     }
 }

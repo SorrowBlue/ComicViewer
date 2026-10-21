@@ -12,6 +12,6 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 data class Settings(
     @ProtoNumber(1) val doneTutorial: Boolean = false,
-    @ProtoNumber(2) val useAuth: Boolean = false,
-    @ProtoNumber(3) val restoreOnLaunch: Boolean = false,
+    // @ProtoNumber(2) (useAuth) and @ProtoNumber(3) (restoreOnLaunch) are reserved/retired.
+    // Use @ProtoNumber(4) or higher when adding new properties.
 )

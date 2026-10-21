@@ -18,9 +18,7 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.runBlocking
 
 fun interface PagingFolderBookThumbnailsUseCase :
     PagingUseCase<PagingFolderBookThumbnailsUseCase.Request, BookThumbnail> {
@@ -41,20 +39,20 @@ internal class PagingFolderBookThumbnailsUseCaseImpl(
             if (bookshelf != null) {
                 val file = fileRepository.findBy(request.bookshelfId, request.path)
                 if (file is IFolder) {
-                    fileRepository.pagingSourceBookThumbnail(
-                        request.pagingConfig,
-                        bookshelf,
-                        file,
-                    ) {
-                        val settings =
-                            runBlocking { settingsRepository.folderDisplaySettings.first() }
-                        SearchCondition(
-                            "",
-                            SearchCondition.Range.InFolder(file.path),
-                            SearchCondition.Period.None,
-                            settings.sortType,
-                            settings.showHiddenFiles,
-                        )
+                    settingsRepository.folderDisplaySettings.flatMapLatest { settings ->
+                        fileRepository.pagingSourceBookThumbnail(
+                            request.pagingConfig,
+                            bookshelf,
+                            file,
+                        ) {
+                            SearchCondition(
+                                "",
+                                SearchCondition.Range.InFolder(file.path),
+                                SearchCondition.Period.None,
+                                settings.currentSortType(file.bookshelfId, file.path),
+                                settings.showHiddenFiles,
+                            )
+                        }
                     }
                 } else {
                     emptyFlow()

@@ -579,7 +579,11 @@ class FolderSortSettingsServiceTest {
         val initialSettings = FolderDisplaySettings(sortType = SortType.Date(true))
 
         // Add with "/manga/chapter1"
-        val added = service.toggleFolderScopeOnly(initialSettings, bookshelfId, "/manga/chapter1")
+        val added = service.toggleFolderScopeOnly(
+            initialSettings,
+            bookshelfId,
+            "/manga/chapter1"
+        ).settings
         assertEquals(1, added.folderScopeOnlyList.size)
         assertTrue(service.isFolderScopeOnly(added, bookshelfId, "/manga/chapter1/"))
 
@@ -588,7 +592,7 @@ class FolderSortSettingsServiceTest {
             added,
             bookshelfId,
             "/manga/chapter1/",
-        )
+        ).settings
         assertEquals(1, withSubfolders.folderScopeOnlyList.size)
         assertTrue(service.isIncludeSubfolders(withSubfolders, bookshelfId, "/manga/chapter1"))
 
@@ -597,7 +601,7 @@ class FolderSortSettingsServiceTest {
             withSubfolders,
             bookshelfId,
             "/manga/chapter1/",
-        )
+        ).settings
         assertTrue(removed.folderScopeOnlyList.isEmpty())
     }
 
@@ -619,7 +623,11 @@ class FolderSortSettingsServiceTest {
         assertTrue(service.isFolderScopeOnly(initialSettings, bookshelfId, "/manga/sub"))
 
         // Toggling folderScopeOnly on /manga/sub turns scope OFF -> Global
-        val toggledOff = service.toggleFolderScopeOnly(initialSettings, bookshelfId, "/manga/sub")
+        val toggledOff = service.toggleFolderScopeOnly(
+            initialSettings,
+            bookshelfId,
+            "/manga/sub"
+        ).settings
         assertFalse(service.isFolderScopeOnly(toggledOff, bookshelfId, "/manga/sub"))
         assertEquals(
             FolderSortScope.Global,
@@ -631,7 +639,11 @@ class FolderSortSettingsServiceTest {
         )
 
         // Toggling folderScopeOnly again turns scope ON -> FolderOnly
-        val toggledOn = service.toggleFolderScopeOnly(toggledOff, bookshelfId, "/manga/sub")
+        val toggledOn = service.toggleFolderScopeOnly(
+            toggledOff,
+            bookshelfId,
+            "/manga/sub"
+        ).settings
         assertTrue(service.isFolderScopeOnly(toggledOn, bookshelfId, "/manga/sub"))
         assertEquals(
             FolderSortScope.FolderOnly,

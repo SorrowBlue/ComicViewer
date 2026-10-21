@@ -34,15 +34,13 @@ internal class GetNavigationHistoryUseCaseImpl(
 
     override fun run(request: Unit): Flow<Resource<NavigationHistory, Error>> {
         return fileRepository.lastHistory().map { file ->
-            if (file != null) {
-                val bookshelf = bookshelfRepository.flow(file.bookshelfId).first()
+            val book = file as? Book
+            if (book != null) {
+                val bookshelf = bookshelfRepository.flow(book.bookshelfId).first()
                 if (bookshelf != null) {
-                    val book = fileRepository.findBy(file.bookshelfId, file.path) as? Book
-                    if (book != null) {
-                        return@map Resource.Success(
-                            NavigationHistory(getFolderList(bookshelf, book.parent), book),
-                        )
-                    }
+                    return@map Resource.Success(
+                        NavigationHistory(getFolderList(bookshelf, book.parent), book),
+                    )
                 }
             }
             return@map Resource.Error(Error.System)
