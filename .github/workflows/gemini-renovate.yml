@@ -53,6 +53,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
           EVENT_NAME: ${{ github.event_name }}
           PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+          GCP_PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT || vars.GOOGLE_CLOUD_PROJECT }}
+          GCP_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
         run: |
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             gh pr checkout "$PR_NUMBER"
@@ -63,6 +65,11 @@ jobs:
             echo "Latest commit was authored by github-actions[bot]. Skipping to prevent loop."
             echo "should-run=false" >> "$GITHUB_OUTPUT"
             exit 0
+          fi
+
+          if [ -z "$GCP_PROJECT_ID" ] && [[ "$GCP_SERVICE_ACCOUNT" == *@*.iam.gserviceaccount.com ]]; then
+            GCP_PROJECT_ID="${GCP_SERVICE_ACCOUNT#*@}"
+            GCP_PROJECT_ID="${GCP_PROJECT_ID%.iam.gserviceaccount.com}"
           fi
 
           BASE_REF=$(gh pr view "$PR_NUMBER" --json baseRefName --jq '.baseRefName')
@@ -80,6 +87,7 @@ jobs:
             echo "base-ref=${BASE_REF}"
             echo "head-ref=${HEAD_REF}"
             echo "pr-title=${PR_TITLE}"
+            echo "gcp-project-id=${GCP_PROJECT_ID}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Setup JDK and Gradle
@@ -99,7 +107,11 @@ jobs:
           HEAD_REF: ${{ steps.prepare.outputs.head-ref }}
           PR_TITLE: ${{ steps.prepare.outputs.pr-title }}
         with:
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          use_vertex_ai: 'true'
+          gcp_project_id: ${{ steps.prepare.outputs.gcp-project-id }}
+          gcp_location: ${{ vars.GOOGLE_CLOUD_LOCATION || 'global' }}
+          gcp_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          gcp_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
           github_pr_number: ${{ steps.prepare.outputs.pr-number }}
           settings: |-
             {
