@@ -119,7 +119,6 @@ private fun FolderAppBarPreview() {
                 title = "Folder Name",
                 sortType = SortType.Name(true),
                 sortScope = FolderSortScope.FolderOnly,
-                folderScopeOnly = true,
             ),
             onBackClick = {},
             onSearchClick = {},

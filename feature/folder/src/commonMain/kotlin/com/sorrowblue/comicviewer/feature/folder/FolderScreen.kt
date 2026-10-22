@@ -108,7 +108,6 @@ private fun FolderScreenPreview() = PreviewTheme {
             folderAppBarUiState = FolderAppBarUiState(
                 title = "Folder Name",
                 sortScope = FolderSortScope.Global,
-                folderScopeOnly = false,
             ),
             folderListUiState = FolderListUiState(),
         ),

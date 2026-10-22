@@ -51,6 +51,7 @@ internal class CollectionFileRepositoryImpl(
     override suspend fun add(file: CollectionFile) {
         withContext(dispatcher) {
             collectionFileDao.insert(CollectionFileEntity.fromModel(file))
+            dao.updateUpdatedAt(file.id)
         }
     }
 

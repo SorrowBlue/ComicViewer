@@ -12,7 +12,6 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.service.settings.FolderSortSettingsService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -71,28 +70,21 @@ interface BookNavigationService {
         /**
          * [BookNavigationService] のインスタンスを生成して返します。
          *
-         * @param folderSortSettingsService フォルダ個別ソート設定サービス
          * @return [BookNavigationService] のインスタンス
          */
-        operator fun invoke(
-            folderSortSettingsService: FolderSortSettingsService = FolderSortSettingsService(),
-        ): BookNavigationService = BookNavigationServiceImpl(
-            folderSortSettingsService = folderSortSettingsService,
-        )
+        operator fun invoke(): BookNavigationService = BookNavigationServiceImpl()
     }
 }
 
 @ContributesBinding(AppScope::class)
 @Inject
-class BookNavigationServiceImpl(private val folderSortSettingsService: FolderSortSettingsService) :
-    BookNavigationService {
+class BookNavigationServiceImpl : BookNavigationService {
 
     override fun resolveFolderSortType(
         settings: FolderDisplaySettings,
         bookshelfId: BookshelfId,
         parentPath: String,
-    ): SortType = folderSortSettingsService.resolveSortType(
-        settings = settings,
+    ): SortType = settings.currentSortType(
         bookshelfId = bookshelfId,
         path = parentPath,
     )

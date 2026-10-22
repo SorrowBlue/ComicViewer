@@ -114,26 +114,6 @@ data class FolderDisplaySettings(
             FolderSortScope.Global
         }
     }
-
-    /**
-     * Checks whether the specified folder has a folder-specific sort setting.
-     *
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if a folder-specific setting exists, false otherwise.
-     */
-    fun isFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean =
-        currentSortScope(bookshelfId, path) != FolderSortScope.Global
-
-    /**
-     * Checks whether the specified folder has subfolder sort inheritance enabled.
-     *
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if subfolder sort inheritance is enabled, false otherwise.
-     */
-    fun isIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean =
-        currentSortScope(bookshelfId, path) == FolderSortScope.Subfolders
 }
 
 /**

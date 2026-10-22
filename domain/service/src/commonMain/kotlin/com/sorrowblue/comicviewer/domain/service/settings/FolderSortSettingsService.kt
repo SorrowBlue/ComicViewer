@@ -16,51 +16,9 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 /**
- * Domain service responsible for resolving and updating folder sort settings and scopes.
+ * Domain service responsible for updating folder sort settings and scopes.
  */
 interface FolderSortSettingsService {
-
-    /**
-     * Checks whether the specified folder has a folder-specific sort setting.
-     *
-     * @param settings The current folder display settings.
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if a folder-specific setting exists, false otherwise.
-     */
-    fun isFolderScopeOnly(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): Boolean
-
-    /**
-     * Resolves the effective [FolderSortScope] for the specified folder.
-     *
-     * @param settings The current folder display settings.
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return The effective [FolderSortScope] applied to the folder.
-     */
-    fun resolveSortScope(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): FolderSortScope
-
-    /**
-     * Resolves the effective [SortType] for the specified folder.
-     *
-     * @param settings The current folder display settings.
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return The effective [SortType] applied to the folder.
-     */
-    fun resolveSortType(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): SortType
 
     /**
      * Updates the sort type for the specified folder according to its active scope.
@@ -97,59 +55,12 @@ interface FolderSortSettingsService {
     ): UpdateResult
 
     /**
-     * Checks whether the specified folder has subfolder sort inheritance enabled.
-     *
-     * @param settings The current folder display settings.
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if subfolder sort inheritance is enabled, false otherwise.
-     */
-    fun isIncludeSubfolders(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): Boolean
-
-    /**
-     * Toggles the folder-specific sort setting for the specified folder.
-     *
-     * @param settings The current folder display settings.
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return The [UpdateResult] containing the updated settings and change flags.
-     */
-    fun toggleFolderScopeOnly(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): UpdateResult
-
-    /**
-     * Toggles the subfolder sort inheritance flag for the specified folder.
-     *
-     * @param settings The current folder display settings.
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return The [UpdateResult] containing the updated settings and change flags.
-     */
-    fun toggleIncludeSubfolders(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): UpdateResult
-
-    /**
      * Represents the result of a sort setting or scope update.
      *
      * @property settings The updated folder display settings.
-     * @property isChanged True if any setting value was modified.
      * @property isSortTypeChanged True if the effective sort type for the target folder changed.
      */
-    data class UpdateResult(
-        val settings: FolderDisplaySettings,
-        val isChanged: Boolean,
-        val isSortTypeChanged: Boolean = isChanged,
-    )
+    data class UpdateResult(val settings: FolderDisplaySettings, val isSortTypeChanged: Boolean)
 
     companion object {
         /**
@@ -163,38 +74,14 @@ interface FolderSortSettingsService {
 @Inject
 class FolderSortSettingsServiceImpl : FolderSortSettingsService {
 
-    override fun isFolderScopeOnly(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): Boolean = settings.isFolderScopeOnly(bookshelfId, path)
-
-    override fun isIncludeSubfolders(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): Boolean = settings.isIncludeSubfolders(bookshelfId, path)
-
-    override fun resolveSortScope(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): FolderSortScope = settings.currentSortScope(bookshelfId, path)
-
-    override fun resolveSortType(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): SortType = settings.currentSortType(bookshelfId, path)
-
     override fun updateSortType(
         settings: FolderDisplaySettings,
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): FolderSortSettingsService.UpdateResult {
-        val previousSortType = resolveSortType(settings, bookshelfId, path)
-        val currentScope = resolveSortScope(settings, bookshelfId, path)
+        val previousSortType = settings.currentSortType(bookshelfId, path)
+        val currentScope = settings.currentSortScope(bookshelfId, path)
         val newSettings = when (currentScope) {
             FolderSortScope.Global -> {
                 val updatedList = settings.folderScopeOnlyList.map {
@@ -259,10 +146,9 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
                 }
             }
         }
-        val newSortType = resolveSortType(newSettings, bookshelfId, path)
+        val newSortType = newSettings.currentSortType(bookshelfId, path)
         return FolderSortSettingsService.UpdateResult(
             settings = newSettings,
-            isChanged = newSettings != settings,
             isSortTypeChanged = newSortType != previousSortType,
         )
     }
@@ -273,7 +159,7 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
         path: String,
         scope: FolderSortScope,
     ): FolderSortSettingsService.UpdateResult {
-        val previousSortType = resolveSortType(settings, bookshelfId, path)
+        val previousSortType = settings.currentSortType(bookshelfId, path)
         val newList = when (scope) {
             FolderSortScope.Global -> {
                 val hasSubfoldersAncestor = settings.folderScopeOnlyList.any {
@@ -333,40 +219,11 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
             }
         }
         val newSettings = settings.copy(folderScopeOnlyList = newList)
-        val newSortType = resolveSortType(newSettings, bookshelfId, path)
+        val newSortType = newSettings.currentSortType(bookshelfId, path)
         return FolderSortSettingsService.UpdateResult(
             settings = newSettings,
-            isChanged = newSettings != settings,
             isSortTypeChanged = newSortType != previousSortType,
         )
-    }
-
-    override fun toggleFolderScopeOnly(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): FolderSortSettingsService.UpdateResult {
-        val isCurrentlyScoped = isFolderScopeOnly(settings, bookshelfId, path)
-        val targetScope = if (isCurrentlyScoped) {
-            FolderSortScope.Global
-        } else {
-            FolderSortScope.FolderOnly
-        }
-        return updateSortScope(settings, bookshelfId, path, targetScope)
-    }
-
-    override fun toggleIncludeSubfolders(
-        settings: FolderDisplaySettings,
-        bookshelfId: BookshelfId,
-        path: String,
-    ): FolderSortSettingsService.UpdateResult {
-        val isCurrentlySubfolders = isIncludeSubfolders(settings, bookshelfId, path)
-        val targetScope = if (isCurrentlySubfolders) {
-            FolderSortScope.FolderOnly
-        } else {
-            FolderSortScope.Subfolders
-        }
-        return updateSortScope(settings, bookshelfId, path, targetScope)
     }
 
     private fun upsertScopeEntry(

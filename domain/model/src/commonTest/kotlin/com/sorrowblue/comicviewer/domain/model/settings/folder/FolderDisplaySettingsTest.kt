@@ -118,8 +118,6 @@ class FolderDisplaySettingsTest {
                 folderScopeOnlyList = emptyList(),
             )
             assertEquals(FolderSortScope.Global, settings.currentSortScope(bookshelf1, "/manga"))
-            assertFalse(settings.isFolderScopeOnly(bookshelf1, "/manga"))
-            assertFalse(settings.isIncludeSubfolders(bookshelf1, "/manga"))
             assertEquals(globalSort, settings.currentSortType(bookshelf1, "/manga"))
             assertEquals(globalSort, settings.currentSortType(bookshelf1, "/manga/sub"))
         }
@@ -149,8 +147,6 @@ class FolderDisplaySettingsTest {
                     FolderSortScope.FolderOnly,
                     settings.currentSortScope(bookshelf1, "/manga/"),
                 )
-                assertTrue(settings.isFolderScopeOnly(bookshelf1, "/manga"))
-                assertFalse(settings.isIncludeSubfolders(bookshelf1, "/manga"))
                 assertEquals(folderSort, settings.currentSortType(bookshelf1, "/manga"))
                 assertEquals(folderSort, settings.currentSortType(bookshelf1, "/manga/"))
 
@@ -159,8 +155,6 @@ class FolderDisplaySettingsTest {
                     FolderSortScope.Global,
                     settings.currentSortScope(bookshelf1, "/manga/sub"),
                 )
-                assertFalse(settings.isFolderScopeOnly(bookshelf1, "/manga/sub"))
-                assertFalse(settings.isIncludeSubfolders(bookshelf1, "/manga/sub"))
                 assertEquals(globalSort, settings.currentSortType(bookshelf1, "/manga/sub"))
 
                 // Sibling and prefix-similar folders use global
@@ -192,8 +186,6 @@ class FolderDisplaySettingsTest {
                         settings.currentSortScope(bookshelf1, targetPath),
                         "Expected Subfolders scope for $targetPath",
                     )
-                    assertTrue(settings.isFolderScopeOnly(bookshelf1, targetPath))
-                    assertTrue(settings.isIncludeSubfolders(bookshelf1, targetPath))
                     assertEquals(
                         subfolderSort,
                         settings.currentSortType(bookshelf1, targetPath),
@@ -207,8 +199,6 @@ class FolderDisplaySettingsTest {
                         FolderSortScope.Global,
                         settings.currentSortScope(bookshelf1, outsidePath),
                     )
-                    assertFalse(settings.isFolderScopeOnly(bookshelf1, outsidePath))
-                    assertFalse(settings.isIncludeSubfolders(bookshelf1, outsidePath))
                     assertEquals(globalSort, settings.currentSortType(bookshelf1, outsidePath))
                 }
             }
@@ -274,8 +264,6 @@ class FolderDisplaySettingsTest {
 
         // Child /a/b has FolderOnly
         assertEquals(FolderSortScope.FolderOnly, settings.currentSortScope(bookshelf1, "/a/b"))
-        assertTrue(settings.isFolderScopeOnly(bookshelf1, "/a/b"))
-        assertFalse(settings.isIncludeSubfolders(bookshelf1, "/a/b"))
         assertEquals(SortType.Size(true), settings.currentSortType(bookshelf1, "/a/b"))
 
         // Grandchild /a/b/c inherits from /a because /a/b has includeSubfolders = false
@@ -310,8 +298,6 @@ class FolderDisplaySettingsTest {
 
         // Child /a/b opted back into Global
         assertEquals(FolderSortScope.Global, settings.currentSortScope(bookshelf1, "/a/b"))
-        assertFalse(settings.isFolderScopeOnly(bookshelf1, "/a/b"))
-        assertFalse(settings.isIncludeSubfolders(bookshelf1, "/a/b"))
         assertEquals(SortType.Name(false), settings.currentSortType(bookshelf1, "/a/b"))
 
         // Grandchild /a/b/c still inherits from /a

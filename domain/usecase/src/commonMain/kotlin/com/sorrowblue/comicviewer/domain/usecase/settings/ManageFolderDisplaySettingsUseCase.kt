@@ -43,24 +43,6 @@ interface ManageFolderDisplaySettingsUseCase : ManageSettingsUseCase<FolderDispl
         path: String,
         scope: FolderSortScope,
     ): Boolean
-
-    /**
-     * Toggles the folder-specific sort setting for the specified folder.
-     *
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if the effective sort type for the folder changed, false otherwise.
-     */
-    suspend fun toggleFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean
-
-    /**
-     * Toggles the subfolder sort inheritance flag for the specified folder.
-     *
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if the effective sort type for the folder changed, false otherwise.
-     */
-    suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean
 }
 
 @Inject
@@ -101,24 +83,6 @@ internal class ManageFolderDisplaySettingsUseCaseImpl(
             scope = scope,
         )
     }
-
-    override suspend fun toggleFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean =
-        updateWithResult { current ->
-            folderSortSettingsService.toggleFolderScopeOnly(
-                settings = current,
-                bookshelfId = bookshelfId,
-                path = path,
-            )
-        }
-
-    override suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean =
-        updateWithResult { current ->
-            folderSortSettingsService.toggleIncludeSubfolders(
-                settings = current,
-                bookshelfId = bookshelfId,
-                path = path,
-            )
-        }
 
     private suspend fun updateWithResult(
         block: (FolderDisplaySettings) -> FolderSortSettingsService.UpdateResult,

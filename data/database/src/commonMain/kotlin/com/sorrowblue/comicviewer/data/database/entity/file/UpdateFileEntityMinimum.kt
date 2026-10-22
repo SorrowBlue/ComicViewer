@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.data.database.entity.file
 
 import androidx.room3.ColumnInfo
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.BookFolder
 import com.sorrowblue.comicviewer.domain.model.file.File
@@ -19,6 +20,7 @@ internal class UpdateFileEntityMinimum(
     @ColumnInfo(name = "hidden") val isHidden: Boolean,
     @ColumnInfo(name = "file_type") val fileEntityType: FileEntity.Type,
     @ColumnInfo(name = "file_type_order") val fileTypeOrder: Int = fileEntityType.order,
+    @ColumnInfo(name = "total_page_count") val totalPageCount: Int = 0,
 ) {
     companion object {
         fun fromModel(model: File) = UpdateFileEntityMinimum(
@@ -32,6 +34,7 @@ internal class UpdateFileEntityMinimum(
                 is BookFolder -> FileEntity.Type.IMAGE_FOLDER
                 is Folder -> FileEntity.Type.FOLDER
             },
+            totalPageCount = (model as? Book)?.totalPageCount ?: 0,
         )
     }
 }

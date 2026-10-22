@@ -81,13 +81,16 @@ internal class RegisterBookshelfUseCaseImpl(
                             bookshelfRepository.updateOrCreate(
                                 request.bookshelf,
                             ) { bookshelf ->
-                                val folder =
-                                    remoteStorageClientFactory
-                                        .create(bookshelf)
-                                        .file(request.path) as IFolder
-                                val folderModel = when (folder) {
-                                    is BookFolder -> folder.copy(parent = "")
-                                    is Folder -> folder.copy(parent = "")
+                                val folderModel = when (file) {
+                                    is BookFolder -> file.copy(
+                                        bookshelfId = bookshelf.id,
+                                        parent = "",
+                                    )
+
+                                    is Folder -> file.copy(
+                                        bookshelfId = bookshelf.id,
+                                        parent = "",
+                                    )
                                 }
                                 fileRepository.addUpdate(folderModel)
                             }

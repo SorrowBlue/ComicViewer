@@ -20,11 +20,13 @@ data class Folder private constructor(
     override val count: Int,
 ) : IFolder {
     fun copy(
+        bookshelfId: BookshelfId = this.bookshelfId,
         parent: String = this.parent,
         sortIndex: Int = this.sortIndex,
         size: Long = this.size,
     ) = copy(
         bookshelfId = bookshelfId,
+        name = name,
         parent = parent,
         size = size,
         sortIndex = sortIndex,
