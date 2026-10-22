@@ -55,6 +55,8 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
           GCP_PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT || vars.GOOGLE_CLOUD_PROJECT }}
           GCP_SERVICE_ACCOUNT: ${{ secrets.GEMINI_SERVICE_ACCOUNT }}
+          FORCE_FREE_TIER: ${{ vars.GEMINI_USE_FREE_TIER }}
+          MAX_MONTHLY_VERTEX_RUNS: ${{ vars.GEMINI_MAX_MONTHLY_VERTEX_RUNS || '80' }}
         run: |
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             gh pr checkout "$PR_NUMBER"
@@ -72,6 +74,18 @@ jobs:
             GCP_PROJECT_ID="${GCP_PROJECT_ID%.iam.gserviceaccount.com}"
           fi
 
+          CURRENT_MONTH=$(date -u +"%Y-%m")
+          MONTHLY_RUNS=$(gh run list --workflow=gemini-renovate.yml --created ">=${CURRENT_MONTH}-01" --status success --limit 200 --json databaseId --jq 'length' || echo "0")
+          echo "Monthly successful runs in ${CURRENT_MONTH}: ${MONTHLY_RUNS} / ${MAX_MONTHLY_VERTEX_RUNS}"
+
+          USE_VERTEX="true"
+          if [ "$FORCE_FREE_TIER" = "true" ] || [ -z "$GCP_PROJECT_ID" ]; then
+            USE_VERTEX="false"
+          elif [ "$MONTHLY_RUNS" -ge "$MAX_MONTHLY_VERTEX_RUNS" ]; then
+            echo "Monthly Vertex AI run cap (${MAX_MONTHLY_VERTEX_RUNS}) reached. Switching to AI Studio Free Tier to prevent exceeding monthly benefit credits."
+            USE_VERTEX="false"
+          fi
+
           BASE_REF=$(gh pr view "$PR_NUMBER" --json baseRefName --jq '.baseRefName')
           HEAD_REF=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName')
           PR_TITLE=$(gh pr view "$PR_NUMBER" --json title --jq '.title')
@@ -83,6 +97,7 @@ jobs:
 
           {
             echo "should-run=true"
+            echo "use-vertex=${USE_VERTEX}"
             echo "pr-number=${PR_NUMBER}"
             echo "base-ref=${BASE_REF}"
             echo "head-ref=${HEAD_REF}"
@@ -92,7 +107,7 @@ jobs:
             cat << 'EOF'
           {
             "model": {
-              "maxSessionTurns": 40
+              "maxSessionTurns": 30
             },
             "telemetry": {
               "enabled": false
@@ -154,8 +169,7 @@ jobs:
         id: gemini_vertex
         if: >-
           steps.prepare.outputs.should-run == 'true' &&
-          vars.GEMINI_USE_FREE_TIER != 'true' &&
-          steps.prepare.outputs.gcp-project-id != ''
+          steps.prepare.outputs.use-vertex == 'true'
         continue-on-error: true
         uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
         env:
@@ -179,7 +193,7 @@ jobs:
         id: gemini_free
         if: >-
           steps.prepare.outputs.should-run == 'true' &&
-          (vars.GEMINI_USE_FREE_TIER == 'true' || steps.gemini_vertex.outcome != 'success')
+          (steps.prepare.outputs.use-vertex != 'true' || steps.gemini_vertex.outcome != 'success')
         continue-on-error: true
         uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
         env:
