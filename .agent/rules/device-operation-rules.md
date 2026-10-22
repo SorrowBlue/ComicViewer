@@ -1,6 +1,5 @@
 ---
 trigger: always_on
-globs: ["**/*"]
 ---
 
 # Device Operation Rules (端末自動操作・キャプチャの禁止規約)

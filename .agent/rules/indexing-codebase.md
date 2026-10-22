@@ -1,6 +1,5 @@
 ---
 trigger: always_on
-globs: ["**/*"]
 ---
 
 # Project Structure Awareness (プロジェクト構造認識)

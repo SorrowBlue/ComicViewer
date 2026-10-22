@@ -1,6 +1,5 @@
 ---
 trigger: always_on
-globs: ["**/*"]
 ---
 
 # Git Commit Rules (コミットメッセージ規約)

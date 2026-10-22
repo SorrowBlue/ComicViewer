@@ -1,6 +1,5 @@
 ---
 trigger: always_on
-globs: ["**/*"]
 ---
 
 # Senior Engineer Conduct (厳格な行動規範)
