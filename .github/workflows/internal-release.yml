@@ -2,6 +2,16 @@ name: Internal Release
 
 on:
   workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Target platform to publish'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+          - all
+          - android
+          - windows
   workflow_run:
     workflows: ["Lint, Test, and Build"]
     types:
@@ -34,7 +44,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "should-release=true" >> $GITHUB_OUTPUT
-            echo "Decision: Triggered manually via workflow_dispatch. Running Internal Release."
+            echo "Decision: Triggered manually via workflow_dispatch (platform: ${{ inputs.platform }}). Running Internal Release."
             exit 0
           fi
 
@@ -59,7 +69,9 @@ jobs:
 
   android-publish:
     needs: check-commit
-    if: needs.check-commit.outputs.should-release == 'true'
+    if: >-
+      needs.check-commit.outputs.should-release == 'true' &&
+      (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'android')
     uses: ./.github/workflows/android-publish.yml
     with:
       ref: ${{ github.event.workflow_run.head_sha || '' }}
@@ -73,7 +85,9 @@ jobs:
 
   windows-publish:
     needs: check-commit
-    if: needs.check-commit.outputs.should-release == 'true'
+    if: >-
+      needs.check-commit.outputs.should-release == 'true' &&
+      (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'windows')
     uses: ./.github/workflows/windows-publish.yml
     with:
       ref: ${{ github.event.workflow_run.head_sha || '' }}
