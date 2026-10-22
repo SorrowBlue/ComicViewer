@@ -6,10 +6,6 @@ package com.sorrowblue.comicviewer.data.database.entity.file
 
 import androidx.room3.ColumnInfo
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.file.BookFile
-import com.sorrowblue.comicviewer.domain.model.file.BookFolder
-import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.Folder
 
 internal data class UpdateFileEntityMinimumWithSortIndex(
     val path: String,
@@ -24,22 +20,6 @@ internal data class UpdateFileEntityMinimumWithSortIndex(
     @ColumnInfo(name = "sort_index") val sortIndex: Int,
 ) {
     companion object {
-        fun fromModel(model: File) = UpdateFileEntityMinimumWithSortIndex(
-            path = model.path,
-            bookshelfId = model.bookshelfId,
-            name = model.name,
-            parent = model.parent,
-            size = model.size,
-            lastModified = model.lastModifier,
-            isHidden = model.isHidden,
-            fileEntityType = when (model) {
-                is BookFile -> FileEntity.Type.FILE
-                is BookFolder -> FileEntity.Type.IMAGE_FOLDER
-                is Folder -> FileEntity.Type.FOLDER
-            },
-            sortIndex = model.sortIndex,
-        )
-
         fun fromFileEntity(entity: FileEntity) = UpdateFileEntityMinimumWithSortIndex(
             path = entity.path,
             bookshelfId = BookshelfId(entity.bookshelfId),
@@ -65,17 +45,6 @@ internal data class UpdateFileEntityMinimumWithSortIndexWithoutFileType(
     @ColumnInfo(name = "sort_index") val sortIndex: Int,
 ) {
     companion object {
-        fun fromModel(model: File) = UpdateFileEntityMinimumWithSortIndexWithoutFileType(
-            path = model.path,
-            bookshelfId = model.bookshelfId,
-            name = model.name,
-            parent = model.parent,
-            size = model.size,
-            lastModified = model.lastModifier,
-            isHidden = model.isHidden,
-            sortIndex = model.sortIndex,
-        )
-
         fun fromFileEntity(entity: FileEntity) =
             UpdateFileEntityMinimumWithSortIndexWithoutFileType(
                 path = entity.path,

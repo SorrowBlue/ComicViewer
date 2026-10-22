@@ -19,7 +19,7 @@ import io.github.vinceglb.filekit.resolve
 import logcat.logcat
 
 @Inject
-internal actual class DatabaseHelper actual constructor(private val context: PlatformContext) {
+internal actual class DatabaseHelper actual constructor(context: PlatformContext) {
     actual fun getDatabaseBuilder(): RoomDatabase.Builder<ComicViewerDatabase> {
         val dbPath = FileKit.databasesDir.also {
             it.createDirectories()

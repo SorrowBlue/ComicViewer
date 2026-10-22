@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.usecase.bookshelf.FlowBookshelfListUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.CreateCollectionUseCase
+import com.sorrowblue.comicviewer.domain.usecase.invoke
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap

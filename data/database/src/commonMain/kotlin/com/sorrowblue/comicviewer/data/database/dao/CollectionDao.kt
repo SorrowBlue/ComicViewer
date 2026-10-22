@@ -97,6 +97,9 @@ internal interface CollectionDao {
     @Query("DELETE FROM collection WHERE id = :id")
     suspend fun delete(id: CollectionId): Int
 
+    @Query("UPDATE collection SET updated_at = CURRENT_TIMESTAMP WHERE id = :id")
+    suspend fun updateUpdatedAt(id: CollectionId): Int
+
     @Query(
         """
             SELECT
@@ -138,9 +141,6 @@ internal interface CollectionDao {
         """,
     )
     fun flow(id: CollectionId): Flow<CollectionEntityCount?>
-
-    @Query("SELECT * FROM collection")
-    fun flowAll(): Flow<List<CollectionEntity>>
 
     @Query(
         """

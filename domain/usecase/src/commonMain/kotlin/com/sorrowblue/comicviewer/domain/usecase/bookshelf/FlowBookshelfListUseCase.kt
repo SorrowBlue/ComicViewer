@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.map
 abstract class FlowBookshelfListUseCase :
     UseCase<Unit, List<Bookshelf>, FlowBookshelfListUseCase.Error>() {
 
-    operator fun invoke(): Flow<Resource<List<Bookshelf>, Error>> = invoke(Unit)
-
     sealed interface Error : Resource.AppError {
         data object System : Error
     }

@@ -85,8 +85,6 @@ internal class FolderViewModel(
                 title = title,
                 showSearch = showSearch,
                 sortScope = folderDisplaySettings.currentSortScope(bookshelfId, path),
-                folderScopeOnly = folderDisplaySettings.isFolderScopeOnly(bookshelfId, path),
-                includeSubfolders = folderDisplaySettings.isIncludeSubfolders(bookshelfId, path),
                 sortType = folderDisplaySettings.currentSortType(bookshelfId, path),
                 fileListDisplay = folderDisplaySettings.fileListDisplay,
                 showHiddenFiles = folderDisplaySettings.showHiddenFiles,
@@ -123,22 +121,6 @@ internal class FolderViewModel(
     fun onSortScopeClick(scope: FolderSortScope) {
         viewModelScope.launch {
             if (folderDisplaySettingsUseCase.updateSortScope(bookshelfId, path, scope)) {
-                events.tryEmit(FolderScreenUiEvent.Reload)
-            }
-        }
-    }
-
-    fun onFolderScopeOnlyClick() {
-        viewModelScope.launch {
-            if (folderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)) {
-                events.tryEmit(FolderScreenUiEvent.Reload)
-            }
-        }
-    }
-
-    fun onIncludeSubfoldersClick() {
-        viewModelScope.launch {
-            if (folderDisplaySettingsUseCase.toggleIncludeSubfolders(bookshelfId, path)) {
                 events.tryEmit(FolderScreenUiEvent.Reload)
             }
         }

@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 interface Initializer<T> {
     fun create(): T
 
-    fun dependencies(): List<KClass<out Initializer<*>>?>
+    fun dependencies(): List<KClass<out Initializer<*>>>
 
     companion object {
         fun initialize(list: List<Initializer<*>>) {

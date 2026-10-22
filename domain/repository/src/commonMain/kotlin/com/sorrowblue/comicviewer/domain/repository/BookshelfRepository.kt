@@ -18,8 +18,6 @@ interface BookshelfRepository {
         transaction: suspend (Bookshelf) -> Unit,
     ): Bookshelf?
 
-    suspend fun delete(bookshelfId: BookshelfId): Resource<Unit, Resource.SystemError>
-
     fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?>
 
     fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>>

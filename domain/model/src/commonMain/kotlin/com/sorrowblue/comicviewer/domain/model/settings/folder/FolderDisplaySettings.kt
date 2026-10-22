@@ -63,18 +63,26 @@ data class FolderDisplaySettings(
      *    set.
      */
     fun currentSortType(bookshelfId: BookshelfId, path: String): SortType {
+        val normPath = normalizeFolderPath(path)
         val targetList = folderScopeOnlyList.filter { it.bookshelfId == bookshelfId }
-        targetList.find { isSameFolderPath(it.path, path) }?.let {
+        targetList.find { normalizeFolderPath(it.path) == normPath }?.let {
             return if (it.useGlobal) sortType else it.sortType
         }
         return targetList
-            .filter {
-                !it.useGlobal &&
-                    it.includeSubfolders &&
-                    isSubfolderPath(parent = it.path, child = path)
+            .mapNotNull { entry ->
+                if (!entry.useGlobal && entry.includeSubfolders) {
+                    val normEntryPath = normalizeFolderPath(entry.path)
+                    if (isNormalizedSubfolderPath(parent = normEntryPath, child = normPath)) {
+                        normEntryPath.length to entry.sortType
+                    } else {
+                        null
+                    }
+                } else {
+                    null
+                }
             }
-            .maxByOrNull { normalizeFolderPath(it.path).length }
-            ?.sortType
+            .maxByOrNull { it.first }
+            ?.second
             ?: sortType
     }
 
@@ -86,8 +94,9 @@ data class FolderDisplaySettings(
      * @return The [FolderSortScope] currently applied to the folder.
      */
     fun currentSortScope(bookshelfId: BookshelfId, path: String): FolderSortScope {
+        val normPath = normalizeFolderPath(path)
         val targetList = folderScopeOnlyList.filter { it.bookshelfId == bookshelfId }
-        targetList.find { isSameFolderPath(it.path, path) }?.let {
+        targetList.find { normalizeFolderPath(it.path) == normPath }?.let {
             return when {
                 it.useGlobal -> FolderSortScope.Global
                 it.includeSubfolders -> FolderSortScope.Subfolders
@@ -97,7 +106,7 @@ data class FolderDisplaySettings(
         val inheritedFromAncestor = targetList.any {
             !it.useGlobal &&
                 it.includeSubfolders &&
-                isSubfolderPath(parent = it.path, child = path)
+                isNormalizedSubfolderPath(parent = normalizeFolderPath(it.path), child = normPath)
         }
         return if (inheritedFromAncestor) {
             FolderSortScope.Subfolders
@@ -105,26 +114,6 @@ data class FolderDisplaySettings(
             FolderSortScope.Global
         }
     }
-
-    /**
-     * Checks whether the specified folder has a folder-specific sort setting.
-     *
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if a folder-specific setting exists, false otherwise.
-     */
-    fun isFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean =
-        currentSortScope(bookshelfId, path) != FolderSortScope.Global
-
-    /**
-     * Checks whether the specified folder has subfolder sort inheritance enabled.
-     *
-     * @param bookshelfId The ID of the bookshelf.
-     * @param path The folder path.
-     * @return True if subfolder sort inheritance is enabled, false otherwise.
-     */
-    fun isIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean =
-        currentSortScope(bookshelfId, path) == FolderSortScope.Subfolders
 }
 
 /**
@@ -144,14 +133,17 @@ fun isSameFolderPath(path1: String, path2: String): Boolean =
  * @param child The candidate descendant folder path.
  * @return True if [child] is strictly inside [parent], false otherwise.
  */
-fun isSubfolderPath(parent: String, child: String): Boolean {
-    val normParent = normalizeFolderPath(parent)
-    val normChild = normalizeFolderPath(child)
-    if (normParent.isEmpty() || normChild.isEmpty() || normParent == normChild) return false
-    return if (normParent.endsWith("/")) {
-        normChild.startsWith(normParent)
+fun isSubfolderPath(parent: String, child: String): Boolean = isNormalizedSubfolderPath(
+    parent = normalizeFolderPath(parent),
+    child = normalizeFolderPath(child),
+)
+
+private fun isNormalizedSubfolderPath(parent: String, child: String): Boolean {
+    if (parent.isEmpty() || child.isEmpty() || parent == child) return false
+    return if (parent.endsWith("/")) {
+        child.startsWith(parent)
     } else {
-        normChild.startsWith("$normParent/")
+        child.startsWith("$parent/")
     }
 }
 

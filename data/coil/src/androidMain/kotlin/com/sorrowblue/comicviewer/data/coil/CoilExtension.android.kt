@@ -12,7 +12,7 @@ import kotlinx.io.Source
 import kotlinx.io.asInputStream
 import kotlinx.io.asOutputStream
 
-internal actual suspend fun resizeImage(
+internal actual fun resizeImage(
     source: Source,
     sink: Sink,
     imageFormat: ImageFormat,

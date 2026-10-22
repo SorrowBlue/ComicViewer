@@ -7,18 +7,14 @@ package com.sorrowblue.comicviewer.framework.ui.component.file
 import androidx.compose.animation.SharedTransitionScope.ResizeMode.Companion.scaleToBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.ProgressIndicatorDefaults
-import androidx.compose.material3.ProgressIndicatorDefaults.drawStopIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -72,9 +67,9 @@ fun ListFile(
     with(LocalSharedTransitionScope.current) {
         ListItem(
             leadingContent = {
+                val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                 if (showThumbnail) {
                     Box {
-                        val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                         FileThumbnailAsyncImage(
                             fileThumbnail = FileThumbnail.from(file),
                             contentScale = contentScale,
@@ -97,7 +92,6 @@ fun ListFile(
                         )
                     }
                 } else {
-                    val boundsTransform = ComicTheme.motionScheme.slowSpatialSpec<Rect>()
                     Box(
                         modifier = Modifier
                             .sharedBounds(
@@ -122,21 +116,7 @@ fun ListFile(
             },
             supportingContent = {
                 if (file is Book && 0 < file.lastPageRead) {
-                    val color = ProgressIndicatorDefaults.linearColor
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        progress = { file.lastPageRead.toFloat() / file.totalPageCount },
-                        strokeCap = StrokeCap.Round,
-                        gapSize = 0.dp,
-                        drawStopIndicator = {
-                            drawStopIndicator(
-                                drawScope = this,
-                                stopSize = 0.dp,
-                                color = color,
-                                strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
-                            )
-                        },
-                    )
+                    BookProgressIndicator(book = file, visible = true)
                 }
             },
             trailingContent = {

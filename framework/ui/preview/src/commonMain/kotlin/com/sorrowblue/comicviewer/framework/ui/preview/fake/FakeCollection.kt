@@ -6,21 +6,8 @@ package com.sorrowblue.comicviewer.framework.ui.preview.fake
 
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
-import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
-import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlinx.datetime.LocalDateTime
-
-@OptIn(InternalDataApi::class)
-fun fakeSmartCollection(collectionId: Int = 0, name: String = nextLoremIpsum()) = SmartCollection(
-    id = CollectionId(collectionId),
-    name = name,
-    count = 999,
-    createdAt = fakeCreatedAt,
-    updatedAt = fakeUpdatedAt,
-    bookshelfId = null,
-    searchCondition = SearchCondition(),
-)
 
 @OptIn(InternalDataApi::class)
 fun fakeBasicCollection(collectionId: Int = 0, name: String = nextLoremIpsum()) = BasicCollection(

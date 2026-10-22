@@ -12,19 +12,14 @@ import org.codelibs.jcifs.smb.impl.SmbFile
  * An implementation of [SeekableInputStream] for accessing files over the SMB protocol.
  *
  * This class uses the jCIFS [SmbFile.openRandomAccess] method to provide seekable
- * read and write capabilities on a remote SMB share.
+ * read capabilities on a remote SMB share.
  *
  * @param smbFile the remote file to open.
- * @param write whether the file should be opened with write access ("rw") or read-only ("r").
  */
-internal class SmbSeekableInputStream(smbFile: SmbFile, write: Boolean) : SeekableInputStream {
+internal class SmbSeekableInputStream(smbFile: SmbFile) : SeekableInputStream {
 
     private val file = runCatching {
-        if (write) {
-            smbFile.openRandomAccess("rw", SmbConstants.DEFAULT_SHARING)
-        } else {
-            smbFile.openRandomAccess("r", SmbConstants.DEFAULT_SHARING)
-        }
+        smbFile.openRandomAccess("r", SmbConstants.DEFAULT_SHARING)
     }.onFailure {
         it.printStackTrace()
     }.getOrThrow()

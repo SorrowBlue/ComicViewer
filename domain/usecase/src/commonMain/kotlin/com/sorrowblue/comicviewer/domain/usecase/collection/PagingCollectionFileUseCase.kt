@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.domain.usecase.collection
 
 import androidx.paging.PagingConfig
-import com.sorrowblue.comicviewer.domain.BaseRequest
 import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
@@ -25,7 +24,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 fun interface PagingCollectionFileUseCase :
     PagingUseCase<PagingCollectionFileUseCase.Request, File> {
 
-    data class Request(val collectionId: CollectionId, val pagingConfig: PagingConfig) : BaseRequest
+    data class Request(val collectionId: CollectionId, val pagingConfig: PagingConfig)
 }
 
 @Inject

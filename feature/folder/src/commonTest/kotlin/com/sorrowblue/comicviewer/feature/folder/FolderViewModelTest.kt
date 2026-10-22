@@ -25,7 +25,6 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -80,8 +79,6 @@ class FolderViewModelTest {
             FolderSortScope.Global,
             viewModel.uiState.value.folderAppBarUiState.sortScope,
         )
-        assertFalse(viewModel.uiState.value.folderAppBarUiState.folderScopeOnly)
-        assertFalse(viewModel.uiState.value.folderAppBarUiState.includeSubfolders)
         assertEquals(SortType.Name(true), viewModel.uiState.value.folderAppBarUiState.sortType)
 
         // Switch to FolderOnly + Date(false)
@@ -93,8 +90,6 @@ class FolderViewModelTest {
             FolderSortScope.FolderOnly,
             viewModel.uiState.value.folderAppBarUiState.sortScope,
         )
-        assertTrue(viewModel.uiState.value.folderAppBarUiState.folderScopeOnly)
-        assertFalse(viewModel.uiState.value.folderAppBarUiState.includeSubfolders)
         assertEquals(SortType.Date(false), viewModel.uiState.value.folderAppBarUiState.sortType)
 
         // Switch to Subfolders
@@ -105,8 +100,6 @@ class FolderViewModelTest {
             FolderSortScope.Subfolders,
             viewModel.uiState.value.folderAppBarUiState.sortScope,
         )
-        assertTrue(viewModel.uiState.value.folderAppBarUiState.folderScopeOnly)
-        assertTrue(viewModel.uiState.value.folderAppBarUiState.includeSubfolders)
         assertEquals(SortType.Date(false), viewModel.uiState.value.folderAppBarUiState.sortType)
     }
 
@@ -238,43 +231,6 @@ class FolderViewModelTest {
                 subViewModel.uiState.value.folderAppBarUiState.sortType,
             )
             assertEquals(1, emittedEvents.size)
-        }
-
-    @Test
-    fun onFolderScopeOnlyClick_and_onIncludeSubfoldersClick_emitReloadWhenSortChanges() =
-        runTest(testDispatcher) {
-            val fakeSettingsUseCase = FakeManageFolderDisplaySettingsUseCase(
-                FolderDisplaySettings(
-                    sortType = SortType.Name(true),
-                    folderScopeOnlyList = listOf(
-                        FolderScopeOnly(
-                            bookshelfId = bookshelfId,
-                            path = folderPath,
-                            sortType = SortType.Size(false),
-                            includeSubfolders = false,
-                        ),
-                    ),
-                ),
-            )
-            val viewModel = createViewModel(
-                path = folderPath,
-                settingsUseCase = fakeSettingsUseCase,
-            )
-            val emittedEvents = mutableListOf<FolderScreenUiEvent>()
-            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-                viewModel.events.collect { emittedEvents.add(it) }
-            }
-            advanceUntilIdle()
-
-            // Toggling includeSubfolders ON keeps Size(false) -> no Reload for /manga itself
-            viewModel.onIncludeSubfoldersClick()
-            advanceUntilIdle()
-            assertTrue(emittedEvents.isEmpty())
-
-            // Toggling folderScopeOnly OFF reverts /manga from Size(false) to Global Name(true) -> emits Reload
-            viewModel.onFolderScopeOnlyClick()
-            advanceUntilIdle()
-            assertEquals(listOf<FolderScreenUiEvent>(FolderScreenUiEvent.Reload), emittedEvents)
         }
 
     @Test
@@ -449,25 +405,5 @@ private class FakeManageFolderDisplaySettingsUseCase(
         val newSettings = current.copy(folderScopeOnlyList = newList)
         state.value = newSettings
         return newSettings.currentSortType(bookshelfId, path) != previousSortType
-    }
-
-    override suspend fun toggleFolderScopeOnly(bookshelfId: BookshelfId, path: String): Boolean {
-        val current = state.value
-        val targetScope = if (current.isFolderScopeOnly(bookshelfId, path)) {
-            FolderSortScope.Global
-        } else {
-            FolderSortScope.FolderOnly
-        }
-        return updateSortScope(bookshelfId, path, targetScope)
-    }
-
-    override suspend fun toggleIncludeSubfolders(bookshelfId: BookshelfId, path: String): Boolean {
-        val current = state.value
-        val targetScope = if (current.isIncludeSubfolders(bookshelfId, path)) {
-            FolderSortScope.FolderOnly
-        } else {
-            FolderSortScope.Subfolders
-        }
-        return updateSortScope(bookshelfId, path, targetScope)
     }
 }

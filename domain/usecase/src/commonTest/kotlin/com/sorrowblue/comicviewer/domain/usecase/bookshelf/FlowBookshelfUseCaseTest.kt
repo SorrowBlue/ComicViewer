@@ -60,9 +60,6 @@ private open class TestBookshelfRepository : BookshelfRepository {
         transaction: suspend (Bookshelf) -> Unit,
     ): Bookshelf? = TODO()
 
-    override suspend fun delete(bookshelfId: BookshelfId): Resource<Unit, Resource.SystemError> =
-        TODO()
-
     override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = TODO()
     override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> =
         TODO()

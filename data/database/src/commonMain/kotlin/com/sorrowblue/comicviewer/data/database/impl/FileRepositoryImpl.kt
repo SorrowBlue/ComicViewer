@@ -17,7 +17,6 @@ import com.sorrowblue.comicviewer.data.database.dao.pagingSourceFileSearch
 import com.sorrowblue.comicviewer.data.database.entity.file.FileEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.QueryFileWithCountEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimum
-import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileEntityMinimumWithSortIndex
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileHistoryEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileInfoEntity
 import com.sorrowblue.comicviewer.data.database.entity.file.UpdateFileTypeInfoEntity
@@ -139,12 +138,6 @@ internal class FileRepositoryImpl(
         }
     }
 
-    override suspend fun updateSimpleAll(list: List<File>) {
-        withContext(dispatcher) {
-            dao.updateSimple(list.map(UpdateFileEntityMinimumWithSortIndex::fromModel))
-        }
-    }
-
     override suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError> =
         withContext(
             dispatcher,
@@ -164,26 +157,6 @@ internal class FileRepositoryImpl(
                 },
             )
         }
-
-    override suspend fun selectByNotPaths(
-        bookshelfId: BookshelfId,
-        path: String,
-        list: List<String>,
-    ): List<File> = withContext(dispatcher) {
-        dao.findByNotPaths(bookshelfId.value, path, list).map(FileEntity::toModel)
-    }
-
-    override suspend fun deleteAll(list: List<File>) {
-        withContext(dispatcher) {
-            dao.deleteAll(list.map(FileEntity.Companion::fromModel))
-        }
-    }
-
-    override suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean = withContext(
-        dispatcher,
-    ) {
-        dao.find(bookshelfId.value, path) != null
-    }
 
     override fun pagingSource(
         bookshelfId: BookshelfId,
@@ -283,21 +256,9 @@ internal class FileRepositoryImpl(
 
     override fun lastHistory(): Flow<File?> = dao.lastHistory().map { it?.toModel() }
 
-    override suspend fun deleteThumbnails() {
-        withContext(dispatcher) {
-            dao.deleteAllCacheKey()
-        }
-    }
-
     override suspend fun clearCacheKey(bookshelfId: BookshelfId) {
         withContext(dispatcher) {
             dao.updateCacheKeyToEmpty(bookshelfId = bookshelfId.value)
-        }
-    }
-
-    override suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>) {
-        withContext(dispatcher) {
-            dao.deleteHistory(bookshelfId.value, list.toTypedArray())
         }
     }
 
@@ -313,7 +274,7 @@ internal class FileRepositoryImpl(
         }
     }
 
-    override suspend fun deleteAll2(bookshelfModelId: BookshelfId) {
+    override suspend fun deleteAll(bookshelfModelId: BookshelfId) {
         withContext(dispatcher) {
             dao.deleteAll(bookshelfModelId.value)
         }

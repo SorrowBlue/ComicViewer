@@ -12,15 +12,17 @@ import org.jetbrains.skia.EncodedImageFormat
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.impl.use
 
-internal actual suspend fun resizeImage(
+internal actual fun resizeImage(
     source: Source,
     sink: Sink,
     imageFormat: ImageFormat,
     quality: Int,
 ) {
-    val image = Image.makeFromEncoded(source.readByteArray())
-    val data = image.encodeToData(imageFormat.toCompressFormat(), quality)
-    data?.use { sink.write(it.bytes) }
+    Image.makeFromEncoded(source.readByteArray()).use { image ->
+        image.encodeToData(imageFormat.toCompressFormat(), quality)?.use {
+            sink.write(it.bytes)
+        }
+    }
 }
 
 private fun ImageFormat.toCompressFormat() = when (this) {

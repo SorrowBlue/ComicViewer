@@ -139,46 +139,6 @@ class ManageFolderDisplaySettingsUseCaseTest {
             manageFolderDisplaySettingsUseCase.settings.first().folderScopeOnlyList.isEmpty(),
         )
     }
-
-    @Test
-    fun testToggleFolderScopeOnly() = runTest {
-        manageFolderDisplaySettingsUseCase.edit {
-            it.copy(sortType = SortType.Name(true))
-        }
-
-        // 最初は空 -> トグルで個別設定が追加される（ソート種別自体は同じなので false）
-        val sortChangedOnAdd =
-            manageFolderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
-        assertFalse(sortChangedOnAdd)
-        val afterAdd = manageFolderDisplaySettingsUseCase.settings.first()
-        assertEquals(1, afterAdd.folderScopeOnlyList.size)
-        assertEquals(bookshelfId, afterAdd.folderScopeOnlyList[0].bookshelfId)
-        assertEquals(path, afterAdd.folderScopeOnlyList[0].path)
-
-        // 個別設定のソート順を変更してからトグル解除 -> Global のソート順に戻るので true
-        manageFolderDisplaySettingsUseCase.updateSortType(bookshelfId, path, SortType.Size(false))
-        val sortChangedOnRemove =
-            manageFolderDisplaySettingsUseCase.toggleFolderScopeOnly(bookshelfId, path)
-        assertTrue(sortChangedOnRemove)
-        val afterRemove = manageFolderDisplaySettingsUseCase.settings.first()
-        assertTrue(afterRemove.folderScopeOnlyList.isEmpty())
-    }
-
-    @Test
-    fun testToggleIncludeSubfolders() = runTest {
-        manageFolderDisplaySettingsUseCase.edit {
-            it.copy(sortType = SortType.Name(true))
-        }
-        manageFolderDisplaySettingsUseCase.toggleIncludeSubfolders(bookshelfId, path)
-        val afterAdd = manageFolderDisplaySettingsUseCase.settings.first()
-        assertEquals(1, afterAdd.folderScopeOnlyList.size)
-        assertTrue(afterAdd.folderScopeOnlyList[0].includeSubfolders)
-
-        manageFolderDisplaySettingsUseCase.toggleIncludeSubfolders(bookshelfId, path)
-        val afterToggle = manageFolderDisplaySettingsUseCase.settings.first()
-        assertEquals(1, afterToggle.folderScopeOnlyList.size)
-        assertFalse(afterToggle.folderScopeOnlyList[0].includeSubfolders)
-    }
 }
 
 @DependencyGraph(scope = AppScope::class)

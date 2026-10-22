@@ -47,26 +47,20 @@ internal data class BookshelfEntity(
                 password = DecryptedPassword(""),
             )
 
-            is SmbServer -> BookshelfEntity(
-                id = model.id,
-                displayName = model.displayName,
-                type = Type.SMB,
-                deleted = false,
-                host = model.host,
-                port = model.port,
-                domain = when (val auth = model.auth) {
-                    SmbServer.Auth.Guest -> ""
-                    is SmbServer.Auth.UsernamePassword -> auth.domain
-                },
-                username = when (val auth = model.auth) {
-                    SmbServer.Auth.Guest -> ""
-                    is SmbServer.Auth.UsernamePassword -> auth.username
-                },
-                password = when (val auth = model.auth) {
-                    SmbServer.Auth.Guest -> DecryptedPassword("")
-                    is SmbServer.Auth.UsernamePassword -> DecryptedPassword(auth.password)
-                },
-            )
+            is SmbServer -> {
+                val auth = model.auth as? SmbServer.Auth.UsernamePassword
+                BookshelfEntity(
+                    id = model.id,
+                    displayName = model.displayName,
+                    type = Type.SMB,
+                    deleted = false,
+                    host = model.host,
+                    port = model.port,
+                    domain = auth?.domain.orEmpty(),
+                    username = auth?.username.orEmpty(),
+                    password = DecryptedPassword(auth?.password.orEmpty()),
+                )
+            }
 
             ShareContents -> BookshelfEntity(
                 id = model.id,

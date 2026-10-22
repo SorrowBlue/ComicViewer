@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.data.storage.client.FileReaderType
 import com.sorrowblue.comicviewer.data.storage.client.SeekableInputStream
 import com.sorrowblue.comicviewer.data.storage.client.qualifier.ImageExtension
 import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
+import com.sorrowblue.comicviewer.domain.model.file.extension
 import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import com.sorrowblue.kioarch.ArchiveEntry
 import com.sorrowblue.kioarch.KioArch
@@ -45,11 +46,9 @@ internal class ZipFileReader(
 
     private val zipFile = KioArch.createReader(SeekableSourceImpl(seekableInputStream))
 
-    private val archive = zipFile.getEntries()
-
     private val entries =
-        archive
-            .filter { !it.isDirectory && it.name.extension() in supportedException }
+        zipFile.getEntries()
+            .filter { !it.isDirectory && it.name.extension in supportedException }
             .sortedByName()
 
     private val mutex = Mutex()
@@ -78,6 +77,4 @@ internal class ZipFileReader(
             }
         }
     }
-
-    private fun String.extension() = substringAfterLast('.', "").lowercase()
 }

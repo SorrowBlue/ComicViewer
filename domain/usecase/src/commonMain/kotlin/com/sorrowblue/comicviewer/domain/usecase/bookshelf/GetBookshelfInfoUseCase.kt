@@ -35,16 +35,9 @@ internal class GetBookshelfInfoUseCaseImpl(
 ) : GetBookshelfInfoUseCase() {
 
     override fun run(request: BookshelfId) = bookshelfRepository.flow(request).map { bookshelf ->
-        if (bookshelf != null) {
-            val folder = fileRepository.root(request)
-            if (folder != null) {
-                Resource.Success(BookshelfFolder(bookshelf, folder))
-            } else {
-                sendFatalErrorUseCase(
-                    SendFatalErrorUseCase.Request(RuntimeException("NotFound")),
-                )
-                Resource.Error(Error.NotFound)
-            }
+        val folder = if (bookshelf != null) fileRepository.root(request) else null
+        if (bookshelf != null && folder != null) {
+            Resource.Success(BookshelfFolder(bookshelf, folder))
         } else {
             sendFatalErrorUseCase(SendFatalErrorUseCase.Request(RuntimeException("NotFound")))
             Resource.Error(Error.NotFound)

@@ -15,6 +15,7 @@ import com.sorrowblue.comicviewer.data.coil.cache.CoilDiskCache
 import com.sorrowblue.comicviewer.data.coil.cache.thumbnailDiskCache
 import com.sorrowblue.comicviewer.data.coil.closeQuietly
 import com.sorrowblue.comicviewer.data.coil.fetcher.BaseFetcher
+import com.sorrowblue.comicviewer.data.coil.fetcher.CoilMetadata
 import com.sorrowblue.comicviewer.data.coil.resizeImage
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
@@ -28,8 +29,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
 import kotlinx.coroutines.flow.first
 import kotlinx.io.Source
-import kotlinx.io.readString
-import kotlinx.serialization.json.Json
 
 internal class BookThumbnailFetcher(
     private val data: BookThumbnail,
@@ -39,7 +38,7 @@ internal class BookThumbnailFetcher(
     private val bookshelfRepository: BookshelfRepository,
     private val fileRepository: FileRepository,
     private val settingsRepository: SettingsRepository,
-) : BaseFetcher<BookThumbnail, BookThumbnailMetadata>(data, options, diskCache) {
+) : BaseFetcher<BookThumbnailMetadata>(options, diskCache) {
 
     override suspend fun doFetch(): FetchResult {
         var snapshot = readFromDiskCache()
@@ -67,7 +66,8 @@ internal class BookThumbnailFetcher(
 
             val fetchResult =
                 storageClient.fileReader(book).use { fileReader ->
-                    check(fileReader.pageCount() != 0) {
+                    val pageCount = fileReader.pageCount()
+                    check(pageCount != 0) {
                         "Only 0 pages"
                     }
                     val displaySettings = settingsRepository.folderDisplaySettings.first()
@@ -88,7 +88,7 @@ internal class BookThumbnailFetcher(
                                 data.path,
                                 data.bookshelfId,
                                 diskCacheKey,
-                                fileReader.pageCount(),
+                                pageCount,
                             )
                             return@use SourceFetchResult(
                                 source = it.toImageSource(),
@@ -104,7 +104,7 @@ internal class BookThumbnailFetcher(
                             data.path,
                             data.bookshelfId,
                             diskCacheKey,
-                            fileReader.pageCount(),
+                            pageCount,
                         )
                         return@use SourceFetchResult(
                             source = source.toImageSource(),
@@ -130,17 +130,7 @@ internal class BookThumbnailFetcher(
 
     override suspend fun metadata() = BookThumbnailMetadata(data)
 
-    override fun readFrom(source: Source): BookThumbnailMetadata =
-        Json.decodeFromString<BookThumbnailMetadata>(source.readString())
-
-    override suspend fun fetch(): FetchResult? {
-        // ページ数が不明な場合はキャッシュから取得する処理をスキップします。
-        return if (data.totalPageCount <= 0) {
-            doFetch()
-        } else {
-            super.fetch()
-        }
-    }
+    override fun readFrom(source: Source): BookThumbnailMetadata = CoilMetadata.from(source)
 
     @ClassKey(BookThumbnail::class)
     @ContributesIntoMap(AppScope::class, binding = binding<coil3.key.Keyer<*>>())

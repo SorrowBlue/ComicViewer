@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.framework.ui.locale
 
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -16,7 +15,7 @@ import java.util.Properties
 
 @SingleIn(AppScope::class)
 @Inject
-class LocaleHelper(private val context: PlatformContext) {
+class LocaleHelper {
     private val file by lazy {
         FileKit.filesDir.resolve("lang.properties").file.apply {
             if (!exists()) {

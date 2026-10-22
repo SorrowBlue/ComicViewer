@@ -28,10 +28,4 @@ annotation class Collection
 annotation class GlobalSettings
 
 @Qualifier
-annotation class ViewerOperation
-
-@Qualifier
 annotation class Viewer
-
-@Qualifier
-annotation class PdfPlugin

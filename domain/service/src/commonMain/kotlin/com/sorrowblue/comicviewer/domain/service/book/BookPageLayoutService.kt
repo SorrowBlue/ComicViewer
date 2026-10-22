@@ -58,28 +58,21 @@ internal class BookPageLayoutServiceImpl : BookPageLayoutService {
     ): List<BookPage> {
         if (totalPageCount <= 0) return emptyList()
 
-        val format = when (pageFormat) {
-            BookSettings.PageFormat.Default -> BookSettings.PageFormat.Default
+        val pageFactory: (Int) -> BookPage = when (pageFormat) {
+            BookSettings.PageFormat.Default -> BookPage::Default
 
-            BookSettings.PageFormat.Spread -> BookSettings.PageFormat.Spread
+            BookSettings.PageFormat.Spread -> BookPage.Spread::Unrated
 
-            BookSettings.PageFormat.Split -> BookSettings.PageFormat.Split
+            BookSettings.PageFormat.Split -> BookPage.Split::Unrated
 
             BookSettings.PageFormat.Auto -> if (isCompactWindow) {
-                BookSettings.PageFormat.Split
+                BookPage.Split::Unrated
             } else {
-                BookSettings.PageFormat.Spread
+                BookPage.Spread::Unrated
             }
         }
 
-        return (0 until totalPageCount).map { index ->
-            when (format) {
-                BookSettings.PageFormat.Default -> BookPage.Default(index)
-                BookSettings.PageFormat.Spread -> BookPage.Spread.Unrated(index)
-                BookSettings.PageFormat.Split -> BookPage.Split.Unrated(index)
-                BookSettings.PageFormat.Auto -> error("Resolved above")
-            }
-        }
+        return List(totalPageCount, pageFactory)
     }
 
     override fun resolvePage(

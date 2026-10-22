@@ -364,15 +364,7 @@ private open class FakeFileRepository : FileRepository {
         cacheKey: String,
         totalPage: Int,
     ) = TODO()
-    override suspend fun updateSimpleAll(list: List<File>) = TODO()
     override suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError> = TODO()
-    override suspend fun selectByNotPaths(
-        bookshelfId: BookshelfId,
-        path: String,
-        list: List<String>,
-    ): List<File> = TODO()
-    override suspend fun deleteAll(list: List<File>) = TODO()
-    override suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean = TODO()
     override fun pagingSource(
         bookshelfId: BookshelfId,
         pagingConfig: PagingConfig,
@@ -411,12 +403,10 @@ private open class FakeFileRepository : FileRepository {
     override suspend fun root(id: BookshelfId): Folder? = TODO()
     override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>> =
         TODO()
-    override suspend fun deleteThumbnails() = TODO()
     override suspend fun clearCacheKey(bookshelfId: BookshelfId) = TODO()
-    override suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>) = TODO()
     override suspend fun deleteAllHistory() = TODO()
     override suspend fun updateHistory(file: File, files: List<File>) = TODO()
-    override suspend fun deleteAll2(bookshelfModelId: BookshelfId) = TODO()
+    override suspend fun deleteAll(bookshelfModelId: BookshelfId) = TODO()
     override suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String> = TODO()
     override fun lastHistory(): Flow<File?> = TODO()
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> =

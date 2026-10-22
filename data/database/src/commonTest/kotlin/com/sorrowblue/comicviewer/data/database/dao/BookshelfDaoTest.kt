@@ -42,24 +42,6 @@ internal class BookshelfDaoTest : DatabaseTest() {
     }
 
     @Test
-    fun delete_by_id() = runTest {
-        val entity = BookshelfEntity(
-            id = BookshelfId(3),
-            displayName = "DeleteId",
-            type = BookshelfEntity.Type.DEVICE,
-            deleted = false,
-            host = "",
-            port = 0,
-            domain = "",
-            username = "",
-            password = DecryptedPassword(""),
-        )
-        dao.upsert(entity)
-        val deletedCount = dao.delete(3)
-        assertEquals(1, deletedCount)
-    }
-
-    @Test
     fun updateDeleted() = runTest {
         val entity = BookshelfEntity(
             id = BookshelfId(4),

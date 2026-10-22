@@ -22,6 +22,6 @@ internal class ManageSecuritySettingsUseCaseImpl(
     override val settings: Flow<SecuritySettings> = settingsRepository.securitySettings
 
     override suspend fun edit(action: (SecuritySettings) -> SecuritySettings) {
-        settingsRepository.updateSecuritySettings(action::invoke)
+        settingsRepository.updateSecuritySettings(action)
     }
 }

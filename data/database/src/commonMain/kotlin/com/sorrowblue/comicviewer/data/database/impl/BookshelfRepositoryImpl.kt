@@ -64,16 +64,6 @@ internal class BookshelfRepositoryImpl(
         }
     }
 
-    override suspend fun delete(bookshelfId: BookshelfId): Resource<Unit, Resource.SystemError> =
-        runCatching {
-            withContext(dispatcher) {
-                dao.delete(bookshelfId.value)
-            }
-        }.fold(
-            onSuccess = { Resource.Success(Unit) },
-            onFailure = { Resource.Error(Resource.SystemError(it)) },
-        )
-
     override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = if (bookshelfId ==
         ShareContents.id
     ) {

@@ -33,18 +33,6 @@ internal class CollectionDaoTest : DatabaseTest() {
     }
 
     @Test
-    fun flowAll() = runTest {
-        val entityList = List(100) {
-            factory.createCollectionEntity()
-        }
-        entityList.forEach {
-            collectionDao.insert(it)
-        }
-        val dbEntityList = collectionDao.flowAll().first()
-        assertEquals(entityList.size, dbEntityList.size)
-    }
-
-    @Test
     fun updateBasic() = runTest {
         var entity = CollectionEntity.fromModel(BasicCollection("name"))
         val inserted = collectionDao.insert(entity)

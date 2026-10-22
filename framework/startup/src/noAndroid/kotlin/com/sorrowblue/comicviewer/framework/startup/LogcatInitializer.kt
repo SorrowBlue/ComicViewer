@@ -22,5 +22,5 @@ class LogcatInitializer : Initializer<LogcatLogger.Companion> {
         return LogcatLogger.Companion
     }
 
-    override fun dependencies(): List<KClass<out Initializer<*>>?> = emptyList()
+    override fun dependencies(): List<KClass<out Initializer<*>>> = emptyList()
 }

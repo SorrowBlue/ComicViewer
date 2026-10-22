@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
+import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.repository.CollectionFileRepository
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
@@ -90,22 +91,14 @@ internal class GetNextBookUseCaseImpl(
             parentPath = parentPath,
         )
 
-        return runCatching {
-            if (isNext) {
+        return resolveBookResult {
+            val modelFlow = if (isNext) {
                 fileRepository.nextFileModel(bookshelfId, path, sortType)
             } else {
                 fileRepository.prevFileModel(bookshelfId, path, sortType)
             }
-        }.fold({ modelFlow ->
-            val book = bookNavigationService.validateBook(modelFlow.first())
-            if (book != null) {
-                Resource.Success(book)
-            } else {
-                Resource.Error(Error.NotFound)
-            }
-        }, {
-            Resource.Error(Error.System)
-        })
+            modelFlow.first()
+        }
     }
 
     private suspend fun collection(
@@ -122,19 +115,14 @@ internal class GetNextBookUseCaseImpl(
         logcat { "collection: $collection" }
         val sortType = bookNavigationService.resolveCollectionSortType(collection, settings)
 
-        return runCatching {
-            when (collection) {
+        return resolveBookResult {
+            val modelFlow = when (collection) {
                 is BasicCollection -> {
+                    val collectionFile = CollectionFile(collectionId, bookshelfId, path)
                     if (isNext) {
-                        collectionFileRepository.flowNextCollectionFile(
-                            CollectionFile(collectionId, bookshelfId, path),
-                            sortType,
-                        )
+                        collectionFileRepository.flowNextCollectionFile(collectionFile, sortType)
                     } else {
-                        collectionFileRepository.flowPrevCollectionFile(
-                            CollectionFile(collectionId, bookshelfId, path),
-                            sortType,
-                        )
+                        collectionFileRepository.flowPrevCollectionFile(collectionFile, sortType)
                     }
                 }
 
@@ -156,19 +144,23 @@ internal class GetNextBookUseCaseImpl(
                     }
                 }
             }
-        }.onFailure {
-            logcat { "GetNextBookInteractor: $it" }
-        }.fold({ modelFlow ->
-            val book = bookNavigationService.validateBook(modelFlow.first())
-            if (book != null) {
-                logcat { "modelFlow.first(): $book" }
-                Resource.Success(book)
-            } else {
-                Resource.Error(Error.NotFound)
-            }
-        }, {
-            logcat { "GetNextBookInteractor: $it" }
-            Resource.Error(Error.System)
-        })
+            modelFlow.first()
+        }
     }
+
+    private inline fun resolveBookResult(block: () -> File?): Resource<Book, Error> =
+        runCatching(block).fold(
+            onSuccess = { file ->
+                val book = bookNavigationService.validateBook(file)
+                if (book != null) {
+                    Resource.Success(book)
+                } else {
+                    Resource.Error(Error.NotFound)
+                }
+            },
+            onFailure = {
+                logcat { "GetNextBookInteractor: $it" }
+                Resource.Error(Error.System)
+            },
+        )
 }

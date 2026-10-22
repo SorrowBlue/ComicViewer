@@ -42,7 +42,7 @@ internal class BookPageImageFetcher(
     private val bookshelfRepository: BookshelfRepository,
     private val settingsRepository: SettingsRepository,
     private val bookFileReaderManager: BookFileReaderManager,
-) : BaseFetcher<BookPageImage, BookPageImageMetadata>(data, options, diskCacheLazy) {
+) : BaseFetcher<BookPageImageMetadata>(options, diskCacheLazy) {
 
     override val diskCacheKey
         get() = options.diskCacheKey
@@ -93,9 +93,7 @@ internal class BookPageImageFetcher(
                         mimeType = null,
                         dataSource = DataSource.NETWORK,
                     )
-                }
-                // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
-                SourceFetchResult(
+                } ?: SourceFetchResult(
                     source = fileReader.source(data.pageIndex).toImageSource(),
                     mimeType = null,
                     dataSource = DataSource.NETWORK,

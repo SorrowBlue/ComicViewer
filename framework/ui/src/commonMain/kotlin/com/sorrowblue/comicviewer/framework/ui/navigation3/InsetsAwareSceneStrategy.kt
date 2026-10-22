@@ -43,7 +43,7 @@ private val DetailMetadataClass =
 private val NavEntry<*>.isSupportingMainPane: Boolean
     get() = metadata[SupportingPaneRoleKey]?.let { it::class } == MainMetadataClass
 
-private val NavEntry<*>.isSupportingExtraOrSupportingPane: Boolean
+internal val NavEntry<*>.isSupportingExtraOrSupportingPane: Boolean
     get() {
         val clazz = metadata[SupportingPaneRoleKey]?.let { it::class }
         return clazz == ExtraMetadataClass || clazz == SupportingMetadataClass
@@ -52,7 +52,7 @@ private val NavEntry<*>.isSupportingExtraOrSupportingPane: Boolean
 private val NavEntry<*>.isListPane: Boolean
     get() = metadata[ListDetailRoleKey]?.let { it::class } == ListMetadataClass
 
-private val NavEntry<*>.isDetailPane: Boolean
+internal val NavEntry<*>.isDetailPane: Boolean
     get() = metadata[ListDetailRoleKey]?.let { it::class } == DetailMetadataClass
 
 private fun <T : Any> NavEntry<T>.withConsumedInsets(sides: WindowInsetsSides): NavEntry<T> =

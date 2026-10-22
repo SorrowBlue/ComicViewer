@@ -61,19 +61,7 @@ interface FileRepository {
         totalPage: Int,
     )
 
-    suspend fun updateSimpleAll(list: List<File>)
-
     suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError>
-
-    suspend fun selectByNotPaths(
-        bookshelfId: BookshelfId,
-        path: String,
-        list: List<String>,
-    ): List<File>
-
-    suspend fun deleteAll(list: List<File>)
-
-    suspend fun exists(bookshelfId: BookshelfId, path: String): Boolean
 
     fun pagingSource(
         bookshelfId: BookshelfId,
@@ -115,17 +103,13 @@ interface FileRepository {
 
     fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>>
 
-    suspend fun deleteThumbnails()
-
     suspend fun clearCacheKey(bookshelfId: BookshelfId)
-
-    suspend fun deleteHistory(bookshelfId: BookshelfId, list: List<String>)
 
     suspend fun deleteAllHistory()
 
     suspend fun updateHistory(file: File, files: List<File>)
 
-    suspend fun deleteAll2(bookshelfModelId: BookshelfId)
+    suspend fun deleteAll(bookshelfModelId: BookshelfId)
 
     suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String>
 

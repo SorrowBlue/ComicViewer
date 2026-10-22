@@ -61,21 +61,25 @@ internal class GetBookUseCaseImpl(
         val remoteStorageClient = remoteStorageClientFactory.create(bookshelf)
         val resolveImageFolder =
             manageFolderSettingsUseCase.settings.first().resolveImageFolder
-        val localFile =
-            runCatching {
-                when (val file = remoteStorageClient.file(path, resolveImageFolder)) {
-                    is BookFile -> fileRepository.updateSimple(file)
-                    is BookFolder -> fileRepository.updateSimple(file)
-                    is Folder -> return Resource.Error(Error.NotFound)
-                }
-            }.getOrElse {
-                return Resource.Error(Error.NotFound)
-            }
-        return localFile.fold(
+        val remoteBook = runCatching {
+            remoteStorageClient.file(path, resolveImageFolder) as? Book
+        }.getOrNull() ?: return Resource.Error(Error.NotFound)
+        val totalPageCount = runCatching {
+            remoteStorageClient.pageCount(remoteBook)
+        }.getOrElse {
+            logcat { it.asLog() }
+            // TODO Report Error
+            return Resource.Error(Error.ReportedSystemError)
+        }
+        logcat { "totalPageCount: $totalPageCount" }
+        val updatedBook = when (remoteBook) {
+            is BookFile -> remoteBook.copy(totalPageCount = totalPageCount)
+            is BookFolder -> remoteBook.copy(totalPageCount = totalPageCount)
+        }
+        return fileRepository.updateSimple(updatedBook).fold(
             onSuccess = {
                 when (it) {
-                    is BookFile -> updateTotalPageCount(remoteStorageClient, it)
-                    is BookFolder -> updateTotalPageCount(remoteStorageClient, it)
+                    is Book -> Resource.Success(it)
                     is Folder -> Resource.Error(Error.NotFound)
                 }
             },
@@ -90,33 +94,5 @@ internal class GetBookUseCaseImpl(
                 }
             },
         )
-    }
-
-    private suspend fun updateTotalPageCount(
-        remoteStorageClient: RemoteStorageClient,
-        book: Book,
-    ): Resource<Book, Error> {
-        logcat { "updateTotalPageCount()" }
-        return kotlin
-            .runCatching {
-                remoteStorageClient.pageCount(book).let { totalPageCount ->
-                    logcat { "totalPageCount: $totalPageCount" }
-                    when (book) {
-                        is BookFile -> book.copy(totalPageCount = totalPageCount)
-                        is BookFolder -> book.copy(totalPageCount = totalPageCount)
-                    }.also {
-                        fileRepository.addUpdate(it)
-                    }
-                }
-            }.fold(
-                onSuccess = {
-                    Resource.Success(it)
-                },
-                onFailure = {
-                    logcat { it.asLog() }
-                    // TODO Report Error
-                    Resource.Error(Error.ReportedSystemError)
-                },
-            )
     }
 }

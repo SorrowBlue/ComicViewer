@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.data.database.entity.bookshelf
 
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import io.github.vinceglb.filekit.FileKit
@@ -31,7 +30,7 @@ private const val CipherTransformation = "AES/CBC/PKCS5Padding"
 private const val IV = "1234567812345678"
 
 @ContributesBinding(AppScope::class)
-internal class JvmCryptUtil(private val context: PlatformContext) : CryptUtil {
+internal class JvmCryptUtil : CryptUtil {
     override fun decrypt(alias: String, encryptedText: String): String {
         val key = loadKeyStore(alias)
         val iv = IvParameterSpec(IV.toByteArray())

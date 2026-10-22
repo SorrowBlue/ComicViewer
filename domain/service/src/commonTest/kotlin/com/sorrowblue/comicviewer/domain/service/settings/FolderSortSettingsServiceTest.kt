@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 @OptIn(InternalDataApi::class)
@@ -22,44 +23,6 @@ class FolderSortSettingsServiceTest {
     private val bookshelfId = BookshelfId(1)
     private val otherBookshelfId = BookshelfId(2)
     private val path = "/manga/chapter1"
-
-    @Test
-    fun testIsFolderScopeOnly() {
-        val defaultSettings = FolderDisplaySettings()
-        assertFalse(service.isFolderScopeOnly(defaultSettings, bookshelfId, path))
-
-        val scopedSettings = defaultSettings.copy(
-            folderScopeOnlyList = listOf(
-                FolderScopeOnly(bookshelfId, path, SortType.Date(true)),
-            ),
-        )
-        assertTrue(service.isFolderScopeOnly(scopedSettings, bookshelfId, path))
-        assertFalse(service.isFolderScopeOnly(scopedSettings, otherBookshelfId, path))
-        assertFalse(service.isFolderScopeOnly(scopedSettings, bookshelfId, "/other"))
-    }
-
-    @Test
-    fun testResolveSortType() {
-        val defaultSettings = FolderDisplaySettings(sortType = SortType.Name(true))
-        assertEquals(
-            SortType.Name(true),
-            service.resolveSortType(defaultSettings, bookshelfId, path),
-        )
-
-        val scopedSettings = defaultSettings.copy(
-            folderScopeOnlyList = listOf(
-                FolderScopeOnly(bookshelfId, path, SortType.Date(false)),
-            ),
-        )
-        assertEquals(
-            SortType.Date(false),
-            service.resolveSortType(scopedSettings, bookshelfId, path),
-        )
-        assertEquals(
-            SortType.Name(true),
-            service.resolveSortType(scopedSettings, otherBookshelfId, path),
-        )
-    }
 
     // =========================================================================
     // 1. Exhaustive 3x3 Scope Transitions (Standalone Folder)
@@ -106,7 +69,7 @@ class FolderSortSettingsServiceTest {
 
                 assertEquals(
                     fromScope,
-                    service.resolveSortScope(initialSettings, bookshelfId, "/manga"),
+                    initialSettings.currentSortScope(bookshelfId, "/manga"),
                 )
 
                 val result = service.updateSortScope(
@@ -119,23 +82,25 @@ class FolderSortSettingsServiceTest {
                 // Resulting scope must match toScope
                 assertEquals(
                     toScope,
-                    service.resolveSortScope(result.settings, bookshelfId, "/manga"),
+                    result.settings.currentSortScope(bookshelfId, "/manga"),
                     "Transition $fromScope -> $toScope failed to set scope",
                 )
 
                 if (fromScope == toScope) {
-                    assertFalse(
-                        result.isChanged,
-                        "Same scope transition $fromScope -> $toScope should not mark isChanged",
+                    assertEquals(
+                        initialSettings,
+                        result.settings,
+                        "Same scope transition $fromScope -> $toScope should not modify settings",
                     )
                     assertFalse(
                         result.isSortTypeChanged,
                         "Same scope transition $fromScope -> $toScope should not mark isSortTypeChanged",
                     )
                 } else {
-                    assertTrue(
-                        result.isChanged,
-                        "Different scope transition $fromScope -> $toScope should mark isChanged",
+                    assertNotEquals(
+                        initialSettings,
+                        result.settings,
+                        "Different scope transition $fromScope -> $toScope should modify settings",
                     )
                 }
 
@@ -149,7 +114,7 @@ class FolderSortSettingsServiceTest {
                 }
                 assertEquals(
                     expectedSort,
-                    service.resolveSortType(result.settings, bookshelfId, "/manga"),
+                    result.settings.currentSortType(bookshelfId, "/manga"),
                 )
 
                 val expectedSortChanged =
@@ -163,20 +128,20 @@ class FolderSortSettingsServiceTest {
                 if (toScope == FolderSortScope.Subfolders) {
                     assertEquals(
                         FolderSortScope.Subfolders,
-                        service.resolveSortScope(result.settings, bookshelfId, "/manga/sub"),
+                        result.settings.currentSortScope(bookshelfId, "/manga/sub"),
                     )
                     assertEquals(
                         expectedSort,
-                        service.resolveSortType(result.settings, bookshelfId, "/manga/sub"),
+                        result.settings.currentSortType(bookshelfId, "/manga/sub"),
                     )
                 } else {
                     assertEquals(
                         FolderSortScope.Global,
-                        service.resolveSortScope(result.settings, bookshelfId, "/manga/sub"),
+                        result.settings.currentSortScope(bookshelfId, "/manga/sub"),
                     )
                     assertEquals(
                         baseGlobalSort,
-                        service.resolveSortType(result.settings, bookshelfId, "/manga/sub"),
+                        result.settings.currentSortType(bookshelfId, "/manga/sub"),
                     )
                 }
             }
@@ -239,7 +204,7 @@ class FolderSortSettingsServiceTest {
 
                 assertEquals(
                     fromScope,
-                    service.resolveSortScope(initial, bookshelfId, "/manga/sub"),
+                    initial.currentSortScope(bookshelfId, "/manga/sub"),
                 )
 
                 val result = service.updateSortScope(
@@ -251,18 +216,18 @@ class FolderSortSettingsServiceTest {
 
                 assertEquals(
                     toScope,
-                    service.resolveSortScope(result.settings, bookshelfId, "/manga/sub"),
+                    result.settings.currentSortScope(bookshelfId, "/manga/sub"),
                     "Subfolder transition $fromScope -> $toScope failed",
                 )
 
                 // Parent /manga must remain untouched in Subfolders(parentSort)
                 assertEquals(
                     FolderSortScope.Subfolders,
-                    service.resolveSortScope(result.settings, bookshelfId, "/manga"),
+                    result.settings.currentSortScope(bookshelfId, "/manga"),
                 )
                 assertEquals(
                     parentSort,
-                    service.resolveSortType(result.settings, bookshelfId, "/manga"),
+                    result.settings.currentSortType(bookshelfId, "/manga"),
                 )
             }
         }
@@ -283,13 +248,13 @@ class FolderSortSettingsServiceTest {
                     val result = service.updateSortType(scoped, bookshelfId, path, targetSort)
                     assertEquals(
                         targetSort,
-                        service.resolveSortType(result.settings, bookshelfId, path),
+                        result.settings.currentSortType(bookshelfId, path),
                     )
                     assertEquals(
                         scope,
-                        service.resolveSortScope(result.settings, bookshelfId, path),
+                        result.settings.currentSortScope(bookshelfId, path),
                     )
-                    assertEquals(initialSort != targetSort, result.isChanged)
+                    assertEquals(initialSort != targetSort, result.settings != scoped)
                     assertEquals(initialSort != targetSort, result.isSortTypeChanged)
                 }
             }
@@ -322,27 +287,27 @@ class FolderSortSettingsServiceTest {
             sortType = SortType.Size(true),
         )
 
-        assertTrue(result.isChanged)
+        assertNotEquals(initialSettings, result.settings)
         assertTrue(result.isSortTypeChanged)
         // Global sort is preserved
         assertEquals(SortType.Name(true), result.settings.sortType)
         // Parent /manga is preserved
         assertEquals(
             SortType.Date(false),
-            service.resolveSortType(result.settings, bookshelfId, "/manga"),
+            result.settings.currentSortType(bookshelfId, "/manga"),
         )
         // Subfolder /manga/vol1 and its child /manga/vol1/ch1 now use Size(true)
         assertEquals(
             FolderSortScope.Subfolders,
-            service.resolveSortScope(result.settings, bookshelfId, "/manga/vol1"),
+            result.settings.currentSortScope(bookshelfId, "/manga/vol1"),
         )
         assertEquals(
             SortType.Size(true),
-            service.resolveSortType(result.settings, bookshelfId, "/manga/vol1"),
+            result.settings.currentSortType(bookshelfId, "/manga/vol1"),
         )
         assertEquals(
             SortType.Size(true),
-            service.resolveSortType(result.settings, bookshelfId, "/manga/vol1/ch1"),
+            result.settings.currentSortType(bookshelfId, "/manga/vol1/ch1"),
         )
     }
 
@@ -375,25 +340,25 @@ class FolderSortSettingsServiceTest {
             sortType = SortType.Name(false),
         )
 
-        assertTrue(result.isChanged)
+        assertNotEquals(initialSettings, result.settings)
         assertTrue(result.isSortTypeChanged)
         assertEquals(SortType.Name(false), result.settings.sortType)
         assertEquals(
             SortType.Name(false),
-            service.resolveSortType(result.settings, bookshelfId, "/globalFolder"),
+            result.settings.currentSortType(bookshelfId, "/globalFolder"),
         )
         // Scoped folders are preserved
         assertEquals(
             SortType.Date(false),
-            service.resolveSortType(result.settings, bookshelfId, "/folderOnly"),
+            result.settings.currentSortType(bookshelfId, "/folderOnly"),
         )
         assertEquals(
             SortType.Size(true),
-            service.resolveSortType(result.settings, bookshelfId, "/subfolders"),
+            result.settings.currentSortType(bookshelfId, "/subfolders"),
         )
         assertEquals(
             SortType.Size(true),
-            service.resolveSortType(result.settings, bookshelfId, "/subfolders/child"),
+            result.settings.currentSortType(bookshelfId, "/subfolders/child"),
         )
     }
 
@@ -455,22 +420,22 @@ class FolderSortSettingsServiceTest {
         for (p in listOf("/manga", "/manga/sub", "/manga/sub/deep")) {
             assertEquals(
                 FolderSortScope.Subfolders,
-                service.resolveSortScope(finalSettings, bookshelfId, p),
+                finalSettings.currentSortScope(bookshelfId, p),
             )
             assertEquals(
                 SortType.Date(true),
-                service.resolveSortType(finalSettings, bookshelfId, p),
+                finalSettings.currentSortType(bookshelfId, p),
             )
         }
 
         // Unrelated folder (/other) and other bookshelf (otherBookshelfId) are untouched
         assertEquals(
             SortType.Name(false),
-            service.resolveSortType(finalSettings, bookshelfId, "/other"),
+            finalSettings.currentSortType(bookshelfId, "/other"),
         )
         assertEquals(
             SortType.Date(true),
-            service.resolveSortType(finalSettings, otherBookshelfId, "/manga/sub"),
+            finalSettings.currentSortType(otherBookshelfId, "/manga/sub"),
         )
     }
 
@@ -506,11 +471,11 @@ class FolderSortSettingsServiceTest {
         ).settings
         assertEquals(
             FolderSortScope.FolderOnly,
-            service.resolveSortScope(settings, bookshelfId, "/manga/sub"),
+            settings.currentSortScope(bookshelfId, "/manga/sub"),
         )
         assertEquals(
             SortType.Size(false),
-            service.resolveSortType(settings, bookshelfId, "/manga/sub"),
+            settings.currentSortType(bookshelfId, "/manga/sub"),
         )
 
         // Step 3: Parent (/manga) changes sort type to Name(false) (still in Subfolders)
@@ -524,11 +489,11 @@ class FolderSortSettingsServiceTest {
         // Child (/manga/sub) is reset and now inherits Name(false) from Parent
         assertEquals(
             FolderSortScope.Subfolders,
-            service.resolveSortScope(settings, bookshelfId, "/manga/sub"),
+            settings.currentSortScope(bookshelfId, "/manga/sub"),
         )
         assertEquals(
             SortType.Name(false),
-            service.resolveSortType(settings, bookshelfId, "/manga/sub"),
+            settings.currentSortType(bookshelfId, "/manga/sub"),
         )
     }
 
@@ -571,71 +536,46 @@ class FolderSortSettingsServiceTest {
     }
 
     // =========================================================================
-    // 5. Legacy Toggle Methods & Path Normalization
+    // 5. Path Normalization in updateSortScope
     // =========================================================================
 
     @Test
-    fun testToggleFolderScopeOnly_and_toggleIncludeSubfolders_withNormalizedPaths() {
+    fun testUpdateSortScope_withNormalizedPaths() {
         val initialSettings = FolderDisplaySettings(sortType = SortType.Date(true))
 
         // Add with "/manga/chapter1"
-        val added = service.toggleFolderScopeOnly(initialSettings, bookshelfId, "/manga/chapter1")
+        val added = service.updateSortScope(
+            initialSettings,
+            bookshelfId,
+            "/manga/chapter1",
+            FolderSortScope.FolderOnly,
+        ).settings
         assertEquals(1, added.folderScopeOnlyList.size)
-        assertTrue(service.isFolderScopeOnly(added, bookshelfId, "/manga/chapter1/"))
+        assertEquals(
+            FolderSortScope.FolderOnly,
+            added.currentSortScope(bookshelfId, "/manga/chapter1/"),
+        )
 
-        // Toggle includeSubfolders using trailing slash "/manga/chapter1/" -> updates existing entry, no duplicate
-        val withSubfolders = service.toggleIncludeSubfolders(
+        // Update to Subfolders using trailing slash "/manga/chapter1/" -> updates existing entry, no duplicate
+        val withSubfolders = service.updateSortScope(
             added,
             bookshelfId,
             "/manga/chapter1/",
-        )
+            FolderSortScope.Subfolders,
+        ).settings
         assertEquals(1, withSubfolders.folderScopeOnlyList.size)
-        assertTrue(service.isIncludeSubfolders(withSubfolders, bookshelfId, "/manga/chapter1"))
+        assertEquals(
+            FolderSortScope.Subfolders,
+            withSubfolders.currentSortScope(bookshelfId, "/manga/chapter1"),
+        )
 
-        // Toggle folderScopeOnly off using "/manga/chapter1/" -> removes entry
-        val removed = service.toggleFolderScopeOnly(
+        // Revert to Global using "/manga/chapter1/" -> removes entry
+        val removed = service.updateSortScope(
             withSubfolders,
             bookshelfId,
             "/manga/chapter1/",
-        )
-        assertTrue(removed.folderScopeOnlyList.isEmpty())
-    }
-
-    @Test
-    fun testToggleFolderScopeOnly_onInheritedSubfolder_switchesToGlobalThenFolderOnly() {
-        val initialSettings = FolderDisplaySettings(
-            sortType = SortType.Name(true),
-            folderScopeOnlyList = listOf(
-                FolderScopeOnly(
-                    bookshelfId = bookshelfId,
-                    path = "/manga",
-                    sortType = SortType.Date(false),
-                    includeSubfolders = true,
-                ),
-            ),
-        )
-
-        // Subfolder /manga/sub is currently scoped (inheriting Subfolders)
-        assertTrue(service.isFolderScopeOnly(initialSettings, bookshelfId, "/manga/sub"))
-
-        // Toggling folderScopeOnly on /manga/sub turns scope OFF -> Global
-        val toggledOff = service.toggleFolderScopeOnly(initialSettings, bookshelfId, "/manga/sub")
-        assertFalse(service.isFolderScopeOnly(toggledOff, bookshelfId, "/manga/sub"))
-        assertEquals(
             FolderSortScope.Global,
-            service.resolveSortScope(toggledOff, bookshelfId, "/manga/sub"),
-        )
-        assertEquals(
-            SortType.Name(true),
-            service.resolveSortType(toggledOff, bookshelfId, "/manga/sub"),
-        )
-
-        // Toggling folderScopeOnly again turns scope ON -> FolderOnly
-        val toggledOn = service.toggleFolderScopeOnly(toggledOff, bookshelfId, "/manga/sub")
-        assertTrue(service.isFolderScopeOnly(toggledOn, bookshelfId, "/manga/sub"))
-        assertEquals(
-            FolderSortScope.FolderOnly,
-            service.resolveSortScope(toggledOn, bookshelfId, "/manga/sub"),
-        )
+        ).settings
+        assertTrue(removed.folderScopeOnlyList.isEmpty())
     }
 }

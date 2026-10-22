@@ -50,7 +50,6 @@ class FileHierarchyScanServiceTest {
 
         service.scanHierarchy(
             root = root,
-            resolveImageFolder = false,
             supportExtensions = supportExtensions,
             listFiles = { file, filter ->
                 filesMap[file.path]?.filter(filter).orEmpty()
@@ -93,7 +92,6 @@ class FileHierarchyScanServiceTest {
 
         service.scanHierarchy(
             root = root,
-            resolveImageFolder = false,
             supportExtensions = supportExtensions,
             listFiles = { _, _ -> emptyList() },
             onFolderFilesScanned = { parent, files ->
