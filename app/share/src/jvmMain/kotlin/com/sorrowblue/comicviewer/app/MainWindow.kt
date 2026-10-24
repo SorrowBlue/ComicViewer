@@ -7,6 +7,9 @@ package com.sorrowblue.comicviewer.app
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.RenderVectorGroup
+import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -32,7 +35,7 @@ fun rememberWindowState2(settings: WindowSettings): WindowState {
             settings.x,
             settings.y,
             settings.width,
-            settings.height
+            settings.height,
         )
     ) {
         WindowPosition(settings.x.dp, settings.y.dp)
@@ -65,7 +68,7 @@ fun MainWindow(exitApplication: () -> Unit) {
         },
         state = windowState,
         title = stringResource(FrameworkResString.app_name),
-        icon = rememberVectorPainter(ComicIcons.Launcher),
+        icon = rememberWindowIconPainter(ComicIcons.Launcher),
     ) {
         context(appGraph.context) {
             MetroContent {
@@ -75,6 +78,20 @@ fun MainWindow(exitApplication: () -> Unit) {
             }
         }
     }
+}
+
+@Composable
+private fun rememberWindowIconPainter(image: ImageVector): VectorPainter = rememberVectorPainter(
+    defaultWidth = image.defaultWidth,
+    defaultHeight = image.defaultHeight,
+    viewportWidth = image.viewportWidth,
+    viewportHeight = image.viewportHeight,
+    name = image.name,
+    tintColor = image.tintColor,
+    tintBlendMode = image.tintBlendMode,
+    autoMirror = image.autoMirror,
+) { _, _ ->
+    RenderVectorGroup(group = image.root)
 }
 
 private fun isWindowPositionValid(x: Int, y: Int, width: Int, height: Int): Boolean {
