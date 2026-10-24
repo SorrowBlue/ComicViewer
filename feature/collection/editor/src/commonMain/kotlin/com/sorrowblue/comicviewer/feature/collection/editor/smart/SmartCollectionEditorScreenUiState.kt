@@ -37,6 +37,9 @@ import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionCreateNa
 import com.sorrowblue.comicviewer.feature.collection.nav.SmartCollectionEditNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
+import com.sorrowblue.comicviewer.framework.ui.form.rememberFormState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.material3.AlertDialogContent
 import com.sorrowblue.comicviewer.framework.ui.material3.CloseIconButton
@@ -47,9 +50,6 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_save
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Form
-import soil.form.compose.rememberForm
-import soil.form.compose.rememberFormState
 
 @Serializable
 internal data class SmartCollectionEditorScreenUiState(

@@ -16,6 +16,9 @@ import com.github.skydoves.navgraph.annotations.NavPreview
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameTextField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionCreateNavKey
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
+import com.sorrowblue.comicviewer.framework.ui.form.rememberFormState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 import comicviewer.feature.collection.editor.generated.resources.Res
@@ -23,9 +26,6 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_basic_create
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Form
-import soil.form.compose.rememberForm
-import soil.form.compose.rememberFormState
 
 @Serializable
 internal data class BasicCollectionsCreateScreenUiState(val isLoading: Boolean = false)

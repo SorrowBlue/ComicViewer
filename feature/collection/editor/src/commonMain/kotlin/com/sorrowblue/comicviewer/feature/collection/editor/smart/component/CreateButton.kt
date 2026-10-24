@@ -11,12 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sorrowblue.comicviewer.framework.ui.form.Form
 import com.sorrowblue.comicviewer.framework.ui.material3.ButtonWithIcon
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_create
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Form
-import soil.form.compose.watch
 
 @Composable
 internal fun CreateButton(
@@ -27,8 +26,8 @@ internal fun CreateButton(
     ButtonWithIcon(
         modifier = modifier,
         onClick = form::handleSubmit,
-        enabled = form.watch { meta.canSubmit } && !isLoading,
-        iconEnabled = form.watch { meta.canSubmit } && !isLoading,
+        enabled = form.meta.canSubmit && !isLoading,
+        iconEnabled = form.meta.canSubmit && !isLoading,
         icon = {
             if (isLoading) {
                 CircularProgressIndicator(

@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.smart.component
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,17 +14,17 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.sorrowblue.comicviewer.feature.collection.editor.component.supportingText
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
+import com.sorrowblue.comicviewer.framework.ui.form.FieldValidator
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.TextField
+import com.sorrowblue.comicviewer.framework.ui.form.hasError
+import com.sorrowblue.comicviewer.framework.ui.form.notBlank
+import com.sorrowblue.comicviewer.framework.ui.form.supportingText
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_must_not_be_blank
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_search_keyword
 import org.jetbrains.compose.resources.stringResource
-import soil.form.FieldValidator
-import soil.form.compose.Field
-import soil.form.compose.Form
-import soil.form.compose.hasError
-import soil.form.rule.notBlank
 
 @Composable
 internal fun Form<SmartCollectionForm>.QueryField(
@@ -31,7 +32,7 @@ internal fun Form<SmartCollectionForm>.QueryField(
     modifier: Modifier = Modifier,
 ) {
     val errorMessage = stringResource(Res.string.collection_editor_error_must_not_be_blank)
-    Field(
+    TextField(
         name = QueryField,
         selector = { it.searchCondition.query },
         updater = { copy(searchCondition = searchCondition.copy(query = it)) },
@@ -39,12 +40,11 @@ internal fun Form<SmartCollectionForm>.QueryField(
         enabled = enabled,
     ) { field ->
         OutlinedTextField(
-            value = field.value,
-            onValueChange = field::onValueChange,
+            state = field.textFieldState,
             label = { Text(stringResource(Res.string.collection_editor_label_search_keyword)) },
             enabled = field.isEnabled,
             isError = field.hasError,
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             supportingText = field.supportingText(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,

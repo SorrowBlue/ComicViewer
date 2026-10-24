@@ -7,6 +7,7 @@ kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.framework.ui"
         androidResources.enable = true
+        withHostTest {}
     }
     sourceSets {
         commonMain {
@@ -33,6 +34,12 @@ kotlin {
                 implementation(libs.coil3.compose)
                 implementation(libs.composables.composeunstyledScrollbars)
                 implementation(libs.metro.viewmodelCompose)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(projects.framework.test)
+                implementation(libs.kotlin.test)
             }
         }
         androidMain {

@@ -6,7 +6,7 @@ package com.sorrowblue.comicviewer.feature.collection.editor.smart
 
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
-import soil.form.compose.Form
+import com.sorrowblue.comicviewer.framework.ui.form.Form
 
 internal interface SmartCollectionEditorScreenState {
     val uiState: SmartCollectionEditorScreenUiState

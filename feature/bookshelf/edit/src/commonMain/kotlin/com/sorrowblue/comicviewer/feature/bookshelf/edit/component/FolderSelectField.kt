@@ -20,6 +20,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.DeviceEditorForm
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.form.FieldValidator
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.FormField
+import com.sorrowblue.comicviewer.framework.ui.form.hasError
+import com.sorrowblue.comicviewer.framework.ui.form.notNull
+import com.sorrowblue.comicviewer.framework.ui.form.rememberField
+import com.sorrowblue.comicviewer.framework.ui.form.supportingText
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_select_folder
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_select_folder
@@ -31,12 +38,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
-import soil.form.FieldValidator
-import soil.form.compose.Form
-import soil.form.compose.FormField
-import soil.form.compose.hasError
-import soil.form.compose.rememberField
-import soil.form.rule.notNull
 
 expect fun localUriToDisplayPath(path: String): String
 

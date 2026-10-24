@@ -45,6 +45,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.nav.BookshelfWizardNavKey
 import com.sorrowblue.comicviewer.feature.permission.nav.LocalNetworkAccessPermissionNavKey
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
 import com.sorrowblue.comicviewer.framework.ui.layout.plus
@@ -58,7 +59,6 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_t
 import comicviewer.feature.bookshelf.edit.generated.resources.cancel
 import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.rememberForm
 
 @NavDestination(BookshelfWizardNavKey.Edit::class)
 @Composable

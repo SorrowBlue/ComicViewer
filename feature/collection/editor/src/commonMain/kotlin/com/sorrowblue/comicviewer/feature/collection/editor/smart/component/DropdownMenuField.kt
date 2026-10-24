@@ -18,10 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.sorrowblue.comicviewer.feature.collection.editor.component.supportingText
+import com.sorrowblue.comicviewer.framework.ui.form.FormField
+import com.sorrowblue.comicviewer.framework.ui.form.hasError
+import com.sorrowblue.comicviewer.framework.ui.form.supportingText
 import kotlinx.collections.immutable.PersistentList
-import soil.form.compose.FormField
-import soil.form.compose.hasError
 
 @Composable
 internal fun <T> DropdownMenuField(

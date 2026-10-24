@@ -33,7 +33,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.BookshelfEditorS
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm.Auth
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import soil.form.compose.Form
+import com.sorrowblue.comicviewer.framework.ui.form.Form
 
 @Composable
 internal fun SmbEditorContents(

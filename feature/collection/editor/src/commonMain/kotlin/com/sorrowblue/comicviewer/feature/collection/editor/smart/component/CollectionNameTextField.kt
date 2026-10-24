@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.smart.component
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,18 +14,18 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionForm
-import com.sorrowblue.comicviewer.feature.collection.editor.component.handleFocusChanged
-import com.sorrowblue.comicviewer.feature.collection.editor.component.supportingText
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
+import com.sorrowblue.comicviewer.framework.ui.form.FieldValidator
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.TextField
+import com.sorrowblue.comicviewer.framework.ui.form.handleFocusChanged
+import com.sorrowblue.comicviewer.framework.ui.form.hasError
+import com.sorrowblue.comicviewer.framework.ui.form.notBlank
+import com.sorrowblue.comicviewer.framework.ui.form.supportingText
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_must_not_be_blank
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_collection_name
 import org.jetbrains.compose.resources.stringResource
-import soil.form.FieldValidator
-import soil.form.compose.Field
-import soil.form.compose.Form
-import soil.form.compose.hasError
-import soil.form.rule.notBlank
 
 @Composable
 internal fun Form<SmartCollectionForm>.CollectionNameTextField2(
@@ -32,7 +33,7 @@ internal fun Form<SmartCollectionForm>.CollectionNameTextField2(
     modifier: Modifier = Modifier,
 ) {
     val notBlankError = stringResource(Res.string.collection_editor_error_must_not_be_blank)
-    Field(
+    TextField(
         name = CollectionNameField,
         selector = { it.name },
         updater = { copy(name = it) },
@@ -40,13 +41,12 @@ internal fun Form<SmartCollectionForm>.CollectionNameTextField2(
         enabled = enabled,
     ) { field ->
         OutlinedTextField(
-            value = field.value,
-            onValueChange = field::onValueChange,
+            state = field.textFieldState,
             label = { Text(stringResource(Res.string.collection_editor_label_collection_name)) },
             isError = field.hasError,
             enabled = field.isEnabled,
             supportingText = field.supportingText(),
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
@@ -65,7 +65,7 @@ internal fun CollectionNameTextField(
     enabled: Boolean = true,
 ) {
     val notBlankError = stringResource(Res.string.collection_editor_error_must_not_be_blank)
-    form.Field(
+    form.TextField(
         name = CollectionNameField,
         selector = { it.name },
         updater = { copy(name = it) },
@@ -73,8 +73,7 @@ internal fun CollectionNameTextField(
         enabled = enabled,
     ) { field ->
         OutlinedTextField(
-            value = field.value,
-            onValueChange = field::onValueChange,
+            state = field.textFieldState,
             label = { Text(stringResource(Res.string.collection_editor_label_collection_name)) },
             isError = field.hasError,
             enabled = field.isEnabled,
@@ -83,7 +82,7 @@ internal fun CollectionNameTextField(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
             ),
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             modifier = modifier
                 .handleFocusChanged(field)
                 .testTag(CollectionNameField),

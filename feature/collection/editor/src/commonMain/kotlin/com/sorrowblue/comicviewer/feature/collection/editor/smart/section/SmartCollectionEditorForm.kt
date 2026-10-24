@@ -20,7 +20,7 @@ import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.Rang
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.ShowHiddenFilesField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.SortTypeField
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import soil.form.compose.Form
+import com.sorrowblue.comicviewer.framework.ui.form.Form
 
 @Composable
 internal fun SmartCollectionEditorForm(
