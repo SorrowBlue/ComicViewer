@@ -27,8 +27,6 @@
     <string name="bookshelf_edit_smb_input_label_host">Server name / IP address</string>
     <string name="bookshelf_edit_smb_input_label_path">Path</string>
     <string name="bookshelf_edit_smb_input_label_port">Port</string>
-    <string name="bookshelf_edit_smb_input_prefix_path" translatable="false">/</string>
-    <string name="bookshelf_edit_smb_input_suffix_path" translatable="false">/</string>
     <string name="bookshelf_edit_title_edit">Edit bookshelf</string>
     <string name="bookshelf_edit_title_register">Registering bookshelf</string>
 
