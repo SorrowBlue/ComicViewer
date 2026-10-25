@@ -86,12 +86,25 @@ class IosSmbFileClientImpl: IosSmbFileClient {
     }
 
     func connect(path: String) async throws {
+        if path == "/" {
+            _ = try await self.manager.listShares()
+            return
+        }
         let client = try await connectShare(path: path)
         let subPath = path.withoutShare()
         try await client.attributesOfItem(atPath: subPath)
     }
 
     func current(path: String) async throws -> IosSmbFile {
+        if path == "/" {
+            return IosSmbFile(
+                path: "/",
+                name: "",
+                isDirectory: true,
+                fileSize: 0,
+                contentModificationDate: 0
+            )
+        }
         let client = try await connectShare(path: path)
         let subPath = path.withoutShare()
         let attributes = try await client.attributesOfItem(atPath: subPath)
@@ -106,6 +119,19 @@ class IosSmbFileClientImpl: IosSmbFileClient {
     }
 
     func listDirectory(path: String) async throws -> [IosSmbFile] {
+        if path == "/" {
+            let shares = try await self.manager.listShares()
+            return shares.map { share in
+                let name = share.name.nfcString()
+                return IosSmbFile(
+                    path: "/\(name)/",
+                    name: name,
+                    isDirectory: true,
+                    fileSize: 0,
+                    contentModificationDate: 0
+                )
+            }
+        }
         let url = URL(fileURLWithPath: path)
         let subPath = path.withoutShare()
         let client = try await connectShare(path: path)

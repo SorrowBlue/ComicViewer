@@ -10,6 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
+import com.sorrowblue.comicviewer.framework.ui.form.Field
+import com.sorrowblue.comicviewer.framework.ui.form.Form
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_range
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_range_bookshelf
@@ -18,8 +20,6 @@ import comicviewer.feature.collection.editor.generated.resources.collection_edit
 import kotlinx.collections.immutable.toPersistentList
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Field
-import soil.form.compose.Form
 
 @Composable
 internal fun Form<SmartCollectionForm>.RangeField(

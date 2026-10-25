@@ -6,6 +6,8 @@ package com.sorrowblue.comicviewer.feature.search
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -40,12 +42,12 @@ import com.sorrowblue.comicviewer.framework.ui.preview.fake.flowData
 @Composable
 internal fun SearchScreen(
     uiState: SearchScreenUiState,
+    queryState: TextFieldState,
     lazyPagingItems: LazyPagingItems<File>,
     lazyGridState: LazyGridState,
     onBackClick: () -> Unit,
     onSmartCollectionClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onQueryChange: (String) -> Unit,
     onRangeClick: (SearchCondition.Range) -> Unit,
     onPeriodClick: (SearchCondition.Period) -> Unit,
     onSortTypeClick: (SortType) -> Unit,
@@ -58,12 +60,12 @@ internal fun SearchScreen(
     Scaffold(
         topBar = {
             SearchTopAppBar(
+                queryState = queryState,
                 searchCondition = uiState.searchCondition,
                 scrollBehavior = scrollBehavior,
                 onBackClick = onBackClick,
                 onSmartCollectionClick = onSmartCollectionClick,
                 onSettingsClick = onSettingsClick,
-                onQueryChange = onQueryChange,
                 onRangeClick = onRangeClick,
                 onPeriodClick = onPeriodClick,
                 onSortTypeClick = onSortTypeClick,
@@ -101,13 +103,13 @@ private fun SearchScreenPreview() = PreviewTheme {
         uiState = SearchScreenUiState(
             searchCondition = SearchCondition(),
         ),
+        queryState = rememberTextFieldState(),
         lazyPagingItems = PagingData.flowData<File> { fakeBookFile() }
             .collectAsLazyPagingItems(),
         lazyGridState = LazyGridState(),
         onBackClick = {},
         onSmartCollectionClick = {},
         onSettingsClick = {},
-        onQueryChange = {},
         onRangeClick = {},
         onPeriodClick = {},
         onSortTypeClick = {},

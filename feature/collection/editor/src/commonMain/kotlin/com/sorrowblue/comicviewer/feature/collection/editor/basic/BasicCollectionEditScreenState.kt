@@ -20,16 +20,16 @@ import com.sorrowblue.comicviewer.domain.model.collection.BasicCollection
 import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.FormState
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
+import com.sorrowblue.comicviewer.framework.ui.form.rememberFormState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import soil.form.compose.Form
-import soil.form.compose.FormState
-import soil.form.compose.rememberForm
-import soil.form.compose.rememberFormState
 
 internal sealed interface BasicCollectionEditScreenStateEvent {
     data object EditComplete : BasicCollectionEditScreenStateEvent

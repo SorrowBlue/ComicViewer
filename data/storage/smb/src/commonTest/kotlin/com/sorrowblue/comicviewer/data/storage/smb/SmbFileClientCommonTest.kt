@@ -54,11 +54,23 @@ class SmbFileClientCommonTest {
     @Test
     fun testConnect() = runTest {
         val client = createClient()
+        client.connect("/")
         client.connect(BuildConfig.SMB_PATH)
 
         val bad = "/nope-nope-12345/"
         val ex = assertFailsWith<Throwable> { client.connect(bad) }
         assertTrue(ex is FileClientException || ex is Exception)
+    }
+
+    @Test
+    fun testRootDirectory() = runTest {
+        val client = createClient()
+        val root = client.current("/")
+        assertTrue(root is Folder)
+        assertEquals("/", root.path)
+
+        val shares = client.listFiles(root)
+        assertTrue(shares.isNotEmpty(), "listFiles on root should return shares")
     }
 
     @Test

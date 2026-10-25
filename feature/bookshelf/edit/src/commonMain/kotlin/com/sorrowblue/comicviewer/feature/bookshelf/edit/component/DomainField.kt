@@ -5,6 +5,7 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,13 +14,14 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.TextField
+import com.sorrowblue.comicviewer.framework.ui.form.handleFocusChanged
+import com.sorrowblue.comicviewer.framework.ui.form.hasError
+import com.sorrowblue.comicviewer.framework.ui.form.supportingText
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_hint_domain
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Field
-import soil.form.compose.Form
-import soil.form.compose.hasError
-import soil.form.compose.watch
 
 @Composable
 internal fun DomainField(
@@ -27,7 +29,7 @@ internal fun DomainField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    form.Field(
+    form.TextField(
         name = DomainField,
         selector = { it.domain },
         updater = { copy(domain = it) },
@@ -35,17 +37,14 @@ internal fun DomainField(
         enabled = enabled,
     ) { field ->
         OutlinedTextField(
-            value = field.value,
-            onValueChange = field::onValueChange,
+            state = field.textFieldState,
             label = { Text(text = stringResource(Res.string.bookshelf_edit_hint_domain)) },
             isError =
                 field.hasError ||
-                    form.watch {
-                        meta.fields[AuthField]
-                            ?.error
-                            ?.messages
-                            ?.isNotEmpty() == true
-                    },
+                    form.meta.fields[AuthField]
+                        ?.error
+                        ?.messages
+                        ?.isNotEmpty() == true,
             enabled = field.isEnabled,
             supportingText = field.supportingText(),
             keyboardOptions = KeyboardOptions(
@@ -53,7 +52,7 @@ internal fun DomainField(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
             ),
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             modifier = modifier
                 .handleFocusChanged(field)
                 .testTag(DomainField),

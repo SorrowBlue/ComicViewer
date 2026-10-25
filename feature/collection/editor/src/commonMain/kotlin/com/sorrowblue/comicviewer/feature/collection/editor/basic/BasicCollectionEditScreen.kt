@@ -40,6 +40,9 @@ import com.sorrowblue.comicviewer.feature.collection.nav.BasicCollectionEditNavK
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.ui.core.isCompactWindowClass
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
+import com.sorrowblue.comicviewer.framework.ui.form.rememberFormState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import com.sorrowblue.comicviewer.framework.ui.layout.PaddingValuesSides
 import com.sorrowblue.comicviewer.framework.ui.layout.only
@@ -53,9 +56,6 @@ import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_cancel
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_title_basic_edit
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Form
-import soil.form.compose.rememberForm
-import soil.form.compose.rememberFormState
 
 @NavDestination(BasicCollectionEditNavKey::class)
 @Composable
@@ -88,6 +88,7 @@ internal fun BasicCollectionEditScreen(
                         IconButton(
                             onClick = form::handleSubmit,
                             enabled = form.meta.canSubmit && !uiState.isLoading,
+                            modifier = Modifier.testTag("CreateButton"),
                         ) {
                             Icon(ComicIcons.Save, null)
                         }

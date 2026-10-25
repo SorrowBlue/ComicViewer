@@ -26,7 +26,6 @@ androidx-work = "2.12.0"
 buildconfig = "6.1.2"
 coil = "3.6.3"
 composables = "2.10.1"
-compose-animationGraphics = "1.13.0-beta02"
 compose-material3 = "1.13.0-beta01"
 compose-material3Adaptive = "1.3.0"
 composeHotReload = "1.3.0-beta02"
@@ -53,7 +52,6 @@ metro = "1.4.5"
 multiplatform-navigation3 = "1.2.0"
 navgraph = "0.3.0"
 robolectric = "4.17"
-soil = "1.0.0-alpha15"
 versionCatalogLinter = "1.1.0"
 
 [libraries]
@@ -94,7 +92,6 @@ coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil3-core = { group = "io.coil-kt.coil3", name = "coil-core", version.ref = "coil" }
 composables-composeunstyledScrollbars = { group = "com.composables", name = "composeunstyled-scrollbars", version.ref = "composables" }
-compose-animationGraphics = { group = "androidx.compose.animation", name = "animation-graphics", version.ref = "compose-animationGraphics" }
 compose-componentsAnimatedimage = { group = "org.jetbrains.compose.components", name = "components-animatedimage", version.ref = "composeMultiplatform" }
 compose-componentsResources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "composeMultiplatform" }
 compose-edgeToEdgePreview = { group = "de.drick.compose", name = "edge-to-edge-preview", version.ref = "edge2edgePreview" }
@@ -146,7 +143,6 @@ metro-viewmodel = { group = "dev.zacsweers.metro", name = "metrox-viewmodel", ve
 metro-viewmodelCompose = { group = "dev.zacsweers.metro", name = "metrox-viewmodel-compose", version.ref = "metro" }
 navgraph-gradlePlugin = { group = "com.github.skydoves", name = "compose-nav-graph-gradle", version.ref = "navgraph" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
-soil-form = { group = "com.soil-kt.soil", name = "form", version.ref = "soil" }
 
 [bundles]
 detekt = [

@@ -5,6 +5,8 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -20,6 +22,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.DeviceEditorForm
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.form.FieldValidator
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.FormField
+import com.sorrowblue.comicviewer.framework.ui.form.hasError
+import com.sorrowblue.comicviewer.framework.ui.form.notNull
+import com.sorrowblue.comicviewer.framework.ui.form.rememberField
+import com.sorrowblue.comicviewer.framework.ui.form.supportingText
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_select_folder
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_select_folder
@@ -31,12 +40,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import logcat.logcat
 import org.jetbrains.compose.resources.stringResource
-import soil.form.FieldValidator
-import soil.form.compose.Form
-import soil.form.compose.FormField
-import soil.form.compose.hasError
-import soil.form.compose.rememberField
-import soil.form.rule.notNull
 
 expect fun localUriToDisplayPath(path: String): String
 
@@ -44,10 +47,13 @@ expect fun localUriToDisplayPath(path: String): String
 internal fun FolderSelectField(state: FolderSelectFieldState, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
-        value = state.formField.value
-            ?.let { localUriToDisplayPath(it) }
-            .orEmpty(),
-        onValueChange = {},
+        state = remember(state.formField.value) {
+            TextFieldState(
+                state.formField.value
+                    ?.let { localUriToDisplayPath(it) }
+                    .orEmpty(),
+            )
+        },
         label = { Text(text = stringResource(Res.string.bookshelf_edit_label_select_folder)) },
         isError = state.formField.hasError,
         enabled = state.formField.isEnabled,
@@ -67,7 +73,7 @@ internal fun FolderSelectField(state: FolderSelectFieldState, modifier: Modifier
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next,
         ),
-        singleLine = true,
+        lineLimits = TextFieldLineLimits.SingleLine,
         modifier = modifier
             .testTag("FolderSelect")
             .onFocusChanged {

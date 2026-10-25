@@ -16,6 +16,9 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.ui.AppState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.LocalAppState
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
+import com.sorrowblue.comicviewer.framework.ui.form.rememberFormState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_msg_success_create
@@ -26,9 +29,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.getString
-import soil.form.compose.Form
-import soil.form.compose.rememberForm
-import soil.form.compose.rememberFormState
 
 internal sealed interface BasicCollectionCreateScreenStateEvent {
     data object CreateComplete : BasicCollectionCreateScreenStateEvent

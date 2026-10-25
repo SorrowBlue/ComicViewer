@@ -19,6 +19,11 @@ import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.BookshelfField
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.form.FieldError
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.FormState
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
+import com.sorrowblue.comicviewer.framework.ui.form.rememberFormState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_error_not_get_bookshelf
@@ -29,13 +34,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.getString
-import soil.form.FieldError
-import soil.form.FormOptions
-import soil.form.compose.Form
-import soil.form.compose.FormPolicy
-import soil.form.compose.FormState
-import soil.form.compose.rememberForm
-import soil.form.compose.rememberFormState
 
 @Composable
 internal fun rememberSmartCollectionCreateScreenState(
@@ -50,7 +48,6 @@ internal fun rememberSmartCollectionCreateScreenState(
             searchCondition = searchCondition,
         ),
         saver = kSerializableSaver(),
-        policy = FormPolicy(FormOptions(false)),
     )
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     return remember(viewModel, lifecycle) {

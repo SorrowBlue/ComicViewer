@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.framework.designsystem.icon.ComicIcons
+import com.sorrowblue.comicviewer.framework.ui.form.Field
+import com.sorrowblue.comicviewer.framework.ui.form.Form
 import com.sorrowblue.comicviewer.framework.ui.material3.SwitchWithText
 import comicviewer.feature.collection.editor.generated.resources.Res
 import comicviewer.feature.collection.editor.generated.resources.collection_editor_label_show_hidden_files
 import org.jetbrains.compose.resources.stringResource
-import soil.form.compose.Field
-import soil.form.compose.Form
 
 @Composable
 internal fun Form<SmartCollectionForm>.ShowHiddenFilesField(

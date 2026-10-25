@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -28,9 +29,9 @@ import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 @Composable
 internal fun AuthenticationRowContents(
     uiState: AuthenticationScreenUiState,
+    pinState: TextFieldState,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
-    onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -67,7 +68,7 @@ internal fun AuthenticationRowContents(
             }
             InputContents(
                 uiState = uiState,
-                onPinChange = onPinChange,
+                pinState = pinState,
                 onNextClick = onNextClick,
                 modifier = Modifier
                     .weight(1f)
@@ -80,9 +81,9 @@ internal fun AuthenticationRowContents(
 @Composable
 internal fun AuthenticationColumnContents(
     uiState: AuthenticationScreenUiState,
+    pinState: TextFieldState,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
-    onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -129,7 +130,7 @@ internal fun AuthenticationColumnContents(
         ) {
             InputContents(
                 uiState = uiState,
-                onPinChange = onPinChange,
+                pinState = pinState,
                 onNextClick = onNextClick,
             )
         }

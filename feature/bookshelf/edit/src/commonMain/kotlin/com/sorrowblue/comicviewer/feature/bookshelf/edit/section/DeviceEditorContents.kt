@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.FolderSelectF
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.BookshelfEditorScreenUiState
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.DeviceEditorForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
-import soil.form.compose.Form
+import com.sorrowblue.comicviewer.framework.ui.form.Form
 
 @Composable
 internal fun DeviceEditorContents(

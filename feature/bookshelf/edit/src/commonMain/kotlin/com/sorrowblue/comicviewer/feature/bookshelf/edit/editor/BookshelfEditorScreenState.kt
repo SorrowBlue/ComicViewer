@@ -25,6 +25,11 @@ import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PathFieldName
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.PortField
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.component.rememberFolderSelectFieldState
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.form.FieldError
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.FormState
+import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
+import com.sorrowblue.comicviewer.framework.ui.form.rememberFormState
 import com.sorrowblue.comicviewer.framework.ui.kSerializableSaver
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_error_bad_auth
@@ -40,16 +45,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import soil.form.FieldError
-import soil.form.FieldOptions
-import soil.form.FieldValidationMode
-import soil.form.FieldValidationStrategy
-import soil.form.FormOptions
-import soil.form.compose.Form
-import soil.form.compose.FormPolicy
-import soil.form.compose.FormState
-import soil.form.compose.rememberForm
-import soil.form.compose.rememberFormState
 
 internal sealed interface BookshelfEditorScreenEvent {
     data object Complete : BookshelfEditorScreenEvent
@@ -67,20 +62,7 @@ internal fun rememberBookshelfEditorScreenState(
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val state = when (editType.bookshelfType) {
         BookshelfType.SMB -> {
-            val formState =
-                rememberFormState(
-                    SmbEditorForm(),
-                    kSerializableSaver(),
-                    policy = FormPolicy(
-                        formOptions = FormOptions(preValidation = false),
-                        fieldOptions = FieldOptions(
-                            validationStrategy = FieldValidationStrategy(
-                                initial = FieldValidationMode.Change,
-                                next = { _, _ -> FieldValidationMode.Change },
-                            ),
-                        ),
-                    ),
-                )
+            val formState = rememberFormState(SmbEditorForm(), kSerializableSaver())
             rememberSaveable(
                 saver = SmbEditorScreenStateImpl.saver(
                     coroutineScope = coroutineScope,
@@ -339,7 +321,7 @@ private abstract class BookshelfEditorScreenStateImpl(
 
                             RegisterBookshelfUseCase.Error.Network -> {
                                 formState.setError(
-                                    "auth" to FieldError(
+                                    AuthField to FieldError(
                                         getString(Res.string.bookshelf_edit_error_bad_network),
                                     ),
                                 )
@@ -354,7 +336,7 @@ private abstract class BookshelfEditorScreenStateImpl(
                             }
 
                             RegisterBookshelfUseCase.Error.System -> {
-                                formState.setError("auth" to FieldError("unknown error"))
+                                formState.setError(AuthField to FieldError("unknown error"))
                             }
                         }
                     }

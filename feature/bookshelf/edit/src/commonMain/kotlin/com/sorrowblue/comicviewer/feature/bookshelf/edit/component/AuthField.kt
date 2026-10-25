@@ -17,15 +17,14 @@ import androidx.compose.ui.platform.testTag
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.designsystem.theme.fixedColors
+import com.sorrowblue.comicviewer.framework.ui.form.FieldName
+import com.sorrowblue.comicviewer.framework.ui.form.Form
+import com.sorrowblue.comicviewer.framework.ui.form.FormField
+import com.sorrowblue.comicviewer.framework.ui.form.rememberField
 import comicviewer.feature.bookshelf.edit.generated.resources.Res
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_guest
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_edit_label_username_password
 import org.jetbrains.compose.resources.stringResource
-import soil.form.FieldName
-import soil.form.compose.Form
-import soil.form.compose.FormField
-import soil.form.compose.rememberField
-import soil.form.compose.watch
 
 @Composable
 internal fun AuthField(
@@ -57,7 +56,7 @@ internal fun AuthField(
                 }
             }
         }
-        val error = form.watch { meta.fields[AuthField]?.error }
+        val error = form.meta.fields[AuthField]?.error
         error?.messages?.firstOrNull()?.let {
             Text(it, style = ComicTheme.typography.bodySmall, color = ComicTheme.colorScheme.error)
         }

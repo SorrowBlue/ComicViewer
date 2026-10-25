@@ -6,6 +6,8 @@ package com.sorrowblue.comicviewer.framework.ui.material3
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenu
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -42,13 +44,13 @@ fun <T : ExposedDropdownMenu> ExposedDropdownMenu(
         modifier = modifier,
     ) {
         OutlinedTextField(
+            state = remember(value) { TextFieldState(value) },
             modifier = Modifier
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             readOnly = true,
-            value = value,
-            onValueChange = {},
+            lineLimits = TextFieldLineLimits.SingleLine,
             label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),

@@ -17,8 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -36,11 +40,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.semantics.contentDataType
 import androidx.compose.ui.semantics.semantics
@@ -50,33 +49,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sorrowblue.comicviewer.feature.authentication.PinDrawable
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
+import com.sorrowblue.comicviewer.framework.ui.form.DigitOnlyInputTransformation
+import com.sorrowblue.comicviewer.framework.ui.form.NormalizeDigitsEffect
 import com.sorrowblue.comicviewer.framework.ui.preview.PreviewTheme
 
 @Composable
 internal fun PinTextField(
-    pin: String,
-    onPinChange: (String) -> Unit,
+    state: TextFieldState,
     onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    NormalizeDigitsEffect(state)
     Box(
-        modifier = modifier
-            .onPreviewKeyEvent {
-                when (it.type) {
-                    KeyEventType.KeyUp if it.key == Key.Enter -> {
-                        onNextClick()
-                        false
-                    }
-
-                    KeyEventType.KeyDown if it.key == Key.Enter -> true
-
-                    else -> false
-                }
-            },
+        modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
-        val pinCount = pin.count()
+        val pinCount = state.text.length
         val focusRequester = remember { FocusRequester() }
         val scrollState = rememberLazyListState()
         var hasFocus by remember { mutableStateOf(false) }
@@ -85,14 +74,17 @@ internal fun PinTextField(
             if (hasFocus) colors.focusedIndicatorColor else colors.unfocusedIndicatorColor,
         )
         TextField(
-            value = pin,
-            onValueChange = onPinChange,
+            state = state,
+            lineLimits = TextFieldLineLimits.SingleLine,
+            inputTransformation = DigitOnlyInputTransformation,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Next,
             ),
             colors = TextFieldDefaults.colors(),
-            keyboardActions = KeyboardActions(onNext = { onNextClick() }),
+            onKeyboardAction = KeyboardActionHandler {
+                onNextClick()
+            },
             modifier = Modifier
                 .size(1.dp)
                 .alpha(0f)
@@ -135,7 +127,7 @@ internal fun PinTextField(
         LaunchedEffect(pinCount) {
             scrollState.animateScrollToItem(pinCount)
         }
-        SideEffect(Unit) {
+        SideEffect {
             focusRequester.requestFocus()
         }
     }
@@ -146,11 +138,10 @@ internal fun PinTextField(
 private fun PinTextFieldPreview() {
     PreviewTheme {
         Column {
-            var pin by remember { mutableStateOf("1111") }
+            val state = rememberTextFieldState("1111")
             PinTextField(
-                pin = pin,
-                onPinChange = { pin = it },
-                onNextClick = { pin = "" },
+                state = state,
+                onNextClick = state::clearText,
                 modifier = Modifier
                     .width(240.dp)
                     .height(48.dp),

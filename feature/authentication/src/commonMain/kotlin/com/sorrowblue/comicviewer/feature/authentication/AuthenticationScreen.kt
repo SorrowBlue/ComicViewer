@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,80 +34,56 @@ import org.jetbrains.compose.resources.StringResource
 
 @Serializable
 internal sealed interface AuthenticationScreenUiState {
-    val pin: String
     val error: ErrorType?
     val loading: Boolean
-
-    fun copyPin(pin: String): AuthenticationScreenUiState
 
     @Serializable
     sealed interface Register : AuthenticationScreenUiState {
         @Serializable
         data class Input(
-            override val pin: String,
             override val error: ErrorType? = null,
             override val loading: Boolean = false,
-        ) : Register {
-            override fun copyPin(pin: String) = copy(pin = pin)
-        }
+        ) : Register
 
         @Serializable
         data class Confirm(
-            override val pin: String,
             override val error: ErrorType? = null,
             override val loading: Boolean = false,
-        ) : Register {
-            override fun copyPin(pin: String) = copy(pin = pin)
-        }
+        ) : Register
     }
 
     @Serializable
     data class Authentication(
-        override val pin: String,
         override val error: ErrorType? = null,
         override val loading: Boolean = false,
-    ) : AuthenticationScreenUiState {
-        override fun copyPin(pin: String) = copy(pin = pin)
-    }
+    ) : AuthenticationScreenUiState
 
     @Serializable
     sealed interface Change : AuthenticationScreenUiState {
         @Serializable
         data class ConfirmOld(
-            override val pin: String,
             override val error: ErrorType? = null,
             override val loading: Boolean = false,
-        ) : Change {
-            override fun copyPin(pin: String) = copy(pin = pin)
-        }
+        ) : Change
 
         @Serializable
         data class Input(
-            override val pin: String,
             override val error: ErrorType? = null,
             override val loading: Boolean = false,
-        ) : Change {
-            override fun copyPin(pin: String) = copy(pin = pin)
-        }
+        ) : Change
 
         @Serializable
         data class Confirm(
-            override val pin: String,
             override val error: ErrorType? = null,
             override val loading: Boolean = false,
-        ) : Change {
-            override fun copyPin(pin: String) = copy(pin = pin)
-        }
+        ) : Change
     }
 
     @Serializable
     data class Erase(
-        override val pin: String,
         override val error: ErrorType? = null,
         override val loading: Boolean = false,
-    ) : AuthenticationScreenUiState {
-        override fun copyPin(pin: String) = copy(pin = pin)
-    }
+    ) : AuthenticationScreenUiState
 }
 
 internal enum class ErrorType(val resource: StringResource) {
@@ -118,10 +96,10 @@ internal enum class ErrorType(val resource: StringResource) {
 @Composable
 internal fun AuthenticationScreen(
     uiState: AuthenticationScreenUiState,
+    pinState: TextFieldState,
     snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
-    onPinChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DetectOrientation(modifier.fillMaxSize()) { isLandscape ->
@@ -133,9 +111,9 @@ internal fun AuthenticationScreen(
             if (isLandscape) {
                 AuthenticationRowContents(
                     uiState = uiState,
+                    pinState = pinState,
                     onBackClick = onBackClick,
                     onNextClick = onNextClick,
-                    onPinChange = onPinChange,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(contentPadding)
@@ -144,9 +122,9 @@ internal fun AuthenticationScreen(
             } else {
                 AuthenticationColumnContents(
                     uiState = uiState,
+                    pinState = pinState,
                     onBackClick = onBackClick,
                     onNextClick = onNextClick,
-                    onPinChange = onPinChange,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(contentPadding)
@@ -162,10 +140,10 @@ internal fun AuthenticationScreen(
 @PreviewMultiplatform
 internal fun AuthenticationScreenPreview() = PreviewTheme {
     AuthenticationScreen(
-        uiState = AuthenticationScreenUiState.Register.Input(pin = "1234"),
+        uiState = AuthenticationScreenUiState.Register.Input(),
+        pinState = rememberTextFieldState("1234"),
         snackbarHostState = remember { SnackbarHostState() },
         onBackClick = {},
         onNextClick = {},
-        onPinChange = {},
     )
 }
