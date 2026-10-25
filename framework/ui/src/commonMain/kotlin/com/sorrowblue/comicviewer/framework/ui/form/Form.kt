@@ -96,7 +96,26 @@ fun <T : Any, V> Form<T>.rememberField(
     validator: ((V) -> List<String>)? = null,
     dependsOn: Set<FieldName> = emptySet(),
     enabled: Boolean = true,
-): FormField<V> {
+): FormField<V> = rememberRegisteredField(
+    name = name,
+    selector = selector,
+    updater = updater,
+    validator = validator,
+    dependsOn = dependsOn,
+    enabled = enabled,
+)
+
+@Composable
+private fun <T : Any, V> Form<T>.rememberRegisteredField(
+    name: FieldName,
+    selector: (T) -> V,
+    updater: T.(V) -> T,
+    validator: ((V) -> List<String>)?,
+    dependsOn: Set<FieldName>,
+    enabled: Boolean,
+    valueToText: ((V) -> String)? = null,
+    textToValue: ((String) -> V)? = null,
+): RegisteredField<T, V> {
     val field = remember(state, name) {
         state.getOrCreateField(
             name = name,
@@ -105,6 +124,8 @@ fun <T : Any, V> Form<T>.rememberField(
             validator = validator,
             dependsOn = dependsOn,
             enabled = enabled,
+            valueToText = valueToText,
+            textToValue = textToValue,
         )
     }
     DisposableEffect(field, name) {
@@ -180,32 +201,16 @@ fun <T : Any> Form<T>.TextField(
     enabled: Boolean = true,
     content: @Composable (TextFormField<String>) -> Unit,
 ) {
-    val field = remember(state, name) {
-        state.getOrCreateField(
-            name = name,
-            selector = selector,
-            updater = updater,
-            validator = validator,
-            dependsOn = dependsOn,
-            enabled = enabled,
-            valueToText = { it },
-            textToValue = { it },
-        )
-    }
-    DisposableEffect(field, name) {
-        field.isMounted = true
-        state.mountField(name)
-        onDispose {
-            field.isMounted = false
-            state.unmountField(name)
-        }
-    }
-    DisposableEffect(field, enabled, validator, dependsOn) {
-        field.isEnabled = enabled
-        field.validator = validator
-        field.dependsOn = dependsOn
-        onDispose {}
-    }
+    val field = rememberRegisteredField(
+        name = name,
+        selector = selector,
+        updater = updater,
+        validator = validator,
+        dependsOn = dependsOn,
+        enabled = enabled,
+        valueToText = { it },
+        textToValue = { it },
+    )
     LaunchedEffect(field.textFieldState) {
         snapshotFlow { field.textFieldState.text.toString() }
             .collect { currentText ->
@@ -239,37 +244,19 @@ fun <T : Any> Form<T>.IntTextField(
     invalidValue: Int = -1,
     content: @Composable (TextFormField<Int>) -> Unit,
 ) {
-    val field = remember(state, name) {
-        state.getOrCreateField(
-            name = name,
-            selector = selector,
-            updater = updater,
-            validator = validator,
-            dependsOn = dependsOn,
-            enabled = enabled,
-            valueToText = { if (it < 0) "" else it.toString() },
-            textToValue = { it.toIntOrNull() ?: invalidValue },
-        )
-    }
-    DisposableEffect(field, name) {
-        field.isMounted = true
-        state.mountField(name)
-        onDispose {
-            field.isMounted = false
-            state.unmountField(name)
-        }
-    }
-    DisposableEffect(field, enabled, validator, dependsOn) {
-        field.isEnabled = enabled
-        field.validator = validator
-        field.dependsOn = dependsOn
-        onDispose {}
-    }
-    LaunchedEffect(field.textFieldState) {
-        snapshotFlow { field.textFieldState.text.toString() }
-            .collect { currentText ->
-                field.onTextObserved(currentText)
-            }
-    }
+    val field = rememberRegisteredField(
+        name = name,
+        selector = selector,
+        updater = updater,
+        validator = validator,
+        dependsOn = dependsOn,
+        enabled = enabled,
+        valueToText = { if (it < 0) "" else it.toString() },
+        textToValue = { it.normalizeDigits().toIntOrNull() ?: invalidValue },
+    )
+    NormalizeDigitsEffect(
+        state = field.textFieldState,
+        onTextChange = field::onTextObserved,
+    )
     content(field)
 }

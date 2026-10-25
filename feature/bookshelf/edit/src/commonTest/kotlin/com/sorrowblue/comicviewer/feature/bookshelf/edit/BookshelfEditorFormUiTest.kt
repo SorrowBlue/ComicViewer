@@ -151,10 +151,15 @@ class BookshelfEditorFormUiTest {
         onNodeWithTag(PortField).performTextInput("70000")
         onNodeWithTag("SaveButton").assertIsNotEnabled()
 
-        // Non-numeric port disables submit
+        // Non-numeric input is rejected by DigitOnlyInputTransformation, leaving PortField empty
         onNodeWithTag(PortField).performTextClearance()
         onNodeWithTag(PortField).performTextInput("abc")
         onNodeWithTag("SaveButton").assertIsNotEnabled()
+
+        // Full-width digits are normalized to half-width ASCII digits
+        onNodeWithTag(PortField).performTextInput("８０８０")
+        onNodeWithTag(PortField).assertTextContains("8080")
+        onNodeWithTag("SaveButton").assertIsEnabled()
 
         // Resetting formState updates TextFieldState values and clears errors
         runOnIdle {

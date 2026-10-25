@@ -21,10 +21,10 @@ fun AuthenticationScreenRoot(
     val state = rememberAuthenticationScreenState(screenType)
     AuthenticationScreen(
         uiState = state.uiState,
+        pinState = state.pinState,
         snackbarHostState = state.snackbarHostState,
         onBackClick = onBackClick,
         onNextClick = state::onNextClick,
-        onPinChange = state::onPinChange,
         modifier = modifier.testTag("AuthenticationScreenRoot"),
     )
 

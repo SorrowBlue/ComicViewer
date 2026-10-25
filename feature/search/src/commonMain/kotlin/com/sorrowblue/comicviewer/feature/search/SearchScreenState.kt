@@ -6,6 +6,8 @@ package com.sorrowblue.comicviewer.feature.search
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -13,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
@@ -32,13 +35,12 @@ import kotlinx.coroutines.flow.onEach
 @Stable
 internal interface SearchScreenState {
     val uiState: SearchScreenUiState
+    val queryState: TextFieldState
     val lazyGridState: LazyGridState
     val lazyPagingItems: LazyPagingItems<File>
 
     var isSkipFirstRefresh: Boolean
     var isScrollableTop: Boolean
-
-    fun onQueryChange(query: String)
 
     fun onRangeClick(range: SearchCondition.Range)
 
@@ -58,11 +60,15 @@ internal fun rememberSearchScreenState(
     },
 ): SearchScreenState {
     val coroutineScope = rememberCoroutineScope()
+    val queryState = rememberTextFieldState(
+        initialText = viewModel.searchConditionFlow.value.query,
+    )
     val lazyGridState = rememberLazyGridState()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val state = remember(lazyGridState, lifecycle) {
+    val state = remember(queryState, lazyGridState, lifecycle) {
         SearchScreenStateImpl(
             path = path,
+            queryState = queryState,
             lazyGridState = lazyGridState,
             lifecycle = lifecycle,
             coroutineScope = coroutineScope,
@@ -77,6 +83,7 @@ internal fun rememberSearchScreenState(
 @OptIn(SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
     private val path: String,
+    override val queryState: TextFieldState,
     override val lazyGridState: LazyGridState,
     lifecycle: Lifecycle,
     coroutineScope: CoroutineScope,
@@ -98,15 +105,20 @@ private class SearchScreenStateImpl(
                 uiState = uiState.copy(searchCondition = it)
             }
             .launchIn(coroutineScope)
+
+        snapshotFlow { queryState.text.toString() }
+            .flowWithLifecycle(lifecycle)
+            .onEach { query ->
+                if (query != searchConditionFlow.value.query) {
+                    updateSearchCondition(searchConditionFlow.value.copy(query = query))
+                    update()
+                }
+            }
+            .launchIn(coroutineScope)
     }
 
     override fun onPeriodClick(period: SearchCondition.Period) {
         updateSearchCondition(searchConditionFlow.value.copy(period = period))
-        update()
-    }
-
-    override fun onQueryChange(query: String) {
-        updateSearchCondition(searchConditionFlow.value.copy(query = query))
         update()
     }
 

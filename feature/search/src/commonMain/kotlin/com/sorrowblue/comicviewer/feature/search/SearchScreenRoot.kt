@@ -30,6 +30,7 @@ internal fun SearchScreenRoot(
     val lazyPagingItems = state.lazyPagingItems
     SearchScreen(
         uiState = state.uiState,
+        queryState = state.queryState,
         lazyPagingItems = lazyPagingItems,
         lazyGridState = state.lazyGridState,
         onBackClick = onBackClick,
@@ -37,7 +38,6 @@ internal fun SearchScreenRoot(
             onSmartCollectionClick(bookshelfId, state.uiState.searchCondition)
         },
         onSettingsClick = onSettingsClick,
-        onQueryChange = state::onQueryChange,
         onRangeClick = state::onRangeClick,
         onPeriodClick = state::onPeriodClick,
         onSortTypeClick = state::onSortTypeClick,

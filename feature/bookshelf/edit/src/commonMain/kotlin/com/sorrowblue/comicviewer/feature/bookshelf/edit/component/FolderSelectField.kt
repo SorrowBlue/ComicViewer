@@ -5,6 +5,8 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.edit.component
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -45,10 +47,13 @@ expect fun localUriToDisplayPath(path: String): String
 internal fun FolderSelectField(state: FolderSelectFieldState, modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
-        value = state.formField.value
-            ?.let { localUriToDisplayPath(it) }
-            .orEmpty(),
-        onValueChange = {},
+        state = remember(state.formField.value) {
+            TextFieldState(
+                state.formField.value
+                    ?.let { localUriToDisplayPath(it) }
+                    .orEmpty(),
+            )
+        },
         label = { Text(text = stringResource(Res.string.bookshelf_edit_label_select_folder)) },
         isError = state.formField.hasError,
         enabled = state.formField.isEnabled,
@@ -68,7 +73,7 @@ internal fun FolderSelectField(state: FolderSelectFieldState, modifier: Modifier
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next,
         ),
-        singleLine = true,
+        lineLimits = TextFieldLineLimits.SingleLine,
         modifier = modifier
             .testTag("FolderSelect")
             .onFocusChanged {

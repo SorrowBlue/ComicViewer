@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,12 +64,12 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SearchTopAppBar(
+    queryState: TextFieldState,
     searchCondition: SearchCondition,
     scrollBehavior: TopAppBarScrollBehavior,
     onBackClick: () -> Unit,
     onSmartCollectionClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onQueryChange: (String) -> Unit,
     onRangeClick: (SearchCondition.Range) -> Unit,
     onPeriodClick: (SearchCondition.Period) -> Unit,
     onSortTypeClick: (SortType) -> Unit,
@@ -78,24 +80,23 @@ internal fun SearchTopAppBar(
             title = {
                 val skc = LocalSoftwareKeyboardController.current
                 TextField(
-                    value = searchCondition.query,
-                    onValueChange = onQueryChange,
+                    state = queryState,
                     placeholder = { Text(text = stringResource(Res.string.search_label_search)) },
-                    maxLines = 1,
+                    lineLimits = TextFieldLineLimits.SingleLine,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent,
                     ),
-                    trailingIcon = if (searchCondition.query.isEmpty()) {
+                    trailingIcon = if (queryState.text.isEmpty()) {
                         null
                     } else {
                         {
-                            IconButton(onClick = { onQueryChange("") }) {
+                            IconButton(onClick = queryState::clearText) {
                                 Icon(ComicIcons.Close, null)
                             }
                         }
                     },
-                    keyboardActions = KeyboardActions(onSearch = { skc?.hide() }),
+                    onKeyboardAction = { skc?.hide() },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     modifier = Modifier.fillMaxWidth(),
                 )

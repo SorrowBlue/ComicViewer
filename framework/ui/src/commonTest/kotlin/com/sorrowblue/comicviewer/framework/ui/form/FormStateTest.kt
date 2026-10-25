@@ -137,4 +137,11 @@ class FormStateTest {
         assertEquals(null, formState.meta.fields["auth"]?.error)
         assertTrue(formState.meta.canSubmit)
     }
+
+    @Test
+    fun normalizeDigitsConvertsFullWidthDigitsAndPreservesHalfWidthDigits() {
+        assertEquals("0123456789", "０１２３４５６７８９".normalizeDigits())
+        assertEquals("8080", "8０8０".normalizeDigits())
+        assertEquals("0123456789", "0123456789".normalizeDigits())
+    }
 }

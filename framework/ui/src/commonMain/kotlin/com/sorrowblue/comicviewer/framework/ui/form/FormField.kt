@@ -4,12 +4,76 @@
 
 package com.sorrowblue.comicviewer.framework.ui.form
 
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+
+/**
+ * An [InputTransformation] that restricts input to decimal digits, rejecting any non-digit characters.
+ *
+ * Full-width digits (`０`–`９`) are normalized to half-width ASCII digits (`0`–`9`) once IME
+ * composition finishes via [NormalizeDigitsEffect] so that active IME composition ranges are
+ * preserved on Desktop/JVM.
+ */
+object DigitOnlyInputTransformation : InputTransformation {
+    override fun TextFieldBuffer.transformInput() {
+        if (!asCharSequence().all { it.digitToIntOrNull() != null }) {
+            revertAllChanges()
+        }
+    }
+}
+
+/**
+ * Normalizes any Unicode decimal digits (such as full-width `０`–`９`) in this [CharSequence] to
+ * half-width ASCII digits (`0`–`9`).
+ */
+fun CharSequence.normalizeDigits(): String = buildString(length) {
+    for (i in 0 until this@normalizeDigits.length) {
+        val ch = this@normalizeDigits[i]
+        val digit = ch.digitToIntOrNull()
+        if (digit != null) {
+            append(('0'.code + digit).toChar())
+        } else {
+            append(ch)
+        }
+    }
+}
+
+/**
+ * Normalizes non-ASCII decimal digits (e.g., full-width `０`–`９`) in [state] to half-width ASCII
+ * digits (`0`–`9`) once IME [TextFieldState.composition] finishes (`composition == null`), and
+ * optionally notifies [onTextChange] with the latest text.
+ *
+ * @param state The [TextFieldState] to observe and normalize.
+ * @param onTextChange Optional callback invoked with the observed text once normalized.
+ */
+@Composable
+fun NormalizeDigitsEffect(state: TextFieldState, onTextChange: ((String) -> Unit)? = null,) {
+    LaunchedEffect(state) {
+        snapshotFlow { state.composition to state.text.toString() }
+            .collect { (composition, text) ->
+                if (composition == null) {
+                    val normalized = text.normalizeDigits()
+                    if (normalized != text) {
+                        state.edit {
+                            val previousSelection = selection
+                            replace(0, length, normalized)
+                            selection = previousSelection
+                        }
+                        return@collect
+                    }
+                }
+                onTextChange?.invoke(text)
+            }
+    }
+}
 
 /**
  * Represents a bound form field state and its operations.

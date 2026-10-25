@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.sorrowblue.comicviewer.feature.bookshelf.edit.editor.SmbEditorForm
+import com.sorrowblue.comicviewer.framework.ui.form.DigitOnlyInputTransformation
 import com.sorrowblue.comicviewer.framework.ui.form.FieldValidator
 import com.sorrowblue.comicviewer.framework.ui.form.Form
 import com.sorrowblue.comicviewer.framework.ui.form.IntTextField
@@ -51,6 +52,7 @@ internal fun PortField(
             isError = field.hasError,
             enabled = field.isEnabled,
             supportingText = field.supportingText(),
+            inputTransformation = DigitOnlyInputTransformation,
             keyboardOptions = KeyboardOptions(
                 showKeyboardOnFocus = false,
                 keyboardType = KeyboardType.NumberPassword,

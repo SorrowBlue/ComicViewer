@@ -5,6 +5,8 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.smart.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenu
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -34,12 +36,14 @@ internal fun <T> DropdownMenuField(
     text: @Composable (T) -> Unit = { Text(text = value(it)) },
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val displayValue = value(field.value)
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
         modifier = modifier,
     ) {
         OutlinedTextField(
+            state = remember(displayValue) { TextFieldState(displayValue) },
             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).then(
                 if (fillMaxWidth) {
                     Modifier.fillMaxWidth()
@@ -47,13 +51,11 @@ internal fun <T> DropdownMenuField(
                     Modifier
                 },
             ),
-            value = value(field.value),
             isError = field.hasError,
             supportingText = field.supportingText(),
             enabled = field.isEnabled,
             readOnly = true,
-            onValueChange = {},
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             label = { label() },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),

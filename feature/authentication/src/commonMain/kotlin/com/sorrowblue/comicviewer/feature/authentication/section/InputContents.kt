@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,7 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun InputContents(
     uiState: AuthenticationScreenUiState,
-    onPinChange: (String) -> Unit,
+    pinState: TextFieldState,
     onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -55,8 +56,7 @@ internal fun InputContents(
 
         val enabled by remember(uiState) { derivedStateOf { !uiState.loading } }
         PinTextField(
-            pin = uiState.pin,
-            onPinChange = onPinChange,
+            state = pinState,
             onNextClick = onNextClick,
             enabled = enabled,
             modifier = Modifier

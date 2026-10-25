@@ -4,6 +4,9 @@
 
 package com.sorrowblue.comicviewer.feature.authentication
 
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +21,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.sorrowblue.comicviewer.feature.authentication.nav.ScreenType
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
+import com.sorrowblue.comicviewer.framework.ui.form.normalizeDigits
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberSaveable
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +40,7 @@ internal fun rememberAuthenticationScreenState(
     viewModel: AuthenticationViewModel = metroViewModel(),
 ): AuthenticationScreenState {
     val snackbarHostState = remember { SnackbarHostState() }
+    val pinState = rememberTextFieldState()
     val scope = rememberCoroutineScope()
     val biometricManager = rememberBiometricManager()
     val pinInputFlowStateHolder =
@@ -50,6 +55,7 @@ internal fun rememberAuthenticationScreenState(
     ) {
         AuthenticationScreenStateImpl(
             snackbarHostState = snackbarHostState,
+            pinState = pinState,
             screenType = screenType,
             scope = scope,
             biometricManager = biometricManager,
@@ -65,18 +71,17 @@ internal fun rememberAuthenticationScreenState(
  * Acts as a coordinator between UI state and business logic components.
  *
  * This interface follows state hoisting best practices by:
- * - Exposing UI state through [uiState]
- * - Providing event callbacks through [onNextClick] and [onPinChange]
+ * - Exposing UI state through [uiState] and [pinState]
+ * - Providing event callbacks through [onNextClick]
  * - Managing temporary flow state through [PinInputFlowStateHolder]
  */
 internal interface AuthenticationScreenState {
     val uiState: AuthenticationScreenUiState
+    val pinState: TextFieldState
     val events: EventFlow<AuthenticationScreenEvent>
     val snackbarHostState: SnackbarHostState
 
     fun onNextClick()
-
-    fun onPinChange(pin: String)
 }
 
 /**
@@ -100,17 +105,21 @@ internal class AuthenticationScreenStateImpl(
     private val viewModel: AuthenticationViewModel,
     val pinInputFlowStateHolder: PinInputFlowStateHolder,
     private val lifecycleOwner: LifecycleOwner,
+    override val pinState: TextFieldState = TextFieldState(),
 ) : AuthenticationScreenState {
     override val events = EventFlow<AuthenticationScreenEvent>()
 
     override var uiState by mutableStateOf(
         when (screenType) {
-            ScreenType.Register -> AuthenticationScreenUiState.Register.Input("")
-            ScreenType.Change -> AuthenticationScreenUiState.Change.ConfirmOld("")
-            ScreenType.Erase -> AuthenticationScreenUiState.Erase("")
-            ScreenType.Authenticate -> AuthenticationScreenUiState.Authentication("")
+            ScreenType.Register -> AuthenticationScreenUiState.Register.Input()
+            ScreenType.Change -> AuthenticationScreenUiState.Change.ConfirmOld()
+            ScreenType.Erase -> AuthenticationScreenUiState.Erase()
+            ScreenType.Authenticate -> AuthenticationScreenUiState.Authentication()
         },
     )
+
+    private val currentPin: String
+        get() = pinState.text.normalizeDigits()
 
     init {
         if (screenType == ScreenType.Authenticate) {
@@ -138,10 +147,6 @@ internal class AuthenticationScreenStateImpl(
         }
     }
 
-    override fun onPinChange(pin: String) {
-        uiState = uiState.copyPin(if (pin.all { it.digitToIntOrNull() != null }) pin else "")
-    }
-
     override fun onNextClick() {
         when (val currentUiState = uiState) {
             is AuthenticationScreenUiState.Authentication -> handleAuthentication(currentUiState)
@@ -153,12 +158,12 @@ internal class AuthenticationScreenStateImpl(
 
     private fun handleAuthentication(currentUiState: AuthenticationScreenUiState.Authentication) {
         scope.launch {
-            if (viewModel.verifyPin(uiState.pin)) {
+            if (viewModel.verifyPin(currentPin)) {
                 uiState = currentUiState.copy(loading = true)
                 complete()
             } else {
+                pinState.clearText()
                 uiState = AuthenticationScreenUiState.Authentication(
-                    pin = "",
                     error = ErrorType.IncorrectPin,
                 )
             }
@@ -167,13 +172,13 @@ internal class AuthenticationScreenStateImpl(
 
     private fun handleErase(currentUiState: AuthenticationScreenUiState.Erase) {
         scope.launch {
-            if (viewModel.verifyPin(uiState.pin)) {
+            if (viewModel.verifyPin(currentPin)) {
                 viewModel.removePin()
                 uiState = currentUiState.copy(loading = true)
                 complete()
             } else {
+                pinState.clearText()
                 uiState = AuthenticationScreenUiState.Erase(
-                    pin = "",
                     error = ErrorType.IncorrectPin,
                 )
             }
@@ -190,11 +195,12 @@ internal class AuthenticationScreenStateImpl(
 
     private fun handleChangeConfirmOld() {
         scope.launch {
-            uiState = if (viewModel.verifyPin(uiState.pin)) {
-                AuthenticationScreenUiState.Change.Input("")
+            val verified = viewModel.verifyPin(currentPin)
+            pinState.clearText()
+            uiState = if (verified) {
+                AuthenticationScreenUiState.Change.Input()
             } else {
                 AuthenticationScreenUiState.Change.ConfirmOld(
-                    pin = "",
                     error = ErrorType.IncorrectPin,
                 )
             }
@@ -202,27 +208,29 @@ internal class AuthenticationScreenStateImpl(
     }
 
     private fun handleChangeInput(currentUiState: AuthenticationScreenUiState.Change.Input) {
-        if (viewModel.validatePinLength(uiState.pin)) {
-            pinInputFlowStateHolder.storeTemporaryPin(uiState.pin)
-            uiState = AuthenticationScreenUiState.Change.Confirm("")
+        val pin = currentPin
+        pinState.clearText()
+        if (viewModel.validatePinLength(pin)) {
+            pinInputFlowStateHolder.storeTemporaryPin(pin)
+            uiState = AuthenticationScreenUiState.Change.Confirm()
         } else {
             uiState = currentUiState.copy(
-                pin = "",
                 error = ErrorType.Pin4More,
             )
         }
     }
 
     private fun handleChangeConfirm(currentUiState: AuthenticationScreenUiState.Change.Confirm) {
-        if (pinInputFlowStateHolder.verifyTemporaryPin(uiState.pin)) {
+        val pin = currentPin
+        if (pinInputFlowStateHolder.verifyTemporaryPin(pin)) {
             scope.launch {
-                viewModel.savePin(uiState.pin)
+                viewModel.savePin(pin)
                 uiState = currentUiState.copy(loading = true)
                 complete()
             }
         } else {
+            pinState.clearText()
             uiState = AuthenticationScreenUiState.Change.Input(
-                pin = "",
                 error = ErrorType.IncorrectPin,
             )
         }
@@ -236,12 +244,13 @@ internal class AuthenticationScreenStateImpl(
     }
 
     private fun handleRegisterInput(currentUiState: AuthenticationScreenUiState.Register.Input) {
-        if (viewModel.validatePinLength(uiState.pin)) {
-            pinInputFlowStateHolder.storeTemporaryPin(uiState.pin)
-            uiState = AuthenticationScreenUiState.Register.Confirm("")
+        val pin = currentPin
+        pinState.clearText()
+        if (viewModel.validatePinLength(pin)) {
+            pinInputFlowStateHolder.storeTemporaryPin(pin)
+            uiState = AuthenticationScreenUiState.Register.Confirm()
         } else {
             uiState = currentUiState.copy(
-                pin = "",
                 error = ErrorType.Pin4More,
             )
         }
@@ -250,16 +259,17 @@ internal class AuthenticationScreenStateImpl(
     private fun handleRegisterConfirm(
         currentUiState: AuthenticationScreenUiState.Register.Confirm,
     ) {
-        if (pinInputFlowStateHolder.verifyTemporaryPin(uiState.pin)) {
+        val pin = currentPin
+        if (pinInputFlowStateHolder.verifyTemporaryPin(pin)) {
             scope.launch {
-                viewModel.savePin(uiState.pin)
+                viewModel.savePin(pin)
                 uiState = currentUiState.copy(loading = true)
                 complete()
             }
         } else {
             pinInputFlowStateHolder.clearTemporaryPin()
+            pinState.clearText()
             uiState = AuthenticationScreenUiState.Register.Input(
-                pin = "",
                 error = ErrorType.PinNotMatch,
             )
         }
