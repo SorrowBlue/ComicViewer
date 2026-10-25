@@ -14,13 +14,13 @@ kotlin {
         }
         commonTest {
             dependencies {
+                implementation(projects.framework.test)
                 implementation(libs.kotlinx.coroutinesTest)
             }
         }
         androidMain {
             dependencies {
                 implementation(libs.androidx.biometric)
-                implementation(libs.compose.animationGraphics)
             }
         }
     }
