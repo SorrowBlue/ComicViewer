@@ -1,5 +1,6 @@
 ---
-description: コミットメッセージ生成（英語）
+name: commit
+description: ステージングされた変更（git diff --cached）から英語のConventional Commitsメッセージを生成します（/commit）。
 ---
 
 # Commit Message Generator (English)

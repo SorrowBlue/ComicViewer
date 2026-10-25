@@ -1,5 +1,6 @@
 ---
-description: 計画する
+name: plan
+description: 計画専用モード（PLAN-ONLY-MODE）でソースコードの編集を行わず、コンテキスト分析と実装計画成果物（implementation_plan.md等）の作成のみを行います。明示的に実装計画の作成を求められた場合（/plan）に使用します。
 ---
 
 # 計画ワークフロー
