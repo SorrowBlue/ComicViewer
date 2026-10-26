@@ -8,23 +8,23 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.file.Book
 
 /**
- * 閲覧中の本に対応する [BookFileReader] のキャッシュおよびライフサイクルを管理するマネージャーポート。
+ * Manager port that caches and manages the lifecycle of [BookFileReader] instances for open books.
  */
 interface BookFileReaderManager {
 
     /**
-     * 指定された本のリーダーを取得する。すでに同じ本が開かれている場合はキャッシュされたリーダーを返す。
+     * Retrieves a [BookFileReader] for the specified book, returning a cached reader if the book is already open.
      *
-     * @param bookshelf 本棚情報
-     * @param book 対象の本
-     * @return [BookFileReader]
+     * @param bookshelf Bookshelf to which the book belongs.
+     * @param book Target book.
+     * @return [BookFileReader] instance.
      */
     suspend fun get(bookshelf: Bookshelf, book: Book): BookFileReader
 
     /**
-     * 開いている本のリソースを解放する。
+     * Releases resources held for the specified open book.
      *
-     * @param book 閉じる対象の本
+     * @param book Book to close.
      */
     suspend fun close(book: Book)
 }

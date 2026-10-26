@@ -8,46 +8,46 @@ import kotlinx.io.Sink
 import kotlinx.io.Source
 
 /**
- * 本ファイルの内容（ページデータやページ数）を読み取るリーダーポート。
+ * Reader port that accesses the contents (page streams, sizes, and metadata) of a book file.
  */
 interface BookFileReader : AutoCloseable {
 
     /**
-     * 総ページ数を取得する。
+     * Returns the total number of pages in the book.
      *
-     * @return ページ数
+     * @return Total page count.
      */
     suspend fun pageCount(): Int
 
     /**
-     * 指定されたページのデータソースを取得する。
+     * Opens a data [Source] for the specified page.
      *
-     * @param pageIndex ページ番号 (0-indexed)
-     * @return ページデータの [Source]
+     * @param pageIndex Zero-based page index.
+     * @return Data [Source] for the page.
      */
     suspend fun source(pageIndex: Int): Source
 
     /**
-     * 指定されたページのデータを指定の [Sink] に展開する。
+     * Extracts the raw data of the specified page into [sink].
      *
-     * @param pageIndex ページ番号 (0-indexed)
-     * @param sink 出力先 [Sink]
+     * @param pageIndex Zero-based page index.
+     * @param sink Destination [Sink].
      */
     suspend fun extractTo(pageIndex: Int, sink: Sink)
 
     /**
-     * 指定されたページのファイルサイズ（バイト数）を取得する。
+     * Returns the byte size of the specified page entry.
      *
-     * @param pageIndex ページ番号 (0-indexed)
-     * @return ファイルサイズ
+     * @param pageIndex Zero-based page index.
+     * @return File size in bytes.
      */
     suspend fun fileSize(pageIndex: Int): Long
 
     /**
-     * 指定されたページのエントリファイル名を取得する。
+     * Returns the entry file name of the specified page.
      *
-     * @param pageIndex ページ番号 (0-indexed)
-     * @return ファイル名
+     * @param pageIndex Zero-based page index.
+     * @return Entry file name.
      */
     suspend fun fileName(pageIndex: Int): String
 }
