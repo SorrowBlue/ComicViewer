@@ -17,13 +17,17 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
@@ -48,12 +52,16 @@ internal class GetBookUseCaseImpl(
 ) : GetBookUseCase() {
 
     override fun run(request: Request): Flow<Resource<Book, Error>> =
-        bookshelfRepository.flow(request.bookshelfId).map {
+        bookshelfRepository.flow(request.bookshelfId).map<Bookshelf?, Resource<Book, Error>> {
             if (it != null) {
                 fetch(it, request.path)
             } else {
                 Resource.Error(Error.NotFound)
             }
+        }.catch { e ->
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR) { e.asLog() }
+            emit(Resource.Error(Error.ReportedSystemError))
         }
 
     private suspend fun fetch(bookshelf: Bookshelf, path: String): Resource<Book, Error> {
@@ -61,10 +69,10 @@ internal class GetBookUseCaseImpl(
         val remoteStorageClient = remoteStorageClientFactory.create(bookshelf)
         val resolveImageFolder =
             manageFolderSettingsUseCase.settings.first().resolveImageFolder
-        val remoteBook = runCatching {
+        val remoteBook = runCatchingCancellable {
             remoteStorageClient.file(path, resolveImageFolder) as? Book
         }.getOrNull() ?: return Resource.Error(Error.NotFound)
-        val totalPageCount = runCatching {
+        val totalPageCount = runCatchingCancellable {
             remoteStorageClient.pageCount(remoteBook)
         }.getOrElse {
             logcat { it.asLog() }

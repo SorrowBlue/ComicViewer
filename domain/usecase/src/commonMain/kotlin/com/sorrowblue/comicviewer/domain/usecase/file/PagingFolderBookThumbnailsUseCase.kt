@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -23,7 +24,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 fun interface PagingFolderBookThumbnailsUseCase :
     PagingUseCase<PagingFolderBookThumbnailsUseCase.Request, BookThumbnail> {
 
-    class Request(val bookshelfId: BookshelfId, val path: String, val pagingConfig: PagingConfig)
+    data class Request(
+        val bookshelfId: BookshelfId,
+        val path: String,
+        val pagingConfig: PagingConfig,
+    )
 }
 
 @Inject
@@ -37,7 +42,9 @@ internal class PagingFolderBookThumbnailsUseCaseImpl(
     override fun invoke(request: PagingFolderBookThumbnailsUseCase.Request) =
         bookshelfRepository.flow(request.bookshelfId).flatMapLatest { bookshelf ->
             if (bookshelf != null) {
-                val file = fileRepository.findBy(request.bookshelfId, request.path)
+                val file = runCatchingCancellable {
+                    fileRepository.findBy(request.bookshelfId, request.path)
+                }.getOrNull()
                 if (file is IFolder) {
                     settingsRepository.folderDisplaySettings.flatMapLatest { settings ->
                         fileRepository.pagingSourceBookThumbnail(

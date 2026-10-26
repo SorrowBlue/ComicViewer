@@ -15,8 +15,6 @@ graph TB
     :domain:model["model"]
     :domain:repository["repository"]
     :domain:service["service"]
-    :domain:service["service"]
-    :domain:repository["repository"]
   end
 
   :domain:usecase --> :domain:model

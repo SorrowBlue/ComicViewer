@@ -7,14 +7,15 @@ package com.sorrowblue.comicviewer.domain.usecase
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.cache.BookshelfImageCacheInfo
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.model.common.dataOrNull
 import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -31,7 +32,15 @@ internal class GetBookshelfImageCacheInfoUseCaseImpl(
 
     override fun run(request: Unit): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> =
         bookshelfRepository.allBookshelf().fold(
-            onSuccess = { flow -> flow.map { Resource.Success(imageCacheInfoList(it)) } },
+            onSuccess = { flow ->
+                flow.map<List<Bookshelf>, Resource<List<BookshelfImageCacheInfo>, Unit>> {
+                    Resource.Success(imageCacheInfoList(it))
+                }.catch { e ->
+                    if (e is CancellationException) throw e
+                    sendFatalErrorUseCase(SendFatalErrorUseCase.Request(e))
+                    emit(Resource.Error(Unit))
+                }
+            },
             onError = {
                 flow {
                     sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
@@ -40,8 +49,14 @@ internal class GetBookshelfImageCacheInfoUseCaseImpl(
             },
         )
 
-    private fun imageCacheInfoList(list: List<Bookshelf>): List<BookshelfImageCacheInfo> =
-        list.mapNotNull {
-            imageCacheRepository.getBookshelfImageCacheInfo(it).dataOrNull()
+    private suspend fun imageCacheInfoList(list: List<Bookshelf>): List<BookshelfImageCacheInfo> =
+        list.mapNotNull { bookshelf ->
+            imageCacheRepository.getBookshelfImageCacheInfo(bookshelf).fold(
+                onSuccess = { it },
+                onError = {
+                    sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
+                    null
+                },
+            )
         }
 }

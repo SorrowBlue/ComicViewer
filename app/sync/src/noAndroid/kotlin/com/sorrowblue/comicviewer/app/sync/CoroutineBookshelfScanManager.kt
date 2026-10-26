@@ -24,9 +24,10 @@ internal class CoroutineBookshelfScanManager(
     private val regenerateThumbnails: suspend (BookshelfId) -> Unit = {},
     private val onFileScanComplete: suspend (BookshelfId) -> Unit = {},
     private val onThumbnailScanComplete: suspend (BookshelfId) -> Unit = {},
+    private val coroutineScope: CoroutineScope = CoroutineScope(
+        SupervisorJob() + Dispatchers.Default,
+    ),
 ) : BookshelfScanManager {
-
-    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private val scanningFiles = MutableStateFlow<Set<BookshelfId>>(emptySet())
     private val scanningThumbnails = MutableStateFlow<Set<BookshelfId>>(emptySet())
@@ -37,6 +38,7 @@ internal class CoroutineBookshelfScanManager(
     override fun isScanningThumbnail(bookshelfId: BookshelfId): Flow<Boolean> =
         scanningThumbnails.map { bookshelfId in it }
 
+    @Suppress("TooGenericExceptionCaught")
     override fun scanFile(bookshelfId: BookshelfId) {
         scanningFiles.update { it + bookshelfId }
         coroutineScope.launch {
@@ -53,6 +55,7 @@ internal class CoroutineBookshelfScanManager(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     override fun scanThumbnail(bookshelfId: BookshelfId) {
         scanningThumbnails.update { it + bookshelfId }
         coroutineScope.launch {

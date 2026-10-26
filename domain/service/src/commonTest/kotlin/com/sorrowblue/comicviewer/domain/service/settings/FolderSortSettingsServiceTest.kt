@@ -543,14 +543,15 @@ class FolderSortSettingsServiceTest {
     fun testUpdateSortScope_withNormalizedPaths() {
         val initialSettings = FolderDisplaySettings(sortType = SortType.Date(true))
 
-        // Add with "/manga/chapter1"
+        // Add with "/manga/chapter1/" -> stored path should be canonicalized to "/manga/chapter1"
         val added = service.updateSortScope(
             initialSettings,
             bookshelfId,
-            "/manga/chapter1",
+            "/manga/chapter1/",
             FolderSortScope.FolderOnly,
         ).settings
         assertEquals(1, added.folderScopeOnlyList.size)
+        assertEquals("/manga/chapter1", added.folderScopeOnlyList[0].path)
         assertEquals(
             FolderSortScope.FolderOnly,
             added.currentSortScope(bookshelfId, "/manga/chapter1/"),
@@ -564,6 +565,7 @@ class FolderSortSettingsServiceTest {
             FolderSortScope.Subfolders,
         ).settings
         assertEquals(1, withSubfolders.folderScopeOnlyList.size)
+        assertEquals("/manga/chapter1", withSubfolders.folderScopeOnlyList[0].path)
         assertEquals(
             FolderSortScope.Subfolders,
             withSubfolders.currentSortScope(bookshelfId, "/manga/chapter1"),
@@ -577,5 +579,45 @@ class FolderSortSettingsServiceTest {
             FolderSortScope.Global,
         ).settings
         assertTrue(removed.folderScopeOnlyList.isEmpty())
+    }
+
+    @Test
+    fun testUpdateSortType_inGlobalScope_updatesAllUseGlobalEntries() {
+        var settings = FolderDisplaySettings(sortType = SortType.Name(true))
+        settings = service.updateSortScope(
+            settings,
+            bookshelfId,
+            "/manga",
+            FolderSortScope.Subfolders,
+        ).settings
+        settings = service.updateSortType(
+            settings,
+            bookshelfId,
+            "/manga",
+            SortType.Date(false),
+        ).settings
+        settings = service.updateSortScope(
+            settings,
+            bookshelfId,
+            "/manga/sub1",
+            FolderSortScope.Global,
+        ).settings
+        settings = service.updateSortScope(
+            settings,
+            bookshelfId,
+            "/manga/sub2",
+            FolderSortScope.Global,
+        ).settings
+
+        val updated = service.updateSortType(
+            settings = settings,
+            bookshelfId = bookshelfId,
+            path = "/otherGlobal",
+            sortType = SortType.Size(false),
+        ).settings
+
+        val useGlobalEntries = updated.folderScopeOnlyList.filter { it.useGlobal }
+        assertEquals(2, useGlobalEntries.size)
+        assertTrue(useGlobalEntries.all { it.sortType == SortType.Size(false) })
     }
 }

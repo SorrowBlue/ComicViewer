@@ -12,24 +12,25 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.domain.model.settings.folder.normalizeFolderPath
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 /**
- * コミック閲覧中の前後ブック移動における、探索ポリシー・ソート種別の解決、
- * 親フォルダーパス抽出、およびモデル検証を司るドメインサービス。
+ * Domain service that resolves sort types, extracts parent folder paths, and validates book models
+ * when navigating to the previous or next book during comic reading.
  */
 interface BookNavigationService {
 
     /**
-     * フォルダー閲覧時において、親フォルダーに適用される有効なソート種別を解決します。
-     * 個別設定や子フォルダーへの継承設定が存在する場合はそれを優先し、なければ全体設定を返します。
+     * Resolves the effective sort type applied to the parent folder during folder browsing.
+     * Prioritizes folder-specific settings or inherited parent settings over the global setting.
      *
-     * @param settings フォルダ表示設定
-     * @param bookshelfId 本棚ID
-     * @param parentPath 親フォルダーパス
-     * @return 適用されるソート種別
+     * @param settings Folder display settings.
+     * @param bookshelfId Bookshelf ID.
+     * @param parentPath Parent folder path.
+     * @return The resolved [SortType].
      */
     fun resolveFolderSortType(
         settings: FolderDisplaySettings,
@@ -38,12 +39,13 @@ interface BookNavigationService {
     ): SortType
 
     /**
-     * コレクション閲覧時において、コレクションの種類に応じた有効なソート種別を解決します。
-     * [SmartCollection] の場合は検索条件のソート種別を、[BasicCollection] の場合は表示設定のソート種別を返します。
+     * Resolves the effective sort type according to the collection type during collection browsing.
+     * Returns the search condition's sort type for [SmartCollection] or the folder display setting's
+     * sort type for [BasicCollection].
      *
-     * @param collection コレクション
-     * @param settings フォルダ表示設定
-     * @return 適用されるソート種別
+     * @param collection Target collection.
+     * @param settings Folder display settings.
+     * @return The resolved [SortType].
      */
     fun resolveCollectionSortType(
         collection: Collection,
@@ -51,26 +53,26 @@ interface BookNavigationService {
     ): SortType
 
     /**
-     * ファイルパスから親フォルダーのパスを抽出します。
+     * Extracts the parent folder path from a file or folder path.
      *
-     * @param path 対象のファイルまたはフォルダーパス
-     * @return 親フォルダーパス（ルート直下または親がない場合は空文字列）
+     * @param path Target file or folder path.
+     * @return The parent folder path, or an empty string if the path is at the root or has no parent.
      */
     fun extractParentPath(path: String): String
 
     /**
-     * 取得されたファイルが有効な [Book] であるかを検証します。
+     * Validates whether the retrieved file is a valid [Book].
      *
-     * @param file 検証対象のファイル
-     * @return 有効な [Book] の場合はそのインスタンス、それ以外または null の場合は null
+     * @param file File to validate.
+     * @return The [Book] instance if valid, or `null` otherwise.
      */
     fun validateBook(file: File?): Book?
 
     companion object {
         /**
-         * [BookNavigationService] のインスタンスを生成して返します。
+         * Creates and returns an instance of [BookNavigationService].
          *
-         * @return [BookNavigationService] のインスタンス
+         * @return An instance of [BookNavigationService].
          */
         operator fun invoke(): BookNavigationService = BookNavigationServiceImpl()
     }
@@ -98,7 +100,7 @@ class BookNavigationServiceImpl : BookNavigationService {
     }
 
     override fun extractParentPath(path: String): String {
-        val trimmed = path.removeSuffix("/")
+        val trimmed = normalizeFolderPath(path).removeSuffix("/")
         val lastIndex = trimmed.lastIndexOf('/')
         return if (lastIndex > 0) {
             trimmed.substring(0, lastIndex)

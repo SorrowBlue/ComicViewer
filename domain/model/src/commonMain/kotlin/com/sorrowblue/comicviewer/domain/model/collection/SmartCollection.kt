@@ -25,9 +25,12 @@ data class SmartCollection private constructor(
         name: String = this.name,
         bookshelfId: BookshelfId? = this.bookshelfId,
         searchCondition: SearchCondition = this.searchCondition,
+        updatedAt: LocalDateTime =
+            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     ): SmartCollection = copy(
         id = id,
         name = name,
+        updatedAt = updatedAt,
         bookshelfId = bookshelfId,
         searchCondition = searchCondition,
     )
@@ -37,8 +40,10 @@ data class SmartCollection private constructor(
             name: String,
             bookshelfId: BookshelfId?,
             searchCondition: SearchCondition,
+            clock: Clock = Clock.System,
+            timeZone: TimeZone = TimeZone.currentSystemDefault(),
         ): SmartCollection {
-            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            val now = clock.now().toLocalDateTime(timeZone)
             return SmartCollection(
                 id = CollectionId(),
                 name = name,

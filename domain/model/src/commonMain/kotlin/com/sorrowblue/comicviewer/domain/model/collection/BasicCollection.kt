@@ -17,14 +17,23 @@ data class BasicCollection private constructor(
     override val createdAt: LocalDateTime,
     override val updatedAt: LocalDateTime,
 ) : Collection {
-    fun copy(name: String = this.name) = copy(
+    fun copy(
+        name: String = this.name,
+        updatedAt: LocalDateTime =
+            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+    ) = copy(
         id = id,
         name = name,
+        updatedAt = updatedAt,
     )
 
     companion object {
-        operator fun invoke(name: String): BasicCollection {
-            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        operator fun invoke(
+            name: String,
+            clock: Clock = Clock.System,
+            timeZone: TimeZone = TimeZone.currentSystemDefault(),
+        ): BasicCollection {
+            val now = clock.now().toLocalDateTime(timeZone)
             return BasicCollection(
                 id = CollectionId(),
                 name = name,

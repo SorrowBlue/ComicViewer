@@ -6,6 +6,7 @@ package com.sorrowblue.comicviewer.feature.authentication
 
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageSecuritySettingsUseCase
+import com.sorrowblue.comicviewer.framework.test.SmallTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,6 +21,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 
+@SmallTest
 @OptIn(ExperimentalCoroutinesApi::class)
 class AuthSessionTest {
 

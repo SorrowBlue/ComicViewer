@@ -4,6 +4,7 @@
 
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
@@ -11,9 +12,12 @@ import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 abstract class GetBookshelfInfoUseCase :
@@ -34,13 +38,25 @@ internal class GetBookshelfInfoUseCaseImpl(
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetBookshelfInfoUseCase() {
 
-    override fun run(request: BookshelfId) = bookshelfRepository.flow(request).map { bookshelf ->
-        val folder = if (bookshelf != null) fileRepository.root(request) else null
-        if (bookshelf != null && folder != null) {
-            Resource.Success(BookshelfFolder(bookshelf, folder))
-        } else {
-            sendFatalErrorUseCase(SendFatalErrorUseCase.Request(RuntimeException("NotFound")))
-            Resource.Error(Error.NotFound)
+    override fun run(request: BookshelfId) =
+        bookshelfRepository.flow(request).map<Bookshelf?, Resource<BookshelfFolder, Error>> {
+            if (it == null) {
+                return@map Resource.Error(Error.NotFound)
+            }
+            val folder = runCatchingCancellable {
+                fileRepository.root(request)
+            }.getOrElse { e ->
+                sendFatalErrorUseCase(SendFatalErrorUseCase.Request(e))
+                return@map Resource.Error(Error.System)
+            }
+            if (folder != null) {
+                Resource.Success(BookshelfFolder(it, folder))
+            } else {
+                Resource.Error(Error.NotFound)
+            }
+        }.catch { e ->
+            if (e is CancellationException) throw e
+            sendFatalErrorUseCase(SendFatalErrorUseCase.Request(e))
+            emit(Resource.Error(Error.System))
         }
-    }
 }

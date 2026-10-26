@@ -19,6 +19,7 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.service.book.BookNavigationService
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -57,9 +58,9 @@ internal class GetNextBookUseCaseImpl(
     private val bookNavigationService: BookNavigationService,
 ) : GetNextBookUseCase() {
 
-    override suspend fun run(request: Request): Resource<Book, Error> {
+    override suspend fun run(request: Request): Resource<Book, Error> = resolveBookResult {
         val settings = settingsRepository.folderDisplaySettings.first()
-        return when (val location = request.location) {
+        when (val location = request.location) {
             is Location.Collection -> collection(
                 request.isNext,
                 location.collectionId,
@@ -82,7 +83,7 @@ internal class GetNextBookUseCaseImpl(
         bookshelfId: BookshelfId,
         path: String,
         settings: FolderDisplaySettings,
-    ): Resource<Book, Error> {
+    ): File? {
         val currentFile = fileRepository.findBy(bookshelfId, path)
         val parentPath = currentFile?.parent ?: bookNavigationService.extractParentPath(path)
         val sortType = bookNavigationService.resolveFolderSortType(
@@ -91,14 +92,12 @@ internal class GetNextBookUseCaseImpl(
             parentPath = parentPath,
         )
 
-        return resolveBookResult {
-            val modelFlow = if (isNext) {
-                fileRepository.nextFileModel(bookshelfId, path, sortType)
-            } else {
-                fileRepository.prevFileModel(bookshelfId, path, sortType)
-            }
-            modelFlow.first()
+        val modelFlow = if (isNext) {
+            fileRepository.nextFileModel(bookshelfId, path, sortType)
+        } else {
+            fileRepository.prevFileModel(bookshelfId, path, sortType)
         }
+        return modelFlow.first()
     }
 
     private suspend fun collection(
@@ -107,49 +106,47 @@ internal class GetNextBookUseCaseImpl(
         bookshelfId: BookshelfId,
         path: String,
         settings: FolderDisplaySettings,
-    ): Resource<Book, Error> {
+    ): File? {
         logcat { "#collection $bookshelfId $collectionId" }
         val collection = collectionRepository.flow(collectionId).first()
-            ?: return Resource.Error(Error.NotFound)
+            ?: return null
 
         logcat { "collection: $collection" }
         val sortType = bookNavigationService.resolveCollectionSortType(collection, settings)
 
-        return resolveBookResult {
-            val modelFlow = when (collection) {
-                is BasicCollection -> {
-                    val collectionFile = CollectionFile(collectionId, bookshelfId, path)
-                    if (isNext) {
-                        collectionFileRepository.flowNextCollectionFile(collectionFile, sortType)
-                    } else {
-                        collectionFileRepository.flowPrevCollectionFile(collectionFile, sortType)
-                    }
-                }
-
-                is SmartCollection -> {
-                    if (isNext) {
-                        fileRepository.nextFileModel(
-                            bookshelfId,
-                            path,
-                            collection.searchCondition,
-                            sortType,
-                        )
-                    } else {
-                        fileRepository.prevFileModel(
-                            bookshelfId,
-                            path,
-                            collection.searchCondition,
-                            sortType,
-                        )
-                    }
+        val modelFlow = when (collection) {
+            is BasicCollection -> {
+                val collectionFile = CollectionFile(collectionId, bookshelfId, path)
+                if (isNext) {
+                    collectionFileRepository.flowNextCollectionFile(collectionFile, sortType)
+                } else {
+                    collectionFileRepository.flowPrevCollectionFile(collectionFile, sortType)
                 }
             }
-            modelFlow.first()
+
+            is SmartCollection -> {
+                if (isNext) {
+                    fileRepository.nextFileModel(
+                        bookshelfId,
+                        path,
+                        collection.searchCondition,
+                        sortType,
+                    )
+                } else {
+                    fileRepository.prevFileModel(
+                        bookshelfId,
+                        path,
+                        collection.searchCondition,
+                        sortType,
+                    )
+                }
+            }
         }
+        return modelFlow.first()
     }
 
     private inline fun resolveBookResult(block: () -> File?): Resource<Book, Error> =
-        runCatching(block).fold(
+        runCatchingCancellable(block).fold(
             onSuccess = { file ->
                 val book = bookNavigationService.validateBook(file)
                 if (book != null) {

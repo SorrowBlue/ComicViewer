@@ -13,6 +13,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
 import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
+import com.sorrowblue.comicviewer.framework.test.SmallTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -31,6 +32,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
+@SmallTest
 @OptIn(ExperimentalCoroutinesApi::class, InternalDataApi::class)
 class ComicViewerAppViewModelTest {
 

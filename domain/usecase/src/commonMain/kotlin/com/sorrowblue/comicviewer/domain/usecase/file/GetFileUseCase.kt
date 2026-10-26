@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -29,7 +30,7 @@ abstract class GetFileUseCase : UseCase<GetFileUseCase.Request, File, GetFileUse
 internal class GetFileUseCaseImpl(private val fileRepository: FileRepository) : GetFileUseCase() {
 
     override fun run(request: Request): Flow<Resource<File, Error>> = flow {
-        runCatching {
+        runCatchingCancellable {
             fileRepository.findBy(request.bookshelfId, request.path)
         }.fold({
             if (it != null) {

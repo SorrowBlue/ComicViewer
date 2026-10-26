@@ -10,16 +10,16 @@ import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.time.Clock
 
 abstract class AddReadLaterUseCase :
     OneShotUseCase<AddReadLaterUseCase.Request, ReadLaterFile, Unit>() {
 
-    data class Request private constructor(val readLaterFile: ReadLaterFile) {
-        constructor(bookshelfId: BookshelfId, path: String) : this(ReadLaterFile(bookshelfId, path))
-    }
+    data class Request(val bookshelfId: BookshelfId, val path: String)
 }
 
 @Inject
@@ -30,12 +30,25 @@ internal class AddReadLaterUseCaseImpl(
 ) : AddReadLaterUseCase() {
 
     override suspend fun run(request: Request): Resource<ReadLaterFile, Unit> =
-        when (val result = readLaterFileRepository.updateOrAdd(request.readLaterFile)) {
-            is Resource.Success -> Resource.Success(request.readLaterFile)
+        runCatchingCancellable {
+            when (
+                val result = readLaterFileRepository.updateOrAdd(
+                    ReadLaterFile(
+                        bookshelfId = request.bookshelfId,
+                        path = request.path,
+                        modifiedDate = Clock.System.now().toEpochMilliseconds(),
+                    ),
+                )
+            ) {
+                is Resource.Success -> Resource.Success(result.data)
 
-            is Resource.Error -> {
-                sendFatalErrorUseCase(SendFatalErrorUseCase.Request(result.error.throwable))
-                Resource.Error(Unit)
+                is Resource.Error -> {
+                    sendFatalErrorUseCase(SendFatalErrorUseCase.Request(result.error.throwable))
+                    Resource.Error(Unit)
+                }
             }
+        }.getOrElse {
+            sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it))
+            Resource.Error(Unit)
         }
 }

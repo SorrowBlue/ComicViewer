@@ -16,10 +16,10 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
 /**
- * [Semaphore] により同時に実行されるコルーチン数を制限するカスタム [CoroutineScope]。
+ * Custom [CoroutineScope] that limits the number of concurrently executing coroutines using a [Semaphore].
  *
- * @param underlying ラップ元の [CoroutineScope]
- * @param limit 最大同時実行数
+ * @param underlying The wrapped [CoroutineScope].
+ * @param limit Maximum number of concurrent executions.
  */
 internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int) :
     CoroutineScope by underlying {
@@ -35,10 +35,11 @@ internal class LimitedCoroutineScope(private val underlying: CoroutineScope, lim
     }
 
     /**
-     * コレクションの各要素に対して、最大同時実行数を保ちながら並行実行し、全タスクの完了を待機する。
+     * Executes [transform] in parallel for each element in the collection while maintaining the concurrency limit,
+     * and awaits completion of all tasks.
      *
-     * @param transform 各要素に対して並行実行する処理
-     * @return 変換結果のリスト
+     * @param transform Suspending transformation to run in parallel for each element.
+     * @return List of transformed results.
      */
     suspend fun <T, R> Iterable<T>.mapParallel(transform: suspend (T) -> R): List<R> = map { item ->
         async { transform(item) }
@@ -46,11 +47,11 @@ internal class LimitedCoroutineScope(private val underlying: CoroutineScope, lim
 }
 
 /**
- * 同時実行数を [limit] に制限した [LimitedCoroutineScope] で [block] を実行する。
+ * Executes [block] within a [LimitedCoroutineScope] whose concurrency is limited to [limit].
  *
- * @param limit 最大同時実行数
- * @param context 実行コンテキスト
- * @param block スコープ内で実行する処理
+ * @param limit Maximum number of concurrent executions.
+ * @param context Execution coroutine context.
+ * @param block Suspending block to execute within the scope.
  */
 internal suspend fun <T> limitedCoroutineScope(
     limit: Int,

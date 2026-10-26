@@ -14,17 +14,17 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 /**
- * コミックの初期ページ一覧を生成するユースケース。
+ * Use case that generates the initial list of pages for a comic book.
  */
 abstract class CreateInitialBookPagesUseCase :
     OneShotUseCase<CreateInitialBookPagesUseCase.Request, List<BookPage>, Unit>() {
 
     /**
-     * ページリスト生成リクエスト
+     * Request parameters for generating the initial page list.
      *
-     * @property totalPageCount 総ページ数
-     * @property pageFormat ページフォーマット設定
-     * @property isCompactWindow コンパクト画面（スマートフォン等）かどうか
+     * @property totalPageCount Total number of pages in the book.
+     * @property pageFormat Page display format setting.
+     * @property isCompactWindow Whether the current window is compact (e.g., smartphones).
      */
     data class Request(
         val totalPageCount: Int,

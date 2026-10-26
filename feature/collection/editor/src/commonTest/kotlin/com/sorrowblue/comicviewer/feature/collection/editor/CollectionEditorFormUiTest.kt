@@ -4,7 +4,9 @@
 
 package com.sorrowblue.comicviewer.feature.collection.editor
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -14,18 +16,14 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.v2.runComposeUiTest
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionCreateScreen
-import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionEditScreen
-import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionEditScreenUiState
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionForm
 import com.sorrowblue.comicviewer.feature.collection.editor.basic.BasicCollectionsCreateScreenUiState
-import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditorScreen
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.SmartCollectionEditorScreenUiState
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CollectionNameField
+import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.CreateButton
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.component.QueryField
+import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionEditorForm
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
 import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 import com.sorrowblue.comicviewer.framework.test.MediumTest
@@ -33,14 +31,13 @@ import com.sorrowblue.comicviewer.framework.ui.form.FormState
 import com.sorrowblue.comicviewer.framework.ui.form.rememberForm
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.coroutines.flow.flowOf
 
 @MediumTest
 @OptIn(ExperimentalTestApi::class)
 class CollectionEditorFormUiTest {
 
     @Test
-    fun basicCollectionCreateScreen_validatesNameAndSubmits() = runComposeUiTest {
+    fun basicCollectionCreateScreen_validatesResetAndSubmits() = runComposeUiTest {
         var submittedForm: BasicCollectionForm? = null
         val formState = FormState(BasicCollectionForm())
 
@@ -68,29 +65,8 @@ class CollectionEditorFormUiTest {
         onNodeWithTag("CreateButton").performClick()
 
         assertEquals(BasicCollectionForm(name = "My Collection"), submittedForm)
-    }
 
-    @Test
-    fun basicCollectionEditScreen_resetAndValidation() = runComposeUiTest {
-        var submittedForm: BasicCollectionForm? = null
-        val formState = FormState(BasicCollectionForm())
-
-        setContent {
-            ComicTheme {
-                val form = rememberForm(state = formState, onSubmit = { submittedForm = it })
-                val lazyPagingItems = flowOf(PagingData.empty<File>()).collectAsLazyPagingItems()
-                BasicCollectionEditScreen(
-                    uiState = BasicCollectionEditScreenUiState(isLoading = false),
-                    form = form,
-                    lazyPagingItems = lazyPagingItems,
-                    onBackClick = {},
-                    onDeleteClick = {},
-                )
-            }
-        }
-
-        onNodeWithTag("CreateButton").assertIsNotEnabled()
-
+        // Resetting formState updates CollectionNameField and keeps validation active
         runOnIdle {
             formState.reset(BasicCollectionForm(name = "Existing Collection"))
         }
@@ -108,22 +84,28 @@ class CollectionEditorFormUiTest {
     }
 
     @Test
-    fun smartCollectionEditorScreen_validatesNameAndQueryAndSubmits() = runComposeUiTest {
+    fun smartCollectionEditorForm_validatesNameAndQueryAndSubmits() = runComposeUiTest {
         var submittedForm: SmartCollectionForm? = null
         val formState = FormState(SmartCollectionForm())
 
         setContent {
             ComicTheme {
                 val form = rememberForm(state = formState, onSubmit = { submittedForm = it })
-                SmartCollectionEditorScreen(
-                    form = form,
-                    uiState = SmartCollectionEditorScreenUiState(
-                        enabledForm = true,
-                        bookshelf = mapOf(null to "All Bookshelves"),
-                    ),
-                    title = { Text("Smart Collection") },
-                    onCancel = {},
+                val uiState = SmartCollectionEditorScreenUiState(
+                    enabledForm = true,
+                    bookshelf = mapOf(null to "All Bookshelves"),
                 )
+                Column {
+                    SmartCollectionEditorForm(
+                        form = form,
+                        uiState = uiState,
+                        bookshelf = uiState.bookshelf,
+                    )
+                    CreateButton(
+                        form = form,
+                        modifier = Modifier.testTag("CreateButton"),
+                    )
+                }
             }
         }
 

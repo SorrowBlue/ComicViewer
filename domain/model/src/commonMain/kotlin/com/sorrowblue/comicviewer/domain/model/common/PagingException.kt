@@ -4,12 +4,12 @@
 
 package com.sorrowblue.comicviewer.domain.model.common
 
-sealed class PagingException : RuntimeException() {
-    class NoNetwork : PagingException()
+sealed class PagingException(cause: Throwable? = null) : RuntimeException(cause) {
+    class NoNetwork(cause: Throwable? = null) : PagingException(cause)
 
-    class InvalidAuth : PagingException()
+    class InvalidAuth(cause: Throwable? = null) : PagingException(cause)
 
-    class InvalidServer : PagingException()
+    class InvalidServer(cause: Throwable? = null) : PagingException(cause)
 
-    class NotFound : PagingException()
+    class NotFound(cause: Throwable? = null) : PagingException(cause)
 }

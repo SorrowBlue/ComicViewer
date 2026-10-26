@@ -11,6 +11,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 value class NavigationHistory(val value: Pair<List<Folder>, Book>) {
     val folderList get() = value.first
+    val book get() = value.second
 
     constructor(folderList: List<Folder>, book: Book) : this(
         Pair(

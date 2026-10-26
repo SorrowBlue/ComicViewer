@@ -33,11 +33,15 @@ interface RemoteStorageClient {
     @Throws(RemoteException::class, CancellationException::class)
     suspend fun file(path: String, resolveImageFolder: Boolean = false): File
 
+    @Throws(RemoteException::class, CancellationException::class)
     suspend fun pageCount(book: Book): Int
 
+    @Throws(RemoteException::class, CancellationException::class)
     suspend fun fileReader(book: Book): BookFileReader
 
+    @Throws(RemoteException::class, CancellationException::class)
     suspend fun getAttribute(path: String): FileAttribute?
 
+    @Throws(RemoteException::class, CancellationException::class)
     suspend fun getFileSize(path: String): Long
 }

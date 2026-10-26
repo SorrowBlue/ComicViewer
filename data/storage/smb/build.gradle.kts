@@ -36,9 +36,6 @@ kotlin {
         }
         getByName("androidHostTest") {
             dependsOn(androidJvmTest)
-            dependencies {
-                runtimeOnly(libs.robolectric)
-            }
         }
         jvmMain {
             dependsOn(androidJvm)

@@ -66,7 +66,10 @@ data class SmbServer private constructor(
             val domain: String,
             val username: String,
             val password: String,
-        ) : Auth
+        ) : Auth {
+            override fun toString(): String =
+                "UsernamePassword(domain=$domain, username=$username, password=***)"
+        }
 
         data object Guest : Auth
     }

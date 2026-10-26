@@ -18,9 +18,11 @@ internal class IosFileSortService : FileSortService {
 
     override val compareFile: Comparator<File> = compareBy<File> { if (it is BookFile) 1 else 0 }
         .thenComparator { a, b ->
-            @Suppress("CAST_NEVER_SUCCEEDS")
-            val str = a.name as NSString
-            str.localizedCompare(b.name).toInt()
+            compareNatural(a.name, b.name) { chunkA, chunkB ->
+                @Suppress("CAST_NEVER_SUCCEEDS")
+                val str = chunkA as NSString
+                str.localizedCompare(chunkB).toInt()
+            }
         }
 }
 

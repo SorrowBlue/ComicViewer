@@ -12,8 +12,13 @@ import com.sorrowblue.comicviewer.domain.usecase.UseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import logcat.LogPriority
+import logcat.asLog
+import logcat.logcat
 
 abstract class GetCollectionUseCase :
     UseCase<CollectionId, Collection, GetCollectionUseCase.Error>() {
@@ -31,11 +36,15 @@ internal class GetCollectionUseCaseImpl(private val repository: CollectionReposi
     GetCollectionUseCase() {
 
     override fun run(request: CollectionId): Flow<Resource<Collection, Error>> =
-        repository.flow(request).map {
+        repository.flow(request).map<Collection?, Resource<Collection, Error>> {
             if (it == null) {
                 Resource.Error(Error.NotFound)
             } else {
                 Resource.Success(it)
             }
+        }.catch { e ->
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR) { e.asLog() }
+            emit(Resource.Error(Error.System))
         }
 }

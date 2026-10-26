@@ -14,10 +14,14 @@ import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.service.file.FileHierarchyScanService
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
+import logcat.LogPriority
+import logcat.asLog
+import logcat.logcat
 
 abstract class ScanBookshelfUseCase :
     OneShotUseCase<ScanBookshelfUseCase.Request, Unit, ScanBookshelfUseCase.Error>() {
@@ -42,7 +46,7 @@ internal class ScanBookshelfUseCaseImpl(
     private val fileHierarchyScanService: FileHierarchyScanService,
 ) : ScanBookshelfUseCase() {
 
-    override suspend fun run(request: Request): Resource<Unit, Error> {
+    override suspend fun run(request: Request): Resource<Unit, Error> = runCatchingCancellable {
         val bookshelf = bookshelfRepository.flow(request.bookshelfId).first()
         if (bookshelf != null) {
             val rootFolder = fileRepository.root(request.bookshelfId)
@@ -68,6 +72,11 @@ internal class ScanBookshelfUseCaseImpl(
                 )
             }
         }
-        return Resource.Success(Unit)
-    }
+    }.fold(
+        onSuccess = { Resource.Success(Unit) },
+        onFailure = {
+            logcat(LogPriority.ERROR) { it.asLog() }
+            Resource.Error(Error.System)
+        },
+    )
 }

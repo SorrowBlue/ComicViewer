@@ -11,18 +11,18 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 /**
- * ファイル階層の再帰的走査、フィルタリング、ソートおよびインデックス採番を行うドメインサービス。
+ * Domain service that performs traversal, filtering, sorting, and index assignment across a file hierarchy.
  */
 interface FileHierarchyScanService {
 
     /**
-     * 指定されたルート要素からファイル階層を再帰的に走査（深さ優先探索）します。
+     * Traverses the file hierarchy in depth-first pre-order starting from the specified root element.
      *
-     * @param root 走査開始ノード（通常はルートフォルダー）
-     * @param supportExtensions サポートするファイル拡張子のリスト
-     * @param listFiles 指定ノード直下の未ソートファイル一覧を取得する処理（フィルタ条件付き）
-     * @param onFolderFilesScanned 親フォルダーと、自然順ソート・採番が完了した直下ファイル一覧が確定した際に呼ばれるコールバック
-     * @param onFileDiscovered 発見されたファイルごとに呼ばれるコールバック
+     * @param root Root node to start scanning from (typically the root folder).
+     * @param supportExtensions List of supported file extensions.
+     * @param listFiles Function to retrieve the unsorted list of direct children under a node with a filter predicate.
+     * @param onFolderFilesScanned Callback invoked when a parent folder and its naturally sorted, indexed children are finalized.
+     * @param onFileDiscovered Callback invoked for each discovered file.
      */
     suspend fun scanHierarchy(
         root: File,
@@ -45,25 +45,25 @@ class FileHierarchyScanServiceImpl(private val fileSortService: FileSortService)
         onFolderFilesScanned: suspend (parent: File, files: List<File>) -> Unit,
         onFileDiscovered: suspend (file: File) -> Unit,
     ) {
-        val fileModelList = fileSortService.sortedIndex(
-            listFiles(root) {
-                fileSortService.filter(it, supportExtensions)
-            },
-        )
-        onFolderFilesScanned(root, fileModelList)
-        fileModelList.forEach {
-            onFileDiscovered(it)
-        }
-        fileModelList
-            .filterIsInstance<IFolder>()
-            .forEach { folder ->
-                scanHierarchy(
-                    root = folder,
-                    supportExtensions = supportExtensions,
-                    listFiles = listFiles,
-                    onFolderFilesScanned = onFolderFilesScanned,
-                    onFileDiscovered = onFileDiscovered,
-                )
+        val stack = ArrayDeque<File>()
+        stack.addLast(root)
+        while (stack.isNotEmpty()) {
+            val current = stack.removeLast()
+            val fileModelList = fileSortService.sortedIndex(
+                listFiles(current) {
+                    fileSortService.filter(it, supportExtensions)
+                },
+            )
+            onFolderFilesScanned(current, fileModelList)
+            fileModelList.forEach {
+                onFileDiscovered(it)
             }
+            fileModelList
+                .filterIsInstance<IFolder>()
+                .asReversed()
+                .forEach { folder ->
+                    stack.addLast(folder)
+                }
+        }
     }
 }

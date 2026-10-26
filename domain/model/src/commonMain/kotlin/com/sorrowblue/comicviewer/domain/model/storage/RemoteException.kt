@@ -4,14 +4,14 @@
 
 package com.sorrowblue.comicviewer.domain.model.storage
 
-sealed class RemoteException : RuntimeException() {
-    class NoNetwork : RemoteException()
+sealed class RemoteException(cause: Throwable? = null) : RuntimeException(cause) {
+    class NoNetwork(cause: Throwable? = null) : RemoteException(cause)
 
-    class InvalidAuth : RemoteException()
+    class InvalidAuth(cause: Throwable? = null) : RemoteException(cause)
 
-    class InvalidServer : RemoteException()
+    class InvalidServer(cause: Throwable? = null) : RemoteException(cause)
 
-    class NotFound : RemoteException()
+    class NotFound(cause: Throwable? = null) : RemoteException(cause)
 
-    class Unknown : RemoteException()
+    class Unknown(cause: Throwable? = null) : RemoteException(cause)
 }

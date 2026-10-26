@@ -11,6 +11,7 @@ import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.model.settings.folder.isSameFolderPath
 import com.sorrowblue.comicviewer.domain.model.settings.folder.isSubfolderPath
+import com.sorrowblue.comicviewer.domain.model.settings.folder.normalizeFolderPath
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -85,11 +86,7 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
         val newSettings = when (currentScope) {
             FolderSortScope.Global -> {
                 val updatedList = settings.folderScopeOnlyList.map {
-                    if (
-                        it.bookshelfId == bookshelfId &&
-                        isSameFolderPath(it.path, path) &&
-                        it.useGlobal
-                    ) {
+                    if (it.useGlobal) {
                         it.copy(sortType = sortType)
                     } else {
                         it
@@ -230,23 +227,24 @@ class FolderSortSettingsServiceImpl : FolderSortSettingsService {
         list: List<FolderScopeOnly>,
         entry: FolderScopeOnly,
     ): List<FolderScopeOnly> {
+        val normalizedEntry = entry.copy(path = normalizeFolderPath(entry.path))
         val exists = list.any {
-            it.bookshelfId == entry.bookshelfId && isSameFolderPath(it.path, entry.path)
+            it.bookshelfId == normalizedEntry.bookshelfId &&
+                isSameFolderPath(it.path, normalizedEntry.path)
         }
         return if (exists) {
             list.map {
-                if (it.bookshelfId == entry.bookshelfId && isSameFolderPath(it.path, entry.path)) {
-                    it.copy(
-                        sortType = entry.sortType,
-                        includeSubfolders = entry.includeSubfolders,
-                        useGlobal = entry.useGlobal,
-                    )
+                if (
+                    it.bookshelfId == normalizedEntry.bookshelfId &&
+                    isSameFolderPath(it.path, normalizedEntry.path)
+                ) {
+                    normalizedEntry
                 } else {
                     it
                 }
             }
         } else {
-            list + entry
+            list + normalizedEntry
         }
     }
 

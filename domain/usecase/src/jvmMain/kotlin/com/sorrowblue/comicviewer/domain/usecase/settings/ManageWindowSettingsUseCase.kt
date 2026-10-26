@@ -25,4 +25,3 @@ internal class ManageWindowSettingsUseCaseImpl(
         settingsRepository.updateWindowSettings(action)
     }
 }
-

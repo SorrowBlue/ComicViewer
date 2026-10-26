@@ -5,16 +5,15 @@
 package com.sorrowblue.comicviewer.domain.model.common
 
 sealed interface Resource<out D, out E> {
-    class Success<D>(val data: D) : Resource<D, Nothing>
+    data class Success<out D>(val data: D) : Resource<D, Nothing>
 
-    class Error<out E>(val error: E) : Resource<Nothing, E>
+    data class Error<out E>(val error: E) : Resource<Nothing, E>
 
-    /** data class Runtime(reason: RuntimeError) : ErrorEntity */
     interface IError
 
     interface AppError : IError
 
-    class SystemError(val throwable: Throwable) : IError
+    data class SystemError(val throwable: Throwable) : IError
 }
 
 inline fun <D, E, R> Resource<D, E>.fold(onSuccess: (D) -> R, onError: (E) -> R): R = when (this) {

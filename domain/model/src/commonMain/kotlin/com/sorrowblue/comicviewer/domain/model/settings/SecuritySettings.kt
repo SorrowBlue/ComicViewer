@@ -14,4 +14,7 @@ data class SecuritySettings(
     @ProtoNumber(1) val password: String? = null,
     @ProtoNumber(2) val useBiometrics: Boolean = false,
     @ProtoNumber(3) val lockOnBackground: Boolean = false,
-)
+) {
+    override fun toString(): String =
+        "SecuritySettings(password=${if (password != null) "***" else "null"}, useBiometrics=$useBiometrics, lockOnBackground=$lockOnBackground)"
+}

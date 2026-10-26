@@ -304,4 +304,43 @@ class BookPageLayoutServiceTest {
             p3,
         )
     }
+
+    @Test
+    fun resolveSplitPage_outOfBoundsPage_returnsCurrentListUnchanged() {
+        val initialList: List<PageItem> = listOf(
+            BookPage.Split.Unrated(0),
+            BookPage.Split.Unrated(1),
+        )
+
+        val updated = service.resolvePage(
+            currentList = initialList,
+            unratedPage = BookPage.Split.Unrated(99),
+            isPortrait = false,
+        )
+
+        assertEquals(initialList, updated)
+    }
+
+    @Test
+    fun resolveSpreadPage_outOfBoundsPage_returnsCurrentListUnchanged() {
+        val initialList: List<PageItem> = listOf(
+            BookPage.Spread.Unrated(0),
+            BookPage.Spread.Unrated(1),
+        )
+
+        val updated = service.resolvePage(
+            currentList = initialList,
+            unratedPage = BookPage.Spread.Unrated(99),
+            isPortrait = true,
+        )
+
+        assertEquals(initialList, updated)
+        assertTrue(
+            service.resolvePage(
+                currentList = emptyList(),
+                unratedPage = BookPage.Spread.Unrated(0),
+                isPortrait = true,
+            ).isEmpty(),
+        )
+    }
 }

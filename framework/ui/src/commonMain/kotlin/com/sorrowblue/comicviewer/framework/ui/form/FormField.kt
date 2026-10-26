@@ -55,7 +55,7 @@ fun CharSequence.normalizeDigits(): String = buildString(length) {
  * @param onTextChange Optional callback invoked with the observed text once normalized.
  */
 @Composable
-fun NormalizeDigitsEffect(state: TextFieldState, onTextChange: ((String) -> Unit)? = null,) {
+fun NormalizeDigitsEffect(state: TextFieldState, onTextChange: ((String) -> Unit)? = null) {
     LaunchedEffect(state) {
         snapshotFlow { state.composition to state.text.toString() }
             .collect { (composition, text) ->

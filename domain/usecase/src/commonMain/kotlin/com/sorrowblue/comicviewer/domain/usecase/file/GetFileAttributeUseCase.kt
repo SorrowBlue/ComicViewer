@@ -4,16 +4,21 @@
 
 package com.sorrowblue.comicviewer.domain.usecase.file
 
+import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
+import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.UseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 abstract class GetFileAttributeUseCase :
@@ -36,22 +41,31 @@ internal class GetFileAttributeUseCaseImpl(
 ) : GetFileAttributeUseCase() {
 
     override fun run(request: Request): Flow<Resource<FileAttribute, Error>> =
-        bookshelfRepository.flow(request.bookshelfId).map { bookshelf ->
-            if (bookshelf != null) {
-                kotlin
-                    .runCatching {
+        bookshelfRepository.flow(request.bookshelfId)
+            .map<Bookshelf?, Resource<FileAttribute, Error>> { bookshelf ->
+                if (bookshelf != null) {
+                    runCatchingCancellable {
                         remoteStorageClientFactory.create(bookshelf).getAttribute(request.path)
-                    }.fold({ attribute ->
-                        if (attribute != null) {
-                            Resource.Success(attribute)
-                        } else {
-                            Resource.Error(Error.NotFound)
-                        }
-                    }, {
-                        Resource.Error(Error.System)
-                    })
-            } else {
-                Resource.Error(Error.NotFound)
+                    }.fold(
+                        onSuccess = { attribute ->
+                            if (attribute != null) {
+                                Resource.Success(attribute)
+                            } else {
+                                Resource.Error(Error.NotFound)
+                            }
+                        },
+                        onFailure = {
+                            when (it) {
+                                is RemoteException.NotFound -> Resource.Error(Error.NotFound)
+                                else -> Resource.Error(Error.System)
+                            }
+                        },
+                    )
+                } else {
+                    Resource.Error(Error.NotFound)
+                }
+            }.catch { e ->
+                if (e is CancellationException) throw e
+                emit(Resource.Error(Error.System))
             }
-        }
 }

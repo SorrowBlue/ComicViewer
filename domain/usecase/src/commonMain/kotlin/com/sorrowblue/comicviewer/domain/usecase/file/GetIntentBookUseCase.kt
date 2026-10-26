@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -24,9 +25,16 @@ internal class GetIntentBookUseCaseImpl(
     override suspend fun run(request: String): Resource<BookFile, Unit> {
         val bookshelf = ShareContents
         val remoteStorageClient = remoteStorageClientFactory.create(bookshelf)
-        var book = remoteStorageClient.file(request)
-        book = book as BookFile
-        book = book.copy(totalPageCount = remoteStorageClient.pageCount(book))
-        return Resource.Success(book)
+        return runCatchingCancellable {
+            val file = remoteStorageClient.file(request)
+            if (file is BookFile) {
+                val totalPageCount = remoteStorageClient.pageCount(file)
+                Resource.Success(file.copy(totalPageCount = totalPageCount))
+            } else {
+                Resource.Error(Unit)
+            }
+        }.getOrElse {
+            Resource.Error(Unit)
+        }
     }
 }

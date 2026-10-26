@@ -13,11 +13,12 @@ import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
 import com.sorrowblue.comicviewer.domain.usecase.PagingUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 
 fun interface PagingFileUseCase : PagingUseCase<PagingFileUseCase.Request, File> {
@@ -39,18 +40,27 @@ internal class PagingFileUseCaseImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(request: PagingFileUseCase.Request) = bookshelfRepository
-        .flow(request.bookshelfId).filterNotNull().flatMapLatest { bookshelf ->
-            val file = fileRepository.findBy(request.bookshelfId, request.path) as IFolder
-            settingsRepository.folderDisplaySettings.flatMapLatest { settings ->
-                fileRepository.pagingDataFlow(request.pagingConfig, bookshelf, file) {
-                    SearchCondition(
-                        "",
-                        SearchCondition.Range.InFolder(file.path),
-                        SearchCondition.Period.None,
-                        settings.currentSortType(file.bookshelfId, file.path),
-                        settings.showHiddenFiles,
-                    )
+        .flow(request.bookshelfId).flatMapLatest { bookshelf ->
+            if (bookshelf == null) {
+                return@flatMapLatest emptyFlow()
+            }
+            val file = runCatchingCancellable {
+                fileRepository.findBy(request.bookshelfId, request.path)
+            }.getOrNull()
+            if (file is IFolder) {
+                settingsRepository.folderDisplaySettings.flatMapLatest { settings ->
+                    fileRepository.pagingDataFlow(request.pagingConfig, bookshelf, file) {
+                        SearchCondition(
+                            "",
+                            SearchCondition.Range.InFolder(file.path),
+                            SearchCondition.Period.None,
+                            settings.currentSortType(file.bookshelfId, file.path),
+                            settings.showHiddenFiles,
+                        )
+                    }
                 }
+            } else {
+                emptyFlow()
             }
         }
 }

@@ -12,8 +12,13 @@ import com.sorrowblue.comicviewer.domain.usecase.UseCase
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import logcat.LogPriority
+import logcat.asLog
+import logcat.logcat
 
 /**
  * UseCase to observe a single [Bookshelf] by [BookshelfId].
@@ -21,7 +26,9 @@ import kotlinx.coroutines.flow.map
 abstract class FlowBookshelfUseCase :
     UseCase<BookshelfId, Bookshelf?, FlowBookshelfUseCase.Error>() {
 
-    sealed interface Error : Resource.AppError
+    sealed interface Error : Resource.AppError {
+        data object System : Error
+    }
 }
 
 @Inject
@@ -30,7 +37,11 @@ internal class FlowBookshelfUseCaseImpl(private val bookshelfRepository: Bookshe
     FlowBookshelfUseCase() {
 
     override fun run(request: BookshelfId): Flow<Resource<Bookshelf?, Error>> =
-        bookshelfRepository.flow(request).map {
+        bookshelfRepository.flow(request).map<Bookshelf?, Resource<Bookshelf?, Error>> {
             Resource.Success(it)
+        }.catch { e ->
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR) { e.asLog() }
+            emit(Resource.Error(Error.System))
         }
 }

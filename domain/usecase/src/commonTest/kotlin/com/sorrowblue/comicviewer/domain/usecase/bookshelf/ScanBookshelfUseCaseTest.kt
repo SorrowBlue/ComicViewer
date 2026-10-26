@@ -4,41 +4,27 @@
 
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
-import com.sorrowblue.comicviewer.domain.model.file.BookThumbnail
 import com.sorrowblue.comicviewer.domain.model.file.File
-import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.file.SupportExtension
-import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
-import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
-import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
-import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
-import com.sorrowblue.comicviewer.domain.model.settings.Settings
-import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderThumbnailOrder
-import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
-import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
-import com.sorrowblue.comicviewer.domain.repository.FileRepository
-import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
-import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
-import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
+import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.service.file.FileHierarchyScanService
+import com.sorrowblue.comicviewer.domain.usecase.StubBookshelfRepository
+import com.sorrowblue.comicviewer.domain.usecase.StubFileRepository
+import com.sorrowblue.comicviewer.domain.usecase.StubRemoteStorageClient
+import com.sorrowblue.comicviewer.domain.usecase.StubSettingsRepository
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -83,18 +69,18 @@ class ScanBookshelfUseCaseTest {
             }
         }
 
-        val fakeBookshelfRepository = object : FakeBookshelfRepository() {
+        val fakeBookshelfRepository = object : StubBookshelfRepository() {
             override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(testBookshelf)
         }
 
-        val fakeFileRepository = object : FakeFileRepository() {
+        val fakeFileRepository = object : StubFileRepository() {
             override suspend fun root(id: BookshelfId): Folder = rootFolder
             override suspend fun updateHistory(file: File, files: List<File>) {
                 historyUpdated.add(file to files)
             }
         }
 
-        val fakeClient = object : FakeRemoteStorageClient() {
+        val fakeClient = object : StubRemoteStorageClient() {
             override suspend fun listFiles(
                 file: File,
                 resolveImageFolder: Boolean,
@@ -106,7 +92,7 @@ class ScanBookshelfUseCaseTest {
             override fun create(bookshelf: Bookshelf): RemoteStorageClient = fakeClient
         }
 
-        val fakeSettingsRepository = object : FakeSettingsRepository() {
+        val fakeSettingsRepository = object : StubSettingsRepository() {
             override val folderSettings: Flow<FolderSettings> = flowOf(
                 FolderSettings(
                     supportExtension = listOf(
@@ -156,20 +142,20 @@ class ScanBookshelfUseCaseTest {
             }
         }
 
-        val fakeBookshelfRepository = object : FakeBookshelfRepository() {
+        val fakeBookshelfRepository = object : StubBookshelfRepository() {
             override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(null)
         }
 
-        val fakeFileRepository = object : FakeFileRepository() {
+        val fakeFileRepository = object : StubFileRepository() {
             override suspend fun root(id: BookshelfId): Folder = rootFolder
         }
 
         val fakeClientFactory = object : RemoteStorageClient.Factory {
             override fun create(bookshelf: Bookshelf): RemoteStorageClient =
-                object : FakeRemoteStorageClient() {}
+                object : StubRemoteStorageClient() {}
         }
 
-        val fakeSettingsRepository = object : FakeSettingsRepository() {}
+        val fakeSettingsRepository = object : StubSettingsRepository() {}
 
         val useCase = ScanBookshelfUseCaseImpl(
             bookshelfRepository = fakeBookshelfRepository,
@@ -186,170 +172,98 @@ class ScanBookshelfUseCaseTest {
         assertTrue(result is Resource.Success)
         assertEquals(false, scanHierarchyCalled)
     }
-}
 
-private open class FakeBookshelfRepository : BookshelfRepository {
-    override suspend fun updateOrCreate(
-        bookshelf: Bookshelf,
-        transaction: suspend (Bookshelf) -> Unit,
-    ): Bookshelf? = TODO()
+    @Test
+    fun testScanBookshelfUseCase_whenExceptionThrown_returnsSystemError() = runTest {
+        val fakeScanService = object : FileHierarchyScanService {
+            override suspend fun scanHierarchy(
+                root: File,
+                supportExtensions: List<String>,
+                listFiles: suspend (file: File, filter: (File) -> Boolean) -> List<File>,
+                onFolderFilesScanned: suspend (parent: File, files: List<File>) -> Unit,
+                onFileDiscovered: suspend (file: File) -> Unit,
+            ) {
+                listFiles(root) { true }
+            }
+        }
 
-    override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = TODO()
-    override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> =
-        TODO()
+        val fakeBookshelfRepository = object : StubBookshelfRepository() {
+            override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(testBookshelf)
+        }
 
-    override fun allBookshelf(): Resource<Flow<List<Bookshelf>>, Resource.SystemError> = TODO()
-    override suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean) = TODO()
-}
+        val fakeFileRepository = object : StubFileRepository() {
+            override suspend fun root(id: BookshelfId): Folder = rootFolder
+        }
 
-private open class FakeFileRepository : FileRepository {
-    override fun pagingDataFlow(
-        pagingConfig: PagingConfig,
-        bookshelf: Bookshelf,
-        file: File,
-        searchCondition: () -> SearchCondition,
-    ): Flow<PagingData<File>> = TODO()
+        val fakeClientFactory = object : RemoteStorageClient.Factory {
+            override fun create(bookshelf: Bookshelf): RemoteStorageClient =
+                object : StubRemoteStorageClient() {
+                    override suspend fun listFiles(
+                        file: File,
+                        resolveImageFolder: Boolean,
+                        filter: (File) -> Boolean,
+                    ): List<File> = throw RemoteException.InvalidServer()
+                }
+        }
 
-    override fun pagingSourceBookThumbnail(
-        pagingConfig: PagingConfig,
-        bookshelf: Bookshelf,
-        file: File,
-        searchCondition: () -> SearchCondition,
-    ): Flow<PagingData<BookThumbnail>> = TODO()
+        val fakeSettingsRepository = object : StubSettingsRepository() {
+            override val folderSettings: Flow<FolderSettings> = flowOf(FolderSettings())
+        }
 
-    override fun pagingDataFlow(
-        pagingConfig: PagingConfig,
-        bookshelfId: BookshelfId?,
-        searchCondition: () -> SearchCondition,
-    ): Flow<PagingData<File>> = TODO()
+        val useCase = ScanBookshelfUseCaseImpl(
+            bookshelfRepository = fakeBookshelfRepository,
+            fileRepository = fakeFileRepository,
+            remoteStorageClientFactory = fakeClientFactory,
+            settingsRepository = fakeSettingsRepository,
+            fileHierarchyScanService = fakeScanService,
+        )
 
-    override suspend fun addUpdate(fileModel: File) = TODO()
-    override suspend fun updateHistory(
-        path: String,
-        bookshelfId: BookshelfId,
-        lastReadPage: Int,
-        lastReading: Long,
-    ) = TODO()
+        val result = useCase(
+            ScanBookshelfUseCase.Request(bookshelfId) { _, _ -> },
+        )
 
-    override suspend fun updateAdditionalInfo(
-        path: String,
-        bookshelfId: BookshelfId,
-        cacheKey: String,
-        totalPage: Int,
-    ) = TODO()
+        assertEquals(Resource.Error(ScanBookshelfUseCase.Error.System), result)
+    }
 
-    override suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError> = TODO()
-    override fun pagingSource(
-        bookshelfId: BookshelfId,
-        pagingConfig: PagingConfig,
-    ): Flow<PagingData<BookThumbnail>> = TODO()
+    @Test
+    fun testScanBookshelfUseCase_whenCancelled_rethrowsCancellationException() = runTest {
+        val fakeScanService = object : FileHierarchyScanService {
+            override suspend fun scanHierarchy(
+                root: File,
+                supportExtensions: List<String>,
+                listFiles: suspend (file: File, filter: (File) -> Boolean) -> List<File>,
+                onFolderFilesScanned: suspend (parent: File, files: List<File>) -> Unit,
+                onFileDiscovered: suspend (file: File) -> Unit,
+            ): Unit = throw CancellationException("Scan cancelled")
+        }
 
-    override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = TODO()
-    override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = TODO()
-    override fun nextFileModel(
-        bookshelfId: BookshelfId,
-        path: String,
-        sortType: SortType,
-    ): Flow<File?> = TODO()
+        val fakeBookshelfRepository = object : StubBookshelfRepository() {
+            override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(testBookshelf)
+        }
 
-    override fun nextFileModel(
-        bookshelfId: BookshelfId,
-        path: String,
-        searchCondition: SearchCondition,
-        sortType: SortType,
-    ): Flow<File?> = TODO()
+        val fakeFileRepository = object : StubFileRepository() {
+            override suspend fun root(id: BookshelfId): Folder = rootFolder
+        }
 
-    override fun prevFileModel(
-        bookshelfId: BookshelfId,
-        path: String,
-        sortType: SortType,
-    ): Flow<File?> = TODO()
+        val fakeClientFactory = object : RemoteStorageClient.Factory {
+            override fun create(bookshelf: Bookshelf): RemoteStorageClient =
+                object : StubRemoteStorageClient() {}
+        }
 
-    override fun prevFileModel(
-        bookshelfId: BookshelfId,
-        path: String,
-        searchCondition: SearchCondition,
-        sortType: SortType,
-    ): Flow<File?> = TODO()
+        val fakeSettingsRepository = object : StubSettingsRepository() {
+            override val folderSettings: Flow<FolderSettings> = flowOf(FolderSettings())
+        }
 
-    override suspend fun getCacheKeys(
-        bookshelfId: BookshelfId,
-        parent: String,
-        limit: Int,
-        folderThumbnailOrderModel: FolderThumbnailOrder,
-    ): List<String> = TODO()
+        val useCase = ScanBookshelfUseCaseImpl(
+            bookshelfRepository = fakeBookshelfRepository,
+            fileRepository = fakeFileRepository,
+            remoteStorageClientFactory = fakeClientFactory,
+            settingsRepository = fakeSettingsRepository,
+            fileHierarchyScanService = fakeScanService,
+        )
 
-    override suspend fun removeCacheKey(diskCacheKey: String) = TODO()
-    override suspend fun root(id: BookshelfId): Folder? = TODO()
-    override fun pagingHistoryBookSource(pagingConfig: PagingConfig): Flow<PagingData<Book>> =
-        TODO()
-
-    override suspend fun clearCacheKey(bookshelfId: BookshelfId) = TODO()
-    override suspend fun deleteAllHistory(): Unit = TODO()
-    override suspend fun updateHistory(file: File, files: List<File>): Unit = TODO()
-    override suspend fun deleteAll(bookshelfModelId: BookshelfId): Unit = TODO()
-    override suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String> = TODO()
-    override fun lastHistory(): Flow<File?> = TODO()
-    override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> =
-        TODO()
-
-    override suspend fun count(bookshelfId: BookshelfId): Long = TODO()
-    override suspend fun updateFileType(file: File) = TODO()
-}
-
-private open class FakeRemoteStorageClient : RemoteStorageClient {
-    override suspend fun connect(path: String) = TODO()
-    override suspend fun exists(path: String): Boolean = TODO()
-    override suspend fun listFiles(
-        file: File,
-        resolveImageFolder: Boolean,
-        filter: (File) -> Boolean,
-    ): List<File> = TODO()
-
-    override suspend fun file(path: String, resolveImageFolder: Boolean): File = TODO()
-    override suspend fun pageCount(book: Book): Int = TODO()
-    override suspend fun fileReader(book: Book): BookFileReader = TODO()
-    override suspend fun getAttribute(path: String): FileAttribute? = TODO()
-    override suspend fun getFileSize(path: String): Long = TODO()
-}
-
-private open class FakeSettingsRepository : SettingsRepository {
-    override val settings: Flow<Settings> get() = TODO()
-    override suspend fun updateSettings(transform: suspend (Settings) -> Settings): Settings =
-        TODO()
-
-    override val displaySettings: Flow<DisplaySettings> get() = TODO()
-    override suspend fun updateDisplaySettings(
-        transform: suspend (DisplaySettings) -> DisplaySettings,
-    ): DisplaySettings = TODO()
-
-    override val viewerSettings: Flow<ViewerSettings> get() = TODO()
-    override suspend fun updateViewerSettings(
-        transform: suspend (ViewerSettings) -> ViewerSettings,
-    ): ViewerSettings = TODO()
-
-    override val bookSettings: Flow<BookSettings> get() = TODO()
-    override suspend fun updateBookSettings(
-        transform: suspend (BookSettings) -> BookSettings,
-    ): BookSettings = TODO()
-
-    override val folderDisplaySettings: Flow<FolderDisplaySettings> get() = TODO()
-    override suspend fun updateFolderDisplaySettings(
-        transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings,
-    ): FolderDisplaySettings = TODO()
-
-    override val folderSettings: Flow<FolderSettings> get() = TODO()
-    override suspend fun updateFolderSettings(
-        transform: suspend (FolderSettings) -> FolderSettings,
-    ): FolderSettings = TODO()
-
-    override val securitySettings: Flow<SecuritySettings> get() = TODO()
-    override suspend fun updateSecuritySettings(
-        transform: suspend (SecuritySettings) -> SecuritySettings,
-    ): SecuritySettings = TODO()
-
-    override val collectionSettings: Flow<CollectionSettings> get() = TODO()
-    override suspend fun updateCollectionSettings(
-        transform: suspend (CollectionSettings) -> CollectionSettings,
-    ): CollectionSettings = TODO()
+        assertFailsWith<CancellationException> {
+            useCase(ScanBookshelfUseCase.Request(bookshelfId) { _, _ -> })
+        }
+    }
 }

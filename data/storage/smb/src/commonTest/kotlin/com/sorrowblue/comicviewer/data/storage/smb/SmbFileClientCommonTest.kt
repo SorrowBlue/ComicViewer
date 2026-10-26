@@ -9,8 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
 import com.sorrowblue.comicviewer.domain.model.bookshelf.SmbServer
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
-import com.sorrowblue.comicviewer.framework.test.MultiplatformAndroidJUnit4
-import com.sorrowblue.comicviewer.framework.test.MultiplatformRunWith
+import com.sorrowblue.comicviewer.framework.test.MediumTest
 import dev.zacsweers.metro.createGraph
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,9 +18,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
-import kotlinx.io.readString
 
-@MultiplatformRunWith(MultiplatformAndroidJUnit4::class)
+@MediumTest
 class SmbFileClientCommonTest {
     private val server
         get() = SmbServer(
@@ -35,15 +33,14 @@ class SmbFileClientCommonTest {
             ),
         )
 
-    private fun createClient(): FileClient<Bookshelf> {
+    private val client: FileClient<Bookshelf> by lazy {
         val graph = createGraph<SmbTestGraph>()
         @Suppress("UNCHECKED_CAST")
-        return graph.fileClientFactory.getFileClient(server)
+        graph.fileClientFactory.getFileClient(server)
     }
 
     @Test
     fun testExists() = runTest {
-        val client = createClient()
         assertTrue(
             BuildConfig.SMB_PATH.isNotEmpty(),
             "BuildConfig.smbPath must be provided for tests",
@@ -53,7 +50,6 @@ class SmbFileClientCommonTest {
 
     @Test
     fun testConnect() = runTest {
-        val client = createClient()
         client.connect("/")
         client.connect(BuildConfig.SMB_PATH)
 
@@ -64,7 +60,6 @@ class SmbFileClientCommonTest {
 
     @Test
     fun testRootDirectory() = runTest {
-        val client = createClient()
         val root = client.current("/")
         assertTrue(root is Folder)
         assertEquals("/", root.path)
@@ -75,7 +70,6 @@ class SmbFileClientCommonTest {
 
     @Test
     fun testCurrentAndAttribute() = runTest {
-        val client = createClient()
         val f = client.current(BuildConfig.SMB_PATH)
         assertNotNull(f)
         assertTrue(f.path.contains(BuildConfig.SMB_PATH.removeSuffix("/")))
@@ -89,7 +83,6 @@ class SmbFileClientCommonTest {
 
     @Test
     fun testListFiles() = runTest {
-        val client = createClient()
         val path = BuildConfig.SMB_PATH
         val parent = path.trimEnd('/').substringBeforeLast('/', "")
         val dir = if (parent.isEmpty()) "/" else "$parent/"
@@ -117,7 +110,6 @@ class SmbFileClientCommonTest {
 
     @Test
     fun testBufferedSource() = runTest {
-        val client = createClient()
         val file = Folder(
             path = BuildConfig.SMB_PATH,
             bookshelfId = server.id,
@@ -129,9 +121,8 @@ class SmbFileClientCommonTest {
         )
         client.listFiles(file).firstOrNull { it is BookFile }?.let {
             client.source(it).use { bufferedSource ->
-                assertEquals(
-                    bufferedSource.readString().isNotEmpty(),
-                    true,
+                assertTrue(
+                    bufferedSource.request(1),
                     "file should not be empty",
                 )
             }
@@ -140,7 +131,6 @@ class SmbFileClientCommonTest {
 
     @Test
     fun testSeekableInputStream() = runTest {
-        val client = createClient()
         val file = Folder(
             path = BuildConfig.SMB_PATH,
             bookshelfId = server.id,
