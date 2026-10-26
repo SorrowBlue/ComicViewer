@@ -84,7 +84,9 @@ class Navigator(val state: NavigationState) {
             val fromIndex = if (inclusive) index else index + 1
             if (fromIndex < currentStack.size) {
                 logcat {
-                    "#pop: inclusive=$inclusive, ${currentStack.lastOrNull()} -> ${currentStack.getOrNull(fromIndex - 1)}"
+                    "#pop: inclusive=$inclusive, ${currentStack.lastOrNull()} -> ${currentStack.getOrNull(
+                        fromIndex - 1,
+                    )}"
                 }
                 currentStack.subList(fromIndex, currentStack.size).clear()
             } else {
