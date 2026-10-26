@@ -4,7 +4,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
 import com.sorrowblue.comicviewer.data.database.DatabaseTest
-import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.framework.test.MediumTest
 import com.sorrowblue.comicviewer.framework.test.MultiplatformAndroidJUnit4
@@ -20,7 +19,6 @@ internal class FileDaoTest : DatabaseTest() {
 
     @Test
     fun pagingSourceHistoryTest() = runTest {
-        val factory = EntityFactory()
         val bookshelfEntity = factory.createBookshelfEntity().let { entity ->
             dao.upsert(entity).let {
                 entity.copy(id = BookshelfId(it.toInt()))

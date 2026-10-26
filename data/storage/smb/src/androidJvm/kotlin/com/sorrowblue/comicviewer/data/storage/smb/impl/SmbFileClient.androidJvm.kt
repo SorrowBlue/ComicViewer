@@ -51,7 +51,14 @@ import org.codelibs.jcifs.smb.impl.SmbFile
 import org.codelibs.jcifs.smb.util.transport.ConnectionTimeoutException
 import org.codelibs.jcifs.smb.util.transport.TransportException
 
-private var rootSmbFile: SmbFile? = null
+private data class CachedCifsContext(
+    val host: String,
+    val port: Int,
+    val auth: SmbServer.Auth,
+    val context: CIFSContext,
+)
+
+private var cachedCifsContext: CachedCifsContext? = null
 
 private val mutex = Mutex()
 
@@ -223,8 +230,7 @@ internal actual class SmbFileClient(
         }
     }
 
-    @Suppress("UnusedPrivateFunction")
-    private fun SmbServer.smbFile(path: String): SmbFile = SmbFile(
+    private fun SmbServer.smbFile(path: String, context: CIFSContext): SmbFile = SmbFile(
         URI(
             "smb",
             null,
@@ -234,55 +240,25 @@ internal actual class SmbFileClient(
             null,
             null,
         ).decode(),
-        cifsContext(),
+        context,
     )
 
-    private fun SmbFile.isSame(path: String): Boolean {
-        val credentials = context.credentials
-        val bookshelfAuth = this@SmbFileClient.bookshelf.auth
-        val sameAuth = if (credentials !is NtlmPasswordAuthenticator) {
-            false
-        } else {
-            when (bookshelfAuth) {
-                SmbServer.Auth.Guest -> credentials.isGuest
+    private fun CachedCifsContext.isSameServer(server: SmbServer): Boolean =
+        host == server.host && port == server.port && auth == server.auth
 
-                is SmbServer.Auth.UsernamePassword -> {
-                    NtlmPasswordAuthenticator(
-                        bookshelfAuth.domain,
-                        bookshelfAuth.username,
-                        bookshelfAuth.password,
-                    ) == credentials
-                }
-            }
-        }
-        return sameAuth &&
-            server == this@SmbFileClient.bookshelf.host &&
-            share == this@SmbFileClient.bookshelf.smbFile(path).share &&
-            url.port == this@SmbFileClient.bookshelf.port
-    }
-
-    @Suppress("RedundantSuspendModifier", "UnusedPrivateFunction")
     private suspend fun smbFile(path: String): SmbFile {
-        return mutex.withLock {
-            rootSmbFile?.takeIf { it.isSame(path) }?.let { root ->
-                return@withLock root.resolveRelative(path)
-            }
-            val file = bookshelf.smbFile(path)
-            val shareName = file.share ?: return@withLock file.also { rootSmbFile = it }
-            val root = bookshelf.smbFile("/$shareName/").also {
-                rootSmbFile = it
-            }
-            root.resolveRelative(path)
+        val context = mutex.withLock {
+            cachedCifsContext?.takeIf { it.isSameServer(bookshelf) }?.context
+                ?: cifsContext().also {
+                    cachedCifsContext = CachedCifsContext(
+                        host = bookshelf.host,
+                        port = bookshelf.port,
+                        auth = bookshelf.auth,
+                        context = it,
+                    )
+                }
         }
-    }
-
-    private fun SmbFile.resolveRelative(fullPath: String): SmbFile {
-        val relativePath = fullPath.removePrefix("/$share/").removePrefix("/")
-        return if (relativePath.isEmpty()) {
-            this
-        } else {
-            resolve(relativePath) as SmbFile
-        }
+        return bookshelf.smbFile(path, context)
     }
 
     private fun URI.decode() = URLDecoder.decode(toString().replace("+", "%2B"), "UTF-8")

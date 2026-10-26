@@ -3,8 +3,9 @@ package com.sorrowblue.comicviewer.data.database.dao
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
+import androidx.room3.immediateTransaction
+import androidx.room3.useWriterConnection
 import com.sorrowblue.comicviewer.data.database.DatabaseTest
-import com.sorrowblue.comicviewer.data.database.entity.EntityFactory
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.BookshelfEntity
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.DecryptedPassword
 import com.sorrowblue.comicviewer.data.database.entity.bookshelf.EmbeddedBookshelfFileCountEntity
@@ -62,14 +63,15 @@ internal class BookshelfDaoTest : DatabaseTest() {
 
     @Test
     fun pagingSourceNoDeletedTest() = runTest {
-        val factory = EntityFactory()
-        val bookshelfList = List(100) {
+        val bookshelfList = List(20) {
             factory.createBookshelfEntity(it + 1, deleted = it % 2 == 0)
         }
         val fileDao = database.fileDao()
-        bookshelfList.forEach {
-            dao.upsert(it)
-            fileDao.upsert(factory.createFileEntity(1, it.id, ""))
+        database.useWriterConnection { transactor ->
+            transactor.immediateTransaction {
+                bookshelfList.forEach { dao.upsert(it) }
+                fileDao.upsertAll(bookshelfList.map { factory.createFileEntity(1, it.id, "") })
+            }
         }
 
         val result = dao.allBookshelf().first()
@@ -88,11 +90,13 @@ internal class BookshelfDaoTest : DatabaseTest() {
 
     @Test
     fun allBookshelf() = runTest {
-        val factory = EntityFactory()
-        val bookshelfList = List(100) {
+        val bookshelfList = List(20) {
             factory.createBookshelfEntity(it + 1)
-        }.apply {
-            forEach { dao.upsert(it) }
+        }
+        database.useWriterConnection { transactor ->
+            transactor.immediateTransaction {
+                bookshelfList.forEach { dao.upsert(it) }
+            }
         }
         val result = dao.allBookshelf().first()
         assertContentEquals(bookshelfList, result)

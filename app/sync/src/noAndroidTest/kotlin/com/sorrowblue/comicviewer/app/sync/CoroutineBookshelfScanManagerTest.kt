@@ -9,16 +9,16 @@ import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 
-@OptIn(InternalDataApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, InternalDataApi::class)
 class CoroutineBookshelfScanManagerTest {
 
     @Test
-    fun scanFile_executesAndCompletes() = runTest {
+    fun scanFileExecutesAndCompletes() = runTest {
         var scanCalled = false
         var fileCompleted = false
         val manager = CoroutineBookshelfScanManager(
@@ -26,15 +26,14 @@ class CoroutineBookshelfScanManagerTest {
                 scanCalled = true
             },
             onFileScanComplete = { fileCompleted = true },
+            coroutineScope = backgroundScope,
         )
         val id = BookshelfId(1)
 
         assertFalse(manager.isScanningFile(id).first())
         manager.scanFile(id)
-
-        while (!fileCompleted || manager.isScanningFile(id).first()) {
-            delay(10.milliseconds)
-        }
+        assertTrue(manager.isScanningFile(id).first())
+        runCurrent()
 
         assertTrue(scanCalled)
         assertTrue(fileCompleted)
@@ -42,7 +41,7 @@ class CoroutineBookshelfScanManagerTest {
     }
 
     @Test
-    fun scanThumbnail_executesAndCompletes() = runTest {
+    fun scanThumbnailExecutesAndCompletes() = runTest {
         var regenCalled = false
         var thumbnailCompleted = false
         val manager = CoroutineBookshelfScanManager(
@@ -50,15 +49,14 @@ class CoroutineBookshelfScanManagerTest {
                 regenCalled = true
             },
             onThumbnailScanComplete = { thumbnailCompleted = true },
+            coroutineScope = backgroundScope,
         )
         val id = BookshelfId(1)
 
         assertFalse(manager.isScanningThumbnail(id).first())
         manager.scanThumbnail(id)
-
-        while (!thumbnailCompleted || manager.isScanningThumbnail(id).first()) {
-            delay(10.milliseconds)
-        }
+        assertTrue(manager.isScanningThumbnail(id).first())
+        runCurrent()
 
         assertTrue(regenCalled)
         assertTrue(thumbnailCompleted)

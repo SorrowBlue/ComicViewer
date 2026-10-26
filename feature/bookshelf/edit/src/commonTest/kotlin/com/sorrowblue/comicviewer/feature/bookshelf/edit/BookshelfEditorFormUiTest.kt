@@ -54,193 +54,134 @@ import kotlin.test.assertTrue
 class BookshelfEditorFormUiTest {
 
     @Test
-    fun smbEditorContents_guestAuth_allowsEmptyPathAndValidatesRequiredFields() = runComposeUiTest {
-        var submittedForm: SmbEditorForm? = null
-        val formState = FormState(SmbEditorForm())
+    fun smbEditorContents_validatesFields_port_reset_manualErrors_andAuthModes() =
+        runComposeUiTest {
+            var submittedForm: SmbEditorForm? = null
+            val formState = FormState(SmbEditorForm())
 
-        setContent {
-            ComicTheme {
-                val form = rememberForm(state = formState, onSubmit = { submittedForm = it })
-                Column {
-                    SmbEditorContents(
-                        form = form,
-                        uiState = BookshelfEditorScreenUiState(progress = false),
-                    )
-                    Button(
-                        onClick = form::handleSubmit,
-                        enabled = form.meta.canSubmit,
-                        modifier = Modifier.testTag("SaveButton"),
-                    ) {
-                        Text("Save")
+            setContent {
+                ComicTheme {
+                    val form = rememberForm(state = formState, onSubmit = { submittedForm = it })
+                    Column {
+                        SmbEditorContents(
+                            form = form,
+                            uiState = BookshelfEditorScreenUiState(progress = false),
+                        )
+                        Button(
+                            onClick = form::handleSubmit,
+                            enabled = form.meta.canSubmit,
+                            modifier = Modifier.testTag("SaveButton"),
+                        ) {
+                            Text("Save")
+                        }
                     }
                 }
             }
-        }
 
-        // Initially cannot submit because DisplayNameField and HostField are blank
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
+            // 1. Guest auth: initially cannot submit because DisplayNameField and HostField are blank
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
 
-        // Focus DisplayNameField and blur to HostField -> validation error is recorded
-        onNodeWithTag(DisplayNameField).requestFocus()
-        onNodeWithTag(HostField).requestFocus()
-        runOnIdle {
-            assertTrue(
-                formState.meta.fields[DisplayNameField]
-                    ?.error
-                    ?.messages
-                    ?.isNotEmpty() == true,
-            )
-        }
-
-        // Fill DisplayNameField and HostField while leaving PathField empty -> SaveButton is enabled
-        onNodeWithTag(DisplayNameField).performTextInput("MySMB")
-        onNodeWithTag(HostField).performTextInput("192.168.1.10")
-        onNodeWithTag("SaveButton").assertIsEnabled()
-
-        // Clear DisplayNameField -> SaveButton is disabled immediately
-        onNodeWithTag(DisplayNameField).performTextClearance()
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
-
-        // Re-enter DisplayNameField and submit with empty PathField
-        onNodeWithTag(DisplayNameField).performTextInput("MySMB")
-        onNodeWithTag("SaveButton").assertIsEnabled()
-        onNodeWithTag("SaveButton").performClick()
-
-        assertEquals(
-            SmbEditorForm(
-                displayName = "MySMB",
-                host = "192.168.1.10",
-                port = 445,
-                path = "",
-                auth = SmbEditorForm.Auth.Guest,
-            ),
-            submittedForm,
-        )
-    }
-
-    @Test
-    fun smbEditorContents_portValidation_reset_andManualHostPortErrors() = runComposeUiTest {
-        val formState = FormState(
-            SmbEditorForm(displayName = "MySMB", host = "192.168.1.10"),
-        )
-
-        setContent {
-            ComicTheme {
-                val form = rememberForm(state = formState, onSubmit = {})
-                Column {
-                    SmbEditorContents(
-                        form = form,
-                        uiState = BookshelfEditorScreenUiState(progress = false),
-                    )
-                    Button(
-                        onClick = form::handleSubmit,
-                        enabled = form.meta.canSubmit,
-                        modifier = Modifier.testTag("SaveButton"),
-                    ) {
-                        Text("Save")
-                    }
-                }
+            // Focus DisplayNameField and blur to HostField -> validation error is recorded
+            onNodeWithTag(DisplayNameField).requestFocus()
+            onNodeWithTag(HostField).requestFocus()
+            runOnIdle {
+                assertTrue(
+                    formState.meta.fields[DisplayNameField]
+                        ?.error
+                        ?.messages
+                        ?.isNotEmpty() == true,
+                )
             }
-        }
 
-        onNodeWithTag(PortField).assertTextContains("445")
-        onNodeWithTag("SaveButton").assertIsEnabled()
+            // Fill DisplayNameField and HostField while leaving PathField empty -> SaveButton is enabled
+            onNodeWithTag(DisplayNameField).performTextInput("MySMB")
+            onNodeWithTag(HostField).performTextInput("192.168.1.10")
+            onNodeWithTag(PortField).assertTextContains("445")
+            onNodeWithTag("SaveButton").assertIsEnabled()
 
-        // Out-of-range port disables submit
-        onNodeWithTag(PortField).performTextClearance()
-        onNodeWithTag(PortField).performTextInput("70000")
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
+            // Clear DisplayNameField -> SaveButton is disabled immediately
+            onNodeWithTag(DisplayNameField).performTextClearance()
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
 
-        // Non-numeric input is rejected by DigitOnlyInputTransformation, leaving PortField empty
-        onNodeWithTag(PortField).performTextClearance()
-        onNodeWithTag(PortField).performTextInput("abc")
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
+            // Re-enter DisplayNameField and submit with empty PathField
+            onNodeWithTag(DisplayNameField).performTextInput("MySMB")
+            onNodeWithTag("SaveButton").assertIsEnabled()
+            onNodeWithTag("SaveButton").performClick()
 
-        // Full-width digits are normalized to half-width ASCII digits
-        onNodeWithTag(PortField).performTextInput("８０８０")
-        onNodeWithTag(PortField).assertTextContains("8080")
-        onNodeWithTag("SaveButton").assertIsEnabled()
-
-        // Resetting formState updates TextFieldState values and clears errors
-        runOnIdle {
-            formState.reset(
+            assertEquals(
                 SmbEditorForm(
                     displayName = "MySMB",
                     host = "192.168.1.10",
-                    port = 8080,
-                    path = "share/comics",
+                    port = 445,
+                    path = "",
+                    auth = SmbEditorForm.Auth.Guest,
                 ),
+                submittedForm,
             )
-        }
-        onNodeWithTag(PortField).assertTextContains("8080")
-        onNodeWithTag(PathFieldName).assertTextContains("share/comics")
-        onNodeWithTag("SaveButton").assertIsEnabled()
 
-        // Setting manual errors on HostField and PortField displays them and disables submit
-        runOnIdle {
-            formState.setError(
-                HostField to FieldError("Bad host"),
-                PortField to FieldError("Bad port"),
-            )
-        }
-        onNodeWithText("Bad host").assertIsDisplayed()
-        onNodeWithText("Bad port").assertIsDisplayed()
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
+            // 2. Port validation, reset, and manual host/port errors
+            onNodeWithTag(PortField).performTextClearance()
+            onNodeWithTag(PortField).performTextInput("70000")
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
 
-        // Editing HostField clears manual errors on both HostField and PortField (via dependsOn)
-        onNodeWithTag(HostField).performTextClearance()
-        onNodeWithTag(HostField).performTextInput("192.168.1.20")
-        onNodeWithText("Bad host").assertDoesNotExist()
-        onNodeWithText("Bad port").assertDoesNotExist()
-        onNodeWithTag("SaveButton").assertIsEnabled()
-    }
+            // Non-numeric input is rejected by DigitOnlyInputTransformation, leaving PortField empty
+            onNodeWithTag(PortField).performTextClearance()
+            onNodeWithTag(PortField).performTextInput("abc")
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
 
-    @Test
-    fun smbEditorContents_userPassAuth_requiresUsernameAndPassword() = runComposeUiTest {
-        val formState = FormState(
-            SmbEditorForm(displayName = "MySMB", host = "192.168.1.10"),
-        )
+            // Full-width digits are normalized to half-width ASCII digits
+            onNodeWithTag(PortField).performTextInput("８０８０")
+            onNodeWithTag(PortField).assertTextContains("8080")
+            onNodeWithTag("SaveButton").assertIsEnabled()
 
-        setContent {
-            ComicTheme {
-                val form = rememberForm(state = formState, onSubmit = {})
-                Column {
-                    SmbEditorContents(
-                        form = form,
-                        uiState = BookshelfEditorScreenUiState(progress = false),
-                    )
-                    Button(
-                        onClick = form::handleSubmit,
-                        enabled = form.meta.canSubmit,
-                        modifier = Modifier.testTag("SaveButton"),
-                    ) {
-                        Text("Save")
-                    }
-                }
+            // Resetting formState updates TextFieldState values and clears errors
+            runOnIdle {
+                formState.reset(
+                    SmbEditorForm(
+                        displayName = "MySMB",
+                        host = "192.168.1.10",
+                        port = 8080,
+                        path = "share/comics",
+                    ),
+                )
             }
+            onNodeWithTag(PortField).assertTextContains("8080")
+            onNodeWithTag(PathFieldName).assertTextContains("share/comics")
+            onNodeWithTag("SaveButton").assertIsEnabled()
+
+            // Setting manual errors on HostField and PortField displays them and disables submit
+            runOnIdle {
+                formState.setError(
+                    HostField to FieldError("Bad host"),
+                    PortField to FieldError("Bad port"),
+                )
+            }
+            onNodeWithText("Bad host").assertIsDisplayed()
+            onNodeWithText("Bad port").assertIsDisplayed()
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
+
+            // Editing HostField clears manual errors on both HostField and PortField (via dependsOn)
+            onNodeWithTag(HostField).performTextClearance()
+            onNodeWithTag(HostField).performTextInput("192.168.1.20")
+            onNodeWithText("Bad host").assertDoesNotExist()
+            onNodeWithText("Bad port").assertDoesNotExist()
+            onNodeWithTag("SaveButton").assertIsEnabled()
+
+            // 3. UserPass auth requires UsernameField and PasswordField
+            onNodeWithTag(SmbEditorForm.Auth.UserPass.testTag).performClick()
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
+
+            onNodeWithTag(UsernameField).performTextInput("testuser")
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
+
+            onNodeWithTag(PasswordField).performTextInput("testpass")
+            onNodeWithTag("SaveButton").assertIsEnabled()
+
+            onNodeWithTag(UsernameField).performTextClearance()
+            onNodeWithTag("SaveButton").assertIsNotEnabled()
+            onNodeWithTag(SmbEditorForm.Auth.Guest.testTag).performClick()
+            onNodeWithTag("SaveButton").assertIsEnabled()
         }
-
-        // Initially Guest auth is selected and SaveButton is enabled
-        onNodeWithTag("SaveButton").assertIsEnabled()
-
-        // Selecting UserPass mounts UsernameField and PasswordField, disabling SaveButton
-        onNodeWithTag(SmbEditorForm.Auth.UserPass.testTag).performClick()
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
-
-        // Filling UsernameField alone is not enough while PasswordField is blank
-        onNodeWithTag(UsernameField).performTextInput("testuser")
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
-
-        // Filling PasswordField enables SaveButton
-        onNodeWithTag(PasswordField).performTextInput("testpass")
-        onNodeWithTag("SaveButton").assertIsEnabled()
-
-        // Clearing UsernameField disables SaveButton, and switching back to Guest re-enables it
-        onNodeWithTag(UsernameField).performTextClearance()
-        onNodeWithTag("SaveButton").assertIsNotEnabled()
-        onNodeWithTag(SmbEditorForm.Auth.Guest.testTag).performClick()
-        onNodeWithTag("SaveButton").assertIsEnabled()
-    }
 
     @Test
     fun deviceEditorContents_requiresDisplayNameAndFolderSelection() = runComposeUiTest {
