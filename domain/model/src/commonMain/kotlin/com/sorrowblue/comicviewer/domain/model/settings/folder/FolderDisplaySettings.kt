@@ -161,7 +161,7 @@ fun normalizeFolderPath(path: String): String {
     val trimmed = normalized.trimEnd('/')
     return when {
         trimmed.isEmpty() -> "/"
-        trimmed.length == 2 && trimmed[1] == ':' && normalized.endsWith("/") -> "$trimmed/"
+        trimmed.length == 2 && trimmed[0].isLetter() && trimmed[1] == ':' -> "$trimmed/"
         else -> trimmed
     }
 }

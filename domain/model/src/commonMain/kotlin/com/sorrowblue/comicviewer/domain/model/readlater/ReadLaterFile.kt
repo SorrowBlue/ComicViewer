@@ -5,10 +5,9 @@
 package com.sorrowblue.comicviewer.domain.model.readlater
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import kotlin.time.Clock
 
 data class ReadLaterFile(
     val bookshelfId: BookshelfId,
     val path: String,
-    val modifiedDate: Long = Clock.System.now().toEpochMilliseconds(),
+    val modifiedDate: Long = 0L,
 )

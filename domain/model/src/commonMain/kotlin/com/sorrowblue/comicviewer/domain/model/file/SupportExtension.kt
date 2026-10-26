@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 sealed interface SupportExtension {
     val extension: String
 
+    @Serializable
     enum class Archive(override val extension: String) : SupportExtension {
         SEVEN_Z("7z"),
         CAB("cab"),

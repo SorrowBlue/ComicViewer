@@ -24,11 +24,15 @@ data class BookFile private constructor(
     val extension get() = name.extension
 
     fun copy(
+        bookshelfId: BookshelfId = this.bookshelfId,
+        parent: String = this.parent,
         size: Long = this.size,
         sortIndex: Int = this.sortIndex,
         totalPageCount: Int = this.totalPageCount,
     ) = copy(
         bookshelfId = bookshelfId,
+        name = name,
+        parent = parent,
         size = size,
         totalPageCount = totalPageCount,
         sortIndex = sortIndex,

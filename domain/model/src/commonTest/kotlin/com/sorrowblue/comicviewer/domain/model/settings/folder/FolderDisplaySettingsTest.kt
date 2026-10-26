@@ -35,11 +35,14 @@ class FolderDisplaySettingsTest {
 
     @Test
     fun normalizeFolderPath_handlesWindowsPaths() {
+        assertEquals("C:/", normalizeFolderPath("C:"))
         assertEquals("C:/", normalizeFolderPath("C:\\"))
         assertEquals("C:/", normalizeFolderPath("C:/"))
         assertEquals("C:/Manga", normalizeFolderPath("C:\\Manga"))
         assertEquals("C:/Manga", normalizeFolderPath("C:\\Manga\\"))
         assertEquals("C:/Manga/Sub", normalizeFolderPath("C:\\Manga\\Sub\\"))
+        assertTrue(isSameFolderPath("C:", "C:/"))
+        assertTrue(isSameFolderPath("C:", "C:\\"))
     }
 
     @Test
