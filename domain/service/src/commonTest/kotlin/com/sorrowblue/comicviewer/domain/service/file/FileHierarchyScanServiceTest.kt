@@ -107,4 +107,61 @@ class FileHierarchyScanServiceTest {
         assertTrue(scannedFolders[0].second.isEmpty())
         assertTrue(discoveredFiles.isEmpty())
     }
+
+    @Test
+    fun testScanHierarchy_multipleSiblingSubfolders_preservesPreOrderDfs() = runTest {
+        val root = Folder(bookshelfId, "root", "", "/root", 0, 0, false)
+        val sub1 = Folder(bookshelfId, "sub1", "/root", "/root/sub1", 0, 0, false)
+        val sub2 = Folder(bookshelfId, "sub2", "/root", "/root/sub2", 0, 0, false)
+        val sub1Book = BookFile(
+            bookshelfId,
+            "sub1_01.zip",
+            "/root/sub1",
+            "/root/sub1/sub1_01.zip",
+            50,
+            0,
+            false,
+        )
+        val sub2Book = BookFile(
+            bookshelfId,
+            "sub2_01.zip",
+            "/root/sub2",
+            "/root/sub2/sub2_01.zip",
+            50,
+            0,
+            false,
+        )
+
+        val filesMap = mapOf(
+            root.path to listOf(sub2, sub1),
+            sub1.path to listOf(sub1Book),
+            sub2.path to listOf(sub2Book),
+        )
+
+        val scannedFolders = mutableListOf<Pair<File, List<File>>>()
+        val discoveredFiles = mutableListOf<File>()
+
+        service.scanHierarchy(
+            root = root,
+            supportExtensions = supportExtensions,
+            listFiles = { file, filter ->
+                filesMap[file.path]?.filter(filter).orEmpty()
+            },
+            onFolderFilesScanned = { parent, files ->
+                scannedFolders.add(parent to files)
+            },
+            onFileDiscovered = { file ->
+                discoveredFiles.add(file)
+            },
+        )
+
+        assertEquals(
+            listOf("/root", "/root/sub1", "/root/sub2"),
+            scannedFolders.map { it.first.path },
+        )
+        assertEquals(
+            listOf("sub1", "sub2", "sub1_01.zip", "sub2_01.zip"),
+            discoveredFiles.map { it.name },
+        )
+    }
 }

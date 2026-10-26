@@ -26,7 +26,10 @@ internal class JvmFileSortService : FileSortService {
     }
 
     override val compareFile: Comparator<File> = compareBy<File> { if (it is BookFile) 1 else 0 }
-        .thenComparator { a, b -> requireNotNull(collatorThreadLocal.get()).compare(a.name, b.name) }
+        .thenComparator { a, b ->
+            val collator = requireNotNull(collatorThreadLocal.get())
+            compareNatural(a.name, b.name) { chunkA, chunkB -> collator.compare(chunkA, chunkB) }
+        }
 }
 
 internal actual fun defaultFileSortService(): FileSortService = JvmFileSortService()

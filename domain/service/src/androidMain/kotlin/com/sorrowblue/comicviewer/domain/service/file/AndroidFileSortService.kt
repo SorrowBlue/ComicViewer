@@ -34,7 +34,9 @@ internal class AndroidFileSortService : FileSortService {
             val javaCollator = java.text.RuleBasedCollator(us.rules + lo.rules).apply {
                 strength = JavaCollator.PRIMARY
             }
-            val compareFunc: (String, String) -> Int = { a, b -> javaCollator.compare(a, b) }
+            val compareFunc: (String, String) -> Int = { a, b ->
+                compareNatural(a, b) { chunkA, chunkB -> javaCollator.compare(chunkA, chunkB) }
+            }
             compareFunc
         }
     }

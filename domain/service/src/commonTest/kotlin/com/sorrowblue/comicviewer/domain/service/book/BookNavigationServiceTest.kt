@@ -141,6 +141,8 @@ class BookNavigationServiceTest {
         assertEquals("/manga", service.extractParentPath("/manga/vol1.cbz"))
         assertEquals("/manga", service.extractParentPath("/manga/vol1.cbz/"))
         assertEquals("/manga/sub", service.extractParentPath("/manga/sub/vol1.cbz"))
+        assertEquals("C:/manga", service.extractParentPath("C:\\manga\\vol1.cbz"))
+        assertEquals("/manga", service.extractParentPath("/manga%2Fvol1.cbz"))
         assertEquals("", service.extractParentPath("/vol1.cbz"))
         assertEquals("manga", service.extractParentPath("manga/vol1.cbz"))
         assertEquals("", service.extractParentPath("vol1.cbz"))

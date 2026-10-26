@@ -58,4 +58,17 @@ class FileSortServiceTest {
         assertEquals(listOf("01.zip", "02.zip", "03.zip"), sorted.map { it.name })
         assertEquals(listOf(0, 1, 2), sorted.map { it.sortIndex })
     }
+
+    @Test
+    fun testNaturalNumericSort() {
+        val file1 = BookFile(bookshelfId, "vol1.zip", "", "/vol1.zip", 100, 0, false)
+        val file2 = BookFile(bookshelfId, "vol2.zip", "", "/vol2.zip", 100, 0, false)
+        val file10 = BookFile(bookshelfId, "vol10.zip", "", "/vol10.zip", 100, 0, false)
+
+        val list = listOf(file10, file2, file1)
+        val sorted = service.sortedIndex(list)
+
+        assertEquals(listOf("vol1.zip", "vol2.zip", "vol10.zip"), sorted.map { it.name })
+        assertEquals(listOf(0, 1, 2), sorted.map { it.sortIndex })
+    }
 }

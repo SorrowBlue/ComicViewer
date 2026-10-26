@@ -125,6 +125,7 @@ internal class BookPageLayoutServiceImpl : BookPageLayoutService {
                 else -> Unit
             }
         }
+        if (spread.index !in orientations) return currentList
         orientations[spread.index] =
             if (isPortrait) PageOrientation.Portrait else PageOrientation.Landscape
         if (orientations.isEmpty()) return currentList
