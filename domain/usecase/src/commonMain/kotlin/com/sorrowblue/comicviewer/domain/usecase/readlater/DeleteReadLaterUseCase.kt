@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -17,9 +18,7 @@ import dev.zacsweers.metro.Inject
 abstract class DeleteReadLaterUseCase :
     OneShotUseCase<DeleteReadLaterUseCase.Request, Unit, Unit>() {
 
-    data class Request private constructor(val readLaterFile: ReadLaterFile) {
-        constructor(bookshelfId: BookshelfId, path: String) : this(ReadLaterFile(bookshelfId, path))
-    }
+    data class Request(val bookshelfId: BookshelfId, val path: String)
 }
 
 @Inject
@@ -29,8 +28,12 @@ internal class DeleteReadLaterUseCaseImpl(
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : DeleteReadLaterUseCase() {
 
-    override suspend fun run(request: Request): Resource<Unit, Unit> =
-        when (val result = readLaterFileRepository.delete(request.readLaterFile)) {
+    override suspend fun run(request: Request): Resource<Unit, Unit> = runCatchingCancellable {
+        when (
+            val result = readLaterFileRepository.delete(
+                ReadLaterFile(request.bookshelfId, request.path),
+            )
+        ) {
             is Resource.Success -> Resource.Success(Unit)
 
             is Resource.Error -> {
@@ -38,4 +41,8 @@ internal class DeleteReadLaterUseCaseImpl(
                 Resource.Error(Unit)
             }
         }
+    }.getOrElse {
+        sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it))
+        Resource.Error(Unit)
+    }
 }

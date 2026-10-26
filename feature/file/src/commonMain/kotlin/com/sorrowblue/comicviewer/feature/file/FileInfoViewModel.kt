@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
@@ -19,7 +19,7 @@ import com.sorrowblue.comicviewer.domain.usecase.file.GetFileSizeUseCase
 import com.sorrowblue.comicviewer.domain.usecase.file.PagingFolderBookThumbnailsUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.AddReadLaterUseCase
 import com.sorrowblue.comicviewer.domain.usecase.readlater.DeleteReadLaterUseCase
-import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadlaterUseCase
+import com.sorrowblue.comicviewer.domain.usecase.readlater.ExistsReadLaterUseCase
 import com.sorrowblue.comicviewer.feature.file.section.FileInfoButtonsUiState
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -45,7 +45,7 @@ internal class FileInfoViewModel(
     @Assisted private val file: File,
     @Assisted private val isOpenFolderEnabled: Boolean,
     getFileAttributeUseCase: GetFileAttributeUseCase,
-    existsReadlaterUseCase: ExistsReadlaterUseCase,
+    existsReadLaterUseCase: ExistsReadLaterUseCase,
     getFileSizeUseCase: GetFileSizeUseCase,
     pagingFolderBookThumbnailsUseCase: PagingFolderBookThumbnailsUseCase,
     private val addReadLaterUseCase: AddReadLaterUseCase,
@@ -59,7 +59,7 @@ internal class FileInfoViewModel(
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     private val isReadLaterFlow =
-        existsReadlaterUseCase(ExistsReadlaterUseCase.Request(file.bookshelfId, file.path))
+        existsReadLaterUseCase(ExistsReadLaterUseCase.Request(file.bookshelfId, file.path))
             .map { it.dataOrNull() ?: false }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 

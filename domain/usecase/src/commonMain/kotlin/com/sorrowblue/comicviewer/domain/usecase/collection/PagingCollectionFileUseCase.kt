@@ -18,7 +18,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 
 fun interface PagingCollectionFileUseCase :
@@ -38,9 +38,11 @@ internal class PagingCollectionFileUseCaseImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(request: PagingCollectionFileUseCase.Request) =
-        collectionRepository.flow(request.collectionId).filterNotNull()
+        collectionRepository.flow(request.collectionId)
             .flatMapLatest { collection ->
                 when (collection) {
+                    null -> emptyFlow()
+
                     is BasicCollection -> {
                         settingsRepository.folderDisplaySettings.flatMapLatest { settings ->
                             collectionFileRepository.pagingDataFlow(

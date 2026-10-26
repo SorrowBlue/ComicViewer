@@ -16,7 +16,7 @@ import dev.zacsweers.metro.Inject
 
 fun interface PagingQueryFileUseCase : PagingUseCase<PagingQueryFileUseCase.Request, File> {
 
-    class Request(
+    data class Request(
         val bookshelfId: BookshelfId,
         val searchCondition: () -> SearchCondition,
         val pagingConfig: PagingConfig,

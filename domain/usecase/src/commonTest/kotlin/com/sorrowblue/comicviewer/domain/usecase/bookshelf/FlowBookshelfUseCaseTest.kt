@@ -4,20 +4,18 @@
 
 package com.sorrowblue.comicviewer.domain.usecase.bookshelf
 
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import com.sorrowblue.comicviewer.domain.model.bookshelf.Bookshelf
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.bookshelf.DeviceStorage
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.common.Resource
-import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
+import com.sorrowblue.comicviewer.domain.usecase.StubBookshelfRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 
@@ -29,7 +27,7 @@ class FlowBookshelfUseCaseTest {
 
     @Test
     fun testFlowBookshelfUseCase_success() = runTest {
-        val fakeBookshelfRepository = object : TestBookshelfRepository() {
+        val fakeBookshelfRepository = object : StubBookshelfRepository() {
             override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(testBookshelf)
         }
 
@@ -42,7 +40,7 @@ class FlowBookshelfUseCaseTest {
 
     @Test
     fun testFlowBookshelfUseCase_notFound() = runTest {
-        val fakeBookshelfRepository = object : TestBookshelfRepository() {
+        val fakeBookshelfRepository = object : StubBookshelfRepository() {
             override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(null)
         }
 
@@ -52,18 +50,18 @@ class FlowBookshelfUseCaseTest {
         assertTrue(result is Resource.Success)
         assertEquals(null, result.data)
     }
-}
 
-private open class TestBookshelfRepository : BookshelfRepository {
-    override suspend fun updateOrCreate(
-        bookshelf: Bookshelf,
-        transaction: suspend (Bookshelf) -> Unit,
-    ): Bookshelf? = TODO()
+    @Test
+    fun testFlowBookshelfUseCase_whenFlowThrowsException_emitsSystemError() = runTest {
+        val fakeBookshelfRepository = object : StubBookshelfRepository() {
+            override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flow {
+                throw IllegalStateException("Database failure")
+            }
+        }
 
-    override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = TODO()
-    override fun pagingSource(pagingConfig: PagingConfig): Flow<PagingData<BookshelfFolder>> =
-        TODO()
+        val useCase = FlowBookshelfUseCaseImpl(fakeBookshelfRepository)
+        val result = useCase(bookshelfId).first()
 
-    override fun allBookshelf(): Resource<Flow<List<Bookshelf>>, Resource.SystemError> = TODO()
-    override suspend fun updateDeleted(bookshelfId: BookshelfId, isDeleted: Boolean) = TODO()
+        assertEquals(Resource.Error(FlowBookshelfUseCase.Error.System), result)
+    }
 }

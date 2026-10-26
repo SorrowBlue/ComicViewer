@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.common.fold
 import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
 import com.sorrowblue.comicviewer.domain.usecase.SendFatalErrorUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -22,7 +23,7 @@ internal class DeleteAllReadLaterUseCaseImpl(
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : DeleteAllReadLaterUseCase() {
 
-    override suspend fun run(request: Unit): Resource<Unit, Unit> =
+    override suspend fun run(request: Unit): Resource<Unit, Unit> = runCatchingCancellable {
         readLaterFileRepository.deleteAll().fold(
             onSuccess = { Resource.Success(Unit) },
             onError = {
@@ -30,4 +31,8 @@ internal class DeleteAllReadLaterUseCaseImpl(
                 Resource.Error(Unit)
             },
         )
+    }.getOrElse {
+        sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it))
+        Resource.Error(Unit)
+    }
 }

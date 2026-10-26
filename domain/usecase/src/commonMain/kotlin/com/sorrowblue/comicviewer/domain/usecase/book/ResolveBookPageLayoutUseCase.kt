@@ -14,17 +14,17 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
 /**
- * 画像サイズ（縦横比）判定完了時に、コミックページの結合・分割レイアウトを再計算するユースケース。
+ * Use case that recalculates the combined or split page layout once an image's aspect ratio is determined.
  */
 abstract class ResolveBookPageLayoutUseCase :
     OneShotUseCase<ResolveBookPageLayoutUseCase.Request, List<PageItem>, Unit>() {
 
     /**
-     * ページリスト更新リクエスト
+     * Request parameters for updating the page list layout.
      *
-     * @property currentList 現在のページアイテム一覧
-     * @property unratedPage 縦横比が確定した未評価ページ
-     * @property isPortrait 画像が縦長の場合は true、横長の場合は false
+     * @property currentList Current list of page items.
+     * @property unratedPage The unrated page whose aspect ratio has been determined.
+     * @property isPortrait `true` if the image is portrait or square, `false` if landscape.
      */
     data class Request(
         val currentList: List<PageItem>,

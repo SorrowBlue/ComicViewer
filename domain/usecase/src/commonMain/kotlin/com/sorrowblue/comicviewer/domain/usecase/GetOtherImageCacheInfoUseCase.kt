@@ -22,13 +22,18 @@ internal class GetOtherImageCacheInfoUseCaseImpl(
 ) : GetOtherImageCacheInfoUseCase() {
 
     override suspend fun run(request: Unit): Resource<OtherImageCache, Unit> =
-        imageCacheRepository.getOtherImageCache().fold(
-            onSuccess = {
-                Resource.Success(it)
-            },
-            onError = {
-                sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
-                Resource.Error(Unit)
-            },
-        )
+        runCatchingCancellable {
+            imageCacheRepository.getOtherImageCache().fold(
+                onSuccess = {
+                    Resource.Success(it)
+                },
+                onError = {
+                    sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
+                    Resource.Error(Unit)
+                },
+            )
+        }.getOrElse {
+            sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it))
+            Resource.Error(Unit)
+        }
 }

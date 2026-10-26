@@ -8,9 +8,13 @@ import com.sorrowblue.comicviewer.domain.model.collection.Collection
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.repository.CollectionRepository
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import logcat.LogPriority
+import logcat.asLog
+import logcat.logcat
 
 abstract class CreateCollectionUseCase : OneShotUseCase<Collection, Collection, Unit>()
 
@@ -20,5 +24,13 @@ internal class CreateCollectionUseCaseImpl(private val repository: CollectionRep
     CreateCollectionUseCase() {
 
     override suspend fun run(request: Collection): Resource<Collection, Unit> =
-        Resource.Success(repository.create(request))
+        runCatchingCancellable {
+            repository.create(request)
+        }.fold(
+            onSuccess = { Resource.Success(it) },
+            onFailure = {
+                logcat(LogPriority.ERROR) { it.asLog() }
+                Resource.Error(Unit)
+            },
+        )
 }

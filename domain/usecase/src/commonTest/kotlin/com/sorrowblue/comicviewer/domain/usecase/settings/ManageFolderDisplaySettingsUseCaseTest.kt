@@ -6,21 +6,16 @@ package com.sorrowblue.comicviewer.domain.usecase.settings
 
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
-import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
-import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
-import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
-import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
-import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
-import com.sorrowblue.comicviewer.domain.model.settings.Settings
-import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderSortScope
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.repository.SettingsRepository
+import com.sorrowblue.comicviewer.domain.usecase.StubSettingsRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
 import dev.zacsweers.metro.createGraph
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -148,8 +143,8 @@ internal interface TestGraph {
 }
 
 @Inject
-@ContributesBinding(AppScope::class)
-internal class FakeSettingsRepository : SettingsRepository {
+@ContributesBinding(AppScope::class, binding = binding<SettingsRepository>())
+internal class FakeSettingsRepository : StubSettingsRepository() {
 
     override val folderDisplaySettings: Flow<FolderDisplaySettings>
         field = MutableStateFlow(FolderDisplaySettings())
@@ -159,81 +154,6 @@ internal class FakeSettingsRepository : SettingsRepository {
     ): FolderDisplaySettings {
         val newSettings = transform(folderDisplaySettings.value)
         folderDisplaySettings.value = newSettings
-        return newSettings
-    }
-
-    override val settings: Flow<Settings>
-        field = MutableStateFlow(Settings())
-
-    override suspend fun updateSettings(transform: suspend (Settings) -> Settings): Settings {
-        val newSettings = transform(settings.value)
-        settings.value = newSettings
-        return newSettings
-    }
-
-    override val displaySettings: Flow<DisplaySettings>
-        field = MutableStateFlow(DisplaySettings())
-
-    override suspend fun updateDisplaySettings(
-        transform: suspend (DisplaySettings) -> DisplaySettings,
-    ): DisplaySettings {
-        val newSettings = transform(displaySettings.value)
-        displaySettings.value = newSettings
-        return newSettings
-    }
-
-    override val viewerSettings: Flow<ViewerSettings>
-        field = MutableStateFlow(ViewerSettings())
-
-    override suspend fun updateViewerSettings(
-        transform: suspend (ViewerSettings) -> ViewerSettings,
-    ): ViewerSettings {
-        val newSettings = transform(viewerSettings.value)
-        viewerSettings.value = newSettings
-        return newSettings
-    }
-
-    override val bookSettings: Flow<BookSettings>
-        field = MutableStateFlow(BookSettings())
-
-    override suspend fun updateBookSettings(
-        transform: suspend (BookSettings) -> BookSettings,
-    ): BookSettings {
-        val newSettings = transform(bookSettings.value)
-        bookSettings.value = newSettings
-        return newSettings
-    }
-
-    override val folderSettings: Flow<FolderSettings>
-        field = MutableStateFlow(FolderSettings())
-
-    override suspend fun updateFolderSettings(
-        transform: suspend (FolderSettings) -> FolderSettings,
-    ): FolderSettings {
-        val newSettings = transform(folderSettings.value)
-        folderSettings.value = newSettings
-        return newSettings
-    }
-
-    override val securitySettings: Flow<SecuritySettings>
-        field = MutableStateFlow(SecuritySettings())
-
-    override suspend fun updateSecuritySettings(
-        transform: suspend (SecuritySettings) -> SecuritySettings,
-    ): SecuritySettings {
-        val newSettings = transform(securitySettings.value)
-        securitySettings.value = newSettings
-        return newSettings
-    }
-
-    override val collectionSettings: Flow<CollectionSettings>
-        field = MutableStateFlow(CollectionSettings())
-
-    override suspend fun updateCollectionSettings(
-        transform: suspend (CollectionSettings) -> CollectionSettings,
-    ): CollectionSettings {
-        val newSettings = transform(collectionSettings.value)
-        collectionSettings.value = newSettings
         return newSettings
     }
 }

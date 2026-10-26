@@ -8,9 +8,13 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.repository.file.BookFileReaderManager
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import logcat.LogPriority
+import logcat.asLog
+import logcat.logcat
 
 abstract class CloseBookUseCase : OneShotUseCase<Book, Unit, Unit>()
 
@@ -19,8 +23,13 @@ abstract class CloseBookUseCase : OneShotUseCase<Book, Unit, Unit>()
 internal class CloseBookUseCaseImpl(private val bookFileReaderManager: BookFileReaderManager) :
     CloseBookUseCase() {
 
-    override suspend fun run(request: Book): Resource<Unit, Unit> {
+    override suspend fun run(request: Book): Resource<Unit, Unit> = runCatchingCancellable {
         bookFileReaderManager.close(request)
-        return Resource.Success(Unit)
-    }
+    }.fold(
+        onSuccess = { Resource.Success(Unit) },
+        onFailure = {
+            logcat(LogPriority.ERROR) { it.asLog() }
+            Resource.Error(Unit)
+        },
+    )
 }
