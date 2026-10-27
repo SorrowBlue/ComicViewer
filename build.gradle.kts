@@ -22,7 +22,7 @@ plugins {
     alias(libs.plugins.versionCatalogLinter)
     alias(libs.plugins.dokka)
     alias(libs.plugins.detekt)
-    id("nl.littlerobots.version-catalog-update") version "1.1.1"
+    id("nl.littlerobots.version-catalog-update") version "1.1.2"
 }
 
 dependencyAnalysis {
