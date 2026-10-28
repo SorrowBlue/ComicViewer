@@ -13,7 +13,7 @@ pluginManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.11"
-    id("com.android.settings") version "9.4.1"
+    id("com.android.settings") version "9.5.0"
     id("io.github.baole.konture") version "1.0.2"
     id("dev.iurysouza.modulegraph.settings") version "0.15.0"
 }
