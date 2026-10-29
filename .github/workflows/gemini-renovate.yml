@@ -17,14 +17,14 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
   issues: write
   id-token: write
 
 jobs:
   investigate-and-fix:
-    name: Investigate & Fix Renovate PR
+    name: Investigate Renovate PR
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'workflow_dispatch' ||
@@ -47,7 +47,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
 
-      - name: Prepare PR context and check commit author
+      - name: Prepare PR context
         id: prepare
         env:
           GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
@@ -60,13 +60,6 @@ jobs:
         run: |
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             gh pr checkout "$PR_NUMBER"
-          fi
-
-          LAST_AUTHOR=$(git log -1 --format='%an')
-          if [ "$EVENT_NAME" = "pull_request" ] && [ "$LAST_AUTHOR" = "github-actions[bot]" ]; then
-            echo "Latest commit was authored by github-actions[bot]. Skipping to prevent loop."
-            echo "should-run=false" >> "$GITHUB_OUTPUT"
-            exit 0
           fi
 
           if [ -z "$GCP_PROJECT_ID" ] && [[ "$GCP_SERVICE_ACCOUNT" == *@*.iam.gserviceaccount.com ]]; then
@@ -90,10 +83,66 @@ jobs:
           HEAD_REF=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName')
           PR_TITLE=$(gh pr view "$PR_NUMBER" --json title --jq '.title')
 
-          mkdir -p .gemini
-          gh pr view "$PR_NUMBER" --json body --jq '.body' > .gemini/pr-body.md
+          PR_BODY=$(gh pr view "$PR_NUMBER" --json body --jq '.body' | head -c 30000)
           git fetch origin "$BASE_REF"
-          git diff "origin/${BASE_REF}...HEAD" > .gemini/pr-diff.patch
+          PR_DIFF=$(git diff "origin/${BASE_REF}...HEAD" | head -c 20000)
+
+          USAGE_CONTEXT=""
+          if git diff --name-only "origin/${BASE_REF}...HEAD" | grep -q '^gradle/libs\.versions\.toml$'; then
+            CHANGED_KEYS=$(git diff -U0 "origin/${BASE_REF}...HEAD" -- gradle/libs.versions.toml \
+              | grep -E '^\+[a-zA-Z0-9_-]+[[:space:]]*=' \
+              | sed -E 's/^\+([a-zA-Z0-9_-]+)[[:space:]]*=.*/\1/' \
+              | sort -u || true)
+
+            for KEY in $CHANGED_KEYS; do
+              TOML_DEFS=$(grep -nE "version\.ref[[:space:]]*=[[:space:]]*\"${KEY}\"" gradle/libs.versions.toml || true)
+              USAGE_CONTEXT+="### Version Key: ${KEY}"$'\n'
+              if [ -n "$TOML_DEFS" ]; then
+                USAGE_CONTEXT+="#### gradle/libs.versions.toml 定義:"$'\n'"\`\`\`toml"$'\n'"${TOML_DEFS}"$'\n'"\`\`\`"$'\n'
+              fi
+
+              ALIASES=$(printf '%s\n' "$TOML_DEFS" | sed -E 's/^[0-9]+:([a-zA-Z0-9_-]+)[[:space:]]*=.*/\1/' | tr '-' '.' || true)
+              GROUPS=$(printf '%s\n' "$TOML_DEFS" | sed -nE 's/.*group[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' | sort -u || true)
+
+              if [ -n "$ALIASES" ]; then
+                GRADLE_USAGES=""
+                for ALIAS in $ALIASES; do
+                  for PREFIX in "libs.${ALIAS}" "libs.plugins.${ALIAS}" "libs.bundles.${ALIAS}"; do
+                    MATCHES=$(git grep -n -F "$PREFIX" -- '*.gradle.kts' 'build-logic/**' || true)
+                    if [ -n "$MATCHES" ]; then
+                      GRADLE_USAGES+="${MATCHES}"$'\n'
+                    fi
+                  done
+                done
+                if [ -n "$GRADLE_USAGES" ]; then
+                  GRADLE_USAGES=$(printf '%s' "$GRADLE_USAGES" | sort -u)
+                  USAGE_CONTEXT+="#### ビルドスクリプト内の参照箇所:"$'\n'"\`\`\`text"$'\n'"${GRADLE_USAGES}"$'\n'"\`\`\`"$'\n'
+                fi
+              fi
+
+              if [ -n "$GROUPS" ]; then
+                KT_IMPORTS=""
+                for GRP in $GROUPS; do
+                  IMPORTS=$(git grep -n "import ${GRP}" -- '*.kt' || true)
+                  if [ -z "$IMPORTS" ]; then
+                    CLEAN_KEY=$(echo "$KEY" | tr '[:upper:]' '[:lower:]' | sed 's/-.*//')
+                    IMPORTS=$(git grep -n -i "import .*${CLEAN_KEY}" -- '*.kt' || true)
+                  fi
+                  if [ -n "$IMPORTS" ]; then
+                    KT_IMPORTS+="${IMPORTS}"$'\n'
+                  fi
+                done
+                if [ -n "$KT_IMPORTS" ]; then
+                  USAGE_CONTEXT+="#### Kotlin ソース内の import 箇所:"$'\n'"\`\`\`text"$'\n'"$(printf '%s' "$KT_IMPORTS" | head -n 100)"$'\n'"\`\`\`"$'\n'
+                fi
+              fi
+            done
+          fi
+
+          if [ -z "$USAGE_CONTEXT" ]; then
+            USAGE_CONTEXT="（Version Catalog 以外の変更、または事前抽出された import 箇所はありません）"
+          fi
+          USAGE_CONTEXT=$(printf '%s' "$USAGE_CONTEXT" | head -c 15000)
 
           {
             echo "should-run=true"
@@ -107,7 +156,7 @@ jobs:
             cat << 'EOF'
           {
             "model": {
-              "maxSessionTurns": 30
+              "maxSessionTurns": 5
             },
             "telemetry": {
               "enabled": false
@@ -115,14 +164,17 @@ jobs:
             "tools": {
               "core": [
                 "read_file",
-                "write_file",
-                "replace",
                 "glob",
                 "grep_search",
                 "list_directory",
-                "web_fetch",
-                "google_web_search",
-                "run_shell_command"
+                "web_fetch"
+              ],
+              "allowed": [
+                "read_file",
+                "glob",
+                "grep_search",
+                "list_directory",
+                "web_fetch"
               ]
             }
           }
@@ -131,39 +183,45 @@ jobs:
             echo "prompt<<PROMPT_EOF"
             cat << EOF
           あなたは ComicViewer プロジェクトのシニアエンジニア AI エージェントです。
-          Renovate によって作成されたパッチ以外のライブラリ更新 PR（マイナー更新・メジャー更新等）について、変更点の調査、影響範囲の特定、および必要に応じた修正を実施してください。
+          Renovate によって作成されたライブラリ・プラグイン更新 PR について、バージョンアップの内容とプロジェクトへの影響範囲を調査し、日本語で調査レポートを作成してください。
+
+          ## 重要な制約事項（厳守）
+          - **コードの修正・ファイル書き込み・ビルド実行は一切行わないでください**（調査とレポート出力のみ）。
+          - セッションの最大ターン数は **5 ターン** に制限されています。ツール呼び出しは最小限（最大 2〜3 回まで）にとどめてください。
+          - 下記の「PR 差分」「PR 本文（Release Notes）」「事前抽出されたプロジェクト内の利用箇所」だけで影響範囲が判断できる場合は、**ツールを一切呼ばずに 1 ターン目で直接最終レポートを出力**してください。
+          - ソースコード内の具体的な API 利用方法を確認する必要がある場合のみ、事前抽出リストに記載されたファイルを \`read_file\`（または最小限の \`grep_search\`）で確認し、直ちに最終レポートを出力してください。
+          - あなたの最終回答（標準出力）がそのまま PR コメントとして投稿されます。挨拶や前置きは含めず、以下の Markdown フォーマットのみを出力してください。
+
+          ## 出力フォーマット
+          ## 🤖 Gemini ライブラリ更新調査レポート
+          ### 📦 更新対象
+          （更新されたライブラリ・プラグイン名と更新前後のバージョン）
+          ### 🔍 主な変更点・破壊的変更
+          （リリースノートや Changelog から判明した新機能・挙動変更・非推奨化・破壊的変更の要点）
+          ### 🎯 プロジェクトへの影響範囲
+          （該当ライブラリを使用しているモジュール・クラスと、今回の変更による具体的な影響の有無）
+          ### 🛠️ 対応要否の判定
+          （そのままマージ可能か、手動でのコード修正・確認が必要か、およびその根拠）
+
+          ---
 
           ## コンテキスト情報
           - PR 番号: #${PR_NUMBER}
           - PR タイトル: ${PR_TITLE}
-          - PR 本文ファイル: \`.gemini/pr-body.md\`
-          - PR 差分ファイル: \`.gemini/pr-diff.patch\`
 
-          ## 実行手順
-          1. **変更内容の確認**
-             - \`.gemini/pr-diff.patch\` および \`.gemini/pr-body.md\` を読み取り、更新されたライブラリ・プラグイン名とバージョン変化（更新前 -> 更新後）を正確に把握してください。
-          2. **リリースノート・変更点の調査**
-             - \`.gemini/pr-body.md\` に含まれる Release Notes / Changelog や、必要に応じて \`google_web_search\` / \`web_fetch\` を用いて、該当バージョンの破壊的変更（Breaking Changes）、非推奨化（Deprecations）、挙動変更、新機能を調査してください。
-          3. **プロジェクト内の利用箇所と影響範囲の特定**
-             - \`grep_search\` / \`glob\` / \`read_file\` を使用して、更新対象ライブラリがリポジトリ内のどのモジュール・クラスで使用されているかを検索し、影響の有無を分析してください。
-          4. **ビルド・静的解析による検証とコード修正**
-             - 影響を受けるモジュールのコンパイル・テスト、または \`./gradlew checkVersionCatalog\` や \`./gradlew reportMerge\` 等を実行して問題が発生しないか確認してください。
-             - 破壊的変更への追従、非推奨 API の置き換え、設定ファイルの調整など、コード修正が必要な場合は、\`AGENTS.md\` の規約（末尾カンマ、import 順序、KDoc 等）に従ってファイルを修正し、再度 \`./gradlew\` で検証してください。
-             - ファイルを修正した場合は、コミットメッセージ（英語・Conventional Commits 形式、例: \`fix: adapt to <library> <version> API changes\`）を \`.gemini/commit-message.txt\` に書き出してください（自身で \`git push\` は行わず、ワークツリーに変更を残すかローカルコミットまでとしてください）。
-          5. **調査レポートの作成**
-             - 調査結果および対応内容を以下の構成で **日本語** の Markdown ファイル \`.gemini/renovate-report.md\` に出力してください：
-               - \`## 🤖 Gemini ライブラリ更新調査レポート\`
-               - \`### 📦 更新対象\`（ライブラリ名・更新前後のバージョン）
-               - \`### 🔍 主な変更点・破壊的変更\`（リリースノートや Changelog から判明した重要事項）
-               - \`### 🎯 プロジェクトへの影響範囲\`（該当ライブラリの利用箇所と影響の有無）
-               - \`### 🛠️ 修正・検証結果\`（実施したコード修正の内容、または修正不要と判断した根拠と実行した検証コマンドの結果）
+          ### PR 差分 (git diff)
+          \`\`\`diff
+          ${PR_DIFF}
+          \`\`\`
+
+          ### 事前抽出されたプロジェクト内の利用箇所
+          ${USAGE_CONTEXT}
+
+          ### PR 本文 (Release Notes / Changelog)
+          ${PR_BODY}
           EOF
             echo "PROMPT_EOF"
           } >> "$GITHUB_OUTPUT"
-
-      - name: Setup JDK and Gradle
-        if: steps.prepare.outputs.should-run == 'true'
-        uses: ./.github/actions/setup-java-gradle
 
       - name: Run Gemini CLI via Vertex AI (GCP Credits)
         id: gemini_vertex
@@ -198,6 +256,14 @@ jobs:
         uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
         env:
           GEMINI_CLI_TRUST_WORKSPACE: 'true'
+          GOOGLE_APPLICATION_CREDENTIALS: ''
+          GOOGLE_GHA_CREDS_PATH: ''
+          CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ''
+          GOOGLE_CLOUD_PROJECT: ''
+          GCLOUD_PROJECT: ''
+          GCP_PROJECT: ''
+          CLOUDSDK_CORE_PROJECT: ''
+          CLOUDSDK_PROJECT: ''
           GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.prepare.outputs.pr-number }}
           BASE_REF: ${{ steps.prepare.outputs.base-ref }}
@@ -209,54 +275,27 @@ jobs:
           settings: ${{ steps.prepare.outputs.settings }}
           prompt: ${{ steps.prepare.outputs.prompt }}
 
-      - name: Commit and push fixes if needed
-        id: commit_fix
-        if: steps.prepare.outputs.should-run == 'true'
-        env:
-          HEAD_REF: ${{ steps.prepare.outputs.head-ref }}
-        run: |
-          COMMIT_MSG="fix: apply adjustments for dependency update"
-          if [ -s .gemini/commit-message.txt ]; then
-            COMMIT_MSG=$(cat .gemini/commit-message.txt)
-          fi
-          if [ -s .gemini/renovate-report.md ]; then
-            cp .gemini/renovate-report.md /tmp/gemini-renovate-report.md
-          fi
-
-          rm -rf .gemini gha-creds-*.json
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          if [ -n "$(git status --porcelain)" ]; then
-            git add -A
-            git commit -m "$COMMIT_MSG"
-          fi
-
-          AHEAD_COUNT=$(git rev-list "origin/${HEAD_REF}..HEAD" --count)
-          if [ "$AHEAD_COUNT" -gt 0 ]; then
-            echo "Pushing $AHEAD_COUNT commit(s) to origin/${HEAD_REF}..."
-            git push origin "HEAD:refs/heads/${HEAD_REF}"
-            echo "pushed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "No code modifications were required."
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Post investigation report to PR
         if: steps.prepare.outputs.should-run == 'true'
         env:
           GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.prepare.outputs.pr-number }}
+          VERTEX_OUTCOME: ${{ steps.gemini_vertex.outcome }}
+          FREE_OUTCOME: ${{ steps.gemini_free.outcome }}
           GEMINI_SUMMARY: ${{ steps.gemini_vertex.outputs.summary || steps.gemini_free.outputs.summary }}
         run: |
+          rm -rf .gemini gemini-artifacts gha-creds-*.json
+
+          if [ -z "$GEMINI_SUMMARY" ]; then
+            echo "::error::Gemini investigation failed on both Vertex AI (${VERTEX_OUTCOME}) and Free Tier (${FREE_OUTCOME}). No report content was generated."
+            exit 1
+          fi
+
           REPORT_FILE="/tmp/gemini-renovate-report.md"
-          if [ ! -s "$REPORT_FILE" ] && [ -n "$GEMINI_SUMMARY" ]; then
+          if [[ "$GEMINI_SUMMARY" == *"## 🤖 Gemini ライブラリ更新調査レポート"* ]]; then
+            printf "%s\n" "$GEMINI_SUMMARY" > "$REPORT_FILE"
+          else
             printf "## 🤖 Gemini ライブラリ更新調査レポート\n\n%s\n" "$GEMINI_SUMMARY" > "$REPORT_FILE"
           fi
 
-          if [ -s "$REPORT_FILE" ]; then
-            gh pr comment "$PR_NUMBER" --body-file "$REPORT_FILE"
-          else
-            echo "No report content generated."
-          fi
+          gh pr comment "$PR_NUMBER" --body-file "$REPORT_FILE"
