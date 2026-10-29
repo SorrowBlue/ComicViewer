@@ -25,13 +25,11 @@ object JvmDataStoreModule {
     /**
      * Provide window settings data store
      *
-     * @param dataStoreMaker DataStore maker
      * @return Window settings data store
      */
     @WindowSettings
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideWindowSettingsDataStore(
-        dataStoreMaker: DataStoreMaker,
-    ): DataStore<DomainWindowSettings> = dataStoreMaker.createDataStore(WindowSettingsSerializer)
+    private fun DataStoreMaker.provideWindowSettingsDataStore(): DataStore<DomainWindowSettings> =
+        createDataStore(WindowSettingsSerializer)
 }

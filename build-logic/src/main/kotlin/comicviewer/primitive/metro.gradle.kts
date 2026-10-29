@@ -18,5 +18,7 @@ if (kotlinPluginIds.any(pluginManager::hasPlugin)) {
     configure<dev.zacsweers.metro.gradle.MetroPluginExtension> {
         @Suppress("OPT_IN_USAGE")
         generateContributionProviders = true
+        @Suppress("OPT_IN_USAGE")
+        reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
     }
 }

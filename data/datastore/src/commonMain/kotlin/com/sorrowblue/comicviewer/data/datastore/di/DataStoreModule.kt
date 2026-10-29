@@ -42,53 +42,48 @@ object DataStoreModule {
     @Book
     @SingleIn(AppScope::class)
     @Provides
-    private fun bookSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<BookSettings> =
-        dataStoreMaker.createDataStore(BookSettingsSerializer)
+    private fun DataStoreMaker.bookSettingsDataStore(): DataStore<BookSettings> =
+        createDataStore(BookSettingsSerializer)
 
     @Display
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideDisplaySettingsDataStore(
-        dataStoreMaker: DataStoreMaker,
-    ): DataStore<DisplaySettings> = dataStoreMaker.createDataStore(DisplaySettingsSerializer)
+    private fun DataStoreMaker.provideDisplaySettingsDataStore(): DataStore<DisplaySettings> =
+        createDataStore(DisplaySettingsSerializer)
 
     @FolderDisplay
     @SingleIn(AppScope::class)
     @Provides
-    private fun folderDisplaySettingsDataStore(
-        dataStoreMaker: DataStoreMaker,
-    ): DataStore<FolderDisplaySettings> =
-        dataStoreMaker.createDataStore(FolderDisplaySettingsSerializer)
+    private fun DataStoreMaker.folderDisplaySettingsDataStore(): DataStore<FolderDisplaySettings> =
+        createDataStore(FolderDisplaySettingsSerializer)
 
     @Folder
     @SingleIn(AppScope::class)
     @Provides
-    private fun folderSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<FolderSettings> =
-        dataStoreMaker.createDataStore(FolderSettingsSerializer)
+    private fun DataStoreMaker.folderSettingsDataStore(): DataStore<FolderSettings> =
+        createDataStore(FolderSettingsSerializer)
 
     @Security
     @SingleIn(AppScope::class)
     @Provides
-    private fun securitySettingsDataStore(
-        dataStoreMaker: DataStoreMaker,
-    ): DataStore<SecuritySettings> = dataStoreMaker.createDataStore(SecuritySettingsSerializer)
+    private fun DataStoreMaker.securitySettingsDataStore(): DataStore<SecuritySettings> =
+        createDataStore(SecuritySettingsSerializer)
 
     @GlobalSettings
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<Settings> =
-        dataStoreMaker.createDataStore(SettingsSerializer)
+    private fun DataStoreMaker.provideSettingsDataStore(): DataStore<Settings> =
+        createDataStore(SettingsSerializer)
 
     @Viewer
     @SingleIn(AppScope::class)
     @Provides
-    private fun viewerSettingsDataStore(dataStoreMaker: DataStoreMaker): DataStore<ViewerSettings> =
-        dataStoreMaker.createDataStore(ViewerSettingsSerializer)
+    private fun DataStoreMaker.viewerSettingsDataStore(): DataStore<ViewerSettings> =
+        createDataStore(ViewerSettingsSerializer)
 
     @Collection
     @SingleIn(AppScope::class)
     @Provides
-    private fun collectionSettingsDataStore(
-        dataStoreMaker: DataStoreMaker,
-    ): DataStore<CollectionSettings> = dataStoreMaker.createDataStore(CollectionSettingsSerializer)
+    private fun DataStoreMaker.collectionSettingsDataStore(): DataStore<CollectionSettings> =
+        createDataStore(CollectionSettingsSerializer)
 }
