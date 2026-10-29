@@ -118,11 +118,6 @@ dependencies {
     androidTestUtil(libs.androidx.testOrchestrator)
 }
 
-metro {
-    @Suppress("OPT_IN_USAGE")
-    reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
-}
-
 buildConfig {
     packageName = "com.sorrowblue.comicviewer.app"
     buildConfigField("SMB_HOST", project.findProperty("smbHost")?.toString().orEmpty())

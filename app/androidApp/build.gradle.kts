@@ -64,6 +64,13 @@ dependencies {
     implementation(libs.androidx.appcompat)
 }
 
+metro {
+    @Suppress("OPT_IN_USAGE")
+    hiddenDependencies {
+        checkOnCompile.set(true)
+    }
+}
+
 aboutLibraries {
     export {
         outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/androidMain/composeResources/files/aboutlibraries.json"))

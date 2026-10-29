@@ -16,8 +16,8 @@ import logcat.logcat
 @BindingContainer
 object DataCoilProviders {
     @Provides
-    private fun provideDiskCache(coilDiskCache: CoilDiskCache): DiskCache =
-        DiskCache.Builder().directory(coilDiskCache.resolve("image_cache")).build().also {
+    private fun CoilDiskCache.provideDiskCache(): DiskCache =
+        DiskCache.Builder().directory(resolve("image_cache")).build().also {
             logcat { "#provideDiskCache okio.Path=${it.directory}" }
         }
 }

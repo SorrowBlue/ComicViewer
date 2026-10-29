@@ -15,6 +15,6 @@ import dev.zacsweers.metro.Provides
 @BindingContainer
 object FrameworkNotificationProviders {
     @Provides
-    fun provideNotificationManagerCompat(context: Context): NotificationManagerCompat =
-        NotificationManagerCompat.from(context)
+    fun Context.provideNotificationManagerCompat(): NotificationManagerCompat =
+        NotificationManagerCompat.from(this)
 }

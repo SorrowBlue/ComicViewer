@@ -45,27 +45,24 @@ object DatabaseProviders {
 
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideBookshelfDao(database: ComicViewerDatabase): BookshelfDao = database
-        .bookshelfDao()
+    private fun ComicViewerDatabase.provideBookshelfDao(): BookshelfDao = bookshelfDao()
 
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideFileDao(database: ComicViewerDatabase): FileDao = database.fileDao()
+    private fun ComicViewerDatabase.provideFileDao(): FileDao = fileDao()
 
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideCollectionDao(database: ComicViewerDatabase): CollectionDao = database
-        .collectionDao()
+    private fun ComicViewerDatabase.provideCollectionDao(): CollectionDao = collectionDao()
 
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideCollectionFileDao(database: ComicViewerDatabase): CollectionFileDao =
-        database.collectionFileDao()
+    private fun ComicViewerDatabase.provideCollectionFileDao(): CollectionFileDao =
+        collectionFileDao()
 
     @SingleIn(AppScope::class)
     @Provides
-    private fun provideReadLaterFileDao(database: ComicViewerDatabase): ReadLaterFileDao = database
-        .readLaterFileDao()
+    private fun ComicViewerDatabase.provideReadLaterFileDao(): ReadLaterFileDao = readLaterFileDao()
 
     @IoDispatcher
     @SingleIn(AppScope::class)
