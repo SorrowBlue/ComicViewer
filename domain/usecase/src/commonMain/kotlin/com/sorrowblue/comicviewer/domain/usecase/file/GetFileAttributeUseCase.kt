@@ -19,16 +19,36 @@ import dev.zacsweers.metro.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
+/**
+ * Observes the [FileAttribute] of a file on remote storage by its bookshelf ID and path.
+ */
 abstract class GetFileAttributeUseCase :
     UseCase<GetFileAttributeUseCase.Request, FileAttribute, GetFileAttributeUseCase.Error>() {
 
+    /**
+     * Request parameters for [GetFileAttributeUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf containing the file.
+     * @property path The path of the file.
+     */
     data class Request(val bookshelfId: BookshelfId, val path: String)
 
+    /**
+     * Errors that can occur when retrieving file attributes.
+     */
     sealed interface Error : Resource.AppError {
 
+        /**
+         * Indicates that the bookshelf or file attribute was not found.
+         */
         data object NotFound : Error
+
+        /**
+         * Indicates that a system or remote error occurred.
+         */
         data object System : Error
     }
 }
@@ -42,6 +62,7 @@ internal class GetFileAttributeUseCaseImpl(
 
     override fun run(request: Request): Flow<Resource<FileAttribute, Error>> =
         bookshelfRepository.flow(request.bookshelfId)
+            .distinctUntilChanged()
             .map<Bookshelf?, Resource<FileAttribute, Error>> { bookshelf ->
                 if (bookshelf != null) {
                     runCatchingCancellable {

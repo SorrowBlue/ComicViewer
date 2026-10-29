@@ -20,6 +20,7 @@ import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
@@ -31,15 +32,31 @@ import logcat.logcat
 private const val MaxParallelCoroutines = 6
 private const val BatchSize = 50
 
+/**
+ * Regenerates thumbnails for all files in a bookshelf while reporting progress.
+ */
 abstract class RegenerateThumbnailsUseCase :
     OneShotUseCase<RegenerateThumbnailsUseCase.Request, Unit, RegenerateThumbnailsUseCase.Error>() {
 
-    data class Request(
+    /**
+     * Request parameters for [RegenerateThumbnailsUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf whose thumbnails should be regenerated.
+     * @property process Callback invoked as each thumbnail is processed with current progress and
+     * total count.
+     */
+    class Request(
         val bookshelfId: BookshelfId,
         val process: suspend (Bookshelf, progress: Long, max: Long) -> Unit,
     )
 
+    /**
+     * Errors that can occur during thumbnail regeneration.
+     */
     enum class Error : Resource.AppError {
+        /**
+         * Indicates that a system error occurred.
+         */
         System,
     }
 }
@@ -89,8 +106,9 @@ internal class RegenerateThumbnailsUseCaseImpl(
 
                 batch.mapParallel { file ->
                     loadThumbnail(file)
-                    val progress = mutex.withLock { ++completedCount }
-                    onProgress(bookshelf, progress, totalCount)
+                    mutex.withLock {
+                        onProgress(bookshelf, ++completedCount, totalCount)
+                    }
                 }
             }
         }
@@ -99,6 +117,7 @@ internal class RegenerateThumbnailsUseCaseImpl(
     private suspend fun loadThumbnail(file: File) {
         runCatchingCancellable {
             thumbnailRepository.load(FileThumbnail.from(file)).onError {
+                if (it.throwable is CancellationException) throw it.throwable
                 logcat(LogPriority.WARN) { it.throwable.asLog() }
             }
         }.onFailure {

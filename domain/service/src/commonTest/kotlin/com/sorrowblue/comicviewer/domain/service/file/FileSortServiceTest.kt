@@ -71,4 +71,20 @@ class FileSortServiceTest {
         assertEquals(listOf("vol1.zip", "vol2.zip", "vol10.zip"), sorted.map { it.name })
         assertEquals(listOf(0, 1, 2), sorted.map { it.sortIndex })
     }
+
+    @Test
+    fun testNaturalSortLeadingZeroAndCaseTieBreaker() {
+        val file1 = BookFile(bookshelfId, "vol1.zip", "", "/vol1.zip", 100, 0, false)
+        val file01 = BookFile(bookshelfId, "vol01.zip", "", "/vol01.zip", 100, 0, false)
+        val fileUpper2 = BookFile(bookshelfId, "Vol2.zip", "", "/Vol2.zip", 100, 0, false)
+        val fileLower10 = BookFile(bookshelfId, "vol10.zip", "", "/vol10.zip", 100, 0, false)
+
+        val sorted = service.sortedIndex(listOf(fileLower10, file01, fileUpper2, file1))
+
+        assertEquals(
+            listOf("vol1.zip", "vol01.zip", "Vol2.zip", "vol10.zip"),
+            sorted.map { it.name },
+        )
+        assertEquals(listOf(0, 1, 2, 3), sorted.map { it.sortIndex })
+    }
 }

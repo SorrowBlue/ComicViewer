@@ -10,7 +10,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import platform.Foundation.NSString
-import platform.Foundation.localizedCompare
+import platform.Foundation.localizedCaseInsensitiveCompare
 
 @ContributesBinding(AppScope::class)
 @Inject
@@ -21,7 +21,7 @@ internal class IosFileSortService : FileSortService {
             compareNatural(a.name, b.name) { chunkA, chunkB ->
                 @Suppress("CAST_NEVER_SUCCEEDS")
                 val str = chunkA as NSString
-                str.localizedCompare(chunkB).toInt()
+                str.localizedCaseInsensitiveCompare(chunkB).toInt()
             }
         }
 }

@@ -10,6 +10,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
  * Base interface representing a page item displayed in the viewer.
  */
 sealed interface PageItem {
+    /** Unique key identifying this page item in the viewer list. */
     val key: String
 }
 
@@ -27,6 +28,7 @@ data class NextPage(val isNext: Boolean, val nextBooks: List<NextBook>) : PageIt
  * Represents a previous or next book candidate.
  */
 sealed interface NextBook {
+    /** The target book candidate. */
     val book: Book
 
     /** Previous or next book within a folder. */
@@ -56,9 +58,11 @@ sealed interface BookPage : PageItem {
     }
 
     /**
-     * Two-page spread display format. Portrait pages are paired with adjacent pages, while landscape pages occupy a full spread.
+     * Two-page spread display format. Portrait pages are paired with adjacent pages,
+     * while landscape pages occupy a full spread.
      */
     sealed interface Spread : BookPage {
+        /** Zero-based page index. */
         val index: Int
 
         /** Page whose aspect ratio has not yet been evaluated. */
@@ -88,6 +92,7 @@ sealed interface BookPage : PageItem {
      * Split display format where landscape images are split into right and left halves.
      */
     sealed interface Split : BookPage {
+        /** Zero-based page index. */
         val index: Int
 
         /** Page whose aspect ratio has not yet been evaluated. */

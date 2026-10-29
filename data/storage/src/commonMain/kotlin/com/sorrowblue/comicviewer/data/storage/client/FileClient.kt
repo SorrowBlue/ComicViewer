@@ -18,6 +18,7 @@ import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import dev.zacsweers.metro.DefaultBinding
 import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.MapKey
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -68,27 +69,33 @@ abstract class FileClient<T : Bookshelf>(
 
     abstract suspend fun fileSize(path: String): Long
 
-    suspend fun fileReader(book: Book): BookFileReader = withContext(dispatcher) {
+    internal suspend fun fileReader(
+        book: Book,
+        imageFolderFileReaderFactory: ImageFolderFileReader.Factory,
+    ): BookFileReader = withContext(dispatcher) {
         runCatching {
             when (book) {
                 is BookFile -> {
                     val seekableInputStream = seekableInputStream(book)
-                    when (book.extension) {
-                        "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
-                            fileReaderFactoryMap.getValue(FileReaderType.Document)
+                    runCatching {
+                        when (book.extension) {
+                            "pdf", "epub", "xps", "oxps", "mobi", "fb2" ->
+                                fileReaderFactoryMap.getValue(FileReaderType.Document)
 
-                        else -> fileReaderFactoryMap.getValue(FileReaderType.Zip)
-                    }.create(seekableInputStream)
+                            else -> fileReaderFactoryMap.getValue(FileReaderType.Zip)
+                        }.create(seekableInputStream)
+                    }.getOrElse { e ->
+                        runCatching { seekableInputStream.close() }
+                        throw e
+                    }
                 }
 
-                is BookFolder -> ImageFolderFileReader(dispatcher, this@FileClient, book)
+                is BookFolder -> imageFolderFileReaderFactory.create(this@FileClient, book)
             }
         }.getOrElse {
+            if (it is CancellationException) throw it
             logcat { it.asLog() }
-            throw when (it) {
-                is FileClientException -> it.toRemoteException()
-                else -> it
-            }
+            throw it.toRemoteException()
         }
     }
 }

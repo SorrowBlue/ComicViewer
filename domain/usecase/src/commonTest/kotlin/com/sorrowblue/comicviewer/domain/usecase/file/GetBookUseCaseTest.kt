@@ -13,12 +13,13 @@ import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
+import com.sorrowblue.comicviewer.domain.model.storage.RemoteException
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
 import com.sorrowblue.comicviewer.domain.repository.storage.RemoteStorageClient
 import com.sorrowblue.comicviewer.domain.usecase.StubBookshelfRepository
 import com.sorrowblue.comicviewer.domain.usecase.StubFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.StubRemoteStorageClient
-import com.sorrowblue.comicviewer.domain.usecase.settings.ManageFolderSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.StubSettingsRepository
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,6 +33,10 @@ import kotlinx.coroutines.test.runTest
 
 @OptIn(InternalDataApi::class)
 class GetBookUseCaseTest {
+
+    private val defaultSettingsRepository = object : StubSettingsRepository() {
+        override val folderSettings: Flow<FolderSettings> = flowOf(FolderSettings())
+    }
 
     @Test
     fun getBook_updatesDatabaseOnceWithTotalPageCount() = runTest {
@@ -65,14 +70,14 @@ class GetBookUseCaseTest {
 
         val fileRepository = object : StubFileRepository() {
             override suspend fun updateSimple(
-                list: File,
+                file: File,
             ): Resource<File, FileRepositoryQueryError> {
                 updateSimpleCount++
-                updatedFileArg = list
-                return Resource.Success(list)
+                updatedFileArg = file
+                return Resource.Success(file)
             }
 
-            override suspend fun addUpdate(fileModel: File) {
+            override suspend fun addUpdate(file: File) {
                 addUpdateCount++
             }
         }
@@ -87,16 +92,11 @@ class GetBookUseCaseTest {
                 }
         }
 
-        val manageFolderSettingsUseCase = object : ManageFolderSettingsUseCase {
-            override val settings: Flow<FolderSettings> = flowOf(FolderSettings())
-            override suspend fun edit(action: (FolderSettings) -> FolderSettings) = Unit
-        }
-
         val useCase = GetBookUseCaseImpl(
             bookshelfRepository = bookshelfRepository,
             fileRepository = fileRepository,
             remoteStorageClientFactory = remoteStorageClientFactory,
-            manageFolderSettingsUseCase = manageFolderSettingsUseCase,
+            settingsRepository = defaultSettingsRepository,
         )
 
         val result = useCase(GetBookUseCase.Request(bookshelfId, path)).first()
@@ -144,16 +144,11 @@ class GetBookUseCaseTest {
                 }
         }
 
-        val manageFolderSettingsUseCase = object : ManageFolderSettingsUseCase {
-            override val settings: Flow<FolderSettings> = flowOf(FolderSettings())
-            override suspend fun edit(action: (FolderSettings) -> FolderSettings) = Unit
-        }
-
         val useCase = GetBookUseCaseImpl(
             bookshelfRepository = bookshelfRepository,
             fileRepository = StubFileRepository(),
             remoteStorageClientFactory = remoteStorageClientFactory,
-            manageFolderSettingsUseCase = manageFolderSettingsUseCase,
+            settingsRepository = defaultSettingsRepository,
         )
 
         assertFailsWith<CancellationException> {
@@ -177,19 +172,114 @@ class GetBookUseCaseTest {
                 StubRemoteStorageClient()
         }
 
-        val manageFolderSettingsUseCase = object : ManageFolderSettingsUseCase {
-            override val settings: Flow<FolderSettings> = flowOf(FolderSettings())
-            override suspend fun edit(action: (FolderSettings) -> FolderSettings) = Unit
+        val useCase = GetBookUseCaseImpl(
+            bookshelfRepository = bookshelfRepository,
+            fileRepository = StubFileRepository(),
+            remoteStorageClientFactory = remoteStorageClientFactory,
+            settingsRepository = defaultSettingsRepository,
+        )
+
+        val result = useCase(GetBookUseCase.Request(bookshelfId, path)).first()
+        assertEquals(Resource.Error(GetBookUseCase.Error.ReportedSystemError), result)
+    }
+
+    @Test
+    fun getBook_whenRemoteFileThrowsNotFound_returnsNotFoundError() = runTest {
+        val bookshelfId = BookshelfId(1)
+        val bookshelf = DeviceStorage(bookshelfId, "Test", 0, false)
+        val path = "/manga/missing.cbz"
+
+        val bookshelfRepository = object : StubBookshelfRepository() {
+            override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
+        }
+
+        val remoteStorageClientFactory = object : RemoteStorageClient.Factory {
+            override fun create(bookshelf: Bookshelf): RemoteStorageClient =
+                object : StubRemoteStorageClient() {
+                    override suspend fun file(path: String, resolveImageFolder: Boolean): File =
+                        throw RemoteException.NotFound()
+                }
         }
 
         val useCase = GetBookUseCaseImpl(
             bookshelfRepository = bookshelfRepository,
             fileRepository = StubFileRepository(),
             remoteStorageClientFactory = remoteStorageClientFactory,
-            manageFolderSettingsUseCase = manageFolderSettingsUseCase,
+            settingsRepository = defaultSettingsRepository,
+        )
+
+        val result = useCase(GetBookUseCase.Request(bookshelfId, path)).first()
+        assertEquals(Resource.Error(GetBookUseCase.Error.NotFound), result)
+    }
+
+    @Test
+    fun getBook_whenRemoteFileThrowsNoNetwork_returnsReportedSystemError() = runTest {
+        val bookshelfId = BookshelfId(1)
+        val bookshelf = DeviceStorage(bookshelfId, "Test", 0, false)
+        val path = "/manga/vol1.cbz"
+
+        val bookshelfRepository = object : StubBookshelfRepository() {
+            override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
+        }
+
+        val remoteStorageClientFactory = object : RemoteStorageClient.Factory {
+            override fun create(bookshelf: Bookshelf): RemoteStorageClient =
+                object : StubRemoteStorageClient() {
+                    override suspend fun file(path: String, resolveImageFolder: Boolean): File =
+                        throw RemoteException.NoNetwork()
+                }
+        }
+
+        val useCase = GetBookUseCaseImpl(
+            bookshelfRepository = bookshelfRepository,
+            fileRepository = StubFileRepository(),
+            remoteStorageClientFactory = remoteStorageClientFactory,
+            settingsRepository = defaultSettingsRepository,
         )
 
         val result = useCase(GetBookUseCase.Request(bookshelfId, path)).first()
         assertEquals(Resource.Error(GetBookUseCase.Error.ReportedSystemError), result)
+    }
+
+    @Test
+    fun getBook_whenPageCountThrowsNotFound_returnsNotFoundError() = runTest {
+        val bookshelfId = BookshelfId(1)
+        val bookshelf = DeviceStorage(bookshelfId, "Test", 0, false)
+        val path = "/manga/deleted_during_fetch.cbz"
+        val remoteBook = BookFile(
+            bookshelfId = bookshelfId,
+            name = "deleted_during_fetch.cbz",
+            parent = "/manga",
+            path = path,
+            size = 2048L,
+            lastModifier = 500L,
+            isHidden = false,
+            totalPageCount = 0,
+        )
+
+        val bookshelfRepository = object : StubBookshelfRepository() {
+            override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
+        }
+
+        val remoteStorageClientFactory = object : RemoteStorageClient.Factory {
+            override fun create(bookshelf: Bookshelf): RemoteStorageClient =
+                object : StubRemoteStorageClient() {
+                    override suspend fun file(path: String, resolveImageFolder: Boolean): File =
+                        remoteBook
+
+                    override suspend fun pageCount(book: Book): Int =
+                        throw RemoteException.NotFound()
+                }
+        }
+
+        val useCase = GetBookUseCaseImpl(
+            bookshelfRepository = bookshelfRepository,
+            fileRepository = StubFileRepository(),
+            remoteStorageClientFactory = remoteStorageClientFactory,
+            settingsRepository = defaultSettingsRepository,
+        )
+
+        val result = useCase(GetBookUseCase.Request(bookshelfId, path)).first()
+        assertEquals(Resource.Error(GetBookUseCase.Error.NotFound), result)
     }
 }

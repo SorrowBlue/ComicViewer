@@ -46,10 +46,14 @@ internal class ZipFileReader(
 
     private val zipFile = KioArch.createReader(SeekableSourceImpl(seekableInputStream))
 
-    private val entries =
+    private val entries = runCatching {
         zipFile.getEntries()
             .filter { !it.isDirectory && it.name.extension in supportedException }
             .sortedByName()
+    }.getOrElse { e ->
+        runCatching { zipFile.close() }
+        throw e
+    }
 
     private val mutex = Mutex()
 
@@ -58,22 +62,30 @@ internal class ZipFileReader(
     override suspend fun fileName(pageIndex: Int): String = entries[pageIndex].name
 
     override suspend fun source(pageIndex: Int): Source = mutex.withLock {
-        Buffer().also {
-            zipFile.extractEntry(entries[pageIndex], sink = it)
+        withContext(dispatcher) {
+            Buffer().also {
+                zipFile.extractEntry(entries[pageIndex], sink = it)
+            }
         }
     }
 
     override suspend fun extractTo(pageIndex: Int, sink: Sink) = mutex.withLock {
-        zipFile.extractEntry(entries[pageIndex], sink = sink)
+        withContext(dispatcher) {
+            zipFile.extractEntry(entries[pageIndex], sink = sink)
+        }
     }
 
     override suspend fun pageCount(): Int = entries.size
 
     override fun close() {
         runBlocking {
-            withContext(dispatcher) {
-                seekableInputStream.close()
-                zipFile.close()
+            mutex.withLock {
+                withContext(dispatcher) {
+                    val zipCloseResult = runCatching { zipFile.close() }
+                    val streamCloseResult = runCatching { seekableInputStream.close() }
+                    zipCloseResult.getOrThrow()
+                    streamCloseResult.getOrThrow()
+                }
             }
         }
     }

@@ -23,15 +23,27 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Scans the file hierarchy of a bookshelf and invokes a callback for each discovered file.
+ */
 abstract class ScanBookshelfUseCase :
     OneShotUseCase<ScanBookshelfUseCase.Request, Unit, ScanBookshelfUseCase.Error>() {
 
-    data class Request(
-        val bookshelfId: BookshelfId,
-        val process: suspend (Bookshelf, File) -> Unit,
-    )
+    /**
+     * Request parameters for [ScanBookshelfUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf to scan.
+     * @property process Callback invoked for each discovered [File] on the [Bookshelf].
+     */
+    class Request(val bookshelfId: BookshelfId, val process: suspend (Bookshelf, File) -> Unit)
 
+    /**
+     * Errors that can occur during bookshelf scanning.
+     */
     enum class Error : Resource.AppError {
+        /**
+         * Indicates that a system error occurred during scanning.
+         */
         System,
     }
 }
@@ -64,7 +76,7 @@ internal class ScanBookshelfUseCaseImpl(
                         client.listFiles(file, resolveImageFolder, filter)
                     },
                     onFolderFilesScanned = { parent, files ->
-                        fileRepository.updateHistory(parent, files)
+                        fileRepository.syncFolderFiles(parent, files)
                     },
                     onFileDiscovered = { file ->
                         request.process(bookshelf, file)

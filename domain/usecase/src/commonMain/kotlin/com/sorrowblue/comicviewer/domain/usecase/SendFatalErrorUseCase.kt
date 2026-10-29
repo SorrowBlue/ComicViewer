@@ -12,9 +12,17 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Reports a fatal error for logging or crash reporting.
+ */
 abstract class SendFatalErrorUseCase :
     OneShotUseCase<SendFatalErrorUseCase.Request, Unit, Unit>() {
 
+    /**
+     * Request parameters for [SendFatalErrorUseCase].
+     *
+     * @property throwable The fatal [Throwable] to report.
+     */
     data class Request(val throwable: Throwable)
 }
 

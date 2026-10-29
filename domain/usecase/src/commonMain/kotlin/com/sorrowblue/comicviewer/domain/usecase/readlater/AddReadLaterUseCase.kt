@@ -14,20 +14,40 @@ import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 
+/**
+ * Adds or updates a file in the "read later" list.
+ */
 abstract class AddReadLaterUseCase :
     OneShotUseCase<AddReadLaterUseCase.Request, ReadLaterFile, Unit>() {
 
+    /**
+     * Request parameters for [AddReadLaterUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf containing the file.
+     * @property path The path of the file to add to "read later".
+     */
     data class Request(val bookshelfId: BookshelfId, val path: String)
 }
 
-@Inject
 @ContributesBinding(AppScope::class)
 internal class AddReadLaterUseCaseImpl(
     private val readLaterFileRepository: ReadLaterFileRepository,
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
+    private val clock: Clock,
 ) : AddReadLaterUseCase() {
+
+    @Inject
+    constructor(
+        readLaterFileRepository: ReadLaterFileRepository,
+        sendFatalErrorUseCase: SendFatalErrorUseCase,
+    ) : this(
+        readLaterFileRepository = readLaterFileRepository,
+        sendFatalErrorUseCase = sendFatalErrorUseCase,
+        clock = Clock.System,
+    )
 
     override suspend fun run(request: Request): Resource<ReadLaterFile, Unit> =
         runCatchingCancellable {
@@ -36,13 +56,16 @@ internal class AddReadLaterUseCaseImpl(
                     ReadLaterFile(
                         bookshelfId = request.bookshelfId,
                         path = request.path,
-                        modifiedDate = Clock.System.now().toEpochMilliseconds(),
+                        modifiedDate = clock.now().toEpochMilliseconds(),
                     ),
                 )
             ) {
                 is Resource.Success -> Resource.Success(result.data)
 
                 is Resource.Error -> {
+                    if (result.error.throwable is CancellationException) {
+                        throw result.error.throwable
+                    }
                     sendFatalErrorUseCase(SendFatalErrorUseCase.Request(result.error.throwable))
                     Resource.Error(Unit)
                 }

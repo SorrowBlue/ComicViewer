@@ -14,9 +14,19 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+/**
+ * Observes paginated [File] items matching a [SearchCondition] on a bookshelf.
+ */
 fun interface PagingQueryFileUseCase : PagingUseCase<PagingQueryFileUseCase.Request, File> {
 
-    data class Request(
+    /**
+     * Request parameters for [PagingQueryFileUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf to search.
+     * @property searchCondition Provider for the search condition.
+     * @property pagingConfig Configuration for pagination.
+     */
+    class Request(
         val bookshelfId: BookshelfId,
         val searchCondition: () -> SearchCondition,
         val pagingConfig: PagingConfig,

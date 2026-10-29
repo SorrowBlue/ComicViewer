@@ -75,7 +75,7 @@ class ScanBookshelfUseCaseTest {
 
         val fakeFileRepository = object : StubFileRepository() {
             override suspend fun root(id: BookshelfId): Folder = rootFolder
-            override suspend fun updateHistory(file: File, files: List<File>) {
+            override suspend fun syncFolderFiles(file: File, files: List<File>) {
                 historyUpdated.add(file to files)
             }
         }

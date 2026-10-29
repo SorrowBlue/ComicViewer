@@ -11,6 +11,9 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Use case for observing and updating [BookSettings].
+ */
 interface ManageBookSettingsUseCase : ManageSettingsUseCase<BookSettings>
 
 @Inject

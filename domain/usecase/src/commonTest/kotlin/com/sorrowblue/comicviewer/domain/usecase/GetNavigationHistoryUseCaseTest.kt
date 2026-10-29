@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.NavigationHistory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.Flow
@@ -124,6 +125,26 @@ class GetNavigationHistoryUseCaseTest {
                 }
             },
             bookshelfRepository = StubBookshelfRepository(),
+        )
+
+        val result = useCase(Unit).first()
+        assertEquals(
+            Resource.Error(GetNavigationHistoryUseCase.Error.System),
+            result,
+        )
+    }
+
+    @Test
+    fun getNavigationHistory_whenBookshelfIsDeleted_returnsSystemError() = runTest {
+        val deletedBookshelf = DeviceStorage(bookshelfId, "Shelf", 0, isDeleted = true)
+        val useCase = GetNavigationHistoryUseCaseImpl(
+            fileRepository = object : StubFileRepository() {
+                override fun lastHistory(): Flow<File?> = flowOf(book)
+            },
+            bookshelfRepository = object : StubBookshelfRepository() {
+                override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> =
+                    flowOf(deletedBookshelf)
+            },
         )
 
         val result = useCase(Unit).first()

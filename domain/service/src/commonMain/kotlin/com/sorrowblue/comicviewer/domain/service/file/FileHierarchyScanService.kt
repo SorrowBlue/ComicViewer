@@ -35,7 +35,7 @@ interface FileHierarchyScanService {
 
 @ContributesBinding(AppScope::class)
 @Inject
-class FileHierarchyScanServiceImpl(private val fileSortService: FileSortService) :
+internal class FileHierarchyScanServiceImpl(private val fileSortService: FileSortService) :
     FileHierarchyScanService {
 
     override suspend fun scanHierarchy(

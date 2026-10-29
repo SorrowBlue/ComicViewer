@@ -14,6 +14,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+/**
+ * Resolves a [BookFile] and its total page count from an external intent URI or path.
+ */
 abstract class GetIntentBookUseCase : OneShotUseCase<String, BookFile, Unit>()
 
 @Inject

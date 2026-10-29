@@ -12,6 +12,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionId
 import com.sorrowblue.comicviewer.domain.model.collection.SmartCollection
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.common.Resource
+import com.sorrowblue.comicviewer.domain.model.file.Book
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
@@ -19,6 +20,7 @@ import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderScopeOnly
 import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
+import com.sorrowblue.comicviewer.domain.model.settings.folder.normalizeFolderPath
 import com.sorrowblue.comicviewer.domain.service.book.BookNavigationService
 import com.sorrowblue.comicviewer.domain.usecase.StubCollectionFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.StubCollectionRepository
@@ -74,7 +76,7 @@ class GetNextBookUseCaseTest {
         val fakeFileRepository = object : StubFileRepository() {
             override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = book1
 
-            override fun nextFileModel(
+            override fun nextFile(
                 bookshelfId: BookshelfId,
                 path: String,
                 sortType: SortType,
@@ -89,7 +91,7 @@ class GetNextBookUseCaseTest {
             fileRepository = fakeFileRepository,
             collectionFileRepository = StubCollectionFileRepository(),
             collectionRepository = StubCollectionRepository(),
-            bookNavigationService = BookNavigationService(),
+            bookNavigationService = FakeBookNavigationService,
         )
 
         val result = useCase(
@@ -120,7 +122,7 @@ class GetNextBookUseCaseTest {
 
         val fakeFileRepository = object : StubFileRepository() {
             override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = book1
-            override fun nextFileModel(
+            override fun nextFile(
                 bookshelfId: BookshelfId,
                 path: String,
                 sortType: SortType,
@@ -132,7 +134,7 @@ class GetNextBookUseCaseTest {
             fileRepository = fakeFileRepository,
             collectionFileRepository = StubCollectionFileRepository(),
             collectionRepository = StubCollectionRepository(),
-            bookNavigationService = BookNavigationService(),
+            bookNavigationService = FakeBookNavigationService,
         )
 
         val result = useCase(
@@ -177,7 +179,7 @@ class GetNextBookUseCaseTest {
             fileRepository = StubFileRepository(),
             collectionFileRepository = fakeCollectionFileRepository,
             collectionRepository = fakeCollectionRepository,
-            bookNavigationService = BookNavigationService(),
+            bookNavigationService = FakeBookNavigationService,
         )
 
         val result = useCase(
@@ -215,7 +217,7 @@ class GetNextBookUseCaseTest {
         }
 
         val fakeFileRepository = object : StubFileRepository() {
-            override fun nextFileModel(
+            override fun nextFile(
                 bookshelfId: BookshelfId,
                 path: String,
                 searchCondition: SearchCondition,
@@ -231,7 +233,7 @@ class GetNextBookUseCaseTest {
             fileRepository = fakeFileRepository,
             collectionFileRepository = StubCollectionFileRepository(),
             collectionRepository = fakeCollectionRepository,
-            bookNavigationService = BookNavigationService(),
+            bookNavigationService = FakeBookNavigationService,
         )
 
         val result = useCase(
@@ -261,7 +263,7 @@ class GetNextBookUseCaseTest {
             fileRepository = StubFileRepository(),
             collectionFileRepository = StubCollectionFileRepository(),
             collectionRepository = fakeCollectionRepository,
-            bookNavigationService = BookNavigationService(),
+            bookNavigationService = FakeBookNavigationService,
         )
 
         val result = useCase(
@@ -289,7 +291,7 @@ class GetNextBookUseCaseTest {
             fileRepository = fakeFileRepository,
             collectionFileRepository = StubCollectionFileRepository(),
             collectionRepository = StubCollectionRepository(),
-            bookNavigationService = BookNavigationService(),
+            bookNavigationService = FakeBookNavigationService,
         )
 
         val result = useCase(
@@ -312,4 +314,28 @@ private class FakeSettingsRepository(
     override val folderDisplaySettings: Flow<FolderDisplaySettings> = flowOf(
         initialFolderDisplaySettings,
     )
+}
+
+private object FakeBookNavigationService : BookNavigationService {
+    override fun resolveFolderSortType(
+        settings: FolderDisplaySettings,
+        bookshelfId: BookshelfId,
+        parentPath: String,
+    ): SortType = settings.currentSortType(bookshelfId, parentPath)
+
+    override fun resolveCollectionSortType(
+        collection: Collection,
+        settings: FolderDisplaySettings,
+    ): SortType = when (collection) {
+        is SmartCollection -> collection.searchCondition.sortType
+        is BasicCollection -> settings.sortType
+    }
+
+    override fun extractParentPath(path: String): String {
+        val trimmed = normalizeFolderPath(path).removeSuffix("/")
+        val lastIndex = trimmed.lastIndexOf('/')
+        return if (lastIndex > 0) trimmed.substring(0, lastIndex) else ""
+    }
+
+    override fun validateBook(file: File?): Book? = file as? Book
 }

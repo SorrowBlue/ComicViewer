@@ -10,6 +10,15 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+/**
+ * Represents a manually curated [Collection] of files.
+ *
+ * @property id The unique identifier of the collection.
+ * @property name The display name of the collection.
+ * @property count The number of items in the collection.
+ * @property createdAt The timestamp when the collection was created.
+ * @property updatedAt The timestamp when the collection was last updated.
+ */
 data class BasicCollection private constructor(
     override val id: CollectionId,
     override val name: String,
@@ -17,17 +26,16 @@ data class BasicCollection private constructor(
     override val createdAt: LocalDateTime,
     override val updatedAt: LocalDateTime,
 ) : Collection {
-    fun copy(
-        name: String = this.name,
-        updatedAt: LocalDateTime =
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-    ) = copy(
-        id = id,
-        name = name,
-        updatedAt = updatedAt,
-    )
+
+    /**
+     * Returns a copy of this [BasicCollection] with updated [name].
+     */
+    fun copy(name: String = this.name) = copy(id = id, name = name)
 
     companion object {
+        /**
+         * Creates a new [BasicCollection] with the specified [name].
+         */
         operator fun invoke(
             name: String,
             clock: Clock = Clock.System,
@@ -43,6 +51,9 @@ data class BasicCollection private constructor(
             )
         }
 
+        /**
+         * Reconstructs a [BasicCollection] instance from persisted fields.
+         */
         @InternalDataApi
         operator fun invoke(
             id: CollectionId,

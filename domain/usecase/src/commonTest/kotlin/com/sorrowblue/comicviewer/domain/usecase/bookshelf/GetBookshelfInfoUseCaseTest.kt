@@ -67,6 +67,26 @@ class GetBookshelfInfoUseCaseTest {
         }
 
     @Test
+    fun getBookshelfInfo_whenRootFolderNotFound_returnsNotFoundWithoutReportingFatalError() =
+        runTest {
+            val fatalErrorUseCase = StubSendFatalErrorUseCase()
+            val useCase = GetBookshelfInfoUseCaseImpl(
+                bookshelfRepository = object : StubBookshelfRepository() {
+                    override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> =
+                        flowOf(bookshelf)
+                },
+                fileRepository = object : StubFileRepository() {
+                    override suspend fun root(id: BookshelfId): Folder? = null
+                },
+                sendFatalErrorUseCase = fatalErrorUseCase,
+            )
+
+            val result = useCase(bookshelfId).first()
+            assertEquals(Resource.Error(GetBookshelfInfoUseCase.Error.NotFound), result)
+            assertEquals(0, fatalErrorUseCase.reportedThrowables.size)
+        }
+
+    @Test
     fun getBookshelfInfo_whenRootThrowsException_reportsFatalErrorAndReturnsSystemError() =
         runTest {
             val fatalErrorUseCase = StubSendFatalErrorUseCase()

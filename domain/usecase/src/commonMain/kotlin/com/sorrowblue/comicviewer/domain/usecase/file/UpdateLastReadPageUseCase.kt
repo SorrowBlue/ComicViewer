@@ -17,28 +17,42 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Updates the last read page and reading timestamp for a book in the local database.
+ */
 abstract class UpdateLastReadPageUseCase :
     OneShotUseCase<UpdateLastReadPageUseCase.Request, Unit, Unit>() {
 
-    data class Request(
-        val bookshelfId: BookshelfId,
-        val path: String,
-        val lastReadPage: Int,
-        val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
-    )
+    /**
+     * Request parameters for [UpdateLastReadPageUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf containing the book.
+     * @property path The path of the book.
+     * @property lastReadPage The index of the last read page.
+     */
+    data class Request(val bookshelfId: BookshelfId, val path: String, val lastReadPage: Int)
 }
 
-@Inject
 @ContributesBinding(AppScope::class)
-internal class UpdateLastReadPageUseCaseImpl(private val fileRepository: FileRepository) :
-    UpdateLastReadPageUseCase() {
+internal class UpdateLastReadPageUseCaseImpl(
+    private val fileRepository: FileRepository,
+    private val clock: Clock,
+) : UpdateLastReadPageUseCase() {
+
+    @Inject
+    constructor(
+        fileRepository: FileRepository,
+    ) : this(
+        fileRepository = fileRepository,
+        clock = Clock.System,
+    )
 
     override suspend fun run(request: Request): Resource<Unit, Unit> = runCatchingCancellable {
         fileRepository.updateHistory(
             request.path,
             request.bookshelfId,
             request.lastReadPage,
-            request.timestamp,
+            clock.now().toEpochMilliseconds(),
         )
     }.fold(
         onSuccess = { Resource.Success(Unit) },

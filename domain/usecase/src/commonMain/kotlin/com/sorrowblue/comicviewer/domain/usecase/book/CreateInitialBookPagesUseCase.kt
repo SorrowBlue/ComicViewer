@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.service.book.BookPageLayoutService
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -38,12 +39,15 @@ abstract class CreateInitialBookPagesUseCase :
 internal class CreateInitialBookPagesUseCaseImpl(private val service: BookPageLayoutService) :
     CreateInitialBookPagesUseCase() {
 
-    override suspend fun run(request: Request): Resource<List<BookPage>, Unit> {
-        val bookPages = service.createInitialPages(
-            totalPageCount = request.totalPageCount,
-            pageFormat = request.pageFormat,
-            isCompactWindow = request.isCompactWindow,
+    override suspend fun run(request: Request): Resource<List<BookPage>, Unit> =
+        runCatchingCancellable {
+            service.createInitialPages(
+                totalPageCount = request.totalPageCount,
+                pageFormat = request.pageFormat,
+                isCompactWindow = request.isCompactWindow,
+            )
+        }.fold(
+            onSuccess = { Resource.Success(it) },
+            onFailure = { Resource.Error(Unit) },
         )
-        return Resource.Success(bookPages)
-    }
 }

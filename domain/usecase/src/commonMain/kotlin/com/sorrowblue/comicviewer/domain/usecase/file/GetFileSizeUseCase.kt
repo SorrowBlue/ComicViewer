@@ -18,15 +18,35 @@ import dev.zacsweers.metro.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
+/**
+ * Observes the size in bytes of a file on remote storage by its bookshelf ID and path.
+ */
 abstract class GetFileSizeUseCase :
     UseCase<GetFileSizeUseCase.Request, Long, GetFileSizeUseCase.Error>() {
 
+    /**
+     * Request parameters for [GetFileSizeUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf containing the file.
+     * @property path The path of the file.
+     */
     data class Request(val bookshelfId: BookshelfId, val path: String)
 
+    /**
+     * Errors that can occur when retrieving a file's size.
+     */
     sealed interface Error : Resource.AppError {
+        /**
+         * Indicates that the bookshelf or file was not found.
+         */
         data object NotFound : Error
+
+        /**
+         * Indicates that a system or remote error occurred.
+         */
         data object System : Error
     }
 }
@@ -40,6 +60,7 @@ internal class GetFileSizeUseCaseImpl(
 
     override fun run(request: Request): Flow<Resource<Long, Error>> =
         bookshelfRepository.flow(request.bookshelfId)
+            .distinctUntilChanged()
             .map<Bookshelf?, Resource<Long, Error>> { bookshelf ->
                 if (bookshelf != null) {
                     runCatchingCancellable {

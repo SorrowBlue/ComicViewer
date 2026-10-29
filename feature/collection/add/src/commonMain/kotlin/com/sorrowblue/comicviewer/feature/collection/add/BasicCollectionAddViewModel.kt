@@ -15,7 +15,7 @@ import com.sorrowblue.comicviewer.domain.model.collection.CollectionType
 import com.sorrowblue.comicviewer.domain.usecase.collection.AddCollectionFileUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.PagingCollectionExistUseCase
 import com.sorrowblue.comicviewer.domain.usecase.collection.RemoveCollectionFileUseCase
-import com.sorrowblue.comicviewer.domain.usecase.settings.CollectionSettingsUseCase
+import com.sorrowblue.comicviewer.domain.usecase.settings.ManageCollectionSettingsUseCase
 import com.sorrowblue.comicviewer.feature.collection.add.component.CollectionSort
 import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import dev.zacsweers.metro.AppScope
@@ -41,7 +41,7 @@ internal class BasicCollectionAddViewModel(
     @Assisted private val bookshelfId: BookshelfId,
     @Assisted private val path: String,
     pagingCollectionExistUseCase: PagingCollectionExistUseCase,
-    private val collectionSettingsUseCase: CollectionSettingsUseCase,
+    private val collectionSettingsUseCase: ManageCollectionSettingsUseCase,
     private val removeCollectionFileUseCase: RemoveCollectionFileUseCase,
     private val addCollectionFileUseCase: AddCollectionFileUseCase,
 ) : ViewModel() {

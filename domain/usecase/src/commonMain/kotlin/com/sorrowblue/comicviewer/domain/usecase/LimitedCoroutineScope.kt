@@ -16,13 +16,12 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
 /**
- * Custom [CoroutineScope] that limits the number of concurrently executing coroutines using a [Semaphore].
+ * Scope that limits the number of concurrently executing coroutines using a [Semaphore].
  *
  * @param underlying The wrapped [CoroutineScope].
  * @param limit Maximum number of concurrent executions.
  */
-internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int) :
-    CoroutineScope by underlying {
+internal class LimitedCoroutineScope(private val underlying: CoroutineScope, limit: Int) {
 
     private val semaphore = Semaphore(limit)
 

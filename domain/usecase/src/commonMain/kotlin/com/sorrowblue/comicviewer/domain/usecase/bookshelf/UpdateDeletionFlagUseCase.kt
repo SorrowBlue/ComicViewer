@@ -16,9 +16,18 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Updates the soft-deletion flag of a bookshelf.
+ */
 abstract class UpdateDeletionFlagUseCase :
     OneShotUseCase<UpdateDeletionFlagUseCase.Request, Unit, Unit>() {
 
+    /**
+     * Request parameters for [UpdateDeletionFlagUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf to update.
+     * @property deleted Whether the bookshelf is marked as deleted.
+     */
     data class Request(val bookshelfId: BookshelfId, val deleted: Boolean)
 }
 

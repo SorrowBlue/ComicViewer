@@ -14,11 +14,15 @@ import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
+import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
+import com.sorrowblue.comicviewer.domain.model.settings.folder.GridColumnSize
+import com.sorrowblue.comicviewer.domain.model.settings.folder.SortType
 import com.sorrowblue.comicviewer.domain.usecase.StubBookshelfRepository
 import com.sorrowblue.comicviewer.domain.usecase.StubFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.StubSettingsRepository
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,7 +40,7 @@ import kotlinx.coroutines.test.runTest
 class PagingFileUseCaseTest {
 
     @Test
-    fun pagingFile_whenFindByReturnsNull_returnsEmptyFlow() = runTest {
+    fun pagingFile_whenFlowEmitsNull_returnsEmptyFlow() = runTest {
         val bookshelfId = BookshelfId(1)
         val bookshelf = DeviceStorage(
             id = bookshelfId,
@@ -49,7 +53,8 @@ class PagingFileUseCaseTest {
                 override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
             },
             fileRepository = object : StubFileRepository() {
-                override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = null
+                override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> =
+                    flowOf(null)
             },
             settingsRepository = StubSettingsRepository(),
         )
@@ -62,7 +67,7 @@ class PagingFileUseCaseTest {
     }
 
     @Test
-    fun pagingFile_whenFindByReturnsBookFile_returnsEmptyFlow() = runTest {
+    fun pagingFile_whenFlowEmitsBookFile_returnsEmptyFlow() = runTest {
         val bookshelfId = BookshelfId(1)
         val bookshelf = DeviceStorage(
             id = bookshelfId,
@@ -84,7 +89,8 @@ class PagingFileUseCaseTest {
                 override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
             },
             fileRepository = object : StubFileRepository() {
-                override suspend fun findBy(bookshelfId: BookshelfId, path: String): File = bookFile
+                override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> =
+                    flowOf(bookFile)
             },
             settingsRepository = StubSettingsRepository(),
         )
@@ -97,7 +103,7 @@ class PagingFileUseCaseTest {
     }
 
     @Test
-    fun pagingFile_whenFindByThrowsException_returnsEmptyFlow() = runTest {
+    fun pagingFile_whenFlowThrowsException_returnsEmptyFlow() = runTest {
         val bookshelfId = BookshelfId(1)
         val bookshelf = DeviceStorage(
             id = bookshelfId,
@@ -110,8 +116,9 @@ class PagingFileUseCaseTest {
                 override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
             },
             fileRepository = object : StubFileRepository() {
-                override suspend fun findBy(bookshelfId: BookshelfId, path: String): File =
+                override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = flow {
                     throw IllegalStateException("DB error")
+                }
             },
             settingsRepository = StubSettingsRepository(),
         )
@@ -121,6 +128,68 @@ class PagingFileUseCaseTest {
         ).toList()
 
         assertTrue(items.isEmpty())
+    }
+
+    @Test
+    fun pagingFile_whenFolderAddedLater_recoversAndStartsPagingFlow() = runTest {
+        val bookshelfId = BookshelfId(1)
+        val bookshelf = DeviceStorage(
+            id = bookshelfId,
+            displayName = "Shelf",
+            fileCount = 0,
+            isDeleted = false,
+        )
+        val folder = Folder(
+            bookshelfId = bookshelfId,
+            name = "manga",
+            parent = "",
+            path = "/manga",
+            size = 0,
+            lastModifier = 0,
+            isHidden = false,
+        )
+        val fileState = MutableStateFlow<File?>(null)
+        var innerPagingActive = false
+
+        val useCase = PagingFileUseCaseImpl(
+            bookshelfRepository = object : StubBookshelfRepository() {
+                override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
+            },
+            fileRepository = object : StubFileRepository() {
+                override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = fileState
+                override fun pagingDataFlow(
+                    pagingConfig: PagingConfig,
+                    bookshelf: Bookshelf,
+                    file: File,
+                    searchCondition: () -> SearchCondition,
+                ): Flow<PagingData<File>> = flow {
+                    innerPagingActive = true
+                    try {
+                        emit(PagingData.empty())
+                        awaitCancellation()
+                    } finally {
+                        innerPagingActive = false
+                    }
+                }
+            },
+            settingsRepository = object : StubSettingsRepository() {
+                override val folderDisplaySettings: Flow<FolderDisplaySettings> =
+                    flowOf(FolderDisplaySettings())
+            },
+        )
+
+        val job = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            useCase(
+                PagingFileUseCase.Request(PagingConfig(20), bookshelfId, folder.path),
+            ).collect {}
+        }
+
+        assertFalse(innerPagingActive)
+
+        fileState.value = folder
+        assertTrue(innerPagingActive)
+
+        job.cancel()
     }
 
     @Test
@@ -149,7 +218,9 @@ class PagingFileUseCaseTest {
                 override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = bookshelfState
             },
             fileRepository = object : StubFileRepository() {
-                override suspend fun findBy(bookshelfId: BookshelfId, path: String): File = folder
+                override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> =
+                    flowOf(folder)
+
                 override fun pagingDataFlow(
                     pagingConfig: PagingConfig,
                     bookshelf: Bookshelf,
@@ -186,7 +257,7 @@ class PagingFileUseCaseTest {
     }
 
     @Test
-    fun pagingFolderBookThumbnails_whenFindByThrowsException_returnsEmptyFlow() = runTest {
+    fun pagingFolderBookThumbnails_whenFlowThrowsException_returnsEmptyFlow() = runTest {
         val bookshelfId = BookshelfId(1)
         val bookshelf = DeviceStorage(
             id = bookshelfId,
@@ -199,8 +270,9 @@ class PagingFileUseCaseTest {
                 override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
             },
             fileRepository = object : StubFileRepository() {
-                override suspend fun findBy(bookshelfId: BookshelfId, path: String): File =
+                override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = flow {
                     throw IllegalStateException("DB error")
+                }
             },
             settingsRepository = StubSettingsRepository(),
         )
@@ -210,5 +282,72 @@ class PagingFileUseCaseTest {
         ).toList()
 
         assertTrue(items.isEmpty())
+    }
+
+    @Test
+    fun pagingFile_whenUiOnlySettingsChange_doesNotRecreatePagingFlow() = runTest {
+        val bookshelfId = BookshelfId(1)
+        val bookshelf = DeviceStorage(
+            id = bookshelfId,
+            displayName = "Shelf",
+            fileCount = 0,
+            isDeleted = false,
+        )
+        val folder = Folder(
+            bookshelfId = bookshelfId,
+            name = "manga",
+            parent = "",
+            path = "/manga",
+            size = 0,
+            lastModifier = 0,
+            isHidden = false,
+        )
+        val settingsState = MutableStateFlow(FolderDisplaySettings(sortType = SortType.Name(true)))
+        var pagingFlowCreationCount = 0
+
+        val useCase = PagingFileUseCaseImpl(
+            bookshelfRepository = object : StubBookshelfRepository() {
+                override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)
+            },
+            fileRepository = object : StubFileRepository() {
+                override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> =
+                    flowOf(folder)
+
+                override fun pagingDataFlow(
+                    pagingConfig: PagingConfig,
+                    bookshelf: Bookshelf,
+                    file: File,
+                    searchCondition: () -> SearchCondition,
+                ): Flow<PagingData<File>> = flow {
+                    pagingFlowCreationCount++
+                    emit(PagingData.empty())
+                    awaitCancellation()
+                }
+            },
+            settingsRepository = object : StubSettingsRepository() {
+                override val folderDisplaySettings: Flow<FolderDisplaySettings> = settingsState
+            },
+        )
+
+        val job = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            useCase(
+                PagingFileUseCase.Request(PagingConfig(20), bookshelfId, folder.path),
+            ).collect {}
+        }
+
+        assertEquals(1, pagingFlowCreationCount)
+
+        // Changing UI-only properties should NOT recreate the PagingData flow
+        settingsState.value = settingsState.value.copy(
+            fileListDisplay = FileListDisplay.List,
+            gridColumnSize = GridColumnSize.Large,
+        )
+        assertEquals(1, pagingFlowCreationCount)
+
+        // Changing effective sortType SHOULD recreate the PagingData flow
+        settingsState.value = settingsState.value.copy(sortType = SortType.Date(false))
+        assertEquals(2, pagingFlowCreationCount)
+
+        job.cancel()
     }
 }

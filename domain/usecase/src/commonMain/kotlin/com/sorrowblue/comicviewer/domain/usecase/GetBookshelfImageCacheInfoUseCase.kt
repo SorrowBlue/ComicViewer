@@ -16,9 +16,14 @@ import dev.zacsweers.metro.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * Observes image cache information for all registered bookshelves.
+ */
 abstract class GetBookshelfImageCacheInfoUseCase :
     UseCase<Unit, List<BookshelfImageCacheInfo>, Unit>()
 
@@ -30,30 +35,35 @@ internal class GetBookshelfImageCacheInfoUseCaseImpl(
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetBookshelfImageCacheInfoUseCase() {
 
-    override fun run(request: Unit): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> =
+    override fun run(request: Unit): Flow<Resource<List<BookshelfImageCacheInfo>, Unit>> = flow {
         bookshelfRepository.allBookshelf().fold(
-            onSuccess = { flow ->
-                flow.map<List<Bookshelf>, Resource<List<BookshelfImageCacheInfo>, Unit>> {
-                    Resource.Success(imageCacheInfoList(it))
-                }.catch { e ->
-                    if (e is CancellationException) throw e
-                    sendFatalErrorUseCase(SendFatalErrorUseCase.Request(e))
-                    emit(Resource.Error(Unit))
-                }
+            onSuccess = { bookshelfFlow ->
+                emitAll(
+                    bookshelfFlow
+                        .distinctUntilChanged()
+                        .map<List<Bookshelf>, Resource<List<BookshelfImageCacheInfo>, Unit>> {
+                            Resource.Success(imageCacheInfoList(it))
+                        },
+                )
             },
             onError = {
-                flow {
-                    sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
-                    emit(Resource.Error(Unit))
-                }
+                if (it.throwable is CancellationException) throw it.throwable
+                sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
+                emit(Resource.Error(Unit))
             },
         )
+    }.catch { e ->
+        if (e is CancellationException) throw e
+        sendFatalErrorUseCase(SendFatalErrorUseCase.Request(e))
+        emit(Resource.Error(Unit))
+    }
 
     private suspend fun imageCacheInfoList(list: List<Bookshelf>): List<BookshelfImageCacheInfo> =
         list.mapNotNull { bookshelf ->
             imageCacheRepository.getBookshelfImageCacheInfo(bookshelf).fold(
                 onSuccess = { it },
                 onError = {
+                    if (it.throwable is CancellationException) throw it.throwable
                     sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
                     null
                 },

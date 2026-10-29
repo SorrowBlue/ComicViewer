@@ -11,6 +11,9 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Use case for observing and updating general application [Settings].
+ */
 interface LoadSettingsUseCase : ManageSettingsUseCase<Settings>
 
 @Inject

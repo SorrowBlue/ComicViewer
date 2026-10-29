@@ -14,17 +14,33 @@ import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Clears cached images for a specific bookshelf or other non-bookshelf caches.
+ */
 abstract class ClearImageCacheUseCase :
     OneShotUseCase<ClearImageCacheUseCase.Request, Unit, Unit>() {
 
+    /**
+     * Request parameters for [ClearImageCacheUseCase].
+     */
     sealed interface Request
 
+    /**
+     * Request to clear a specific [imageCache] associated with a [bookshelfId].
+     *
+     * @property bookshelfId The ID of the bookshelf whose cache should be cleared.
+     * @property imageCache The image cache metadata to clear.
+     */
     data class BookshelfRequest(val bookshelfId: BookshelfId, val imageCache: ImageCache) : Request
 
+    /**
+     * Request to clear other image caches not tied to a specific bookshelf.
+     */
     data object OtherRequest : Request
 }
 
@@ -45,6 +61,7 @@ internal class ClearImageCacheUseCaseImpl(
                     Resource.Success(Unit)
                 },
                 onError = {
+                    if (it.throwable is CancellationException) throw it.throwable
                     logcat(LogPriority.ERROR) { it.throwable.asLog() }
                     Resource.Error(Unit)
                 },

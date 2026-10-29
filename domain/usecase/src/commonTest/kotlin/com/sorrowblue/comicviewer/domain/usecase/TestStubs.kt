@@ -96,7 +96,7 @@ internal open class StubFileRepository : FileRepository {
         searchCondition: () -> SearchCondition,
     ): Flow<PagingData<File>> = TODO()
 
-    override suspend fun addUpdate(fileModel: File): Unit = TODO()
+    override suspend fun addUpdate(file: File): Unit = TODO()
     override suspend fun updateHistory(
         path: String,
         bookshelfId: BookshelfId,
@@ -111,7 +111,7 @@ internal open class StubFileRepository : FileRepository {
         totalPage: Int,
     ): Unit = TODO()
 
-    override suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError> = TODO()
+    override suspend fun updateSimple(file: File): Resource<File, FileRepositoryQueryError> = TODO()
     override fun pagingSource(
         bookshelfId: BookshelfId,
         pagingConfig: PagingConfig,
@@ -119,26 +119,26 @@ internal open class StubFileRepository : FileRepository {
 
     override fun flow(bookshelfId: BookshelfId, path: String): Flow<File?> = TODO()
     override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? = TODO()
-    override fun nextFileModel(
+    override fun nextFile(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): Flow<File?> = TODO()
 
-    override fun nextFileModel(
+    override fun nextFile(
         bookshelfId: BookshelfId,
         path: String,
         searchCondition: SearchCondition,
         sortType: SortType,
     ): Flow<File?> = TODO()
 
-    override fun prevFileModel(
+    override fun prevFile(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): Flow<File?> = TODO()
 
-    override fun prevFileModel(
+    override fun prevFile(
         bookshelfId: BookshelfId,
         path: String,
         searchCondition: SearchCondition,
@@ -149,7 +149,7 @@ internal open class StubFileRepository : FileRepository {
         bookshelfId: BookshelfId,
         parent: String,
         limit: Int,
-        folderThumbnailOrderModel: FolderThumbnailOrder,
+        folderThumbnailOrder: FolderThumbnailOrder,
     ): List<String> = TODO()
 
     override suspend fun removeCacheKey(diskCacheKey: String): Unit = TODO()
@@ -159,8 +159,8 @@ internal open class StubFileRepository : FileRepository {
 
     override suspend fun clearCacheKey(bookshelfId: BookshelfId): Unit = TODO()
     override suspend fun deleteAllHistory(): Unit = TODO()
-    override suspend fun updateHistory(file: File, files: List<File>): Unit = TODO()
-    override suspend fun deleteAll(bookshelfModelId: BookshelfId): Unit = TODO()
+    override suspend fun syncFolderFiles(file: File, files: List<File>): Unit = TODO()
+    override suspend fun deleteAll(bookshelfId: BookshelfId): Unit = TODO()
     override suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String> = TODO()
     override fun lastHistory(): Flow<File?> = TODO()
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> =

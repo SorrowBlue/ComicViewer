@@ -9,9 +9,9 @@ import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.BookFile
 import com.sorrowblue.comicviewer.domain.model.file.Folder
+import com.sorrowblue.comicviewer.domain.model.file.NavigationHistory
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.usecase.GetNavigationHistoryUseCase
-import com.sorrowblue.comicviewer.domain.usecase.NavigationHistory
 import com.sorrowblue.comicviewer.domain.usecase.settings.ManageDisplaySettingsUseCase
 import com.sorrowblue.comicviewer.framework.test.SmallTest
 import kotlin.test.AfterTest
@@ -98,7 +98,7 @@ class ComicViewerAppViewModelTest {
             )
             fakeDisplaySettingsUseCase.flow.value = DisplaySettings(restoreOnLaunch = true)
             fakeGetNavigationHistoryUseCase.result = Resource.Success(
-                NavigationHistory(folders to book),
+                NavigationHistory(folders, book),
             )
 
             val viewModel = ComicViewerAppViewModel(

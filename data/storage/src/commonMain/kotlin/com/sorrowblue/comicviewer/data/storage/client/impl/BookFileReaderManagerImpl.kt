@@ -21,8 +21,10 @@ import logcat.logcat
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 @Inject
-internal class BookFileReaderManagerImpl(private val fileClientFactory: FileClientFactory) :
-    BookFileReaderManager {
+internal class BookFileReaderManagerImpl(
+    private val fileClientFactory: FileClientFactory,
+    private val imageFolderFileReaderFactory: ImageFolderFileReader.Factory,
+) : BookFileReaderManager {
 
     private var fileReader: BookFileReader? = null
     private var book: Book? = null
@@ -30,12 +32,23 @@ internal class BookFileReaderManagerImpl(private val fileClientFactory: FileClie
 
     override suspend fun get(bookshelf: Bookshelf, book: Book): BookFileReader = mutex.withLock {
         val currentReader = fileReader
-        if (currentReader != null && this.book == book) {
+        val currentBook = this.book
+        if (
+            currentReader != null &&
+            currentBook != null &&
+            currentBook.bookshelfId == book.bookshelfId &&
+            currentBook.path == book.path &&
+            currentBook.lastModifier == book.lastModifier
+        ) {
             logcat { "同じFileReaderを使う。${book.bookshelfId} ${book.path}" }
             currentReader
         } else {
-            currentReader?.close()
-            val newReader = fileClientFactory.getFileClient(bookshelf).fileReader(book)
+            fileReader = null
+            this.book = null
+            runCatching { currentReader?.close() }
+            val newReader = fileClientFactory
+                .getFileClient(bookshelf)
+                .fileReader(book, imageFolderFileReaderFactory)
             fileReader = newReader
             this.book = book
             newReader
@@ -44,11 +57,17 @@ internal class BookFileReaderManagerImpl(private val fileClientFactory: FileClie
 
     override suspend fun close(book: Book) {
         mutex.withLock {
-            if (this.book == book) {
+            val currentBook = this.book
+            if (
+                currentBook != null &&
+                currentBook.bookshelfId == book.bookshelfId &&
+                currentBook.path == book.path
+            ) {
                 logcat { "FileReaderをクローズする。${book.bookshelfId} ${book.path}" }
-                fileReader?.close()
+                val currentReader = fileReader
                 fileReader = null
                 this.book = null
+                currentReader?.close()
             }
         }
     }

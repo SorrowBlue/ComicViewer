@@ -8,6 +8,11 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
+/**
+ * General application settings.
+ *
+ * @property doneTutorial Whether the initial onboarding tutorial has been completed.
+ */
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class Settings(

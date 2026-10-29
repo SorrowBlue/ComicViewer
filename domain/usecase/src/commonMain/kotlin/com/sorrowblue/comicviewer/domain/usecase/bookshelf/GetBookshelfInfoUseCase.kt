@@ -18,14 +18,27 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
+/**
+ * Observes a [BookshelfFolder] combining a [Bookshelf] and its root folder by [BookshelfId].
+ */
 abstract class GetBookshelfInfoUseCase :
     UseCase<BookshelfId, BookshelfFolder, GetBookshelfInfoUseCase.Error>() {
 
+    /**
+     * Errors that can occur when retrieving bookshelf information.
+     */
     sealed interface Error : Resource.AppError {
+        /**
+         * Indicates that the bookshelf or its root folder was not found.
+         */
         data object NotFound : Error
 
+        /**
+         * Indicates that a system error occurred.
+         */
         data object System : Error
     }
 }
@@ -38,8 +51,9 @@ internal class GetBookshelfInfoUseCaseImpl(
     private val sendFatalErrorUseCase: SendFatalErrorUseCase,
 ) : GetBookshelfInfoUseCase() {
 
-    override fun run(request: BookshelfId) =
-        bookshelfRepository.flow(request).map<Bookshelf?, Resource<BookshelfFolder, Error>> {
+    override fun run(request: BookshelfId) = bookshelfRepository.flow(request)
+        .distinctUntilChanged()
+        .map<Bookshelf?, Resource<BookshelfFolder, Error>> {
             if (it == null) {
                 return@map Resource.Error(Error.NotFound)
             }

@@ -15,16 +15,27 @@ import dev.zacsweers.metro.Inject
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Observes the list of all registered [Bookshelf] items.
+ */
 abstract class FlowBookshelfListUseCase :
     UseCase<Unit, List<Bookshelf>, FlowBookshelfListUseCase.Error>() {
 
+    /**
+     * Errors that can occur when observing the bookshelf list.
+     */
     sealed interface Error : Resource.AppError {
+        /**
+         * Indicates that a system or database error occurred.
+         */
         data object System : Error
     }
 }
@@ -34,20 +45,26 @@ abstract class FlowBookshelfListUseCase :
 internal class FlowBookshelfListUseCaseImpl(private val bookshelfRepository: BookshelfRepository) :
     FlowBookshelfListUseCase() {
 
-    override fun run(request: Unit): Flow<Resource<List<Bookshelf>, Error>> =
+    override fun run(request: Unit): Flow<Resource<List<Bookshelf>, Error>> = flow {
         bookshelfRepository.allBookshelf().fold(
-            onSuccess = { flow ->
-                flow.map<List<Bookshelf>, Resource<List<Bookshelf>, Error>> {
-                    Resource.Success(it)
-                }.catch { e ->
-                    if (e is CancellationException) throw e
-                    logcat(LogPriority.ERROR) { e.asLog() }
-                    emit(Resource.Error(Error.System))
-                }
+            onSuccess = { bookshelfFlow ->
+                emitAll(
+                    bookshelfFlow
+                        .distinctUntilChanged()
+                        .map<List<Bookshelf>, Resource<List<Bookshelf>, Error>> {
+                            Resource.Success(it)
+                        },
+                )
             },
             onError = {
+                if (it.throwable is CancellationException) throw it.throwable
                 logcat(LogPriority.ERROR) { it.throwable.asLog() }
-                flowOf(Resource.Error(Error.System))
+                emit(Resource.Error(Error.System))
             },
         )
+    }.catch { e ->
+        if (e is CancellationException) throw e
+        logcat(LogPriority.ERROR) { e.asLog() }
+        emit(Resource.Error(Error.System))
+    }
 }

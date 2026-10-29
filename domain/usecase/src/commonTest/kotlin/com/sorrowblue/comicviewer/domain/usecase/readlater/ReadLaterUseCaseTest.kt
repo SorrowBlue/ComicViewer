@@ -10,8 +10,13 @@ import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.usecase.StubReadLaterFileRepository
 import com.sorrowblue.comicviewer.domain.usecase.StubSendFatalErrorUseCase
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -28,6 +33,9 @@ class ReadLaterUseCaseTest {
     @Test
     fun addReadLaterUseCase_returnsPersistedEntityFromRepository() = runTest {
         val fatalErrorUseCase = StubSendFatalErrorUseCase()
+        val fixedClock = object : Clock {
+            override fun now(): Instant = Instant.fromEpochMilliseconds(123_456L)
+        }
         val useCase = AddReadLaterUseCaseImpl(
             readLaterFileRepository = object : StubReadLaterFileRepository() {
                 override suspend fun updateOrAdd(
@@ -35,10 +43,12 @@ class ReadLaterUseCaseTest {
                 ): Resource<ReadLaterFile, Resource.SystemError> {
                     assertEquals(bookshelfId, file.bookshelfId)
                     assertEquals(path, file.path)
+                    assertEquals(123_456L, file.modifiedDate)
                     return Resource.Success(persistedReadLaterFile)
                 }
             },
             sendFatalErrorUseCase = fatalErrorUseCase,
+            clock = fixedClock,
         )
 
         val req1 = AddReadLaterUseCase.Request(bookshelfId, path)
@@ -168,4 +178,47 @@ class ReadLaterUseCaseTest {
             assertEquals(Resource.Error(Unit), result)
             assertEquals(listOf<Throwable>(expectedException), fatalErrorUseCase.reportedThrowables)
         }
+
+    @Test
+    fun addReadLaterUseCase_whenRepositoryReturnsCancellationError_rethrowsWithoutReporting() =
+        runTest {
+            val fatalErrorUseCase = StubSendFatalErrorUseCase()
+            val useCase = AddReadLaterUseCaseImpl(
+                readLaterFileRepository = object : StubReadLaterFileRepository() {
+                    override suspend fun updateOrAdd(
+                        file: ReadLaterFile,
+                    ): Resource<ReadLaterFile, Resource.SystemError> =
+                        Resource.Error(Resource.SystemError(CancellationException("Cancelled")))
+                },
+                sendFatalErrorUseCase = fatalErrorUseCase,
+            )
+
+            assertFailsWith<CancellationException> {
+                useCase(AddReadLaterUseCase.Request(bookshelfId, path))
+            }
+            assertEquals(0, fatalErrorUseCase.reportedThrowables.size)
+        }
+
+    @Test
+    fun existsReadLaterUseCase_isColdFlow_doesNotQueryRepositoryUntilCollected() = runTest {
+        val fatalErrorUseCase = StubSendFatalErrorUseCase()
+        var existsQueried = false
+        val useCase = ExistsReadLaterUseCaseImpl(
+            readLaterFileRepository = object : StubReadLaterFileRepository() {
+                override fun exists(
+                    file: ReadLaterFile,
+                ): Resource<Flow<Boolean>, Resource.SystemError> {
+                    existsQueried = true
+                    return Resource.Success(flowOf(true))
+                }
+            },
+            sendFatalErrorUseCase = fatalErrorUseCase,
+        )
+
+        val flow = useCase(ExistsReadLaterUseCase.Request(bookshelfId, path))
+        assertFalse(existsQueried)
+
+        val result = flow.first()
+        assertEquals(Resource.Success(true), result)
+    }
 }

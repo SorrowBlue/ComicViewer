@@ -9,6 +9,13 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
+/**
+ * Settings controlling folder scanning and file recognition behavior.
+ *
+ * @property isAutoRefresh Whether folders automatically refresh when opened.
+ * @property supportExtension List of archive and document extensions recognized as books.
+ * @property resolveImageFolder Whether folders directly containing images are treated as books.
+ */
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class FolderSettings(

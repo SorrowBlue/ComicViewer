@@ -11,7 +11,11 @@ import com.sorrowblue.comicviewer.domain.repository.ImageCacheRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
+/**
+ * Retrieves information about image caches not associated with a specific bookshelf.
+ */
 abstract class GetOtherImageCacheInfoUseCase : OneShotUseCase<Unit, OtherImageCache, Unit>()
 
 @Inject
@@ -28,6 +32,7 @@ internal class GetOtherImageCacheInfoUseCaseImpl(
                     Resource.Success(it)
                 },
                 onError = {
+                    if (it.throwable is CancellationException) throw it.throwable
                     sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
                     Resource.Error(Unit)
                 },
