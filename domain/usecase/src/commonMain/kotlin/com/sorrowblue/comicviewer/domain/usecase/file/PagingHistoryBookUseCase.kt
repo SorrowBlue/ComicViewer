@@ -12,6 +12,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+/**
+ * Observes paginated [Book] items ordered by reading history.
+ */
 fun interface PagingHistoryBookUseCase : PagingUseCase<PagingConfig, Book>
 
 @Inject

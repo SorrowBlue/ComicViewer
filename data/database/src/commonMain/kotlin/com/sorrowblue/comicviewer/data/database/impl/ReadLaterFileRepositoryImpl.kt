@@ -17,6 +17,7 @@ import com.sorrowblue.comicviewer.domain.model.readlater.ReadLaterFile
 import com.sorrowblue.comicviewer.domain.repository.ReadLaterFileRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -30,7 +31,10 @@ internal class ReadLaterFileRepositoryImpl(private val readLaterFileDao: ReadLat
             readLaterFileDao.upsert(ReadLaterFileEntity.fromModel(file))
         }.fold(
             onSuccess = { Resource.Success(file) },
-            onFailure = { Resource.Error(Resource.SystemError(it)) },
+            onFailure = {
+                if (it is CancellationException) throw it
+                Resource.Error(Resource.SystemError(it))
+            },
         )
 
     override fun exists(file: ReadLaterFile): Resource<Flow<Boolean>, Resource.SystemError> = kotlin
@@ -38,26 +42,33 @@ internal class ReadLaterFileRepositoryImpl(private val readLaterFileDao: ReadLat
             readLaterFileDao.exists(file.bookshelfId.value, file.path)
         }.fold(
             onSuccess = { Resource.Success(it) },
-            onFailure = { Resource.Error(Resource.SystemError(it)) },
+            onFailure = {
+                if (it is CancellationException) throw it
+                Resource.Error(Resource.SystemError(it))
+            },
         )
 
     override suspend fun delete(file: ReadLaterFile): Resource<Unit, Resource.SystemError> = kotlin
         .runCatching {
             readLaterFileDao.delete(ReadLaterFileEntity.fromModel(file))
-        }.fold({
-            Resource.Success(Unit)
-        }, {
-            Resource.Error(Resource.SystemError(it))
-        })
+        }.fold(
+            onSuccess = { Resource.Success(Unit) },
+            onFailure = {
+                if (it is CancellationException) throw it
+                Resource.Error(Resource.SystemError(it))
+            },
+        )
 
     override suspend fun deleteAll(): Resource<Unit, Resource.SystemError> = kotlin
         .runCatching {
             readLaterFileDao.deleteAll()
-        }.fold({
-            Resource.Success(Unit)
-        }, {
-            Resource.Error(Resource.SystemError(it))
-        })
+        }.fold(
+            onSuccess = { Resource.Success(Unit) },
+            onFailure = {
+                if (it is CancellationException) throw it
+                Resource.Error(Resource.SystemError(it))
+            },
+        )
 
     override fun pagingDataFlow(pagingConfig: PagingConfig): Flow<PagingData<File>> = Pager(
         pagingConfig,

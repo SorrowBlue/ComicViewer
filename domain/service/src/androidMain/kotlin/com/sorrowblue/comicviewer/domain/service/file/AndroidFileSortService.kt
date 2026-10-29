@@ -24,11 +24,12 @@ internal class AndroidFileSortService : FileSortService {
             val lo = Collator.getInstance(Locale.getDefault()) as RuleBasedCollator
             val icuCollator = RuleBasedCollator(us.rules + lo.rules).apply {
                 strength = Collator.PRIMARY
-                numericCollation = true
             }
-            val compareFunc: (String, String) -> Int = { a, b -> icuCollator.compare(a, b) }
+            val compareFunc: (String, String) -> Int = { a, b ->
+                compareNatural(a, b) { chunkA, chunkB -> icuCollator.compare(chunkA, chunkB) }
+            }
             compareFunc
-        } catch (_: Throwable) {
+        } catch (_: Exception) {
             val us = JavaCollator.getInstance(Locale.US) as java.text.RuleBasedCollator
             val lo = JavaCollator.getInstance(Locale.getDefault()) as java.text.RuleBasedCollator
             val javaCollator = java.text.RuleBasedCollator(us.rules + lo.rules).apply {

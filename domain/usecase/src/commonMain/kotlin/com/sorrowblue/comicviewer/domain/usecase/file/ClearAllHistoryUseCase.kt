@@ -15,6 +15,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Clears all reading history records from the local database.
+ */
 abstract class ClearAllHistoryUseCase : OneShotUseCase<Unit, Unit, Unit>()
 
 @Inject

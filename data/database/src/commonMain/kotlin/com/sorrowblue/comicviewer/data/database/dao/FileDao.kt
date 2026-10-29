@@ -301,7 +301,9 @@ internal fun FileDao.flowPrevNextFile(
         add("bookshelf_id = c_bookshelf_id")
         add("file_type != 'FOLDER'")
         add("path != c_path")
-        add("($column $op c_$column OR ($column = c_$column AND path $op c_path))")
+        add(
+            "($column $op c_$column OR ($column = c_$column AND sort_index $op c_sort_index) OR ($column = c_$column AND sort_index = c_sort_index AND path $op c_path))",
+        )
         addSearchConditionClauses(searchCondition, bindArgs)
     }
 
@@ -313,7 +315,7 @@ internal fun FileDao.flowPrevNextFile(
           file
         , (
           SELECT
-            bookshelf_id c_bookshelf_id, path c_path, $column c_$column
+            bookshelf_id c_bookshelf_id, path c_path, sort_index c_sort_index, $column c_$column
           FROM
             file
           WHERE
@@ -322,7 +324,7 @@ internal fun FileDao.flowPrevNextFile(
         WHERE
           ${selectionStr.joinToString(" AND ")}
         ORDER BY
-          $column $order, path $order
+          $column $order, sort_index $order, path $order
         LIMIT 1
         ;
         """.trimIndent(),

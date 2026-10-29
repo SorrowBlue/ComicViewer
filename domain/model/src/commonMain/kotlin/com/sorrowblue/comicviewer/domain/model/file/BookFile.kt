@@ -7,6 +7,22 @@ package com.sorrowblue.comicviewer.domain.model.file
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 
+/**
+ * Represents an archive or document file treated as a [Book].
+ *
+ * @property bookshelfId The identifier of the bookshelf containing this book file.
+ * @property name The file name including extension.
+ * @property parent The parent folder path.
+ * @property path The full path of the file within the bookshelf.
+ * @property size The file size in bytes.
+ * @property lastModifier The last modified epoch millisecond timestamp.
+ * @property isHidden Whether the file is hidden.
+ * @property cacheKey The key used for thumbnail caching.
+ * @property lastPageRead The zero-based index of the last read page.
+ * @property totalPageCount The total number of pages in the book.
+ * @property lastReadTime The epoch millisecond timestamp when the book was last read.
+ * @property sortIndex The sort position index within the parent folder.
+ */
 data class BookFile private constructor(
     override val bookshelfId: BookshelfId,
     override val name: String,
@@ -21,8 +37,12 @@ data class BookFile private constructor(
     override val lastReadTime: Long,
     override val sortIndex: Int,
 ) : Book {
+    /** The lowercase file extension of this book file. */
     val extension get() = name.extension
 
+    /**
+     * Returns a copy of this [BookFile] with updated structural or metadata properties.
+     */
     fun copy(
         bookshelfId: BookshelfId = this.bookshelfId,
         parent: String = this.parent,
@@ -39,6 +59,9 @@ data class BookFile private constructor(
     )
 
     companion object {
+        /**
+         * Creates or reconstructs a [BookFile] instance.
+         */
         @InternalDataApi
         operator fun invoke(
             bookshelfId: BookshelfId,

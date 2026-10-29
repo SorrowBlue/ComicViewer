@@ -22,6 +22,7 @@ import com.sorrowblue.comicviewer.domain.model.file.Folder
 import com.sorrowblue.comicviewer.domain.repository.BookshelfRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -95,6 +96,7 @@ internal class BookshelfRepositoryImpl(
                 Resource.Success(it)
             },
             onFailure = {
+                if (it is CancellationException) throw it
                 Resource.Error(Resource.SystemError(it))
             },
         )

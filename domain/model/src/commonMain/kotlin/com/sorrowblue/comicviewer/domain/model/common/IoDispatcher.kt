@@ -6,6 +6,9 @@ package com.sorrowblue.comicviewer.domain.model.common
 
 import dev.zacsweers.metro.Qualifier
 
+/**
+ * Dependency injection qualifier for the I/O coroutine dispatcher.
+ */
 @Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 @Qualifier

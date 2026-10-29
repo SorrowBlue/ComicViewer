@@ -85,14 +85,12 @@ internal class ManageFolderDisplaySettingsUseCaseImpl(
     }
 
     private suspend fun updateWithResult(
-        block: (FolderDisplaySettings) -> FolderSortSettingsService.UpdateResult,
+        transform: (FolderDisplaySettings) -> FolderSortSettingsService.UpdateResult,
     ): Boolean {
-        var isSortTypeChanged = false
-        edit { current ->
-            val result = block(current)
-            isSortTypeChanged = result.isSortTypeChanged
-            result.settings
+        var result: FolderSortSettingsService.UpdateResult? = null
+        settingsRepository.updateFolderDisplaySettings { current ->
+            transform(current).also { result = it }.settings
         }
-        return isSortTypeChanged
+        return result?.isSortTypeChanged ?: false
     }
 }

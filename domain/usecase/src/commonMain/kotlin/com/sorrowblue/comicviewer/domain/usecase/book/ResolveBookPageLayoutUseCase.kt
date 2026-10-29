@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.service.book.BookPageLayoutService
 import com.sorrowblue.comicviewer.domain.usecase.OneShotUseCase
+import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -38,12 +39,15 @@ abstract class ResolveBookPageLayoutUseCase :
 internal class ResolveBookPageLayoutUseCaseImpl(private val service: BookPageLayoutService) :
     ResolveBookPageLayoutUseCase() {
 
-    override suspend fun run(request: Request): Resource<List<PageItem>, Unit> {
-        val pageItems = service.resolvePage(
-            currentList = request.currentList,
-            unratedPage = request.unratedPage,
-            isPortrait = request.isPortrait,
+    override suspend fun run(request: Request): Resource<List<PageItem>, Unit> =
+        runCatchingCancellable {
+            service.resolvePage(
+                currentList = request.currentList,
+                unratedPage = request.unratedPage,
+                isPortrait = request.isPortrait,
+            )
+        }.fold(
+            onSuccess = { Resource.Success(it) },
+            onFailure = { Resource.Error(Unit) },
         )
-        return Resource.Success(pageItems)
-    }
 }

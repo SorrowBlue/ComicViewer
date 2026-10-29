@@ -12,6 +12,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+/**
+ * Observes paginated [File] items registered in the "read later" list.
+ */
 fun interface PagingReadLaterFileUseCase : PagingUseCase<PagingConfig, File>
 
 @Inject

@@ -16,6 +16,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Removes a [CollectionFile] from a basic collection.
+ */
 abstract class RemoveCollectionFileUseCase : OneShotUseCase<CollectionFile, Unit, Unit>()
 
 @Inject

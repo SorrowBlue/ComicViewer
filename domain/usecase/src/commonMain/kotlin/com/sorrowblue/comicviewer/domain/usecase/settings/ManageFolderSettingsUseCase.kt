@@ -11,6 +11,9 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Use case for observing and updating [FolderSettings].
+ */
 interface ManageFolderSettingsUseCase : ManageSettingsUseCase<FolderSettings>
 
 @Inject

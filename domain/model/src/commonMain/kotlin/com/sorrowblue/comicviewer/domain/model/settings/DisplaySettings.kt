@@ -8,6 +8,12 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
+/**
+ * Application-wide display settings.
+ *
+ * @property darkMode The selected theme appearance mode.
+ * @property restoreOnLaunch Whether to restore the last opened book on application launch.
+ */
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class DisplaySettings(

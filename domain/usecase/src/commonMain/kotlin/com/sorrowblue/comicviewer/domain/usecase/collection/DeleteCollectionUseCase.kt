@@ -16,6 +16,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Deletes a collection by its [CollectionId].
+ */
 abstract class DeleteCollectionUseCase : OneShotUseCase<CollectionId, Unit, Unit>()
 
 @Inject

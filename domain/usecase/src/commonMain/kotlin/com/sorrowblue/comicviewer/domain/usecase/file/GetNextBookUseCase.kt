@@ -26,9 +26,20 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
 import logcat.logcat
 
+/**
+ * Resolves the next or previous [Book] relative to a given file path in a folder or collection.
+ */
 abstract class GetNextBookUseCase :
     OneShotUseCase<GetNextBookUseCase.Request, Book, GetNextBookUseCase.Error>() {
 
+    /**
+     * Request parameters for [GetNextBookUseCase].
+     *
+     * @property bookshelfId The bookshelf ID of the current book.
+     * @property path The path of the current book.
+     * @property location The browsing context (folder or collection).
+     * @property isNext Whether to resolve the next book (`true`) or previous book (`false`).
+     */
     data class Request(
         val bookshelfId: BookshelfId,
         val path: String,
@@ -36,14 +47,35 @@ abstract class GetNextBookUseCase :
         val isNext: Boolean,
     )
 
+    /**
+     * Represents the browsing context for book navigation.
+     */
     sealed interface Location {
+        /**
+         * Navigating within a folder hierarchy.
+         */
         data object Folder : Location
 
+        /**
+         * Navigating within a specific collection.
+         *
+         * @property collectionId The ID of the collection.
+         */
         data class Collection(val collectionId: CollectionId) : Location
     }
 
+    /**
+     * Errors that can occur when resolving the next or previous book.
+     */
     enum class Error : Resource.AppError {
+        /**
+         * Indicates that a system error occurred.
+         */
         System,
+
+        /**
+         * Indicates that no adjacent book was found.
+         */
         NotFound,
     }
 }
@@ -93,9 +125,9 @@ internal class GetNextBookUseCaseImpl(
         )
 
         val modelFlow = if (isNext) {
-            fileRepository.nextFileModel(bookshelfId, path, sortType)
+            fileRepository.nextFile(bookshelfId, path, sortType)
         } else {
-            fileRepository.prevFileModel(bookshelfId, path, sortType)
+            fileRepository.prevFile(bookshelfId, path, sortType)
         }
         return modelFlow.first()
     }
@@ -126,14 +158,14 @@ internal class GetNextBookUseCaseImpl(
 
             is SmartCollection -> {
                 if (isNext) {
-                    fileRepository.nextFileModel(
+                    fileRepository.nextFile(
                         bookshelfId,
                         path,
                         collection.searchCondition,
                         sortType,
                     )
                 } else {
-                    fileRepository.prevFileModel(
+                    fileRepository.prevFile(
                         bookshelfId,
                         path,
                         collection.searchCondition,

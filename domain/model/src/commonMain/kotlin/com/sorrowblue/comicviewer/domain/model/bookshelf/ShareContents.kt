@@ -4,6 +4,9 @@
 
 package com.sorrowblue.comicviewer.domain.model.bookshelf
 
+/**
+ * Represents a temporary [Bookshelf] for shared external content.
+ */
 data object ShareContents : Bookshelf {
     override val id: BookshelfId = BookshelfId()
 

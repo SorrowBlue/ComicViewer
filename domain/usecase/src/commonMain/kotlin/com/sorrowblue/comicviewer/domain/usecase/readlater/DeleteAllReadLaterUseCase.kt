@@ -13,7 +13,11 @@ import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
+/**
+ * Deletes all files from the "read later" list.
+ */
 abstract class DeleteAllReadLaterUseCase : OneShotUseCase<Unit, Unit, Unit>()
 
 @Inject
@@ -27,6 +31,7 @@ internal class DeleteAllReadLaterUseCaseImpl(
         readLaterFileRepository.deleteAll().fold(
             onSuccess = { Resource.Success(Unit) },
             onError = {
+                if (it.throwable is CancellationException) throw it.throwable
                 sendFatalErrorUseCase(SendFatalErrorUseCase.Request(it.throwable))
                 Resource.Error(Unit)
             },

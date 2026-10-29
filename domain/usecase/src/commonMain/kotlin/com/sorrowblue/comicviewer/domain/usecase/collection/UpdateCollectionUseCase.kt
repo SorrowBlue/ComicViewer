@@ -16,6 +16,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Updates an existing [Collection].
+ */
 abstract class UpdateCollectionUseCase : OneShotUseCase<Collection, Unit, Unit>()
 
 @Inject

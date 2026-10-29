@@ -22,6 +22,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 
@@ -78,8 +79,8 @@ class RegisterBookshelfUseCaseTest {
 
         val fileRepository = object : StubFileRepository() {
             override suspend fun root(id: BookshelfId): Folder? = null
-            override suspend fun addUpdate(fileModel: File) {
-                savedFile = fileModel
+            override suspend fun addUpdate(file: File) {
+                savedFile = file
             }
         }
 
@@ -295,5 +296,77 @@ class RegisterBookshelfUseCaseTest {
 
         assertTrue(result is Resource.Error)
         assertEquals(RegisterBookshelfUseCase.Error.System, result.error)
+    }
+
+    @Test
+    fun registerBookshelf_whenRootPathChangedAndUpdateFails_doesNotDeleteThumbnails() = runTest {
+        val existingBookshelf = DeviceStorage(
+            id = BookshelfId(1),
+            displayName = "ExistingShelf",
+            fileCount = 10,
+            isDeleted = false,
+        )
+        val oldPath = "/storage/emulated/0/OldManga"
+        val newPath = "/storage/emulated/0/NewManga"
+        var thumbnailsDeleted = false
+
+        val remoteClientFactory = object : RemoteStorageClient.Factory {
+            override fun create(bookshelf: Bookshelf): RemoteStorageClient =
+                object : StubRemoteStorageClient() {
+                    override suspend fun connect(path: String) = Unit
+
+                    override suspend fun file(path: String, resolveImageFolder: Boolean): File =
+                        Folder(
+                            bookshelfId = bookshelf.id,
+                            name = "NewManga",
+                            parent = "/storage/emulated/0",
+                            path = path,
+                            size = 0,
+                            lastModifier = 100L,
+                            isHidden = false,
+                        )
+                }
+        }
+
+        val fileRepository = object : StubFileRepository() {
+            override suspend fun root(id: BookshelfId): Folder = Folder(
+                bookshelfId = existingBookshelf.id,
+                name = "OldManga",
+                parent = "",
+                path = oldPath,
+                size = 0,
+                lastModifier = 50L,
+                isHidden = false,
+            )
+
+            override suspend fun getCacheKeyList(bookshelfId: BookshelfId): List<String> =
+                listOf("cache_1", "cache_2")
+        }
+
+        val bookshelfRepository = object : StubBookshelfRepository() {
+            override suspend fun updateOrCreate(
+                bookshelf: Bookshelf,
+                transaction: suspend (Bookshelf) -> Unit,
+            ): Bookshelf? = null
+        }
+
+        val imageCacheRepository = object : StubImageCacheRepository() {
+            override suspend fun deleteThumbnails(list: List<String>) {
+                thumbnailsDeleted = true
+            }
+        }
+
+        val useCase = RegisterBookshelfUseCaseImpl(
+            fileRepository = fileRepository,
+            bookshelfRepository = bookshelfRepository,
+            remoteStorageClientFactory = remoteClientFactory,
+            imageCacheRepository = imageCacheRepository,
+        )
+
+        val result = useCase(RegisterBookshelfUseCase.Request(existingBookshelf, newPath))
+
+        assertTrue(result is Resource.Error)
+        assertEquals(RegisterBookshelfUseCase.Error.System, result.error)
+        assertFalse(thumbnailsDeleted)
     }
 }

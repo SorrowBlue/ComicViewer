@@ -22,6 +22,7 @@ import com.sorrowblue.comicviewer.domain.service.file.FileSortService
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -76,6 +77,7 @@ internal class FileModelRemoteMediator(
             }.fold({
                 return MediatorResult.Success(endOfPaginationReached = true)
             }, {
+                if (it is CancellationException) throw it
                 logcat(LogPriority.ERROR) { it.message.orEmpty() }
                 val error = if (it is RemoteException) {
                     when (it) {

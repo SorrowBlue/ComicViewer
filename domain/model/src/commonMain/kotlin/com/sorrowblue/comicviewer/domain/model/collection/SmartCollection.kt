@@ -12,6 +12,17 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+/**
+ * Represents a dynamic [Collection] populated based on a [SearchCondition].
+ *
+ * @property id The unique identifier of the collection.
+ * @property name The display name of the collection.
+ * @property count The number of items in the collection.
+ * @property createdAt The timestamp when the collection was created.
+ * @property updatedAt The timestamp when the collection was last updated.
+ * @property bookshelfId Optional bookshelf filter for the search condition.
+ * @property searchCondition The search condition defining the collection contents.
+ */
 data class SmartCollection private constructor(
     override val id: CollectionId,
     override val name: String,
@@ -21,12 +32,14 @@ data class SmartCollection private constructor(
     val bookshelfId: BookshelfId?,
     val searchCondition: SearchCondition,
 ) : Collection {
+
+    /**
+     * Returns a copy of this [SmartCollection] with updated properties.
+     */
     fun copy(
         name: String = this.name,
         bookshelfId: BookshelfId? = this.bookshelfId,
         searchCondition: SearchCondition = this.searchCondition,
-        updatedAt: LocalDateTime =
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     ): SmartCollection = copy(
         id = id,
         name = name,
@@ -36,6 +49,9 @@ data class SmartCollection private constructor(
     )
 
     companion object {
+        /**
+         * Creates a new [SmartCollection] with the specified search parameters.
+         */
         operator fun invoke(
             name: String,
             bookshelfId: BookshelfId?,
@@ -55,6 +71,9 @@ data class SmartCollection private constructor(
             )
         }
 
+        /**
+         * Reconstructs a [SmartCollection] instance from persisted fields.
+         */
         @InternalDataApi
         operator fun invoke(
             id: CollectionId,

@@ -16,6 +16,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Adds a [CollectionFile] to a basic collection.
+ */
 abstract class AddCollectionFileUseCase : OneShotUseCase<CollectionFile, Unit, Unit>()
 
 @Inject

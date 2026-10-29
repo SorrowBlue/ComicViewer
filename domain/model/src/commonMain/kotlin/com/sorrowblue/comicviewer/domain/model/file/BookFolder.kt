@@ -7,6 +7,23 @@ package com.sorrowblue.comicviewer.domain.model.file
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 
+/**
+ * Represents a folder of images treated directly as a [Book].
+ *
+ * @property bookshelfId The identifier of the bookshelf containing this book folder.
+ * @property name The folder name.
+ * @property parent The parent folder path.
+ * @property path The full path of the folder within the bookshelf.
+ * @property size The folder size in bytes.
+ * @property lastModifier The last modified epoch millisecond timestamp.
+ * @property isHidden Whether the folder is hidden.
+ * @property cacheKey The key used for thumbnail caching.
+ * @property lastPageRead The zero-based index of the last read page.
+ * @property totalPageCount The total number of pages in the book folder.
+ * @property lastReadTime The epoch millisecond timestamp when the book folder was last read.
+ * @property sortIndex The sort position index within the parent folder.
+ * @property count The number of child entries in the folder.
+ */
 data class BookFolder private constructor(
     override val bookshelfId: BookshelfId,
     override val name: String,
@@ -23,6 +40,9 @@ data class BookFolder private constructor(
     override val count: Int,
 ) : Book,
     IFolder {
+    /**
+     * Returns a copy of this [BookFolder] with updated structural or metadata properties.
+     */
     fun copy(
         bookshelfId: BookshelfId = this.bookshelfId,
         parent: String = this.parent,
@@ -39,6 +59,9 @@ data class BookFolder private constructor(
     )
 
     companion object {
+        /**
+         * Creates or reconstructs a [BookFolder] instance.
+         */
         @InternalDataApi
         operator fun invoke(
             bookshelfId: BookshelfId,

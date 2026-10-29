@@ -7,6 +7,20 @@ package com.sorrowblue.comicviewer.domain.model.file
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 
+/**
+ * Represents a directory folder within a bookshelf.
+ *
+ * @property bookshelfId The identifier of the bookshelf containing this folder.
+ * @property name The folder name.
+ * @property parent The parent folder path.
+ * @property path The full path of the folder within the bookshelf.
+ * @property size The folder size in bytes.
+ * @property lastModifier The last modified epoch millisecond timestamp.
+ * @property isHidden Whether the folder is hidden.
+ * @property sortIndex The sort position index within the parent folder.
+ * @property cacheKey The key used for thumbnail caching.
+ * @property count The number of child entries in the folder.
+ */
 data class Folder private constructor(
     override val bookshelfId: BookshelfId,
     override val name: String,
@@ -19,6 +33,9 @@ data class Folder private constructor(
     override val cacheKey: String,
     override val count: Int,
 ) : IFolder {
+    /**
+     * Returns a copy of this [Folder] with updated structural or metadata properties.
+     */
     fun copy(
         bookshelfId: BookshelfId = this.bookshelfId,
         parent: String = this.parent,
@@ -33,6 +50,9 @@ data class Folder private constructor(
     )
 
     companion object {
+        /**
+         * Creates or reconstructs a [Folder] instance.
+         */
         @InternalDataApi
         operator fun invoke(
             bookshelfId: BookshelfId,

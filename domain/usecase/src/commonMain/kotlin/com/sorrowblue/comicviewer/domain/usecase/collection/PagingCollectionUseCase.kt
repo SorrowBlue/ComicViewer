@@ -12,6 +12,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 
+/**
+ * Observes paginated [Collection] items.
+ */
 fun interface PagingCollectionUseCase : PagingUseCase<PagingConfig, Collection>
 
 @Inject

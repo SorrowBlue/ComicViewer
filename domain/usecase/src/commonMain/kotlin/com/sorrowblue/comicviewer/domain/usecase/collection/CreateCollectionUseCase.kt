@@ -16,6 +16,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Creates a new [Collection].
+ */
 abstract class CreateCollectionUseCase : OneShotUseCase<Collection, Collection, Unit>()
 
 @Inject

@@ -14,10 +14,20 @@ import com.sorrowblue.comicviewer.domain.usecase.runCatchingCancellable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
+/**
+ * Removes a specific file from the "read later" list.
+ */
 abstract class DeleteReadLaterUseCase :
     OneShotUseCase<DeleteReadLaterUseCase.Request, Unit, Unit>() {
 
+    /**
+     * Request parameters for [DeleteReadLaterUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf containing the file.
+     * @property path The path of the file to remove from "read later".
+     */
     data class Request(val bookshelfId: BookshelfId, val path: String)
 }
 
@@ -37,6 +47,9 @@ internal class DeleteReadLaterUseCaseImpl(
             is Resource.Success -> Resource.Success(Unit)
 
             is Resource.Error -> {
+                if (result.error.throwable is CancellationException) {
+                    throw result.error.throwable
+                }
                 sendFatalErrorUseCase(SendFatalErrorUseCase.Request(result.error.throwable))
                 Resource.Error(Unit)
             }

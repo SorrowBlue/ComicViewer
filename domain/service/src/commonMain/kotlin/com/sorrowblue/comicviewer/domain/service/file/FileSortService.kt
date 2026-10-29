@@ -50,7 +50,7 @@ interface FileSortService {
         /**
          * Returns the default [FileSortService] implementation for the current platform.
          */
-        operator fun invoke(): FileSortService = defaultFileSortService()
+        internal operator fun invoke(): FileSortService = defaultFileSortService()
     }
 }
 
@@ -79,7 +79,11 @@ internal fun compareNatural(a: String, b: String, compareText: (String, String) 
         indexB = endB
     }
     val remainingCmp = (a.length - indexA).compareTo(b.length - indexB)
-    return if (remainingCmp != 0) remainingCmp else zeroLengthTieBreaker
+    return when {
+        remainingCmp != 0 -> remainingCmp
+        zeroLengthTieBreaker != 0 -> zeroLengthTieBreaker
+        else -> a.compareTo(b)
+    }
 }
 
 private fun findChunkEnd(text: String, start: Int): Int {

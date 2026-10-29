@@ -67,13 +67,13 @@ interface FolderSortSettingsService {
         /**
          * Creates an instance of [FolderSortSettingsService].
          */
-        operator fun invoke(): FolderSortSettingsService = FolderSortSettingsServiceImpl()
+        internal operator fun invoke(): FolderSortSettingsService = FolderSortSettingsServiceImpl()
     }
 }
 
 @ContributesBinding(AppScope::class)
 @Inject
-class FolderSortSettingsServiceImpl : FolderSortSettingsService {
+internal class FolderSortSettingsServiceImpl : FolderSortSettingsService {
 
     override fun updateSortType(
         settings: FolderDisplaySettings,

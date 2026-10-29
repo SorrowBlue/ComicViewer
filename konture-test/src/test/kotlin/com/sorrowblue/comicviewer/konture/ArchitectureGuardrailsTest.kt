@@ -10,11 +10,13 @@ import io.github.baole.konture.classes
 import io.github.baole.konture.modules
 import kotlin.test.Test
 
+/**
+ * Architecture guardrail tests verifying module dependencies and class structure conventions.
+ */
 class ArchitectureGuardrailsTest {
 
     /**
-     * モジュール間の循環依存がないことを保証する。
-     * 循環依存はビルドエラーの原因となり、モジュールの独立性を損なう。
+     * Ensures there are no cyclic dependencies between modules.
      */
     @Test
     fun `no cycles between modules`() {
@@ -22,8 +24,7 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * :domain:model が他のモジュールに依存していないことを保証する（:core:logger を除く）。
-     * domain:model はプロジェクトの最下位レイヤーであり、純粋なKotlinモデルのみを含む。
+     * Ensures `:domain:model` does not depend on any other project modules (except `:core:logger`).
      */
     @Test
     fun `domain model does not depend on other layer`() {
@@ -34,8 +35,7 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * :domain:usecase が :domain:model, :domain:repository, :domain:service 以外に依存しないことを保証する（:core:logger を除く）。
-     * usecase はビジネスルールを定義・実行し、実装詳細を知ってはならない。
+     * Ensures `:domain:usecase` only depends on `:domain:model`, `:domain:repository`, and `:domain:service` (plus `:core:logger`).
      */
     @Test
     fun `domain usecase only depends on domain model, repository and service`() {
@@ -52,8 +52,7 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * :domain:service が :domain:model 以外に依存しないことを保証する（:core:logger を除く）。
-     * service はドメインロジックをカプセル化し、上位層や実装詳細を知ってはならない。
+     * Ensures `:domain:service` only depends on `:domain:model` (plus `:core:logger`).
      */
     @Test
     fun `domain service only depends on domain model`() {
@@ -64,8 +63,7 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * :domain:repository が :domain:model 以外に依存しないことを保証する（:core:logger を除く）。
-     * repository はデータアクセスの抽象インターフェースを定義し、実装詳細を知ってはならない。
+     * Ensures `:domain:repository` only depends on `:domain:model` (plus `:core:logger`).
      */
     @Test
     fun `domain repository only depends on domain model`() {
@@ -76,7 +74,7 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * feature層がdata層に直接依存しないことを保証する。
+     * Ensures the `feature` layer does not directly depend on the `data` layer.
      */
     @Test
     fun `feature layer does not directly depend on data layer`() {
@@ -87,8 +85,8 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * framework層が data層、feature層に依存しないことを保証する。
-     * また、UI以外のframework層は domain:usecase にも依存しない。
+     * Ensures the `framework` layer does not depend on `data` or `feature` layers,
+     * and non-UI `framework` modules do not depend on `:domain:usecase`.
      */
     @Test
     fun `framework layer does not depend on feature layer`() {
@@ -107,19 +105,38 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * すべての RepositoryImpl クラス（リポジトリの実装）が internal であることを保証する。
+     * Ensures all `RepositoryImpl`, `ServiceImpl`, and `UseCaseImpl` classes are `internal`.
      */
     @Test
-    fun `repository implementations are internal`() {
+    fun `repository, service, and usecase implementations are internal`() {
         Konture.classes()
             .allowEmpty()
             .that().nameEndsWith("RepositoryImpl")
             .should().beInternal()
             .check()
+
+        listOf(
+            "ServiceImpl",
+            "AndroidFileSortService",
+            "JvmFileSortService",
+            "IosFileSortService",
+        ).forEach { suffix ->
+            Konture.classes()
+                .allowEmpty()
+                .that().nameEndsWith(suffix)
+                .should().beInternal()
+                .check()
+        }
+
+        Konture.classes()
+            .allowEmpty()
+            .that().nameEndsWith("UseCaseImpl")
+            .should().beInternal()
+            .check()
     }
 
     /**
-     * ドメイン層の Repository インターフェースがインターフェースであることを保証する。
+     * Ensures all `Repository` declarations in the domain layer are interfaces.
      */
     @Test
     fun `repository interfaces are interfaces`() {
@@ -132,7 +149,7 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * ViewModel クラスが domain, data レイヤーに存在しないことを保証する。
+     * Ensures `ViewModel` classes do not reside in `domain` or `data` layers.
      */
     @Test
     fun `viewmodels do not reside in domain or data layers`() {
@@ -145,7 +162,7 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * data層が feature層、app層に依存しないことを保証する。
+     * Ensures the `data` layer does not depend on `feature` or `app` layers.
      */
     @Test
     fun `data layer does not depend on feature and app layers`() {
@@ -156,10 +173,8 @@ class ArchitectureGuardrailsTest {
     }
 
     /**
-     * feature層のモジュール同士が直接依存しないことを保証する。
-     * featureモジュール間の画面遷移は :feature:*:nav を介して疎結合に行う必要がある。
-     * 同一フィーチャーグループ内のサブモジュール（例: :feature:settings -> :feature:settings:common）
-     * またはナビゲーションモジュール（:feature:*:nav）への依存のみ許可される。
+     * Ensures `feature` modules do not directly depend on other `feature` modules,
+     * except submodules within the same feature group or `:nav` navigation modules.
      */
     @Test
     fun `feature modules do not directly depend on other feature modules`() {

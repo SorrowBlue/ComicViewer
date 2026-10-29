@@ -11,12 +11,16 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
 
-interface CollectionSettingsUseCase : ManageSettingsUseCase<CollectionSettings>
+/**
+ * Use case for observing and updating [CollectionSettings].
+ */
+interface ManageCollectionSettingsUseCase : ManageSettingsUseCase<CollectionSettings>
 
 @Inject
 @ContributesBinding(AppScope::class)
-internal class CollectionSettingsUseCaseImpl(private val settingsRepository: SettingsRepository) :
-    CollectionSettingsUseCase {
+internal class ManageCollectionSettingsUseCaseImpl(
+    private val settingsRepository: SettingsRepository,
+) : ManageCollectionSettingsUseCase {
 
     override val settings: Flow<CollectionSettings> = settingsRepository.collectionSettings
 

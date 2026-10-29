@@ -8,10 +8,18 @@ import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
 
+/**
+ * Unique identifier for a [Bookshelf].
+ *
+ * @property value The underlying integer ID value.
+ */
 @Serializable
 @JvmInline
 value class BookshelfId @InternalDataApi constructor(val value: Int) {
     companion object {
+        /**
+         * Creates a default uninitialized [BookshelfId].
+         */
         @OptIn(InternalDataApi::class)
         operator fun invoke() = BookshelfId(0)
     }

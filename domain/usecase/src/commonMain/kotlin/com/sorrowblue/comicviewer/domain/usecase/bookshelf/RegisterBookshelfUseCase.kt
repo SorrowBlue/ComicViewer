@@ -22,20 +22,47 @@ import dev.zacsweers.metro.Inject
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Validates connectivity and registers or updates a [Bookshelf] along with its root folder.
+ */
 abstract class RegisterBookshelfUseCase :
     OneShotUseCase<RegisterBookshelfUseCase.Request, Bookshelf, RegisterBookshelfUseCase.Error>() {
 
+    /**
+     * Request parameters for [RegisterBookshelfUseCase].
+     *
+     * @property bookshelf The bookshelf configuration to register or update.
+     * @property path The root folder path on the storage.
+     */
     data class Request(val bookshelf: Bookshelf, val path: String)
 
+    /**
+     * Errors that can occur when registering a bookshelf.
+     */
     sealed interface Error : Resource.AppError {
+        /**
+         * Indicates that the remote server or host could not be reached.
+         */
         data object Host : Error
 
+        /**
+         * Indicates that the specified path does not exist or is not a folder.
+         */
         data object Path : Error
 
+        /**
+         * Indicates that authentication failed.
+         */
         data object Auth : Error
 
+        /**
+         * Indicates that a network connectivity error occurred.
+         */
         data object Network : Error
 
+        /**
+         * Indicates that an unexpected system error occurred.
+         */
         data object System : Error
     }
 }
@@ -68,14 +95,17 @@ internal class RegisterBookshelfUseCaseImpl(
         file: IFolder,
     ): Resource<Bookshelf, Error> {
         val root = fileRepository.root(targetBookshelf.id)
-        if (root != null && root.path != file.path) {
-            // 別の本棚を登録する場合、一旦削除
-            imageCacheRepository.deleteThumbnails(
-                fileRepository.getCacheKeyList(targetBookshelf.id),
-            )
-            fileRepository.deleteAll(targetBookshelf.id)
+        val isRootPathChanged = root != null && root.path != file.path
+        val oldCacheKeys = if (isRootPathChanged) {
+            fileRepository.getCacheKeyList(targetBookshelf.id)
+        } else {
+            emptyList()
         }
         val bookshelf = bookshelfRepository.updateOrCreate(targetBookshelf) { created ->
+            if (isRootPathChanged) {
+                // 別の本棚を登録する場合、一旦削除
+                fileRepository.deleteAll(targetBookshelf.id)
+            }
             val folderModel = when (file) {
                 is BookFolder -> file.copy(
                     bookshelfId = created.id,
@@ -90,6 +120,9 @@ internal class RegisterBookshelfUseCaseImpl(
             fileRepository.addUpdate(folderModel)
         }
         return if (bookshelf != null) {
+            if (oldCacheKeys.isNotEmpty()) {
+                imageCacheRepository.deleteThumbnails(oldCacheKeys)
+            }
             Resource.Success(bookshelf)
         } else {
             Resource.Error(Error.System)

@@ -16,6 +16,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +35,8 @@ internal class ComicViewerAppViewModel(
 ) : ViewModel() {
 
     private var isNavigationRestored = false
+    private var restorationJob: Job? = null
+    private var timeoutJob: Job? = null
 
     fun restore(allowNavigationRestored: Boolean) {
         if (isNavigationRestored) return
@@ -65,17 +68,20 @@ internal class ComicViewerAppViewModel(
     }
 
     fun completeNavigationRestore() {
+        restorationJob?.cancel()
+        restorationJob = null
+        timeoutJob?.cancel()
+        timeoutJob = null
         isInitializedNavigation.value = true
         completeScreenInitialize()
     }
 
     private fun restoreNavigationWithTimeout() {
-        val restorationJob = viewModelScope.launch {
+        restorationJob = viewModelScope.launch {
             restoreNavigation()
         }
-        viewModelScope.launch {
+        timeoutJob = viewModelScope.launch {
             delay(RESTORE_TIMEOUT_MILLIS.milliseconds)
-            restorationJob.cancel()
             completeNavigationRestore()
         }
     }
@@ -87,7 +93,7 @@ internal class ComicViewerAppViewModel(
             return
         }
 
-        val (folderList, book) = history.value
+        val (folderList, book) = history
         val bookshelfId = folderList.first().bookshelfId
 
         if (folderList.size == 1) {

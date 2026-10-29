@@ -16,6 +16,9 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
+/**
+ * Closes any active file reader resources associated with the specified [Book].
+ */
 abstract class CloseBookUseCase : OneShotUseCase<Book, Unit, Unit>()
 
 @Inject

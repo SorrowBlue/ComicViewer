@@ -9,7 +9,6 @@ import com.sorrowblue.comicviewer.domain.model.common.InternalDataApi
 import com.sorrowblue.comicviewer.domain.model.search.SearchCondition
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
@@ -35,12 +34,9 @@ class CollectionTest {
         assertEquals(expectedCreatedAt, created.createdAt)
         assertEquals(expectedCreatedAt, created.updatedAt)
 
-        val nextUpdatedAt = LocalDateTime(2024, 1, 1, 0, 0, 0)
-        val updated = created.copy(name = "Renamed", updatedAt = nextUpdatedAt)
-        assertEquals("Renamed", updated.name)
-        assertEquals(expectedCreatedAt, updated.createdAt)
-        assertEquals(nextUpdatedAt, updated.updatedAt)
-        assertTrue(updated.updatedAt > updated.createdAt)
+        val preserved = created.copy(name = "Preserved")
+        assertEquals("Preserved", preserved.name)
+        assertEquals(expectedCreatedAt, preserved.updatedAt)
     }
 
     @Test
@@ -58,10 +54,8 @@ class CollectionTest {
         assertEquals(expectedCreatedAt, created.createdAt)
         assertEquals(expectedCreatedAt, created.updatedAt)
 
-        val nextUpdatedAt = LocalDateTime(2024, 1, 1, 0, 0, 0)
-        val updated = created.copy(name = "Smart Renamed", updatedAt = nextUpdatedAt)
-        assertEquals("Smart Renamed", updated.name)
-        assertEquals(expectedCreatedAt, updated.createdAt)
-        assertEquals(nextUpdatedAt, updated.updatedAt)
+        val preserved = created.copy(name = "Smart Preserved")
+        assertEquals("Smart Preserved", preserved.name)
+        assertEquals(expectedCreatedAt, preserved.updatedAt)
     }
 }

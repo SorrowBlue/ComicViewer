@@ -37,6 +37,7 @@ import com.sorrowblue.comicviewer.domain.repository.FileRepository
 import com.sorrowblue.comicviewer.domain.repository.FileRepositoryQueryError
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -82,14 +83,15 @@ internal class FileRepositoryImpl(
     }
 
     override suspend fun fileList(bookshelfId: BookshelfId, limit: Int, offset: Long): List<File> =
-        dao.fileList(bookshelfId.value, limit, offset).first().map {
-            it.toModel()
+        withContext(dispatcher) {
+            dao.fileList(bookshelfId.value, limit, offset).first().map {
+                it.toModel()
+            }
         }
 
-    override suspend fun count(bookshelfId: BookshelfId): Long = dao
-        .count(
-            bookshelfId.value,
-        ).first()
+    override suspend fun count(bookshelfId: BookshelfId): Long = withContext(dispatcher) {
+        dao.count(bookshelfId.value).first()
+    }
 
     override fun pagingDataFlow(
         pagingConfig: PagingConfig,
@@ -99,9 +101,9 @@ internal class FileRepositoryImpl(
         dao.pagingSourceFileSearch(bookshelfId, searchCondition())
     }.flow.map { it.map(QueryFileWithCountEntity::toModel) }
 
-    override suspend fun addUpdate(fileModel: File) {
+    override suspend fun addUpdate(file: File) {
         withContext(dispatcher) {
-            dao.upsert(FileEntity.fromModel(fileModel))
+            dao.upsert(FileEntity.fromModel(file))
         }
     }
 
@@ -138,12 +140,12 @@ internal class FileRepositoryImpl(
         }
     }
 
-    override suspend fun updateSimple(list: File): Resource<File, FileRepositoryQueryError> =
+    override suspend fun updateSimple(file: File): Resource<File, FileRepositoryQueryError> =
         withContext(
             dispatcher,
         ) {
             runCatching {
-                dao.updateSimpleGet(UpdateFileEntityMinimum.fromModel(list))?.toModel()
+                dao.updateSimpleGet(UpdateFileEntityMinimum.fromModel(file))?.toModel()
             }.fold(
                 onSuccess = {
                     if (it != null) {
@@ -153,6 +155,7 @@ internal class FileRepositoryImpl(
                     }
                 },
                 onFailure = {
+                    if (it is CancellationException) throw it
                     Resource.Error(FileRepositoryQueryError.SystemError(it))
                 },
             )
@@ -185,14 +188,14 @@ internal class FileRepositoryImpl(
             it?.toModel()
         }
 
-    override fun nextFileModel(
+    override fun nextFile(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): Flow<File?> = flowPrevNextFile(bookshelfId, path, true, sortType)
         .map { it.firstOrNull()?.toModel() }
 
-    override fun nextFileModel(
+    override fun nextFile(
         bookshelfId: BookshelfId,
         path: String,
         searchCondition: SearchCondition,
@@ -200,14 +203,14 @@ internal class FileRepositoryImpl(
     ): Flow<File?> = dao.flowPrevNextFile(bookshelfId, path, searchCondition, true, sortType)
         .map { it.firstOrNull()?.toModel() }
 
-    override fun prevFileModel(
+    override fun prevFile(
         bookshelfId: BookshelfId,
         path: String,
         sortType: SortType,
     ): Flow<File?> = flowPrevNextFile(bookshelfId, path, false, sortType)
         .map { it.firstOrNull()?.toModel() }
 
-    override fun prevFileModel(
+    override fun prevFile(
         bookshelfId: BookshelfId,
         path: String,
         searchCondition: SearchCondition,
@@ -219,9 +222,9 @@ internal class FileRepositoryImpl(
         bookshelfId: BookshelfId,
         parent: String,
         limit: Int,
-        folderThumbnailOrderModel: FolderThumbnailOrder,
+        folderThumbnailOrder: FolderThumbnailOrder,
     ): List<String> = withContext(dispatcher) {
-        when (folderThumbnailOrderModel) {
+        when (folderThumbnailOrder) {
             FolderThumbnailOrder.NAME -> dao.findCacheKeyOrderSortIndex(
                 bookshelfId.value,
                 "$parent%",
@@ -268,15 +271,15 @@ internal class FileRepositoryImpl(
         }
     }
 
-    override suspend fun updateHistory(file: File, files: List<File>) {
+    override suspend fun syncFolderFiles(file: File, files: List<File>) {
         withContext(dispatcher) {
             dao.updateSame(FileEntity.fromModel(file), files.map(FileEntity.Companion::fromModel))
         }
     }
 
-    override suspend fun deleteAll(bookshelfModelId: BookshelfId) {
+    override suspend fun deleteAll(bookshelfId: BookshelfId) {
         withContext(dispatcher) {
-            dao.deleteAll(bookshelfModelId.value)
+            dao.deleteAll(bookshelfId.value)
         }
     }
 
@@ -298,8 +301,8 @@ internal class FileRepositoryImpl(
             is SortType.Size -> "size"
         }
 
-        val comparison =
-            if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">=" else "<="
+        val op =
+            if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) ">" else "<"
         val order =
             if ((isNext && sortType.isAsc) || (!isNext && !sortType.isAsc)) "ASC" else "DESC"
         logcat { "$path, isNext: $isNext, sortType.isAsc: ${sortType.isAsc}" }
@@ -312,7 +315,7 @@ internal class FileRepositoryImpl(
                   file
                   , (
                     SELECT
-                      bookshelf_id c_bookshelf_id, parent c_parent, path c_path, $column c_$column
+                      bookshelf_id c_bookshelf_id, parent c_parent, path c_path, sort_index c_sort_index, $column c_$column
                     FROM
                       file
                     WHERE
@@ -323,9 +326,13 @@ internal class FileRepositoryImpl(
                   AND parent = c_parent
                   AND file_type != 'FOLDER'
                   AND path != c_path
-                  AND $column $comparison c_$column
+                  AND (
+                    $column $op c_$column
+                    OR ($column = c_$column AND sort_index $op c_sort_index)
+                    OR ($column = c_$column AND sort_index = c_sort_index AND path $op c_path)
+                  )
                 ORDER BY
-                  $column $order
+                  $column $order, sort_index $order, path $order
                 LIMIT 1
                 ;
                 """.trimIndent(),

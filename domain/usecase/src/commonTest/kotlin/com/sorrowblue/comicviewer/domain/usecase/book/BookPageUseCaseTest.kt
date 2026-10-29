@@ -6,14 +6,18 @@ package com.sorrowblue.comicviewer.domain.usecase.book
 
 import com.sorrowblue.comicviewer.domain.model.book.BookPage
 import com.sorrowblue.comicviewer.domain.model.book.PageItem
+import com.sorrowblue.comicviewer.domain.model.book.UnratedPage
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
+import com.sorrowblue.comicviewer.domain.service.book.BookPageLayoutService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.createGraph
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlinx.coroutines.test.runTest
 
@@ -56,6 +60,59 @@ class BookPageUseCaseTest {
     }
 
     @Test
+    fun createInitialBookPagesUseCase_whenServiceThrowsException_returnsError() = runTest {
+        val failingService = object : BookPageLayoutService {
+            override fun createInitialPages(
+                totalPageCount: Int,
+                pageFormat: BookSettings.PageFormat,
+                isCompactWindow: Boolean,
+            ): List<BookPage> = throw IllegalStateException("Layout error")
+
+            override fun resolvePage(
+                currentList: List<PageItem>,
+                unratedPage: UnratedPage,
+                isPortrait: Boolean,
+            ): List<PageItem> = emptyList()
+        }
+        val useCase = CreateInitialBookPagesUseCaseImpl(failingService)
+        val result = useCase(
+            CreateInitialBookPagesUseCase.Request(
+                totalPageCount = 2,
+                pageFormat = BookSettings.PageFormat.Spread,
+                isCompactWindow = false,
+            ),
+        )
+        assertEquals(Resource.Error(Unit), result)
+    }
+
+    @Test
+    fun createInitialBookPagesUseCase_whenCancelled_rethrowsCancellationException() = runTest {
+        val cancellingService = object : BookPageLayoutService {
+            override fun createInitialPages(
+                totalPageCount: Int,
+                pageFormat: BookSettings.PageFormat,
+                isCompactWindow: Boolean,
+            ): List<BookPage> = throw CancellationException("Cancelled")
+
+            override fun resolvePage(
+                currentList: List<PageItem>,
+                unratedPage: UnratedPage,
+                isPortrait: Boolean,
+            ): List<PageItem> = emptyList()
+        }
+        val useCase = CreateInitialBookPagesUseCaseImpl(cancellingService)
+        assertFailsWith<CancellationException> {
+            useCase(
+                CreateInitialBookPagesUseCase.Request(
+                    totalPageCount = 2,
+                    pageFormat = BookSettings.PageFormat.Spread,
+                    isCompactWindow = false,
+                ),
+            )
+        }
+    }
+
+    @Test
     fun resolveBookPageLayoutUseCase_delegatesToService() = runTest {
         val initialList: List<PageItem> = listOf(
             BookPage.Spread.Unrated(0),
@@ -77,5 +134,31 @@ class BookPageUseCaseTest {
             ),
             resource.data,
         )
+    }
+
+    @Test
+    fun resolveBookPageLayoutUseCase_whenServiceThrowsException_returnsError() = runTest {
+        val failingService = object : BookPageLayoutService {
+            override fun createInitialPages(
+                totalPageCount: Int,
+                pageFormat: BookSettings.PageFormat,
+                isCompactWindow: Boolean,
+            ): List<BookPage> = emptyList()
+
+            override fun resolvePage(
+                currentList: List<PageItem>,
+                unratedPage: UnratedPage,
+                isPortrait: Boolean,
+            ): List<PageItem> = throw IllegalStateException("Resolve error")
+        }
+        val useCase = ResolveBookPageLayoutUseCaseImpl(failingService)
+        val result = useCase(
+            ResolveBookPageLayoutUseCase.Request(
+                currentList = emptyList(),
+                unratedPage = BookPage.Spread.Unrated(0),
+                isPortrait = true,
+            ),
+        )
+        assertEquals(Resource.Error(Unit), result)
     }
 }

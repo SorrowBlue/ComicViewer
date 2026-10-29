@@ -16,9 +16,11 @@ sealed class FileClientException : RuntimeException() {
     class InvalidPath : FileClientException()
 }
 
-internal fun FileClientException.toRemoteException(): RemoteException = when (this) {
-    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth()
-    is FileClientException.InvalidPath -> RemoteException.NotFound()
-    is FileClientException.InvalidServer -> RemoteException.InvalidServer()
-    is FileClientException.NoNetwork -> RemoteException.NoNetwork()
+internal fun Throwable.toRemoteException(): RemoteException = when (this) {
+    is FileClientException.InvalidAuth -> RemoteException.InvalidAuth(this)
+    is FileClientException.InvalidPath -> RemoteException.NotFound(this)
+    is FileClientException.InvalidServer -> RemoteException.InvalidServer(this)
+    is FileClientException.NoNetwork -> RemoteException.NoNetwork(this)
+    is RemoteException -> this
+    else -> RemoteException.Unknown(this)
 }

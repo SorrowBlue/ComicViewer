@@ -74,13 +74,13 @@ interface BookNavigationService {
          *
          * @return An instance of [BookNavigationService].
          */
-        operator fun invoke(): BookNavigationService = BookNavigationServiceImpl()
+        internal operator fun invoke(): BookNavigationService = BookNavigationServiceImpl()
     }
 }
 
 @ContributesBinding(AppScope::class)
 @Inject
-class BookNavigationServiceImpl : BookNavigationService {
+internal class BookNavigationServiceImpl : BookNavigationService {
 
     override fun resolveFolderSortType(
         settings: FolderDisplaySettings,

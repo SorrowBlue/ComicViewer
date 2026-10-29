@@ -4,7 +4,13 @@
 
 package com.sorrowblue.comicviewer.domain.model.bookshelf
 
+/**
+ * Represents the storage type of a [Bookshelf].
+ */
 enum class BookshelfType {
+    /** Network storage accessed via SMB. */
     SMB,
+
+    /** Local device storage. */
     DEVICE,
 }

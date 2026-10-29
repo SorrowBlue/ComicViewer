@@ -19,6 +19,12 @@ import dev.zacsweers.metro.Inject
 fun interface PagingBookshelfBookUseCase :
     PagingUseCase<PagingBookshelfBookUseCase.Request, BookThumbnail> {
 
+    /**
+     * Request parameters for [PagingBookshelfBookUseCase].
+     *
+     * @property bookshelfId The ID of the bookshelf whose book thumbnails are queried.
+     * @property pagingConfig Configuration for pagination.
+     */
     data class Request(val bookshelfId: BookshelfId, val pagingConfig: PagingConfig)
 }
 
