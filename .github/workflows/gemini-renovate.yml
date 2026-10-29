@@ -83,32 +83,38 @@ jobs:
           HEAD_REF=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName')
           PR_TITLE=$(gh pr view "$PR_NUMBER" --json title --jq '.title')
 
-          PR_BODY=$(gh pr view "$PR_NUMBER" --json body --jq '.body' | head -c 30000)
+          PR_BODY=$(gh pr view "$PR_NUMBER" --json body --jq '.body' || true)
+          PR_BODY="${PR_BODY:0:30000}"
           git fetch origin "$BASE_REF"
-          PR_DIFF=$(git diff "origin/${BASE_REF}...HEAD" | head -c 20000)
+          PR_DIFF=$(git diff "origin/${BASE_REF}...HEAD" -- . ':!.github/workflows/gemini-renovate.yml' || true)
+          if [ -z "$PR_DIFF" ]; then
+            PR_DIFF=$(git diff "origin/${BASE_REF}...HEAD" || true)
+          fi
+          PR_DIFF="${PR_DIFF:0:20000}"
 
+          set +eo pipefail
           USAGE_CONTEXT=""
-          if git diff --name-only "origin/${BASE_REF}...HEAD" | grep -q '^gradle/libs\.versions\.toml$'; then
+          if ! git diff --quiet "origin/${BASE_REF}...HEAD" -- gradle/libs.versions.toml; then
             CHANGED_KEYS=$(git diff -U0 "origin/${BASE_REF}...HEAD" -- gradle/libs.versions.toml \
               | grep -E '^\+[a-zA-Z0-9_-]+[[:space:]]*=' \
               | sed -E 's/^\+([a-zA-Z0-9_-]+)[[:space:]]*=.*/\1/' \
-              | sort -u || true)
+              | sort -u)
 
             for KEY in $CHANGED_KEYS; do
-              TOML_DEFS=$(grep -nE "version\.ref[[:space:]]*=[[:space:]]*\"${KEY}\"" gradle/libs.versions.toml || true)
+              TOML_DEFS=$(grep -nE "version\.ref[[:space:]]*=[[:space:]]*\"${KEY}\"" gradle/libs.versions.toml)
               USAGE_CONTEXT+="### Version Key: ${KEY}"$'\n'
               if [ -n "$TOML_DEFS" ]; then
                 USAGE_CONTEXT+="#### gradle/libs.versions.toml 定義:"$'\n'"\`\`\`toml"$'\n'"${TOML_DEFS}"$'\n'"\`\`\`"$'\n'
               fi
 
-              ALIASES=$(printf '%s\n' "$TOML_DEFS" | sed -E 's/^[0-9]+:([a-zA-Z0-9_-]+)[[:space:]]*=.*/\1/' | tr '-' '.' || true)
-              GROUPS=$(printf '%s\n' "$TOML_DEFS" | sed -nE 's/.*group[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' | sort -u || true)
+              ALIASES=$(printf '%s\n' "$TOML_DEFS" | sed -E 's/^[0-9]+:([a-zA-Z0-9_-]+)[[:space:]]*=.*/\1/' | tr '-' '.')
+              MAVEN_GROUPS=$(printf '%s\n' "$TOML_DEFS" | sed -nE 's/.*group[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' | sort -u)
 
               if [ -n "$ALIASES" ]; then
                 GRADLE_USAGES=""
                 for ALIAS in $ALIASES; do
                   for PREFIX in "libs.${ALIAS}" "libs.plugins.${ALIAS}" "libs.bundles.${ALIAS}"; do
-                    MATCHES=$(git grep -n -F "$PREFIX" -- '*.gradle.kts' 'build-logic/**' || true)
+                    MATCHES=$(git grep -n -F "$PREFIX" -- '*.gradle.kts' 'build-logic/**')
                     if [ -n "$MATCHES" ]; then
                       GRADLE_USAGES+="${MATCHES}"$'\n'
                     fi
@@ -120,20 +126,21 @@ jobs:
                 fi
               fi
 
-              if [ -n "$GROUPS" ]; then
+              if [ -n "$MAVEN_GROUPS" ]; then
                 KT_IMPORTS=""
-                for GRP in $GROUPS; do
-                  IMPORTS=$(git grep -n "import ${GRP}" -- '*.kt' || true)
+                for GRP in $MAVEN_GROUPS; do
+                  IMPORTS=$(git grep -n "import ${GRP}" -- '*.kt')
                   if [ -z "$IMPORTS" ]; then
-                    CLEAN_KEY=$(echo "$KEY" | tr '[:upper:]' '[:lower:]' | sed 's/-.*//')
-                    IMPORTS=$(git grep -n -i "import .*${CLEAN_KEY}" -- '*.kt' || true)
+                    CLEAN_KEY=$(printf '%s\n' "$KEY" | tr '[:upper:]' '[:lower:]' | sed 's/-.*//')
+                    IMPORTS=$(git grep -n -i "import .*${CLEAN_KEY}" -- '*.kt')
                   fi
                   if [ -n "$IMPORTS" ]; then
                     KT_IMPORTS+="${IMPORTS}"$'\n'
                   fi
                 done
                 if [ -n "$KT_IMPORTS" ]; then
-                  USAGE_CONTEXT+="#### Kotlin ソース内の import 箇所:"$'\n'"\`\`\`text"$'\n'"$(printf '%s' "$KT_IMPORTS" | head -n 100)"$'\n'"\`\`\`"$'\n'
+                  KT_IMPORTS="${KT_IMPORTS:0:8000}"
+                  USAGE_CONTEXT+="#### Kotlin ソース内の import 箇所:"$'\n'"\`\`\`text"$'\n'"${KT_IMPORTS}"$'\n'"\`\`\`"$'\n'
                 fi
               fi
             done
@@ -142,7 +149,11 @@ jobs:
           if [ -z "$USAGE_CONTEXT" ]; then
             USAGE_CONTEXT="（Version Catalog 以外の変更、または事前抽出された import 箇所はありません）"
           fi
-          USAGE_CONTEXT=$(printf '%s' "$USAGE_CONTEXT" | head -c 15000)
+          USAGE_CONTEXT="${USAGE_CONTEXT:0:15000}"
+          set -eo pipefail
+
+          SETTINGS_DELIMITER="SETTINGS_EOF_${RANDOM}_${RANDOM}"
+          PROMPT_DELIMITER="PROMPT_EOF_${RANDOM}_${RANDOM}"
 
           {
             echo "should-run=true"
@@ -152,7 +163,7 @@ jobs:
             echo "head-ref=${HEAD_REF}"
             echo "pr-title=${PR_TITLE}"
             echo "gcp-project-id=${GCP_PROJECT_ID}"
-            echo "settings<<SETTINGS_EOF"
+            echo "settings<<${SETTINGS_DELIMITER}"
             cat << 'EOF'
           {
             "model": {
@@ -179,9 +190,9 @@ jobs:
             }
           }
           EOF
-            echo "SETTINGS_EOF"
-            echo "prompt<<PROMPT_EOF"
-            cat << EOF
+            echo "${SETTINGS_DELIMITER}"
+            echo "prompt<<${PROMPT_DELIMITER}"
+            cat << 'EOF'
           あなたは ComicViewer プロジェクトのシニアエンジニア AI エージェントです。
           Renovate によって作成されたライブラリ・プラグイン更新 PR について、バージョンアップの内容とプロジェクトへの影響範囲を調査し、日本語で調査レポートを作成してください。
 
@@ -189,7 +200,7 @@ jobs:
           - **コードの修正・ファイル書き込み・ビルド実行は一切行わないでください**（調査とレポート出力のみ）。
           - セッションの最大ターン数は **5 ターン** に制限されています。ツール呼び出しは最小限（最大 2〜3 回まで）にとどめてください。
           - 下記の「PR 差分」「PR 本文（Release Notes）」「事前抽出されたプロジェクト内の利用箇所」だけで影響範囲が判断できる場合は、**ツールを一切呼ばずに 1 ターン目で直接最終レポートを出力**してください。
-          - ソースコード内の具体的な API 利用方法を確認する必要がある場合のみ、事前抽出リストに記載されたファイルを \`read_file\`（または最小限の \`grep_search\`）で確認し、直ちに最終レポートを出力してください。
+          - ソースコード内の具体的な API 利用方法を確認する必要がある場合のみ、事前抽出リストに記載されたファイルを `read_file`（または最小限の `grep_search`）で確認し、直ちに最終レポートを出力してください。
           - あなたの最終回答（標準出力）がそのまま PR コメントとして投稿されます。挨拶や前置きは含めず、以下の Markdown フォーマットのみを出力してください。
 
           ## 出力フォーマット
@@ -206,22 +217,15 @@ jobs:
           ---
 
           ## コンテキスト情報
-          - PR 番号: #${PR_NUMBER}
-          - PR タイトル: ${PR_TITLE}
-
-          ### PR 差分 (git diff)
-          \`\`\`diff
-          ${PR_DIFF}
-          \`\`\`
-
-          ### 事前抽出されたプロジェクト内の利用箇所
-          ${USAGE_CONTEXT}
-
-          ### PR 本文 (Release Notes / Changelog)
-          ${PR_BODY}
           EOF
-            echo "PROMPT_EOF"
+            printf -- '- PR 番号: #%s\n' "$PR_NUMBER"
+            printf -- '- PR タイトル: %s\n\n' "$PR_TITLE"
+            printf -- '### PR 差分 (git diff)\n```diff\n%s\n```\n\n' "$PR_DIFF"
+            printf -- '### 事前抽出されたプロジェクト内の利用箇所\n%s\n\n' "$USAGE_CONTEXT"
+            printf -- '### PR 本文 (Release Notes / Changelog)\n%s\n' "$PR_BODY"
+            echo "${PROMPT_DELIMITER}"
           } >> "$GITHUB_OUTPUT"
+          echo "Context prepared successfully (PR #${PR_NUMBER}, use-vertex=${USE_VERTEX})"
 
       - name: Run Gemini CLI via Vertex AI (GCP Credits)
         id: gemini_vertex
