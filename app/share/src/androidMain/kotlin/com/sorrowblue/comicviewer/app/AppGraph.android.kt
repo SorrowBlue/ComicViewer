@@ -21,5 +21,6 @@ actual interface AppGraph :
     val workerFactory: WorkerFactory
 
     @Provides
-    fun Context.providesWorkManager(): WorkManager = WorkManager.getInstance(this)
+    fun providesWorkManager(application: Context): WorkManager =
+        WorkManager.getInstance(application)
 }
