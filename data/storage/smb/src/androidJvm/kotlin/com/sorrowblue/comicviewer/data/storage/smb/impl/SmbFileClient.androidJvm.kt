@@ -230,6 +230,7 @@ internal actual class SmbFileClient(
         }
     }
 
+    @Suppress("UnusedPrivateFunction")
     private fun SmbServer.smbFile(path: String, context: CIFSContext): SmbFile = SmbFile(
         URI(
             "smb",
@@ -246,6 +247,7 @@ internal actual class SmbFileClient(
     private fun CachedCifsContext.isSameServer(server: SmbServer): Boolean =
         host == server.host && port == server.port && auth == server.auth
 
+    @Suppress("RedundantSuspendModifier", "UnusedPrivateFunction")
     private suspend fun smbFile(path: String): SmbFile {
         val context = mutex.withLock {
             cachedCifsContext?.takeIf { it.isSameServer(bookshelf) }?.context
