@@ -119,8 +119,21 @@ private class FolderScreenStateImpl(
                     logcat { it.asLog() }
                 }
                 events.tryEmit(FolderScreenEvent.Restore)
-            } else if (!lazyPagingItems.loadState.isLoading) {
-                events.tryEmit(FolderScreenEvent.Restore)
+            } else {
+                val unloadedIndex = lazyPagingItems.indexOf { it == null }
+                val canLoadMoreFromSource =
+                    lazyPagingItems.loadState.source.refresh is LoadState.NotLoading &&
+                        lazyPagingItems.loadState.source.append is LoadState.NotLoading &&
+                        lazyPagingItems.loadState.append !is LoadState.Loading
+                if (0 <= unloadedIndex && canLoadMoreFromSource) {
+                    lazyPagingItems[unloadedIndex]
+                } else if (
+                    !lazyPagingItems.loadState.isLoading &&
+                    lazyPagingItems.loadState.append !is LoadState.Loading
+                ) {
+                    isRestored = true
+                    events.tryEmit(FolderScreenEvent.Restore)
+                }
             }
         }
         if (lazyPagingItems.loadState.refresh is LoadState.Error) {

@@ -103,7 +103,7 @@ internal interface FileDao {
         SELECT
           *,
           CASE
-            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.bookshelf_id = file.bookshelf_id AND f1.parent = file.path)
             else 0
           END count
         FROM
@@ -113,8 +113,20 @@ internal interface FileDao {
     )
     suspend fun find(bookshelfId: Int, path: String): QueryFileWithCountEntity?
 
-    @Query("SELECT * FROM file WHERE bookshelf_id= :bookshelfId AND path = :path")
-    fun flow(bookshelfId: Int, path: String): Flow<FileEntity?>
+    @Query(
+        """
+        SELECT
+          *,
+          CASE
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.bookshelf_id = file.bookshelf_id AND f1.parent = file.path)
+            else 0
+          END count
+        FROM
+          file
+        WHERE
+          bookshelf_id = :bookshelfId AND path = :path""",
+    )
+    fun flow(bookshelfId: Int, path: String): Flow<QueryFileWithCountEntity?>
 
     @Query(
         "SELECT * FROM file WHERE bookshelf_id = :id AND parent = :parent AND path NOT IN (:paths)",
@@ -210,12 +222,16 @@ internal interface FileDao {
 internal fun FileDao.pagingSourceFileSearch(
     bookshelfId: BookshelfId?,
     searchCondition: SearchCondition,
+    excludeFolder: Boolean = false,
 ): PagingSource<Int, QueryFileWithCountEntity> {
     val bindArgs = mutableListOf<Any>()
     val selectionStr = buildList {
         if (bookshelfId != null) {
             add("bookshelf_id = :bookshelfId")
             bindArgs += bookshelfId.value
+        }
+        if (excludeFolder) {
+            add("file_type != 'FOLDER'")
         }
         addSearchConditionClauses(searchCondition, bindArgs)
     }
@@ -225,7 +241,7 @@ internal fun FileDao.pagingSourceFileSearch(
         SELECT
           *,
           CASE
-            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.parent = file.path)
+            WHEN file_type = 'FOLDER' then (SELECT COUNT(f1.path) FROM file f1 WHERE f1.bookshelf_id = file.bookshelf_id AND f1.parent = file.path)
             else 0
           END count
         FROM

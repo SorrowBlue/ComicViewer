@@ -13,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.navigation3.runtime.EntryProviderScope
@@ -63,7 +62,6 @@ internal fun EntryProviderScope<NavKey>.bookshelfEditorEntry(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun BookshelfEditorScreen(
     eventFlow: EventFlow<BookshelfEditScreenEvent>,

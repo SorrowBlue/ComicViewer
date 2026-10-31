@@ -6,14 +6,15 @@ package com.sorrowblue.comicviewer.framework.ui.paging
 
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 
-val <T : Any> androidx.paging.compose.LazyPagingItems<T>.isEmptyData
+val <T : Any> LazyPagingItems<T>.isEmptyData
     get() =
         loadState.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached &&
             loadState.source.append.endOfPaginationReached &&
             itemCount == 0
 
-val <T : Any> androidx.paging.compose.LazyPagingItems<T>.isLoadedData
+val <T : Any> LazyPagingItems<T>.isLoadedData
     get() =
         loadState.source.refresh is LoadState.NotLoading &&
             (
@@ -22,9 +23,9 @@ val <T : Any> androidx.paging.compose.LazyPagingItems<T>.isLoadedData
                 ).refresh is LoadState.NotLoading
                 )
 
-fun <T : Any> androidx.paging.compose.LazyPagingItems<T>.indexOf(op: (T?) -> Boolean): Int {
+fun <T : Any> LazyPagingItems<T>.indexOf(op: (T?) -> Boolean): Int {
     for (i in 0..<itemCount) {
-        if (op(get(i))) {
+        if (op(peek(i))) {
             return i
         }
     }

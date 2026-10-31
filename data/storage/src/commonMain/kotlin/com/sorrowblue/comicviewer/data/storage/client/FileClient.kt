@@ -16,7 +16,6 @@ import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.file.FileAttribute
 import com.sorrowblue.comicviewer.domain.repository.file.BookFileReader
 import dev.zacsweers.metro.DefaultBinding
-import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.MapKey
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.reflect.KClass
@@ -47,7 +46,6 @@ abstract class FileClient<T : Bookshelf>(
     val dispatcher: CoroutineDispatcher,
 ) {
     @Suppress("RemoveRedundantQualifierName")
-    @OptIn(ExperimentalMetroApi::class)
     @DefaultBinding<FileClient.Factory<*>>()
     fun interface Factory<T : Bookshelf> {
         fun create(bookshelf: T): FileClient<T>

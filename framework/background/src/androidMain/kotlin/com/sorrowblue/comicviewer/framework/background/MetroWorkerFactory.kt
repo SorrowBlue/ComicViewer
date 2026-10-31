@@ -11,7 +11,6 @@ import androidx.work.WorkerParameters
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.DefaultBinding
-import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
 
@@ -28,7 +27,6 @@ internal class MetroWorkerFactory(
         workerProviders[Class.forName(workerClassName).kotlin]?.create(workerParameters)
 }
 
-@OptIn(ExperimentalMetroApi::class)
 @DefaultBinding<MetroWorkerInstanceFactory<*>>()
 interface MetroWorkerInstanceFactory<T : ListenableWorker> {
     fun create(params: WorkerParameters): T

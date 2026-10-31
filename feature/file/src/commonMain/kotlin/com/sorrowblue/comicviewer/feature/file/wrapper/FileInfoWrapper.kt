@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
@@ -19,7 +19,9 @@ internal fun FileInfoWrapper(
     content: @Composable (File) -> Unit,
 ) {
     val viewModel =
-        assistedMetroViewModel<FileInfoWrapperViewModel, FileInfoWrapperViewModel.Factory> {
+        assistedMetroViewModel<FileInfoWrapperViewModel, FileInfoWrapperViewModel.Factory>(
+            key = "$fileKey:$isOpenFolderEnabled",
+        ) {
             create(fileKey = fileKey, isOpenFolderEnabled = isOpenFolderEnabled)
         }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

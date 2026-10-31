@@ -4,18 +4,19 @@
 
 package com.sorrowblue.comicviewer.framework.ui
 
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter.State
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageScope
+import com.sorrowblue.comicviewer.framework.designsystem.theme.ComicTheme
 
 @Composable
 fun AsyncImage3(
@@ -47,9 +48,12 @@ fun AsyncImage3(
 
 internal object AsyncImage3Default {
     val loading: @Composable SubcomposeAsyncImageScope.(State.Loading) -> Unit = {
-        CircularProgressIndicator(
-            strokeWidth = 2.dp,
-            modifier = Modifier.wrapContentSize(),
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(ComicTheme.colorScheme.onSurfaceVariant.copy(alpha = SkeletonAlpha)),
         )
     }
 }
+
+private const val SkeletonAlpha = 0.12f

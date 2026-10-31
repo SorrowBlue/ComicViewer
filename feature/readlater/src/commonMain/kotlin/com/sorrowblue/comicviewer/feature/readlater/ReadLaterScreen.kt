@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.readlater
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -93,7 +92,6 @@ private fun ReadLaterContents(
                 .padding(contentPadding),
         )
     } else {
-        @OptIn(ExperimentalFoundationApi::class)
         FileLazyVerticalGrid(
             uiState = FileLazyVerticalGridUiState(fileListDisplay = FileListDisplay.List),
             lazyPagingItems = lazyPagingItems,

@@ -44,9 +44,27 @@ internal class BookThumbnailFetcher(
         var snapshot = readFromDiskCache()
         runCatching {
             // Fast path: fetch the image from the disk cache without performing a network request.
-            val result = fastPath(snapshot)
-            if (result != null) {
-                return result
+            val cachedResult = fastPath(snapshot)
+            if (cachedResult != null && data.totalPageCount > 0) {
+                return cachedResult
+            }
+
+            val book =
+                checkNotNull(
+                    fileRepository.flow(data.bookshelfId, data.path).first() as? Book,
+                ) {
+                    "Book not found. id: ${data.bookshelfId}, path: ${data.path}"
+                }
+            if (cachedResult != null && book.totalPageCount > 0) {
+                if (book.cacheKey != diskCacheKey) {
+                    fileRepository.updateAdditionalInfo(
+                        data.path,
+                        data.bookshelfId,
+                        diskCacheKey,
+                        book.totalPageCount,
+                    )
+                }
+                return cachedResult
             }
 
             // Slow path: fetch the image from the network.
@@ -57,18 +75,23 @@ internal class BookThumbnailFetcher(
             check(storageClient.exists(data.path)) {
                 "File not found. id: ${data.bookshelfId}, path: ${data.path}"
             }
-            val book =
-                checkNotNull(
-                    fileRepository.flow(data.bookshelfId, data.path).first() as? Book,
-                ) {
-                    "Book not found. id: ${data.bookshelfId}, path: ${data.path}"
-                }
 
             val fetchResult =
                 storageClient.fileReader(book).use { fileReader ->
                     val pageCount = fileReader.pageCount()
                     check(pageCount != 0) {
                         "Only 0 pages"
+                    }
+                    if (cachedResult != null) {
+                        if (book.cacheKey != diskCacheKey || book.totalPageCount != pageCount) {
+                            fileRepository.updateAdditionalInfo(
+                                data.path,
+                                data.bookshelfId,
+                                diskCacheKey,
+                                pageCount,
+                            )
+                        }
+                        return@use cachedResult
                     }
                     val displaySettings = settingsRepository.folderDisplaySettings.first()
                     if (displaySettings.isSavedThumbnail) {
@@ -84,40 +107,39 @@ internal class BookThumbnailFetcher(
 
                         snapshot?.let {
                             // DISKキャッシュキーとページ数を更新する。
-                            fileRepository.updateAdditionalInfo(
-                                data.path,
-                                data.bookshelfId,
-                                diskCacheKey,
-                                pageCount,
-                            )
+                            if (book.cacheKey != diskCacheKey || book.totalPageCount != pageCount) {
+                                fileRepository.updateAdditionalInfo(
+                                    data.path,
+                                    data.bookshelfId,
+                                    diskCacheKey,
+                                    pageCount,
+                                )
+                            }
                             return@use SourceFetchResult(
                                 source = it.toImageSource(),
                                 mimeType = "image/*",
                                 dataSource = DataSource.DISK,
                             )
                         }
+                    } else {
+                        snapshot?.closeQuietly()
+                    }
 
-                        // 新しいスナップショットの読み取りに失敗した場合は、応答本文が空でない場合はそれを読み取ります。
-                        val source = fileReader.source(0)
-                        // DISKキャッシュキーとページ数を更新する。
+                    // 新しいスナップショットの読み取りに失敗した場合、またはサムネイル保存が無効な場合は応答本文を読み取ります。
+                    val source = fileReader.source(0)
+                    if (book.totalPageCount != pageCount) {
                         fileRepository.updateAdditionalInfo(
                             data.path,
                             data.bookshelfId,
-                            diskCacheKey,
+                            book.cacheKey,
                             pageCount,
                         )
-                        return@use SourceFetchResult(
-                            source = source.toImageSource(),
-                            mimeType = null,
-                            dataSource = DataSource.NETWORK,
-                        )
-                    } else {
-                        return@use SourceFetchResult(
-                            source = fileReader.source(0).toImageSource(),
-                            mimeType = null,
-                            dataSource = DataSource.NETWORK,
-                        )
                     }
+                    return@use SourceFetchResult(
+                        source = source.toImageSource(),
+                        mimeType = null,
+                        dataSource = DataSource.NETWORK,
+                    )
                 }
             return fetchResult
         }.onFailure {

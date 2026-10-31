@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -50,7 +49,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @MediumTest
-@OptIn(ExperimentalTestApi::class)
 class BookshelfEditorFormUiTest {
 
     @Test

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import androidx.window.core.layout.WindowSizeClass
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -65,6 +66,7 @@ fun <T : File> FileLazyVerticalGrid(
         lazyPagingItems = lazyPagingItems,
         contentPadding = contentPadding,
         type = type,
+        key = lazyPagingItems.itemKey { "${it.bookshelfId.value}:${it.path}" },
         modifier = modifier,
     ) { _, item ->
         when (type) {

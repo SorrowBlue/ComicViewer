@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfFolder
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
 import com.sorrowblue.comicviewer.feature.bookshelf.component.BookshelfListItem
@@ -28,6 +29,7 @@ internal fun BookshelfGridList(
         lazyPagingItems = lazyPagingItems,
         state = lazyGridState,
         type = LazyPagingColumn.Grid(400),
+        key = lazyPagingItems.itemKey { it.bookshelf.id.value },
         modifier = Modifier.fillMaxSize(),
     ) { _, item ->
         BookshelfListItem(

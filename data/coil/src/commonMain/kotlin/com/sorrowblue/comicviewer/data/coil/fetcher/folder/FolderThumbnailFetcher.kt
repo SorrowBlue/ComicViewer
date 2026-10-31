@@ -48,7 +48,7 @@ internal class FolderThumbnailFetcher(
             checkNotNull(
                 fileRepository.flow(data.bookshelfId, data.path).first(),
             ) { "Folder not found. id: ${data.bookshelfId}, path: ${data.path}" }
-        if (folder.parent != "" && resolveImageFolder) {
+        if (folder !is BookFolder && folder.parent != "" && resolveImageFolder) {
             val bookshelf =
                 checkNotNull(bookshelfRepository.flow(data.bookshelfId).first()) {
                     "Bookshelf not found. id: ${data.bookshelfId}"
