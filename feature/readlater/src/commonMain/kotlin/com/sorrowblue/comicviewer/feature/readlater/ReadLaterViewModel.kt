@@ -23,7 +23,14 @@ internal class ReadLaterViewModel(
     private val deleteAllReadLaterUseCase: DeleteAllReadLaterUseCase,
 ) : ViewModel() {
 
-    val pagingDataFlow = pagingReadLaterFileUseCase(PagingConfig(20)).cachedIn(viewModelScope)
+    val pagingDataFlow = pagingReadLaterFileUseCase(
+        PagingConfig(
+            pageSize = PageSize,
+            prefetchDistance = PrefetchDistance,
+            initialLoadSize = InitialLoadSize,
+            jumpThreshold = JumpThreshold,
+        ),
+    ).cachedIn(viewModelScope)
 
     fun clearAll() {
         viewModelScope.launch {
@@ -31,3 +38,8 @@ internal class ReadLaterViewModel(
         }
     }
 }
+
+private const val PageSize = 60
+private const val PrefetchDistance = 30
+private const val InitialLoadSize = 60
+private const val JumpThreshold = PageSize * 3

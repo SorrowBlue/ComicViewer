@@ -29,7 +29,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,7 +38,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @AssistedInject
 internal class FileInfoViewModel(
     @Assisted private val file: File,
@@ -52,6 +50,7 @@ internal class FileInfoViewModel(
     private val deleteReadLaterUseCase: DeleteReadLaterUseCase,
 ) : ViewModel() {
 
+    private val fileFlow = MutableStateFlow(file)
     private val readLaterLoadingFlow = MutableStateFlow(false)
     private val fileAttributeFlow =
         getFileAttributeUseCase(GetFileAttributeUseCase.Request(file.bookshelfId, file.path))
@@ -69,16 +68,18 @@ internal class FileInfoViewModel(
             .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     val uiState = combine(
+        fileFlow,
         isReadLaterFlow,
         fileSizeFlow,
         fileAttributeFlow,
         readLaterLoadingFlow,
-    ) { isReadLater, fileSize, fileAttribute, readLaterLoading ->
+    ) { currentFile, isReadLater, fileSize, fileAttribute, readLaterLoading ->
+        val resolvedSize = if (0 <= fileSize) fileSize else currentFile.size
         FileInfoScreenUiState(
-            file = when (val ufile = file) {
-                is BookFile -> ufile.copy(size = fileSize)
-                is BookFolder -> ufile.copy(size = fileSize)
-                is Folder -> ufile.copy(size = fileSize)
+            file = when (currentFile) {
+                is BookFile -> currentFile.copy(size = resolvedSize)
+                is BookFolder -> currentFile.copy(size = resolvedSize)
+                is Folder -> currentFile.copy(size = resolvedSize)
             },
             attribute = fileAttribute,
             fileInfoButtonsUiState = FileInfoButtonsUiState(
@@ -108,6 +109,10 @@ internal class FileInfoViewModel(
                 PagingConfig(PageSize),
             ),
         ).cachedIn(viewModelScope)
+    }
+
+    fun onFileChange(file: File) {
+        fileFlow.value = file
     }
 
     fun updateReadLater() {

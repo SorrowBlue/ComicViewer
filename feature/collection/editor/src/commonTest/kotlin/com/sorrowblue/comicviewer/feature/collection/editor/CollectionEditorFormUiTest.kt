@@ -7,7 +7,6 @@ package com.sorrowblue.comicviewer.feature.collection.editor
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextContains
@@ -33,7 +32,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @MediumTest
-@OptIn(ExperimentalTestApi::class)
 class CollectionEditorFormUiTest {
 
     @Test

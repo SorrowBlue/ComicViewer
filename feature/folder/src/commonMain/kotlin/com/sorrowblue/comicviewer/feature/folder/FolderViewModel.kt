@@ -10,7 +10,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
-import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfType
 import com.sorrowblue.comicviewer.domain.model.common.Resource
 import com.sorrowblue.comicviewer.domain.model.file.File
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FileListDisplay
@@ -68,10 +67,19 @@ internal class FolderViewModel(
         }.distinctUntilChanged().flatMapLatest { bookshelf ->
             if (bookshelf == null) {
                 emptyFlow()
-            } else if (bookshelf.type == BookshelfType.SMB) {
-                pagingFileUseCase(PagingFileUseCase.Request(PagingConfig(20), bookshelfId, path))
             } else {
-                pagingFileUseCase(PagingFileUseCase.Request(PagingConfig(20), bookshelfId, path))
+                pagingFileUseCase(
+                    PagingFileUseCase.Request(
+                        PagingConfig(
+                            pageSize = PageSize,
+                            prefetchDistance = PrefetchDistance,
+                            initialLoadSize = InitialLoadSize,
+                            jumpThreshold = JumpThreshold,
+                        ),
+                        bookshelfId,
+                        path,
+                    ),
+                )
             }
         }.cachedIn(viewModelScope)
 
@@ -172,3 +180,8 @@ internal class FolderViewModel(
         ): FolderViewModel
     }
 }
+
+private const val PageSize = 60
+private const val PrefetchDistance = 30
+private const val InitialLoadSize = 60
+private const val JumpThreshold = PageSize * 3

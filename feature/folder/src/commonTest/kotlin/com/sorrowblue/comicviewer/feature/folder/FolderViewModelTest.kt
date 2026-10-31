@@ -296,7 +296,6 @@ class FolderViewModelTest {
     }
 }
 
-@OptIn(InternalDataApi::class)
 private class FakeManageFolderDisplaySettingsUseCase(
     initial: FolderDisplaySettings = FolderDisplaySettings(),
 ) : ManageFolderDisplaySettingsUseCase {

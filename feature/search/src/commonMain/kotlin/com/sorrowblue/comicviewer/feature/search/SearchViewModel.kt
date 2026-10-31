@@ -34,7 +34,12 @@ internal class SearchViewModel(
         PagingQueryFileUseCase.Request(
             bookshelfId = bookshelfId,
             searchCondition = { searchConditionFlow.value },
-            pagingConfig = PagingConfig(20),
+            pagingConfig = PagingConfig(
+                pageSize = PageSize,
+                prefetchDistance = PrefetchDistance,
+                initialLoadSize = InitialLoadSize,
+                jumpThreshold = JumpThreshold,
+            ),
         ),
     ).cachedIn(viewModelScope)
 
@@ -49,3 +54,8 @@ internal class SearchViewModel(
         fun create(bookshelfId: BookshelfId): SearchViewModel
     }
 }
+
+private const val PageSize = 60
+private const val PrefetchDistance = 30
+private const val InitialLoadSize = 60
+private const val JumpThreshold = PageSize * 3

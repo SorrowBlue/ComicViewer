@@ -7,7 +7,6 @@ package com.sorrowblue.comicviewer.app
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.ComposeUiTest
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasTestTag
@@ -43,7 +42,6 @@ expect fun AppContent(appGraph: AppGraph)
 private const val TEST_TIMEOUT = 15000L
 
 @LargeTest
-@OptIn(ExperimentalTestApi::class)
 class NavigationTest {
 
     private lateinit var appGraph: AppGraph

@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.collection.section
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -39,7 +38,6 @@ internal fun CollectionContents(
                 .padding(contentPadding),
         )
     } else {
-        @OptIn(ExperimentalFoundationApi::class)
         FileLazyVerticalGrid(
             uiState = fileLazyVerticalGridUiState,
             lazyPagingItems = lazyPagingItems,

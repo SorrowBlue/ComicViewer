@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.feature.tutorial.section
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +29,6 @@ import comicviewer.feature.tutorial.generated.resources.tutorial_text_archive
 import comicviewer.feature.tutorial.generated.resources.tutorial_text_archive_description
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun ArchiveSheet(contentPadding: PaddingValues) {
     TutorialSheet(

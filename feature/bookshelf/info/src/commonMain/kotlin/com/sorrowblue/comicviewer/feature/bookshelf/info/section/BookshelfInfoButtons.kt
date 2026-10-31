@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.feature.bookshelf.info.section
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +31,6 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_btn
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_btn_scan_thumbnail
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun BookshelfInfoButtons(
     isScanningFile: Boolean,

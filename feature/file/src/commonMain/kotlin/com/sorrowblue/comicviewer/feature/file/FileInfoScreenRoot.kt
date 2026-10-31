@@ -1,10 +1,11 @@
-﻿/*
+/*
  * Copyright 2026 SorrowBlue. See LICENSE for details.
  */
 
 package com.sorrowblue.comicviewer.feature.file
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -28,12 +29,17 @@ fun FileInfoScreenRoot(
         isOpenFolderEnabled = isOpenFolderEnabled,
     ) { file ->
         val viewModel =
-            assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory> {
+            assistedMetroViewModel<FileInfoViewModel, FileInfoViewModel.Factory>(
+                key = "${file.key()}:${file::class}:$isOpenFolderEnabled",
+            ) {
                 create(
                     file,
                     isOpenFolderEnabled,
                 )
             }
+        SideEffect(viewModel, file) {
+            viewModel.onFileChange(file)
+        }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val lazyPagingItems = viewModel.pagingFlow?.collectAsLazyPagingItems()
         FileInfoScreen(

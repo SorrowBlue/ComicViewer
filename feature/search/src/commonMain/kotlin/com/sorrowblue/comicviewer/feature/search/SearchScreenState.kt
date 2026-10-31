@@ -19,7 +19,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.sorrowblue.comicviewer.domain.model.bookshelf.BookshelfId
@@ -80,7 +79,6 @@ internal fun rememberSearchScreenState(
     return state
 }
 
-@OptIn(SavedStateHandleSaveableApi::class)
 private class SearchScreenStateImpl(
     private val path: String,
     override val queryState: TextFieldState,

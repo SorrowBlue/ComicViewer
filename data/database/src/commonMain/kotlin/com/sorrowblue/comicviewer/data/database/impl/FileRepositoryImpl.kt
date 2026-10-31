@@ -74,7 +74,7 @@ internal class FileRepositoryImpl(
     ): Flow<PagingData<BookThumbnail>> {
         val remoteMediator = factory.create(bookshelf, file)
         return Pager(pagingConfig, remoteMediator = remoteMediator) {
-            dao.pagingSourceFileSearch(bookshelf.id, searchCondition())
+            dao.pagingSourceFileSearch(bookshelf.id, searchCondition(), excludeFolder = true)
         }.flow.map { pagingData ->
             pagingData.map {
                 BookThumbnail.from(it.toModel() as Book)

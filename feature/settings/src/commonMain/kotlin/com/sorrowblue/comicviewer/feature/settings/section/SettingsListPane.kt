@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.settings.section
 
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,7 +27,6 @@ import comicviewer.feature.settings.generated.resources.settings_title
 import kotlinx.collections.immutable.ImmutableList
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun SettingsListPane(
     settingsList: ImmutableList<SettingsItem>,

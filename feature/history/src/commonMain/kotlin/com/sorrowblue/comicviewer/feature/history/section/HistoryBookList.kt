@@ -4,7 +4,6 @@
 
 package com.sorrowblue.comicviewer.feature.history.section
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -56,7 +55,6 @@ internal fun HistoryBookList(
                 .padding(contentPadding),
         )
     } else {
-        @OptIn(ExperimentalFoundationApi::class)
         FileLazyVerticalGrid(
             uiState = remember {
                 FileLazyVerticalGridUiState(

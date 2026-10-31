@@ -61,7 +61,15 @@ internal class CollectionViewModel(
         }.stateIn(viewModelScope, SharingStarted.Eagerly, CollectionScreenUiState())
 
     val pagingDataFlow = pagingCollectionFileUseCase(
-        PagingCollectionFileUseCase.Request(id, PagingConfig(20)),
+        PagingCollectionFileUseCase.Request(
+            id,
+            PagingConfig(
+                pageSize = PageSize,
+                prefetchDistance = PrefetchDistance,
+                initialLoadSize = InitialLoadSize,
+                jumpThreshold = JumpThreshold,
+            ),
+        ),
     ).cachedIn(viewModelScope)
 
     fun onFileListDisplayClick() {
@@ -97,3 +105,8 @@ internal class CollectionViewModel(
         fun create(id: CollectionId): CollectionViewModel
     }
 }
+
+private const val PageSize = 60
+private const val PrefetchDistance = 30
+private const val InitialLoadSize = 60
+private const val JumpThreshold = PageSize * 3
