@@ -41,7 +41,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
@@ -86,7 +86,7 @@ jobs:
           PR_BODY=$(gh pr view "$PR_NUMBER" --json body --jq '.body' || true)
           PR_BODY="${PR_BODY:0:30000}"
           git fetch origin "$BASE_REF"
-          PR_DIFF=$(git diff "origin/${BASE_REF}...HEAD" -- . ':!.github/workflows/gemini-renovate.yml' || true)
+          PR_DIFF=$(git diff "origin/${BASE_REF}...HEAD" -- . ':!.github/workflows/gemini-renovate.yml' ':!.github/workflows/actions.lock' || true)
           if [ -z "$PR_DIFF" ]; then
             PR_DIFF=$(git diff "origin/${BASE_REF}...HEAD" || true)
           fi
@@ -233,7 +233,7 @@ jobs:
           steps.prepare.outputs.should-run == 'true' &&
           steps.prepare.outputs.use-vertex == 'true'
         continue-on-error: true
-        uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
+        uses: google-github-actions/run-gemini-cli@v0.1.22
         env:
           GEMINI_CLI_TRUST_WORKSPACE: 'true'
           GH_TOKEN: ${{ secrets.GEMINI_RENOVATE_GH_PAT || secrets.GITHUB_TOKEN }}
@@ -257,7 +257,7 @@ jobs:
           steps.prepare.outputs.should-run == 'true' &&
           (steps.prepare.outputs.use-vertex != 'true' || steps.gemini_vertex.outcome != 'success')
         continue-on-error: true
-        uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
+        uses: google-github-actions/run-gemini-cli@v0.1.22
         env:
           GEMINI_CLI_TRUST_WORKSPACE: 'true'
           GOOGLE_APPLICATION_CREDENTIALS: ''

@@ -45,13 +45,13 @@ jobs:
     steps:
       - name: Checkout code
         if: github.event_name == 'pull_request' || github.event_name == 'push'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 2
       - name: Get changed dependency files
         id: changed-dep-files
         if: github.event_name == 'pull_request' || github.event_name == 'push'
-        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        uses: tj-actions/changed-files@v47.0.6
         with:
           files: |
             gradle/libs.versions.toml
@@ -62,7 +62,7 @@ jobs:
       - name: Get changed database files
         id: changed-db-files
         if: github.event_name == 'pull_request'
-        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
+        uses: tj-actions/changed-files@v47.0.6
         with:
           files: |
             data/database/**
@@ -132,7 +132,7 @@ jobs:
     if: always() && cancelled() != true && needs.check-commit.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: wechuli/allcheckspassed@1e77c91db5ec91faa94bf441f91b91327d269ab0 # v2
+      - uses: wechuli/allcheckspassed@v2.6.0
         with:
           poll: false
           delay: 0

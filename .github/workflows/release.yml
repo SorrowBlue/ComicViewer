@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout target commit
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Check Lint, Test, and Build status for commit
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -110,7 +110,7 @@ jobs:
     steps:
       - name: Notify Discord - Release Success
         if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-        uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1
+        uses: sarisia/actions-status-discord@v1.16.0
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           nodetail: true
@@ -130,7 +130,7 @@ jobs:
 
       - name: Notify Discord - Failure
         if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
-        uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1
+        uses: sarisia/actions-status-discord@v1.16.0
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           nodetail: true

@@ -15,12 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Setup JDK and Gradle
-        uses: ./.github/actions/setup-java-gradle
+        uses: $/.github/actions/setup-java-gradle
 
       - name: 🖥️ ExportLibraryDefinitions
         run: ./gradlew :app:jvmApp:exportLibraryDefinitions
@@ -31,7 +31,7 @@ jobs:
         run: ./gradlew :app:jvmApp:jvmJar
 
       - name: Build Apps and Site with Conveyor
-        uses: hydraulic-software/conveyor/actions/build@7370ce828ff1cbc38b95426ffb2fd613492016d5 # v22.3
+        uses: hydraulic-software/conveyor/actions/build@v22.3
         with:
           command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[linux, mac]' make site
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
@@ -45,7 +45,7 @@ jobs:
           cd ..
 
       - name: Upload JVM installers (for Release Assets Archive)
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: jvm-installers
           path: |
@@ -53,7 +53,7 @@ jobs:
 
       - name: Upload Release Assets to GitHub Releases
         if: ${{ inputs.tag-name != '' }}
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        uses: softprops/action-gh-release@v3.0.3
         with:
           files: |
             output/**

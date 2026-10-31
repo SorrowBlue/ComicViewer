@@ -18,13 +18,13 @@ jobs:
     name: Release to Microsoft Store
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
 
       - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
+        uses: $/.github/actions/setup-java-gradle
 
       - name: 🖥️ ExportLibraryDefinitions
         run: ./gradlew :app:jvmApp:exportLibraryDefinitions
@@ -35,7 +35,7 @@ jobs:
         run: ./gradlew :app:jvmApp:jvmJar
 
       - name: Build MSIX Package
-        uses: hydraulic-software/conveyor/actions/build@7370ce828ff1cbc38b95426ffb2fd613492016d5 # v22.3
+        uses: hydraulic-software/conveyor/actions/build@v22.3
         with:
           command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[windows.amd64]' make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
@@ -48,7 +48,7 @@ jobs:
 
       - name: Publish MSIX to Microsoft Store (Production)
         if: inputs.channel == 'production'
-        uses: ./.github/actions/msstore-publish
+        uses: $/.github/actions/msstore-publish
         with:
           tenantId: ${{ secrets.MS_STORE_TENANT_ID }}
           clientId: ${{ secrets.MS_STORE_CLIENT_ID }}
@@ -57,7 +57,7 @@ jobs:
           packageDirectory: 'output'
 
       - name: Publish MSIX to Microsoft Store Test Flight
-        uses: ./.github/actions/msstore-publish
+        uses: $/.github/actions/msstore-publish
         with:
           tenantId: ${{ secrets.MS_STORE_TENANT_ID }}
           clientId: ${{ secrets.MS_STORE_CLIENT_ID }}
@@ -67,7 +67,7 @@ jobs:
           packageDirectory: 'output'
 
       - name: Upload conveyor artifact
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: conveyor-output
           path: output/*

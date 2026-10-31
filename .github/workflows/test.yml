@@ -35,11 +35,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Setup samba
-        uses: ./.github/actions/setup_samba
+        uses: $/.github/actions/setup_samba
       - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
+        uses: $/.github/actions/setup-java-gradle
       - name: Run JVM Tests (Full)
         if: ${{ inputs.full-check }}
         run: >
@@ -61,7 +61,7 @@ jobs:
           -PsmbPath="/testshare/testfolder/"
       - name: Upload Test Report
         if: cancelled() != true
-        uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
+        uses: dorny/test-reporter@v3.2.0
         with:
           name: 'JVM Test'
           path: '**/build/test-results/*/TEST-*.xml'
@@ -69,7 +69,7 @@ jobs:
           fail-on-error: false
       - name: Upload JVM Test Reports on Failure
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: jvm-test-reports
           path: |
@@ -86,11 +86,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Setup samba
-        uses: ./.github/actions/setup_samba
+        uses: $/.github/actions/setup_samba
       - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
+        uses: $/.github/actions/setup-java-gradle
       - name: Run Android Host Tests
         run: >
           ./gradlew testAndroidHostTest :app:androidApp:testDebugUnitTest --continue
@@ -101,7 +101,7 @@ jobs:
           -PsmbPath="/testshare/testfolder/"
       - name: Upload Test Report
         if: cancelled() != true
-        uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
+        uses: dorny/test-reporter@v3.2.0
         with:
           name: 'Android Host Test'
           path: '**/build/test-results/*/TEST-*.xml'
@@ -109,7 +109,7 @@ jobs:
           fail-on-error: false
       - name: Upload Android Host Test Reports on Failure
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: android-host-test-reports
           path: |
@@ -134,12 +134,12 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Setup samba
         if: ${{ inputs.full-check }}
-        uses: ./.github/actions/setup_samba
+        uses: $/.github/actions/setup_samba
       - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
+        uses: $/.github/actions/setup-java-gradle
       - name: Run Instrumentation tests (Full)
         if: ${{ inputs.full-check }}
         timeout-minutes: 20
@@ -156,7 +156,7 @@ jobs:
         run: ./gradlew :data:database:pixel7pro35AndroidDeviceTest --continue
       - name: Upload Test Report
         if: cancelled() != true
-        uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
+        uses: dorny/test-reporter@v3.2.0
         with:
           name: 'Instrumentation Test'
           path: '**/build/outputs/*Test-results/**/TEST-*.xml'
@@ -164,7 +164,7 @@ jobs:
           fail-on-error: false
       - name: Upload Crash Logs on Failure
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: android-crash-logs
           path: |
@@ -177,9 +177,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
+        uses: $/.github/actions/setup-java-gradle
       - name: Run Konture Architecture Tests
         run: >
           ./gradlew :konture-test:test -Dorg.gradle.configureondemand=false
