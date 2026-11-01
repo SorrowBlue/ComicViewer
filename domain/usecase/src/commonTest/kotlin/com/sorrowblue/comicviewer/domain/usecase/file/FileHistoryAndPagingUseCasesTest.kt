@@ -67,8 +67,7 @@ class FileHistoryAndPagingUseCasesTest {
     fun clearAllHistory_whenRepositoryThrowsException_returnsError() = runTest {
         val useCase = ClearAllHistoryUseCaseImpl(
             fileRepository = object : StubFileRepository() {
-                override suspend fun deleteAllHistory(): Unit =
-                    throw IllegalStateException("DB error")
+                override suspend fun deleteAllHistory(): Unit = error("DB error")
             },
         )
 
@@ -114,8 +113,7 @@ class FileHistoryAndPagingUseCasesTest {
         val useCase = CloseBookUseCaseImpl(
             bookFileReaderManager = object : BookFileReaderManager {
                 override suspend fun get(bookshelf: Bookshelf, book: Book): BookFileReader = TODO()
-                override suspend fun close(book: Book): Unit =
-                    throw IllegalStateException("Close failure")
+                override suspend fun close(book: Book): Unit = error("Close failure")
             },
         )
 
@@ -196,7 +194,7 @@ class FileHistoryAndPagingUseCasesTest {
                     bookshelfId: BookshelfId,
                     lastReadPage: Int,
                     lastReading: Long,
-                ): Unit = throw IllegalStateException("Update history failure")
+                ): Unit = error("Update history failure")
             },
         )
 

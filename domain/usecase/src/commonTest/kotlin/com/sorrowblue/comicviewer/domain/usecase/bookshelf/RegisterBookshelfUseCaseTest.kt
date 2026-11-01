@@ -132,8 +132,7 @@ class RegisterBookshelfUseCaseTest {
         val remoteClientFactory = object : RemoteStorageClient.Factory {
             override fun create(bookshelf: Bookshelf): RemoteStorageClient =
                 object : StubRemoteStorageClient() {
-                    override suspend fun connect(path: String): Unit =
-                        throw IllegalStateException("Unexpected failure")
+                    override suspend fun connect(path: String): Unit = error("Unexpected failure")
                 }
         }
 
@@ -281,8 +280,7 @@ class RegisterBookshelfUseCaseTest {
         }
 
         val fileRepository = object : StubFileRepository() {
-            override suspend fun root(id: BookshelfId): Folder? =
-                throw IllegalStateException("Database failure")
+            override suspend fun root(id: BookshelfId): Folder? = error("Database failure")
         }
 
         val useCase = RegisterBookshelfUseCaseImpl(

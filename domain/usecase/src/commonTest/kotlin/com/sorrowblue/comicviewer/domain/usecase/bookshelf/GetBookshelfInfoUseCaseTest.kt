@@ -96,8 +96,7 @@ class GetBookshelfInfoUseCaseTest {
                         flowOf(bookshelf)
                 },
                 fileRepository = object : StubFileRepository() {
-                    override suspend fun root(id: BookshelfId): Folder =
-                        throw IllegalStateException("DB read error")
+                    override suspend fun root(id: BookshelfId): Folder = error("DB read error")
                 },
                 sendFatalErrorUseCase = fatalErrorUseCase,
             )

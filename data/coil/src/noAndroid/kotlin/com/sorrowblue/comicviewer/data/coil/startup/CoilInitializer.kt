@@ -21,6 +21,5 @@ internal class CoilInitializer(private val context: PlatformContext) :
         initialize(context)
     }
 
-    override fun dependencies(): List<KClass<out Initializer<*>>> =
-        listOf(LogcatInitializer::class)
+    override fun dependencies(): List<KClass<out Initializer<*>>> = listOf(LogcatInitializer::class)
 }

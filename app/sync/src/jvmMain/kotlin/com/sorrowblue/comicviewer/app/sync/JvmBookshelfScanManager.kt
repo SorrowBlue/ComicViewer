@@ -33,7 +33,9 @@ internal class JvmBookshelfScanManager(
             scanBookshelfUseCase.invoke(ScanBookshelfUseCase.Request(it) { _, _ -> })
         },
         regenerateThumbnails = {
-            regenerateThumbnailsUseCase.invoke(RegenerateThumbnailsUseCase.Request(it) { _, _, _ -> })
+            regenerateThumbnailsUseCase.invoke(
+                RegenerateThumbnailsUseCase.Request(it) { _, _, _ -> },
+            )
         },
         onFileScanComplete = { bookshelfId ->
             val displayName = getDisplayName(bookshelfId)

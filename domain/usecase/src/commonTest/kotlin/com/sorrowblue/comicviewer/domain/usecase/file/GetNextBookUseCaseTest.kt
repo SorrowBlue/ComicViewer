@@ -283,7 +283,7 @@ class GetNextBookUseCaseTest {
     fun testFolder_whenFindByThrowsException_returnsSystemError() = runTest {
         val fakeFileRepository = object : StubFileRepository() {
             override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? =
-                throw IllegalStateException("DB failure")
+                error("DB failure")
         }
 
         val useCase = GetNextBookUseCaseImpl(

@@ -188,7 +188,7 @@ class RegenerateThumbnailsUseCaseTest {
             ): Resource<Unit, Resource.SystemError> {
                 super.load(fileThumbnail)
                 if (fileThumbnail.path.contains("Book2")) {
-                    throw IllegalStateException("Unexpected exception on Book2")
+                    error("Unexpected exception on Book2")
                 }
                 return Resource.Success(Unit)
             }
@@ -225,7 +225,7 @@ class RegenerateThumbnailsUseCaseTest {
                 bookshelfId: BookshelfId,
                 limit: Int,
                 offset: Long,
-            ): List<File> = throw IllegalStateException("DB error")
+            ): List<File> = error("DB error")
         }
         val thumbnailRepo = TestFakeThumbnailRepository()
 
