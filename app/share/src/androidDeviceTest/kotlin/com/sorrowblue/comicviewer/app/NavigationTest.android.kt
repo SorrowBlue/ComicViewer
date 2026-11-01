@@ -51,12 +51,11 @@ private fun waitForNetworkAvailable(context: Context) {
     }
 }
 
-private fun canRouteToHost(host: String, port: Int): Boolean =
-    runCatching {
-        DatagramSocket().use { socket ->
-            socket.connect(InetAddress.getByName(host), port)
-        }
-    }.isSuccess
+private fun canRouteToHost(host: String, port: Int): Boolean = runCatching {
+    DatagramSocket().use { socket ->
+        socket.connect(InetAddress.getByName(host), port)
+    }
+}.isSuccess
 
 actual fun tearDownTest(appGraph: AppGraph) {
     // Do nothing

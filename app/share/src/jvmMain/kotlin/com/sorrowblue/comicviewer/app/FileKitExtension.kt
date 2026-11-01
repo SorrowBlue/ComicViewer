@@ -25,7 +25,7 @@ private fun cacheDirFixed(appId: String): File {
 }
 
 private fun getEnv(key: String): String = System.getenv(key)
-    ?: throw IllegalStateException("Environment variable $key not found.")
+    ?: error("Environment variable $key not found.")
 
 fun initFileKit(appId: String) {
     FileKit.init(appId = appId, cacheDir = cacheDirFixed(appId))

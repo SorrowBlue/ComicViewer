@@ -102,7 +102,7 @@ class GetNavigationHistoryUseCaseTest {
             fileRepository = object : StubFileRepository() {
                 override fun lastHistory(): Flow<File?> = flowOf(book)
                 override suspend fun findBy(bookshelfId: BookshelfId, path: String): File? =
-                    throw IllegalStateException("Database failure")
+                    error("Database failure")
             },
             bookshelfRepository = object : StubBookshelfRepository() {
                 override fun flow(bookshelfId: BookshelfId): Flow<Bookshelf?> = flowOf(bookshelf)

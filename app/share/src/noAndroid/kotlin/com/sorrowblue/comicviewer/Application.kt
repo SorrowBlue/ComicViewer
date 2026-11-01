@@ -17,11 +17,18 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 @Composable
 context(context: PlatformContext)
 fun Application(finishApp: () -> Unit) {
-    val appViewModel = metroViewModel<ApplicationViewModel>()
-    val darkMode by appViewModel.displaySettings.collectAsStateWithLifecycle(DarkMode.DEVICE)
-    CompositionLocalProvider(LocalDarkMode provides darkMode) {
+    ProvideDarkMode {
         ComicViewerApp(
             finishApp = finishApp,
         )
     }
+}
+
+@Composable
+private fun ProvideDarkMode(
+    viewModel: ApplicationViewModel = metroViewModel(),
+    content: @Composable () -> Unit,
+) {
+    val darkMode by viewModel.displaySettings.collectAsStateWithLifecycle(DarkMode.DEVICE)
+    CompositionLocalProvider(LocalDarkMode provides darkMode, content = content)
 }

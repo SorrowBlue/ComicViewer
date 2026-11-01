@@ -158,7 +158,7 @@ class BookshelfUseCasesTest {
                 override suspend fun updateDeleted(
                     bookshelfId: BookshelfId,
                     isDeleted: Boolean,
-                ): Unit = throw IllegalStateException("Update failed")
+                ): Unit = error("Update failed")
             },
         )
 

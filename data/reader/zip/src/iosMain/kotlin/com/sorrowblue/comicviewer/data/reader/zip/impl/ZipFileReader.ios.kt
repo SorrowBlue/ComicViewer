@@ -8,9 +8,12 @@ import com.sorrowblue.kioarch.ArchiveEntry
 import platform.Foundation.NSString
 import platform.Foundation.localizedStandardCompare
 
-internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> {
-    return sortedWith(Comparator { a, b ->
+internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> = sortedWith(
+    Comparator {
+            a,
+            b,
+        ->
         @Suppress("CAST_NEVER_SUCCEEDS")
         (a.name as NSString).localizedStandardCompare(b.name).toInt()
-    })
-}
+    },
+)

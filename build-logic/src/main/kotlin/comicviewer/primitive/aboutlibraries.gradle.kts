@@ -14,8 +14,7 @@ aboutLibraries {
     collect {
         includePlatform.set(true)
         fetchRemoteLicense.set(true)
-        val githubApiToken = project.findProperty("githubApiToken") as? String
-        gitHubApiToken.set(githubApiToken)
+        gitHubApiToken.set(providers.gradleProperty("githubApiToken"))
     }
     license {
         strictMode.set(StrictMode.FAIL)

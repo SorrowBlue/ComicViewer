@@ -21,7 +21,9 @@ internal interface IosAppGraph : AppGraph {
     }
 }
 
-internal class IosApplication : IosContext(), AppGraphProvider<AppGraph> {
+internal class IosApplication :
+    IosContext(),
+    AppGraphProvider<AppGraph> {
     override val appGraph: AppGraph by lazy {
         createGraphFactory<IosAppGraph.Factory>().createIosAppGraph(this)
     }

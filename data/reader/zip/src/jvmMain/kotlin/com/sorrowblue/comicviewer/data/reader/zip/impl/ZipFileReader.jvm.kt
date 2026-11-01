@@ -19,4 +19,3 @@ internal actual fun List<ArchiveEntry>.sortedByName(): List<ArchiveEntry> {
     val collator = requireNotNull(collatorThreadLocal.get())
     return sortedWith(Comparator.comparing(ArchiveEntry::name, collator::compare))
 }
-

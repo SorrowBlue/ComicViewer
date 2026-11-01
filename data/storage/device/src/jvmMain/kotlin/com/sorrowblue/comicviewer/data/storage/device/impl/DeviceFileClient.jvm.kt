@@ -42,7 +42,7 @@ import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
 
-internal abstract class BaseJvmFileClient<T : Bookshelf>(
+internal open class BaseJvmFileClient<T : Bookshelf>(
     bookshelf: T,
     fileReaderFactoryMap: FileReaderFactoryMap,
     dispatcher: CoroutineDispatcher,

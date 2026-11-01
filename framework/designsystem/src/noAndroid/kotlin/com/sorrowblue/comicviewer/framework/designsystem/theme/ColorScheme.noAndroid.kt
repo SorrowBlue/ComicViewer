@@ -6,14 +6,16 @@ package com.sorrowblue.comicviewer.framework.designsystem.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.sorrowblue.comicviewer.domain.model.settings.DarkMode
 
 val LocalDarkMode = staticCompositionLocalOf { DarkMode.DEVICE }
 
+@ReadOnlyComposable
 @Composable
-internal actual fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): ColorScheme {
-    return when (LocalDarkMode.current) {
+internal actual fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): ColorScheme =
+    when (LocalDarkMode.current) {
         DarkMode.DEVICE -> when {
             darkTheme -> darkScheme
             else -> lightScheme
@@ -23,4 +25,3 @@ internal actual fun colorScheme(darkTheme: Boolean, dynamicColor: Boolean): Colo
 
         DarkMode.LIGHT -> lightScheme
     }
-}

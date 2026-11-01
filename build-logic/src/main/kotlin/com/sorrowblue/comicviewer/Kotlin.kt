@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configure<T> {
     jvmToolchain {
         vendor.set(JvmVendorSpec.ADOPTIUM)
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+        languageVersion.set(libs.versions.java.map(JavaLanguageVersion::of))
     }
     require(this is KotlinAndroidProjectExtension || this is KotlinMultiplatformExtension) {
         "Unsupported project extension $this ${T::class}"
@@ -28,7 +28,10 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
         freeCompilerArgs.add("-Xintrinsic-const-evaluation")
         freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
 
-        val warningsAsErrors = project.findProperty("warningsAsErrors") as? String
-        allWarningsAsErrors.set(warningsAsErrors.toBoolean())
+        allWarningsAsErrors.set(
+            providers.gradleProperty("warningsAsErrors")
+                .map(String::toBoolean)
+                .orElse(false),
+        )
     }
 }

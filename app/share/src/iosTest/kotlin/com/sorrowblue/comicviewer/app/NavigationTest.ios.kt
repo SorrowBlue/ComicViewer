@@ -20,9 +20,7 @@ actual fun tearDownTest(appGraph: AppGraph) {
     // Do nothing for iOS tests
 }
 
-actual fun createAppGraph(): AppGraph {
-    return IosApplication().appGraph
-}
+actual fun createAppGraph(): AppGraph = IosApplication().appGraph
 
 @DependencyGraph(scope = AppScope::class)
 internal interface TestAppGraph : AppGraph {
@@ -32,7 +30,9 @@ internal interface TestAppGraph : AppGraph {
     }
 }
 
-internal class IosApplication : IosContext(), AppGraphProvider<AppGraph> {
+internal class IosApplication :
+    IosContext(),
+    AppGraphProvider<AppGraph> {
     override val appGraph: AppGraph by lazy {
         createGraphFactory<TestAppGraph.Factory>().createTestAppGraph(this)
     }

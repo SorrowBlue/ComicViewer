@@ -129,8 +129,7 @@ class ClearImageCacheUseCaseTest {
     @Test
     fun clearOtherImageCache_whenRepositoryThrowsException_returnsError() = runTest {
         val imageCacheRepository = object : StubImageCacheRepository() {
-            override suspend fun clearImageCache(): Unit =
-                throw IllegalStateException("Disk deletion failure")
+            override suspend fun clearImageCache(): Unit = error("Disk deletion failure")
         }
 
         val useCase = ClearImageCacheUseCaseImpl(

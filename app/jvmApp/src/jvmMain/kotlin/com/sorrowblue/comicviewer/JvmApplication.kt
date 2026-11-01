@@ -5,8 +5,7 @@
 package com.sorrowblue.comicviewer
 
 import com.sorrowblue.comicviewer.app.AppGraph
-import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
-import com.sorrowblue.comicviewer.framework.common.DesktopContext
+import com.sorrowblue.comicviewer.app.JvmApplication
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
@@ -21,9 +20,7 @@ internal interface JvmAppGraph : AppGraph {
     }
 }
 
-internal class JvmApplication :
-    DesktopContext(),
-    AppGraphProvider<AppGraph> {
+internal class MainApplication : JvmApplication() {
     override val appGraph: AppGraph by lazy {
         createGraphFactory<JvmAppGraph.Factory>().createJvmAppGraph(this)
     }

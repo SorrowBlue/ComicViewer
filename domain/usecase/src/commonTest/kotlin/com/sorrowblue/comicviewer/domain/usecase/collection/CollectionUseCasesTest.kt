@@ -53,7 +53,7 @@ class CollectionUseCasesTest {
         val useCase = CreateCollectionUseCaseImpl(
             repository = object : StubCollectionRepository() {
                 override suspend fun create(collection: Collection): Collection =
-                    throw IllegalStateException("Create failed")
+                    error("Create failed")
             },
         )
 
@@ -97,8 +97,7 @@ class CollectionUseCasesTest {
     fun updateCollection_whenRepositoryThrowsException_returnsError() = runTest {
         val useCase = UpdateCollectionUseCaseImpl(
             repository = object : StubCollectionRepository() {
-                override suspend fun update(collection: Collection): Unit =
-                    throw IllegalStateException("Update failed")
+                override suspend fun update(collection: Collection): Unit = error("Update failed")
             },
         )
 
@@ -143,7 +142,7 @@ class CollectionUseCasesTest {
         val useCase = DeleteCollectionUseCaseImpl(
             repository = object : StubCollectionRepository() {
                 override suspend fun delete(collectionId: CollectionId): Unit =
-                    throw IllegalStateException("Delete failed")
+                    error("Delete failed")
             },
         )
 
@@ -189,8 +188,7 @@ class CollectionUseCasesTest {
         val collectionFile = CollectionFile(collectionId, BookshelfId(1), "/manga/vol1.cbz")
         val useCase = RemoveCollectionFileUseCaseImpl(
             repository = object : StubCollectionFileRepository() {
-                override suspend fun remove(file: CollectionFile): Unit =
-                    throw IllegalStateException("Remove failed")
+                override suspend fun remove(file: CollectionFile): Unit = error("Remove failed")
             },
         )
 

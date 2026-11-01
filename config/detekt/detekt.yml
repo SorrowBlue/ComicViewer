@@ -110,6 +110,7 @@ Compose:
       'LocalFinishApp',
       'LocalNavigationSuiteScaffoldState',
       'LocalFloatingActionButtonState',
+      'LocalDarkMode',
     ]
   CompositionLocalNaming:
     active: true

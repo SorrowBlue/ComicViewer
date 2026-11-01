@@ -22,9 +22,7 @@ internal class DeviceSeekableInputStream(private val filePath: String) : Seekabl
 
     private var file: CPointer<FILE>? = fopen(filePath, "rb")
 
-    override fun read(buf: ByteArray): Int {
-        return read(buf, 0, buf.size)
-    }
+    override fun read(buf: ByteArray): Int = read(buf, 0, buf.size)
 
     override fun read(buf: ByteArray, offset: Int, length: Int): Int {
         if (offset < 0 || length < 0 || offset > buf.size || length > buf.size - offset) {

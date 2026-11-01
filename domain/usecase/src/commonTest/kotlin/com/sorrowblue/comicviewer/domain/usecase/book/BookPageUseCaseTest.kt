@@ -66,7 +66,7 @@ class BookPageUseCaseTest {
                 totalPageCount: Int,
                 pageFormat: BookSettings.PageFormat,
                 isCompactWindow: Boolean,
-            ): List<BookPage> = throw IllegalStateException("Layout error")
+            ): List<BookPage> = error("Layout error")
 
             override fun resolvePage(
                 currentList: List<PageItem>,
@@ -149,7 +149,7 @@ class BookPageUseCaseTest {
                 currentList: List<PageItem>,
                 unratedPage: UnratedPage,
                 isPortrait: Boolean,
-            ): List<PageItem> = throw IllegalStateException("Resolve error")
+            ): List<PageItem> = error("Resolve error")
         }
         val useCase = ResolveBookPageLayoutUseCaseImpl(failingService)
         val result = useCase(
