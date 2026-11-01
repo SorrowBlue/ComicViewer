@@ -5,8 +5,6 @@
 package com.sorrowblue.comicviewer.app
 
 import com.sorrowblue.comicviewer.data.database.TestHelper
-import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
-import com.sorrowblue.comicviewer.framework.common.DesktopContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
@@ -35,9 +33,7 @@ actual fun tearDownTest(appGraph: AppGraph) {
     }
 }
 
-actual fun createAppGraph(): AppGraph {
-    return JvmApplication().appGraph
-}
+actual fun createAppGraph(): AppGraph = TestApplication().appGraph
 
 @DependencyGraph(scope = AppScope::class)
 internal interface TestAppGraph : AppGraph {
@@ -61,7 +57,7 @@ interface TestHelperContext {
     }
 }
 
-private class JvmApplication : DesktopContext(), AppGraphProvider<AppGraph> {
+internal class TestApplication : JvmApplication() {
     override val appGraph: AppGraph by lazy {
         createGraphFactory<TestAppGraph.Factory>().createTestAppGraph(this)
     }

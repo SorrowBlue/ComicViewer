@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.registerSkikoComposeImplementation
 import androidx.compose.ui.window.application
 import com.sorrowblue.comicviewer.app.MainWindow
 import com.sorrowblue.comicviewer.app.initFileKit
+import com.sorrowblue.comicviewer.app.startWindow
 import java.awt.Window
 import java.io.File
 import kotlin.system.exitProcess
@@ -38,11 +39,10 @@ fun main(args: Array<String>) {
                 "com.sorrowblue.comicviewer"
             },
         )
-        val jvmApplication = JvmApplication()
+        val mainApplication = MainApplication()
+        mainApplication.onCreate()
         application {
-            context(jvmApplication.appGraph) {
-                MainWindow(exitApplication = ::exitApplication)
-            }
+            mainApplication.startWindow<MainWindow>()
             if (isSmokeTest) {
                 LaunchedEffect(Unit) {
                     withTimeout(20.seconds) {
