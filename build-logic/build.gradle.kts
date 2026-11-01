@@ -10,7 +10,7 @@ group = "com.sorrowblue.comicviewer.buildlogic"
 kotlin {
     jvmToolchain {
         vendor = JvmVendorSpec.ADOPTIUM
-        languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+        languageVersion = libs.versions.java.map(JavaLanguageVersion::of)
     }
 }
 
@@ -31,7 +31,7 @@ dependencies {
 detekt {
     buildUponDefaultConfig = true
     config.setFrom(layout.projectDirectory.file("../config/detekt/detekt.yml"))
-    basePath.set(projectDir)
+    basePath.set(layout.projectDirectory)
     autoCorrect = true
     parallel = true
 }

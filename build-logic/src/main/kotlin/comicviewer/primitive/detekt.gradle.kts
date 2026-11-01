@@ -18,8 +18,8 @@ dependencies {
 
 detekt {
     buildUponDefaultConfig = true
-    config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
-    basePath.set(rootProject.projectDir)
+    config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml"))
+    basePath.set(rootProject.layout.projectDirectory)
     autoCorrect = true
     parallel = true
 }
@@ -36,7 +36,7 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
-rootProject.tasks.withType<ReportMergeTask> {
+rootProject.tasks.withType<ReportMergeTask>().configureEach {
     input.from(
         tasks.withType<Detekt>()
             .map { it.reports.sarif.outputLocation },

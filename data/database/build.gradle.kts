@@ -59,13 +59,13 @@ kotlin {
             }
         }
 
-        getByName("androidHostTest") {
+        named("androidHostTest") {
             dependencies {
                 runtimeOnly(libs.robolectric)
             }
         }
 
-        getByName("androidDeviceTest") {
+        named("androidDeviceTest") {
             dependencies {
                 implementation(libs.androidx.testRunner)
                 implementation(libs.androidx.room3SqliteWrapper)
@@ -95,7 +95,7 @@ dependencies {
 }
 
 room3 {
-    schemaDirectory("$projectDir/schemas")
+    schemaDirectory(layout.projectDirectory.dir("schemas"))
 }
 
 tasks.withType<Test>().matching { it.name.contains("AndroidHostTest") }.configureEach {

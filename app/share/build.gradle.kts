@@ -105,7 +105,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
-        getByName("androidDeviceTest") {
+        named("androidDeviceTest") {
             dependencies {
                 implementation(libs.androidx.testRunner)
                 runtimeOnly(libs.androidx.test.espressoCore)
@@ -120,12 +120,15 @@ dependencies {
 
 buildConfig {
     packageName = "com.sorrowblue.comicviewer.app"
-    buildConfigField("SMB_HOST", project.findProperty("smbHost")?.toString().orEmpty())
-    buildConfigField("SMB_PORT", project.findProperty("smbPort")?.toString()?.toIntOrNull() ?: 445)
-    buildConfigField("SMB_USERNAME", project.findProperty("smbUsername")?.toString().orEmpty())
-    buildConfigField("SMB_DOMAIN", project.findProperty("smbDomain")?.toString().orEmpty())
-    buildConfigField("SMB_PASSWORD", project.findProperty("smbPassword")?.toString().orEmpty())
-    buildConfigField("SMB_PATH", project.findProperty("smbPath")?.toString().orEmpty())
+    buildConfigField("SMB_HOST", providers.gradleProperty("smbHost").orElse(""))
+    buildConfigField(
+        "SMB_PORT",
+        providers.gradleProperty("smbPort").map { it.toIntOrNull() ?: 445 }.orElse(445),
+    )
+    buildConfigField("SMB_USERNAME", providers.gradleProperty("smbUsername").orElse(""))
+    buildConfigField("SMB_DOMAIN", providers.gradleProperty("smbDomain").orElse(""))
+    buildConfigField("SMB_PASSWORD", providers.gradleProperty("smbPassword").orElse(""))
+    buildConfigField("SMB_PATH", providers.gradleProperty("smbPath").orElse(""))
 }
 
 ksp {

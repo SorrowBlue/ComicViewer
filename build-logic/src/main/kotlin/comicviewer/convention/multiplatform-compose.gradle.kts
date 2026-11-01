@@ -33,10 +33,24 @@ val enableComposeCompilerReports = providers.gradleProperty("enableComposeCompil
     .orElse(false)
 
 composeCompiler {
-    if (enableComposeCompilerReports.get()) {
-        reportsDestination = layout.buildDirectory.dir("compose_compiler/reports")
-        metricsDestination = layout.buildDirectory.dir("compose_compiler/metrics")
-    }
+    reportsDestination.set(
+        enableComposeCompilerReports.flatMap { enabled ->
+            if (enabled) {
+                layout.buildDirectory.dir("compose_compiler/reports")
+            } else {
+                objects.directoryProperty()
+            }
+        },
+    )
+    metricsDestination.set(
+        enableComposeCompilerReports.flatMap { enabled ->
+            if (enabled) {
+                layout.buildDirectory.dir("compose_compiler/metrics")
+            } else {
+                objects.directoryProperty()
+            }
+        },
+    )
     val stabilityConfigFile = rootProject.layout.projectDirectory.file(
         "config/compose/compose_compiler_config.conf",
     )

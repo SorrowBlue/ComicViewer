@@ -11,16 +11,15 @@ plugins {
     com.android.application
 }
 
+val gitVersionCodeProvider =
+    providers.of(AndroidVersionCodeValueSource::class) {}.map(String::toInt)
+val gitVersionNameProvider = providers.of(GitPlaneTagValueSource::class) {}
+
 androidComponents {
     onVariants(selector().all()) { variant ->
         variant.outputs.forEach { output ->
-            val gitTagCountProvider = providers.of(AndroidVersionCodeValueSource::class) {}
-            val gitPlaneTagProvider = providers.of(GitPlaneTagValueSource::class) {}
-            output.versionName.set(gitPlaneTagProvider.get())
-            output.versionCode.set(gitTagCountProvider.get().toInt())
-            logger.lifecycle(
-                "${variant.name}: versionName=${output.versionName.get()}, versionCode=${output.versionCode.get()}",
-            )
+            output.versionName.set(gitVersionNameProvider)
+            output.versionCode.set(gitVersionCodeProvider)
         }
     }
 }

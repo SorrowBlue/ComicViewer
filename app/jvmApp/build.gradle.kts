@@ -96,7 +96,7 @@ compose.desktop {
         )
     }
 }
-tasks.withType<JavaExec> {
+tasks.withType<JavaExec>().configureEach {
     jvmArgs("-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
 }
 
@@ -209,12 +209,14 @@ tasks.register<InspectConveyorDependenciesTask>("inspectConveyorDependencies") {
 
     runtimeJars.from(externalArtifacts.map { it.artifactFiles })
     jarPathToCoordinate.set(
-        externalArtifacts.map { artifacts ->
-            artifacts.resolvedArtifacts.get().mapNotNull { artifact ->
-                val id = artifact.id.componentIdentifier as? ModuleComponentIdentifier
-                    ?: return@mapNotNull null
-                artifact.file.absolutePath to "${id.group}:${id.module}:${id.version}"
-            }.toMap()
+        externalArtifacts.flatMap { artifacts ->
+            artifacts.resolvedArtifacts.map { resolvedSet ->
+                resolvedSet.mapNotNull { artifact ->
+                    val id = artifact.id.componentIdentifier as? ModuleComponentIdentifier
+                        ?: return@mapNotNull null
+                    artifact.file.absolutePath to "${id.group}:${id.module}:${id.version}"
+                }.toMap()
+            }
         },
     )
     manifestOutputFile.set(layout.buildDirectory.file("conveyor/deps.txt"))
