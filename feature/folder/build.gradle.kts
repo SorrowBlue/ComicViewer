@@ -10,16 +10,17 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.book.nav)
+                implementation(projects.feature.file.nav)
                 implementation(projects.feature.folder.nav)
                 implementation(projects.feature.permission.nav)
                 implementation(projects.feature.search.nav)
                 implementation(projects.feature.settings.nav)
-                implementation(projects.feature.file.nav)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
             }
         }
         commonTest {
             dependencies {
-                implementation(libs.kotlin.test)
                 implementation(libs.kotlinx.coroutinesTest)
             }
         }

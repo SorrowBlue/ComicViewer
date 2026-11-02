@@ -15,6 +15,9 @@ kotlin {
                 implementation(projects.feature.folder.nav)
                 implementation(projects.feature.search.nav)
                 implementation(projects.feature.settings.nav)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
+                implementation(libs.kotlinx.collectionsImmutable)
             }
         }
     }

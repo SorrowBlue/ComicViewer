@@ -10,8 +10,8 @@ plugins {
     alias(libs.plugins.comicviewer.primitive.detekt)
     alias(libs.plugins.comicviewer.primitive.dokka)
     alias(libs.plugins.comicviewer.primitive.aboutlibraries)
+    alias(libs.plugins.comicviewer.primitive.jvmAppVersion)
     id("dev.hydraulic.conveyor") version "2.0"
-    id("comicviewer.primitive.jvm-app-version")
 }
 
 kotlin {
@@ -20,8 +20,6 @@ kotlin {
     sourceSets {
         jvmMain.dependencies {
             diSubprojects.forEach(::implementation)
-
-            implementation(compose.desktop.currentOs)
 
             implementation(libs.compose.ui)
 

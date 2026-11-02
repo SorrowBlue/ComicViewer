@@ -7,6 +7,13 @@ kotlin {
     android {
         namespace = "com.sorrowblue.comicviewer.feature.settings.common"
     }
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+            "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
+        )
+    }
 
     sourceSets {
         commonMain {
@@ -16,12 +23,10 @@ kotlin {
                 implementation(projects.framework.ui)
                 implementation(projects.framework.ui.preview)
 
-
                 implementation(libs.androidx.windowCore)
                 implementation(libs.compose.material3)
-                implementation(libs.compose.material3Adaptive)
+                api(libs.compose.material3Adaptive)
                 implementation(libs.compose.material3AdaptiveLayout)
-                implementation(libs.compose.ui)
                 implementation(libs.compose.preview)
             }
         }

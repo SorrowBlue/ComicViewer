@@ -101,7 +101,7 @@ private fun isWindowPositionValid(x: Int, y: Int, width: Int, height: Int): Bool
 /**
  * State holder for [RecoverableWindow] that manages persisting and restoring [WindowSettings].
  */
-interface RecoverableWindowState {
+internal interface RecoverableWindowState {
 
     /**
      * Stream of saved [WindowSettings].

@@ -11,6 +11,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.collection.nav)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
+                implementation(libs.coil3.compose)
             }
         }
     }

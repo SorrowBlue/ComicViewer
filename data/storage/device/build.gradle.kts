@@ -10,7 +10,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.data.storage)
-                implementation(libs.kotlinx.coroutinesCore)
             }
         }
         androidMain {

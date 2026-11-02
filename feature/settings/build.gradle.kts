@@ -11,6 +11,8 @@ kotlin {
             dependencies {
                 implementation(projects.feature.settings.common)
                 implementation(projects.feature.settings.nav)
+                implementation(libs.compose.material3Adaptive)
+                implementation(libs.kotlinx.collectionsImmutable)
             }
         }
         androidMain {

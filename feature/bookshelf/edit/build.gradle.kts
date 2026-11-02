@@ -21,7 +21,9 @@ kotlin {
                 implementation(projects.feature.bookshelf.nav)
                 implementation(projects.feature.permission.nav)
                 implementation(projects.framework.permission)
+                implementation(libs.androidx.navigationeventCompose)
                 implementation(libs.filekit.compose)
+                implementation(libs.kotlinx.collectionsImmutable)
             }
         }
         commonTest {
@@ -32,7 +34,6 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutinesSwing)
             }
         }

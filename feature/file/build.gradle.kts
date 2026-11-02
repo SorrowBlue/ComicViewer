@@ -9,10 +9,13 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.kotlinx.datetime)
-                implementation(projects.feature.file.nav)
                 implementation(projects.feature.collection.nav)
+                implementation(projects.feature.file.nav)
                 implementation(projects.feature.folder.nav)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
+                implementation(libs.compose.material3Adaptive)
+                implementation(libs.kotlinx.datetime)
             }
         }
     }

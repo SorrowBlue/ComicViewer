@@ -12,6 +12,7 @@ kotlin {
                 implementation(projects.feature.book.nav)
                 implementation(projects.feature.permission.nav)
                 implementation(projects.feature.settings.nav)
+                implementation(libs.coil3.compose)
             }
         }
         commonTest {
