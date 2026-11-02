@@ -17,15 +17,19 @@ val Project.libs: LibrariesForLibs
 fun PluginManager.hasPlugin(provider: Provider<PluginDependency>): Boolean =
     hasPlugin(provider.get().pluginId)
 
-private val nonDiModulePaths = setOf(
+internal val nonDiModulePaths = setOf(
     ":core:logger",
-    ":konture-test",
+    ":domain:repository",
+    ":feature:file:nav",
+    ":feature:settings:common",
+    ":framework:common",
     ":framework:designsystem",
+    ":framework:navigation",
     ":framework:navigation:processor",
+    ":framework:permission",
     ":framework:test",
     ":framework:ui:preview",
-    ":framework:permission",
-    ":feature:file:nav",
+    ":konture-test",
 )
 
 /**

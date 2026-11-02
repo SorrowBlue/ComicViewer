@@ -17,7 +17,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(project(":framework:navigation"))
-                implementation(libs.androidx.navigation3Runtime)
+                api(libs.androidx.navigation3Runtime)
             }
         }
     }
@@ -26,9 +26,6 @@ kotlin {
 dependencies {
     add("kspAndroid", project(":framework:navigation:processor"))
     add("kspJvm", project(":framework:navigation:processor"))
-    add("kspJvmTest", project(":framework:navigation:processor"))
     add("kspIosArm64", project(":framework:navigation:processor"))
-    add("kspIosArm64Test", project(":framework:navigation:processor"))
     add("kspIosSimulatorArm64", project(":framework:navigation:processor"))
-    add("kspIosSimulatorArm64Test", project(":framework:navigation:processor"))
 }

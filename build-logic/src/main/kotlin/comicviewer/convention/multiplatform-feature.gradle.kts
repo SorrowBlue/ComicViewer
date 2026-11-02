@@ -11,7 +11,6 @@ plugins {
     id("comicviewer.convention.multiplatform-library")
     id("comicviewer.convention.multiplatform-compose")
     com.github.skydoves.navgraph
-    com.google.devtools.ksp
     id("comicviewer.convention.navigation-library")
 }
 
@@ -29,6 +28,13 @@ kotlin {
             isIncludeAndroidResources = true
         }
     }
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+            "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
+        )
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(project(":framework:designsystem"))
@@ -36,30 +42,19 @@ kotlin {
             implementation(project(":framework:ui:preview"))
             implementation(project(":domain:usecase"))
 
-            // Image
-            implementation(libs.coil3.compose)
-            // Paging
-            implementation(libs.androidx.pagingCommon)
-
             implementation(libs.compose.componentsResources)
             implementation(libs.compose.preview)
-            implementation(libs.kotlinx.collectionsImmutable)
-            implementation(libs.androidx.lifecycleCommon)
 
             // Adaptive
             implementation(libs.compose.material3)
-            implementation(libs.compose.material3Adaptive)
             implementation(libs.compose.material3AdaptiveLayout)
             implementation(libs.compose.material3AdaptiveNavigation3)
 
             // Navigation
             implementation(libs.androidx.lifecycleCompose)
             implementation(libs.androidx.navigation3UI)
-            implementation(libs.androidx.navigationeventCompose)
             implementation(libs.kotlinx.serializationCore)
 
-            // Paging
-            implementation(libs.androidx.pagingCompose)
             implementation(libs.metro.viewmodelCompose)
         }
         commonTest {
