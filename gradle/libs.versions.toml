@@ -46,7 +46,9 @@ kotlin = "2.4.21"
 kotlinx-collectionsImmutable = "0.5.2"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
+kotlinx-io = "0.9.2"
 kotlinx-serialization = "1.12.0"
+kpdfium = "0.1.1"
 ksp = "2.3.12"
 metro = "1.5.1"
 multiplatform-navigation3 = "1.2.0"
@@ -66,7 +68,6 @@ androidx-coreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "
 androidx-coreSplashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-coreSplashscreen" }
 androidx-datastoreCoreOkio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "androidx-datastore" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "androidx-documentfile" }
-androidx-lifecycleCommon = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-common", version.ref = "androidx-lifecycle" }
 androidx-lifecycleCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycleViewmodelNavigation3 = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
 androidx-navigation3Runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "androidx-navigation3" }
@@ -123,18 +124,19 @@ kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "c
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serializationGradlePlugin = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-testJunit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
 kotlinx-collectionsImmutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collectionsImmutable" }
 kotlinx-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
-kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version = "0.9.2" }
-kotlinx-ioOkio = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-okio", version = "0.9.2" }
+kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
+kotlinx-ioOkio = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-okio", version.ref = "kotlinx-io" }
 kotlinx-serializationCbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
 kotlinx-serializationCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serializationProtobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
-kpdfium = { group = "com.sorrowblue.kpdfium", name = "kpdfium", version = "0.1.1" }
+kpdfium = { group = "com.sorrowblue.kpdfium", name = "kpdfium", version.ref = "kpdfium" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 metro-android = { group = "dev.zacsweers.metro", name = "metrox-android", version.ref = "metro" }
@@ -167,7 +169,6 @@ plugins = [
 [plugins]
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
 androidApplication = { id = "com.android.application", version.ref = "android-gradle" }
-androidLibrary = { id = "com.android.library", version.ref = "android-gradle" }
 androidMultiplatform = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 androidTest = { id = "com.android.test", version.ref = "android-gradle" }
 androidxRoom3 = { id = "androidx.room3", version.ref = "androidx-room3" }
@@ -179,8 +180,10 @@ comicviewer-multiplatformFeature = { id = "comicviewer.convention.multiplatform-
 comicviewer-multiplatformLibrary = { id = "comicviewer.convention.multiplatform-library" }
 comicviewer-navigationLibrary = { id = "comicviewer.convention.navigation-library" }
 comicviewer-primitive-aboutlibraries = { id = "comicviewer.primitive.aboutlibraries" }
+comicviewer-primitive-androidVersionNameCode = { id = "comicviewer.primitive.android-version-name-code" }
 comicviewer-primitive-detekt = { id = "comicviewer.primitive.detekt" }
 comicviewer-primitive-dokka = { id = "comicviewer.primitive.dokka" }
+comicviewer-primitive-jvmAppVersion = { id = "comicviewer.primitive.jvm-app-version" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

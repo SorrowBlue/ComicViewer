@@ -5,7 +5,6 @@ import nl.littlerobots.vcu.plugin.resolver.VersionSelectors
 plugins {
     alias(libs.plugins.dependencyAnalysis)
     alias(libs.plugins.androidApplication) apply false
-    alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.androidMultiplatform) apply false
     alias(libs.plugins.androidTest) apply false
     alias(libs.plugins.androidxRoom3) apply false
@@ -31,7 +30,6 @@ dependencyAnalysis {
             onAny {
                 exclude("dev.zacsweers.metro:runtime")
                 exclude("org.jetbrains.compose.hot-reload:hot-reload-runtime-api")
-                excludeRegex("org\\.jetbrains\\.compose\\.desktop:desktop.*")
                 exclude(":core:logger")
             }
         }
@@ -58,9 +56,6 @@ dependencyAnalysis {
         }
         bundle("androidx.paging") {
             includeGroup("androidx.paging")
-        }
-        bundle("org.jetbrains.compose.desktop") {
-            includeGroup("org.jetbrains.compose.desktop")
         }
         bundle("org.jetbrains.compose.ui") {
             includeGroup("androidx.compose.ui")
@@ -114,6 +109,8 @@ dependencies {
     dokka(projects.app.ios)
     dokka(projects.app.jvmApp)
     dokka(projects.app.share)
+    dokka(projects.app.sync)
+    dokka(projects.core.logger)
     dokka(projects.data.coil)
     dokka(projects.data.database)
     dokka(projects.data.datastore)
@@ -122,7 +119,6 @@ dependencies {
     dokka(projects.data.storage)
     dokka(projects.data.storage.device)
     dokka(projects.data.storage.smb)
-    dokka(projects.app.sync)
     dokka(projects.domain.model)
     dokka(projects.domain.repository)
     dokka(projects.domain.service)
@@ -144,26 +140,32 @@ dependencies {
     dokka(projects.feature.folder)
     dokka(projects.feature.folder.nav)
     dokka(projects.feature.history)
+    dokka(projects.feature.permission)
+    dokka(projects.feature.permission.nav)
     dokka(projects.feature.readlater)
     dokka(projects.feature.search)
     dokka(projects.feature.search.nav)
     dokka(projects.feature.settings)
     dokka(projects.feature.settings.common)
     dokka(projects.feature.settings.display)
+    dokka(projects.feature.settings.extension)
     dokka(projects.feature.settings.folder)
     dokka(projects.feature.settings.info)
     dokka(projects.feature.settings.nav)
-    dokka(projects.feature.settings.extension)
     dokka(projects.feature.settings.security)
     dokka(projects.feature.settings.viewer)
     dokka(projects.feature.tutorial)
     dokka(projects.feature.tutorial.nav)
+    dokka(projects.framework.background)
     dokka(projects.framework.common)
     dokka(projects.framework.designsystem)
+    dokka(projects.framework.navigation)
     dokka(projects.framework.notification)
+    dokka(projects.framework.permission)
     dokka(projects.framework.startup)
     dokka(projects.framework.test)
     dokka(projects.framework.ui)
+    dokka(projects.framework.ui.preview)
 }
 
 val reportMerge = tasks.register("reportMerge", ReportMergeTask::class) {
