@@ -186,6 +186,7 @@ class ArchitectureGuardrailsTest {
             "file",
             "folder",
             "history",
+            "permission",
             "readlater",
             "search",
             "settings",
