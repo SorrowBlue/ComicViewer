@@ -8,8 +8,8 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.domain.model)
-            implementation(libs.androidx.navigation3Runtime)
+            api(projects.domain.model)
+            api(libs.androidx.navigation3Runtime)
         }
     }
 }

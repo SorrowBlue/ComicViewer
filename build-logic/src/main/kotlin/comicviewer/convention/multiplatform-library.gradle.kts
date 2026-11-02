@@ -5,6 +5,7 @@
 package comicviewer.convention
 
 import com.sorrowblue.comicviewer.configureKotlin
+import com.sorrowblue.comicviewer.nonDiModulePaths
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.named
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -17,7 +18,10 @@ plugins {
     id("comicviewer.primitive.detekt")
     id("comicviewer.primitive.dokka")
     id("comicviewer.primitive.lint")
-    id("comicviewer.primitive.metro")
+}
+
+if (project.path !in nonDiModulePaths) {
+    pluginManager.apply("comicviewer.primitive.metro")
 }
 
 kotlin {

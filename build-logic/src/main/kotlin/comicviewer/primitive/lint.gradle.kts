@@ -6,7 +6,6 @@ package comicviewer.primitive
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryExtension
-import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.dsl.Lint
 import com.sorrowblue.comicviewer.hasPlugin
 import com.sorrowblue.comicviewer.libs
@@ -15,14 +14,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 when {
     pluginManager.hasPlugin(libs.plugins.androidApplication) -> {
         configure<ApplicationExtension> {
-            lint {
-                configure()
-            }
-        }
-    }
-
-    pluginManager.hasPlugin(libs.plugins.androidLibrary) -> {
-        configure<LibraryExtension> {
             lint {
                 configure()
             }

@@ -19,6 +19,10 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.collection.nav)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
+                implementation(libs.coil3.compose)
+                implementation(libs.kotlinx.collectionsImmutable)
             }
         }
         commonTest {
@@ -29,7 +33,6 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutinesSwing)
             }
         }

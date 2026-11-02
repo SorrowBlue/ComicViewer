@@ -10,6 +10,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.tutorial.nav)
+                implementation(libs.androidx.navigationeventCompose)
+                implementation(libs.kotlinx.collectionsImmutable)
             }
         }
     }

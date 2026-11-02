@@ -55,10 +55,17 @@ kotlin {
         }
         withHostTest { }
     }
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+            "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
+        )
+    }
     sourceSets {
         commonMain {
             dependencies {
-                api(projects.domain.model)
+                implementation(projects.domain.model)
                 api(projects.domain.usecase)
                 api(projects.framework.common)
                 api(projects.framework.navigation)
@@ -102,12 +109,10 @@ kotlin {
             implementation(libs.compose.componentsAnimatedimage)
         }
         jvmTest.dependencies {
-            implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
         named("androidDeviceTest") {
             dependencies {
-                implementation(libs.androidx.testRunner)
                 runtimeOnly(libs.androidx.test.espressoCore)
             }
         }

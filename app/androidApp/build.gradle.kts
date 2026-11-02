@@ -3,7 +3,7 @@ import com.sorrowblue.comicviewer.diSubprojects
 plugins {
     alias(libs.plugins.comicviewer.androidApplication)
     alias(libs.plugins.comicviewer.di)
-    id("comicviewer.primitive.android-version-name-code")
+    alias(libs.plugins.comicviewer.primitive.androidVersionNameCode)
 }
 
 android {
@@ -61,7 +61,6 @@ dependencies {
     diSubprojects.forEach(::implementation)
     implementation(libs.androidx.workRuntime)
     implementation(libs.metro.android)
-    implementation(libs.androidx.appcompat)
 }
 
 metro {

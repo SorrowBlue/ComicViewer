@@ -9,29 +9,29 @@ plugins {
 }
 
 kotlin {
+    val exportedProjects = listOf(
+        projects.data.storage,
+        projects.data.storage.smb,
+        projects.data.storage.device,
+        projects.data.reader.zip,
+        projects.domain.model,
+    )
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
             binaryOption("bundleId", "com.sorrowblue.comicviewer.app")
-            export(projects.data.storage)
-            export(projects.data.storage.smb)
-            export(projects.data.storage.device)
-            export(projects.data.reader.zip)
-            export(projects.domain.model)
+            exportedProjects.forEach(::export)
         }
     }
     sourceSets {
         iosMain.dependencies {
-            diSubprojects.forEach(::implementation)
-            api(projects.data.storage)
-            api(projects.data.storage.smb)
-            api(projects.data.storage.device)
-            api(projects.data.reader.zip)
-            api(projects.domain.model)
+            val exportedPaths = exportedProjects.map { it.path }.toSet()
+            diSubprojects.filterNot { it.path in exportedPaths }.forEach(::implementation)
+            exportedProjects.forEach(::api)
         }
     }
 }

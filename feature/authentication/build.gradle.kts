@@ -10,6 +10,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(projects.feature.authentication.nav)
+                implementation(libs.kotlinx.collectionsImmutable)
             }
         }
         commonTest {

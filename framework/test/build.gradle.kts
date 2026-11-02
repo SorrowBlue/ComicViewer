@@ -11,12 +11,11 @@ kotlin {
             dependencies {
                 api(libs.androidx.testExtJunit)
                 api(libs.androidx.testRunner)
-                implementation(libs.junit)
             }
         }
         jvmMain {
             dependencies {
-                implementation(kotlin("test-junit5"))
+                implementation(libs.kotlin.testJunit5)
             }
         }
     }

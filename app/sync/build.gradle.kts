@@ -11,14 +11,12 @@ kotlin {
             dependencies {
                 api(projects.domain.repository)
                 implementation(projects.domain.usecase)
-                implementation(libs.kotlinx.coroutinesCore)
             }
         }
         androidMain {
             dependencies {
                 implementation(projects.framework.background)
                 implementation(projects.framework.notification)
-                implementation(libs.androidx.workRuntime)
                 implementation(libs.androidx.coreKtx)
             }
         }

@@ -34,7 +34,7 @@ val gitCommitTimestampProvider: Provider<Long>
     }
 
 buildConfig {
-    packageName = "om.sorrowblue.comicviewer.feature.settings"
+    packageName = "com.sorrowblue.comicviewer.feature.settings"
     buildConfigField("VERSION_NAME", gitTagProvider)
     buildConfigField("TIMESTAMP", gitCommitTimestampProvider)
 }

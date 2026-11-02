@@ -9,9 +9,12 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.permission)
                 implementation(projects.feature.bookshelf.nav)
                 implementation(projects.feature.permission.nav)
+                implementation(projects.framework.permission)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
+                implementation(libs.compose.material3Adaptive)
             }
         }
         commonTest {

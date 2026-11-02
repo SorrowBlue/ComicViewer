@@ -14,6 +14,9 @@ kotlin {
                 implementation(projects.feature.file.nav)
                 implementation(projects.feature.folder.nav)
                 implementation(projects.feature.settings.nav)
+                implementation(libs.androidx.pagingCommon)
+                implementation(libs.androidx.pagingCompose)
+                implementation(libs.coil3.compose)
             }
         }
     }
