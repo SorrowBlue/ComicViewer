@@ -37,7 +37,7 @@ metro {
 
 aboutLibraries {
     export {
-        outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/jvmMain/composeResources/files/aboutlibraries.json"))
+        outputFile.set(isolated.rootProject.projectDirectory.file("feature/settings/info/src/jvmMain/composeResources/files/aboutlibraries.json"))
     }
 }
 
@@ -57,7 +57,7 @@ compose.desktop {
             vendor = "SorrowBlue"
             description = "Multi-platform Comic Viewer"
             copyright = "Copyright 2026 SorrowBlue."
-            licenseFile.set(rootProject.file("LICENSE"))
+            licenseFile.set(isolated.rootProject.projectDirectory.file("LICENSE"))
 
             linux {
                 debMaintainer = "sorrowblue.dev@gmail.com"
@@ -95,7 +95,11 @@ compose.desktop {
     }
 }
 tasks.withType<JavaExec>().configureEach {
-    jvmArgs("-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8")
+    jvmArgs(
+        "-Dfile.encoding=UTF-8",
+        "-Dsun.stdout.encoding=UTF-8",
+        "-Dsun.stderr.encoding=UTF-8",
+    )
 }
 
 abstract class InspectConveyorDependenciesTask : DefaultTask() {

@@ -181,7 +181,7 @@ tasks.updateDaemonJvm {
 }
 
 moduleGraphConfig {
-    subprojects.filter { it.projectDir.resolve("src").exists() }.map { it.path }.forEach {
+    subprojects.filter { it.isolated.projectDirectory.dir("src").asFile.exists() }.map { it.path }.forEach {
         graph(
             readmePath = "${it.split(":").filter { it.isNotEmpty() }.joinToString("/")}/README.md",
             heading = "## Module dependency graph",

@@ -39,5 +39,5 @@ private fun Lint.configure() {
         "GradleDependency",
         "AppLinksAutoVerify",
     )
-    baseline = rootProject.file("config/lint-baseline.xml")
+    baseline = isolated.rootProject.projectDirectory.file("config/lint-baseline.xml").asFile
 }

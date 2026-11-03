@@ -38,6 +38,6 @@ kotlin {
 
 aboutLibraries {
     export {
-        outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/iosMain/composeResources/files/aboutlibraries.json"))
+        outputFile.set(isolated.rootProject.projectDirectory.file("feature/settings/info/src/iosMain/composeResources/files/aboutlibraries.json"))
     }
 }
