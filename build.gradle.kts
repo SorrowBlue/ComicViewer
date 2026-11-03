@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidMultiplatform) apply false
     alias(libs.plugins.androidTest) apply false
+    alias(libs.plugins.androidxBaselineprofile) apply false
     alias(libs.plugins.androidxRoom3) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.composeHotReload) apply false
@@ -97,8 +98,8 @@ tasks.named<Delete>("clean") {
 }
 
 konture {
-    excludeConfigurations("dokka", "kover")
-    excludeModules(":framework:common", ":")
+    excludeConfigurations("dokka", "kover", "baselineProfile")
+    excludeModules(":framework:common", ":", ":app:androidBenchmark")
 }
 
 versionCatalogUpdate {
