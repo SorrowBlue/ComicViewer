@@ -78,10 +78,8 @@ class FormState<T : Any>(initialValue: T) {
 
         override val fields: Map<FieldName, FieldMeta>
             get() = buildMap {
-                fieldRegistry.forEach { (name, field) ->
-                    put(name, field)
-                }
-                manualErrors.forEach { (name, fieldError) ->
+                putAll(fieldRegistry)
+                manualErrors.forEach { (val name = key, val fieldError = value) ->
                     if (!containsKey(name)) {
                         put(
                             name,
@@ -114,9 +112,7 @@ class FormState<T : Any>(initialValue: T) {
      * @param errors Pairs of field names and their corresponding [FieldError].
      */
     fun setError(vararg errors: Pair<FieldName, FieldError>) {
-        errors.forEach { (name, error) ->
-            manualErrors[name] = error
-        }
+        manualErrors.putAll(errors)
     }
 
     internal fun onFieldEdited(name: FieldName, dependsOn: Set<FieldName>) {

@@ -16,9 +16,10 @@ import logcat.logcat
 internal class NotificationInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         val notificationManager = context.getSystemService<NotificationManager>() ?: return
-        val (createChannels, deleteChannels) = AndroidNotificationChannel.entries.partition {
-            it.enable
-        }
+        (val createChannels = first, val deleteChannels = second) =
+            AndroidNotificationChannel.entries.partition {
+                it.enable
+            }
         createChannels.forEach {
             val channel =
                 NotificationChannel(it.id, context.getString(it.nameRes), it.important).apply {

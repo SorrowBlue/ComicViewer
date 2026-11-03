@@ -128,7 +128,7 @@ private class ReceiveBookScreenStateImpl(
             bookFile to pageItems
         }
             .flowWithLifecycle(lifecycle)
-            .onEach { (bookFile, pageItems) ->
+            .onEach { (val bookFile = first, val pageItems = second) ->
                 val totalPageCount = bookFile.totalPageCount
                 val isFirstLoad = !isInitialized() && pageItems.isNotEmpty()
                 val currentPagerIndex = if (isSynced) {

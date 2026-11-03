@@ -58,7 +58,7 @@ fun CharSequence.normalizeDigits(): String = buildString(length) {
 fun NormalizeDigitsEffect(state: TextFieldState, onTextChange: ((String) -> Unit)? = null) {
     LaunchedEffect(state) {
         snapshotFlow { state.composition to state.text.toString() }
-            .collect { (composition, text) ->
+            .collect { (val composition = first, val text = second) ->
                 if (composition == null) {
                     val normalized = text.normalizeDigits()
                     if (normalized != text) {

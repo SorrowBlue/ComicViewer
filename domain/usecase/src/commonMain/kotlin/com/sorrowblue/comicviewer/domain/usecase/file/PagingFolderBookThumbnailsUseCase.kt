@@ -71,25 +71,25 @@ internal class PagingFolderBookThumbnailsUseCaseImpl(
                             if (file is IFolder) {
                                 settingsRepository.folderDisplaySettings
                                     .map { settings ->
-                                        settings.currentSortType(
-                                            file.bookshelfId,
-                                            file.path,
-                                        ) to settings.showHiddenFiles
+                                        SearchCondition(
+                                            "",
+                                            SearchCondition.Range.InFolder(file.path),
+                                            SearchCondition.Period.None,
+                                            settings.currentSortType(
+                                                file.bookshelfId,
+                                                file.path,
+                                            ),
+                                            settings.showHiddenFiles,
+                                        )
                                     }
                                     .distinctUntilChanged()
-                                    .flatMapLatest { (sortType, showHiddenFiles) ->
+                                    .flatMapLatest { searchCondition ->
                                         fileRepository.pagingSourceBookThumbnail(
                                             request.pagingConfig,
                                             bookshelf,
                                             file,
                                         ) {
-                                            SearchCondition(
-                                                "",
-                                                SearchCondition.Range.InFolder(file.path),
-                                                SearchCondition.Period.None,
-                                                sortType,
-                                                showHiddenFiles,
-                                            )
+                                            searchCondition
                                         }
                                     }
                             } else {
