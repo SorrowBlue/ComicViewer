@@ -1,3 +1,5 @@
+import com.sorrowblue.comicviewer.configureManagedDevices
+
 plugins {
     alias(libs.plugins.comicviewer.multiplatformLibrary)
     alias(libs.plugins.androidxRoom3)
@@ -13,22 +15,7 @@ kotlin {
         }
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-            managedDevices {
-                localDevices {
-                    @Suppress("UnstableApiUsage")
-                    create("pixel9api35") {
-                        device = "Pixel 9"
-                        apiLevel = 35
-                        systemImageSource = "aosp-atd"
-                    }
-                    @Suppress("UnstableApiUsage")
-                    create("pixel7pro35") {
-                        device = "Pixel 7 Pro"
-                        apiLevel = 35
-                        systemImageSource = "aosp-atd"
-                    }
-                }
-            }
+            configureManagedDevices()
         }
     }
 

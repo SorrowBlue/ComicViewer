@@ -4,9 +4,17 @@
 
 package com.sorrowblue.comicviewer
 
+import com.android.build.api.dsl.KotlinMultiplatformAndroidDeviceTest
 import com.android.build.api.dsl.ManagedDevices
 import com.android.build.api.dsl.ManagedVirtualDevice
 import com.android.build.api.dsl.TestExtension
+
+/**
+ * Configures standard Gradle Managed Devices (GMD) for KMP Android device tests.
+ */
+fun KotlinMultiplatformAndroidDeviceTest.configureManagedDevices() {
+    managedDevices.configureLocalDevices()
+}
 
 /**
  * Configures standard Gradle Managed Devices (GMD) for Android test modules.
