@@ -91,6 +91,7 @@ compose.desktop {
             "-Dfile.encoding=UTF-8",
             "-Dsun.stdout.encoding=UTF-8",
             "-Dsun.stderr.encoding=UTF-8",
+            "-Dskiko.swing.frame.pacing=true",
         )
     }
 }
@@ -99,6 +100,7 @@ tasks.withType<JavaExec>().configureEach {
         "-Dfile.encoding=UTF-8",
         "-Dsun.stdout.encoding=UTF-8",
         "-Dsun.stderr.encoding=UTF-8",
+        "-Dskiko.swing.frame.pacing=true",
     )
 }
 
