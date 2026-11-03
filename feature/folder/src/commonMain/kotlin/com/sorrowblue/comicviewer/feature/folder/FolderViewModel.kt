@@ -32,6 +32,7 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -59,7 +60,8 @@ internal class FolderViewModel(
     private val folderDisplaySettingsUseCase: ManageFolderDisplaySettingsUseCase,
 ) : ViewModel() {
 
-    val events = EventFlow<FolderScreenUiEvent>()
+    val events: SharedFlow<FolderScreenUiEvent>
+        field = EventFlow()
 
     val pagingFlow: Flow<PagingData<File>> =
         getBookshelfInfoUseCase(bookshelfId).map { resource ->

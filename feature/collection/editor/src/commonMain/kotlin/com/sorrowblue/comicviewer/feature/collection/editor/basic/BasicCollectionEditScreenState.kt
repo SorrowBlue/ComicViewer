@@ -38,7 +38,7 @@ internal sealed interface BasicCollectionEditScreenStateEvent {
 internal interface BasicCollectionEditScreenState {
     val uiState: BasicCollectionEditScreenUiState
     val form: Form<BasicCollectionForm>
-    val events: EventFlow<BasicCollectionEditScreenStateEvent>
+    val events: SharedFlow<BasicCollectionEditScreenStateEvent>
     val lazyPagingItems: LazyPagingItems<File>
 
     fun onSubmit(formData: BasicCollectionForm)
@@ -89,7 +89,8 @@ private class BasicCollectionEditScreenStateImpl(
     override lateinit var form: Form<BasicCollectionForm>
     override lateinit var lazyPagingItems: LazyPagingItems<File>
 
-    override val events = EventFlow<BasicCollectionEditScreenStateEvent>()
+    override val events: SharedFlow<BasicCollectionEditScreenStateEvent>
+        field = EventFlow()
 
     init {
         uiState = uiState.copy(isLoading = true)

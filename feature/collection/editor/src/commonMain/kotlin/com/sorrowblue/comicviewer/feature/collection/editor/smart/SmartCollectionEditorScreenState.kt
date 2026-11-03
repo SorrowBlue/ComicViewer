@@ -5,14 +5,14 @@
 package com.sorrowblue.comicviewer.feature.collection.editor.smart
 
 import com.sorrowblue.comicviewer.feature.collection.editor.smart.section.SmartCollectionForm
-import com.sorrowblue.comicviewer.framework.ui.EventFlow
 import com.sorrowblue.comicviewer.framework.ui.form.Form
+import kotlinx.coroutines.flow.SharedFlow
 
 internal interface SmartCollectionEditorScreenState {
     val uiState: SmartCollectionEditorScreenUiState
     val form: Form<SmartCollectionForm>
 
-    val event: EventFlow<SmartCollectionEditorScreenStateEvent>
+    val event: SharedFlow<SmartCollectionEditorScreenStateEvent>
 
     fun onSubmit(formData: SmartCollectionForm)
 }

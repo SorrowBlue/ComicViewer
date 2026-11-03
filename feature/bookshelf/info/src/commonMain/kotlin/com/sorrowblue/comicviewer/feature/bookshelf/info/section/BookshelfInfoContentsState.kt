@@ -37,6 +37,7 @@ import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_lab
 import comicviewer.feature.bookshelf.info.generated.resources.bookshelf_info_label_scanning_thumbnails_no_notification
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ internal sealed interface BookshelfInfoContentsEvent {
 internal interface BookshelfInfoContentsState {
     val uiState: BookshelfInfoContentsUiState
     val lazyPagingItems: LazyPagingItems<BookThumbnail>
-    val events: EventFlow<BookshelfInfoContentsEvent>
+    val events: SharedFlow<BookshelfInfoContentsEvent>
     val localNetworkPermissionRequester: LocalNetworkPermissionRequester
 
     fun onScanFileClick()
@@ -104,7 +105,8 @@ private class BookshelfInfoContentsStateImpl(
 
     private lateinit var currentScanType: ScanType
 
-    override val events = EventFlow<BookshelfInfoContentsEvent>()
+    override val events: SharedFlow<BookshelfInfoContentsEvent>
+        field = EventFlow()
 
     override var uiState by mutableStateOf(
         BookshelfInfoContentsUiState(

@@ -125,7 +125,7 @@ internal fun rememberBookshelfEditorScreenState(
 
 internal interface IBookshelfEditorScreenState {
     val uiState: BookshelfEditorScreenUiState
-    val events: EventFlow<BookshelfEditorScreenEvent>
+    val events: SharedFlow<BookshelfEditorScreenEvent>
 
     fun onSubmit(form: BookshelfEditorForm)
 
@@ -268,7 +268,8 @@ private abstract class BookshelfEditorScreenStateImpl(
     bookshelfEditorFormFlow: SharedFlow<BookshelfEditorForm?>,
     private val submit: (BookshelfEditorForm) -> Unit,
 ) : IBookshelfEditorScreenState {
-    override val events: EventFlow<BookshelfEditorScreenEvent> = EventFlow()
+    final override val events: SharedFlow<BookshelfEditorScreenEvent>
+        field = EventFlow()
 
     override var uiState by mutableStateOf(BookshelfEditorScreenUiState())
 

@@ -25,6 +25,7 @@ import com.sorrowblue.comicviewer.framework.ui.form.normalizeDigits
 import com.sorrowblue.comicviewer.framework.ui.saveable.rememberSaveable
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import logcat.logcat
@@ -78,7 +79,7 @@ internal fun rememberAuthenticationScreenState(
 internal interface AuthenticationScreenState {
     val uiState: AuthenticationScreenUiState
     val pinState: TextFieldState
-    val events: EventFlow<AuthenticationScreenEvent>
+    val events: SharedFlow<AuthenticationScreenEvent>
     val snackbarHostState: SnackbarHostState
 
     fun onNextClick()
@@ -107,7 +108,8 @@ internal class AuthenticationScreenStateImpl(
     private val lifecycleOwner: LifecycleOwner,
     override val pinState: TextFieldState = TextFieldState(),
 ) : AuthenticationScreenState {
-    override val events = EventFlow<AuthenticationScreenEvent>()
+    override val events: SharedFlow<AuthenticationScreenEvent>
+        field = EventFlow()
 
     override var uiState by mutableStateOf(
         when (screenType) {
