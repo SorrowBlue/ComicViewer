@@ -25,7 +25,6 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
         freeCompilerArgs.add("-Xexpect-actual-classes")
         freeCompilerArgs.add("-Xexplicit-context-arguments")
         freeCompilerArgs.add("-Xcollection-literals")
-        freeCompilerArgs.add("-Xintrinsic-const-evaluation")
         freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
         freeCompilerArgs.add("-Xname-based-destructuring=complete")
 
