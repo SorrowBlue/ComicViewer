@@ -114,6 +114,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+**/generated/baselineProfiles/
 
 ######################
 # User configuration #
