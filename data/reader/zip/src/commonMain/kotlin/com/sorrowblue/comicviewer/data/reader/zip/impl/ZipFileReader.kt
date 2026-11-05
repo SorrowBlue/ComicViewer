@@ -51,7 +51,7 @@ internal class ZipFileReader(
             .filter { !it.isDirectory && it.name.extension in supportedException }
             .sortedByName()
     }.getOrElse { e ->
-        runCatching { zipFile.close() }
+        zipFile.use { }
         throw e
     }
 
@@ -81,10 +81,9 @@ internal class ZipFileReader(
         runBlocking {
             mutex.withLock {
                 withContext(dispatcher) {
-                    val zipCloseResult = runCatching { zipFile.close() }
-                    val streamCloseResult = runCatching { seekableInputStream.close() }
-                    zipCloseResult.getOrThrow()
-                    streamCloseResult.getOrThrow()
+                    seekableInputStream.use {
+                        zipFile.close()
+                    }
                 }
             }
         }

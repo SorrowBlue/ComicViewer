@@ -83,7 +83,7 @@ abstract class FileClient<T : Bookshelf>(
                             else -> fileReaderFactoryMap.getValue(FileReaderType.Zip)
                         }.create(seekableInputStream)
                     }.getOrElse { e ->
-                        runCatching { seekableInputStream.close() }
+                        seekableInputStream.use {}
                         throw e
                     }
                 }

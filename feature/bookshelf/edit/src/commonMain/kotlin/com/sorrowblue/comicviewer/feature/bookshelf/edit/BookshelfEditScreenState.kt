@@ -44,6 +44,8 @@ internal sealed interface BookshelfEditScreenRootEvent {
 internal interface BookshelfEditScreenState {
     fun onSourceClick(type: BookshelfType)
     fun updateCanSubmit(value: Boolean)
+
+    @IgnorableReturnValue
     fun onBack(): Boolean
     fun discardConfirm(force: Boolean)
 

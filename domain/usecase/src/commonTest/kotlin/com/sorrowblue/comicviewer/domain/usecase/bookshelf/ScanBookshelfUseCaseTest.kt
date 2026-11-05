@@ -183,7 +183,7 @@ class ScanBookshelfUseCaseTest {
                 onFolderFilesScanned: suspend (parent: File, files: List<File>) -> Unit,
                 onFileDiscovered: suspend (file: File) -> Unit,
             ) {
-                listFiles(root) { true }
+                val _ = listFiles(root) { true }
             }
         }
 

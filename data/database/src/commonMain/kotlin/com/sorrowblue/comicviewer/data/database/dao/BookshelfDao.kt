@@ -28,6 +28,7 @@ internal abstract class BookshelfDao(val database: ComicViewerDatabase) {
      * @param entity The bookshelf entity to insert or update.
      * @return The row ID of the inserted or updated entity.
      */
+    @IgnorableReturnValue
     @Upsert
     abstract suspend fun upsert(entity: BookshelfEntity): Long
 

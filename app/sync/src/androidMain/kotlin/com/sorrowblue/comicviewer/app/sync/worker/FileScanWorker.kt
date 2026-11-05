@@ -195,6 +195,7 @@ internal class FileScanWorker(
         fun getWorkInfosFlow(workManager: WorkManager, id: BookshelfId): Flow<List<WorkInfo>> =
             workManager.getWorkInfosForUniqueWorkFlow(uniqueWorkName(id))
 
+        @IgnorableReturnValue
         fun enqueueUniqueWork(workManager: WorkManager, bookshelfId: BookshelfId): Operation {
             val constraints = Constraints
                 .Builder()

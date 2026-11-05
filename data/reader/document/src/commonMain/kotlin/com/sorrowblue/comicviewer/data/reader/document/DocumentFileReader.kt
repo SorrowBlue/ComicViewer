@@ -74,12 +74,10 @@ internal class DocumentFileReader(
         runBlocking {
             mutex.withLock {
                 withContext(dispatcher) {
-                    val docToClose = document
-                    document = null
-                    val docCloseResult = runCatching { docToClose?.close() }
-                    val sourceCloseResult = runCatching { source.close() }
-                    docCloseResult.getOrThrow()
-                    sourceCloseResult.getOrThrow()
+                    document.use {
+                        document = null
+                        source.close()
+                    }
                 }
             }
         }

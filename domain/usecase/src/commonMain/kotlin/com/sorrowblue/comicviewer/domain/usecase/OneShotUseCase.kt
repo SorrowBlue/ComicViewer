@@ -23,6 +23,7 @@ abstract class OneShotUseCase<in R : Any, out D, out E> {
      * @param request The input request parameters.
      * @return The resulting [Resource].
      */
+    @IgnorableReturnValue
     suspend operator fun invoke(request: R): Resource<D, E> {
         logcat { "#invoke request: $request" }
         return run(request)
@@ -42,4 +43,5 @@ abstract class OneShotUseCase<in R : Any, out D, out E> {
  *
  * @return The resulting [Resource].
  */
+@IgnorableReturnValue
 suspend operator fun <D, E> OneShotUseCase<Unit, D, E>.invoke(): Resource<D, E> = invoke(Unit)

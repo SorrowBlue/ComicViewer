@@ -40,6 +40,7 @@ internal class LimitedCoroutineScope(private val underlying: CoroutineScope, lim
      * @param transform Suspending transformation to run in parallel for each element.
      * @return List of transformed results.
      */
+    @IgnorableReturnValue
     suspend fun <T, R> Iterable<T>.mapParallel(transform: suspend (T) -> R): List<R> = map { item ->
         async { transform(item) }
     }.awaitAll()

@@ -29,7 +29,10 @@ interface SeekableInputStream : AutoCloseable {
      * [SEEK_CUR] (current position), or [SEEK_END] (end of stream).
      * @return the new position within the stream.
      */
+    @IgnorableReturnValue
     fun seek(offset: Long, whence: Int): Long
+
+    @IgnorableReturnValue
     fun seek(position: Long): Long
 
     /**

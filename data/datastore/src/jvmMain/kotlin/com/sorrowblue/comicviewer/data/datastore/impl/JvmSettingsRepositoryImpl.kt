@@ -28,5 +28,7 @@ internal class JvmSettingsRepositoryImpl(
 
     override suspend fun updateWindowSettings(
         transform: suspend (DomainWindowSettings) -> DomainWindowSettings,
-    ): DomainWindowSettings = windowSettingsDataStore.updateData(transform)
+    ) {
+        val _ = windowSettingsDataStore.updateData(transform)
+    }
 }

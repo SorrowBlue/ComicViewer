@@ -33,12 +33,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 @DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 internal interface FileDao {
+    @IgnorableReturnValue
     @Upsert
     suspend fun upsert(fileEntity: FileEntity): Long
 
+    @IgnorableReturnValue
     @Upsert
     suspend fun upsertAll(fileEntity: List<FileEntity>): List<Long>
 
+    @IgnorableReturnValue
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateHistory(updateFileHistoryEntity: UpdateFileHistoryEntity): Int
 
@@ -48,6 +51,7 @@ internal interface FileDao {
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateFileType(updateFileTypeInfoEntity: UpdateFileTypeInfoEntity)
 
+    @IgnorableReturnValue
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateSimple(entity: UpdateFileEntityMinimum): Int
 

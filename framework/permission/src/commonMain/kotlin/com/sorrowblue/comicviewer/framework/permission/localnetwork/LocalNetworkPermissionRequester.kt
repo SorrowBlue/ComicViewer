@@ -21,6 +21,7 @@ interface LocalNetworkPermissionRequester {
 
     val state: LocalNetworkPermissionState get() = LocalNetworkPermissionState.Granted
 
+    @IgnorableReturnValue
     fun checkPermission(): Boolean = true
 
     fun onPermissionConfirmClick() {

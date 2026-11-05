@@ -45,7 +45,7 @@ internal class BookFileReaderManagerImpl(
         } else {
             fileReader = null
             this.book = null
-            runCatching { currentReader?.close() }
+            currentReader.use { }
             val newReader = fileClientFactory
                 .getFileClient(bookshelf)
                 .fileReader(book, imageFolderFileReaderFactory)
@@ -64,10 +64,10 @@ internal class BookFileReaderManagerImpl(
                 currentBook.path == book.path
             ) {
                 logcat { "FileReaderをクローズする。${book.bookshelfId} ${book.path}" }
-                val currentReader = fileReader
-                fileReader = null
-                this.book = null
-                currentReader?.close()
+                fileReader.use {
+                    fileReader = null
+                    this.book = null
+                }
             }
         }
     }
