@@ -43,7 +43,7 @@ jobs:
       - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
         run: ./gradlew ${{ matrix.task }}
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v4.39.2
+        uses: github/codeql-action/upload-sarif@v4.39.3
         if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
         with:
           sarif_file: ${{ matrix.sarif_file }}
@@ -76,7 +76,7 @@ jobs:
       - name: 🔍️Run analyze ${{ matrix.name || matrix.task }}
         run: ./gradlew ${{ matrix.task }}
       - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v4.39.2
+        uses: github/codeql-action/upload-sarif@v4.39.3
         if: ${{ !cancelled() && matrix.sarif_file && matrix.category }}
         with:
           sarif_file: ${{ matrix.sarif_file }}
