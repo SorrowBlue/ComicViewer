@@ -26,12 +26,8 @@ class SettingsUseCasesTest {
         val state = MutableStateFlow(Settings(doneTutorial = false))
         val repository = object : StubSettingsRepository() {
             override val settings: Flow<Settings> = state
-            override suspend fun updateSettings(
-                transform: suspend (Settings) -> Settings,
-            ): Settings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            override suspend fun updateSettings(transform: suspend (Settings) -> Settings) {
+                state.value = transform(state.value)
             }
         }
         val useCase = LoadSettingsUseCaseImpl(repository)
@@ -50,10 +46,8 @@ class SettingsUseCasesTest {
             override val bookSettings: Flow<BookSettings> = state
             override suspend fun updateBookSettings(
                 transform: suspend (BookSettings) -> BookSettings,
-            ): BookSettings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            ) {
+                state.value = transform(state.value)
             }
         }
         val useCase = ManageBookSettingsUseCaseImpl(repository)
@@ -72,10 +66,8 @@ class SettingsUseCasesTest {
             override val collectionSettings: Flow<CollectionSettings> = state
             override suspend fun updateCollectionSettings(
                 transform: suspend (CollectionSettings) -> CollectionSettings,
-            ): CollectionSettings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            ) {
+                state.value = transform(state.value)
             }
         }
         val useCase = ManageCollectionSettingsUseCaseImpl(repository)
@@ -94,10 +86,8 @@ class SettingsUseCasesTest {
             override val displaySettings: Flow<DisplaySettings> = state
             override suspend fun updateDisplaySettings(
                 transform: suspend (DisplaySettings) -> DisplaySettings,
-            ): DisplaySettings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            ) {
+                state.value = transform(state.value)
             }
         }
         val useCase = ManageDisplaySettingsUseCaseImpl(repository)
@@ -116,10 +106,8 @@ class SettingsUseCasesTest {
             override val folderSettings: Flow<FolderSettings> = state
             override suspend fun updateFolderSettings(
                 transform: suspend (FolderSettings) -> FolderSettings,
-            ): FolderSettings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            ) {
+                state.value = transform(state.value)
             }
         }
         val useCase = ManageFolderSettingsUseCaseImpl(repository)
@@ -138,10 +126,8 @@ class SettingsUseCasesTest {
             override val securitySettings: Flow<SecuritySettings> = state
             override suspend fun updateSecuritySettings(
                 transform: suspend (SecuritySettings) -> SecuritySettings,
-            ): SecuritySettings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            ) {
+                state.value = transform(state.value)
             }
         }
         val useCase = ManageSecuritySettingsUseCaseImpl(repository)
@@ -160,10 +146,8 @@ class SettingsUseCasesTest {
             override val viewerSettings: Flow<ViewerSettings> = state
             override suspend fun updateViewerSettings(
                 transform: suspend (ViewerSettings) -> ViewerSettings,
-            ): ViewerSettings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            ) {
+                state.value = transform(state.value)
             }
         }
         val useCase = ManageViewerSettingsUseCaseImpl(repository)

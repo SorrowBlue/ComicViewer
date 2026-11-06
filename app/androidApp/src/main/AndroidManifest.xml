@@ -13,8 +13,7 @@
         android:localeConfig="@xml/locales_config"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ComicViewer"
-        tools:targetApi="tiramisu">
+        android:theme="@style/Theme.ComicViewer">
 
         <provider
             android:name="androidx.startup.InitializationProvider"

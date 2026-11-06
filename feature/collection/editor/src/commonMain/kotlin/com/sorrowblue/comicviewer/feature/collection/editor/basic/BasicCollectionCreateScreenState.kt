@@ -37,7 +37,7 @@ internal sealed interface BasicCollectionCreateScreenStateEvent {
 internal interface BasicCollectionCreateScreenState {
     val uiState: BasicCollectionsCreateScreenUiState
     val form: Form<BasicCollectionForm>
-    val event: EventFlow<BasicCollectionCreateScreenStateEvent>
+    val event: SharedFlow<BasicCollectionCreateScreenStateEvent>
 
     fun onSubmit(formData: BasicCollectionForm)
 }
@@ -78,7 +78,8 @@ private class BasicCollectionCreateScreenStateImpl(
 ) : BasicCollectionCreateScreenState {
     override lateinit var form: Form<BasicCollectionForm>
 
-    override val event = EventFlow<BasicCollectionCreateScreenStateEvent>()
+    override val event: SharedFlow<BasicCollectionCreateScreenStateEvent>
+        field = EventFlow()
 
     override val uiState by mutableStateOf(BasicCollectionsCreateScreenUiState())
 

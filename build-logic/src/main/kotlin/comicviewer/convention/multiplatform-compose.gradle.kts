@@ -43,7 +43,7 @@ composeCompiler {
             }
         },
     )
-    val stabilityConfigFile = rootProject.layout.projectDirectory.file(
+    val stabilityConfigFile = isolated.rootProject.projectDirectory.file(
         "config/compose/compose_compiler_config.conf",
     )
     if (stabilityConfigFile.asFile.exists()) {

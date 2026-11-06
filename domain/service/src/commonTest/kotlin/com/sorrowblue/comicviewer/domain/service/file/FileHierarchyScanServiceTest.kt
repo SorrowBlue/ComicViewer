@@ -66,13 +66,13 @@ class FileHierarchyScanServiceTest {
         assertEquals(2, scannedFolders.size)
 
         // root直下: subFolder(フォルダ優先) -> 01.cbz -> 02.zip の順 (readme.txt は除外)
-        val (rootParent, rootFiles) = scannedFolders[0]
+        (val rootParent = first, val rootFiles = second) = scannedFolders[0]
         assertEquals(root.path, rootParent.path)
         assertEquals(listOf("sub", "01.cbz", "02.zip"), rootFiles.map { it.name })
         assertEquals(listOf(0, 1, 2), rootFiles.map { it.sortIndex })
 
         // subFolder直下: sub_01.zip
-        val (subParent, subFiles) = scannedFolders[1]
+        (val subParent = first, val subFiles = second) = scannedFolders[1]
         assertEquals(subFolder.path, subParent.path)
         assertEquals(listOf("sub_01.zip"), subFiles.map { it.name })
         assertEquals(listOf(0), subFiles.map { it.sortIndex })

@@ -34,6 +34,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import logcat.asLog
 import logcat.logcat
@@ -44,7 +45,7 @@ internal sealed interface FolderScreenEvent {
 
 @Stable
 internal interface FolderScreenState {
-    val events: EventFlow<FolderScreenEvent>
+    val events: SharedFlow<FolderScreenEvent>
     val lazyPagingItems: LazyPagingItems<File>
     val lazyGridState: LazyGridState
     val snackbarHostState: SnackbarHostState

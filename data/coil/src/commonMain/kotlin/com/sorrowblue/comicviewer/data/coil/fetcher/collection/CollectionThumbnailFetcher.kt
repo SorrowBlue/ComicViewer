@@ -55,7 +55,11 @@ internal class CollectionThumbnailFetcher(
             logcat(LogPriority.INFO) { "Not found thumbnail cache.$data" }
             return null
         }
-        return cacheKeyList.firstNotNullOfOrNull { (bookshelfId, cacheKey) ->
+        return cacheKeyList.firstNotNullOfOrNull { (
+            val bookshelfId = first,
+            val cacheKey = second,
+        ),
+            ->
             coilDiskCacheLazy.value.thumbnailDiskCache(bookshelfId).openSnapshot(cacheKey) ?: run {
                 fileRepository.removeCacheKey(cacheKey)
                 null

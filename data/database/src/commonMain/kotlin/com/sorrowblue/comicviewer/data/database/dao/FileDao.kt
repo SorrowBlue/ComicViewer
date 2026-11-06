@@ -33,12 +33,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 @DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 internal interface FileDao {
+    @IgnorableReturnValue
     @Upsert
     suspend fun upsert(fileEntity: FileEntity): Long
 
+    @IgnorableReturnValue
     @Upsert
     suspend fun upsertAll(fileEntity: List<FileEntity>): List<Long>
 
+    @IgnorableReturnValue
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateHistory(updateFileHistoryEntity: UpdateFileHistoryEntity): Int
 
@@ -48,6 +51,7 @@ internal interface FileDao {
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateFileType(updateFileTypeInfoEntity: UpdateFileTypeInfoEntity)
 
+    @IgnorableReturnValue
     @Update(entity = FileEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateSimple(entity: UpdateFileEntityMinimum): Int
 
@@ -77,7 +81,7 @@ internal interface FileDao {
         // existsFiles DBにある項目：更新対象
         // noExistsFiles DBにない項目：挿入対象
         val existingPaths = findPathsByParent(entity.bookshelfId, entity.path).toSet()
-        val (existsFiles, noExistsFiles) = entityList.partition {
+        (val existsFiles = first, val noExistsFiles = second) = entityList.partition {
             it.path in existingPaths
         }
 
@@ -86,7 +90,9 @@ internal interface FileDao {
 
         // DBにファイルを更新
         // ファイルサイズ、更新日時、タイプ ソート、インデックス
-        val (folder, file) = existsFiles.partition { it.fileType == FileEntity.Type.FOLDER }
+        (val folder = first, val file = second) = existsFiles.partition {
+            it.fileType == FileEntity.Type.FOLDER
+        }
         updateSimple2(
             folder.map(
                 UpdateFileEntityMinimumWithSortIndexWithoutFileType.Companion::fromFileEntity,

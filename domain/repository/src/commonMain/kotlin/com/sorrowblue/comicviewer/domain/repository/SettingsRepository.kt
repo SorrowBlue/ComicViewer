@@ -26,7 +26,7 @@ interface SettingsRepository {
     /**
      * Updates general application [Settings] using [transform].
      */
-    suspend fun updateSettings(transform: suspend (Settings) -> Settings): Settings
+    suspend fun updateSettings(transform: suspend (Settings) -> Settings)
 
     /**
      * Observes [DisplaySettings].
@@ -36,9 +36,7 @@ interface SettingsRepository {
     /**
      * Updates [DisplaySettings] using [transform].
      */
-    suspend fun updateDisplaySettings(
-        transform: suspend (DisplaySettings) -> DisplaySettings,
-    ): DisplaySettings
+    suspend fun updateDisplaySettings(transform: suspend (DisplaySettings) -> DisplaySettings)
 
     /**
      * Observes [ViewerSettings].
@@ -48,9 +46,7 @@ interface SettingsRepository {
     /**
      * Updates [ViewerSettings] using [transform].
      */
-    suspend fun updateViewerSettings(
-        transform: suspend (ViewerSettings) -> ViewerSettings,
-    ): ViewerSettings
+    suspend fun updateViewerSettings(transform: suspend (ViewerSettings) -> ViewerSettings)
 
     /**
      * Observes [BookSettings].
@@ -60,7 +56,7 @@ interface SettingsRepository {
     /**
      * Updates [BookSettings] using [transform].
      */
-    suspend fun updateBookSettings(transform: suspend (BookSettings) -> BookSettings): BookSettings
+    suspend fun updateBookSettings(transform: suspend (BookSettings) -> BookSettings)
 
     /**
      * Observes [FolderDisplaySettings].
@@ -72,7 +68,7 @@ interface SettingsRepository {
      */
     suspend fun updateFolderDisplaySettings(
         transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings,
-    ): FolderDisplaySettings
+    )
 
     /**
      * Observes [FolderSettings].
@@ -82,9 +78,7 @@ interface SettingsRepository {
     /**
      * Updates [FolderSettings] using [transform].
      */
-    suspend fun updateFolderSettings(
-        transform: suspend (FolderSettings) -> FolderSettings,
-    ): FolderSettings
+    suspend fun updateFolderSettings(transform: suspend (FolderSettings) -> FolderSettings)
 
     /**
      * Observes [SecuritySettings].
@@ -94,9 +88,7 @@ interface SettingsRepository {
     /**
      * Updates [SecuritySettings] using [transform].
      */
-    suspend fun updateSecuritySettings(
-        transform: suspend (SecuritySettings) -> SecuritySettings,
-    ): SecuritySettings
+    suspend fun updateSecuritySettings(transform: suspend (SecuritySettings) -> SecuritySettings)
 
     /**
      * Observes [CollectionSettings].
@@ -108,5 +100,5 @@ interface SettingsRepository {
      */
     suspend fun updateCollectionSettings(
         transform: suspend (CollectionSettings) -> CollectionSettings,
-    ): CollectionSettings
+    )
 }

@@ -70,6 +70,8 @@ private fun handleSmokeTestFailure(message: String, throwable: Throwable): Nothi
     val logPath = System.getenv("COMICVIEWER_SMOKE_TEST_LOG") ?: "smoke-test-error.log"
     runCatching {
         File(logPath).writeText(report)
+    }.onFailure {
+        it.printStackTrace()
     }
     exitProcess(1)
 }

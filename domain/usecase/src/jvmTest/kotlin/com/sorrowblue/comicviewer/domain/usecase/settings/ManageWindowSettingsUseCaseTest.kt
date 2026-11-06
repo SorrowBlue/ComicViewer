@@ -23,10 +23,8 @@ class ManageWindowSettingsUseCaseTest {
 
             override suspend fun updateWindowSettings(
                 transform: suspend (WindowSettings) -> WindowSettings,
-            ): WindowSettings {
-                val updated = transform(state.value)
-                state.value = updated
-                return updated
+            ) {
+                state.value = transform(state.value)
             }
         }
         val useCase = ManageWindowSettingsUseCaseImpl(repository)

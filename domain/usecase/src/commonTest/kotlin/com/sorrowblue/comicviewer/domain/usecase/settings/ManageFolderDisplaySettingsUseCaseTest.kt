@@ -151,9 +151,7 @@ internal class FakeSettingsRepository : StubSettingsRepository() {
 
     override suspend fun updateFolderDisplaySettings(
         transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings,
-    ): FolderDisplaySettings {
-        val newSettings = transform(folderDisplaySettings.value)
-        folderDisplaySettings.value = newSettings
-        return newSettings
+    ) {
+        folderDisplaySettings.value = transform(folderDisplaySettings.value)
     }
 }

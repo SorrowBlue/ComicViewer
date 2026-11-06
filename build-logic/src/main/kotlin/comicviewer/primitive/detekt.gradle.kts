@@ -18,8 +18,8 @@ dependencies {
 
 detekt {
     buildUponDefaultConfig = true
-    config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml"))
-    basePath.set(rootProject.layout.projectDirectory)
+    config.setFrom(isolated.rootProject.projectDirectory.file("config/detekt/detekt.yml"))
+    basePath.set(isolated.rootProject.projectDirectory)
     autoCorrect = true
     parallel = true
 }
@@ -36,9 +36,14 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
-rootProject.tasks.withType<ReportMergeTask>().configureEach {
-    input.from(
-        tasks.withType<Detekt>()
-            .map { it.reports.sarif.outputLocation },
-    )
+if (!providers.gradleProperty(
+        "org.gradle.isolated-projects",
+    ).map(String::toBoolean).getOrElse(false)
+) {
+    rootProject.tasks.withType<ReportMergeTask>().configureEach {
+        input.from(
+            tasks.withType<Detekt>()
+                .map { it.reports.sarif.outputLocation },
+        )
+    }
 }

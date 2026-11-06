@@ -40,6 +40,7 @@ internal interface CollectionDao {
         showHidden: Boolean?,
     ): Long
 
+    @IgnorableReturnValue
     @Query(
         """
             UPDATE collection
@@ -63,6 +64,7 @@ internal interface CollectionDao {
         type: CollectionEntity.Type = CollectionEntity.Type.Basic,
     ): Int
 
+    @IgnorableReturnValue
     @Query(
         """
             UPDATE collection
@@ -94,9 +96,11 @@ internal interface CollectionDao {
         type: CollectionEntity.Type = CollectionEntity.Type.Smart,
     ): Int
 
+    @IgnorableReturnValue
     @Query("DELETE FROM collection WHERE id = :id")
     suspend fun delete(id: CollectionId): Int
 
+    @IgnorableReturnValue
     @Query("UPDATE collection SET updated_at = CURRENT_TIMESTAMP WHERE id = :id")
     suspend fun updateUpdatedAt(id: CollectionId): Int
 

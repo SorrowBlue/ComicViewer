@@ -137,7 +137,7 @@ class RegenerateThumbnailsUseCaseTest {
             override suspend fun load(
                 fileThumbnail: FileThumbnail,
             ): Resource<Unit, Resource.SystemError> {
-                super.load(fileThumbnail)
+                val _ = super.load(fileThumbnail)
                 return if (fileThumbnail.path.contains("Book2")) {
                     Resource.Error(
                         Resource.SystemError(IllegalStateException("Failed to load Book2")),
@@ -186,7 +186,7 @@ class RegenerateThumbnailsUseCaseTest {
             override suspend fun load(
                 fileThumbnail: FileThumbnail,
             ): Resource<Unit, Resource.SystemError> {
-                super.load(fileThumbnail)
+                val _ = super.load(fileThumbnail)
                 if (fileThumbnail.path.contains("Book2")) {
                     error("Unexpected exception on Book2")
                 }

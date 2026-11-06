@@ -36,6 +36,7 @@ internal interface CollectionFileDao {
      * @param entity The CollectionFileEntity to insert.
      * @return The row ID of the inserted entity, or -1 if ignored.
      */
+    @IgnorableReturnValue
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(entity: CollectionFileEntity): Long
 
@@ -45,6 +46,7 @@ internal interface CollectionFileDao {
      * @param entity The CollectionFileEntity to delete.
      * @return The number of rows deleted.
      */
+    @IgnorableReturnValue
     @Delete
     suspend fun delete(entity: CollectionFileEntity): Int
 

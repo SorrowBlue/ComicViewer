@@ -1,4 +1,5 @@
 import com.github.skydoves.navgraph.gradle.RenderBackend
+import com.sorrowblue.comicviewer.configureManagedDevices
 import com.sorrowblue.comicviewer.diSubprojects
 
 plugins {
@@ -36,22 +37,7 @@ kotlin {
             execution = "ANDROIDX_TEST_ORCHESTRATOR"
             animationsDisabled = true
             instrumentationRunnerArguments["clearPackageData"] = "true"
-            managedDevices {
-                localDevices {
-                    @Suppress("UnstableApiUsage")
-                    create("pixel9api35") {
-                        device = "Pixel 9"
-                        apiLevel = 35
-                        systemImageSource = "aosp-atd"
-                    }
-                    @Suppress("UnstableApiUsage")
-                    create("pixel7pro35") {
-                        device = "Pixel 7 Pro"
-                        apiLevel = 35
-                        systemImageSource = "aosp-atd"
-                    }
-                }
-            }
+            configureManagedDevices()
         }
         withHostTest { }
     }

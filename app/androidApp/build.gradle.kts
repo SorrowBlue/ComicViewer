@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.comicviewer.androidApplication)
     alias(libs.plugins.comicviewer.di)
     alias(libs.plugins.comicviewer.primitive.androidVersionNameCode)
+    alias(libs.plugins.androidxBaselineprofile)
 }
 
 android {
@@ -59,8 +60,19 @@ android {
 
 dependencies {
     diSubprojects.forEach(::implementation)
+    baselineProfile(projects.app.androidBenchmark)
+    implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.workRuntime)
     implementation(libs.metro.android)
+}
+
+baselineProfile {
+    dexLayoutOptimization = true
+    automaticGenerationDuringBuild =
+        providers.gradleProperty("generateBaselineProfile")
+            .map(String::toBoolean)
+            .orElse(false)
+            .get()
 }
 
 metro {
@@ -72,7 +84,7 @@ metro {
 
 aboutLibraries {
     export {
-        outputFile.set(rootProject.layout.projectDirectory.file("feature/settings/info/src/androidMain/composeResources/files/aboutlibraries.json"))
+        outputFile.set(isolated.rootProject.projectDirectory.file("feature/settings/info/src/androidMain/composeResources/files/aboutlibraries.json"))
     }
 }
 

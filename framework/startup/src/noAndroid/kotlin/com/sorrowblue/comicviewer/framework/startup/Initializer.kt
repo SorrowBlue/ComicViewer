@@ -9,7 +9,8 @@ import kotlin.reflect.KClass
 
 @DefaultBinding<Initializer<*>>
 interface Initializer<T> {
-    fun create(): T
+
+    fun create()
 
     fun dependencies(): List<KClass<out Initializer<*>>>
 

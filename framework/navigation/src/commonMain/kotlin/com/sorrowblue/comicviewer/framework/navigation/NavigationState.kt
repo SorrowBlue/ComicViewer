@@ -86,7 +86,7 @@ class NavigationState(
         // For each back stack, create a `SaveableStateHolder` decorator and use it to decorate
         // the entries from that stack. When backStacks changes, `rememberDecoratedNavEntries` will
         // be recomposed and a new list of decorated entries is returned.
-        val decoratedEntries = backStacks.mapValues { (_, stack) ->
+        val decoratedEntries = backStacks.mapValues { (val stack = value) ->
             rememberDecoratedNavEntries(
                 backStack = stack,
                 entryDecorators = entryDecorators,

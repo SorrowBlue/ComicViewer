@@ -75,7 +75,8 @@ private class SmartCollectionCreateScreenStateImpl(
 
     override lateinit var form: Form<SmartCollectionForm>
 
-    override val event = EventFlow<SmartCollectionEditorScreenStateEvent>()
+    override val event: SharedFlow<SmartCollectionEditorScreenStateEvent>
+        field = EventFlow()
 
     override var uiState by mutableStateOf(SmartCollectionEditorScreenUiState())
 

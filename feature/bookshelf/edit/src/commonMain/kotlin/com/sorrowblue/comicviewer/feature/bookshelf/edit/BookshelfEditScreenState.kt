@@ -27,6 +27,7 @@ import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_t
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_title_register
 import comicviewer.feature.bookshelf.edit.generated.resources.bookshelf_wizard_title_register_of
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.modules.SerializersModule
@@ -43,12 +44,14 @@ internal sealed interface BookshelfEditScreenRootEvent {
 internal interface BookshelfEditScreenState {
     fun onSourceClick(type: BookshelfType)
     fun updateCanSubmit(value: Boolean)
+
+    @IgnorableReturnValue
     fun onBack(): Boolean
     fun discardConfirm(force: Boolean)
 
     val uiState: BookshelfEditScreenUiState
     val backStack: NavBackStack<NavKey>
-    val events: EventFlow<BookshelfEditScreenRootEvent>
+    val events: SharedFlow<BookshelfEditScreenRootEvent>
 }
 
 @Composable
@@ -90,7 +93,8 @@ private class BookshelfEditScreenStateImpl(
 
     lateinit var localNetworkPermissionRequester: LocalNetworkPermissionRequester
 
-    override val events = EventFlow<BookshelfEditScreenRootEvent>()
+    override val events: SharedFlow<BookshelfEditScreenRootEvent>
+        field = EventFlow()
 
     override var uiState by mutableStateOf(BookshelfEditScreenUiState())
 

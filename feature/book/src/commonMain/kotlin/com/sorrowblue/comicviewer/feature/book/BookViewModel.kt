@@ -96,18 +96,15 @@ internal class BookViewModel(
         combine(
             bookSettingsFlow.map { it.pageFormat },
             isCompactWindowFlow,
-        ) { pageFormat, isCompactWindow ->
-            pageFormat to isCompactWindow
-        }.distinctUntilChanged { old, new ->
-            if (old.first != new.first) {
+            PageAction::FormatChange,
+        ).distinctUntilChanged { old, new ->
+            if (old.pageFormat != new.pageFormat) {
                 false
-            } else if (old.first == BookSettings.PageFormat.Auto) {
-                old.second == new.second
+            } else if (old.pageFormat == BookSettings.PageFormat.Auto) {
+                old.isCompactWindow == new.isCompactWindow
             } else {
                 true
             }
-        }.map { (pageFormat, isCompactWindow) ->
-            PageAction.FormatChange(pageFormat, isCompactWindow)
         },
         pageActionFlow,
     ).scan(emptyList<PageItem>()) { currentList, action ->

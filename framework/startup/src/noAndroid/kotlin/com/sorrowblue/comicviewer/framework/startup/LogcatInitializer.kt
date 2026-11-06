@@ -14,12 +14,11 @@ import logcat.logcat
 
 @ContributesIntoSet(AppScope::class)
 class LogcatInitializer : Initializer<LogcatLogger.Companion> {
-    override fun create(): LogcatLogger.Companion {
+    override fun create() {
         if (!LogcatLogger.isInstalled) {
             LogcatLogger.install(PrintLogger)
         }
         logcat(LogPriority.INFO) { "Initialized logcat." }
-        return LogcatLogger.Companion
     }
 
     override fun dependencies(): List<KClass<out Initializer<*>>> = emptyList()

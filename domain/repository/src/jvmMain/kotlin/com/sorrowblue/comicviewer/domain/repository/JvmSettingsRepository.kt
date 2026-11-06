@@ -23,7 +23,5 @@ interface JvmSettingsRepository {
      * @param transform Transform function
      * @return Updated window settings
      */
-    suspend fun updateWindowSettings(
-        transform: suspend (WindowSettings) -> WindowSettings,
-    ): WindowSettings
+    suspend fun updateWindowSettings(transform: suspend (WindowSettings) -> WindowSettings)
 }

@@ -188,43 +188,42 @@ internal open class StubRemoteStorageClient : RemoteStorageClient {
 
 internal open class StubSettingsRepository : SettingsRepository {
     override val settings: Flow<Settings> get() = TODO()
-    override suspend fun updateSettings(transform: suspend (Settings) -> Settings): Settings =
-        TODO()
+    override suspend fun updateSettings(transform: suspend (Settings) -> Settings): Unit = TODO()
 
     override val displaySettings: Flow<DisplaySettings> get() = TODO()
     override suspend fun updateDisplaySettings(
         transform: suspend (DisplaySettings) -> DisplaySettings,
-    ): DisplaySettings = TODO()
+    ): Unit = TODO()
 
     override val viewerSettings: Flow<ViewerSettings> get() = TODO()
     override suspend fun updateViewerSettings(
         transform: suspend (ViewerSettings) -> ViewerSettings,
-    ): ViewerSettings = TODO()
+    ): Unit = TODO()
 
     override val bookSettings: Flow<BookSettings> get() = TODO()
     override suspend fun updateBookSettings(
         transform: suspend (BookSettings) -> BookSettings,
-    ): BookSettings = TODO()
+    ): Unit = TODO()
 
     override val folderDisplaySettings: Flow<FolderDisplaySettings> get() = TODO()
     override suspend fun updateFolderDisplaySettings(
         transform: suspend (FolderDisplaySettings) -> FolderDisplaySettings,
-    ): FolderDisplaySettings = TODO()
+    ): Unit = TODO()
 
     override val folderSettings: Flow<FolderSettings> get() = TODO()
     override suspend fun updateFolderSettings(
         transform: suspend (FolderSettings) -> FolderSettings,
-    ): FolderSettings = TODO()
+    ): Unit = TODO()
 
     override val securitySettings: Flow<SecuritySettings> get() = TODO()
     override suspend fun updateSecuritySettings(
         transform: suspend (SecuritySettings) -> SecuritySettings,
-    ): SecuritySettings = TODO()
+    ): Unit = TODO()
 
     override val collectionSettings: Flow<CollectionSettings> get() = TODO()
     override suspend fun updateCollectionSettings(
         transform: suspend (CollectionSettings) -> CollectionSettings,
-    ): CollectionSettings = TODO()
+    ): Unit = TODO()
 }
 
 internal open class StubCollectionRepository : CollectionRepository {
