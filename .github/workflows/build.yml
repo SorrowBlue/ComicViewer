@@ -63,7 +63,7 @@ jobs:
         run: ./gradlew :app:jvmApp:jvmJar
       - name: Build Windows MSIX Package
         if: ${{ inputs.full-check }}
-        uses: hydraulic-software/conveyor/actions/build@v22.3
+        uses: hydraulic-software/conveyor/actions/build@v22.4
         with:
           command: -f config/conveyor/ci.conveyor.conf -K='app.machines=[windows.amd64]' make windows-msix
           signing_key: ${{ secrets.CONVEYOR_SIGNING_KEY }}
