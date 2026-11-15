@@ -18,6 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Auto Label PR
-        uses: release-drafter/release-drafter/autolabeler@v7.10.0
+        uses: release-drafter/release-drafter/autolabeler@v7.11.0
         with:
           config-name: release-drafter.yml
