@@ -51,7 +51,7 @@ workflows:
         - 'hydraulic-software/conveyor@v22.4'
         - 'softprops/action-gh-release@v3.0.4'
     '.github/workflows/labeler.yml':
-        - 'release-drafter/release-drafter@v7.10.0'
+        - 'release-drafter/release-drafter@v7.11.0'
     '.github/workflows/lint-test-build.yml':
         - 'actions/checkout@v7.0.1'
         - 'tj-actions/changed-files@v47.0.6'
@@ -63,7 +63,7 @@ workflows:
         - 'github/codeql-action@v4.39.3'
         - 'gradle/actions@v6.4.1'
     '.github/workflows/release-drafter.yml':
-        - 'release-drafter/release-drafter@v7.10.0'
+        - 'release-drafter/release-drafter@v7.11.0'
     '.github/workflows/release.yml':
         - 'actions/checkout@v7.0.1'
         - 'sarisia/actions-status-discord@v1.16.0'
@@ -199,9 +199,9 @@ dependencies:
         commit: 'sha1-e738b9dd8f2476ea806d921b64aacd24f34515a5'
         owner_id: 1237372
         repo_id: 220583833
-    'release-drafter/release-drafter@v7.10.0':
-        ref: 'v7.10.0'
-        commit: 'sha1-978bb0b30c5ee8cdd332ced253758157150d43f0'
+    'release-drafter/release-drafter@v7.11.0':
+        ref: 'v7.11.0'
+        commit: 'sha1-d1a19e60e81a7e650d00a7de9277f87e439117ea'
         owner_id: 58292376
         repo_id: 139022359
     'ruby/setup-ruby@v1.338.0':
