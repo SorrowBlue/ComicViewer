@@ -33,6 +33,7 @@ metro {
     hiddenDependencies {
         checkOnCompile.set(true)
     }
+    enableDerivedBindings.set(true)
 }
 
 aboutLibraries {

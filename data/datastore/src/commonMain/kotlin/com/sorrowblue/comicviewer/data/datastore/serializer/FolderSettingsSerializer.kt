@@ -5,7 +5,10 @@
 package com.sorrowblue.comicviewer.data.datastore.serializer
 
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 
+@ContributesBinding(AppScope::class)
 internal object FolderSettingsSerializer :
     OkioKSerializer<FolderSettings>(FolderSettings.serializer()) {
     override val fileName = "folder_settings.pb"

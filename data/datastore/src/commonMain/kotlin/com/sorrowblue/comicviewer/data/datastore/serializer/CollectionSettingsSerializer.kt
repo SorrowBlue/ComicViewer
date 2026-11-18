@@ -5,7 +5,10 @@
 package com.sorrowblue.comicviewer.data.datastore.serializer
 
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 
+@ContributesBinding(AppScope::class)
 internal object CollectionSettingsSerializer :
     OkioKSerializer<CollectionSettings>(CollectionSettings.serializer()) {
     override val fileName = "collectionSettings.pb"

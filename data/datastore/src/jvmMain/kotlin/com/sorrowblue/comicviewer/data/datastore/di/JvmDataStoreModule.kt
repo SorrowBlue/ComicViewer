@@ -6,9 +6,7 @@ package com.sorrowblue.comicviewer.data.datastore.di
 
 import androidx.datastore.core.DataStore
 import com.sorrowblue.comicviewer.data.datastore.DataStoreMaker
-import com.sorrowblue.comicviewer.data.datastore.qualifier.WindowSettings
-import com.sorrowblue.comicviewer.data.datastore.serializer.WindowSettingsSerializer
-import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings as DomainWindowSettings
+import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
@@ -18,18 +16,21 @@ import dev.zacsweers.metro.SingleIn
 /**
  * JVM DataStore module
  */
+/*
 @ContributesTo(AppScope::class)
 @BindingContainer
 object JvmDataStoreModule {
 
-    /**
+    */
+/**
      * Provide window settings data store
      *
      * @return Window settings data store
-     */
-    @WindowSettings
+     *//*
+
     @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.provideWindowSettingsDataStore(): DataStore<DomainWindowSettings> =
-        createDataStore(WindowSettingsSerializer)
+    private fun <T> DataStoreMaker.dataStore3(serializer: OkioKSerializer<T>): DataStore<T> =
+        createDataStore(serializer)
 }
+*/

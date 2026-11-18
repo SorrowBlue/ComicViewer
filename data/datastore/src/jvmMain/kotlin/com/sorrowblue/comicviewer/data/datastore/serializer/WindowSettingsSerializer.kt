@@ -5,10 +5,13 @@
 package com.sorrowblue.comicviewer.data.datastore.serializer
 
 import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 
 /**
  * Window settings serializer
  */
+@ContributesBinding(AppScope::class)
 internal object WindowSettingsSerializer : OkioKSerializer<WindowSettings>(
     WindowSettings.serializer(),
 ) {

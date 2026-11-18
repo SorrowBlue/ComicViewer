@@ -4,6 +4,9 @@
 
 package comicviewer.primitive
 
+import dev.zacsweers.metro.gradle.DelicateMetroGradleApi
+import dev.zacsweers.metro.gradle.ExperimentalMetroGradleApi
+
 val kotlinPluginIds = listOf(
     "com.android.application",
     "org.jetbrains.kotlin.jvm",
@@ -16,9 +19,10 @@ if (kotlinPluginIds.any(pluginManager::hasPlugin)) {
         dev.zacsweers.metro
     }
     configure<dev.zacsweers.metro.gradle.MetroPluginExtension> {
-        @Suppress("OPT_IN_USAGE")
         generateContributionProviders = true
-        @Suppress("OPT_IN_USAGE")
+        @OptIn(DelicateMetroGradleApi::class)
         reportsDestination.set(layout.buildDirectory.dir("reports/metro"))
+        @OptIn(ExperimentalMetroGradleApi::class)
+        enableDerivedBindings.set(true)
     }
 }
