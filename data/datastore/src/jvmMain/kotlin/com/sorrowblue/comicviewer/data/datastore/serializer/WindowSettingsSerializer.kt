@@ -13,8 +13,7 @@ import dev.zacsweers.metro.ContributesBinding
  */
 @ContributesBinding(AppScope::class)
 internal object WindowSettingsSerializer : OkioKSerializer<WindowSettings>(
-    WindowSettings.serializer(),
-) {
-    override val fileName = "window_settings.pb"
-    override val defaultValue = WindowSettings()
-}
+    serializer = WindowSettings.serializer(),
+    fileName = "window_settings.pb",
+    defaultValue = WindowSettings(),
+)

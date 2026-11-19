@@ -1,4 +1,5 @@
 import com.sorrowblue.comicviewer.diSubprojects
+import dev.zacsweers.metro.gradle.ExperimentalMetroGradleApi
 import java.util.zip.ZipFile
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -29,11 +30,10 @@ kotlin {
 }
 
 metro {
-    @Suppress("OPT_IN_USAGE")
+    @OptIn(ExperimentalMetroGradleApi::class)
     hiddenDependencies {
         checkOnCompile.set(true)
     }
-    enableDerivedBindings.set(true)
 }
 
 aboutLibraries {

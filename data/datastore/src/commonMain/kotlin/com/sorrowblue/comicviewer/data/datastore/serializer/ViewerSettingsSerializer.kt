@@ -10,10 +10,11 @@ import dev.zacsweers.metro.ContributesBinding
 import okio.BufferedSource
 
 @ContributesBinding(AppScope::class)
-internal object ViewerSettingsSerializer :
-    OkioKSerializer<ViewerSettings>(ViewerSettings.serializer()) {
-    override val fileName = "viewerSettings.pb"
-    override val defaultValue = ViewerSettings()
+internal object ViewerSettingsSerializer : OkioKSerializer<ViewerSettings>(
+    serializer = ViewerSettings.serializer(),
+    fileName = "viewerSettings.pb",
+    defaultValue = ViewerSettings(),
+) {
 
     override suspend fun readFrom(source: BufferedSource): ViewerSettings {
         val settings = super.readFrom(source)
