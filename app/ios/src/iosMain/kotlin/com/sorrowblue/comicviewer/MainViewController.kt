@@ -4,10 +4,8 @@
 
 package com.sorrowblue.comicviewer
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.window.ComposeUIViewController
 import com.sorrowblue.comicviewer.app.MetroContent
-import com.sorrowblue.comicviewer.framework.startup.Initializer
 
 @Suppress("FunctionNaming")
 fun MainViewController() = ComposeUIViewController {
@@ -15,9 +13,6 @@ fun MainViewController() = ComposeUIViewController {
     context(iosApplication) {
         MetroContent {
             Application(finishApp = {})
-        }
-        LaunchedEffect(Unit) {
-            Initializer.initialize(iosApplication.appGraph.initializer.toList())
         }
     }
 }

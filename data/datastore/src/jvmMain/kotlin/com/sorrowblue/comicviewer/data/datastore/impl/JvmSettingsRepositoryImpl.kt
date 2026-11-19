@@ -5,7 +5,6 @@
 package com.sorrowblue.comicviewer.data.datastore.impl
 
 import androidx.datastore.core.DataStore
-import com.sorrowblue.comicviewer.data.datastore.qualifier.WindowSettings
 import com.sorrowblue.comicviewer.domain.model.settings.WindowSettings as DomainWindowSettings
 import com.sorrowblue.comicviewer.domain.repository.JvmSettingsRepository
 import dev.zacsweers.metro.AppScope
@@ -21,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 internal class JvmSettingsRepositoryImpl(
-    @param:WindowSettings private val windowSettingsDataStore: DataStore<DomainWindowSettings>,
+    private val windowSettingsDataStore: DataStore<DomainWindowSettings>,
 ) : JvmSettingsRepository {
 
     override val windowSettings: Flow<DomainWindowSettings> = windowSettingsDataStore.data

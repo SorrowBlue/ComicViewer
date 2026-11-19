@@ -22,6 +22,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
+/**
+ * Provides Room database, DAO, and dispatcher bindings.
+ */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object DatabaseProviders {
@@ -31,17 +34,20 @@ object DatabaseProviders {
         helper: DatabaseHelper,
         decryptedPasswordConverters: DecryptedPasswordConverters,
         @IoDispatcher dispatcher: CoroutineDispatcher,
-    ): ComicViewerDatabase = helper
-        .getDatabaseBuilder()
-        .addMigrations(
-            ComicViewerDatabase.ManualMigration7to8(),
-            ComicViewerDatabase.ManualMigration8to9(),
-            ComicViewerDatabase.ManualMigration9to10(),
-        )
-        .addColumnTypeConverter(decryptedPasswordConverters)
-        .setQueryCoroutineContext(dispatcher)
-        .fallbackToDestructiveMigrationOnDowngrade(true)
-        .build()
+        holder: DatabaseGraphLifecycle.Holder,
+    ): ComicViewerDatabase = holder.attach(
+        helper
+            .getDatabaseBuilder()
+            .addMigrations(
+                ComicViewerDatabase.ManualMigration7to8(),
+                ComicViewerDatabase.ManualMigration8to9(),
+                ComicViewerDatabase.ManualMigration9to10(),
+            )
+            .addColumnTypeConverter(decryptedPasswordConverters)
+            .setQueryCoroutineContext(dispatcher)
+            .fallbackToDestructiveMigrationOnDowngrade(true)
+            .build(),
+    )
 
     @SingleIn(AppScope::class)
     @Provides
@@ -64,6 +70,11 @@ object DatabaseProviders {
     @Provides
     private fun ComicViewerDatabase.provideReadLaterFileDao(): ReadLaterFileDao = readLaterFileDao()
 
+    /**
+     * Provides the IO coroutine dispatcher.
+     *
+     * @return IO [CoroutineDispatcher].
+     */
     @IoDispatcher
     @SingleIn(AppScope::class)
     @Provides

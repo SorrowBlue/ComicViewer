@@ -49,8 +49,8 @@ class NavigationTest {
 
     @BeforeTest
     fun setup() {
-        appGraph = createAppGraph()
         setupTest()
+        appGraph = createAppGraph()
     }
 
     @AfterTest

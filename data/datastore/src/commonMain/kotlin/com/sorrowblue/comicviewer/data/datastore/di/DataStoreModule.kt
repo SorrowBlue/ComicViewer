@@ -5,85 +5,85 @@
 package com.sorrowblue.comicviewer.data.datastore.di
 
 import androidx.datastore.core.DataStore
-import com.sorrowblue.comicviewer.data.datastore.DataStoreMaker
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Book
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Collection
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
-import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
-import com.sorrowblue.comicviewer.data.datastore.qualifier.GlobalSettings
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
-import com.sorrowblue.comicviewer.data.datastore.serializer.BookSettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.CollectionSettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.DisplaySettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.FolderDisplaySettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.FolderSettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.SecuritySettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.SettingsSerializer
-import com.sorrowblue.comicviewer.data.datastore.serializer.ViewerSettingsSerializer
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.core.okio.OkioStorage
+import com.sorrowblue.comicviewer.data.datastore.serializer.OkioKSerializer
+import com.sorrowblue.comicviewer.data.datastore.serializer.okioKSerializer
+import com.sorrowblue.comicviewer.domain.model.common.IoDispatcher
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
 import com.sorrowblue.comicviewer.domain.model.settings.FolderSettings
 import com.sorrowblue.comicviewer.domain.model.settings.SecuritySettings
 import com.sorrowblue.comicviewer.domain.model.settings.Settings
-import com.sorrowblue.comicviewer.domain.model.settings.ViewerSettings
 import com.sorrowblue.comicviewer.domain.model.settings.folder.FolderDisplaySettings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.path
+import io.github.vinceglb.filekit.resolve
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.SupervisorJob
+import okio.FileSystem
+import okio.Path.Companion.toPath
+import okio.SYSTEM
 
+/**
+ * Provides DataStore instances and serializers for application settings.
+ */
 @ContributesTo(AppScope::class)
 @BindingContainer
 object DataStoreModule {
-    @Book
-    @SingleIn(AppScope::class)
-    @Provides
-    private fun DataStoreMaker.bookSettingsDataStore(): DataStore<BookSettings> =
-        createDataStore(BookSettingsSerializer)
 
-    @Display
     @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.provideDisplaySettingsDataStore(): DataStore<DisplaySettings> =
-        createDataStore(DisplaySettingsSerializer)
+    private fun <T> provideDataStore(
+        serializer: OkioKSerializer<T>,
+        @IoDispatcher dispatcher: CoroutineDispatcher,
+    ): DataStore<T> = DataStore.Builder(
+        storage = OkioStorage(
+            fileSystem = FileSystem.SYSTEM,
+            producePath = {
+                FileKit.filesDir
+                    .resolve("datastore")
+                    .resolve(serializer.fileName)
+                    .path.toPath()
+            },
+            serializer = serializer,
+        ),
+        context = dispatcher + SupervisorJob(),
+    ).setCorruptionHandler(ReplaceFileCorruptionHandler { serializer.defaultValue })
+        .build()
 
-    @FolderDisplay
-    @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.folderDisplaySettingsDataStore(): DataStore<FolderDisplaySettings> =
-        createDataStore(FolderDisplaySettingsSerializer)
+    private fun provideSettingsSerializer(): OkioKSerializer<Settings> =
+        okioKSerializer("settings.pb", Settings())
 
-    @Folder
-    @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.folderSettingsDataStore(): DataStore<FolderSettings> =
-        createDataStore(FolderSettingsSerializer)
+    private fun provideDisplaySettingsSerializer(): OkioKSerializer<DisplaySettings> =
+        okioKSerializer("displaySettings.pb", DisplaySettings())
 
-    @Security
-    @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.securitySettingsDataStore(): DataStore<SecuritySettings> =
-        createDataStore(SecuritySettingsSerializer)
+    private fun provideBookSettingsSerializer(): OkioKSerializer<BookSettings> =
+        okioKSerializer("bookSettings.pb", BookSettings())
 
-    @GlobalSettings
-    @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.provideSettingsDataStore(): DataStore<Settings> =
-        createDataStore(SettingsSerializer)
+    private fun provideFolderDisplaySettingsSerializer(): OkioKSerializer<FolderDisplaySettings> =
+        okioKSerializer("folder_display_settings.pb", FolderDisplaySettings())
 
-    @Viewer
-    @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.viewerSettingsDataStore(): DataStore<ViewerSettings> =
-        createDataStore(ViewerSettingsSerializer)
+    private fun provideFolderSettingsSerializer(): OkioKSerializer<FolderSettings> =
+        okioKSerializer("folder_settings.pb", FolderSettings())
 
-    @Collection
-    @SingleIn(AppScope::class)
     @Provides
-    private fun DataStoreMaker.collectionSettingsDataStore(): DataStore<CollectionSettings> =
-        createDataStore(CollectionSettingsSerializer)
+    private fun provideSecuritySettingsSerializer(): OkioKSerializer<SecuritySettings> =
+        okioKSerializer("securitySettings.pb", SecuritySettings())
+
+    @Provides
+    private fun provideCollectionSettingsSerializer(): OkioKSerializer<CollectionSettings> =
+        okioKSerializer("collectionSettings.pb", CollectionSettings())
 }

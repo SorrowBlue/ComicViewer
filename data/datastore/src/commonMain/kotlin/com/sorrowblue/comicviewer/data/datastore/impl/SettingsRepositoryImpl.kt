@@ -5,14 +5,6 @@
 package com.sorrowblue.comicviewer.data.datastore.impl
 
 import androidx.datastore.core.DataStore
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Book
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Collection
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Display
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Folder
-import com.sorrowblue.comicviewer.data.datastore.qualifier.FolderDisplay
-import com.sorrowblue.comicviewer.data.datastore.qualifier.GlobalSettings
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Security
-import com.sorrowblue.comicviewer.data.datastore.qualifier.Viewer
 import com.sorrowblue.comicviewer.domain.model.settings.BookSettings
 import com.sorrowblue.comicviewer.domain.model.settings.CollectionSettings
 import com.sorrowblue.comicviewer.domain.model.settings.DisplaySettings
@@ -30,15 +22,14 @@ import kotlinx.coroutines.flow.Flow
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 internal class SettingsRepositoryImpl(
-    @param:GlobalSettings private val settingsDataStore: DataStore<Settings>,
-    @param:Display private val displaySettingsDataStore: DataStore<DisplaySettings>,
-    @param:Viewer private val viewerSettingsDataStore: DataStore<ViewerSettings>,
-    @param:Book private val bookSettingsDataStore: DataStore<BookSettings>,
-    @param:FolderDisplay private val folderDisplaySettingsDataStore:
-    DataStore<FolderDisplaySettings>,
-    @param:Folder private val folderSettingsDataStore: DataStore<FolderSettings>,
-    @param:Collection private val collectionSettingsDataStore: DataStore<CollectionSettings>,
-    @param:Security private val securitySettingsDataStore: DataStore<SecuritySettings>,
+    private val settingsDataStore: DataStore<Settings>,
+    private val displaySettingsDataStore: DataStore<DisplaySettings>,
+    private val viewerSettingsDataStore: DataStore<ViewerSettings>,
+    private val bookSettingsDataStore: DataStore<BookSettings>,
+    private val folderDisplaySettingsDataStore: DataStore<FolderDisplaySettings>,
+    private val folderSettingsDataStore: DataStore<FolderSettings>,
+    private val collectionSettingsDataStore: DataStore<CollectionSettings>,
+    private val securitySettingsDataStore: DataStore<SecuritySettings>,
 ) : SettingsRepository {
     override val settings = settingsDataStore.data
 

@@ -1,4 +1,5 @@
 import com.sorrowblue.comicviewer.diSubprojects
+import dev.zacsweers.metro.gradle.ExperimentalMetroGradleApi
 
 plugins {
     alias(libs.plugins.comicviewer.androidApplication)
@@ -76,7 +77,7 @@ baselineProfile {
 }
 
 metro {
-    @Suppress("OPT_IN_USAGE")
+    @OptIn(ExperimentalMetroGradleApi::class)
     hiddenDependencies {
         checkOnCompile.set(true)
     }
