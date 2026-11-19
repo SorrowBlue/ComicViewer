@@ -10,7 +10,6 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.framework.common)
                 implementation(projects.domain.repository)
                 implementation(projects.framework.startup)
                 api(libs.coil3.core)
@@ -18,6 +17,11 @@ kotlin {
                 implementation(libs.kotlinx.io)
                 implementation(libs.kotlinx.ioOkio)
                 implementation(libs.kotlinx.serializationJson)
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation(projects.framework.common)
             }
         }
     }

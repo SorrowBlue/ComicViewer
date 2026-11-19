@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ApplicationScope
 import com.sorrowblue.comicviewer.framework.common.AppGraphProvider
 import com.sorrowblue.comicviewer.framework.common.DesktopContext
-import com.sorrowblue.comicviewer.framework.startup.Initializer
 import dev.zacsweers.metro.MapKey
 import dev.zacsweers.metro.Multibinds
 import kotlin.reflect.KClass
@@ -52,11 +51,12 @@ abstract class JvmApplication :
         get() = appGraph
 
     /**
-     * Initializes application-level components via [Initializer].
+     * Initializes the application and triggers [appGraph] creation.
      */
     open fun onCreate() {
-        Initializer.initialize(appGraph.initializer.toList())
-        logcat(LogPriority.INFO) { "onCreate" }
+        appGraph.let {
+            logcat(LogPriority.INFO) { "onCreate" }
+        }
     }
 
     /**

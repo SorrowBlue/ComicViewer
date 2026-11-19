@@ -11,10 +11,6 @@ import coil3.fetch.Fetcher
 import coil3.key.Keyer
 import coil3.request.crossfade
 import coil3.size.Precision
-import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.common.appGraph
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
 import kotlin.reflect.KClass
@@ -24,8 +20,7 @@ import logcat.logcat
 @HasMemberInjections
 open class BaseCoilInitializer {
 
-    fun initialize(platformContext: PlatformContext) {
-        platformContext.appGraph<CoilInitializerInjector>().inject(this)
+    fun initialize() {
         SingletonImageLoader.setSafe { context ->
             ImageLoader(context)
                 .newBuilder()
@@ -39,24 +34,24 @@ open class BaseCoilInitializer {
     }
 
     @Inject
-    lateinit var factory: Map<KClass<*>, Fetcher.Factory<*>>
+    lateinit var factory: Lazy<Map<KClass<*>, Fetcher.Factory<*>>>
 
     @Inject
-    lateinit var keyer: Map<KClass<*>, Keyer<*>>
+    lateinit var keyer: Lazy<Map<KClass<*>, Keyer<*>>>
 
     @Suppress("UNCHECKED_CAST")
     private val componentRegistry
         get() = ComponentRegistry.Builder()
             .apply {
-                factory.forEach { add(it.value as Fetcher.Factory<Any>, it.key as KClass<Any>) }
-                keyer.forEach { add(it.value as Keyer<Any>, it.key as KClass<Any>) }
+                factory.value.forEach {
+                    add(
+                        it.value as Fetcher.Factory<Any>,
+                        it.key as KClass<Any>,
+                    )
+                }
+                keyer.value.forEach { add(it.value as Keyer<Any>, it.key as KClass<Any>) }
             }
             .build()
 
     open fun ImageLoader.Builder.setup() {}
-}
-
-@ContributesTo(AppScope::class)
-interface CoilInitializerInjector {
-    fun inject(target: BaseCoilInitializer)
 }

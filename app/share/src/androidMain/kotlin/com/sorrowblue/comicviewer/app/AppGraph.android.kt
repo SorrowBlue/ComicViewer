@@ -8,14 +8,18 @@ import android.content.Context
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
+import dev.zacsweers.metro.CloseableGraph
+import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metrox.android.MetroAppComponentProviders
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 
+@OptIn(ExperimentalMetroApi::class)
 actual interface AppGraph :
     ViewModelGraph,
     NavigationGraph,
-    MetroAppComponentProviders {
+    MetroAppComponentProviders,
+    CloseableGraph {
     actual val context: PlatformContext
 
     val workerFactory: WorkerFactory

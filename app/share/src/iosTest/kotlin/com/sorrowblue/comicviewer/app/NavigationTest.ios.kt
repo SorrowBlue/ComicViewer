@@ -9,6 +9,7 @@ import com.sorrowblue.comicviewer.framework.common.IosContext
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
+import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
 
@@ -16,8 +17,9 @@ actual fun setupTest() {
     // Do nothing for iOS tests
 }
 
+@OptIn(ExperimentalMetroApi::class)
 actual fun tearDownTest(appGraph: AppGraph) {
-    // Do nothing for iOS tests
+    appGraph.close()
 }
 
 actual fun createAppGraph(): AppGraph = IosApplication().appGraph

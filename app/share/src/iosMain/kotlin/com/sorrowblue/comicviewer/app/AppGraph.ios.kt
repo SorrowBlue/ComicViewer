@@ -5,12 +5,14 @@
 package com.sorrowblue.comicviewer.app
 
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import com.sorrowblue.comicviewer.framework.startup.Initializer
+import dev.zacsweers.metro.CloseableGraph
+import dev.zacsweers.metro.ExperimentalMetroApi
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 
+@OptIn(ExperimentalMetroApi::class)
 actual interface AppGraph :
     ViewModelGraph,
-    NavigationGraph {
+    NavigationGraph,
+    CloseableGraph {
     actual val context: PlatformContext
-    val initializer: Set<Initializer<*>>
 }

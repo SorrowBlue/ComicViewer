@@ -8,8 +8,6 @@ import androidx.room3.Room
 import androidx.room3.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.sorrowblue.comicviewer.framework.common.PlatformContext
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.absolutePath
@@ -28,17 +26,5 @@ internal actual class DatabaseHelper actual constructor(context: PlatformContext
         return Room.databaseBuilder<ComicViewerDatabase>(
             name = dbPath.resolve(DatabaseName).absolutePath(),
         ).setDriver(BundledSQLiteDriver())
-    }
-}
-
-interface TestHelper {
-
-    fun closeDatabase()
-}
-
-@ContributesBinding(AppScope::class)
-internal class TestHelperImpl(private val database: ComicViewerDatabase) : TestHelper {
-    override fun closeDatabase() {
-        database.close()
     }
 }

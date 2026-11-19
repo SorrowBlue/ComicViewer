@@ -70,11 +70,6 @@ kotlin {
                 api(libs.metro.viewmodel)
             }
         }
-        named("noAndroid") {
-            dependencies {
-                api(projects.framework.startup)
-            }
-        }
         commonTest.dependencies {
             diSubprojects.forEach(::implementation)
             implementation(projects.framework.test)
