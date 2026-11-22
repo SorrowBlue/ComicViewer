@@ -110,7 +110,7 @@ jobs:
     steps:
       - name: Notify Discord - Release Success
         if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-        uses: sarisia/actions-status-discord@v1.16.0
+        uses: sarisia/actions-status-discord@v1.16.1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           nodetail: true
@@ -130,7 +130,7 @@ jobs:
 
       - name: Notify Discord - Failure
         if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
-        uses: sarisia/actions-status-discord@v1.16.0
+        uses: sarisia/actions-status-discord@v1.16.1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           nodetail: true
